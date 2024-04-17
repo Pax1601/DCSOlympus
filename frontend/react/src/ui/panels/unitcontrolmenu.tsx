@@ -109,7 +109,7 @@ export function UnitControlMenu() {
 		onClose={() => { }}
 	>
 		{/* Units list */}
-		<div className="dark:bg-[#243141] h-fit p-0 flex flex-col gap-0">
+		<div className="dark:bg-olympus-200/30 h-fit p-0 flex flex-col gap-0">
 			<div>
 				{
 					<>

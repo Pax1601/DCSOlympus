@@ -6,7 +6,7 @@ export function OlUnitSummary(props: {
     blueprint: UnitBlueprint,
     coalition: Coalition
 }) {
-    return <div data-coalition={props.coalition} className="relative border-l-4 flex flex-col gap-2 p-2 pt-4 pb-4 items-start shadow-lg bg-white dark:bg-olympus-600 data-[coalition='blue']:border-blue-600 data-[coalition='neutral']:border-gray-400 data-[coalition='red']:border-red-500">
+    return <div data-coalition={props.coalition} className="relative border-l-4 flex flex-col gap-2 p-2 pt-4 pb-4 items-start shadow-lg bg-white dark:bg-olympus-200/30 data-[coalition='blue']:border-blue-600 data-[coalition='neutral']:border-gray-400 data-[coalition='red']:border-red-500">
             <div className="flex flex-row gap-2 content-center">
             <img className="object-cover h-7 ml-2 rounded-tl-md invert" src={"images/units/"+props.blueprint.filename} alt="" />  
             <div className="my-auto w-full font-semibold tracking-tight text-gray-900 dark:text-white">{props.blueprint.label}</div>

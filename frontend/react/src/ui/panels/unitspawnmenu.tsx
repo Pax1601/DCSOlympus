@@ -109,7 +109,7 @@ export function UnitSpawnMenu(props: {
                 </OlDropdown>
             </div>
         </div>
-        <div className="dark:bg-[#243141] h-fit p-4 flex flex-col gap-1">
+        <div className="dark:bg-olympus-200/30 h-fit p-4 flex flex-col gap-1">
             {spawnLoadout && spawnLoadout.items.map((item) => {
                 return <div className="flex gap-2 content-center">
                     <div className="my-auto font-bold text-sm rounded-full text-gray-500 dark:bg-[#17212D] w-6 py-0.5 text-center">{item.quantity}</div>
