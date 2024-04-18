@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faLock, faLockOpen, faUnlock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
+import { faExternalLink, faLock, faLockOpen, faUnlock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 
@@ -9,7 +9,7 @@ export function OlStateButton(props: {
     icon: IconProp,
     onClick: () => void
 }) {
-    const className = (props.className ?? '') + ` h-[40px] w-[40px] flex-none font-medium rounded-md text-md dark:bg-gray-700 dark:hover:bg-gray-600 dark:data-[checked='true']:bg-blue-500 dark:text-white dark:border-gray-600 `;
+    const className = (props.className ?? '') + ` h-[40px] w-[40px] flex-none font-medium rounded-md text-lg dark:bg-olympus-600 dark:hover:bg-olympus-300 dark:data-[checked='true']:bg-blue-500 dark:data-[checked='true']:text-white dark:text-gray-300 dark:border-gray-600 `;
 
     return <button onClick={props.onClick} data-checked={props.checked} type="button" className={className}>
         <FontAwesomeIcon icon={props.icon} />

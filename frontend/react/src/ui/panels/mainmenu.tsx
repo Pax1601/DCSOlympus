@@ -17,7 +17,7 @@ export function MainMenu(props: {
         onClose={props.onClose}
     >
         <div className="flex flex-col p-5 gap-1 font-normal text-gray-900 dark:text-white">
-            <div className="p-2 mb-1">
+            <div className="mb-1">
                 <div className="flex gap-2 mb-2 select-none rounded-sm content-center text-green-700 dark:text-green-400 font-bold text-lg"><FontAwesomeIcon icon={faCheckCircle} className="my-auto" />Olympus Version {VERSION}</div>
                 <div className="text-gray-400 text-sm">You can use the Olympus Manager to update port, passwords or other settings.</div>
             </div>

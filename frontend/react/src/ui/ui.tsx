@@ -9,6 +9,7 @@ import { SpawnMenu } from './panels/spawnmenu'
 import { UnitControlMenu } from './panels/unitcontrolmenu'
 import { MainMenu } from './panels/mainmenu'
 import { SideBar } from './panels/sidebar';
+import { Options } from './panels/options';
 import { MapHiddenTypes, MapOptions } from '../types/types'
 import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from '../constants/constants'
 import { getApp, setupApp } from '../olympusapp'
@@ -19,6 +20,7 @@ export type OlympusState = {
 	unitControlMenuVisible: boolean,
 	measureMenuVisible: boolean,
 	drawingMenuVisible: boolean,
+	optionsMenuVisible: boolean,
 	mapHiddenTypes: MapHiddenTypes;
 	mapOptions: MapOptions;
 }
@@ -29,6 +31,7 @@ export function UI() {
 	var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
 	var [measureMenuVisible, setMeasureMenuVisible] = useState(false);
 	var [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
+	var [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
 	var [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
 	var [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
 
@@ -46,6 +49,7 @@ export function UI() {
 		setUnitControlMenuVisible(false);
 		setMeasureMenuVisible(false);
 		setDrawingMenuVisible(false);
+		setOptionsMenuVisible(false);
 	}
 
 	return (
@@ -56,6 +60,7 @@ export function UI() {
 				unitControlMenuVisible: unitControlMenuVisible,
 				measureMenuVisible: measureMenuVisible,
 				drawingMenuVisible: drawingMenuVisible,
+				optionsMenuVisible: optionsMenuVisible,
 				mapOptions: mapOptions,
 				mapHiddenTypes: mapHiddenTypes
 			}}>
@@ -66,11 +71,13 @@ export function UI() {
 						setUnitControlMenuVisible: setUnitControlMenuVisible,
 						setDrawingMenuVisible: setDrawingMenuVisible,
 						setMeasureMenuVisible: setMeasureMenuVisible,
+						setOptionsMenuVisible: setOptionsMenuVisible,
 						toggleMainMenuVisible: () => { hideAllMenus(); setMainMenuVisible(!mainMenuVisible) },
 						toggleSpawnMenuVisible: () => { hideAllMenus(); setSpawnMenuVisible(!spawnMenuVisible) },
 						toggleUnitControlMenuVisible: () => { hideAllMenus(); setUnitControlMenuVisible(!unitControlMenuVisible) },
 						toggleMeasureMenuVisible: () => { hideAllMenus(); setMeasureMenuVisible(!measureMenuVisible) },
 						toggleDrawingMenuVisible: () => { hideAllMenus(); setDrawingMenuVisible(!drawingMenuVisible) },
+						toggleOptionsMenuVisible: () => { hideAllMenus(); setOptionsMenuVisible(!optionsMenuVisible) },
 					}
 				}>
 					<div className='absolute top-0 left-0 h-full w-full flex flex-col'>
@@ -79,6 +86,7 @@ export function UI() {
 							<SideBar />
 							<MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
 							<SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
+							<Options open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} />
 							<UnitControlMenu />
 						</div>
 					</div>
