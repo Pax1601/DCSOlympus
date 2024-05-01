@@ -452,52 +452,10 @@ export class OlympusApp {
             });
         });
 
-        // TODO: move from here in dedicated class
-        document.addEventListener("closeDialog", (ev: CustomEventInit) => {
-            ev.detail._element.closest(".ol-dialog").classList.add("hide");
-            document.getElementById("gray-out")?.classList.toggle("hide", true);
-        });
-
-        /* Try and connect with the Olympus REST server */
-        const loginForm = document.getElementById("authentication-form");
-        if (loginForm instanceof HTMLFormElement) {
-            loginForm.addEventListener("submit", (ev:SubmitEvent) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                var hash = sha256.create();
-                const username = (loginForm.querySelector("#username") as HTMLInputElement).value;
-                const password = hash.update((loginForm.querySelector("#password") as HTMLInputElement).value).hex();
-
-                // Update the user credentials
-                this.getServerManager().setCredentials(username, password);
-
-                // Start periodically requesting updates
-                this.getServerManager().startUpdate();
-
-                this.setLoginStatus("connecting");
-            });
-        } else {
-            console.error("Unable to find login form.");
-        }
-
-        /* Temporary */
-        this.getServerManager().setCredentials("admin", "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33");
-        this.getServerManager().startUpdate();
-
         /* Reload the page, used to mimic a restart of the app */
         document.addEventListener("reloadPage", () => {
             location.reload();
         })
-
-        ///* Inject the svgs with the corresponding svg code. This allows to dynamically manipulate the svg, like changing colors */
-        //document.querySelectorAll("[inject-svg]").forEach((el: Element) => {
-        //    var img = el as HTMLImageElement;
-        //    var isLoaded = img.complete;
-        //    if (isLoaded)
-        //        SVGInjector(img);
-        //    else
-        //        img.addEventListener("load", () => { SVGInjector(img); });
-        //})
     }
 
     getConfig() {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { OlUnitSummary } from "../components/olunitsummary";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { OlNumberInput } from "../components/olnumberinput";
@@ -7,6 +7,10 @@ import { OlRangeSlider } from "../components/olrangeslider";
 import { OlDropdownItem, OlDropdown } from '../components/oldropdown';
 import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
+import { getApp } from "../../olympusapp";
+import { IDLE, SPAWN_UNIT } from "../../constants/constants";
+import { ftToM, getUnitCategoryByBlueprint } from "../../other/utils";
+import { LatLng } from "leaflet";
 
 export function UnitSpawnMenu(props: {
     blueprint: UnitBlueprint
@@ -25,6 +29,30 @@ export function UnitSpawnMenu(props: {
     var [spawnLoadoutName, setSpawnLoadout] = useState("");
     var [spawnAltitude, setSpawnAltitude] = useState((maxAltitude - minAltitude) / 2);
     var [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
+
+    /* When the menu is opened show the unit preview on the map as a cursor */
+    useEffect(() => {
+		if (props.blueprint !== null) {
+			getApp()?.getMap()?.setState(SPAWN_UNIT, {
+				spawnRequestTable: {
+					category: getUnitCategoryByBlueprint(props.blueprint),
+					unit: {
+						unitType: props.blueprint.name,
+						location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+						skill: "High",
+						liveryID: "",
+						altitude: ftToM(spawnAltitude),
+						loadout: props.blueprint.loadouts?.find((loadout) => { return loadout.name === spawnLoadoutName})?.code ?? ""
+					},
+					coalition: 'blue'
+				}
+			});
+		}
+		else {
+			if (getApp()?.getMap()?.getState() === SPAWN_UNIT)
+				getApp()?.getMap()?.setState(IDLE);
+		}
+	})
 
     /* Get a list of all the roles */
     const roles: string[] = [];

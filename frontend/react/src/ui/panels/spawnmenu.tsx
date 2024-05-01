@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Menu } from "./components/menu";
-import { faHelicopter, faJetFighter, faPlus, faShieldAlt, faShip, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
@@ -9,13 +9,12 @@ import { OlUnitEntryList } from "../components/olunitlistentry";
 import { UnitSpawnMenu } from "./unitspawnmenu";
 import { UnitBlueprint } from "../../interfaces";
 import { olButtonsVisibilityAircraft, olButtonsVisibilityGroundunit, olButtonsVisibilityGroundunitSam, olButtonsVisibilityHelicopter, olButtonsVisibilityNavyunit } from "../components/olicons";
-import { SPAWN_UNIT } from "../../constants/constants";
 
 library.add(faPlus);
 
-function filterUnits(blueprints: {[key: string]: UnitBlueprint}, filterString: string) {
+function filterUnits(blueprints: { [key: string]: UnitBlueprint }, filterString: string) {
 	var filteredUnits = {};
-		if (blueprints) {
+	if (blueprints) {
 		Object.entries(blueprints).forEach(([key, value]) => {
 			if (value.enabled && (filterString === "" || value.label.includes(filterString)))
 				filteredUnits[key] = value;
@@ -31,12 +30,6 @@ export function SpawnMenu(props: {
 }) {
 	var [blueprint, setBlueprint] = useState(null as (null | UnitBlueprint));
 	var [filterString, setFilterString] = useState("");
-
-	useEffect(() => {
-		if (!props.open || blueprint !== null) {
-			//getApp()?.getMap()?.setState(SPAWN_UNIT, {name: blueprint?.name ?? '', coalition: 'blue'});
-		}
-	} )
 
 	/* Filter aircrafts, helicopters, and navyunits */
 	const filteredAircraft = filterUnits(getApp()?.getAircraftDatabase()?.blueprints, filterString);
@@ -65,7 +58,7 @@ export function SpawnMenu(props: {
 	>
 		<>
 			{(blueprint === null) && <div className="p-5">
-				<OlSearchBar onChange={(ev) => setFilterString(ev.target.value)}/>
+				<OlSearchBar onChange={(ev) => setFilterString(ev.target.value)} />
 				<OlAccordion title={`Aircraft`}>
 					<div className="flex flex-col gap-1 max-h-80 overflow-y-scroll">
 						{Object.keys(filteredAircraft).map((key) => {

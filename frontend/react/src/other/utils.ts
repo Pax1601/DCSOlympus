@@ -1,7 +1,7 @@
 import { LatLng, Point, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
-import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
+import { AircraftDatabase, aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 //import { Buffer } from "buffer";
@@ -10,6 +10,7 @@ import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
+import { getApp } from "../olympusapp";
 
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -365,19 +366,14 @@ export function getUnitDatabaseByCategory(category: string) {
         return null;
 }
 
-export function getCategoryBlueprintIconSVG(category: string, unitName: string) {
-
-    const path = "/resources/theme/images/buttons/visibility/";
-
-    //  We can just send these back okay
-    if (["Aircraft", "Helicopter", "NavyUnit"].includes(category)) return `${path}${category.toLowerCase()}.svg`;
-
-    //  Return if not a ground units as it's therefore something we don't recognise
-    if (category !== "GroundUnit") return false;
-
-    /** We need to get the unit detail for ground units so we can work out if it's an air defence unit or not **/
-    return GROUND_UNIT_AIR_DEFENCE_REGEX.test(unitName) ? `${path}groundunit-sam.svg` : `${path}groundunit.svg`;
+export function getUnitCategoryByBlueprint(blueprint: UnitBlueprint) {
+    for (let database of [getApp()?.getAircraftDatabase(), getApp()?.getHelicopterDatabase(), getApp()?.getGroundUnitDatabase(), getApp()?.getNavyUnitDatabase()]) {
+        if (blueprint.name in database.blueprints)
+            return database.getCategory();
+    }
+    return "unknown";
 }
+
 
 export function base64ToBytes(base64: string) {
     //return Buffer.from(base64, 'base64').buffer;
@@ -477,4 +473,4 @@ export function getWikipediaEntry(search: string, callback: CallableFunction) {
         }
     };
     xhr.send();
-    }
+}

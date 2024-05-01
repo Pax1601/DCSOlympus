@@ -7,7 +7,7 @@ import { BoxSelect } from "./boxselect";
 //import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, /*createCheckboxOption, createSliderInputOption, createTextInputOption,*/ deg2rad, getGroundElevation, polyContains } from "../other/utils";
+import { bearing, /*createCheckboxOption, createSliderInputOption, createTextInputOption,*/ deg2rad, getGroundElevation, getUnitCategoryByBlueprint, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
@@ -30,7 +30,7 @@ import './markers/stylesheets/units.css'
 // Temporary
 import './theme.css'
 import { Coalition, MapHiddenTypes, MapOptions } from "../types/types";
-import { UnitBlueprint } from "../interfaces";
+import { SpawnRequestTable, UnitBlueprint, UnitSpawnTable } from "../interfaces";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -56,7 +56,7 @@ export class Map extends L.Map {
     #state: string;
     #layer: L.TileLayer | L.LayerGroup | null = null;
 
-    #spawningBlueprint: UnitBlueprint | null = null;
+    #spawnRequestTable: SpawnRequestTable | null = null; 
 
     #preventLeftClick: boolean = false;
     #leftClickTimer: number = 0;
@@ -292,7 +292,7 @@ export class Map extends L.Map {
     }
 
     /* State machine */
-    setState(state: string, options?: { blueprint: UnitBlueprint, coalition: Coalition }) {
+    setState(state: string, options?: { spawnRequestTable: SpawnRequestTable }) {
         this.#state = state;
 
         /* Operations to perform if you are NOT in a state */
@@ -302,9 +302,9 @@ export class Map extends L.Map {
 
         /* Operations to perform if you ARE in a state */
         if (this.#state === SPAWN_UNIT) {
-            this.#spawningBlueprint = options?.blueprint ?? null;
+            this.#spawnRequestTable = options?.spawnRequestTable ?? null;
             this.#spawnCursor?.removeFrom(this);
-            this.#spawnCursor = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawningBlueprint?.name ?? "unknown", options?.coalition ?? 'blue');
+            this.#spawnCursor = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? 'blue');
         }
         else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
             this.#coalitionAreas.push(new CoalitionArea([]));
@@ -621,12 +621,20 @@ export class Map extends L.Map {
                 this.deselectAllCoalitionAreas();
             }
             else if (this.#state === SPAWN_UNIT) {
-                //getApp().getUnitsManager().spawnUnits(
-                //    "asd",
-                //    [
-                //        {}
-                //    ]
-                //)
+                if (this.#spawnRequestTable !== null) {
+                    const location = this.getMouseCoordinates();
+                    getApp().getUnitsManager().spawnUnits(
+                        this.#spawnRequestTable.category,
+                        [ this.#spawnRequestTable.unit ],
+                        this.#spawnRequestTable.coalition,
+                        false,
+                        undefined,
+                        undefined,
+                        (hash) => {
+                            this.addTemporaryMarker(location, this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? "blue", hash)
+                        }
+                    )
+                }
             }
             else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
                 if (this.getSelectedCoalitionArea()?.getEditing()) {

@@ -500,14 +500,16 @@ module.exports = function (configLocation) {
 			var auth = req.get("Authorization");
 			if (auth) {
 				var username = Buffer.from(auth.replace("Basic ", ""), 'base64').toString('binary').split(":")[0];
-				switch (username) {
-					case "admin":
+				var password = Buffer.from(auth.replace("Basic ", ""), 'base64').toString('binary').split(":")[1];
+				console.log(password)
+				switch (password) {
+					case "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":
 						ret.mission.commandModeOptions.commandMode = "Game master";
 						break
-					case "blue": 
+					case "16477688c0e00699c6cfa4497a3612d7e83c532062b64b250fed8908128ed548": 
 						ret.mission.commandModeOptions.commandMode = "Blue commander";
 						break;
-					case "red": 
+					case "b1f51a511f1da0cd348b8f8598db32e61cb963e5fc69e2b41485bf99590ed75a": 
 						ret.mission.commandModeOptions.commandMode = "Red commander";
 						break;
 				}

@@ -5,8 +5,6 @@ import React from "react";
 export function OlButtonGroup(props: {
     children?: JSX.Element | JSX.Element[]
 }) {
-
-
     return <div className="inline-flex rounded-md shadow-sm" >
         {props.children}
     </div>

@@ -11,5 +11,3 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <UI />
   </React.StrictMode>,
 )
-
-//window.onload = setupApp;

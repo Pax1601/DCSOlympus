@@ -1,6 +1,6 @@
 import React from 'react'
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from '../components/olstatebutton';
-import { faLock, faSkull, faCamera, faFlag, faCircle, faLink, faUnlink } from '@fortawesome/free-solid-svg-icons';
+import { faSkull, faCamera, faFlag, faLink, faUnlink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EventsConsumer } from '../../eventscontext';
 import { StateConsumer } from '../../statecontext';

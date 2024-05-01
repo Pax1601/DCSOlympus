@@ -1,4 +1,5 @@
 import { LatLng } from "leaflet";
+import { Coalition } from "./types/types";
 
 class Airbase {
     
@@ -63,13 +64,19 @@ export interface ServerRequestOptions {
     commandHash?: string;
 }
 
+export interface SpawnRequestTable {
+    category: string,
+    coalition: string,
+    unit: UnitSpawnTable
+}
+
 export interface UnitSpawnTable {
     unitType: string,
     location: LatLng,
-    altitude?: number,
-    loadout?: string,
     skill: string,
-    liveryID: string
+    liveryID: string,
+    altitude: number,
+    loadout: string
 }
 
 export interface ObjectIconOptions {
@@ -223,20 +230,6 @@ export interface UnitBlueprint {
     indirectFire?: boolean;
     markerFile?: string;
     unitWhenGrouped?: string;
-}
-
-export interface UnitSpawnOptions {
-    roleType: string;
-    name: string;
-    latlng: LatLng;
-    coalition: string;
-    count: number;
-    country: string;
-    skill: string;
-    loadout: LoadoutBlueprint | undefined;
-    airbase: Airbase | undefined;
-    liveryID: string | undefined;
-    altitude: number | undefined;
 }
 
 export interface AirbaseOptions {
