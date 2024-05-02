@@ -28,6 +28,7 @@ export type OlympusState = {
 }
 
 export function UI() {
+	var [loginModalVisible, setLoginModalVisible] = useState(true);
 	var [mainMenuVisible, setMainMenuVisible] = useState(false);
 	var [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
 	var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
@@ -60,7 +61,7 @@ export function UI() {
 	function checkPassword(password: string) {
 		setCheckingPassword(true);
 		var hash = sha256.create();
-		getApp().getServerManager().setCredentials("no-username", hash.update(password).hex());
+		getApp().getServerManager().setPassword(hash.update(password).hex());
 		getApp().getServerManager().getMission((response) => {
 			const commandMode = response.mission.commandModeOptions.commandMode;
 			try {
@@ -69,7 +70,18 @@ export function UI() {
 				setLoginError(true);
 			}
 			setCheckingPassword(false);
-		})
+		},
+			() => {
+				setLoginError(true);
+				setCheckingPassword(false);
+			},
+		)
+	}
+
+	function connect(username: string) {
+		getApp().getServerManager().setUsername(username);
+		getApp().getServerManager().startUpdate();
+		setLoginModalVisible(false);
 	}
 
 	return (
@@ -103,11 +115,19 @@ export function UI() {
 					<div className='absolute top-0 left-0 h-full w-full flex flex-col'>
 						<Header />
 						<div className='flex h-full'>
-							<LoginModal
-								onLogin={(password) => { checkPassword(password) }}
-								checkingPassword={checkingPassword}
-								loginError={loginError}
-							/>
+							{loginModalVisible &&
+								<>
+									<div className="fixed top-0 left-0 w-full h-full z-ui-3 bg-black opacity-60"></div>
+									<LoginModal
+										onLogin={(password) => { checkPassword(password) }}
+										onContinue={(username) => { connect(username) }}
+										onBack={() => { setCommandMode(null) }}
+										checkingPassword={checkingPassword}
+										loginError={loginError}
+										commandMode={commandMode}
+									/>
+								</>
+							}
 							<SideBar />
 							<MainMenu
 								open={mainMenuVisible}

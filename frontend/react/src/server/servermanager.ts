@@ -12,7 +12,7 @@ export class ServerManager {
     #connected: boolean = false;
     #paused: boolean = false;
     #REST_ADDRESS = "http://localhost:3001/olympus";
-    #username = "";
+    #username = "no-username";
     #password = "";
     #sessionHash: string | null = null;
     #lastUpdateTimes: { [key: string]: number } = {}
@@ -30,12 +30,15 @@ export class ServerManager {
         this.#lastUpdateTimes[MISSION_URI] = Date.now();
     }
 
-    setCredentials(newUsername: string, newPassword: string) {
+    setUsername(newUsername: string) {
         this.#username = newUsername;
+    }
+
+    setPassword(newPassword: string) {
         this.#password = newPassword;
     }
 
-    GET(callback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType: string = 'text', force: boolean = false) {
+    GET(callback: CallableFunction, errorCallback: CallableFunction, uri: string, options?: ServerRequestOptions, responseType: string = 'text', force: boolean = false) {
         var xmlHttp = new XMLHttpRequest();
 
         /* If a request on this uri is still pending (meaning it's not done or did not yet fail), skip the request, to avoid clogging the TCP workers */
@@ -84,15 +87,18 @@ export class ServerManager {
                 /* Bad credentials */
                 console.error("Incorrect username/password");
                 getApp().setLoginStatus("failed");
+                errorCallback && errorCallback(xmlHttp.status);
             } else {
                 /* Failure, probably disconnected */
                 this.setConnected(false);
+                errorCallback && errorCallback(xmlHttp.status);
             }
         };
         xmlHttp.onreadystatechange = (res) => {
             if (xmlHttp.readyState == 4 && xmlHttp.status === 0) {
                 console.error("An error occurred during the XMLHttpRequest");
                 this.setConnected(false);
+                errorCallback && errorCallback(xmlHttp.status);
             }
         };
         xmlHttp.send(null);
@@ -131,32 +137,32 @@ export class ServerManager {
         console.log(`Setting REST address to ${this.#REST_ADDRESS}`)
     }
 
-    getAirbases(callback: CallableFunction) {
-        this.GET(callback, AIRBASES_URI);
+    getAirbases(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, AIRBASES_URI);
     }
 
-    getBullseye(callback: CallableFunction) {
-        this.GET(callback, BULLSEYE_URI);
+    getBullseye(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, BULLSEYE_URI);
     }
 
-    getLogs(callback: CallableFunction, refresh: boolean = false) {
-        this.GET(callback, LOGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[LOGS_URI] }, 'text', refresh);
+    getLogs(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, LOGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[LOGS_URI] }, 'text', refresh);
     }
 
-    getMission(callback: CallableFunction) {
-        this.GET(callback, MISSION_URI);
+    getMission(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, MISSION_URI);
     }
 
-    getUnits(callback: CallableFunction, refresh: boolean = false) {
-        this.GET(callback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, 'arraybuffer', refresh);
+    getUnits(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, 'arraybuffer', refresh);
     }
 
-    getWeapons(callback: CallableFunction, refresh: boolean = false) {
-        this.GET(callback, WEAPONS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[WEAPONS_URI] }, 'arraybuffer', refresh);
+    getWeapons(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, WEAPONS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[WEAPONS_URI] }, 'arraybuffer', refresh);
     }
 
-    isCommandExecuted(callback: CallableFunction, commandHash: string) {
-        this.GET(callback, COMMANDS_URI, { commandHash: commandHash });
+    isCommandExecuted(callback: CallableFunction, commandHash: string, errorCallback: CallableFunction = () => {}) {
+        this.GET(callback, errorCallback, COMMANDS_URI, { commandHash: commandHash });
     }
 
     addDestination(ID: number, path: any, callback: CallableFunction = () => { }) {

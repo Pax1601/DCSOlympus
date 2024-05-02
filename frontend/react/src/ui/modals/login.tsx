@@ -8,11 +8,15 @@ import { VERSION, connectedToServer } from '../../olympusapp'
 export function LoginModal(props: {
     checkingPassword: boolean,
     loginError: boolean,
-    onLogin: (password: string) => void
+    commandMode: string | null,
+    onLogin: (password: string) => void,
+    onContinue: (username: string) => void,
+    onBack: () => void
 }) {
     const [password, setPassword] = useState("");
+    const [displayName, setDisplayName] = useState("");
 
-    return <Modal className="flex inline-flex max-h-[600px] overflow-y-auto h-[75%] scroll-smooth w-[80%] bg-white dark:bg-olympus-800 ">
+    return <Modal className="inline-flex max-h-[600px] overflow-y-auto h-[75%] scroll-smooth w-[80%] bg-white dark:bg-olympus-800 ">
         <div className='absolute gap-8 flex flex-col p-16 max-lg:p-12 w-full'>
             <div className="flex flex-row max-lg:flex-col w-full gap-6">
                 <div className="flex flex-grow flex-col gap-5 w-[40%] max-lg:w-[100%] content-center justify-start">
@@ -30,18 +34,37 @@ export function LoginModal(props: {
                                 {
                                     !props.loginError ?
                                         <>
-                                            <div className="flex flex-col items-start gap-2">
-                                                <label className=" text-gray-800 dark:text-white text-md">Password</label>
-                                                <input type="text" onChange={(ev) => setPassword(ev.currentTarget.value)} className="w-full max-w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter password" required />
-                                            </div>
-                                            <div className='flex'>
-                                                <button type="button" onClick={() => props.onLogin(password)} className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm">
-                                                    Login <FontAwesomeIcon className="my-auto" icon={faArrowRight} />
-                                                </button>
-                                                <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
-                                                    View Guide <FontAwesomeIcon className="my-auto" icon={faExternalLink} />
-                                                </button>
-                                            </div>
+                                            {   props.commandMode === null? 
+                                                <>
+                                                    <div className="flex flex-col items-start gap-2">
+                                                        <label className=" text-gray-800 dark:text-white text-md">Password</label>
+                                                        <input type="text" onChange={(ev) => setPassword(ev.currentTarget.value)} className="w-full max-w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter password" required />
+                                                    </div>
+                                                    <div className='flex'>
+                                                        <button type="button" onClick={() => props.onLogin(password)} className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm">
+                                                            Login <FontAwesomeIcon className="my-auto" icon={faArrowRight} />
+                                                        </button>
+                                                        <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
+                                                            View Guide <FontAwesomeIcon className="my-auto" icon={faExternalLink} />
+                                                        </button>
+                                                    </div>
+                                                </>
+                                                : 
+                                                <>
+                                                    <div className="flex flex-col items-start gap-2">
+                                                        <label className=" text-gray-800 dark:text-white text-md">Set display name</label>
+                                                        <input type="text" onChange={(ev) => setDisplayName(ev.currentTarget.value)} className="w-full max-w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter display name" required />
+                                                    </div>
+                                                    <div className='flex'>
+                                                        <button type="button" onClick={() => props.onContinue(displayName)} className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm">
+                                                            Continue <FontAwesomeIcon className="my-auto" icon={faArrowRight} />
+                                                        </button>
+                                                        <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
+                                                            Back
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            }
                                         </>
                                         :
                                         <div>

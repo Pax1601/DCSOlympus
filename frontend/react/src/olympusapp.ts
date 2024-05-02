@@ -41,8 +41,8 @@ import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 //import { ContextManager } from "./context/contextmanager";
 //import { Context } from "./context/context";
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
-export var IP = "{{IP ADDRESS OF SERVER}}";
-export var connectedToServer = true;
+export var IP = window.location.toString();
+export var connectedToServer = true;    // Temporary
 
 export class OlympusApp {
     /* Global data */
@@ -271,6 +271,7 @@ export class OlympusApp {
         })
 
         /* Load the config file from the server */
+        // Temporary
         const configRequest = new Request("http://localhost:3000/" + "resources/config");
         fetch(configRequest).then((response) => {
             if (response.status === 200) {

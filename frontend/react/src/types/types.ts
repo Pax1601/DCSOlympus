@@ -1,4 +1,3 @@
-
 /* Types definition */
 export type MapMarkerVisibilityControl = {
     "category"?: string;
