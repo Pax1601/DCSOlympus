@@ -32,7 +32,7 @@ export function LoginModal(props: {
                                         <>
                                             <div className="flex flex-col items-start gap-2">
                                                 <label className=" text-gray-800 dark:text-white text-md">Password</label>
-                                                <input type="text" onChange={(ev) => setPassword(ev.currentTarget.value)} className="w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter password" required />
+                                                <input type="text" onChange={(ev) => setPassword(ev.currentTarget.value)} className="w-full max-w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter password" required />
                                             </div>
                                             <div className='flex'>
                                                 <button type="button" onClick={() => props.onLogin(password)} className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm">
