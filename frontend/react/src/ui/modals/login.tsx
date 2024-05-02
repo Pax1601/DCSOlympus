@@ -1,6 +1,7 @@
 import React, { useState, version } from 'react'
 import { Modal } from './components/modal'
 import { Card } from './components/card'
+import { ErrorCallout, InfoCallout, CommandCallout } from '../../ui/components/olcallout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faCheckCircle, faExternalLink, faLink, faUnlink } from '@fortawesome/free-solid-svg-icons'
 import { VERSION, connectedToServer } from '../../olympusapp'
@@ -16,7 +17,7 @@ export function LoginModal(props: {
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
 
-    return <Modal className="inline-flex max-h-[600px] overflow-y-auto h-[75%] scroll-smooth w-[80%] bg-white dark:bg-olympus-800 ">
+    return <Modal className="inline-flex max-h-[600px] overflow-y-auto h-[75%] scroll-smooth w-[80%] max-w-[1100px] bg-white dark:bg-olympus-800 ">
         <div className='absolute gap-8 flex flex-col p-16 max-lg:p-12 w-full'>
             <div className="flex flex-row max-lg:flex-col w-full gap-6">
                 <div className="flex flex-grow flex-col gap-5 w-[40%] max-lg:w-[100%] content-center justify-start">
@@ -67,10 +68,8 @@ export function LoginModal(props: {
                                             }
                                         </>
                                         :
-                                        <div>
-                                            There was an issue connecting you dog cunt
-                                        </div>
-                                }
+                                        <ErrorCallout title='There was an issue connecting to the server' description='This IP Address is not currently available, or there is some other issue meaning it cannot be reached. Try restarting the Olympus server.'></ErrorCallout>
+}
                             </>
                             :
                             <div>
