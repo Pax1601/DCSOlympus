@@ -17,8 +17,8 @@ export function LoginModal(props: {
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
 
-    return <Modal className="inline-flex max-h-[600px] overflow-y-auto h-[75%] scroll-smooth w-[80%] max-w-[1100px] bg-white dark:bg-olympus-800 ">
-        <div className='absolute gap-8 flex flex-col p-16 max-lg:p-12 w-full'>
+    return <Modal className="inline-flex max-h-[600px] overflow-y-auto h-[75%] scroll-smooth w-[80%] max-w-[1100px] bg-white dark:bg-olympus-800 max-md:w-full max-md:h-full max-md:max-h-full max-md:rounded-none max-md:border-none ">
+        <div className='absolute gap-8 flex flex-col p-16 max-lg:p-8 w-full '>
             <div className="flex flex-row max-lg:flex-col w-full gap-6">
                 <div className="flex flex-grow flex-col gap-5 w-[40%] max-lg:w-[100%] content-center justify-start">
                     {
@@ -82,7 +82,7 @@ export function LoginModal(props: {
                 </div>
                 <div className='flex flex-grow flex-row overflow-hidden gap-2 content-end justify-center max-lg:justify-start max-md:flex-col'>
                     <Card className=''>
-                        <img src="/resources/theme/images/splash/1.jpg" className='h-[40%] contents-center w-full object-cover rounded-md'></img>
+                        <img src="/resources/theme/images/splash/1.jpg" className='h-[40%] max-h-[120px] contents-center w-full object-cover rounded-md'></img>
                         <div className='font-bold mt-2'>
                             YouTube Video Guide
                         </div>
@@ -91,7 +91,7 @@ export function LoginModal(props: {
                         </div>
                     </Card>
                     <Card className=''>
-                        <img src="/resources/theme/images/splash/1.jpg" className='h-[40%] contents-center w-full object-cover rounded-md'></img>
+                        <img src="/resources/theme/images/splash/1.jpg" className='h-[40%] max-h-[120px] contents-center w-full object-cover rounded-md'></img>
                         <div className='font-bold mt-2'>
                             Wiki Guide
                         </div>
