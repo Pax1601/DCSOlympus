@@ -117,7 +117,7 @@ export function UI() {
 						<div className='flex h-full'>
 							{loginModalVisible &&
 								<>
-									<div className="fixed top-0 left-0 w-full h-full z-ui-3 bg-black opacity-60"></div>
+									<div className="fixed top-0 left-0 w-full h-full z-ui-3 bg-[#111111]/95 "></div>
 									<LoginModal
 										onLogin={(password) => { checkPassword(password) }}
 										onContinue={(username) => { connect(username) }}

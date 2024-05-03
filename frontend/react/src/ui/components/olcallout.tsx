@@ -11,7 +11,7 @@ export function ErrorCallout(props: {
         {props.title && (<FontAwesomeIcon className="mt-1" icon={faExclamationCircle}></FontAwesomeIcon>)}
         <div className="flex flex-col font-bold text-pretty content-center items-start gap-2">
             {props.title}
-            <div className="flex text-xs font-medium whitespace-pre-line">
+            <div className="flex text-xs font-medium whitespace-pre-line text-red-500">
                 {props.description}
             </div>
         </div>

@@ -3,8 +3,9 @@ import { Modal } from './components/modal'
 import { Card } from './components/card'
 import { ErrorCallout, InfoCallout, CommandCallout } from '../../ui/components/olcallout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faCheckCircle, faExternalLink, faLink, faUnlink } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faCheckCircle, faDatabase, faExclamation, faExclamationCircle, faExternalLink, faLink, faServer, faSitemap, faUnlink, faWindowMaximize } from '@fortawesome/free-solid-svg-icons'
 import { VERSION, connectedToServer } from '../../olympusapp'
+import { faFirefoxBrowser } from '@fortawesome/free-brands-svg-icons'
 
 export function LoginModal(props: {
     checkingPassword: boolean,
@@ -18,7 +19,11 @@ export function LoginModal(props: {
     const [displayName, setDisplayName] = useState("");
 
     return <Modal className="inline-flex max-h-[530px] overflow-y-auto h-[75%] scroll-smooth w-[80%] max-w-[1100px] bg-white dark:bg-olympus-800 max-md:w-full max-md:h-full max-md:max-h-full max-md:rounded-none max-md:border-none ">
+        <img src="/resources/theme/images/splash/1.jpg" className='contents-center w-full object-cover opacity-[7%]'></img>
+        <div className='absolute w-full h-full bg-gradient-to-r from-blue-200/25 to-transparent'></div>
+        <div className='absolute w-full h-full bg-gradient-to-t from-olympus-800 to-transparent'></div>
         <div className='absolute gap-8 flex flex-col p-16 max-lg:p-8 w-full '>
+
             <div className="flex flex-row max-lg:flex-col w-full gap-6">
                 <div className="flex flex-grow flex-col gap-5 w-[40%] max-lg:w-[100%] content-center justify-start">
                     {
@@ -26,7 +31,7 @@ export function LoginModal(props: {
                             <>
                                 <div className="flex flex-col items-start">
                                     <div className="pt-1 text-gray-800 dark:text-gray-400 text-xs">Connect to</div>
-                                    <div className="flex text-gray-800 dark:text-gray-200 text-md font-bold items-center justify-center gap-2"><div data-connected={connectedToServer} className="py-auto text-green-400 data-[connected='true']:dark:bg-green-400 dark:bg-red-500 w-3 h-3 rounded-full"></div> {window.location.toString()} </div>
+                                    <div className="flex text-gray-800 dark:text-gray-200 text-md font-bold items-center justify-center gap-2">{window.location.toString()} </div>
                                 </div>
                                 <div className="flex flex-col items-start gap-2">
                                     <h1 className="text-4xl text-gray-800 dark:text-white font-bold">DCS Olympus</h1>
@@ -35,22 +40,24 @@ export function LoginModal(props: {
                                 {
                                     !props.loginError ?
                                         <>
-                                            {   props.commandMode === null? 
+                                            {props.commandMode === null ?
                                                 <>
                                                     <div className="flex flex-col items-start gap-2">
-                                                        <label className=" text-gray-800 dark:text-white text-md">Password</label>
+                                                        <label className=" text-gray-800 dark:text-white text-md">Password </label>
                                                         <input type="text" onChange={(ev) => setPassword(ev.currentTarget.value)} className="w-full max-w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter password" required />
                                                     </div>
                                                     <div className='flex'>
                                                         <button type="button" onClick={() => props.onLogin(password)} className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm">
                                                             Login <FontAwesomeIcon className="my-auto" icon={faArrowRight} />
                                                         </button>
+                                                        {/*
                                                         <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
-                                                            View Guide <FontAwesomeIcon className="my-auto" icon={faExternalLink} />
-                                                        </button>
+                                                            View Guide <FontAwesomeIcon className="my-auto text-xs" icon={faExternalLink} />
+                                                         </button>
+                                                         */}
                                                     </div>
                                                 </>
-                                                : 
+                                                :
                                                 <>
                                                     <div className="flex flex-col items-start gap-2">
                                                         <label className=" text-gray-800 dark:text-white text-md">Set display name</label>
@@ -68,8 +75,8 @@ export function LoginModal(props: {
                                             }
                                         </>
                                         :
-                                        <ErrorCallout title='There was an issue connecting to the server' description='This IP Address is not currently available, or there is some other issue meaning it cannot be reached. Try restarting the Olympus server.'></ErrorCallout>
-}
+                                        <><ErrorCallout title='Server could not be reached' description='The Olympus Server at this address could not be reached. Check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used.'></ErrorCallout><div className='text-gray-200 text-sm font-medium'>Still having issues? See our <a href='' className='underline text-blue-300 hover:no-underline'>troubleshooting guide here</a>.</div></>
+                                }
                             </>
                             :
                             <div>
@@ -80,20 +87,20 @@ export function LoginModal(props: {
                             </div>
                     }
                 </div>
-                <div className='flex flex-grow flex-row overflow-hidden gap-2 content-end justify-center max-lg:justify-start max-md:flex-col'>
-                    <Card className=''>
+                <div className='flex flex-grow flex-row overflow-hidden gap-3 content-end justify-center max-lg:justify-start max-md:flex-col'>
+                    <Card className='flex'>
                         <img src="/resources/theme/images/splash/1.jpg" className='h-[40%] max-h-[120px] contents-center w-full object-cover rounded-md'></img>
-                        <div className='font-bold mt-2'>
-                            YouTube Video Guide
+                        <div className='flex font-bold mt-2 content-center items-center gap-2 '>
+                            YouTube Video Guide <FontAwesomeIcon className="my-auto text-xs text-gray-400" icon={faExternalLink} />
                         </div>
                         <div className='text-xs text-black dark:text-gray-400 overflow-hidden text-ellipsis'>
                             Check out our official video tutorial on how to get started with Olympus - so you can immediately start controlling the battlefield.
                         </div>
                     </Card>
-                    <Card className=''>
+                    <Card className='flex'>
                         <img src="/resources/theme/images/splash/1.jpg" className='h-[40%] max-h-[120px] contents-center w-full object-cover rounded-md'></img>
-                        <div className='font-bold mt-2'>
-                            Wiki Guide
+                        <div className='flex font-bold mt-2 content-center items-center gap-2'>
+                            Wiki Guide <FontAwesomeIcon className="my-auto text-xs text-gray-400" icon={faExternalLink} />
                         </div>
                         <div className='text-xs text-black dark:text-gray-400 overflow-hidden text-ellipsis'>
                             Find out more about Olympus through our online wiki guide.
@@ -101,7 +108,7 @@ export function LoginModal(props: {
                     </Card>
                 </div>
             </div>
-            <div className="flex max-lg:flex-col w-full h-full text-gray-500 text-xs">
+            <div className="flex max-lg:flex-col w-full h-full text-gray-600 text-xs font-light">
                 DCS Olympus (the "MATERIAL" or "Software") is provided completely free to users subject to the terms of the CC BY-NC-SA 4.0 Licence except where such terms conflict with this disclaimer, in which case, the terms of this disclaimer shall prevail. Any party making use of the Software in any manner agrees to be bound by the terms set out in the disclaimer. THIS MATERIAL IS NOT MADE OR SUPPORTED BY EAGLE DYNAMICS SA.
             </div>
         </div>
