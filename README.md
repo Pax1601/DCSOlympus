@@ -73,7 +73,7 @@ Olympus by itself should not have a noticeable impact on server performance, how
 Be cognizant of how you play, whether it's done through Olympus or the mission editor 500 MLRS units firing at once is not going to go over well with most servers
 
 
-[**Temporary localhost redirect**](https://localhost:3000)
+[**Temporary localhost redirect**](http://localhost:3000)
 
 
     
