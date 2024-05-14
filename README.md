@@ -71,9 +71,9 @@ A and B never communicate when you connect the client you download the web page 
 Olympus by itself should not have a noticeable impact on server performance, however the ability for the user to spawn arbitrary units and command engagements means Olympus can be used in such a way that brings the game to it's knees.
 
 Be cognizant of how you play, whether it's done through Olympus or the mission editor 500 MLRS units firing at once is not going to go over well with most servers
- 
-    
-    
-    
+
+
+[**Temporary localhost redirect**](https://localhost:3000)
+
 
     
