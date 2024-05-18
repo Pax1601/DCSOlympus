@@ -12,14 +12,6 @@
             "console": "integratedTerminal",
             "args": ["./configs/Test/MediumResolution.yml"],
             "justMyCode": false
-        }, 
-        {
-            "name": "Convert",
-            "type": "python",
-            "request": "launch",
-            "program": "convert_to_jpg.py",
-            "console": "integratedTerminal",
-            "args": ["./Syria/tiles", "./Syria/jpg"]
         }
     ]
 }

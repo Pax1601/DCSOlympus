@@ -55,7 +55,7 @@ export function UnitControlMenu() {
 		updateData();
 	})
 
-	/* When all units are selected clean the view */
+	/* When all units are deselected clean the view */
 	document.addEventListener("clearSelection", () => {
 		setOpen(false);
 		setSelectedUnits([])
