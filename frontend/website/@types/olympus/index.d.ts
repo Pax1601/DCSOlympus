@@ -141,6 +141,7 @@ declare module "constants/constants" {
         Falklands: LatLng[];
         Normandy: LatLng[];
         SinaiMap: LatLng[];
+		Kola: LatLng[];
     };
     export const mapBounds: {
         Syria: {
@@ -172,6 +173,10 @@ declare module "constants/constants" {
             zoom: number;
         };
         SinaiMap: {
+            bounds: LatLngBounds;
+            zoom: number;
+        };
+        Kola: {
             bounds: LatLngBounds;
             zoom: number;
         };
