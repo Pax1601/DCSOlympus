@@ -316,7 +316,7 @@ export class Map extends L.Map {
             let layerData = this.#mapLayers["ArcGIS Satellite"];
             let layers = [new L.TileLayer(layerData.urlTemplate, layerData)];
             
-            let template = `https://maps.dcsolympus.com/maps/${layerName === "DCS Map"? "alt": "sat"}-{theatre}-modern/{z}/{x}/{y}.png`;
+            let template = `https://maps.dcsolympus.com/maps/${layerName === "DCS Map"? "alt": "sat"}-{theatre}/{z}/{x}/{y}.png`;
             layers.push(...DCSMapsZoomLevelsByTheatre[theatre].map((nativeZoomLevels: any) => {
                 return new L.TileLayer(template.replace("{theatre}", theatre.toLowerCase()), {...nativeZoomLevels, maxZoom: 20, crossOrigin: ""});
             }));

@@ -45,7 +45,7 @@ def num_to_deg(xtile, ytile, zoom):
 def compute_mpps(lat, z):
 	return C * math.cos(math.radians(lat)) / math.pow(2, z + 8)
 
-def print_progress_bar(iteration, total, start_time, prefix = '', suffix = '', decimals = 1, length = 80, fill = '█', printEnd = "\r"):
+def print_progress_bar(iteration, total, start_time, prefix = '', suffix = '', decimals = 1, length = 40, fill = '█', printEnd = "\r"):
     now = datetime.datetime.now()
     diff = (now - start_time).total_seconds()
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -146,6 +146,20 @@ def compress_tiles(base_path, zoom, tile, colors_number):
 	im.save(path)
 	return initial_size, os.path.getsize(path)
 
+def compute_longitude_error(delta_width, calib_ref_fn, calib_lng_fn, box1, box2):
+	calib_ref = Image.open(calib_ref_fn)
+	calib_lng = Image.open(calib_lng_fn)
+	calib_box1 = calib_ref.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box1).convert('L')
+	calib_box2 = calib_lng.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box2).convert('L')
+	return compute_difference(calib_box1, calib_box2)
+
+def compute_latitude_error(delta_height, calib_ref_fn, calib_lat_fn, box3, box4):
+	calib_ref = Image.open(calib_ref_fn)
+	calib_lat = Image.open(calib_lat_fn)
+	calib_box3 = calib_ref.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box3).convert('L')
+	calib_box4 = calib_lat.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box4).convert('L')
+	return compute_difference(calib_box3, calib_box4)
+
 def compute_correction_factor(XY, n_width, n_height, map_config, zoom, screenshots_folder, port):
 	# Take screenshots at the given position
 	take_screenshot(XY, 0, 0, map_config, zoom, screenshots_folder, "calib", "ref", port)
@@ -170,30 +184,18 @@ def compute_correction_factor(XY, n_width, n_height, map_config, zoom, screensho
 	# Take screenshot east and south of it
 	take_screenshot((XY[0] + n_width, XY[1]), 0, 0, map_config, zoom, screenshots_folder, "calib", "lng", port)
 	take_screenshot((XY[0], XY[1] + n_height), 0, 0, map_config, zoom, screenshots_folder, "calib", "lat", port)
-	calib_lat = Image.open(os.path.join(screenshots_folder, f"calib_lat_{zoom}.jpg"))
-	calib_lng = Image.open(os.path.join(screenshots_folder, f"calib_lng_{zoom}.jpg"))
 
 	# Find the best correction factor to bring the two images to be equal on the longitude direction
-	best_err = None
-	best_delta_width = 0
-	for delta_width in range(-15, 16):
-		calib_box1 = calib_ref.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box1).convert('L')
-		calib_box2 = calib_lng.resize((calib_ref.width + delta_width, calib_ref.height)).crop(box2).convert('L')
-		err = compute_difference(calib_box1, calib_box2)
-		if best_err is None or err < best_err:
-			best_delta_width = delta_width
-			best_err = err
+	with futures.ThreadPoolExecutor() as executor:
+		futs = [executor.submit(compute_longitude_error, delta_width, os.path.join(screenshots_folder, f"calib_ref_{zoom}.jpg"), os.path.join(screenshots_folder, f"calib_lng_{zoom}.jpg"), box1, box2) for delta_width in range(-15, 16)]
+		values = [fut.result() for fut in futures.as_completed(futs)]
+		best_delta_width = -15 + min(range(len(values)), key=values.__getitem__)
 
 	# Find the best correction factor to bring the two images to be equal on the latitude direction
-	best_err = None
-	best_delta_height = 0
-	for delta_height in range(-15, 16):
-		calib_box3 = calib_ref.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box3).convert('L')
-		calib_box4 = calib_lat.resize((calib_ref.width, calib_ref.height + delta_height)).crop(box4).convert('L')
-		err = compute_difference(calib_box3, calib_box4)
-		if best_err is None or err < best_err:
-			best_delta_height = delta_height
-			best_err = err
+	with futures.ThreadPoolExecutor() as executor:
+		futs = [executor.submit(compute_latitude_error, delta_height, os.path.join(screenshots_folder, f"calib_ref_{zoom}.jpg"), os.path.join(screenshots_folder, f"calib_lat_{zoom}.jpg"), box3, box4) for delta_height in range(-15, 16)]
+		values = [fut.result() for fut in futures.as_completed(futs)]
+		best_delta_height = -15 + min(range(len(values)), key=values.__getitem__)
 
 	return (best_delta_width, best_delta_height)
 
@@ -446,7 +448,7 @@ def run(map_config, port):
 					res.extend([fut.result() for fut in futures.as_completed(futs)])
 			total_initial_size = numpy.sum([r[0] for r in res]) / 1024 / 1024
 			total_final_size = numpy.sum([r[1] for r in res]) / 1024 / 1024
-			print(f"Compressed {len(res)} images in {datetime.datetime.now() - start_time}, inizial size {total_initial_size:.3f}MB, final size {total_final_size:.3f}MB, compression ratio {(1 - total_final_size / total_initial_size )* 100:.3f}%")
+			print(f"Compressed {len(res)} images in {datetime.datetime.now() - start_time}, initial size {total_initial_size:.3f}MB, final size {total_final_size:.3f}MB, compression ratio {(1 - total_final_size / total_initial_size )* 100:.3f}%")
 
 		print("Script end time: ", datetime.datetime.now())
 
