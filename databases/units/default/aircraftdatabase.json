@@ -11135,7 +11135,7 @@
 			}
 		],
 		"filename": "f-4.png",
-		"enabled": true,
+		"enabled": false,
 		"liveries": {
 			"haf aegean ghost": {
 				"name": "Hellenic Airforce - Aegean Ghost",
@@ -17778,7 +17778,7 @@
 	"KC135MPRS": {
 		"name": "KC135MPRS",
 		"coalition": "blue",
-		"label": "KC-135 MPRS StratotankerXXXXXXXXXX",
+		"label": "KC-135 MPRS Stratotanker",
 		"era": "Early Cold War",
 		"shortLabel": "135M",
 		"loadouts": [
@@ -33387,5 +33387,5957 @@
 		"type": "TF_51D",
 		"enabled": false,
 		"liveries": {}
+	},
+	"F-4E-45MC": {
+		"name": "F-4E-45MC",
+		"coalition": "",
+		"era": "",
+		"label": "F-4E-45MC",
+		"shortLabel": "4",
+		"type": "F_4E_45MC",
+		"enabled": true,
+		"liveries": {
+			"sl68-303_h1_110ang": {
+				"name": "F-4E - USAF - SL68-303 - Hill One - 110th Missouri ANG by LanceCriminal86",
+				"countries": "All"
+			},
+			"tuaf-68-0342-h2": {
+				"name": "F-4E - TuAF - 68-0342 - Hill Two by Aqil",
+				"countries": "All"
+			},
+			"jasdf-57-8368": {
+				"name": "F-4EJ - JASDF - 57-8368 by Mach3DS",
+				"countries": "All"
+			},
+			"thunderbird4": {
+				"name": "F-4E - USAF - THUNDERBIRD 4",
+				"countries": "All"
+			},
+			"default": {
+				"name": "F-4E - USAF - GA68-400 - Hill Two - 20th TFTS Silver Lobos",
+				"countries": "All"
+			},
+			"iriaf-3-6673": {
+				"name": "F-4E - IRIAF - 3-6673 - 91st TFS - 9th TFB by ISAAC",
+				"countries": "All"
+			},
+			"38+59_n90_jg71": {
+				"name": "F-4F - 38+59 - Norm 90 - JG 71 Richthofen",
+				"countries": "All"
+			},
+			"haf-generic-ag": {
+				"name": "F-4E - HAF - Generic - Aegean Ghost",
+				"countries": "All"
+			},
+			"wa68-373_sea_57ttw": {
+				"name": "F-4E - USAF - WA68-373 - SEA - 57th Tactical Training Wing",
+				"countries": "All"
+			},
+			"iriaf-3-6564": {
+				"name": "F-4E - IRIAF - 3-6564 - 31st TFS by ISAAC",
+				"countries": "All"
+			},
+			"tuaf-67-0268-h2": {
+				"name": "F-4E - TuAF - 67-0268 - Hill Two by Aqil",
+				"countries": "All"
+			},
+			"iriaf-3-6643": {
+				"name": "F-4E - IRIAF - 3-6643 - 61st TFS by ISAAC",
+				"countries": "All"
+			},
+			"thunderbird2": {
+				"name": "F-4E - USAF - THUNDERBIRD 2",
+				"countries": "All"
+			},
+			"haf-01520_ab": {
+				"name": "F-4E - HAF - 01520 - Aegean Blue by Fish",
+				"countries": "All"
+			},
+			"eaf-70355_h2": {
+				"name": "F-4E - EAF - 70355 - Hill Two by Kerbo",
+				"countries": "All"
+			},
+			"iaf-kurnass-114-119sqn": {
+				"name": "F-4E - IAF - Kurnass 114 - 119 SQN",
+				"countries": "All"
+			},
+			"37+36_n72_jg74": {
+				"name": "F-4F - 37+36 - Norm 72 - JG 74 - Moelders",
+				"countries": "All"
+			},
+			"eaf-60366_ghost": {
+				"name": "F-4E - EAF - 60366 - Ghost Grey by Kerbo",
+				"countries": "All"
+			},
+			"th68-450_h1_457fs": {
+				"name": "F-4E - USAF - TH68-450 - Hill Two - 457th FS Spads",
+				"countries": "All"
+			},
+			"jv67-288_seaw_469tfs": {
+				"name": "F-4E - USAF - JV70-288 - SEA - 469th TFS Tigers",
+				"countries": "All"
+			},
+			"37+24_n81b_jg72": {
+				"name": "F-4F - 37+24 - Norm 81 B - JG 72 Westphalen",
+				"countries": "All"
+			},
+			"eaf-70373_seaw": {
+				"name": "F-4E - EAF - 70373 - SEA by Kerbo",
+				"countries": "All"
+			},
+			"rokaf-68377-h2-156fs": {
+				"name": "F-4E - ROKAF - 68-377 - Hill Two - 156th FS",
+				"countries": "All"
+			},
+			"raaf-97203_sea": {
+				"name": "F-4E - RAAF - 97203 - SEA",
+				"countries": "All"
+			},
+			"jasdf-57-6371": {
+				"name": "RF-4EJ - JASDF - 57-6371 - SEA by Kerbo",
+				"countries": "All"
+			},
+			"rs68-381_e1_526tfs": {
+				"name": "F-4E - USAF - RS68-381 - Euro One - 526th TFS",
+				"countries": "All"
+			},
+			"adc af66-382": {
+				"name": "F-4E - USAF - AF66-382 - ADC - 57th FIS by Mach3DS",
+				"countries": "All"
+			},
+			"thunderbird7": {
+				"name": "F-4E - USAF - THUNDERBIRD 7",
+				"countries": "All"
+			},
+			"rokaf-80407-h2-152fs": {
+				"name": "F-4E - ROKAF - 80407 - Hill Two - 152nd FS",
+				"countries": "All"
+			},
+			"iiaf-3-6687": {
+				"name": "F-4E - IIAF - 3-6687 by ISAAC",
+				"countries": "All"
+			},
+			"raf-43-sqn-fg.1": {
+				"name": "Fictional Royal Air Force 43(F) Sqn FG.1 by Fish",
+				"countries": "All"
+			},
+			"rs68-480_sea_512tfs": {
+				"name": "F-4E - USAF - RS68-480 - SEA Wrap Around - 512th TFS Dragons",
+				"countries": "All"
+			},
+			"jv67-287_seaw_469tfs": {
+				"name": "F-4E - USAF - JV70-287 - SEA - 469th TFS Tigers",
+				"countries": "All"
+			},
+			"tuaf-66-0312_h2_karasahin": {
+				"name": "F-4E - TuAF - 66-0312 - Hill Two - Kara Sahin (Black Hawk) by Aqil",
+				"countries": "All"
+			},
+			"haf-71752_seaw": {
+				"name": "F-4E - HAF - 71752 - SEAW",
+				"countries": "All"
+			},
+			"tuaf-67-0285-sea": {
+				"name": "F-4E - TuAF - 67-0285 - SEA by Aqil",
+				"countries": "All"
+			},
+			"37+83_n81a_jg74": {
+				"name": "F-4F - 37+83 - Norm 81 A - JG 74 Moelders - GAFTIC 1986",
+				"countries": "All"
+			},
+			"haf-01507_ag": {
+				"name": "F-4E - HAF - 01507 - Aegean Ghost",
+				"countries": "All"
+			},
+			"37+01_pp_jg71": {
+				"name": "F-4F - 37+01 - Phantom Pharewell - JG71 - 2013",
+				"countries": "All"
+			},
+			"adc af66-300": {
+				"name": "F-4E - USAF - AF66-300 - ADC - 57th FIS by Mach3DS",
+				"countries": "All"
+			},
+			"rokaf-80470-cg-153fs": {
+				"name": "F-4E - ROKAF - 78740 - Compass Ghost - 153rd FS",
+				"countries": "All"
+			},
+			"iiaf-usaf": {
+				"name": "F-4E - IIAF - USAF - 00252 - Asia Minor by ISAAC",
+				"countries": "All"
+			},
+			"jasdf-77-8399": {
+				"name": "F-4EJ - JASDF - 77-8399 - Final Year Black by Mach3DS",
+				"countries": "All"
+			},
+			"tuaf-69-7585-h2-son_seytanlar": {
+				"name": "F-4E - TuAF - 69-7585 - Hill Two - Son Seytanlar by Aqil",
+				"countries": "All"
+			},
+			"jasdf-87-8312-3wg-blackpanthers50th": {
+				"name": "F-4EJ - JASDF - 87-8312 - 3WG 50th Anniversary by Fish",
+				"countries": "All"
+			},
+			"rs68-517_sea_526tfs": {
+				"name": "F-4E - USAF - RS68-517 - SEA Wrap Around - 526th TFS",
+				"countries": "All"
+			},
+			"thunderbird3": {
+				"name": "F-4E - USAF - THUNDERBIRD 3",
+				"countries": "All"
+			},
+			"ca68-426_h2_163tfg": {
+				"name": "F-4E - USAF - CA68-426 - Hill Two - 163rd TFG",
+				"countries": "All"
+			},
+			"iaf-kurnass-175-69sqn": {
+				"name": "F-4E - IAF - Kurnass 175 - 69 SQN",
+				"countries": "All"
+			},
+			"37+45_n90_jg74": {
+				"name": "F-4F - 37+45 - Norm 90 - JG 74 Moelders",
+				"countries": "All"
+			},
+			"ca69-382_h2_163tfg": {
+				"name": "F-4E - USAF - CA69-382 - Hill Two - 163rd TFG",
+				"countries": "All"
+			},
+			"jasdf-87-8312-3wg": {
+				"name": "F-4EJ - JASDF - 87-8312 - 3WG by Fish",
+				"countries": "All"
+			},
+			"thunderbird6": {
+				"name": "F-4E - USAF - THUNDERBIRD 6",
+				"countries": "All"
+			},
+			"jasdf-57-8367-301st": {
+				"name": "F-4EJ - JASDF - 57-8367 - Grey - 301st",
+				"countries": "All"
+			},
+			"jasdf-67-8380": {
+				"name": "F-4EJ - JASDF - 67-8380 by Mach3DS",
+				"countries": "All"
+			},
+			"nj68-357_h1_141tfs": {
+				"name": "F-4E - USAF - NJ68-357 - Hill Two - 141st TFS Tigers",
+				"countries": "All"
+			},
+			"os68-349_seaw_36tfs": {
+				"name": "F-4E - USAF - OS68-349 - SEA - 36th TFS The Flying Fiends",
+				"countries": "All"
+			},
+			"jasdf-07-8428": {
+				"name": "F-4EJ - JASDF - 07-8428 - Final Year White by Mach3DS",
+				"countries": "All"
+			},
+			"tuaf-77-0288-h2-70thnato": {
+				"name": "F-4E - TuAF - 77-0288 - Hill Two - NATO 70th by Fish",
+				"countries": "All"
+			},
+			"wa66-376_e1_57ttw": {
+				"name": "F-4E - USAF - WA66-376 - Euro One - 57th Tactical Training Wing",
+				"countries": "All"
+			},
+			"jasdf-87-8409-adtw-gifuab2017": {
+				"name": "F-4EJ - JASDF - 87-8409 - ADTW 2017 Digtial Green by Fish",
+				"countries": "All"
+			},
+			"thunderbird1": {
+				"name": "F-4E - USAF - THUNDERBIRD 1",
+				"countries": "All"
+			},
+			"38+13_pp_wtd61": {
+				"name": "F-4F - 38+13 - Phantom Pharewell - WTD61 - 2013",
+				"countries": "All"
+			},
+			"rokaf-80728-h2-153fs": {
+				"name": "F-4E - ROKAF - 78728 - Hill Two - 153rd FS",
+				"countries": "All"
+			},
+			"37+49_n81a_jg73": {
+				"name": "F-4F - 37+49 - Norm 81 A - JaboG 35 - GAFTIC 1985",
+				"countries": "All"
+			},
+			"my68-328_e1_68fs": {
+				"name": "F-4E - USAF - MY68-328 - Euro One - 68th FS Lightning Lancers",
+				"countries": "All"
+			},
+			"tuaf-77-1053-h2_korsanlar": {
+				"name": "F-4E - TuAF - 77-1053 - Hill Two - Korsanlar by Aqil",
+				"countries": "All"
+			},
+			"thunderbird5": {
+				"name": "F-4E - USAF - THUNDERBIRD 5",
+				"countries": "All"
+			},
+			"38+10_n72_jg71": {
+				"name": "F-4F - 38+10 - Norm 72 - JG 71 - 2013",
+				"countries": "All"
+			}
+		},
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x Mk-83 - 1000lb GP Bomb LD (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "3x Mk-83 - 1000lb GP Bomb LD (MER) Ripple",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-83*4, Mk-83*3 (Ripple), Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: Mk-83*4, Mk-83*3 (Ripple), Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "3x AGM-65A - Maverick A (TV Guided) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-65A*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-65A*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD: AGM-45A*4, Aim-7E2*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD: AGM-45A*4, Aim-7E2*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"name": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "1x LAU-68 pod - 7 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"name": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9M",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A HEATERS: Aim-9M*4, ALE-40 (30-60)*1",
+				"name": "_A2A HEATERS: Aim-9M*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "{HB_F4E_WALLEYE_I}",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-62 Walleye I*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-62 Walleye I*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-65A - Maverick A (TV Guided) (LAU-117)(Special Weapons Adapter) ",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + ATGM: AGM-45A*2, AGM-65A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + ATGM: AGM-45A*2, AGM-65A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "2x AGM-65B - Maverick B (TV Guided) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-65B*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-65B*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-12*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-12*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "6x Mk-82 Snakeye - 500lb GP Bomb HD (MER)",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-82 Snakeye - 500lb GP Bomb HD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 Snakeye*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: Mk-82 Snakeye*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x GBU-12 - 500lb Laser Guided Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-12*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-12*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A HEATERS: Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "_A2A HEATERS: Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "2x AGM-65A - Maverick A (TV Guided) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-65A*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-65A*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + ROCKETS: SUU-23*2, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "_GUNPOD + ROCKETS: SUU-23*2, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "2x AGM-65B - Maverick B (TV Guided) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-65B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-65B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: Mk-20*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: Mk-20*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "3x LAU-68 pod - 7 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*3, LAU-68  7x 2.75 FFAR, MK-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*3, LAU-68  7x 2.75 FFAR, MK-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (MER)",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "1x LAU-68 pod - 7 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, LAU-68  7x 2.75 FFAR, MK-5 HEAT*2, Aim-7E2*4, AIM-9L*4, ALE-40 (30-60)*1",
+				"name": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, LAU-68  7x 2.75 FFAR, MK-5 HEAT*2, Aim-7E2*4, AIM-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A MEDIUM RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A MEDIUM RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "6x Mk-82 - 500lb GP Bomb LD (MER)",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "{2x Mk-82 SWA}",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 (LD)*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "IRON: Mk-82 (LD)*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-24*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-24*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-82 Snakeye - 500lb GP Bomb HD (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-82 Snakeye - 500lb GP Bomb HD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 Snakeye*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "IRON: Mk-82 Snakeye*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "SEAD: AGM-45A*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2",
+				"name": "SEAD: AGM-45A*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"name": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "6x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "3x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD: SUU-23*3, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "_GUNPOD: SUU-23*3, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 6
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "GBU-8 HOBOS - 2000 lb TV Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-10 - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye I - Guided Weapon Mk 1 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*5, SUU-23*2, Aim-7E2*4, ALE-40 (30-60)",
+				"name": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*5, SUU-23*2, Aim-7E2*4, ALE-40 (30-60)",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "4x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x CBU-87 - 202 x CEM Cluster Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-87*8, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: CBU-87*8, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "CBU-52B - 220 x HE/Frag bomblets",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-52B*4, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: CBU-52B*4, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "2x AGM-65D - Maverick D (IIR ASM) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-65D*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-65D*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-65D - Maverick D (IIR ASM) (LAU-117)(Special Weapons Adapter) ",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + ATGM: AGM-45A*2, AGM-65D*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + ATGM: AGM-45A*2, AGM-65D*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "4x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "CBU-87 - 202 x CEM Cluster Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-87*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: CBU-87*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "4x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x CBU-87 - 202 x CEM Cluster Bomb (TER)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-87*14, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-87*14, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9M",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7M",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "A2A SHORT RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "A2A SHORT RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x AGM-65D - Maverick D (IIR ASM) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-65D*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-65D*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD: SUU-23*2, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_GUNPOD: SUU-23*2, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (MER)",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*15, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*15, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye II - Guided Weapon Mk 5 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*7, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*7, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9M",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7M",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A MEDIUM RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A MEDIUM RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9J Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A LONG RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A LONG RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x GBU-12 - 500lb Laser Guided Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Fuel Tank 370 GAL*2",
+				"name": "GUIDED: GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x M117 - 750lb GP Bomb LD (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x M117 - 750lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: M-117*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "IRON: M-117*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "6x Mk-82 - 500lb GP Bomb LD (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "{2x Mk-82 SWA}",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 (LD)*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "IRON: Mk-82 (LD)*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-65B - Maverick B (TV Guided) (LAU-117)(Special Weapons Adapter) ",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + ATGM: AGM-45A*2, AGM-65B*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + ATGM: AGM-45A*2, AGM-65B*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 8
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean",
+				"name": "_Z_Clean",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-10 - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x GBU-12 - 500lb Laser Guided Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-10*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-10*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-8 HOBOS - 2000 lb TV Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "2x AGM-65D - Maverick D (IIR ASM) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-65D*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-65D*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "6x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (MER)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "2x CBU-52B - 220 x HE/Frag bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-52B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: CBU-52B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "SUU-23",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*4, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*4, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-10 - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-10*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-10*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A LONG RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A LONG RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"name": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9J Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A ECM: Aim-7E*3, Aim-9J*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A ECM: Aim-7E*3, Aim-9J*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A LONG RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A LONG RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A HEATERS: Aim-9P*4, ALE-40 (30-60)*1",
+				"name": "_A2A HEATERS: Aim-9P*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x GBU-12 - 500lb Laser Guided Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-24*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-24*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "3x Mk-83 - 1000lb GP Bomb LD (MER) Ripple",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-83 - 1000lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-83*6, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "IRON: Mk-83*6, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*2, SUU-23*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*2, SUU-23*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: Mk-20*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: Mk-20*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9J Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "A2A SHORT RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "A2A SHORT RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Mk-84 - 2000lb GP Bomb LD",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-84*3, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: Mk-84*3, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + IRON: SUU-23*2, Mk-82 (LD)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_GUNPOD + IRON: SUU-23*2, Mk-82 (LD)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A MEDIUM RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A MEDIUM RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "GBU-8 HOBOS - 2000 lb TV Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fl. Tank 370 GAL*2",
+				"name": "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "M117 - 750lb GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "3x M117 - 750lb GP Bomb LD (TER)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "IRON: M-117*8, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "IRON: M-117*8, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "6x Mk-82 Snakeye - 500lb GP Bomb HD (MER)",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 Snakeye*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: Mk-82 Snakeye*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye II - Guided Weapon Mk 5 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-10 - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye II - Guided Weapon Mk 5 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-12A Bullpup MCLOS ASM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-12A Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-12A Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "3x LAU-68 pod - 7 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + ROCKETS: SUU-23*3, LAU-68 7x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "_GUNPOD + ROCKETS: SUU-23*3, LAU-68 7x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "GBU-8 HOBOS - 2000 lb TV Guided Bomb",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + ATGM: AGM-45A*2, GBU-8 HOBOS*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + ATGM: AGM-45A*2, GBU-8 HOBOS*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 3x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-65A - Maverick A (TV Guided) (LAU-117)(Special Weapons Adapter) ",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-65A*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-65A*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-24*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-24*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Mk-84 - 2000lb GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-84*2, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "IRON: Mk-84*2, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9JULI Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A HEATERS: Aim-9Juli*4, ALE-40 (30-60)*1",
+				"name": "_A2A HEATERS: Aim-9Juli*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 8
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1",
+				"name": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x M117 - 750lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: M-117*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "IRON: M-117*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9B Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A HEATERS: Aim-9B*4, ALE-40 (30-60)*1",
+				"name": "_A2A HEATERS: Aim-9B*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-12B Bullpup MCLOS ASM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-12B Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-12B Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-62 Walleye I - Guided Weapon Mk 1 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye I*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye I*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Mk-84 - 2000lb GP Bomb LD",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-84*2, Mk-82 (LD)*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "IRON: Mk-84*2, Mk-82 (LD)*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-12*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-12*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "Captive AIM-9M for ACM",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (Empty)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A TRAINING: Captive Aim-9M for ACM*2, ALQ-131 ECM*1, ALE-40 (empty)*1 ",
+				"name": "_A2A TRAINING: Captive Aim-9M for ACM*2, ALQ-131 ECM*1, ALE-40 (empty)*1 ",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Mk-84 - 2000lb GP Bomb LD",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-84*3, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: Mk-84*3, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 6
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2",
+				"name": "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "4x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x GBU-12 - 500lb Laser Guided Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-12*4, CBU-87*4, Aim-7E2*3, Aim-9L, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "GUIDED: GBU-12*4, CBU-87*4, Aim-7E2*3, Aim-9L, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "A2A SHORT RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "A2A SHORT RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "1x LAU-68 pod - 7 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"name": "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x Mk-83 - 1000lb GP Bomb LD (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "3x Mk-83 - 1000lb GP Bomb LD (MER) Ripple",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-83 - 1000lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 3
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-83*10, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1,",
+				"name": "IRON: Mk-83*10, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1,",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-10 - 2000lb Laser Guided Bomb",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-10*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-10*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-65B - Maverick B (TV Guided) (LAU-117)(Special Weapons Adapter) ",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-65B*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-65B*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "A2A SHORT RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "A2A SHORT RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x AGM-65B - Maverick B (TV Guided) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-65B*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-65B*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "6x Mk-82 - 500lb GP Bomb LD (MER)",
+						"quantity": 3
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 (LD)*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: Mk-82 (LD)*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A ECM: Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A ECM: Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye II - Guided Weapon Mk 5 (TV Guided)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye II*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye II*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-82 - 500lb GP Bomb LD (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 (LD)*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "IRON: Mk-82 (LD)*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9M",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7M",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A LONG RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A LONG RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-82 Snakeye - 500lb GP Bomb HD (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 Snakeye - 500lb GP Bomb HD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: Mk-82 Snakeye*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "IRON: Mk-82 Snakeye*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-65D - Maverick D (IIR ASM) (LAU-117)(Special Weapons Adapter) ",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-65D*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-65D*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "2x AGM-65A - Maverick A (TV Guided) (LAU-88)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-65A*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-65A*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 Snakeye - 500lb GP Bomb HD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + IRON: SUU-23*2, Mk-82 Snakeye*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_GUNPOD + IRON: SUU-23*2, Mk-82 Snakeye*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x CBU-52B - 220 x HE/Frag bomblets (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "2x CBU-52B - 220 x HE/Frag bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-52B*10, Aim-7E2*4, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-52B*10, Aim-7E2*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x CBU-87 - 202 x CEM Cluster Bomb (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + Cluster: SUU-23*2, CBU-87*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_GUNPOD + Cluster: SUU-23*2, CBU-87*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x CBU-52B - 220 x HE/Frag bomblets (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x CBU-52B - 220 x HE/Frag bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-52B*10, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-52B*10, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts M156, Wht Phos (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"name": "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1",
+				"roles": [
+					"FAC-A",
+					"Reconnaissance"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 - 500lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER + IRON: Mk-20*6, Mk-82 (LD)*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER + IRON: Mk-20*6, Mk-82 (LD)*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye I - Guided Weapon Mk 1 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-62 Walleye II - Guided Weapon Mk 5 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-62 Walleye II*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-62 Walleye II*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-8 HOBOS - 2000 lb TV Guided Bomb",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-8 HOBOS*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-8 HOBOS*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD: AGM-45A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2",
+				"name": "SEAD: AGM-45A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "SEAD: AGM-45A*4, Aim-7E2*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1, Sargent Fl. Fuel Tank 370 Gal*2",
+				"name": "SEAD: AGM-45A*4, Aim-7E2*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1, Sargent Fl. Fuel Tank 370 Gal*2",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9M",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7M",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A ECM: Aim-7M*3, Aim-9M*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A ECM: Aim-7M*3, Aim-9M*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9J Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A HEATERS: Aim-9J*4, ALE-40 (30-60)*1",
+				"name": "_A2A HEATERS: Aim-9J*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "3x BLU-107/B Durandal - 219kg Concrete Piercing Chute Retarded Bomb w/Booster (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, ALE-40 (30-60)*1",
+				"name": "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9J Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A MEDIUM RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A MEDIUM RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-62 Walleye I - Guided Weapon Mk 1 (TV Guided)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "GBU-24B/B Paveway III - 2000lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "AN/AVQ-23 Pave Spike (Fast/Smart Track) - Targeting Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "GBU-8 HOBOS - 2000 lb TV Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "GUIDED: GBU-8 HOBOS*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"name": "GUIDED: GBU-8 HOBOS*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x CBU-52B - 220 x HE/Frag bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + Cluster: SUU-23*2, CBU-52B*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_GUNPOD + Cluster: SUU-23*2, CBU-52B*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x CBU-52B - 220 x HE/Frag bomblets (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-52B*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "CLUSTER: CBU-52B*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "6x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: Mk-20*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: Mk-20*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "4x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "CBU-87 - 202 x CEM Cluster Bomb",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-87*12, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER: CBU-87*12, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "CBU-52B - 220 x HE/Frag bomblets",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "2x CBU-52B - 220 x HE/Frag bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-52B*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "CLUSTER: CBU-52B*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "4x CBU-87 - 202 x CEM Cluster Bomb (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-87*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-87*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "6x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-82 Snakeye - 500lb GP Bomb HD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER + IRON: Mk-20*6, Mk-82 Snakeye*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "CLUSTER + IRON: Mk-20*6, Mk-82 Snakeye*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "SUU-23",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "(Special Weapons Adapter) 2x Mk-20 Rockeye - 490lbs CBU, 247 x HEAT Bomblets (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + Cluster: SUU-23*2, Mk-20*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"name": "_GUNPOD + Cluster: SUU-23*2, Mk-20*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x LAU-3 pod - 19 x 2.75\" FFAR, UnGd Rkts Mk5, HEAT (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "SUU-23",
+						"quantity": 1
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9P Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "A2A ECM: Aim-7F*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"name": "A2A ECM: Aim-7F*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "GBU-12 - 500lb Laser Guided Bomb",
+						"quantity": 2
+					},
+					{
+						"name": "(Special Weapons Adapter) AGM-45A Shrike ARM (LAU-34)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7F",
+						"quantity": 3
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"name": "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1",
+				"roles": [
+					"SEAD",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty",
+				"name": "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty",
+				"name": "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "3x M117 - 750lb GP Bomb LD (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "5x M117 - 750lb GP Bomb LD (MER)",
+						"quantity": 1
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "3x M117 - 750lb GP Bomb LD (TER)",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "IRON: M-117*17, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"name": "IRON: M-117*17, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					},
+					{
+						"name": "AGM-12C Bullpup - MCLOS missile",
+						"quantity": 2
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-12C Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-12C Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 3
+					},
+					{
+						"name": "ALQ-131 - ECM Pod Rack",
+						"quantity": 1
+					},
+					{
+						"name": "AGM-12C Bullpup - MCLOS missile",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 4
+					}
+				],
+				"enabled": true,
+				"code": "ATGM: AGM-12C Bullpup*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"name": "ATGM: AGM-12C Bullpup*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x CBU-1A/A x 27x19 (513) BLU-4B Bomblets, HE (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "1x CBU-1A/A x 27x19 (513) BLU-4B Bomblets, HE (MER)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-1A/A (BLU-4B*513)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-1A/A (BLU-4B*513)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x CBU-2/A x 19x19 (361) BLU-3 Bomblets, HE (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "1x CBU-2/A x 19x19 (361) BLU-3 Bomblets, HE (MER)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-2A/A (BLU-3*361)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-2A/A (BLU-3*361)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x CBU-2B/A x 22x19 (418) BLU-3B Bomblets, HE (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "1x CBU-2B/A x 22x19 (418) BLU-3B Bomblets, HE (MER)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-2B/A (BLU-3B*418)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"name": "CLUSTER: CBU-2B/A (BLU-3B*418)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x CBU-1A/A x 27x19 (513) BLU-4B Bomblets, HE (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-1A/A (BLU-4B*513)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL",
+				"name": "CLUSTER: CBU-1A/A (BLU-4B*513)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x CBU-2/A x 19x19 (361) BLU-3 Bomblets, HE (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-2A/A (BLU-3*361)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL",
+				"name": "CLUSTER: CBU-2A/A (BLU-3*361)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "2x CBU-2B/A x 22x19 (418) BLU-3B Bomblets, HE (MER)",
+						"quantity": 2
+					},
+					{
+						"name": "AIM-7E-2 Sparrow Semi-Active Radar",
+						"quantity": 4
+					},
+					{
+						"name": "ALE-40 Dispensers (30 Flares + 60 Chaff)",
+						"quantity": 1
+					},
+					{
+						"name": "AIM-9L Sidewinder IR AAM",
+						"quantity": 4
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "CLUSTER: CBU-2B/A (BLU-3B*418)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL",
+				"name": "CLUSTER: CBU-2B/A (BLU-3B*418)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL",
+				"roles": [
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"Antiship Strike"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 6
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2",
+				"name": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons (empty)",
+						"quantity": 2
+					},
+					{
+						"name": "<CLEAN>",
+						"quantity": 6
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2 empty",
+				"name": "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2 empty",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 8
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons (empty)",
+						"quantity": 1
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1 empty",
+				"name": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1 empty",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			},
+			{
+				"items": [
+					{
+						"name": "<CLEAN>",
+						"quantity": 6
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 600 gallons (empty)",
+						"quantity": 1
+					},
+					{
+						"name": "Sargent Fletcher Fuel Tank 370 gallons (empty)",
+						"quantity": 2
+					}
+				],
+				"enabled": true,
+				"code": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2 empty",
+				"name": "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2 empty",
+				"roles": [
+					"CAP",
+					"Escort",
+					"CAP",
+					"CAP",
+					"CAS",
+					"Strike",
+					"Strike",
+					"Runway Attack",
+					"FAC-A",
+					"Antiship Strike",
+					"Reconnaissance",
+					"SEAD"
+				]
+			}
+		],
+		"filename": "f-4.png",
+		"description": "2 Jet engine, swept wing, 2 crew. Phantom",
+		"abilities": "Drogue AAR",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": true,
+		"canRearm": false
 	}
 }
