@@ -5,12 +5,71 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Add missing units",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "addMissingUnits.py",
             "console": "integratedTerminal",
+            "args": ["${input:unitType}", "${input:searchFolder}"],
+            "justMyCode": true
+        },
+        {
+            "name": "Add liveries",
+            "type": "python",
+            "request": "launch",
+            "program": "addLiveries.py",
+            "console": "integratedTerminal",
+            "args": ["${input:unitType}", "${input:searchFolder}"],
+            "justMyCode": true
+        },
+        {
+            "name": "Generate payload tables",
+            "type": "python",
+            "request": "launch",
+            "program": "generatePayloadTables.py",
+            "console": "integratedTerminal",
+            "args": ["${input:searchFolder}"],
+            "justMyCode": true
+        }, 
+        {
+            "name": "Add loadouts",
+            "type": "python",
+            "request": "launch",
+            "program": "addLoadouts.py",
+            "console": "integratedTerminal",
+            "args": ["${input:unitType}", "${input:searchFolder}"],
+            "justMyCode": true
+        }, 
+        {
+            "name": "Add ranges",
+            "type": "python",
+            "request": "launch",
+            "program": "addRanges.py",
+            "console": "integratedTerminal",
+            "args": ["${input:unitType}", "${input:searchFolder}"],
             "justMyCode": true
         }
+    ],
+    "inputs": [
+        {
+          "id": "unitType",
+          "type": "command",
+          "command": "extension.commandvariable.promptStringRemember",
+          "args": {
+            "key": "type",
+            "description": "Unit type (aircraft, helicopter, groundunit, navyunit)",
+            "default": "aircraft"
+          }
+        },
+        {
+            "id": "searchFolder",
+            "type": "command",
+            "command": "extension.commandvariable.promptStringRemember",
+            "args": {
+              "key": "folder",
+              "description": "DCS folder location",
+              "default": "E:\\Eagle Dynamics\\DCS World (Open Beta)"
+            }
+          }
     ]
 }

@@ -1523,6 +1523,1091 @@
       "1": 16
     }
   },
+  "F-4E-45MC": {
+    "IRON: Mk-83*4, Mk-83*3 (Ripple), Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-65A*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD: AGM-45A*4, Aim-7E2*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "_A2A HEATERS: Aim-9M*4, ALE-40 (30-60)*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "ATGM: AGM-62 Walleye I*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "SEAD + ATGM: AGM-45A*2, AGM-65A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "ATGM + GUIDED: AGM-65B*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-12*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-82 Snakeye*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-12*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_A2A HEATERS: Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "ATGM + GUIDED: AGM-65A*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + ROCKETS: SUU-23*2, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-65B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: Mk-20*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*3, LAU-68  7x 2.75 FFAR, MK-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, LAU-68  7x 2.75 FFAR, MK-5 HEAT*2, Aim-7E2*4, AIM-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A MEDIUM RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "IRON: Mk-82 (LD)*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-24*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-82 Snakeye*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD: AGM-45A*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD: SUU-23*3, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*5, SUU-23*2, Aim-7E2*4, ALE-40 (30-60)": {
+      "1": 16,
+      "2": 17
+    },
+    "CLUSTER: CBU-87*8, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-52B*4, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-65D*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD + ATGM: AGM-45A*2, AGM-65D*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "CLUSTER: CBU-87*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-87*14, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A SHORT RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "ATGM: AGM-65D*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD: SUU-23*2, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*15, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*7, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A MEDIUM RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "A2A LONG RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "GUIDED: GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: M-117*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-82 (LD)*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD + ATGM: AGM-45A*2, AGM-65B*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "_Z_Clean": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    },
+    "GUIDED: GBU-10*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-65D*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-52B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*4, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-10*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A LONG RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "A2A ECM: Aim-7E*3, Aim-9J*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "A2A LONG RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "_A2A HEATERS: Aim-9P*4, ALE-40 (30-60)*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "GUIDED: GBU-24*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-83*6, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*2, SUU-23*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "CLUSTER: Mk-20*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A SHORT RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "IRON: Mk-84*3, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + IRON: SUU-23*2, Mk-82 (LD)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A MEDIUM RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: M-117*8, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-82 Snakeye*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-12A Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + ROCKETS: SUU-23*3, LAU-68 7x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD + ATGM: AGM-45A*2, GBU-8 HOBOS*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-65A*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-24*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-84*2, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_A2A HEATERS: Aim-9Juli*4, ALE-40 (30-60)*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    },
+    "IRON: M-117*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_A2A HEATERS: Aim-9B*4, ALE-40 (30-60)*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "ATGM: AGM-12B Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye I*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "IRON: Mk-84*2, Mk-82 (LD)*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-12*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_A2A TRAINING: Captive Aim-9M for ACM*2, ALQ-131 ECM*1, ALE-40 (empty)*1 ": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "IRON: Mk-84*3, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    },
+    "GUIDED: GBU-12*4, CBU-87*4, Aim-7E2*3, Aim-9L, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A SHORT RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "IRON: Mk-83*10, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1,": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-10*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-65B*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A SHORT RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "ATGM: AGM-65B*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "IRON: Mk-82 (LD)*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A ECM: Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye II*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "IRON: Mk-82 (LD)*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A LONG RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "IRON: Mk-82 Snakeye*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-65D*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-65A*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + IRON: SUU-23*2, Mk-82 Snakeye*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-52B*10, Aim-7E2*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + Cluster: SUU-23*2, CBU-87*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-52B*10, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
+      "1": 16,
+      "2": 17
+    },
+    "CLUSTER + IRON: Mk-20*6, Mk-82 (LD)*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-62 Walleye II*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-8 HOBOS*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "SEAD: AGM-45A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "SEAD: AGM-45A*4, Aim-7E2*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1, Sargent Fl. Fuel Tank 370 Gal*2": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "A2A ECM: Aim-7M*3, Aim-9M*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "_A2A HEATERS: Aim-9J*4, ALE-40 (30-60)*1": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A MEDIUM RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "GUIDED: GBU-8 HOBOS*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + Cluster: SUU-23*2, CBU-52B*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-52B*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: Mk-20*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-87*12, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-52B*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-87*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER + IRON: Mk-20*6, Mk-82 Snakeye*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + Cluster: SUU-23*2, Mk-20*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "A2A ECM: Aim-7F*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33,
+      "5": 34,
+      "6": 30
+    },
+    "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "4": 10
+    },
+    "IRON: M-117*17, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-12C Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "ATGM: AGM-12C Bullpup*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-1A/A (BLU-4B*513)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-2A/A (BLU-3*361)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-2B/A (BLU-3B*418)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-1A/A (BLU-4B*513)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-2A/A (BLU-3*361)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "CLUSTER: CBU-2B/A (BLU-3B*418)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL": {
+      "1": 31,
+      "2": 32,
+      "3": 33,
+      "4": 34,
+      "5": 30
+    },
+    "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    },
+    "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2 empty": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    },
+    "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1 empty": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    },
+    "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2 empty": {
+      "1": 11,
+      "2": 18,
+      "3": 19,
+      "5": 10,
+      "6": 31,
+      "7": 32,
+      "8": 33,
+      "9": 34,
+      "10": 16,
+      "11": 30,
+      "12": 17,
+      "13": 29
+    }
+  },
   "F-5E-3": {
     "Mk-82LD*4,AIM-9P*2,Fuel 275": {
       "1": 31,
@@ -1810,13 +2895,13 @@
     "120gal Fuel*2, 200gal Fuel*2": {
       "1": 11
     },
-    "GAR-8*2": {
+    "AIM-9B*2": {
       "1": 10,
       "2": 11,
       "3": 18,
       "4": 19
     },
-    "120gal Fuel*2, GAR-8*2": {
+    "120gal Fuel*2, AIM-9B*2": {
       "1": 10,
       "2": 11,
       "3": 18,
