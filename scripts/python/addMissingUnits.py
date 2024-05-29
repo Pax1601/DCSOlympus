@@ -6,8 +6,6 @@ from slpp import slpp as lua
 
 SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
 
-sys.path.append("..\\..\\..\\dcs-master\\dcs-master")
-
 from dcs.vehicles import *
 from dcs.ships import *
 from dcs.planes import *

@@ -2793,6 +2793,48 @@
 		"canTargetPoint": false,
 		"canRearm": false
 	},
+	"KJ-2000": {
+		"name": "KJ-2000",
+		"coalition": "red",
+		"label": "KJ-2000",
+		"era": "Late Cold War",
+		"shortLabel": "KJ2k",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"AWACS"
+				]
+			}
+		],
+		"filename": "a-50.png",
+		"enabled": true,
+		"liveries": {
+			"china air force kj-2000 (parade 93)": {
+				"name": "china air force kj-2000 (parade 93)",
+				"countries": [
+					"CHN"
+				]
+			},
+			"china air force kj-2000": {
+				"name": "china air force kj-2000",
+				"countries": [
+					"CHN"
+				]
+			}
+		},
+		"type": "Aircraft",
+		"description": "4 jet engine, swept wing, 15 crew. NATO reporting name: Mainring",
+		"abilities": "AEW",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
+	},
 	"AJS37": {
 		"name": "AJS37",
 		"coalition": "blue",
@@ -17730,12 +17772,13 @@
 		"acquisitionRange": "",
 		"engagementRange": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"cost": null
 	},
 	"KC135MPRS": {
 		"name": "KC135MPRS",
 		"coalition": "blue",
-		"label": "KC-135 MPRS Stratotanker",
+		"label": "KC-135 MPRS StratotankerXXXXXXXXXX",
 		"era": "Early Cold War",
 		"shortLabel": "135M",
 		"loadouts": [
@@ -32958,13 +33001,32 @@
 	},
 	"KC130": {
 		"name": "KC130",
-		"coalition": "",
-		"era": "",
-		"label": "KC130",
-		"shortLabel": "130",
-		"type": "KC130",
-		"enabled": false,
-		"liveries": {}
+		"coalition": "blue",
+		"label": "KC-130",
+		"era": "Early Cold War",
+		"shortLabel": "K130",
+		"loadouts": [
+			{
+				"items": [],
+				"enabled": true,
+				"code": "",
+				"name": "Empty loadout",
+				"roles": [
+					"No task",
+					"Tanker"
+				]
+			}
+		],
+		"filename": "c-130.png",
+		"enabled": true,
+		"liveries": {},
+		"type": "Aircraft",
+		"description": "4 turboprop, stright wing, 3 crew. Tanker/transport aircraft. Hercules",
+		"abilities": "Tanker, Drogue AAR",
+		"acquisitionRange": "",
+		"engagementRange": "",
+		"canTargetPoint": false,
+		"canRearm": false
 	},
 	"C-101EB": {
 		"name": "C-101EB",
@@ -32973,16 +33035,6 @@
 		"label": "C-101EB",
 		"shortLabel": "C-101EB",
 		"type": "C_101EB",
-		"enabled": false,
-		"liveries": {}
-	},
-	"KJ-2000": {
-		"name": "KJ-2000",
-		"coalition": "",
-		"era": "",
-		"label": "KJ-2000",
-		"shortLabel": "KJ-2000",
-		"type": "KJ_2000",
 		"enabled": false,
 		"liveries": {}
 	},

@@ -10901,6 +10901,7 @@ Olympus.unitPayloads = {
         }
     },
     ["A-50"] = {},
+    ["KJ-2000"] = {},
     ["AH-1W"] = {
         ["14xHYDRA-70 WP"] = {
             [2] = {["CLSID"] = "M260_HYDRA_WP"},
@@ -12769,6 +12770,7 @@ Olympus.unitPayloads = {
     },
     ["KC-10A"] = {},
     ["KC-135"] = {},
+    ["KC130"] = {},
     ["Mi-24V"] = {
         ["2xFAB-500"] = {
             [3] = {["CLSID"] = "{37DCC01E-9E02-432F-B61D-10C166CA2798}"},
