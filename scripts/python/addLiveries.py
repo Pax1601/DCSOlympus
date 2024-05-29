@@ -4,9 +4,7 @@ import inspect
 import difflib
 from slpp import slpp as lua
 
-SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
-
-sys.path.append("..\\..\\..\\dcs-master\\dcs-master")
+SEARCH_FOLDER = sys.argv[2]
 
 from dcs.weapons_data import Weapons
 from dcs.planes import *

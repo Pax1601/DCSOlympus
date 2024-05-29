@@ -4,7 +4,7 @@ import inspect
 import difflib
 from slpp import slpp as lua
 
-SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
+SEARCH_FOLDER = sys.argv[2]
 
 from dcs.vehicles import *
 from dcs.ships import *
@@ -36,8 +36,8 @@ if len(sys.argv) > 1:
                 "name": unit.id,
                 "coalition": "",
                 "era": "",
-                "label": unit.name,
-                "shortLabel": unit.name,
+                "label": unit.livery_name,
+                "shortLabel": unit.livery_name,
                 "type": unit.__qualname__.split(".")[0],
                 "enabled": False,
                 "liveries": {}
