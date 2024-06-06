@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCSMapsZoomLevelsByTheatre, DCS_LINK_RATIO } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCS_LINK_RATIO, mapMirrors } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -131,7 +131,7 @@ export class Map extends L.Map {
 
         this.#ID = ID;
 
-        this.setLayer("DCS Map");
+        this.setLayer("DCS Map mirror 1");
 
         /* Minimap */
         var minimapLayer = new L.TileLayer(this.#mapLayers[Object.keys(this.#mapLayers)[0]].urlTemplate, { minZoom: 0, maxZoom: 13 });
@@ -312,24 +312,38 @@ export class Map extends L.Map {
                 this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
             }
         /* DCS core layers are handled here */
-        } else if (["DCS Map", "DCS Satellite"].includes(layerName) ) {
+        } else if (["DCS Map mirror 1", "DCS Map mirror 2"].includes(layerName) ) {
             let layerData = this.#mapLayers["ArcGIS Satellite"];
             let layers = [new L.TileLayer(layerData.urlTemplate, layerData)];
-            
-            let template = `https://maps.dcsolympus.com/maps/${layerName === "DCS Map"? "alt": "sat"}-{theatre}/{z}/{x}/{y}.png`;
-            layers.push(...DCSMapsZoomLevelsByTheatre[theatre].map((nativeZoomLevels: any) => {
-                return new L.TileLayer(template.replace("{theatre}", theatre.toLowerCase()), {...nativeZoomLevels, maxZoom: 20, crossOrigin: ""});
-            }));
 
-            this.#layer = new L.LayerGroup(layers);
+            /* Load the configuration file */
+            const mirror = mapMirrors[layerName as keyof typeof mapMirrors];
+            const request = new Request(mirror + "/config.json");
+            fetch(request).then((response) => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    return {};
+                }
+            }).then((res: any) => {
+                if ("alt-" + theatre.toLowerCase() in res) {
+                    let template = `${mirror}/alt-${theatre.toLowerCase()}/{z}/{x}/{y}.png`;
+                    layers.push(...res["alt-" + theatre.toLowerCase()].map((layerConfig: any) => {
+                        return new L.TileLayer(template, {...layerConfig, crossOrigin: ""});
+                    }));                    
+                }
+                this.#layer = new L.LayerGroup(layers);
+                this.#layer?.addTo(this);
+            }).catch(() => {
+                this.#layer = new L.LayerGroup(layers);
+                this.#layer?.addTo(this);
+            })
         }
-
-        this.#layer?.addTo(this);
         this.#layerName = layerName;
     }
 
     getLayers() {
-        let layers = ["DCS Map", "DCS Satellite"]
+        let layers = ["DCS Map mirror 1", "DCS Map mirror 2"]
         layers.push(...Object.keys(this.#mapLayers));
         return layers;
     }
