@@ -283,3 +283,12 @@ export interface ShortcutMouseOptions extends ShortcutOptions {
 export interface Manager {
     add: CallableFunction;
 }
+
+export interface ServerStatus {
+    frameRate: number,
+    load: number,
+    elapsedTime: number,
+    missionTime: DateAndTime["time"],
+    connected: boolean,
+    paused: boolean
+}

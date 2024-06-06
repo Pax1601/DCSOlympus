@@ -15,6 +15,7 @@ import { BLUE_COMMANDER, GAME_MASTER, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEF
 import { getApp, setupApp } from '../olympusapp'
 import { LoginModal } from './modals/login'
 import { sha256 } from 'js-sha256'
+import { MiniMapPanel } from './panels/minimappanel'
 
 export type OlympusState = {
 	mainMenuVisible: boolean,
@@ -141,10 +142,12 @@ export function UI() {
 								open={optionsMenuVisible}
 								onClose={() => setOptionsMenuVisible(false)}
 							/>
+							<MiniMapPanel />
 							<UnitControlMenu />
+							<div id='map-container' className='h-full w-screen' />
 						</div>
 					</div>
-					<div id='map-container' className='fixed h-full w-screen top-0 left-0' />
+					
 				</EventsProvider>
 			</StateProvider>
 		</div>

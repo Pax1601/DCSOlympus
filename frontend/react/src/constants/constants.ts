@@ -154,15 +154,9 @@ export const mapBounds = {
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
 }
 
-export const DCSMapsZoomLevelsByTheatre: { [key: string]: { minNativeZoom?: number, maxNativeZoom?: number, minZoom?: number }[] } = {
-    "Syria": [],
-    "MarianaIslands": [{ minNativeZoom: 1, maxNativeZoom: 13, }, { minNativeZoom: 14, maxNativeZoom: 18, minZoom: 14 }],
-    "Nevada": [],
-    "PersianGulf": [],
-    "Caucasus": [],
-    "Falklands": [],
-    "Normandy": [],
-    "SinaiMap": [],
+export const mapMirrors = { 
+    "DCS Map mirror 1": "https://maps.dcsolympus.com/maps",
+    "DCS Map mirror 2": "https://refugees.dcsolympus.com/maps"
 }
 
 export const defaultMapLayers = {

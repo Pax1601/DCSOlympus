@@ -5,8 +5,9 @@ import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, LOGS_URI, MISSION_URI, NONE, 
 //import { LogPanel } from '../panels/logpanel';
 //import { Popup } from '../popups/popup';
 //import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
-import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, TACAN } from '../interfaces';
+import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from '../interfaces';
 import { zeroAppend } from '../other/utils';
+import { SiTheregister } from 'react-icons/si';
 
 export class ServerManager {
     #connected: boolean = false;
@@ -80,8 +81,10 @@ export class ServerManager {
                     const result = JSON.parse(xmlHttp.responseText);
                     this.#lastUpdateTimes[uri] = callback(result);
 
-                    //if (result.frameRate !== undefined && result.load !== undefined)
-                    //    (getApp().getPanelsManager().get("serverStatus") as ServerStatusPanel).update(result.frameRate, result.load);
+                    if (result.frameRate !== undefined && result.load !== undefined) {
+                        getApp().getMissionManager().setLoad(result.load);
+                        getApp().getMissionManager().setFrameRate(result.frameRate);
+                    }
                 }
             } else if (xmlHttp.status == 401) {
                 /* Bad credentials */
@@ -489,40 +492,25 @@ export class ServerManager {
                     var time = getApp().getUnitsManager()?.update(buffer);
                     return time;
                 }, true);
-
-                const elapsedMissionTime = getApp().getMissionManager().getDateAndTime().elapsedTime;
-                this.#serverIsPaused = (elapsedMissionTime === this.#previousMissionElapsedTime);
-                this.#previousMissionElapsedTime = elapsedMissionTime;
-
-                //const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
-
-                //if (this.getConnected()) {
-                //    if (this.getServerIsPaused()) {
-                //        csp.showServerPaused();
-                //    } else {
-                //        csp.showConnected();
-                //    }
-                //} else {
-                //    csp.showDisconnected();
-                //}
-
             }
         }, (this.getServerIsPaused() ? 500 : 5000)));
 
         //  Mission clock and elapsed time
         this.#intervals.push(window.setInterval(() => {
-
-            if (!this.getConnected() || this.#serverIsPaused) {
-                return;
-            }
-
             const elapsedMissionTime = getApp().getMissionManager().getDateAndTime().elapsedTime;
-
-            //const csp = (getApp().getPanelsManager().get("connectionStatus") as ConnectionStatusPanel);
-            //const mt = getApp().getMissionManager().getDateAndTime().time;
-
-            //csp.setMissionTime([mt.h, mt.m, mt.s].map(n => zeroAppend(n, 2)).join(":"));
-            //csp.setElapsedTime(new Date(elapsedMissionTime * 1000).toISOString().substring(11, 19));
+            this.#serverIsPaused = (elapsedMissionTime === this.#previousMissionElapsedTime);
+            this.#previousMissionElapsedTime = elapsedMissionTime;
+            
+            document.dispatchEvent(new CustomEvent("serverStatusUpdated", {
+                detail: {
+                    frameRate: getApp().getMissionManager().getFrameRate(),
+                    load: getApp().getMissionManager().getLoad(),
+                    elapsedTime: getApp().getMissionManager().getDateAndTime().elapsedTime,
+                    missionTime: getApp().getMissionManager().getDateAndTime().time,
+                    connected: this.getConnected(),
+                    paused: this.getPaused()
+                } as ServerStatus
+            }));
 
         }, 1000));
 

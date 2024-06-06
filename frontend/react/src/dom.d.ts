@@ -1,3 +1,4 @@
+import { ServerStatus } from "./interfaces";
 import { Unit } from "./unit/unit";
 
 interface CustomEventMap {
@@ -6,25 +7,16 @@ interface CustomEventMap {
     "unitsSelection":                   CustomEvent<Unit[]>,
     "unitsDeselection":                 CustomEvent<Unit[]>,
     "clearSelection":                   CustomEvent<any>,
-    "unitCreation":                     CustomEvent<Unit>,  
-    "unitDeletion":                     CustomEvent<Unit>, 
     "unitDeath":                        CustomEvent<Unit>, 
     "unitUpdated":                      CustomEvent<Unit>,  
-    "unitMoveCommand":                  CustomEvent<Unit>,
-    "unitAttackCommand":                CustomEvent<Unit>,
-    "unitLandCommand":                  CustomEvent<Unit>,
-    "unitSetAltitudeCommand":           CustomEvent<Unit>,
-    "unitSetSpeedCommand":              CustomEvent<Unit>,
-    "unitSetOption":                    CustomEvent<Unit>,
-    "groupCreation":                    CustomEvent<Unit[]>,
-    "groupDeletion":                    CustomEvent<Unit[]>,
     "mapStateChanged":                  CustomEvent<string>,
     "mapContextMenu":                   CustomEvent<any>,
     "mapOptionChanged":                 CustomEvent<any>,
-    "mapOptionsChanged":                CustomEvent<any>,
+    "mapOptionsChanged":                CustomEvent<any>, // TODO not very clear, why the two options?
     "commandModeOptionsChanged":        CustomEvent<any>,  
     "contactsUpdated":                  CustomEvent<Unit>,
-    "activeCoalitionChanged":           CustomEvent<any>
+    "activeCoalitionChanged":           CustomEvent<any>,
+    "serverStatusUpdated":              CustomEvent<ServerStatus>
 }
 
 declare global {

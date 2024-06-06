@@ -18,6 +18,8 @@ export class MissionManager {
     #airbases: { [name: string]: Airbase } = {};
     #theatre: string = "";
     #dateAndTime: DateAndTime = {date: {Year: 0, Month: 0, Day: 0}, time: {h: 0, m: 0, s: 0}, startTime: 0, elapsedTime: 0};
+    #load: number = 0;
+    #frameRate: number = 0;
     #commandModeOptions: CommandModeOptions = {commandMode: NONE, restrictSpawns: false, restrictToCoalition: false, setupTime: Infinity, spawnPoints: {red: Infinity, blue: Infinity}, eras: []};
     #remainingSetupTime: number = 0;
     #spentSpawnPoint: number = 0;
@@ -210,6 +212,22 @@ export class MissionManager {
     setSpentSpawnPoints(spawnPoints: number) {
         this.#spentSpawnPoint = spawnPoints;
         this.refreshSpawnPoints();
+    }
+
+    setLoad(load: number) {
+        this.#load = load;
+    }
+
+    getLoad() {
+        return this.#load;
+    }
+
+    setFrameRate(frameRate: number) {
+        this.#frameRate = frameRate;
+    }
+
+    getFrameRate() {
+        return this.#frameRate;
     }
 
     showCommandModeDialog() {

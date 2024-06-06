@@ -343,7 +343,7 @@ export class Map extends L.Map {
     }
 
     getLayers() {
-        let layers = ["DCS Map mirror 1", "DCS Map mirror 2"]
+        let layers = ["DCS Map mirror 1", "DCS Map mirror 2"];
         layers.push(...Object.keys(this.#mapLayers));
         return layers;
     }
