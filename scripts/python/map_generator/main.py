@@ -26,8 +26,8 @@ parser.add_argument('-e', '--extraction_only', action='store_true', help='if pro
 parser.add_argument('-m', '--merging_only', action='store_true', help='if provided, the script will only run the tiles merging algorithm.')   
 parser.add_argument('-c', '--compression_only', action='store_true', help='if provided, the script will only run the compression algorithm.')  
 parser.add_argument('-n', '--colors_number',  type=int, default=256, help='number of colors used by the png quantization algorithm. By default, 256. Must be less than 256.')  
-  
-
+parser.add_argument('-w', '--wait_period',  type=float, default=5.0, help='sleep time, in seconds, the algorithm will wait when a large jump is done in the map. To allow texture loading.')  
+   
 args = parser.parse_args()
 
 # Port on which the camera control module is listening

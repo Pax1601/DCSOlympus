@@ -140,6 +140,13 @@ export const minimapBoundaries = {
         new LatLng(25.946944, 36.897778),
         new LatLng(34.312222, 36.897778),
         new LatLng(34.312222, 28.523333)
+    ],
+    "Kola": [   // Kola
+        new LatLng(72.055300, 4.0140000),
+        new LatLng(64.421145, 10.353076),
+        new LatLng(63.570300, 39.364000),
+        new LatLng(71.48000, 48.091100),
+        new LatLng(72.055300, 4.01400003)
     ]
 };
 
@@ -152,17 +159,12 @@ export const mapBounds = {
     "Falklands": { bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]), zoom: 3 },
     "Normandy": { bounds: new LatLngBounds([50.44, -3.29], [48.12, 3.70]), zoom: 5 },
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
+    "Kola": { bounds: new LatLngBounds([61.59999, 4.29982], [75.05179, 44.29982]), zoom: 3}
 }
 
-export const DCSMapsZoomLevelsByTheatre: { [key: string]: { minNativeZoom?: number, maxNativeZoom?: number, minZoom?: number }[] } = {
-    "Syria": [],
-    "MarianaIslands": [{ minNativeZoom: 1, maxNativeZoom: 13, }, { minNativeZoom: 14, maxNativeZoom: 18, minZoom: 14 }],
-    "Nevada": [],
-    "PersianGulf": [],
-    "Caucasus": [],
-    "Falklands": [],
-    "Normandy": [],
-    "SinaiMap": [],
+export const mapMirrors = { 
+    "DCS Map mirror 1": "https://maps.dcsolympus.com/maps",
+    "DCS Map mirror 2": "https://refugees.dcsolympus.com/maps"
 }
 
 export const defaultMapLayers = {
