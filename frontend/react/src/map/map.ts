@@ -67,6 +67,7 @@ export class Map extends L.Map {
     #panDown: boolean = false;
 
     #lastMousePosition: L.Point = new L.Point(0, 0);
+    #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
 
     #shiftKey: boolean = false;
     #ctrlKey: boolean = false;
@@ -168,7 +169,6 @@ export class Map extends L.Map {
         this.on('mousedown', (e: any) => this.#onMouseDown(e));
         this.on('mouseup', (e: any) => this.#onMouseUp(e));
         this.on('mousemove', (e: any) => this.#onMouseMove(e));
-        this.on('drag', (e: any) => this.#onMouseMove(e));
         this.on('keydown', (e: any) => this.#onKeyDown(e));
         this.on('keyup', (e: any) => this.#onKeyUp(e));
         this.on('move', (e: any) => { if (this.#slaveDCSCamera) this.#broadcastPosition() });
@@ -326,7 +326,7 @@ export class Map extends L.Map {
 
         this.#updateCursor();
 
-        document.dispatchEvent(new CustomEvent("mapStateChanged"));
+        document.dispatchEvent(new CustomEvent("mapStateChanged", { detail: this.#state }));
     }
 
     getState() {
@@ -437,7 +437,7 @@ export class Map extends L.Map {
     }
 
     getMouseCoordinates() {
-        return this.containerPointToLatLng(this.#lastMousePosition);
+        return this.#lastMouseCoordinates;
     }
 
     centerOnUnit(ID: number | null) {
@@ -778,6 +778,7 @@ export class Map extends L.Map {
     #onMouseMove(e: any) {
         this.#lastMousePosition.x = e.originalEvent.x;
         this.#lastMousePosition.y = e.originalEvent.y;
+        this.#lastMouseCoordinates = this.mouseEventToLatLng(e.originalEvent);
 
         this.#updateCursor();
 

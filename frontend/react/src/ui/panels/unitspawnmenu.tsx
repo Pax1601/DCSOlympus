@@ -44,7 +44,7 @@ export function UnitSpawnMenu(props: {
 						altitude: ftToM(spawnAltitude),
 						loadout: props.blueprint.loadouts?.find((loadout) => { return loadout.name === spawnLoadoutName})?.code ?? ""
 					},
-					coalition: 'blue'
+					coalition: spawnCoalition
 				}
 			});
 		}

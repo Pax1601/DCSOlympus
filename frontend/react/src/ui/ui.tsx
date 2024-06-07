@@ -11,7 +11,7 @@ import { MainMenu } from './panels/mainmenu'
 import { SideBar } from './panels/sidebar';
 import { Options } from './panels/options';
 import { MapHiddenTypes, MapOptions } from '../types/types'
-import { BLUE_COMMANDER, GAME_MASTER, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from '../constants/constants'
+import { BLUE_COMMANDER, GAME_MASTER, IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from '../constants/constants'
 import { getApp, setupApp } from '../olympusapp'
 import { LoginModal } from './modals/login'
 import { sha256 } from 'js-sha256'
@@ -48,6 +48,12 @@ export function UI() {
 
 	document.addEventListener("mapOptionsChanged", (ev) => {
 		setMapOptions({ ...getApp().getMap().getOptions() });
+	})
+
+	document.addEventListener("mapStateChanged", (ev) => {
+		if ((ev as CustomEvent).detail == IDLE) {
+			hideAllMenus();
+		}
 	})
 
 	function hideAllMenus() {

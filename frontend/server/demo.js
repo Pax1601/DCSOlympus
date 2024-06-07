@@ -353,7 +353,7 @@ module.exports = function (configLocation) {
 			array = this.concat(array, enc.encode(this.padString(TACAN.callsign, 4)));
 			return array;
 		}
-		
+
 		appendRadio(array, radio, datumIndex) {
 			array = this.concat(array, this.uint8ToByteArray(datumIndex));
 			array = this.concat(array, this.uint32ToByteArray(radio.frequency));

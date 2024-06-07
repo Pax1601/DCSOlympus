@@ -51,6 +51,10 @@ export function SpawnMenu(props: {
 	filteredAirDefense = filterUnits(filteredAirDefense, filterString);
 	filteredGroundUnits = filterUnits(filteredGroundUnits, filterString);
 
+	/* When the menu is closed, reset the blueprint */
+	if (!props.open && blueprint !== null)
+		setBlueprint(null);
+
 	return <Menu {...props}
 		title="Spawn menu"
 		showBackButton={blueprint !== null}
