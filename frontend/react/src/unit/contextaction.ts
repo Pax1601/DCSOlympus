@@ -1,3 +1,4 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Unit } from "./unit";
 
 export interface ContextActionOptions {
@@ -11,13 +12,15 @@ export class ContextAction {
     #callback: CallableFunction | null = null;
     #units: Unit[] = [];
     #hideContextAfterExecution: boolean = true
+    #icon: IconDefinition;
     #options: ContextActionOptions;
 
-    constructor(id: string, label: string, description: string, callback: CallableFunction, hideContextAfterExecution: boolean = true, options: ContextActionOptions) {
+    constructor(id: string, label: string, description: string, icon: IconDefinition, callback: CallableFunction, hideContextAfterExecution: boolean = true, options: ContextActionOptions) {
         this.#id = id;
         this.#label = label;
         this.#description = description;
         this.#callback = callback;
+        this.#icon = icon;
         this.#hideContextAfterExecution = hideContextAfterExecution;
         this.#options = {
             "isScenic": false,
@@ -47,6 +50,10 @@ export class ContextAction {
 
     getCallback() {
         return this.#callback;
+    }
+
+    getIcon() {
+        return this.#icon;
     }
 
     executeCallback() {

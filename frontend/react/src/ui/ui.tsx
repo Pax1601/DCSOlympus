@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './ui.css'
 
 import { EventsProvider } from '../eventscontext'
@@ -16,6 +16,7 @@ import { getApp, setupApp } from '../olympusapp'
 import { LoginModal } from './modals/login'
 import { sha256 } from 'js-sha256'
 import { MiniMapPanel } from './panels/minimappanel'
+import { UnitMouseControlBar } from './panels/unitmousecontrolbar'
 
 export type OlympusState = {
 	mainMenuVisible: boolean,
@@ -29,7 +30,7 @@ export type OlympusState = {
 }
 
 export function UI() {
-	var [loginModalVisible, setLoginModalVisible] = useState(true);
+	var [loginModalVisible, setLoginModalVisible] = useState(false /* Temporary during devel */);
 	var [mainMenuVisible, setMainMenuVisible] = useState(false);
 	var [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
 	var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
@@ -91,6 +92,15 @@ export function UI() {
 		setLoginModalVisible(false);
 	}
 
+	/* Temporary during devel */
+	useEffect(() => {
+		window.setTimeout(() => {
+			checkPassword("admin");
+			connect("devel");
+		}, 1000)
+	}, [])
+	
+	
 	return (
 		<div className="absolute top-0 left-0 h-screen w-screen font-sans overflow-hidden" onLoad={setupApp}>
 			<StateProvider value={{
@@ -151,6 +161,7 @@ export function UI() {
 							<MiniMapPanel />
 							<UnitControlMenu />
 							<div id='map-container' className='h-full w-screen' />
+							<UnitMouseControlBar />
 						</div>
 					</div>
 					
