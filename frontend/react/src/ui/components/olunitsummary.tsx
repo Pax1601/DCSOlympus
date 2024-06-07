@@ -8,8 +8,8 @@ export function OlUnitSummary(props: {
 }) {
     return <div data-coalition={props.coalition} className="relative border-l-4 flex flex-col gap-2 p-2 pt-4 pb-4 items-start shadow-lg bg-white dark:bg-olympus-200/30 data-[coalition='blue']:border-blue-600 data-[coalition='neutral']:border-gray-400 data-[coalition='red']:border-red-500">
             <div className="flex flex-row gap-2 content-center">
-            <img className="object-cover h-7 ml-2 rounded-tl-md invert" src={"images/units/"+props.blueprint.filename} alt="" />  
-            <div className="my-auto w-full font-semibold tracking-tight text-gray-900 dark:text-white">{props.blueprint.label}</div>
+            <img className="absolute object-cover h-full invert opacity-10 right-5 top-0" src={"images/units/"+props.blueprint.filename} alt="" />  
+            <div className="ml-2 my-auto w-full font-semibold tracking-tight text-gray-900 dark:text-white">{props.blueprint.label}</div>
             </div>
             <div className="flex flex-col justify-between px-2 leading-normal h-fit">
                 <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">{props.blueprint.description}</p>
