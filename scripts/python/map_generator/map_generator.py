@@ -331,6 +331,8 @@ def run(map_config, port):
 				start_X, start_Y = deg_to_num(start_lat, start_lng, zoom)
 				end_X, end_Y = deg_to_num(end_lat, end_lng, zoom)
 
+				print(f"Feature {f} of {len(features)}, finding screenshot locations, this may take a while...")
+
 				# Find all the X, Y coordinates inside of the provided area
 				screenshots_XY = []
 				for X in range(start_X, end_X, n_width):
@@ -400,6 +402,7 @@ def run(map_config, port):
 			for current_zoom in range(zoom, map_config["final_level"], -1):
 				Xs = [int(d) for d in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom))) if isdir(join(map_config["tiles_folder"], str(current_zoom), d))]
 				existing_tiles = []
+				print("Finding tiles to merge...")
 				for X in Xs:
 					Ys = [int(f.removesuffix(".png")) for f in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom), str(X))) if isfile(join(map_config["tiles_folder"], str(current_zoom), str(X), f))]
 					for Y in Ys:
@@ -424,12 +427,12 @@ def run(map_config, port):
 					res.extend([fut.result() for fut in futures.as_completed(futs)])
 			print(f"Merged {len(res)} images in {datetime.datetime.now() - start_time}s")
 
-		########### Assemble tiles to get lower zoom levels
+		########### Compress tiles to reduce storage and download times
 		if not map_config["screenshots_only"] and not map_config["extraction_only"] and not map_config["merging_only"]:
 			start_time = datetime.datetime.now()
 			res = []
 			print("Tiles compression start time: ", start_time)
-			for current_zoom in range(zoom, map_config["final_level"], -1):
+			for current_zoom in range(zoom, map_config["final_level"] - 1, -1):
 				Xs = [int(d) for d in listdir(os.path.join(map_config["tiles_folder"], str(current_zoom))) if isdir(join(map_config["tiles_folder"], str(current_zoom), d))]
 				existing_tiles = []
 				for X in Xs:
