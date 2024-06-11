@@ -162,15 +162,9 @@ export const mapBounds = {
     "Kola": { bounds: new LatLngBounds([61.59999, 4.29982], [75.05179, 44.29982]), zoom: 3}
 }
 
-export const DCSMapsZoomLevelsByTheatre: { [key: string]: { minNativeZoom?: number, maxNativeZoom?: number, minZoom?: number }[] } = {
-    "Syria": [],
-    "MarianaIslands": [{ minNativeZoom: 1, maxNativeZoom: 13, }, { minNativeZoom: 14, maxNativeZoom: 18, minZoom: 14 }],
-    "Nevada": [],
-    "PersianGulf": [],
-    "Caucasus": [],
-    "Falklands": [],
-    "Normandy": [],
-    "SinaiMap": [],
+export const mapMirrors = { 
+    "DCS Map mirror 1": "https://maps.dcsolympus.com/maps",
+    "DCS Map mirror 2": "https://refugees.dcsolympus.com/maps"
 }
 
 export const defaultMapLayers = {

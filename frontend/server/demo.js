@@ -458,7 +458,7 @@ module.exports = function (configLocation) {
 		};
 
 		mission(req, res){
-			var ret = {mission: {theatre: "MarianaIslands"}};
+			var ret = {mission: {theatre: "PersianGulf"}};
 			ret.time = Date.now();
 
 			ret.mission.dateAndTime = {
