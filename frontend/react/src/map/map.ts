@@ -11,7 +11,7 @@ import { bearing, /*createCheckboxOption, createSliderInputOption, createTextInp
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
-import { mapMirrors, defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCS_LINK_RATIO, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, SPAWN_UNIT } from "../constants/constants";
+import { mapMirrors, defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCS_LINK_RATIO, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, SPAWN_UNIT, CONTEXT_ACTION } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 //import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -30,6 +30,7 @@ import './markers/stylesheets/units.css'
 import './theme.css'
 import { Coalition, MapHiddenTypes, MapOptions } from "../types/types";
 import { SpawnRequestTable, UnitBlueprint, UnitSpawnTable } from "../interfaces";
+import { ContextAction } from "../unit/contextaction";
 
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
@@ -108,6 +109,8 @@ export class Map extends L.Map {
     #cameraOptionsXmlHttp: XMLHttpRequest | null = null;
     #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
     #cameraZoomRatio: number = 1.0;
+
+    #contextAction: null |  ContextAction = null;
 
     /**
      * 
@@ -305,7 +308,7 @@ export class Map extends L.Map {
     }
 
     /* State machine */
-    setState(state: string, options?: { spawnRequestTable: SpawnRequestTable }) {
+    setState(state: string, options?: { spawnRequestTable?: SpawnRequestTable, contextAction?: ContextAction }) {
         this.#state = state;
 
         /* Operations to perform if you are NOT in a state */
@@ -318,6 +321,9 @@ export class Map extends L.Map {
             this.#spawnRequestTable = options?.spawnRequestTable ?? null;
             this.#spawnCursor?.removeFrom(this);
             this.#spawnCursor = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? 'blue');
+        }
+        else if (this.#state === CONTEXT_ACTION ) {
+            this.#contextAction = options?.contextAction ?? null;
         }
         else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
             this.#coalitionAreas.push(new CoalitionArea([]));
@@ -440,10 +446,10 @@ export class Map extends L.Map {
         return this.#lastMouseCoordinates;
     }
 
-    centerOnUnit(ID: number | null) {
-        if (ID != null) {
+    centerOnUnit(unit: Unit | null) {
+        if (unit !== null) {
             this.options.scrollWheelZoom = 'center';
-            this.#centerUnit = getApp().getUnitsManager().getUnitByID(ID);
+            this.#centerUnit = unit;
         }
         else {
             this.options.scrollWheelZoom = undefined;
@@ -706,6 +712,10 @@ export class Map extends L.Map {
                 this.#destinationRotationCenter = null;
                 this.#computeDestinationRotation = false;
             }
+        }
+        else if (this.#state === CONTEXT_ACTION) {
+            if (this.#contextAction)
+                this.#contextAction.executeCallback(null, e.latlng);
         }
         else {
             this.setState(IDLE);

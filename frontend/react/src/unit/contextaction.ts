@@ -1,29 +1,30 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Unit } from "./unit";
+import { LatLng } from "leaflet";
 
 export interface ContextActionOptions {
-    isScenic?: boolean
+    executeImmediately?: boolean
 }
+
+export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => void;
 
 export class ContextAction {
     #id: string = "";
     #label: string = "";
     #description: string = "";
-    #callback: CallableFunction | null = null;
+    #callback: ContextActionCallback | null = null;
     #units: Unit[] = [];
-    #hideContextAfterExecution: boolean = true
     #icon: IconDefinition;
     #options: ContextActionOptions;
 
-    constructor(id: string, label: string, description: string, icon: IconDefinition, callback: CallableFunction, hideContextAfterExecution: boolean = true, options: ContextActionOptions) {
+    constructor(id: string, label: string, description: string, icon: IconDefinition, callback: ContextActionCallback, options: ContextActionOptions) {
         this.#id = id;
         this.#label = label;
         this.#description = description;
         this.#callback = callback;
         this.#icon = icon;
-        this.#hideContextAfterExecution = hideContextAfterExecution;
         this.#options = {
-            "isScenic": false,
+            executeImmediately: false,
             ...options
         }
     }
@@ -56,12 +57,8 @@ export class ContextAction {
         return this.#icon;
     }
 
-    executeCallback() {
+    executeCallback(targetUnit: Unit | null, targetPosition: LatLng | null) {
         if (this.#callback)
-            this.#callback(this.#units);
-    }
-
-    getHideContextAfterExecution() {
-        return this.#hideContextAfterExecution;
+            this.#callback(this.#units, targetUnit, targetPosition);
     }
 }

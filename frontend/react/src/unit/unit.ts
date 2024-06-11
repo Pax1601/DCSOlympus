@@ -1000,6 +1000,7 @@ export abstract class Unit extends CustomMarker {
     showFollowOptions(units: Unit[]) {
         var contextActionSet = new ContextActionSet();
        
+        // TODO FIX
         contextActionSet.addContextAction(this, 'trail', "Trail", "Follow unit in trail formation", olIconsTrail, () => this.applyFollowOptions('trail', units));
         contextActionSet.addContextAction(this, 'echelon-lh', "Echelon (LH)", "Follow unit in echelon left formation", olIconsEchelonLh, () => this.applyFollowOptions('echelon-lh', units));
         contextActionSet.addContextAction(this, 'echelon-rh', "Echelon (RH)", "Follow unit in echelon right formation", olIconsEchelonRh, () => this.applyFollowOptions('echelon-rh', units));
@@ -1111,11 +1112,11 @@ export abstract class Unit extends CustomMarker {
             if (this.#miniMapMarker == null) {
                 this.#miniMapMarker = new CircleMarker(new LatLng(this.#position.lat, this.#position.lng), { radius: 0.5 });
                 if (this.#coalition == "neutral")
-                    this.#miniMapMarker.setStyle({ color: "#CFD9E8" });
+                    this.#miniMapMarker.setStyle({ color: "#CFD9E8", radius: 2 });
                 else if (this.#coalition == "red")
-                    this.#miniMapMarker.setStyle({ color: "#ff5858" });
+                    this.#miniMapMarker.setStyle({ color: "#ff5858", radius: 2 });
                 else
-                    this.#miniMapMarker.setStyle({ color: "#247be2" });
+                    this.#miniMapMarker.setStyle({ color: "#247be2", radius: 2 });
                 this.#miniMapMarker.addTo(getApp().getMap().getMiniMapLayerGroup());
                 this.#miniMapMarker.bringToBack();
             }
@@ -1498,12 +1499,33 @@ export abstract class AirUnit extends Unit {
     }
 
     appendContextActions(contextActionSet: ContextActionSet) {
-        contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", olStatesAttack, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
-        contextActionSet.addContextAction(this, "follow", "Follow unit", "Follow this unit in formation", olIconsFollow, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { targetUnit.showFollowOptions(units); }, false); // Don't hide the context menu after the execution (to show the follow options)
-        contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", olStatesRefuel, (units: Unit[]) => { getApp().getUnitsManager().refuel(units) });
-        contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", faQuestionCircle, () => { getApp().getMap().centerOnUnit(this.ID); });
-        contextActionSet.addContextAction(this, "bomb", "Precision bombing", "Precision bombing of a specific point", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().bombPoint(targetPosition, units) });
-        contextActionSet.addContextAction(this, "carpet-bomb", "Carpet bombing", "Carpet bombing close to a point", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().carpetBomb(targetPosition, units) });
+        /* Context actions to be executed immediately */
+        contextActionSet.addContextAction(this, "refuel", "Refuel", "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB", olStatesRefuel, (units: Unit[]) => { 
+            getApp().getUnitsManager().refuel(units)
+        }, { executeImmediately: true });
+        contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", faQuestionCircle, (units: Unit[]) => { 
+            getApp().getMap().centerOnUnit(units[0]); 
+        }, { executeImmediately: true });
+
+        /* Context actions with a target unit */
+        contextActionSet.addContextAction(this, "attack", "Attack unit", "Click on a unit to attack it using A/A or A/G weapons", olStatesAttack, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetUnit)
+                getApp().getUnitsManager().attackUnit(targetUnit.ID, units) 
+        });
+        contextActionSet.addContextAction(this, "follow", "Follow unit", "Click on a unit to follow it in formation", olIconsFollow, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetUnit)
+                targetUnit.showFollowOptions(units); 
+        });
+
+        /* Context actions with a target position */
+        contextActionSet.addContextAction(this, "bomb", "Precision bombing", "Click on a point to execute a precision bombing attack", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetPosition)
+                getApp().getUnitsManager().bombPoint(targetPosition , units) 
+        });
+        contextActionSet.addContextAction(this, "carpet-bomb", "Carpet bombing", "Click on a point to execute a carpet bombing attack", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetPosition)
+                getApp().getUnitsManager().carpetBomb(targetPosition , units) 
+        });
     }
 }
 
@@ -1540,7 +1562,10 @@ export class Helicopter extends AirUnit {
 
     appendContextActions(contextActionSet: ContextActionSet) {
         super.appendContextActions(contextActionSet);
-        contextActionSet.addContextAction(this, "land-at-point", "Land here", "Land at this precise location", olIconsLandAtPoint, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().landAtPoint(targetPosition, units) });
+        contextActionSet.addContextAction(this, "land-at-point", "Land here", "Click on a point to land there", olIconsLandAtPoint, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetPosition)
+                getApp().getUnitsManager().landAtPoint(targetPosition , units) 
+        });
     }
 
     getMarkerCategory() {
@@ -1575,21 +1600,38 @@ export class GroundUnit extends Unit {
     }
 
     appendContextActions(contextActionSet: ContextActionSet) {
-        contextActionSet.addContextAction(this, "group-ground", "Group ground units", "Create a group of ground units", olIconsGroupGround, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().createGroup(units) });
-        contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
-        contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", faQuestionCircle, () => { getApp().getMap().centerOnUnit(this.ID); });
-        
-        if (this.canTargetPoint()) {
-            contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Fire at a specific area on the ground", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
-            contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area.\nWARNING: works correctly only on neutral units, blue or red units will aim", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().simulateFireFight(targetPosition, units) });
-        }
+        /* Context actions to be executed immediately */
+        contextActionSet.addContextAction(this, "group-ground", "Group ground units", "Create a group of ground units", olIconsGroupGround, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            getApp().getUnitsManager().createGroup(units) 
+        }, { executeImmediately: true });
+        contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", faQuestionCircle, (units: Unit[]) => { 
+            getApp().getMap().centerOnUnit(units[0]); 
+        }, { executeImmediately: true });
 
         if (this.canAAA()) {
-            contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when an enemy unit gets close enough.\nWARNING: works correctly only on neutral units, blue or red units will aim", faQuestionCircle, (units: Unit[]) => { getApp().getUnitsManager().scenicAAA(units) }, undefined, {
-                "isScenic": true
+            contextActionSet.addContextAction(this, "scenic-aaa", "Scenic AAA", "Shoot AAA in the air without aiming at any target, when an enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim", faQuestionCircle, (units: Unit[]) => { 
+                getApp().getUnitsManager().scenicAAA(units) 
+            }, { executeImmediately: true });
+            contextActionSet.addContextAction(this, "miss-aaa", "Dynamic accuracy AAA", "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim", faQuestionCircle, (units: Unit[]) => { 
+                getApp().getUnitsManager().missOnPurpose(units) 
+            }, { executeImmediately: true });
+        }
+
+        /* Context actions that require a target unit */
+        contextActionSet.addContextAction(this, "attack", "Attack unit", "Click on a unit to attack it", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetUnit)
+                getApp().getUnitsManager().attackUnit(targetUnit.ID, units) 
+        });
+        
+        /* Context actions that require a target position */
+        if (this.canTargetPoint()) {
+            contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Click on a point to precisely fire at it (if possible)", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+                if (targetPosition)
+                    getApp().getUnitsManager().fireAtArea(targetPosition , units) 
             });
-            contextActionSet.addContextAction(this, "miss-aaa", "Dynamic accuracy AAA", "Shoot AAA towards the closest enemy unit, but don't aim precisely.\nWARNING: works correctly only on neutral units, blue or red units will aim", faQuestionCircle, (units: Unit[]) => { getApp().getUnitsManager().missOnPurpose(units) }, undefined, {
-                "isScenic": true
+            contextActionSet.addContextAction(this, "simulate-fire-fight", "Simulate fire fight", "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+                if (targetPosition)
+                    getApp().getUnitsManager().simulateFireFight(targetPosition , units) 
             });
         }
     }
@@ -1663,10 +1705,25 @@ export class NavyUnit extends Unit {
     }
 
     appendContextActions(contextActionSet: ContextActionSet) {
-        contextActionSet.addContextAction(this, "group-navy", "Group navy units", "Create a group of navy units", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().createGroup(units) });
-        contextActionSet.addContextAction(this, "attack", "Attack unit", "Attack the unit using A/A or A/G weapons", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().attackUnit(targetUnit.ID, units) });
-        contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", faQuestionCircle, () => { getApp().getMap().centerOnUnit(this.ID); });
-        contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Fire at a specific area on the ground", faQuestionCircle, (units: Unit[], targetUnit: Unit, targetPosition: LatLng) => { getApp().getUnitsManager().fireAtArea(targetPosition, units) });
+        /* Context actions to be executed immediately */
+        contextActionSet.addContextAction(this, "group-navy", "Group navy units", "Create a group of navy units", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            getApp().getUnitsManager().createGroup(units) 
+        }, { executeImmediately: true });
+        contextActionSet.addContextAction(this, "center-map", "Center map", "Center the map on the unit and follow it", faQuestionCircle, (units: Unit[]) => { 
+            getApp().getMap().centerOnUnit(units[0]); 
+        }, { executeImmediately: true });
+
+        /* Context actions that require a target unit */
+        contextActionSet.addContextAction(this, "attack", "Attack unit", "Click on a unit to attack it", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetUnit)
+                getApp().getUnitsManager().attackUnit(targetUnit.ID, units) 
+        });
+        
+        /* Context actions that require a target position */
+        contextActionSet.addContextAction(this, "fire-at-area", "Fire at area", "Click on a point to precisely fire at it (if possible)", faQuestionCircle, (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => { 
+            if (targetPosition)
+                getApp().getUnitsManager().fireAtArea(targetPosition , units) 
+        });
     }
 
     getCategory() {

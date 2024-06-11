@@ -49,7 +49,7 @@ export function OlDropdown(props: {
         if (cxr > window.innerWidth)
             offsetX -= (cxr - window.innerWidth)
         if (cyb > window.innerHeight)
-            offsetY = -ch - 8;
+            offsetY -= bh + ch + 16;
 
         /* Apply the offset */
         content.style.left = `${offsetX}px`

@@ -24,7 +24,7 @@ export function Header() {
 								</div>
 							</div>
 							<div className="ml-auto">
-								<OlLockStateButton checked={false} onClick={() => {}}/>
+								<OlLockStateButton checked={false} onClick={() => {}} tooltip="Lock/unlock protected units (from scripted mission)"/>
 							</div>
 							<div className="flex flex-row h-fit items-center justify-start gap-1">
 								{
@@ -36,7 +36,8 @@ export function Header() {
 											getApp().getMap().setHiddenType(entry[0], !appState.mapHiddenTypes[entry[0]]);
 										}}
 										checked={!appState.mapHiddenTypes[entry[0]]}
-										icon={entry[1]} />
+										icon={entry[1]}
+										tooltip={"Hide/show " + entry[0] + " units" } />
 									})
 								}
 							</div>
@@ -52,7 +53,8 @@ export function Header() {
 											getApp().getMap().setHiddenType(entry[0], !appState.mapHiddenTypes[entry[0]]);
 										}}
 										checked={!appState.mapHiddenTypes[entry[0]]}
-										icon={entry[1]} />
+										icon={entry[1]}
+										tooltip={"Hide/show " + entry[0] + " units" } />
 									})
 								}
 							</div>
@@ -61,18 +63,21 @@ export function Header() {
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType( 'blue', !appState.mapHiddenTypes['blue'] )}
 									checked={!appState.mapHiddenTypes['blue']}
-									icon={faFlag} className={"!text-blue-500"} />
+									icon={faFlag} className={"!text-blue-500"}
+									tooltip={"Hide/show blue units" } />
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType('red', !appState.mapHiddenTypes['red'] )}
 									checked={!appState.mapHiddenTypes['red']}
-									icon={faFlag} className={"!text-red-500"} />
+									icon={faFlag} className={"!text-red-500"}
+									tooltip={"Hide/show red units" }  />
 								<OlRoundStateButton
 									onClick={() => getApp().getMap().setHiddenType('neutral', !appState.mapHiddenTypes['neutral'] )}
 									checked={!appState.mapHiddenTypes['neutral']}
-									icon={faFlag} className={"!text-gray-500"} />
+									icon={faFlag} className={"!text-gray-500"}
+									tooltip={"Hide/show neutral units" }  />
 							</div>
 							<OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
-							<OlStateButton checked={false} icon={faCamera} onClick={() => {}} />
+							<OlStateButton checked={false} icon={faCamera} onClick={() => {}} tooltip="Activate/deactivate camera plugin" />
 							<OlDropdown label="DCS Sat" className="w-40">
 								<OlDropdownItem className="w-full">DCS Sat</OlDropdownItem>
 								<OlDropdownItem className="w-full">DCS Alt</OlDropdownItem>
