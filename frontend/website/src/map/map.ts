@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCS_LINK_RATIO, mapMirrors } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCS_LINK_RATIO, defaultMapMirrors } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -97,6 +97,7 @@ export class Map extends L.Map {
 
     #mapSourceDropdown: Dropdown;
     #mapLayers: any = defaultMapLayers;
+    #mapMirrors: any = defaultMapMirrors;
     #mapMarkerVisibilityControls: MapMarkerVisibilityControl[] = MAP_MARKER_CONTROLS;
     #mapVisibilityOptionsDropdown: Dropdown;
     #optionButtons: { [key: string]: HTMLButtonElement[] } = {}
@@ -131,10 +132,8 @@ export class Map extends L.Map {
 
         this.#ID = ID;
 
-        this.setLayer("DCS Map mirror 1");
-
         /* Minimap */
-        var minimapLayer = new L.TileLayer(this.#mapLayers[Object.keys(this.#mapLayers)[0]].urlTemplate, { minZoom: 0, maxZoom: 13 });
+        var minimapLayer = new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
         this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
@@ -226,13 +225,40 @@ export class Map extends L.Map {
 
         document.addEventListener("configLoaded", () => {
             let config = getApp().getConfig();
-            if (config.additionalMaps) {
-                let additionalMaps = config.additionalMaps;
+            let layerSet = false;
+
+            /* First load the map mirrors */
+            if (config.mapMirrors) {
+                let mapMirrors = config.mapMirrors;
+                this.#mapMirrors = {
+                    ...this.#mapMirrors,
+                    ...mapMirrors
+                }
+                this.setLayer(Object.keys(mapMirrors)[0]);
+            }
+
+            /* Set the options, and if at least one mirror is available, select the first */
+            this.#mapSourceDropdown.setOptions(Object.keys(this.#mapMirrors), null);
+            if (Object.keys(this.#mapMirrors).length > 0) {
+                this.#mapSourceDropdown.selectValue(0);
+                this.setLayer(Object.keys(this.#mapMirrors)[0]);
+                layerSet = true; // Needed because this is async
+            }
+
+            /* Then load the map layers */
+            if (config.mapLayers) {
+                let mapLayers = config.mapLayers;
                 this.#mapLayers = {
                     ...this.#mapLayers,
-                    ...additionalMaps
+                    ...mapLayers
                 }
-                this.#mapSourceDropdown.setOptions(this.getLayers(), null);
+            }
+
+            /* Append this options, and if no mirror was selected, select the first on (if available). Mirrors have the precedence */
+            this.#mapSourceDropdown.setOptions(Object.keys(this.#mapMirrors).concat(Object.keys(this.#mapLayers)), null);
+            if (!layerSet && Object.keys(this.#mapLayers).length > 0) {
+                this.#mapSourceDropdown.selectValue(0);
+                this.setLayer(Object.keys(this.#mapLayers)[0]);
             }
         })
 
@@ -295,8 +321,7 @@ export class Map extends L.Map {
     }
 
     setLayer(layerName: string) {
-        if (this.#layer != null)
-            this.removeLayer(this.#layer)
+        this.eachLayer((layer) => this.removeLayer(layer))
 
         let theatre = getApp().getMissionManager()?.getTheatre() ?? "Nevada";
 
@@ -308,16 +333,17 @@ export class Map extends L.Map {
                     return new L.TileLayer(layer.urlTemplate.replace("{theatre}", theatre.toLowerCase()), layer);
                 })
                 this.#layer = new L.LayerGroup(layers);
+                this.#layer?.addTo(this);
             } else {
                 this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
+                this.#layer?.addTo(this);
             }
-        /* DCS core layers are handled here */
-        } else if (["DCS Map mirror 1", "DCS Map mirror 2"].includes(layerName) ) {
-            let layerData = this.#mapLayers["ArcGIS Satellite"];
-            let layers = [new L.TileLayer(layerData.urlTemplate, layerData)];
+        /* mirrored layers are handled here */
+        } else if (Object.keys(this.#mapMirrors).includes(layerName) ) {
+            let layers: L.TileLayer[] = [];
 
             /* Load the configuration file */
-            const mirror = mapMirrors[layerName as keyof typeof mapMirrors];
+            const mirror = this.#mapMirrors[layerName as any];
             const request = new Request(mirror + "/config.json");
             fetch(request).then((response) => {
                 if (response.status === 200) {
@@ -343,9 +369,7 @@ export class Map extends L.Map {
     }
 
     getLayers() {
-        let layers = ["DCS Map mirror 1", "DCS Map mirror 2"]
-        layers.push(...Object.keys(this.#mapLayers));
-        return layers;
+        return Object.keys(this.#mapLayers);
     }
 
     /* State machine */
