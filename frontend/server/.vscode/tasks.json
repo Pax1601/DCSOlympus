@@ -25,13 +25,6 @@
                     "endsPattern": "Waiting for connections..."
                 }
             }
-        },
-        {
-            "label": "copy", 
-            "type": "shell",
-            "command": "./scripts/copy.bat",
-            "isBackground": false,
-            "dependsOn": ["check-setup"],
         }
     ], 
     "inputs": [
