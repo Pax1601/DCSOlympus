@@ -26,6 +26,22 @@ The full feature list is simply too long to enumerate in a short summary but nee
 Check the [Wiki](https://github.com/Pax1601/DCSOlympus/wiki) for installation instructions
 
 # Frequently Asked Questions
+
+### I need troubleshooting guidance, please help? ###
+Read through the [Installation Guide](https://github.com/Pax1601/DCSOlympus/wiki) to ensure you have setup Olympus correctly.
+
+Read through [Setup Troubleshooting](https://github.com/Pax1601/DCSOlympus/wiki/Setup-Troubleshooting) for common issues and solutions.
+
+Read through the [Olympus User Guide](https://github.com/Pax1601/DCSOlympus/wiki/2.-User-Guide) to learn how to use Olympus.
+
+If you're still having issues after trying the steps above, please post in the ⁠community-support channel with the following:
+
+A detailed description of your issue
+Your Olympus log file \user home folder\AppData\Local\Temp\Olympus_log.txt for some it might be in \DCS Saved Games folder\Logs\Olympus_log.txt
+Your DCS log file \DCS Saved Games folder\Logs\dcs.log
+
+Screenshots of any relevant screens or issues and any other pertinent information.
+
 ### Can I join up and help out with the project? ###
 We are currently running towards first release in the very near future so we are not looking to add more people to the core team for the moment. However that does not mean we are not open to collaborations and help going forward, if you want to help for now we are committed to the free and open source model so feel free to check out the github, familiarize yourself with the project and maybe even start submitting pull requests for open issues.
 
