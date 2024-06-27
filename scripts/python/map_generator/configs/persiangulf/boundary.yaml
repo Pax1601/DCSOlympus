@@ -1,0 +1,6 @@
+{
+  "output_directory": "",
+  "boundary_file": "./configs/persiangulf/boundary.kml",
+  "zoom_factor": 0.7,
+  "geo_width": 28.41
+}
