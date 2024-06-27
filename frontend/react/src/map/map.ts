@@ -641,7 +641,8 @@ export class Map extends L.Map {
             }
             else if (this.#state === SPAWN_UNIT) {
                 if (this.#spawnRequestTable !== null) {
-                    const location = this.getMouseCoordinates();
+                    const location = e.latlng;
+                    this.#spawnRequestTable.unit.location = e.latlng;
                     getApp().getUnitsManager().spawnUnits(
                         this.#spawnRequestTable.category,
                         [ this.#spawnRequestTable.unit ],

@@ -115,7 +115,7 @@ export class ServerManager {
             xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username}:${this.#password}`));
         xmlHttp.onload = (res: any) => {
             var res = JSON.parse(xmlHttp.responseText);
-            callback(res);
+            callback(res.commandHash);
         };
         xmlHttp.send(JSON.stringify(request));
     }
