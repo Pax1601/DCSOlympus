@@ -17,7 +17,8 @@ export type MapOptions = {
     showUnitTargets: boolean,
     showUnitLabels: boolean,
     showUnitsEngagementRings: boolean,
-    showUnitsAcquisitionRings: boolean
+    showUnitsAcquisitionRings: boolean,
+    fillSelectedRing: boolean
 }
 
 export type MapHiddenTypes = {
@@ -49,3 +50,5 @@ export type MGRS = {
 }
 
 export type Coalition = "blue" | "neutral" | "red";
+
+export type Context = string;

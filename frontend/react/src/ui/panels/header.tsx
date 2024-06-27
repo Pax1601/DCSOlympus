@@ -78,9 +78,10 @@ export function Header() {
 							</div>
 							<OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
 							<OlStateButton checked={false} icon={faCamera} onClick={() => {}} tooltip="Activate/deactivate camera plugin" />
-							<OlDropdown label="DCS Sat" className="w-40">
-								<OlDropdownItem className="w-full">DCS Sat</OlDropdownItem>
-								<OlDropdownItem className="w-full">DCS Alt</OlDropdownItem>
+							<OlDropdown label={appState.activeMapSource} className="w-80">
+								{appState.mapSources.map((source) => {
+									return <OlDropdownItem className="w-full" onClick={() => getApp().getMap().setLayerName(source)}>{ source }</OlDropdownItem>
+								})}
 							</OlDropdown>
 						</div>
 					</nav>

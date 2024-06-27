@@ -9,7 +9,9 @@ export const StateContext = createContext({
     drawingMenuVisible: false,
     optionsMenuVisible: false,
 	mapHiddenTypes: MAP_HIDDEN_TYPES_DEFAULTS,
-    mapOptions: MAP_OPTIONS_DEFAULTS
+    mapOptions: MAP_OPTIONS_DEFAULTS,
+    mapSources: [] as string[],
+    activeMapSource: ""
 })
 
 export const StateProvider = StateContext.Provider;

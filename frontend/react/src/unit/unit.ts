@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX, CONTEXT_ACTION } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -708,7 +708,7 @@ export abstract class Unit extends CustomMarker {
             /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
             (!this.belongsToCommandedCoalition() && (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
             /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
-            (getApp().getMap().getOptions()[HIDE_GROUP_MEMBERS] && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
+            (getApp().getMap().getOptions().hideGroupMembers && !this.#isLeader && !this.getSelected() && this.getCategory() == "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && 
             (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))));
 
         /* Force dead units to be hidden */
@@ -1065,6 +1065,8 @@ export abstract class Unit extends CustomMarker {
                         getApp().getUnitsManager().deselectAllUnits();
 
                     this.setSelected(!this.getSelected());
+                } else if (getApp().getMap().getState() === CONTEXT_ACTION) {
+                    getApp().getMap().executeContextAction(this, null);
                 }
             }
 
@@ -1245,7 +1247,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     #drawPath() {
-        if (this.#activePath != undefined && getApp().getMap().getOptions()[SHOW_UNIT_PATHS]) {
+        if (this.#activePath != undefined && getApp().getMap().getOptions().showUnitPaths) {
             var points: LatLng[] = [];
             points.push(new LatLng(this.#position.lat, this.#position.lng));
 
@@ -1289,7 +1291,7 @@ export abstract class Unit extends CustomMarker {
 
     #drawContacts() {
         this.#clearContacts();
-        if (getApp().getMap().getOptions()[SHOW_UNIT_CONTACTS]) {
+        if (getApp().getMap().getOptions().showUnitContacts) {
             for (let index in this.#contacts) {
                 var contactData = this.#contacts[index];
                 var contact: Unit | Weapon | null;
@@ -1364,12 +1366,12 @@ export abstract class Unit extends CustomMarker {
             if (engagementRange !== this.#engagementCircle.getRadius())
                 this.#engagementCircle.setRadius(engagementRange);
 
-            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getOptions()[FILL_SELECTED_RING] ? 0.3 : 0;
+            this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getOptions().fillSelectedRing ? 0.3 : 0;
 
             /* Acquisition circles */
-            var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
+            var shortAcquisitionRangeCheck = (acquisitionRange > nmToM(3) || !getApp().getMap().getOptions().hideUnitsShortRangeRings);
 
-            if (getApp().getMap().getOptions()[SHOW_UNITS_ACQUISITION_RINGS] && shortAcquisitionRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+            if (getApp().getMap().getOptions().showUnitsAcquisitionRings && shortAcquisitionRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
                     this.#acquisitionCircle.addTo(getApp().getMap());
                     switch (this.getCoalition()) {
@@ -1393,8 +1395,8 @@ export abstract class Unit extends CustomMarker {
             }
 
             /* Engagement circles */
-            var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getOptions()[HIDE_UNITS_SHORT_RANGE_RINGS]);
-            if (getApp().getMap().getOptions()[SHOW_UNITS_ENGAGEMENT_RINGS] && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
+            var shortEngagementRangeCheck = (engagementRange > nmToM(3) || !getApp().getMap().getOptions().hideUnitsShortRangeRings);
+            if (getApp().getMap().getOptions().showUnitsEngagementRings && shortEngagementRangeCheck && (this.belongsToCommandedCoalition() || this.getDetectionMethods().some(value => [VISUAL, OPTIC, IRST, RWR].includes(value)))) {
                 if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
                     this.#engagementCircle.addTo(getApp().getMap());
                     switch (this.getCoalition()) {
@@ -1428,10 +1430,10 @@ export abstract class Unit extends CustomMarker {
     }
 
     #drawTarget() {
-        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getOptions()[SHOW_UNIT_PATHS]) {
+        if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getOptions().showUnitPaths) {
             this.#drawTargetPosition(this.#targetPosition);
         }
-        else if (this.#targetID != 0 && getApp().getMap().getOptions()[SHOW_UNIT_TARGETS]) {
+        else if (this.#targetID != 0 && getApp().getMap().getOptions().showUnitTargets) {
             const target = getApp().getUnitsManager().getUnitByID(this.#targetID);
             if (target && (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || (this.belongsToCommandedCoalition() && getApp().getUnitsManager().getUnitDetectedMethods(target).some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))) {
                 this.#drawTargetPosition(target.getPosition());
@@ -1648,7 +1650,7 @@ export class GroundUnit extends Unit {
     /* When a unit is a leader of a group, the map is zoomed out and grouping when zoomed out is enabled, check if the unit should be shown as a specific group. This is used to show a SAM battery instead of the group leader */
     getDatabaseEntry() {
         let unitWhenGrouped: string | undefined | null = null;
-        if (!this.getSelected() && this.getIsLeader() && getApp().getMap().getOptions()[HIDE_GROUP_MEMBERS] && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
+        if (!this.getSelected() && this.getIsLeader() && getApp().getMap().getOptions().hideGroupMembers && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
             unitWhenGrouped = this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
             let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
                 if (unit.getDatabaseEntry()?.unitWhenGrouped != undefined)
@@ -1665,7 +1667,7 @@ export class GroundUnit extends Unit {
 
     /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
     checkZoomRedraw(): boolean {
-        return (this.getIsLeader() && getApp().getMap().getOptions()[HIDE_GROUP_MEMBERS] as boolean &&
+        return (this.getIsLeader() && getApp().getMap().getOptions().hideGroupMembers as boolean &&
             (getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION ||
                 getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
     }

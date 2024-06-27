@@ -162,25 +162,9 @@ export const mapBounds = {
     "Kola": { bounds: new LatLngBounds([61.59999, 4.29982], [75.05179, 44.29982]), zoom: 3}
 }
 
-export const mapMirrors = { 
-    "DCS Map mirror 1": "https://maps.dcsolympus.com/maps",
-    "DCS Map mirror 2": "https://refugees.dcsolympus.com/maps"
-}
+export const defaultMapMirrors = {}
 
-export const defaultMapLayers = {
-    "ArcGIS Satellite": {
-        urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        minZoom: 1,
-        maxZoom: 19,
-        attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Mapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-    },
-    "OpenStreetMap Mapnik": {
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        minZoom: 1,
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }
-}
+export const defaultMapLayers = {}
 
 /* Map constants */
 export const IDLE = "Idle";

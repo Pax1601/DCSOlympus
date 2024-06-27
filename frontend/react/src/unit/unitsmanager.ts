@@ -1192,9 +1192,6 @@ export class UnitsManager {
      * 
      */
     copy(units: Unit[] | null = null) {
-        //if (!getApp().getContextManager().getCurrentContext().getAllowUnitCopying())
-        //    return;
-
         if (units === null)
             units = this.getSelectedUnits();
 
@@ -1212,9 +1209,6 @@ export class UnitsManager {
      * @returns True if units were pasted successfully
      */
     paste() {
-        //if (!getApp().getContextManager().getCurrentContext().getAllowUnitPasting())
-        //    return;
-
         let spawnPoints = 0;
 
         /* If spawns are restricted, check that the user has the necessary spawn points */

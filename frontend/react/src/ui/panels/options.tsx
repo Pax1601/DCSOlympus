@@ -1,16 +1,15 @@
 import React from "react";
 import { Menu } from "./components/menu";
-import { faArrowRightLong, faCheckCircle, faDatabase, faExternalLink, faExternalLinkAlt, faFile, faFileAlt, faFileExport, faFileImport, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { OlCheckbox } from "../components/olcheckbox";
-import { OlLabelToggle } from "../components/ollabeltoggle";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { OlNumberInput } from "../components/olnumberinput";
+import { MapOptions } from "../../types/types";
+import { getApp } from "../../olympusapp";
 
 export function Options(props: {
     open: boolean,
     onClose: () => void,
+    options: MapOptions,
     children?: JSX.Element | JSX.Element[],
 }) {
     return <Menu
@@ -19,31 +18,57 @@ export function Options(props: {
         showBackButton={false}
         onClose={props.onClose}
     >
-        <div className="flex flex-col p-5 gap-2 font-normal text-gray-900 text-gray-800 dark:text-white ">
-            <div className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer">
-                <OlCheckbox checked={true} onChange={() => { }}></OlCheckbox>
-                <span>Toggle Unit Labels</span>
+        <div className="flex flex-col p-5 gap-2 font-normal text-gray-800 dark:text-white ">
+            <div
+                className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer"
+                onClick={() => { getApp().getMap().setOption("showUnitLabels", !props.options.showUnitLabels) }}
+            >
+                <OlCheckbox checked={props.options.showUnitLabels} onChange={() => { }}></OlCheckbox>
+                <span>Show Unit Labels</span>
+                <kbd className="ml-auto px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">L</kbd>
             </div>
-            <div className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer">
-                <OlCheckbox checked={true} onChange={() => { }}></OlCheckbox>
-                <span>Toggle Threat Rings</span>
+            <div
+                className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer"
+                onClick={() => { getApp().getMap().setOption("showUnitsEngagementRings", !props.options.showUnitsEngagementRings) }}
+            >
+                <OlCheckbox checked={props.options.showUnitsEngagementRings} onChange={() => { }}></OlCheckbox>
+                <span>Show Threat Rings</span>
+                <kbd className="ml-auto px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">Q</kbd>
             </div>
-            <div className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer">
-                <OlCheckbox checked={true} onChange={() => { }}></OlCheckbox>
-                <span>Toggle Detection rings</span>
+            <div
+                className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer"
+                onClick={() => { getApp().getMap().setOption("showUnitsAcquisitionRings", !props.options.showUnitsAcquisitionRings) }}
+            >
+                <OlCheckbox checked={props.options.showUnitsAcquisitionRings} onChange={() => { }}></OlCheckbox>
+                <span>Show Detection rings</span>
+                <kbd className="ml-auto px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">E</kbd>
             </div>
-            <div className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer">
-                <OlCheckbox checked={true} onChange={() => { }}></OlCheckbox>
-                <span>Toggle Detection lines</span>
+            <div
+                className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer"
+                onClick={() => { getApp().getMap().setOption("showUnitTargets", !props.options.showUnitTargets) }}
+            >
+                <OlCheckbox checked={props.options.showUnitTargets} onChange={() => { }}></OlCheckbox>
+                <span>Show Detection lines</span>
+                <kbd className="ml-auto px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">F</kbd>
             </div>
-            <div className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer">
-                <OlCheckbox checked={true} onChange={() => { }}></OlCheckbox>
-                <span>Toggle Radar lines</span>
+            <div
+                className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer"
+                onClick={() => { getApp().getMap().setOption("hideUnitsShortRangeRings", !props.options.hideUnitsShortRangeRings) }}
+            >
+                <OlCheckbox checked={props.options.hideUnitsShortRangeRings} onChange={() => { }}></OlCheckbox>
+                <span>Hide Short range Rings</span>
+                <kbd className="ml-auto px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">R</kbd>
             </div>
-            <div className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer">
-                <OlCheckbox checked={true} onChange={() => { }}></OlCheckbox>
-                <span>Toggle Something Else</span>
+            <div
+                className="group flex flex-row rounded-md justify-content gap-4 p-2 dark:hover:bg-olympus-400 cursor-pointer"
+                onClick={() => { getApp().getMap().setOption("hideGroupMembers", !props.options.hideGroupMembers) }}
+            >
+                <OlCheckbox checked={props.options.hideGroupMembers} onChange={() => { }}></OlCheckbox>
+                <span>Hide Group members</span>
+                <kbd className="ml-auto px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">G</kbd>
             </div>
+
+            {/*
             <hr className="w-auto m-2 my-1 bg-gray-700 border-[1px] dark:border-olympus-500"></hr>
             <div className="flex flex-col content-center items-start justify-between p-2 gap-2">
                 <div className="flex flex-col">
@@ -71,7 +96,7 @@ export function Options(props: {
                         onChange={(ev) => { }}
                     />
                 </div>
-            </div>
+            </div> */}
         </div>
     </Menu>
 }

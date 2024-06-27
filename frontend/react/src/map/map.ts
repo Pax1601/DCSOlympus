@@ -1,26 +1,17 @@
 import * as L from "leaflet"
 import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
-//import { MapContextMenu } from "../contextmenus/mapcontextmenu";
-//import { UnitContextMenu } from "../contextmenus/unitcontextmenu";
-//import { AirbaseContextMenu } from "../contextmenus/airbasecontextmenu";
-//import { Dropdown } from "../controls/dropdown";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { bearing, /*createCheckboxOption, createSliderInputOption, createTextInputOption,*/ deg2rad, getGroundElevation, getUnitCategoryByBlueprint, polyContains } from "../other/utils";
+import { bearing, deg2rad, getGroundElevation, polyContains } from "../other/utils";
 import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
-import { mapMirrors, defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, /*MAP_MARKER_CONTROLS,*/ DCS_LINK_PORT, DCS_LINK_RATIO, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, SPAWN_UNIT, CONTEXT_ACTION } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, defaultMapMirrors, SPAWN_UNIT, CONTEXT_ACTION, MAP_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
-//import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
-//import { AirbaseSpawnContextMenu } from "../contextmenus/airbasespawnmenu";
-//import { GestureHandling } from "leaflet-gesture-handling";
 import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
-import { ContextActionSet } from "../unit/contextactionset";
-import { DCSLayer } from "./dcslayer";
 
 import './markers/stylesheets/airbase.css'
 import './markers/stylesheets/bullseye.css'
@@ -28,10 +19,11 @@ import './markers/stylesheets/units.css'
 
 // Temporary
 import './theme.css'
-import { Coalition, MapHiddenTypes, MapOptions } from "../types/types";
-import { SpawnRequestTable, UnitBlueprint, UnitSpawnTable } from "../interfaces";
+import { MapHiddenTypes, MapOptions } from "../types/types";
+import { SpawnRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 
+// Touch screen support temporarily disabled
 var hasTouchScreen = false;
 //if ("maxTouchPoints" in navigator) 
 //    hasTouchScreen = navigator.maxTouchPoints > 0;
@@ -42,10 +34,6 @@ else
     L.Map.addInitHook('addHandler', 'boxSelect', BoxSelect);
 
 //L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
-
-// TODO would be nice to convert to ts - yes
-//require("../../node_modules/leaflet.nauticscale/dist/leaflet.nauticscale.js")
-//require("../../node_modules/leaflet-path-drag/dist/index.js")
 
 export class Map extends L.Map {
     /* Options */
@@ -105,12 +93,13 @@ export class Map extends L.Map {
     #longPressTimer: number = 0;
 
     #mapLayers: any = defaultMapLayers;
+    #mapMirrors: any = defaultMapMirrors;
     #layerName: string = "";
     #cameraOptionsXmlHttp: XMLHttpRequest | null = null;
     #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
     #cameraZoomRatio: number = 1.0;
 
-    #contextAction: null |  ContextAction = null;
+    #contextAction: null | ContextAction = null;
 
     /**
      * 
@@ -136,10 +125,8 @@ export class Map extends L.Map {
 
         this.#ID = ID;
 
-        this.setLayer("DCS Map mirror 2");
-
         /* Minimap */
-        var minimapLayer = new L.TileLayer(this.#mapLayers[Object.keys(this.#mapLayers)[0]].urlTemplate, { minZoom: 0, maxZoom: 13 });
+        var minimapLayer = new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { minZoom: 0, maxZoom: 13 });
         this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
         this.#miniMapPolyline = new L.Polyline([], { color: '#202831' });
         this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
@@ -218,13 +205,36 @@ export class Map extends L.Map {
 
         document.addEventListener("configLoaded", () => {
             let config = getApp().getConfig();
-            if (config.additionalMaps) {
-                let additionalMaps = config.additionalMaps;
+            let layerSet = false;
+
+            /* First load the map mirrors */
+            if (config.mapMirrors) {
+                let mapMirrors = config.mapMirrors;
+                this.#mapMirrors = {
+                    ...this.#mapMirrors,
+                    ...mapMirrors
+                }
+                this.setLayerName(Object.keys(mapMirrors)[0]);
+            }
+
+            /* Set the options, and if at least one mirror is available, select the first */
+            if (Object.keys(this.#mapMirrors).length > 0) {
+                this.setLayerName(Object.keys(this.#mapMirrors)[0]);
+                layerSet = true; // Needed because this is async
+            }
+
+            /* Then load the map layers */
+            if (config.mapLayers) {
+                let mapLayers = config.mapLayers;
                 this.#mapLayers = {
                     ...this.#mapLayers,
-                    ...additionalMaps
+                    ...mapLayers
                 }
-                //this.#mapSourceDropdown.setOptions(this.getLayers(), null);
+            }
+
+            /* Append this options, and if no mirror was selected, select the first on (if available). Mirrors have the precedence */
+            if (!layerSet && Object.keys(this.#mapLayers).length > 0) {
+                this.setLayerName(Object.keys(this.#mapLayers)[0]);
             }
         })
 
@@ -253,11 +263,11 @@ export class Map extends L.Map {
         }, 1000)
     }
 
-    setLayer(layerName: string) {
-        if (this.#layer != null)
-            this.removeLayer(this.#layer)
+    setLayerName(layerName: string) {
+        if (this.#layer)
+            this.removeLayer(this.#layer);
 
-        let theatre = getApp().getMissionManager()?.getTheatre() ?? "Nevada";
+        let theatre = getApp().getMissionManager()?.getTheatre();
 
         /* Normal or custom layers are handled here */
         if (layerName in this.#mapLayers) {
@@ -267,16 +277,18 @@ export class Map extends L.Map {
                     return new L.TileLayer(layer.urlTemplate.replace("{theatre}", theatre.toLowerCase()), layer);
                 })
                 this.#layer = new L.LayerGroup(layers);
+                this.#layer?.addTo(this);
             } else {
                 this.#layer = new L.TileLayer(layerData.urlTemplate, layerData);
+                this.#layer?.addTo(this);
             }
-        /* DCS core layers are handled here */
-        } else if (["DCS Map mirror 1", "DCS Map mirror 2"].includes(layerName) ) {
-            let layerData = this.#mapLayers["ArcGIS Satellite"];
-            let layers = [new L.TileLayer(layerData.urlTemplate, layerData)];
+
+        /* Mirrored layers are handled here */
+        } else if (Object.keys(this.#mapMirrors).includes(layerName) ) {
+            let layers: L.TileLayer[] = [];
 
             /* Load the configuration file */
-            const mirror = mapMirrors[layerName as keyof typeof mapMirrors];
+            const mirror = this.#mapMirrors[layerName as any];
             const request = new Request(mirror + "/config.json");
             fetch(request).then((response) => {
                 if (response.status === 200) {
@@ -299,16 +311,20 @@ export class Map extends L.Map {
             })
         }
         this.#layerName = layerName;
+
+        document.dispatchEvent(new CustomEvent("mapSourceChanged", {detail: layerName}));
+    }
+
+    getLayerName() {
+        return this.#layerName;
     }
 
     getLayers() {
-        let layers = ["DCS Map mirror 1", "DCS Map mirror 2"];
-        layers.push(...Object.keys(this.#mapLayers));
-        return layers;
+        return Object.keys(this.#mapLayers);
     }
 
     /* State machine */
-    setState(state: string, options?: { spawnRequestTable?: SpawnRequestTable, contextAction?: ContextAction }) {
+    setState(state: string, options?: { spawnRequestTable?: SpawnRequestTable, contextAction?: ContextAction | null }) {
         this.#state = state;
 
         /* Operations to perform if you are NOT in a state */
@@ -317,7 +333,9 @@ export class Map extends L.Map {
         }
 
         /* Operations to perform if you ARE in a state */
-        if (this.#state === SPAWN_UNIT) {
+        if (this.#state === IDLE) {
+            getApp().getUnitsManager().deselectAllUnits();
+        } else if (this.#state === SPAWN_UNIT) {
             this.#spawnRequestTable = options?.spawnRequestTable ?? null;
             this.#spawnCursor?.removeFrom(this);
             this.#spawnCursor = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? 'blue');
@@ -486,7 +504,7 @@ export class Map extends L.Map {
         const boundaries = this.#getMinimapBoundaries();
         this.#miniMapPolyline.setLatLngs(boundaries[theatre as keyof typeof boundaries]);
 
-        this.setLayer(this.#layerName);
+        this.setLayerName(this.#layerName);
     }
 
     getMiniMapLayerGroup() {
@@ -615,21 +633,25 @@ export class Map extends L.Map {
     }
 
     increaseCameraZoom() {
-        const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
-        if (slider instanceof HTMLInputElement) {
-            slider.value = String(Math.min(Number(slider.max), Number(slider.value) + 10));
-            slider.dispatchEvent(new Event('input'));
-            slider.dispatchEvent(new Event('mouseup'));
-        }
+        //const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
+        //if (slider instanceof HTMLInputElement) {
+        //    slider.value = String(Math.min(Number(slider.max), Number(slider.value) + 10));
+        //    slider.dispatchEvent(new Event('input'));
+        //    slider.dispatchEvent(new Event('mouseup'));
+        //}
     }
 
     decreaseCameraZoom() {
-        const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
-        if (slider instanceof HTMLInputElement) {
-            slider.value = String(Math.max(Number(slider.min), Number(slider.value) - 10));
-            slider.dispatchEvent(new Event('input'));
-            slider.dispatchEvent(new Event('mouseup'));
-        }
+        //const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
+        //if (slider instanceof HTMLInputElement) {
+        //    slider.value = String(Math.max(Number(slider.min), Number(slider.value) - 10));
+        //    slider.dispatchEvent(new Event('input'));
+        //    slider.dispatchEvent(new Event('mouseup'));
+        //}
+    }
+
+    executeContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null) {
+        this.#contextAction?.executeCallback(targetUnit, targetPosition);
     }
 
     /* Event handlers */
@@ -663,6 +685,8 @@ export class Map extends L.Map {
                 else {
                     this.deselectAllCoalitionAreas();
                 }
+            } else if (this.#state === CONTEXT_ACTION) {
+                this.executeContextAction(null, e.latlng);
             }
             else {
                 this.setState(IDLE);
@@ -672,7 +696,7 @@ export class Map extends L.Map {
     }
 
     #onDoubleClick(e: any) {
-
+        this.setState(IDLE);
     }
 
     #onContextMenu(e: any) {
@@ -713,10 +737,6 @@ export class Map extends L.Map {
                 this.#destinationRotationCenter = null;
                 this.#computeDestinationRotation = false;
             }
-        }
-        else if (this.#state === CONTEXT_ACTION) {
-            if (this.#contextAction)
-                this.#contextAction.executeCallback(null, e.latlng);
         }
         else {
             this.setState(IDLE);

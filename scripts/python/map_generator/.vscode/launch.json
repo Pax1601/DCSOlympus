@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "main.py",
             "console": "integratedTerminal",
-            "args": ["./configs/PersianGulf/LowResolution.yml"],
+            "args": ["./configs/PersianGulf/HighResolution.yaml"],
             "justMyCode": false
         }
     ]

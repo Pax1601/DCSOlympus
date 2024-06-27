@@ -1,13 +1,7 @@
 import { LatLng } from 'leaflet';
 import { getApp } from '../olympusapp';
 import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, LOGS_URI, MISSION_URI, NONE, ROEs, UNITS_URI, WEAPONS_URI, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
-//import { ServerStatusPanel } from '../panels/serverstatuspanel';
-//import { LogPanel } from '../panels/logpanel';
-//import { Popup } from '../popups/popup';
-//import { ConnectionStatusPanel } from '../panels/connectionstatuspanel';
 import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from '../interfaces';
-import { zeroAppend } from '../other/utils';
-import { SiTheregister } from 'react-icons/si';
 
 export class ServerManager {
     #connected: boolean = false;
@@ -89,7 +83,6 @@ export class ServerManager {
             } else if (xmlHttp.status == 401) {
                 /* Bad credentials */
                 console.error("Incorrect username/password");
-                getApp().setLoginStatus("failed");
                 errorCallback && errorCallback(xmlHttp.status);
             } else {
                 /* Failure, probably disconnected */
@@ -118,6 +111,8 @@ export class ServerManager {
             callback(res.commandHash);
         };
         xmlHttp.send(JSON.stringify(request));
+        console.log(`Sending PUT request:`);
+        console.log(request);
     }
 
     getConfig(callback: CallableFunction) {

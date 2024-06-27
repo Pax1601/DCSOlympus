@@ -1,5 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
-//import { MapMarkerVisibilityControl } from "../map/map";
+import { Context } from "../types/types";
+
+export const DEFAULT_CONTEXT: Context = "default context";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -154,25 +156,8 @@ export const mapBounds = {
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
 }
 
-export const mapMirrors = { 
-    "DCS Map mirror 1": "https://maps.dcsolympus.com/maps",
-    "DCS Map mirror 2": "https://refugees.dcsolympus.com/maps"
-}
-
-export const defaultMapLayers = {
-    "ArcGIS Satellite": {
-        urlTemplate: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        minZoom: 1,
-        maxZoom: 19,
-        attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Mapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-    },
-    "OpenStreetMap Mapnik": {
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        minZoom: 1,
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }
-}
+export const defaultMapMirrors = {};
+export const defaultMapLayers = {};
 
 /* Map constants */
 export const IDLE = "Idle";
@@ -184,18 +169,6 @@ export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = { "AAA": 0.8, "SAM Site": 0.1, "Radar (EWR)": 0.05 };
 export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
-
-export const HIDE_GROUP_MEMBERS = "Hide group members when zoomed out";
-export const SHOW_UNIT_LABELS = "Show unit labels (L)";
-export const SHOW_UNITS_ENGAGEMENT_RINGS = "Show units threat range rings (Q)";
-export const HIDE_UNITS_SHORT_RANGE_RINGS = "Hide short range units threat range rings (R)";
-export const SHOW_UNITS_ACQUISITION_RINGS = "Show units detection range rings (E)";
-export const FILL_SELECTED_RING = "Fill the threat range rings of selected units (F)";
-export const SHOW_UNIT_CONTACTS = "Show selected units contact lines";
-export const SHOW_UNIT_PATHS = "Show selected unit paths";
-export const SHOW_UNIT_TARGETS = "Show selected unit targets";
-export const DCS_LINK_PORT = "DCS Camera link port";
-export const DCS_LINK_RATIO = "DCS Camera zoom";
 
 export const MAP_OPTIONS_TOOLTIPS = {
     hideGroupMembers: 			"Hide group members when zoomed out",
@@ -216,7 +189,8 @@ export const MAP_OPTIONS_DEFAULTS = {
     showUnitTargets: 			false,
     showUnitLabels: 			true,
     showUnitsEngagementRings: 	true,
-    showUnitsAcquisitionRings: 	true
+    showUnitsAcquisitionRings: 	true,
+    fillSelectedRing:           false
 }
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
