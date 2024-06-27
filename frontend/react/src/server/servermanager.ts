@@ -111,6 +111,8 @@ export class ServerManager {
             callback(res);
         };
         xmlHttp.send(JSON.stringify(request));
+        console.log(`Sending PUT request:`);
+        console.log(request);
     }
 
     getConfig(callback: CallableFunction) {

@@ -99,7 +99,7 @@ export class Map extends L.Map {
     #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
     #cameraZoomRatio: number = 1.0;
 
-    #contextAction: null |  ContextAction = null;
+    #contextAction: null | ContextAction = null;
 
     /**
      * 
@@ -324,7 +324,7 @@ export class Map extends L.Map {
     }
 
     /* State machine */
-    setState(state: string, options?: { spawnRequestTable?: SpawnRequestTable, contextAction?: ContextAction }) {
+    setState(state: string, options?: { spawnRequestTable?: SpawnRequestTable, contextAction?: ContextAction | null }) {
         this.#state = state;
 
         /* Operations to perform if you are NOT in a state */
@@ -333,7 +333,9 @@ export class Map extends L.Map {
         }
 
         /* Operations to perform if you ARE in a state */
-        if (this.#state === SPAWN_UNIT) {
+        if (this.#state === IDLE) {
+            getApp().getUnitsManager().deselectAllUnits();
+        } else if (this.#state === SPAWN_UNIT) {
             this.#spawnRequestTable = options?.spawnRequestTable ?? null;
             this.#spawnCursor?.removeFrom(this);
             this.#spawnCursor = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? 'blue');
@@ -648,6 +650,10 @@ export class Map extends L.Map {
         //}
     }
 
+    executeContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null) {
+        this.#contextAction?.executeCallback(targetUnit, targetPosition);
+    }
+
     /* Event handlers */
     #onClick(e: any) {
         if (!this.#preventLeftClick) {
@@ -678,6 +684,8 @@ export class Map extends L.Map {
                 else {
                     this.deselectAllCoalitionAreas();
                 }
+            } else if (this.#state === CONTEXT_ACTION) {
+                this.executeContextAction(null, e.latlng);
             }
             else {
                 this.setState(IDLE);
@@ -687,7 +695,7 @@ export class Map extends L.Map {
     }
 
     #onDoubleClick(e: any) {
-
+        this.setState(IDLE);
     }
 
     #onContextMenu(e: any) {
@@ -728,10 +736,6 @@ export class Map extends L.Map {
                 this.#destinationRotationCenter = null;
                 this.#computeDestinationRotation = false;
             }
-        }
-        else if (this.#state === CONTEXT_ACTION) {
-            if (this.#contextAction)
-                this.#contextAction.executeCallback(null, e.latlng);
         }
         else {
             this.setState(IDLE);

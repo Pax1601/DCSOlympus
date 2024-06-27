@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, VISUAL, emissionsCountermeasures, reactionsToThreat, states, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX, CONTEXT_ACTION } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -1065,6 +1065,8 @@ export abstract class Unit extends CustomMarker {
                         getApp().getUnitsManager().deselectAllUnits();
 
                     this.setSelected(!this.getSelected());
+                } else if (getApp().getMap().getState() === CONTEXT_ACTION) {
+                    getApp().getMap().executeContextAction(this, null);
                 }
             }
 
