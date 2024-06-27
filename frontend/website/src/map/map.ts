@@ -321,7 +321,8 @@ export class Map extends L.Map {
     }
 
     setLayer(layerName: string) {
-        this.eachLayer((layer) => this.removeLayer(layer))
+        if (this.#layer)
+            this.removeLayer(this.#layer);
 
         let theatre = getApp().getMissionManager()?.getTheatre() ?? "Nevada";
 
