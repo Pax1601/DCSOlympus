@@ -20,7 +20,7 @@ export class ShortcutKeyboard extends Shortcut {
         super(config);
 
         document.addEventListener(config.event, (ev: any) => {
-            if ( typeof config.context === "string" && !getApp().getContextManager().currentContextIs( config.context ) ) {
+            if ( typeof config.context === "string" && getApp().getCurrentContext() !== config.context ) {
                 return;
             }
 

@@ -42,6 +42,8 @@ export function UI() {
 	var [checkingPassword, setCheckingPassword] = useState(false);
 	var [loginError, setLoginError] = useState(false);
 	var [commandMode, setCommandMode] = useState(null as null | string);
+	var [mapSources, setMapSources] = useState([] as string[]);
+	var [activeMapSource, setActiveMapSource] = useState("");
 
 	document.addEventListener("hiddenTypesChanged", (ev) => {
 		setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
@@ -55,6 +57,20 @@ export function UI() {
 		if ((ev as CustomEvent).detail == IDLE) {
 			hideAllMenus();
 		}
+	})
+
+	document.addEventListener("mapSourceChanged", (ev) => {
+		var source = (ev as CustomEvent).detail;
+		if (source !== activeMapSource)
+			setActiveMapSource(source);
+	})
+
+
+	document.addEventListener("configLoaded", (ev) => {
+		let config = getApp().getConfig();
+		var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
+		setMapSources(sources);
+		setActiveMapSource(sources[0]);
 	})
 
 	function hideAllMenus() {
@@ -111,7 +127,9 @@ export function UI() {
 				drawingMenuVisible: drawingMenuVisible,
 				optionsMenuVisible: optionsMenuVisible,
 				mapOptions: mapOptions,
-				mapHiddenTypes: mapHiddenTypes
+				mapHiddenTypes: mapHiddenTypes,
+				mapSources: mapSources,
+				activeMapSource: activeMapSource
 			}}>
 				<EventsProvider value={
 					{
@@ -157,6 +175,7 @@ export function UI() {
 							<Options
 								open={optionsMenuVisible}
 								onClose={() => setOptionsMenuVisible(false)}
+								options={mapOptions}
 							/>
 							<MiniMapPanel />
 							<UnitControlMenu />

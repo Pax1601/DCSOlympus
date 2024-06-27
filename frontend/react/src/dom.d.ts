@@ -12,7 +12,9 @@ interface CustomEventMap {
     "mapStateChanged":                  CustomEvent<string>,
     "mapContextMenu":                   CustomEvent<any>,
     "mapOptionChanged":                 CustomEvent<any>,
+    "mapSourceChanged":                 CustomEvent<string>,
     "mapOptionsChanged":                CustomEvent<any>, // TODO not very clear, why the two options?
+    "configLoaded":                     CustomEvent<any>,
     "commandModeOptionsChanged":        CustomEvent<any>,  
     "contactsUpdated":                  CustomEvent<Unit>,
     "activeCoalitionChanged":           CustomEvent<any>,

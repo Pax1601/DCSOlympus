@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { Coalition } from "./types/types";
+import { Coalition, Context } from "./types/types";
 
 class Airbase {
     
@@ -264,7 +264,7 @@ export interface Listener {
 export interface ShortcutOptions {
     altKey?: boolean;
     callback: CallableFunction;
-    context?: string;
+    context?: Context;
     ctrlKey?: boolean;
     name?: string;
     shiftKey?: boolean;
