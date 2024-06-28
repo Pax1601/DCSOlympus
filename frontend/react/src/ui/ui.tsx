@@ -30,7 +30,7 @@ export type OlympusState = {
 }
 
 export function UI() {
-	var [loginModalVisible, setLoginModalVisible] = useState(false /* Temporary during devel */);
+	var [loginModalVisible, setLoginModalVisible] = useState(true);
 	var [mainMenuVisible, setMainMenuVisible] = useState(false);
 	var [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
 	var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
@@ -109,12 +109,12 @@ export function UI() {
 	}
 
 	/* Temporary during devel */
-	useEffect(() => {
-		window.setTimeout(() => {
-			checkPassword("admin");
-			connect("devel");
-		}, 1000)
-	}, [])
+	//useEffect(() => {
+	//	window.setTimeout(() => {
+	//		checkPassword("admin");
+	//		connect("devel");
+	//	}, 1000)
+	//}, [])
 	
 	
 	return (
