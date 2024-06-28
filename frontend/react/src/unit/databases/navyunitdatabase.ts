@@ -4,7 +4,7 @@ import { UnitDatabase } from "./unitdatabase"
 
 export class NavyUnitDatabase extends UnitDatabase {
     constructor() {
-        super(window.location.href.split('?')[0] + 'api/databases/units/navyunitdatabase');
+        super(window.location.href.split('?')[0].replace("vite/", "") + 'api/databases/units/navyunitdatabase');
     }
 
     getSpawnPointsByName(name: string) {

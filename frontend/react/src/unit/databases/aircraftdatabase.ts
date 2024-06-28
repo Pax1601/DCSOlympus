@@ -4,7 +4,7 @@ import { UnitDatabase } from "./unitdatabase"
 
 export class AircraftDatabase extends UnitDatabase {
     constructor() {
-        super(window.location.href.split('?')[0] + 'api/databases/units/aircraftdatabase');
+        super(window.location.href.split('?')[0].replace("vite/", "") + 'api/databases/units/aircraftdatabase');
     }
 
 	getCategory() {

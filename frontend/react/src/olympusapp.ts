@@ -158,7 +158,7 @@ export class OlympusApp {
         this.#weaponsManager = new WeaponsManager();
 
         /* Set the address of the server */
-        this.getServerManager().setAddress(window.location.href.split('?')[0]);
+        this.getServerManager().setAddress(window.location.href.split('?')[0].replace("vite/", ""));
 
         /* Setup all global events */
         this.#setupEvents();
@@ -181,7 +181,7 @@ export class OlympusApp {
         })
 
         /* Load the config file from the server */
-        const configRequest = new Request(window.location.href.split('?')[0] + "resources/config");
+        const configRequest = new Request(window.location.href.split('?')[0].replace("vite/", "") + "resources/config");
         fetch(configRequest).then((response) => {
             if (response.status === 200) {
                 return response.json();
