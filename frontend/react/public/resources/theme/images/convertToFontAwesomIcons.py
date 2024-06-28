@@ -1,4 +1,4 @@
-from svgpathtools import svg2paths, wsvg
+from svgpathtools import svg2paths2
 import os
 from glob import glob
 import svgelements 
@@ -15,7 +15,7 @@ with open(os.path.join( "..", "..", "..", "..",  "src", "ui", "components", "oli
             iconName = temp[0] + ''.join(ele.capitalize() for ele in temp[1:])
 
             svg = svgelements.SVG.parse(filename)
-            paths, attributes = svg2paths(filename)
+            paths, attributes, svg_attributes = svg2paths2(filename)
 
             fp.write(f"export const ol{iconName}: IconDefinition = {{")
             fp.write(" icon: [")

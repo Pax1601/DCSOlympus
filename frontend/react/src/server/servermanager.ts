@@ -129,8 +129,6 @@ export class ServerManager {
     }
 
     setAddress(address: string) {
-        // Temporary
-        address = "http://localhost:3000/"
         this.#REST_ADDRESS = `${address}olympus`
         console.log(`Setting REST address to ${this.#REST_ADDRESS}`)
     }
