@@ -158,8 +158,7 @@ export class OlympusApp {
         this.#weaponsManager = new WeaponsManager();
 
         /* Set the address of the server */
-        // Temporary forcing port 3000 for development
-        this.getServerManager().setAddress(window.location.href.split('?')[0].replace('8080', '3000'));
+        this.getServerManager().setAddress(window.location.href.split('?')[0]);
 
         /* Setup all global events */
         this.#setupEvents();
@@ -182,8 +181,7 @@ export class OlympusApp {
         })
 
         /* Load the config file from the server */
-        // Temporary forcing port 3000 for development
-        const configRequest = new Request(window.location.href.split('?')[0].replace('8080', '3000') + "resources/config");
+        const configRequest = new Request(window.location.href.split('?')[0] + "resources/config");
         fetch(configRequest).then((response) => {
             if (response.status === 200) {
                 return response.json();
