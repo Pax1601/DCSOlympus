@@ -13,45 +13,45 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <sodipodi:namedview
-     id="namedview10"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     showgrid="false"
-     inkscape:zoom="0.88166667"
-     inkscape:cx="497.3535"
-     inkscape:cy="301.13421"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg10"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
-  <metadata
-     id="metadata16">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <defs
-     id="defs14" />
-  <path
-     fill="#bc0000"
-     fill-opacity="1"
-     d="M 0,0 H 640 V 480 H 0 Z"
-     id="path2"
-     style="fill:#cc0000;fill-opacity:1;stroke-width:0.999996" />
+   <sodipodi:namedview
+      id="namedview10"
+      pagecolor="#ffffff"
+      bordercolor="#666666"
+      borderopacity="1.0"
+      inkscape:pageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      showgrid="false"
+      inkscape:zoom="0.88166667"
+      inkscape:cx="497.3535"
+      inkscape:cy="301.13421"
+      inkscape:window-width="1920"
+      inkscape:window-height="1017"
+      inkscape:window-x="-8"
+      inkscape:window-y="-8"
+      inkscape:window-maximized="1"
+      inkscape:current-layer="svg10"
+      fit-margin-top="0"
+      fit-margin-left="0"
+      fit-margin-right="0"
+      fit-margin-bottom="0" />
+   <metadata
+      id="metadata16">
+      <rdf:RDF>
+         <cc:Work
+            rdf:about="">
+            <dc:format>image/svg+xml</dc:format>
+            <dc:type
+               rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+         </cc:Work>
+      </rdf:RDF>
+   </metadata>
+   <defs
+      id="defs14" />
+   <path
+      fill="#bc0000"
+      fill-opacity="1"
+      d="M 0,0 H 640 V 480 H 0 Z"
+      id="path2"
+      style="fill:#cc0000;fill-opacity:1;stroke-width:0.999996" />
 </svg>

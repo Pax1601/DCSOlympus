@@ -1,375 +1,251 @@
 {
   "AGGRESSORS": {
     "flagCode": "RED",
-    "liveryCodes": [
-      "RSO"
-    ]
+    "liveryCodes": ["RSO"]
   },
   "INSURGENTS": {
     "flagCode": "UNK",
-    "liveryCodes": [
-      "INS"
-    ]
+    "liveryCodes": ["INS"]
   },
   "ALGERIA": {
     "flagCode": "DZ",
-    "liveryCodes": [
-      "DZA"
-    ]
+    "liveryCodes": ["DZA"]
   },
   "ARGENTINA": {
     "flagCode": "AR",
-    "liveryCodes": [
-      "ARG"
-    ]
+    "liveryCodes": ["ARG"]
   },
   "AUSTRALIA": {
     "flagCode": "AU",
-    "liveryCodes": [
-      "AUS",
-      "AUSAF"
-    ]
+    "liveryCodes": ["AUS", "AUSAF"]
   },
   "AUSTRIA": {
     "flagCode": "AT",
-    "liveryCodes": [
-      "AUT"
-    ]
+    "liveryCodes": ["AUT"]
   },
   "BAHRAIN": {
     "flagCode": "BH",
-    "liveryCodes": [
-      "BHR"
-    ]
+    "liveryCodes": ["BHR"]
   },
   "BELARUS": {
     "flagCode": "BY",
-    "liveryCodes": [
-      "BLR"
-    ]
+    "liveryCodes": ["BLR"]
   },
   "BELGIUM": {
     "flagCode": "BE",
-    "liveryCodes": [
-      "BEL"
-    ]
+    "liveryCodes": ["BEL"]
   },
   "BOLIVIA": {
     "flagCode": "BO",
-    "liveryCodes": [
-      "BOL"
-    ]
+    "liveryCodes": ["BOL"]
   },
   "BRAZIL": {
     "flagCode": "BR",
-    "liveryCodes": [
-      "BRA"
-    ]
+    "liveryCodes": ["BRA"]
   },
   "BULGARIA": {
     "flagCode": "BG",
-    "liveryCodes": [
-      "BGR"
-    ]
+    "liveryCodes": ["BGR"]
   },
   "CANADA": {
     "flagCode": "CA",
-    "liveryCodes": [
-      "CAN"
-    ]
+    "liveryCodes": ["CAN"]
   },
   "CHILE": {
     "flagCode": "CL",
-    "liveryCodes": [
-      "CHL"
-    ]
+    "liveryCodes": ["CHL"]
   },
   "CHINA": {
     "flagCode": "CN",
-    "liveryCodes": [
-      "CHN"
-    ]
+    "liveryCodes": ["CHN"]
   },
   "CROATIA": {
     "flagCode": "HR",
-    "liveryCodes": [
-      "HRV"
-    ]
+    "liveryCodes": ["HRV"]
   },
   "CUBA": {
     "flagCode": "CU",
-    "liveryCodes": [
-      "CUB"
-    ]
+    "liveryCodes": ["CUB"]
   },
   "CYPRUS": {
     "flagCode": "CY",
-    "liveryCodes": [
-      "CYP"
-    ]
+    "liveryCodes": ["CYP"]
   },
   "CHEZH_REPUBLIC": {
     "displayName": "Czech Republic",
     "flagCode": "CZ",
-    "liveryCodes": [
-      "CZE"
-    ]
+    "liveryCodes": ["CZE"]
   },
   "DENMARK": {
     "flagCode": "DK",
-    "liveryCodes": [
-      "DEN"
-    ]
+    "liveryCodes": ["DEN"]
   },
   "EGYPT": {
     "flagCode": "EG",
-    "liveryCodes": [
-      "EGY",
-      "EGP"
-    ]
+    "liveryCodes": ["EGY", "EGP"]
   },
   "ETHIOPIA": {
     "flagCode": "ET",
-    "liveryCodes": [
-      "ETH"
-    ]
+    "liveryCodes": ["ETH"]
   },
   "FINLAND": {
     "flagCode": "FI",
-    "liveryCodes": [
-      "FIN"
-    ]
+    "liveryCodes": ["FIN"]
   },
   "FRANCE": {
     "flagCode": "FR",
-    "liveryCodes": [
-      "FRA"
-    ]
+    "liveryCodes": ["FRA"]
   },
   "GEORGIA": {
     "flagCode": "GE",
-    "liveryCodes": [
-      "GRG"
-    ]
+    "liveryCodes": ["GRG"]
   },
   "GERMANY": {
     "flagCode": "DE",
-    "liveryCodes": [
-      "GER"
-    ]
+    "liveryCodes": ["GER"]
   },
   "GHANA": {
     "flagCode": "GH",
-    "liveryCodes": [
-      "GHA"
-    ]
+    "liveryCodes": ["GHA"]
   },
   "GREECE": {
     "flagCode": "GR",
-    "liveryCodes": [
-      "GRC"
-    ]
+    "liveryCodes": ["GRC"]
   },
   "HONDURAS": {
     "flagCode": "HN",
-    "liveryCodes": [
-      "HND"
-    ]
+    "liveryCodes": ["HND"]
   },
   "HUNGARY": {
     "flagCode": "HU",
-    "liveryCodes": [
-      "HUN"
-    ]
+    "liveryCodes": ["HUN"]
   },
   "INDIA": {
     "flagCode": "IN",
-    "liveryCodes": [
-      "IND"
-    ]
+    "liveryCodes": ["IND"]
   },
   "INDONESIA": {
     "flagCode": "ID",
-    "liveryCodes": [
-      "IDN"
-    ]
+    "liveryCodes": ["IDN"]
   },
   "IRAN": {
     "flagCode": "IR",
-    "liveryCodes": [
-      "IRN"
-    ]
+    "liveryCodes": ["IRN"]
   },
   "IRAQ": {
     "flagCode": "IQ",
-    "liveryCodes": [
-      "IRQ"
-    ]
+    "liveryCodes": ["IRQ"]
   },
   "ISRAEL": {
     "flagCode": "IL",
-    "liveryCodes": [
-      "ISR"
-    ]
+    "liveryCodes": ["ISR"]
   },
   "ITALY": {
     "flagCode": "IT",
-    "liveryCodes": [
-      "ITA"
-    ]
+    "liveryCodes": ["ITA"]
   },
   "JAPAN": {
     "flagCode": "JP",
-    "liveryCodes": [
-      "JPN"
-    ]
+    "liveryCodes": ["JPN"]
   },
   "JORDAN": {
     "flagCode": "JO",
-    "liveryCodes": [
-      "JOR"
-    ]
+    "liveryCodes": ["JOR"]
   },
   "KAZAKHSTAN": {
     "flagCode": "KZ",
-    "liveryCodes": [
-      "KAZ"
-    ]
+    "liveryCodes": ["KAZ"]
   },
   "SOUTH_KOREA": {
     "displayName": "South Korea",
     "flagCode": "KR",
-    "liveryCodes": [
-      "KOR"
-    ]
+    "liveryCodes": ["KOR"]
   },
   "KUWAIT": {
     "flagCode": "KW",
-    "liveryCodes": [
-      "KWT"
-    ]
+    "liveryCodes": ["KWT"]
   },
   "LEBANON": {
     "flagCode": "LB",
-    "liveryCodes": [
-      "LBN"
-    ]
+    "liveryCodes": ["LBN"]
   },
   "MALAYSIA": {
     "flagCode": "MY",
-    "liveryCodes": [
-      "MYS"
-    ]
+    "liveryCodes": ["MYS"]
   },
   "MEXICO": {
     "flagCode": "MX",
-    "liveryCodes": [
-      "MEX"
-    ]
+    "liveryCodes": ["MEX"]
   },
   "MOROCCO": {
     "flagCode": "MA",
-    "liveryCodes": [
-      "MAR"
-    ]
+    "liveryCodes": ["MAR"]
   },
   "THE_NETHERLANDS": {
     "displayName": "The Netherlands",
     "flagCode": "NL",
-    "liveryCodes": [
-      "NETH"
-    ]
+    "liveryCodes": ["NETH"]
   },
   "NIGERIA": {
     "flagCode": "NG",
-    "liveryCodes": [
-      "NGA"
-    ]
+    "liveryCodes": ["NGA"]
   },
   "NORWAY": {
     "flagCode": "NO",
-    "liveryCodes": [
-      "NOR"
-    ]
+    "liveryCodes": ["NOR"]
   },
   "OMAN": {
     "flagCode": "OM",
-    "liveryCodes": [
-      "OMN"
-    ]
+    "liveryCodes": ["OMN"]
   },
   "PAKISTAN": {
     "flagCode": "PK",
-    "liveryCodes": [
-      "PAK"
-    ]
+    "liveryCodes": ["PAK"]
   },
   "PERU": {
     "flagCode": "PE",
-    "liveryCodes": [
-      "PER"
-    ]
+    "liveryCodes": ["PER"]
   },
   "PHILIPPINES": {
     "flagCode": "PH",
-    "liveryCodes": [
-      "PHL"
-    ]
+    "liveryCodes": ["PHL"]
   },
   "POLAND": {
     "flagCode": "PL",
-    "liveryCodes": [
-      "POL"
-    ]
+    "liveryCodes": ["POL"]
   },
   "PORTUGAL": {
     "flagCode": "PT",
-    "liveryCodes": [
-      "PRT"
-    ]
+    "liveryCodes": ["PRT"]
   },
   "QATAR": {
     "flagCode": "QA",
-    "liveryCodes": [
-      "QAT"
-    ]
+    "liveryCodes": ["QAT"]
   },
   "ROMANIA": {
     "flagCode": "RO",
-    "liveryCodes": [
-      "ROU"
-    ]
+    "liveryCodes": ["ROU"]
   },
   "RUSSIA": {
     "flagCode": "RU",
-    "liveryCodes": [
-      "RUS"
-    ]
+    "liveryCodes": ["RUS"]
   },
   "SAUDI_ARABIA": {
     "displayName": "Saudi Arabia",
     "flagCode": "SA",
-    "liveryCodes": [
-      "SAU"
-    ]
+    "liveryCodes": ["SAU"]
   },
   "SERBIA": {
     "flagCode": "RS",
-    "liveryCodes": [
-      "SRB"
-    ]
+    "liveryCodes": ["SRB"]
   },
   "SLOVAKIA": {
     "flagCode": "SK",
-    "liveryCodes": [
-      "SVK"
-    ]
+    "liveryCodes": ["SVK"]
   },
   "SLOVENIA": {
     "flagCode": "SI",
-    "liveryCodes": [
-      "SVN"
-    ]
+    "liveryCodes": ["SVN"]
   },
   "SOUTH_AFRICA": {
     "displayName": "South Africa",
@@ -378,106 +254,71 @@
   },
   "SPAIN": {
     "flagCode": "ES",
-    "liveryCodes": [
-      "SPN",
-      "SPA"
-    ]
+    "liveryCodes": ["SPN", "SPA"]
   },
   "SUDAN": {
     "flagCode": "SD",
-    "liveryCodes": [
-      "SDN",
-      "SUN"
-    ]
+    "liveryCodes": ["SDN", "SUN"]
   },
   "SWEDEN": {
     "flagCode": "SE",
-    "liveryCodes": [
-      "SWE"
-    ]
+    "liveryCodes": ["SWE"]
   },
   "SWITZERLAND": {
     "flagCode": "CH",
-    "liveryCodes": [
-      "SUI"
-    ]
+    "liveryCodes": ["SUI"]
   },
   "SYRIA": {
     "flagCode": "SY",
-    "liveryCodes": [
-      "SYR"
-    ]
+    "liveryCodes": ["SYR"]
   },
   "THAILAND": {
     "flagCode": "TH",
-    "liveryCodes": [
-      "THA"
-    ]
+    "liveryCodes": ["THA"]
   },
   "TUNISIA": {
     "flagCode": "TN",
-    "liveryCodes": [
-      "TUN"
-    ]
+    "liveryCodes": ["TUN"]
   },
   "TURKEY": {
     "flagCode": "TR",
-    "liveryCodes": [
-      "TUR"
-    ]
+    "liveryCodes": ["TUR"]
   },
   "UKRAINE": {
     "flagCode": "UA",
-    "liveryCodes": [
-      "UKR"
-    ]
+    "liveryCodes": ["UKR"]
   },
   "UNITED_ARAB_EMIRATES": {
     "displayName": "United Arab Emirates",
     "flagCode": "AE",
-    "liveryCodes": [
-      "ARE"
-    ]
+    "liveryCodes": ["ARE"]
   },
   "UK": {
     "displayName": "United Kingdom",
     "flagCode": "GB",
-    "liveryCodes": [
-      "UK"
-    ]
+    "liveryCodes": ["UK"]
   },
   "USA": {
     "displayName": "United States of America",
     "flagCode": "US",
-    "liveryCodes": [
-      "USA",
-      "USAF"
-    ]
+    "liveryCodes": ["USA", "USAF"]
   },
   "VENEZUELA": {
     "flagCode": "VE",
-    "liveryCodes": [
-      "VEN"
-    ]
+    "liveryCodes": ["VEN"]
   },
   "VIETNAM": {
     "flagCode": "VN",
-    "liveryCodes": [
-      "VNM"
-    ]
+    "liveryCodes": ["VNM"]
   },
   "YEMEN": {
     "flagCode": "YE",
-    "liveryCodes": [
-      "YEM"
-    ]
+    "liveryCodes": ["YEM"]
   },
   "CJTF_BLUE": {
     "displayName": "Combined Joint Task Force Blue",
     "flagCode": "BLUE",
-    "liveryCodes": [
-      "BLUE"
-    ]
+    "liveryCodes": ["BLUE"]
   },
   "SOUTH_OSETIA": {
     "displayName": "South Ossetia",
@@ -487,29 +328,21 @@
   "NORTH_KOREA": {
     "displayName": "Democratic People's Republic of Korea",
     "flagCode": "KP",
-    "liveryCodes": [
-      "PRK"
-    ]
+    "liveryCodes": ["PRK"]
   },
   "CJTF_RED": {
     "displayName": "Combined Joint Task Force Red",
     "flagCode": "RED",
-    "liveryCodes": [
-      "RED"
-    ]
+    "liveryCodes": ["RED"]
   },
   "ABKHAZIA": {
     "flagCode": "UNK",
-    "liveryCodes": [
-      "ABH"
-    ]
+    "liveryCodes": ["ABH"]
   },
   "ITALIAN_SOCIAL_REPUBLIC": {
     "displayName": "Italian Social Republic",
     "flagCode": "SOCIAL",
-    "liveryCodes": [
-      "RSI"
-    ]
+    "liveryCodes": ["RSI"]
   },
   "USSR": {
     "displayName": "USSR",
@@ -518,35 +351,24 @@
   },
   "ECUADOR": {
     "flagCode": "EC",
-    "liveryCodes": [
-      "ECU"
-    ]
+    "liveryCodes": ["ECU"]
   },
   "LIBYA": {
     "flagCode": "LY",
-    "liveryCodes": [
-      "LBY",
-      "LIB"
-    ]
+    "liveryCodes": ["LBY", "LIB"]
   },
   "UN_PEACEKEEPERS": {
     "displayName": "United Nations",
     "flagCode": "UNK",
-    "liveryCodes": [
-      "UN"
-    ]
+    "liveryCodes": ["UN"]
   },
   "GDR": {
     "flagCode": "UNK",
-    "liveryCodes": [
-      "GDR"
-    ]
+    "liveryCodes": ["GDR"]
   },
   "YUGOSLAVIA": {
     "flagCode": "YUG",
-    "liveryCodes": [
-      "YUG"
-    ]
+    "liveryCodes": ["YUG"]
   },
   "THIRDREICH": {
     "displayName": "Third Reich",

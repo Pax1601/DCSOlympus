@@ -9,32 +9,34 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs11519" />
-  <sodipodi:namedview
-     id="namedview11517"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     showgrid="false"
-     inkscape:zoom="1.1559539"
-     inkscape:cx="184.69595"
-     inkscape:cy="230.97808"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg11515" />
-  <!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-  <path
-     d="m 0,480 c 0,17.7 14.3,32 32,32 h 576 c 17.7,0 32,-14.3 32,-32 0,-17.7 -14.3,-32 -32,-32 H 32 C 14.3,448 0,462.3 0,480 Z"
-     id="path12003" />
-  <path
-     d="M 381,114.9 186.1,41.8 C 169.4,35.6 150.9,36.5 135,44.5 L 89.1,67.4 C 78,73 77.2,88.5 87.6,95.2 L 234.5,189.7 136,240 77.8,214.1 c -8.7,-3.9 -18.8,-3.7 -27.3,0.6 l -32.2,16.1 c -9.3,4.7 -11.8,16.8 -5,24.7 l 73.1,85.3 c 6.1,7.1 15,11.2 24.3,11.2 h 137.7 c 5,0 9.9,-1.2 14.3,-3.4 L 535.6,212.2 c 46.5,-23.3 82.5,-63.3 100.8,-112 C 645.9,75 627.2,48 600.2,48 h -57.4 c -20.2,0 -40.2,4.8 -58.2,14 z"
-     id="path11513" />
+   <defs
+      id="defs11519" />
+   <sodipodi:namedview
+      id="namedview11517"
+      pagecolor="#ffffff"
+      bordercolor="#666666"
+      borderopacity="1.0"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      showgrid="false"
+      inkscape:zoom="1.1559539"
+      inkscape:cx="184.69595"
+      inkscape:cy="230.97808"
+      inkscape:window-width="1920"
+      inkscape:window-height="1017"
+      inkscape:window-x="-8"
+      inkscape:window-y="-8"
+      inkscape:window-maximized="1"
+      inkscape:current-layer="svg11515" />
+   <!--!
+   Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License -
+   https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+   <path
+      d="m 0,480 c 0,17.7 14.3,32 32,32 h 576 c 17.7,0 32,-14.3 32,-32 0,-17.7 -14.3,-32 -32,-32 H 32 C 14.3,448 0,462.3 0,480 Z"
+      id="path12003" />
+   <path
+      d="M 381,114.9 186.1,41.8 C 169.4,35.6 150.9,36.5 135,44.5 L 89.1,67.4 C 78,73 77.2,88.5 87.6,95.2 L 234.5,189.7 136,240 77.8,214.1 c -8.7,-3.9 -18.8,-3.7 -27.3,0.6 l -32.2,16.1 c -9.3,4.7 -11.8,16.8 -5,24.7 l 73.1,85.3 c 6.1,7.1 15,11.2 24.3,11.2 h 137.7 c 5,0 9.9,-1.2 14.3,-3.4 L 535.6,212.2 c 46.5,-23.3 82.5,-63.3 100.8,-112 C 645.9,75 627.2,48 600.2,48 h -57.4 c -20.2,0 -40.2,4.8 -58.2,14 z"
+      id="path11513" />
 </svg>

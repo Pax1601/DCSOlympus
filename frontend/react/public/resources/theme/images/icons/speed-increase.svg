@@ -9,48 +9,50 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs8" />
-  <sodipodi:namedview
-     id="namedview6"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     showgrid="false"
-     inkscape:zoom="0.81738281"
-     inkscape:cx="362.74313"
-     inkscape:cy="254.47073"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
-  <!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-  <path
-     d="m 51.825435,284.79404 a 203.05733,202.96808 0 1 1 406.114665,0 203.05733,202.96808 0 1 1 -406.114665,0 z M 280.26494,157.939 a 25.382167,25.371011 0 1 0 -50.76433,0 25.382167,25.371011 0 1 0 50.76433,0 z m -25.38218,253.71009 c 27.99972,0 50.76435,-22.75462 50.76435,-50.74202 0,-13.79547 -5.47304,-26.24313 -14.3568,-35.36086 l 50.84365,-115.51736 c 4.20393,-9.59341 -0.15866,-20.85181 -9.75626,-25.05387 -9.59763,-4.2021 -20.86097,0.1586 -25.06489,9.75199 l -50.92297,115.43808 c -0.47592,0 -1.03116,0 -1.50708,0 -27.99969,0 -50.76433,22.75464 -50.76433,50.74202 0,27.9874 22.76464,50.74202 50.76433,50.74202 z M 191.42736,195.9955 a 25.38217,25.371013 0 1 0 -50.76433,0 25.38217,25.371013 0 1 0 50.76433,0 z m -63.45542,114.16955 a 25.382167,25.371011 0 1 0 0,-50.74201 25.382167,25.371011 0 1 0 0,50.74201 z m 279.20384,-25.37101 a 25.38217,25.371013 0 1 0 -50.76433,0 25.38217,25.371013 0 1 0 50.76433,0 z"
-     id="path2"
-     style="stroke-width:0.627239" />
-  <path
-     style="fill:none;stroke-width:37.6403;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
-     id="path1569"
-     sodipodi:type="arc"
-     sodipodi:cx="255.4747"
-     sodipodi:cy="284.48697"
-     sodipodi:rx="250.99081"
-     sodipodi:ry="250.88049"
-     sodipodi:start="3.7594392"
-     sodipodi:end="5.6635934"
-     sodipodi:arc-type="arc"
-     d="M 50.885111,139.15662 A 250.99081,250.88049 0 0 1 255.25567,33.606571 250.99081,250.88049 0 0 1 459.81021,138.79992"
-     sodipodi:open="true" />
-  <path
-     style="fill:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
-     d="m 465.6071,145.14023 4.27204,-74.423872"
-     id="path2580"
-     sodipodi:nodetypes="cc" />
+   <defs
+      id="defs8" />
+   <sodipodi:namedview
+      id="namedview6"
+      pagecolor="#ffffff"
+      bordercolor="#666666"
+      borderopacity="1.0"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      showgrid="false"
+      inkscape:zoom="0.81738281"
+      inkscape:cx="362.74313"
+      inkscape:cy="254.47073"
+      inkscape:window-width="1920"
+      inkscape:window-height="1017"
+      inkscape:window-x="-8"
+      inkscape:window-y="-8"
+      inkscape:window-maximized="1"
+      inkscape:current-layer="svg4" />
+   <!--!
+   Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License -
+   https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+   <path
+      d="m 51.825435,284.79404 a 203.05733,202.96808 0 1 1 406.114665,0 203.05733,202.96808 0 1 1 -406.114665,0 z M 280.26494,157.939 a 25.382167,25.371011 0 1 0 -50.76433,0 25.382167,25.371011 0 1 0 50.76433,0 z m -25.38218,253.71009 c 27.99972,0 50.76435,-22.75462 50.76435,-50.74202 0,-13.79547 -5.47304,-26.24313 -14.3568,-35.36086 l 50.84365,-115.51736 c 4.20393,-9.59341 -0.15866,-20.85181 -9.75626,-25.05387 -9.59763,-4.2021 -20.86097,0.1586 -25.06489,9.75199 l -50.92297,115.43808 c -0.47592,0 -1.03116,0 -1.50708,0 -27.99969,0 -50.76433,22.75464 -50.76433,50.74202 0,27.9874 22.76464,50.74202 50.76433,50.74202 z M 191.42736,195.9955 a 25.38217,25.371013 0 1 0 -50.76433,0 25.38217,25.371013 0 1 0 50.76433,0 z m -63.45542,114.16955 a 25.382167,25.371011 0 1 0 0,-50.74201 25.382167,25.371011 0 1 0 0,50.74201 z m 279.20384,-25.37101 a 25.38217,25.371013 0 1 0 -50.76433,0 25.38217,25.371013 0 1 0 50.76433,0 z"
+      id="path2"
+      style="stroke-width:0.627239" />
+   <path
+      style="fill:none;stroke-width:37.6403;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+      id="path1569"
+      sodipodi:type="arc"
+      sodipodi:cx="255.4747"
+      sodipodi:cy="284.48697"
+      sodipodi:rx="250.99081"
+      sodipodi:ry="250.88049"
+      sodipodi:start="3.7594392"
+      sodipodi:end="5.6635934"
+      sodipodi:arc-type="arc"
+      d="M 50.885111,139.15662 A 250.99081,250.88049 0 0 1 255.25567,33.606571 250.99081,250.88049 0 0 1 459.81021,138.79992"
+      sodipodi:open="true" />
+   <path
+      style="fill:none;stroke-width:30;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+      d="m 465.6071,145.14023 4.27204,-74.423872"
+      id="path2580"
+      sodipodi:nodetypes="cc" />
 </svg>

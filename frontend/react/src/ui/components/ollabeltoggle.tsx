@@ -1,14 +1,54 @@
 import React from "react";
 
 export function OlLabelToggle(props: {
-    toggled: boolean | undefined,
-    leftLabel: string,
-    rightLabel: string,
-    onClick: () => void
+  toggled: boolean | undefined;
+  leftLabel: string;
+  rightLabel: string;
+  onClick: () => void;
 }) {
-    return <button onClick={props.onClick} className="border dark:border-gray-600 relative text-sm flex flex-row flex-none  contents-center justify-between w-[120px] h-10 border dark:border-transparent dark:bg-gray-700 rounded-md py-[5px] px-1 select-none cursor-pointer focus:ring-2 focus:outline-none focus:ring-blue-300 dark:hover:bg-gray-600 dark:focus:ring-blue-800">
-        <span data-flash={props.toggled === undefined} data-toggled={props.toggled ?? false} className="data-[flash='true']:animate-pulse absolute my-auto h-[28px] w-[54px] bg-blue-500 rounded-md data-[toggled='true']:translate-x-14 transition-transform"></span>
-        <span data-active={!(props.toggled ?? false)} className="my-auto dark:data-[active='true']:text-white font-normal dark:data-[active='false']:text-gray-400 dark:data-[active='false']:text-gray-400 pl-3 z-ui-2 transition-colors">{props.leftLabel}</span>
-        <span data-active={props.toggled ?? false} className="my-auto dark:data-[active='true']:text-white font-normal dark:data-[active='false']:text-gray-400 pr-3.5 z-ui-2 transition-colors">{props.rightLabel}</span>
+  return (
+    <button
+      onClick={props.onClick}
+      className={`
+        relative flex h-10 w-[120px] flex-none cursor-pointer select-none
+        flex-row justify-between rounded-md border border px-1 py-[5px] text-sm
+        contents-center
+        dark:border-gray-600 dark:border-transparent dark:bg-gray-700
+        dark:hover:bg-gray-600 dark:focus:ring-blue-800
+        focus:outline-none focus:ring-2 focus:ring-blue-300
+      `}
+    >
+      <span
+        data-flash={props.toggled === undefined}
+        data-toggled={props.toggled ?? false}
+        className={`
+          absolute my-auto h-[28px] w-[54px] rounded-md bg-blue-500
+          transition-transform
+          data-[flash='true']:animate-pulse
+          data-[toggled='true']:translate-x-14
+        `}
+      ></span>
+      <span
+        data-active={!(props.toggled ?? false)}
+        className={`
+          my-auto pl-3 font-normal transition-colors z-ui-2
+          dark:data-[active='false']:text-gray-400
+          dark:data-[active='false']:text-gray-400
+          dark:data-[active='true']:text-white
+        `}
+      >
+        {props.leftLabel}
+      </span>
+      <span
+        data-active={props.toggled ?? false}
+        className={`
+          my-auto pr-3.5 font-normal transition-colors z-ui-2
+          dark:data-[active='false']:text-gray-400
+          dark:data-[active='true']:text-white
+        `}
+      >
+        {props.rightLabel}
+      </span>
     </button>
+  );
 }

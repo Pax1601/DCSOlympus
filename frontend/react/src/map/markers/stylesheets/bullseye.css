@@ -1,24 +1,24 @@
 .bullseye-icon {
-    align-items: center;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    height: 100%;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .bullseye-icon[data-coalition="red"] svg * {
-    stroke: var(--unit-background-red);
-    fill: var(--unit-background-red);
+  stroke: var(--unit-background-red);
+  fill: var(--unit-background-red);
 }
 
 .bullseye-icon[data-coalition="blue"] svg * {
-    stroke: var(--unit-background-blue);
-    fill: var(--unit-background-blue);
+  stroke: var(--unit-background-blue);
+  fill: var(--unit-background-blue);
 }
 
 .bullseye-icon[data-coalition="neutral"] svg * {
-    stroke: var(--unit-background-neutral);
-    fill: var(--unit-background-neutral);
+  stroke: var(--unit-background-neutral);
+  fill: var(--unit-background-neutral);
 }

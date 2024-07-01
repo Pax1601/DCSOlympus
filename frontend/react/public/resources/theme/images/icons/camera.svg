@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   viewBox="0 0 576 512"
-   version="1.1"
-   id="svg1"
-   sodipodi:docname="slew.svg"
-   xml:space="preserve"
-   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
+  viewBox="0 0 576 512"
+  version="1.1"
+  id="svg1"
+  sodipodi:docname="slew.svg"
+  xml:space="preserve"
+  inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+  xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"><defs
      id="defs1" /><sodipodi:namedview
      id="namedview1"
      pagecolor="#505050"
@@ -27,7 +27,9 @@
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" /><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path
+     inkscape:current-layer="svg1" /><!--!Font
+  Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License -
+  https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path
      d="m 18.892988,123.94151 c 0,-33.293066 27.068299,-60.361356 60.361351,-60.361356 H 320.69975 c 33.29306,0 60.36135,27.06829 60.36135,60.361356 V 365.3869 c 0,33.29306 -27.06829,60.36135 -60.36135,60.36135 H 79.254339 c -33.293052,0 -60.361351,-27.06829 -60.361351,-60.36135 z M 546.20598,97.344781 c 9.80872,5.281629 15.93917,15.467609 15.93917,26.596729 V 365.3869 c 0,11.12912 -6.13045,21.3151 -15.93917,26.59673 -9.80872,5.28161 -21.69237,4.71572 -31.02951,-1.50904 l -90.54203,-60.36135 -13.39267,-8.9599 V 305.02555 184.30286 168.17507 l 13.39267,-8.9599 90.54203,-60.361354 c 9.24284,-6.130451 21.12646,-6.790646 31.02951,-1.509035 z"
      id="path1"
      style="stroke-width:0.943146"

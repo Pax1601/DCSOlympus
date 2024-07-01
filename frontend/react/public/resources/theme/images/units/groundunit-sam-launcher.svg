@@ -12,40 +12,40 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <path
-     fill="#3BB9FF" 
-	 stroke="none" 
-	 stroke-width="2"
-     d="M45.7733 41.3423L25.9481 7.63951C25.5228 6.91648 24.4772 6.91646 24.0519 7.63951L4.22671 41.3423C3.79536 42.0756 4.32409 43 5.17484 43H44.8252C45.6759 43 46.2046 42.0756 45.7733 41.3423Z"
-     id="path2" />
-  <path
-     d="M6.74842 41L25 9.97231L43.2516 41H6.74842Z"
-     fill="none"
-     stroke="#082E44"
-     stroke-width="2"
-     id="path4" />
-  <path
-	 stroke="#082E44"
-	 stroke-width="2"
-     id="path849"
-     sodipodi:type="arc"
-     sodipodi:cx="25.284166"
-     sodipodi:cy="43.365532"
-     sodipodi:rx="8.2439137"
-     sodipodi:ry="8.2651606"
-     sodipodi:start="3.8397244"
-     sodipodi:end="5.5850536"
-     sodipodi:arc-type="arc"
-     d="m 18.968962,38.052789 a 8.2439137,8.2651606 0 0 1 6.315204,-2.952418 8.2439137,8.2651606 0 0 1 6.315205,2.952418"
-     sodipodi:open="true" />
-  <path
-     stroke="#082E44"
-	 stroke-width="1.5"
-     d="M 25.114189,34.887901 V 19.887378"
-     id="path1085" />
-  <path
-     stroke="#082E44"
-	 stroke-width="1.5"
-     d="m 23.074458,23.244436 1.981982,-3.432894 1.923784,3.332092"
-     id="path1087" />
+   <path
+      fill="#3BB9FF"
+      stroke="none"
+      stroke-width="2"
+      d="M45.7733 41.3423L25.9481 7.63951C25.5228 6.91648 24.4772 6.91646 24.0519 7.63951L4.22671 41.3423C3.79536 42.0756 4.32409 43 5.17484 43H44.8252C45.6759 43 46.2046 42.0756 45.7733 41.3423Z"
+      id="path2" />
+   <path
+      d="M6.74842 41L25 9.97231L43.2516 41H6.74842Z"
+      fill="none"
+      stroke="#082E44"
+      stroke-width="2"
+      id="path4" />
+   <path
+      stroke="#082E44"
+      stroke-width="2"
+      id="path849"
+      sodipodi:type="arc"
+      sodipodi:cx="25.284166"
+      sodipodi:cy="43.365532"
+      sodipodi:rx="8.2439137"
+      sodipodi:ry="8.2651606"
+      sodipodi:start="3.8397244"
+      sodipodi:end="5.5850536"
+      sodipodi:arc-type="arc"
+      d="m 18.968962,38.052789 a 8.2439137,8.2651606 0 0 1 6.315204,-2.952418 8.2439137,8.2651606 0 0 1 6.315205,2.952418"
+      sodipodi:open="true" />
+   <path
+      stroke="#082E44"
+      stroke-width="1.5"
+      d="M 25.114189,34.887901 V 19.887378"
+      id="path1085" />
+   <path
+      stroke="#082E44"
+      stroke-width="1.5"
+      d="m 23.074458,23.244436 1.981982,-3.432894 1.923784,3.332092"
+      id="path1087" />
 </svg>

@@ -3,28 +3,80 @@ import { UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
 
 export function OlUnitSummary(props: {
-    blueprint: UnitBlueprint,
-    coalition: Coalition
+  blueprint: UnitBlueprint;
+  coalition: Coalition;
 }) {
-    return <div data-coalition={props.coalition} className="relative border-l-4 flex flex-col gap-2 p-2 pt-4 pb-4 items-start shadow-lg bg-white dark:bg-olympus-200/30 data-[coalition='blue']:border-blue-600 data-[coalition='neutral']:border-gray-400 data-[coalition='red']:border-red-500">
-            <div className="flex flex-row gap-2 content-center">
-            <img className="absolute object-cover h-full invert opacity-10 right-5 top-0" src={"images/units/"+props.blueprint.filename} alt="" />  
-            <div className="ml-2 my-auto w-full font-semibold tracking-tight text-gray-900 dark:text-white">{props.blueprint.label}</div>
-            </div>
-            <div className="flex flex-col justify-between px-2 leading-normal h-fit">
-                <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">{props.blueprint.description}</p>
-            </div>
-            <div className="flex flex-row gap-1 px-2">
-                {props.blueprint.abilities?.split(" ").map((tag) => {
-                    return <div key={tag} className="font-bold bg-olympus-800 dark:text-olympus-50 rounded-full px-2 py-0.5 text-xs">
-                        {tag}
-                    </div>
-                })}
-            
-            <div className="font-bold bg-olympus-800 dark:text-olympus-50 rounded-full px-2 py-0.5 text-xs">{props.blueprint.era === "WW2" ? "WW2" : props.blueprint.era.split(" ").map((word) => {
-                return word.charAt(0).toLocaleUpperCase();
-            })}</div>
-            </div>
-            
+  return (
+    <div
+      data-coalition={props.coalition}
+      className={`
+        relative flex flex-col items-start gap-2 border-l-4 bg-white p-2 pb-4
+        pt-4 shadow-lg
+        dark:bg-olympus-200/30
+        data-[coalition='blue']:border-blue-600
+        data-[coalition='neutral']:border-gray-400
+        data-[coalition='red']:border-red-500
+      `}
+    >
+      <div className="flex flex-row content-center gap-2">
+        <img
+          className={`
+            absolute right-5 top-0 h-full object-cover opacity-10 invert
+          `}
+          src={"images/units/" + props.blueprint.filename}
+          alt=""
+        />
+        <div
+          className={`
+            my-auto ml-2 w-full font-semibold tracking-tight text-gray-900
+            dark:text-white
+          `}
+        >
+          {props.blueprint.label}
         </div>
+      </div>
+      <div
+        className={`
+													flex h-fit flex-col justify-between px-2 leading-normal
+												`}
+      >
+        <p
+          className={`
+            mb-1 text-sm text-gray-700
+            dark:text-gray-400
+          `}
+        >
+          {props.blueprint.description}
+        </p>
+      </div>
+      <div className="flex flex-row gap-1 px-2">
+        {props.blueprint.abilities?.split(" ").map((tag) => {
+          return (
+            <div
+              key={tag}
+              className={`
+                rounded-full bg-olympus-800 px-2 py-0.5 text-xs font-bold
+                dark:text-olympus-50
+              `}
+            >
+              {tag}
+            </div>
+          );
+        })}
+
+        <div
+          className={`
+            rounded-full bg-olympus-800 px-2 py-0.5 text-xs font-bold
+            dark:text-olympus-50
+          `}
+        >
+          {props.blueprint.era === "WW2"
+            ? "WW2"
+            : props.blueprint.era.split(" ").map((word) => {
+                return word.charAt(0).toLocaleUpperCase();
+              })}
+        </div>
+      </div>
+    </div>
+  );
 }

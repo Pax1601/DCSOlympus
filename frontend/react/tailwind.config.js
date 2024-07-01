@@ -1,21 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}"
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         background: {
           darker: "#202831",
           dark: "#2D3742",
-          neutral: "#394552"
+          neutral: "#394552",
         },
         interaction: {
-          blue: "#5CA7FF"
+          blue: "#5CA7FF",
         },
-        olympus:{
+        olympus: {
           50: "#516176",
           100: "#4A5A6F",
           200: "#435367",
@@ -25,14 +22,11 @@ export default {
           600: "#243141",
           700: "#1C2836",
           800: "#17212D",
-          900: "#171C26"
-        }
-      }
+          900: "#171C26",
+        },
+      },
     },
   },
-  plugins: [
-  ],
-  darkMode: 'class'
-}
-
-
+  plugins: [],
+  darkMode: "class",
+};

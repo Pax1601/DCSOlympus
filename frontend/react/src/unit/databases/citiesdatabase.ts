@@ -1,4 +1,4 @@
-export var citiesDatabase: {lat: number, lng: number, pop: number}[] = [
+export var citiesDatabase: { lat: number; lng: number; pop: number }[] = [
   {
     lat: 41.0136,
     lng: 28.955,
@@ -7134,4 +7134,4 @@ export var citiesDatabase: {lat: number, lng: number, pop: number}[] = [
     lng: 45.5564,
     pop: 1155,
   },
-]
+];

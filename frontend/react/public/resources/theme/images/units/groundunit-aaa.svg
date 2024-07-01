@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="50" height="50" version="1.1" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
- <path d="m45.773 41.342-19.825-33.703c-0.4253-0.72303-1.4709-0.72305-1.8962 0l-19.825 33.703c-0.43135 0.7333 0.09738 1.6577 0.94813 1.6577h39.65c0.8507 0 1.3794-0.9244 0.9481-1.6577z" fill="#3BB9FF" stroke-width="2"/>
- <text x="21.590775" y="28.910091" fill="#082e44" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514" style="line-height:1.25" xml:space="preserve"><tspan x="21.590775" y="28.910091" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514">A</tspan></text>
- <path d="M6.74842 41L25 9.97231L43.2516 41H6.74842Z" fill="none" stroke="#082E44" stroke-width="2"/>
- <text x="16.189293" y="36.063168" fill="#082e44" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514" style="line-height:1.25" xml:space="preserve"><tspan x="16.189293" y="36.063168" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514">A</tspan></text>
- <text x="27.098772" y="36.063168" fill="#082e44" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514" style="line-height:1.25" xml:space="preserve"><tspan x="27.098772" y="36.063168" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514">A</tspan></text>
+    <path
+        d="m45.773 41.342-19.825-33.703c-0.4253-0.72303-1.4709-0.72305-1.8962 0l-19.825 33.703c-0.43135 0.7333 0.09738 1.6577 0.94813 1.6577h39.65c0.8507 0 1.3794-0.9244 0.9481-1.6577z"
+        fill="#3BB9FF" stroke-width="2" />
+    <text x="21.590775" y="28.910091" fill="#082e44" font-family="sans-serif" font-size="8.838px"
+        font-weight="bold" stroke="#082e44" stroke-width=".514" style="line-height:1.25"
+        xml:space="preserve"><tspan x="21.590775" y="28.910091" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514">A</tspan></text>
+    <path d="M6.74842 41L25 9.97231L43.2516 41H6.74842Z" fill="none" stroke="#082E44"
+        stroke-width="2" />
+    <text x="16.189293" y="36.063168" fill="#082e44" font-family="sans-serif" font-size="8.838px"
+        font-weight="bold" stroke="#082e44" stroke-width=".514" style="line-height:1.25"
+        xml:space="preserve"><tspan x="16.189293" y="36.063168" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514">A</tspan></text>
+    <text x="27.098772" y="36.063168" fill="#082e44" font-family="sans-serif" font-size="8.838px"
+        font-weight="bold" stroke="#082e44" stroke-width=".514" style="line-height:1.25"
+        xml:space="preserve"><tspan x="27.098772" y="36.063168" font-family="sans-serif" font-size="8.838px" font-weight="bold" stroke="#082e44" stroke-width=".514">A</tspan></text>
 </svg>

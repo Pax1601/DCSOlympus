@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   viewBox="0 0 512 512"
-   version="1.1"
-   id="svg1156"
-   sodipodi:docname="scenic.svg"
-   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
-   xml:space="preserve"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
+  viewBox="0 0 512 512"
+  version="1.1"
+  id="svg1156"
+  sodipodi:docname="scenic.svg"
+  inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+  xml:space="preserve"
+  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+  xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"><defs
      id="defs1160" /><sodipodi:namedview
      id="namedview1158"
      pagecolor="#ffffff"
@@ -28,7 +28,9 @@
      inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1156" /><!--! Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
+     inkscape:current-layer="svg1156" /><!--!
+  Font Awesome Pro 6.4.2 by @fontawesome - https://fontawesome.com License -
+  https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path
      d="m 376.91839,231.41639 c -1.31238,-3.09721 -4.35709,-5.09202 -7.71677,-5.09202 -3.35968,0 -6.40439,1.99481 -7.71677,5.09202 l -23.1503,54.01737 c -1.78483,4.1996 -2.72974,8.66167 -2.72974,13.22874 v 40.42116 l -75.59281,44.0958 v -9.86906 c 0,-6.98183 -5.61697,-12.5988 -12.5988,-12.5988 -6.98184,0 -12.59881,5.61697 -12.59881,12.5988 v 29.39721 16.7984 12.5988 c 0,6.98184 5.61697,12.59881 12.59881,12.59881 6.98183,0 12.5988,-5.61697 12.5988,-12.59881 v -4.1996 h 75.59281 v 17.16587 l -30.70958,26.92994 c -1.83732,1.57485 -2.88722,3.88463 -2.88722,6.2994 v 8.3992 c 0,4.61956 3.77964,8.39921 8.3992,8.39921 h 50.39521 v -33.59681 c 0,-4.61956 3.77964,-8.3992 8.3992,-8.3992 4.61956,0 8.3992,3.77964 8.3992,8.3992 v 33.59681 h 50.39521 c 4.61956,0 8.3992,-3.77965 8.3992,-8.39921 v -8.3992 c 0,-2.41477 -1.0499,-4.72455 -2.88722,-6.2994 l -30.70958,-26.92994 v -17.16587 h 75.59281 v 4.1996 c 0,6.98184 5.61697,12.59881 12.5988,12.59881 6.98184,0 12.59881,-5.61697 12.59881,-12.59881 v -12.5988 -16.7984 -29.39721 c 0,-6.98183 -5.61697,-12.5988 -12.59881,-12.5988 -6.98183,0 -12.5988,5.61697 -12.5988,12.5988 v 9.86906 l -75.59281,-44.0958 V 298.6625 c 0,-4.56707 -0.94491,-9.02914 -2.72974,-13.22874 z"
      id="path1154"
      style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.52495;stroke-opacity:1" /><path
