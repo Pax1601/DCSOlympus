@@ -37,6 +37,7 @@ module.exports = function (configLocation) {
     /* Define middleware */
     app.use(logger('dev'));
     app.use('/olympus', createProxyMiddleware({ target: `http://${backendAddress === '*'? 'localhost': backendAddress}:${config["backend"]["port"]}`, changeOrigin: true }));
+    app.use('/vite', createProxyMiddleware({ target: `http://localhost:8080/`, ws: true }));
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     app.use(express.static(path.join(__dirname, 'public')));

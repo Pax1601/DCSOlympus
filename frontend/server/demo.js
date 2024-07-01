@@ -501,7 +501,6 @@ module.exports = function (configLocation) {
 			if (auth) {
 				var username = Buffer.from(auth.replace("Basic ", ""), 'base64').toString('binary').split(":")[0];
 				var password = Buffer.from(auth.replace("Basic ", ""), 'base64').toString('binary').split(":")[1];
-				console.log(password)
 				switch (password) {
 					case "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918":
 						ret.mission.commandModeOptions.commandMode = "Game master";

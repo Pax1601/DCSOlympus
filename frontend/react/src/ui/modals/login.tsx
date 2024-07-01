@@ -34,7 +34,7 @@ export function LoginModal(props: {
                                     <div className="flex text-gray-800 dark:text-gray-200 text-md font-bold items-center justify-center gap-2">{window.location.toString()} </div>
                                 </div>
                                 <div className='flex flex-row gap-2 content-center items-center w-[100%]'>
-                                    <span className='size-[80px] min-w-14'><img src="..\public\images\olympus-500x500.png" className='flex w-full'></img></span>                                
+                                    <span className='size-[80px] min-w-14'><img src="..\images\olympus-500x500.png" className='flex w-full'></img></span>                                
                                     <div className="flex flex-col items-start gap-1">
                                     <h1 className="flex text-4xl text-gray-800 dark:text-white font-bold text-wrap">DCS Olympus</h1>
                                     <div className="flex gap-2 select-none rounded-sm content-center text-green-700 dark:text-green-400 text-sm font-semibold"><FontAwesomeIcon icon={faCheckCircle} className="my-auto" />Version {VERSION}</div>
