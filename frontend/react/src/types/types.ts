@@ -19,6 +19,7 @@ export type MapOptions = {
   showUnitsEngagementRings: boolean;
   showUnitsAcquisitionRings: boolean;
   fillSelectedRing: boolean;
+  showMinimap: boolean;
 };
 
 export type MapHiddenTypes = {

@@ -21,16 +21,20 @@ export function SideBar() {
           {(events) => (
             <nav
               className={`
-                flex flex-col z-ui-1 h-full bg-gray-300
+                flex flex-col z-ui-4 h-full bg-gray-300
                 dark:bg-olympus-900
               `}
             >
-              <div className={`
-                w-16 flex-1 flex-wrap items-center justify-center p-4
-              `}>
-                <div className={`
+              <div
+                className={`
+                  w-16 flex-1 flex-wrap items-center justify-center p-4
+                `}
+              >
+                <div
+                  className={`
                   flex flex-col items-center justify-center gap-2.5
-                `}>
+                `}
+                >
                   <OlStateButton
                     onClick={events.toggleMainMenuVisible}
                     checked={appState.mainMenuVisible}
@@ -64,9 +68,11 @@ export function SideBar() {
                 </div>
               </div>
               <div className="flex w-16 flex-wrap content-end justify-center p-4">
-                <div className={`
+                <div
+                  className={`
                   flex flex-col items-center justify-center gap-2.5
-                `}>
+                `}
+                >
                   <OlStateButton
                     onClick={() =>
                       window.open("https://github.com/Pax1601/DCSOlympus/wiki")

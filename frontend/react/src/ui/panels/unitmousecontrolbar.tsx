@@ -40,7 +40,7 @@ export function UnitMouseControlBar(props: {}) {
 
   /* Deselect the context action when exiting state */
   document.addEventListener("mapStateChanged", (ev) => {
-    setOpen(ev.detail === CONTEXT_ACTION);
+    setOpen((ev as CustomEvent).detail === CONTEXT_ACTION);
   });
 
   /* Update the current values of the shown data */
@@ -65,8 +65,8 @@ export function UnitMouseControlBar(props: {}) {
         <>
           <div
             className={`
-              absolute left-[50%] top-20 flex translate-x-[-50%] gap-2
-              rounded-md bg-gray-200 p-2 z-ui-2
+              absolute left-[50%] top-16 flex translate-x-[calc(-50%+2rem)]
+              gap-2 rounded-md bg-gray-200 p-2 z-ui-2
               dark:bg-olympus-900
             `}
           >
@@ -84,11 +84,9 @@ export function UnitMouseControlBar(props: {}) {
                       } else {
                         if (activeContextAction != contextAction) {
                           setActiveContextAction(contextAction);
-                          getApp()
-                            .getMap()
-                            .setState(CONTEXT_ACTION, {
-                              contextAction: contextAction,
-                            });
+                          getApp().getMap().setState(CONTEXT_ACTION, {
+                            contextAction: contextAction,
+                          });
                         } else {
                           setActiveContextAction(null);
                           getApp()
@@ -105,16 +103,21 @@ export function UnitMouseControlBar(props: {}) {
           {activeContextAction && (
             <div
               className={`
-                absolute left-[50%] top-36 flex translate-x-[-50%] items-center
-                gap-2 rounded-md bg-gray-200 p-4 z-ui-1
+                absolute left-[50%] top-32 flex translate-x-[calc(-50%+2rem)]
+                items-center gap-2 rounded-md bg-gray-200 p-4 z-ui-1
+                min-w-[300px]
                 dark:bg-olympus-800
               `}
             >
-              <FaInfoCircle className="mr-2 text-sm text-blue-500" />
+              <FaInfoCircle className={`
+                mr-2 hidden min-w-8 text-sm text-blue-500
+                md:block
+              `} />
               <div
                 className={`
-                  border-l-[1px] px-5
+                  px-2
                   dark:text-gray-400
+                  md:border-l-[1px] md:px-5
                 `}
               >
                 {activeContextAction.getDescription()}

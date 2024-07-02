@@ -377,7 +377,6 @@ export abstract class Unit extends CustomMarker {
     /* Leaflet events listeners */
     this.on("click", (e) => this.#onClick(e));
     this.on("dblclick", (e) => this.#onDoubleClick(e));
-    this.on("contextmenu", (e) => this.#onContextMenu(e));
     this.on("mouseover", () => {
       if (this.belongsToCommandedCoalition()) {
         this.setHighlighted(true);
@@ -1556,24 +1555,6 @@ export abstract class Unit extends CustomMarker {
       )
         unitsManager.selectUnit(unit.ID, false);
     });
-  }
-
-  #onContextMenu(e: any) {
-    var contextActionSet = new ContextActionSet();
-
-    var units = getApp().getUnitsManager().getSelectedUnits();
-    if (!units.includes(this)) units.push(this);
-
-    units.forEach((unit: Unit) => {
-      unit.appendContextActions(contextActionSet);
-    });
-
-    if (Object.keys(contextActionSet.getContextActions()).length > 0) {
-      getApp()
-        .getMap()
-        .showUnitContextMenu(e.originalEvent.x, e.originalEvent.y, e.latlng);
-      //getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
-    }
   }
 
   #updateMarker() {

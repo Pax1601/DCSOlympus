@@ -196,6 +196,33 @@ export function Options(props: {
             G
           </kbd>
         </div>
+        <div
+          className={`
+            group flex flex-row rounded-md justify-content cursor-pointer gap-4
+            p-2
+            dark:hover:bg-olympus-400
+          `}
+          onClick={() => {
+            getApp()
+              .getMap()
+              .setOption("showMinimap", !props.options.showMinimap);
+          }}
+        >
+          <OlCheckbox
+            checked={props.options.showMinimap}
+            onChange={() => {}}
+          ></OlCheckbox>
+          <span>Show minimap</span>
+          <kbd
+            className={`
+              ml-auto rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5
+              text-xs font-semibold text-gray-800
+              dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+            `}
+          >
+            ?
+          </kbd>
+        </div>
 
         {/*
             <hr className="w-auto m-2 my-1 bg-gray-700 border-[1px] dark:border-olympus-500"></hr>

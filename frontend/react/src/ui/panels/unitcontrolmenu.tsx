@@ -35,8 +35,9 @@ import {
 import { Coalition } from "../../types/types";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 
-export function UnitControlMenu() {
-  var [open, setOpen] = useState(false);
+export function UnitControlMenu(props: {
+  open: boolean
+}) {
   var [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
 
   var [selectedUnitsData, setSelectedUnitsData] = useState({
@@ -94,7 +95,6 @@ export function UnitControlMenu() {
 
   /* When a unit is selected, open the menu */
   document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
-    setOpen(true);
     setSelectedUnits(ev.detail as Unit[]);
 
     updateData();
@@ -108,7 +108,6 @@ export function UnitControlMenu() {
 
   /* When all units are deselected clean the view */
   document.addEventListener("clearSelection", () => {
-    setOpen(false);
     setSelectedUnits([]);
   });
 
@@ -185,7 +184,7 @@ export function UnitControlMenu() {
     getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
   return (
-    <Menu open={open} title="Units selected (x)" onClose={() => {}}>
+    <Menu open={props.open} title="Units selected (x)" onClose={() => {}}>
       {/* Units list */}
       <div
         className={`
@@ -240,9 +239,11 @@ export function UnitControlMenu() {
             return ["Aircraft", "Helicopter"].includes(category);
           }) && (
             <div>
-              <div className={`
-                flex flex-row content-center items-center justify-between
-              `}>
+              <div
+                className={`
+                  flex flex-row content-center items-center justify-between
+                `}
+              >
                 <div className="flex flex-col">
                   <span
                     className={`
@@ -313,9 +314,11 @@ export function UnitControlMenu() {
         }
         {/* Airspeed selector */}
         <div>
-          <div className={`
-            flex flex-row content-center items-center justify-between
-          `}>
+          <div
+            className={`
+              flex flex-row content-center items-center justify-between
+            `}
+          >
             <div className="flex flex-col">
               <span
                 className={`
@@ -417,9 +420,7 @@ export function UnitControlMenu() {
         }) && (
           <>
             {" "}
-            <div
-              className={`flex flex-col gap-2`}
-            >
+            <div className={`flex flex-col gap-2`}>
               <span
                 className={`
                   font-normal
@@ -573,9 +574,7 @@ export function UnitControlMenu() {
         }) && (
           <>
             {" "}
-            <div
-              className={`flex flex-col gap-2`}
-            >
+            <div className={`flex flex-col gap-2`}>
               <span
                 className={`
                   font-normal

@@ -106,10 +106,7 @@ export function OlDropdown(props: {
         type="button"
       >
         {props.leftIcon && (
-          <FontAwesomeIcon
-            icon={props.leftIcon}
-            className={`mr-3`}
-          />
+          <FontAwesomeIcon icon={props.leftIcon} className={`mr-3`} />
         )}
         <span className="overflow-hidden text-ellipsis text-nowrap">
           {props.label}
@@ -138,7 +135,7 @@ export function OlDropdown(props: {
         ref={contentRef}
         data-open={open}
         className={`
-          absolute z-ui-2 w-full divide-y divide-gray-100 overflow-y-scroll
+          absolute z-ui-4 w-full divide-y divide-gray-100 overflow-y-scroll
           rounded-lg bg-white p-2 shadow
           dark:bg-gray-700
           data-[open='false']:hidden

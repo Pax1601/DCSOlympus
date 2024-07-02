@@ -38,7 +38,7 @@ export function LoginModal(props: {
     <Modal
       className={`
         inline-flex h-[75%] max-h-[530px] w-[80%] max-w-[1100px] overflow-y-auto
-        scroll-smooth bg-white
+        scroll-smooth bg-white z-ui-5
         dark:bg-olympus-800
         max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
         max-md:border-none
@@ -111,9 +111,7 @@ export function LoginModal(props: {
                     ></img>
                   </span>
                   <div
-                    className={`
-																																					flex flex-col items-start gap-1
-																																				`}
+                    className={`flex flex-col items-start gap-1`}
                   >
                     <h1
                       className={`
@@ -143,10 +141,7 @@ export function LoginModal(props: {
                     {props.commandMode === null ? (
                       <>
                         <div
-                          className={`
-																																																					flex flex-col items-start
-																																																					gap-2
-																																																				`}
+                          className={`flex flex-col items-start gap-2`}
                         >
                           <label
                             className={`
@@ -157,7 +152,7 @@ export function LoginModal(props: {
                             Password{" "}
                           </label>
                           <input
-                            type="text"
+                            type="password"
                             onChange={(ev) =>
                               setPassword(ev.currentTarget.value)
                             }

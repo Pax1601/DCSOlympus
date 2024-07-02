@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { Context } from "../types/types";
+import { Context, MapOptions } from "../types/types";
 
 export const DEFAULT_CONTEXT: Context = "default context";
 
@@ -292,7 +292,8 @@ export const MAP_OPTIONS_DEFAULTS = {
   showUnitsEngagementRings: true,
   showUnitsAcquisitionRings: true,
   fillSelectedRing: false,
-};
+  showMinimap: false
+} as MapOptions;
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
   human: false,

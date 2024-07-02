@@ -24,6 +24,7 @@ import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
+import { MapStatePanel } from "./panels/mapstatepanel";
 
 export type OlympusState = {
   mainMenuVisible: boolean;
@@ -188,9 +189,11 @@ export function UI() {
             <div className="flex h-full">
               {loginModalVisible && (
                 <>
-                  <div className={`
-                    fixed left-0 top-0 h-full w-full z-ui-3 bg-[#111111]/95
-                  `}></div>
+                  <div
+                    className={`
+                      fixed left-0 top-0 h-full w-full z-ui-5 bg-[#111111]/95
+                    `}
+                  ></div>
                   <LoginModal
                     onLogin={(password) => {
                       checkPassword(password);
@@ -222,9 +225,10 @@ export function UI() {
                 options={mapOptions}
               />
               <MiniMapPanel />
-              <UnitControlMenu />
+              <UnitControlMenu open={unitControlMenuVisible} />
               <div id="map-container" className="h-full w-screen" />
               <UnitMouseControlBar />
+              <MapStatePanel />
             </div>
           </div>
         </EventsProvider>

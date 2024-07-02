@@ -123,6 +123,7 @@ export class Map extends L.Map {
   #cameraZoomRatio: number = 1.0;
 
   #contextAction: null | ContextAction = null;
+  #theatre: string = "";
 
   /**
    *
@@ -156,17 +157,6 @@ export class Map extends L.Map {
     this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
     this.#miniMapPolyline = new L.Polyline([], { color: "#202831" });
     this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
-
-    /* Scale */
-    //@ts-ignore TODO more hacking because the module is provided as a pure javascript module only
-    //L.control.scalenautic({ position: "topright", maxWidth: 300, nautic: true, metric: true, imperial: false }).addTo(this);
-
-    /* Map source dropdown */
-    //this.#mapSourceDropdown = new Dropdown("map-type", (layerName: string) => this.setLayer(layerName));
-    //this.#mapSourceDropdown.setOptions(this.getLayers(), null);
-    //
-    ///* Visibility options dropdown */
-    //this.#mapVisibilityOptionsDropdown = new Dropdown("map-visibility-options", (value: string) => { });
 
     /* Init the state machine */
     this.#state = IDLE;
@@ -235,6 +225,8 @@ export class Map extends L.Map {
           this.#broadcastPosition();
         }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
       }
+
+      this.updateMinimap();
     });
 
     document.addEventListener("configLoaded", () => {
@@ -567,29 +559,16 @@ export class Map extends L.Map {
   }
 
   setTheatre(theatre: string) {
+    this.#theatre = theatre;
+
     var bounds = new L.LatLngBounds([-90, -180], [90, 180]);
-    var miniMapZoom = 5;
     if (theatre in mapBounds) {
       bounds = mapBounds[theatre as keyof typeof mapBounds].bounds;
-      miniMapZoom = mapBounds[theatre as keyof typeof mapBounds].zoom;
     }
 
     this.setView(bounds.getCenter(), 8);
 
-    if (this.#miniMap) this.#miniMap.remove();
-
-    //@ts-ignore // Needed because some of the inputs are wrong in the original module interface
-    this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, {
-      position: "topright",
-      width: 192 * 1.5,
-      height: 108 * 1.5,
-      zoomLevelFixed: miniMapZoom,
-      centerFixed: bounds.getCenter(),
-    }).addTo(this);
-    this.#miniMap.disableInteractivity();
-    this.#miniMap.getMap().on("click", (e: any) => {
-      if (this.#miniMap) this.setView(e.latlng);
-    });
+    this.updateMinimap();
 
     const boundaries = this.#getMinimapBoundaries();
     this.#miniMapPolyline.setLatLngs(
@@ -597,6 +576,33 @@ export class Map extends L.Map {
     );
 
     this.setLayerName(this.#layerName);
+  }
+
+  updateMinimap() {
+    if (this.#miniMap) this.#miniMap.remove();
+
+    if (this.#options.showMinimap) {
+      var bounds = new L.LatLngBounds([-90, -180], [90, 180]);
+      var miniMapZoom = 5;
+      if (this.#theatre in mapBounds) {
+        bounds = mapBounds[this.#theatre as keyof typeof mapBounds].bounds;
+        miniMapZoom = mapBounds[this.#theatre as keyof typeof mapBounds].zoom;
+      }
+
+      this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, {
+        position: "topright",
+        width: 192 * 1.5,
+        height: 108 * 1.5,
+        //@ts-ignore Needed because some of the inputs are wrong in the original module interface
+        zoomLevelFixed: miniMapZoom,
+        //@ts-ignore Needed because some of the inputs are wrong in the original module interface
+        centerFixed: bounds.getCenter(),
+      }).addTo(this);
+      this.#miniMap.disableInteractivity();
+      this.#miniMap.getMap().on("click", (e: any) => {
+        if (this.#miniMap) this.setView(e.latlng);
+      });
+    }
   }
 
   getMiniMapLayerGroup() {
@@ -1092,13 +1098,11 @@ export class Map extends L.Map {
 
   #showDestinationCursors() {
     const singleCursor = !this.#shiftKey;
-    const selectedUnitsCount = getApp()
-      .getUnitsManager()
-      .getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-      }).length;
+    const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({
+      excludeHumans: true,
+      excludeProtected: true,
+      onlyOnePerGroup: true,
+    }).length;
     if (singleCursor) {
       this.#hideDestinationCursors();
     } else if (!singleCursor) {
@@ -1126,13 +1130,11 @@ export class Map extends L.Map {
   }
 
   #updateDestinationCursors() {
-    const selectedUnitsCount = getApp()
-      .getUnitsManager()
-      .getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-      }).length;
+    const selectedUnitsCount = getApp().getUnitsManager().getSelectedUnits({
+      excludeHumans: true,
+      excludeProtected: true,
+      onlyOnePerGroup: true,
+    }).length;
     if (selectedUnitsCount > 1) {
       const groupLatLng =
         this.#computeDestinationRotation &&
