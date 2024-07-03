@@ -3,10 +3,6 @@
   width: 10px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-}
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #ffffffaa;
@@ -15,7 +11,7 @@
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
+.tiny-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
@@ -92,4 +88,15 @@ input[type="range"]:active::-moz-range-thumb {
 }
 input[type="range"]:focus::-moz-range-thumb {
   box-shadow: 0 0 0 13px #3f83f855;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

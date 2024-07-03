@@ -31,8 +31,6 @@ import {
 } from "../components/olicons";
 
 export function Header() {
-  const [collapsed, setCollapsed] = useState(true);
-
   return (
     <StateConsumer>
       {(appState) => (
@@ -40,29 +38,28 @@ export function Header() {
           {() => (
             <nav
               className={`
-                ${collapsed ? "h-[60px]" : "h-fit"}
-                flex w-screen border-gray-200 bg-gray-300 px-3 drop-shadow-md
-                z-ui-2
+                flex w-full gap-4 border-gray-200 bg-gray-300 px-3
+                drop-shadow-md z-ui-2 align-center
                 dark:border-gray-800 dark:bg-olympus-900
               `}
             >
+              <img
+                src="images/icon.png"
+                className="my-auto h-10 w-10 rounded-md p-0"
+              ></img>
               <div
                 className={`
-                  my-2 flex w-full max-w-full flex-wrap items-center justify-end
-                  gap-3 overflow-hidden
+                  my-2 flex w-full items-center gap-3 overflow-x-scroll
+                  no-scrollbar
                 `}
               >
                 <div
                   className={`
-                    mr-auto flex flex-none basis-5/6 flex-row items-center
-                    justify-start gap-6
-                    sm:basis-0
+                    mr-auto hidden flex-none flex-row items-center justify-start
+                    gap-6
+                    lg:flex
                   `}
                 >
-                  <img
-                    src="images/icon.png"
-                    className="h-10 w-10 rounded-md p-0"
-                  ></img>
                   <div className="flex flex-col items-start">
                     <div
                       className={`
@@ -92,12 +89,6 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-                <OlStateButton
-                  onClick={() => setCollapsed(!collapsed)}
-                  checked={!collapsed}
-                  icon={faBars}
-                  tooltip={"Show more options"}
-                ></OlStateButton>
                 <div>
                   <OlLockStateButton
                     checked={false}
@@ -105,6 +96,7 @@ export function Header() {
                     tooltip="Lock/unlock protected units (from scripted mission)"
                   />
                 </div>
+                <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
                 <div
                   className={`
                     flex h-fit flex-row items-center justify-start gap-1
@@ -133,11 +125,7 @@ export function Header() {
                     );
                   })}
                 </div>
-                <div
-                  className={`
-                                  h-8 w-0 border-l-[2px] border-gray-700
-                                `}
-                ></div>
+                <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
                 <div
                   className={`
                     flex h-fit flex-row items-center justify-start gap-1
@@ -180,11 +168,7 @@ export function Header() {
                     tooltip={"Hide/show neutral units"}
                   />
                 </div>
-                <div
-                  className={`
-                                  h-8 w-0 border-l-[2px] border-gray-700
-                                `}
-                ></div>
+                <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
                 <div
                   className={`
                     flex h-fit flex-row items-center justify-start gap-1
@@ -230,12 +214,12 @@ export function Header() {
                   onClick={() => {}}
                   tooltip="Activate/deactivate camera plugin"
                 />
-                <OlDropdown label={appState.activeMapSource} className="w-80">
+                <OlDropdown label={appState.activeMapSource} className="w-40">
                   {appState.mapSources.map((source) => {
                     return (
                       <OlDropdownItem
                         key={source}
-                        className="w-full"
+                        className="w-52"
                         onClick={() => getApp().getMap().setLayerName(source)}
                       >
                         {source}

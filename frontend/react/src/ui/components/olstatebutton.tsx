@@ -13,6 +13,7 @@ import { OlTooltip } from "./oltooltip";
 export function OlStateButton(props: {
   className?: string;
   checked: boolean;
+  highlighted?: boolean;
   icon: IconProp;
   tooltip: string;
   onClick: () => void;
@@ -24,8 +25,10 @@ export function OlStateButton(props: {
     (props.className ?? "") +
     `
       h-[40px] w-[40px] flex-none rounded-md text-lg font-medium
-      dark:border-gray-600 dark:bg-olympus-600 dark:text-gray-300
-      dark:hover:bg-olympus-300 dark:data-[checked='true']:bg-blue-500
+      dark:bg-olympus-600 dark:text-gray-300 dark:hover:bg-olympus-300
+      dark:data-[highlighted='true']:border-[2px]
+      dark:data-[highlighted='true']:border-blue-800
+      dark:data-[checked='true']:bg-blue-500
       dark:data-[checked='true']:text-white
     `;
 
@@ -38,6 +41,7 @@ export function OlStateButton(props: {
           setHover(false);
         }}
         data-checked={props.checked}
+        data-highlighted={props.highlighted ?? false}
         type="button"
         className={className}
         onMouseEnter={() => {
@@ -57,6 +61,7 @@ export function OlStateButton(props: {
 export function OlRoundStateButton(props: {
   className?: string;
   checked: boolean;
+  highlighted?: boolean;
   icon: IconProp;
   tooltip: string;
   onClick: () => void;

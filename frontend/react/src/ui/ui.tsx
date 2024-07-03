@@ -24,7 +24,6 @@ import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
-import { MapStatePanel } from "./panels/mapstatepanel";
 
 export type OlympusState = {
   mainMenuVisible: boolean;
@@ -61,11 +60,11 @@ export function UI() {
     setMapOptions({ ...getApp().getMap().getOptions() });
   });
 
-  document.addEventListener("mapStateChanged", (ev) => {
-    if ((ev as CustomEvent).detail == IDLE) {
-      hideAllMenus();
-    }
-  });
+  //document.addEventListener("mapStateChanged", (ev) => {
+  //  if ((ev as CustomEvent).detail == IDLE) {
+  //    hideAllMenus();
+  //  }
+  //});
 
   document.addEventListener("mapSourceChanged", (ev) => {
     var source = (ev as CustomEvent).detail;
@@ -228,7 +227,6 @@ export function UI() {
               <UnitControlMenu open={unitControlMenuVisible} />
               <div id="map-container" className="h-full w-screen" />
               <UnitMouseControlBar />
-              <MapStatePanel />
             </div>
           </div>
         </EventsProvider>

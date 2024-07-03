@@ -14,7 +14,7 @@ export function Menu(props: {
     <div
       data-open={props.open}
       className={`
-        absolute left-16 right-0 top-[60px] bg-gray-200 backdrop-grayscale
+        absolute left-16 right-0 top-[58px] bg-gray-200 backdrop-grayscale
         z-ui-3 h-screen overflow-y-auto backdrop-blur-lg transition-transform
         dark:bg-olympus-800/90
         data-[open='false']:-translate-x-full

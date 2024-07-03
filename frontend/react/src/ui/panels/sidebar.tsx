@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
 import {
-  faPlus,
   faGamepad,
   faRuler,
   faPencil,
@@ -12,8 +11,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
+import { IDLE, SPAWN_UNIT } from "../../constants/constants";
 
 export function SideBar() {
+  const [mapState, setMapState] = useState(IDLE);
+
+  document.addEventListener("mapStateChanged", (ev) => {
+    setMapState((ev as CustomEvent).detail)
+  });
+
   return (
     <StateConsumer>
       {(appState) => (
@@ -46,6 +52,7 @@ export function SideBar() {
                     checked={appState.spawnMenuVisible}
                     icon={faPlusSquare}
                     tooltip="Hide/show unit spawn menu"
+                    highlighted={mapState === SPAWN_UNIT}
                   ></OlStateButton>
                   <OlStateButton
                     onClick={events.toggleUnitControlMenuVisible}

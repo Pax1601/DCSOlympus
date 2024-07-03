@@ -4,7 +4,7 @@ import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION } from "../../constants/constants";
+import { CONTEXT_ACTION, MOVE_UNIT } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
 
 export function UnitMouseControlBar(props: {}) {
@@ -40,7 +40,7 @@ export function UnitMouseControlBar(props: {}) {
 
   /* Deselect the context action when exiting state */
   document.addEventListener("mapStateChanged", (ev) => {
-    setOpen((ev as CustomEvent).detail === CONTEXT_ACTION);
+    setOpen((ev as CustomEvent).detail === CONTEXT_ACTION || (ev as CustomEvent).detail === MOVE_UNIT);
   });
 
   /* Update the current values of the shown data */
@@ -91,7 +91,7 @@ export function UnitMouseControlBar(props: {}) {
                           setActiveContextAction(null);
                           getApp()
                             .getMap()
-                            .setState(CONTEXT_ACTION, { contextAction: null });
+                            .setState(MOVE_UNIT);
                         }
                       }
                     }}

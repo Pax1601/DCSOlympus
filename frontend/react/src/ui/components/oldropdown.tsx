@@ -99,8 +99,7 @@ export function OlDropdown(props: {
           inline-flex w-full items-center justify-between rounded-lg border
           bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white
           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100
-          dark:hover:bg-gray-600 dark:focus:ring-blue-800
-          focus:outline-none focus:ring-2 focus:ring-blue-300
+          dark:hover:bg-gray-600
           hover:bg-blue-800
         `}
         type="button"
@@ -135,8 +134,8 @@ export function OlDropdown(props: {
         ref={contentRef}
         data-open={open}
         className={`
-          absolute z-ui-4 w-full divide-y divide-gray-100 overflow-y-scroll
-          rounded-lg bg-white p-2 shadow
+          absolute z-ui-4 divide-y divide-gray-100 overflow-y-scroll rounded-lg
+          bg-white p-2 shadow
           dark:bg-gray-700
           data-[open='false']:hidden
         `}
