@@ -36,7 +36,8 @@ import { Coalition } from "../../types/types";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 
 export function UnitControlMenu(props: {
-  open: boolean
+  open: boolean;
+  onClose: () => void;
 }) {
   var [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
 
@@ -184,7 +185,7 @@ export function UnitControlMenu(props: {
     getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
   return (
-    <Menu open={props.open} title="Units selected (x)" onClose={() => {}}>
+    <Menu open={props.open} title="Units selected (x)" onClose={props.onClose}>
       {/* Units list */}
       <div
         className={`

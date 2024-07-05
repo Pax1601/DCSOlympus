@@ -15,7 +15,7 @@ import {
   olButtonsVisibilityHelicopter,
   olButtonsVisibilityNavyunit,
 } from "../components/olicons";
-import { IDLE } from "../../constants/constants";
+import { IDLE, SPAWN_UNIT } from "../../constants/constants";
 
 library.add(faPlus);
 
@@ -75,11 +75,19 @@ export function SpawnMenu(props: {
   filteredAirDefense = filterUnits(filteredAirDefense, filterString);
   filteredGroundUnits = filterUnits(filteredGroundUnits, filterString);
 
+  if (!props.open) {
+    if (getApp()?.getMap()?.getState() === SPAWN_UNIT)
+      getApp().getMap().setState(IDLE);
+    if (blueprint !== null)
+      setBlueprint(null);
+  }
+
   return (
     <Menu
       {...props}
       title="Spawn menu"
       showBackButton={blueprint !== null}
+      canBeHidden={true}
       onBack={() => {
         getApp().getMap().setState(IDLE);
         setBlueprint(null);

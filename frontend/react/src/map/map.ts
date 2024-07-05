@@ -763,13 +763,8 @@ export class Map extends L.Map {
           if (this.#state === IDLE) {
             this.deselectAllCoalitionAreas();
           } else if (this.#state === MOVE_UNIT) {
-                getApp().getUnitsManager().clearDestinations();
-              getApp()
-                .getUnitsManager()
-                .addDestination(e.latlng,
-                  false,
-                  0
-                );
+            getApp().getUnitsManager().clearDestinations();
+            getApp().getUnitsManager().addDestination(e.latlng, false, 0);
           } else if (this.#state === SPAWN_UNIT) {
             if (this.#spawnRequestTable !== null) {
               const location = e.latlng;
@@ -821,9 +816,7 @@ export class Map extends L.Map {
     this.setState(IDLE);
   }
 
-  #onContextMenu(e: any) {
-    
-  }
+  #onContextMenu(e: any) {}
 
   #onSelectionStart(e: any) {
     this.#selecting = true;
@@ -841,9 +834,7 @@ export class Map extends L.Map {
     this.#updateCursor();
   }
 
-  #onMouseDown(e: any) {
-    
-  }
+  #onMouseDown(e: any) {}
 
   #onMouseMove(e: any) {
     this.#lastMousePosition.x = e.originalEvent.x;

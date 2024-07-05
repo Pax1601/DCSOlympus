@@ -52,7 +52,6 @@ export function SideBar() {
                     checked={appState.spawnMenuVisible}
                     icon={faPlusSquare}
                     tooltip="Hide/show unit spawn menu"
-                    highlighted={mapState === SPAWN_UNIT}
                   ></OlStateButton>
                   <OlStateButton
                     onClick={events.toggleUnitControlMenuVisible}

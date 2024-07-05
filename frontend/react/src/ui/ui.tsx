@@ -224,7 +224,10 @@ export function UI() {
                 options={mapOptions}
               />
               <MiniMapPanel />
-              <UnitControlMenu open={unitControlMenuVisible} />
+              <UnitControlMenu
+                open={unitControlMenuVisible}
+                onClose={() => setUnitControlMenuVisible(false)}
+              />
               <div id="map-container" className="h-full w-screen" />
               <UnitMouseControlBar />
             </div>

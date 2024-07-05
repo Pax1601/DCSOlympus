@@ -11,7 +11,7 @@ export function OlLabelToggle(props: {
       onClick={props.onClick}
       className={`
         relative flex h-10 w-[120px] flex-none cursor-pointer select-none
-        flex-row justify-between rounded-md border border px-1 py-[5px] text-sm
+        flex-row justify-between rounded-md border px-1 py-[5px] text-sm
         contents-center
         dark:border-gray-600 dark:border-transparent dark:bg-gray-700
         dark:hover:bg-gray-600 dark:focus:ring-blue-800
@@ -32,7 +32,6 @@ export function OlLabelToggle(props: {
         data-active={!(props.toggled ?? false)}
         className={`
           my-auto pl-3 font-normal transition-colors z-ui-2
-          dark:data-[active='false']:text-gray-400
           dark:data-[active='false']:text-gray-400
           dark:data-[active='true']:text-white
         `}

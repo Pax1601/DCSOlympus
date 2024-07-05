@@ -72,7 +72,7 @@ export function MiniMapPanel(props: {}) {
       onClick={() => setShowMissionTime(!showMissionTime)}
       className={`
         absolute right-[10px]
-        ${showMinimap ? `top-[232px]` : `top-[70px]`}
+        ${showMinimap ? `top-[232px]` : `top-[90px]`}
         w-[288px] z-ui-0 flex items-center justify-between
         ${showMinimap ? `rounded-b-lg` : `rounded-lg`}
         bg-gray-200 p-3 text-sm backdrop-blur-lg backdrop-grayscale
@@ -114,13 +114,13 @@ export function MiniMapPanel(props: {}) {
           onClick={() => {
             getApp().getMap().setOption("showMinimap", false);
           }}
-        ></FaChevronUp>
+        />
       ) : (
         <FaChevronDown
           onClick={() => {
             getApp().getMap().setOption("showMinimap", true);
           }}
-        ></FaChevronDown>
+        />
       )}
     </div>
   );

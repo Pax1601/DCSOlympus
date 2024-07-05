@@ -39,7 +39,7 @@ export function Header() {
             <nav
               className={`
                 flex w-full gap-4 border-gray-200 bg-gray-300 px-3
-                drop-shadow-md z-ui-2 align-center
+                drop-shadow-md z-ui-4 align-center
                 dark:border-gray-800 dark:bg-olympus-900
               `}
             >

@@ -54,7 +54,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
         });
     } else {
       if (getApp()?.getMap()?.getState() === SPAWN_UNIT)
-        getApp()?.getMap()?.setState(IDLE);
+        getApp().getMap().setState(IDLE);
     }
   });
 
