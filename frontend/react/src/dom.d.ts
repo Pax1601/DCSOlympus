@@ -14,11 +14,13 @@ interface CustomEventMap {
   mapOptionChanged: CustomEvent<any>;
   mapSourceChanged: CustomEvent<string>;
   mapOptionsChanged: CustomEvent<any>; // TODO not very clear, why the two options?
+  mapSelectionEnd: CustomEvent<any>;
   configLoaded: CustomEvent<any>;
   commandModeOptionsChanged: CustomEvent<any>;
   contactsUpdated: CustomEvent<Unit>;
   activeCoalitionChanged: CustomEvent<any>;
   serverStatusUpdated: CustomEvent<ServerStatus>;
+  mapForceBoxSelect: CustomEvent<any>
 }
 
 declare global {

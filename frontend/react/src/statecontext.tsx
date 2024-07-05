@@ -15,6 +15,7 @@ export const StateContext = createContext({
   mapOptions: MAP_OPTIONS_DEFAULTS,
   mapSources: [] as string[],
   activeMapSource: "",
+  mapBoxSelection: false
 });
 
 export const StateProvider = StateContext.Provider;

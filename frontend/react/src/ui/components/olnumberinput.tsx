@@ -9,7 +9,7 @@ export function OlNumberInput(props: {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <div className="w-fit">
+    <div className="min-w-32">
       <div className="relative flex max-w-[8rem] items-center">
         <button
           type="button"

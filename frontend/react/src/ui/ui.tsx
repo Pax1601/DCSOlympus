@@ -51,6 +51,7 @@ export function UI() {
   var [commandMode, setCommandMode] = useState(null as null | string);
   var [mapSources, setMapSources] = useState([] as string[]);
   var [activeMapSource, setActiveMapSource] = useState("");
+  var [mapBoxSelection, setMapBoxSelection] = useState(false);
 
   document.addEventListener("hiddenTypesChanged", (ev) => {
     setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
@@ -60,11 +61,11 @@ export function UI() {
     setMapOptions({ ...getApp().getMap().getOptions() });
   });
 
-  //document.addEventListener("mapStateChanged", (ev) => {
-  //  if ((ev as CustomEvent).detail == IDLE) {
-  //    hideAllMenus();
-  //  }
-  //});
+  document.addEventListener("mapStateChanged", (ev) => {
+    if ((ev as CustomEvent).detail == IDLE) {
+      hideAllMenus();
+    }
+  });
 
   document.addEventListener("mapSourceChanged", (ev) => {
     var source = (ev as CustomEvent).detail;
@@ -78,6 +79,14 @@ export function UI() {
     );
     setMapSources(sources);
     setActiveMapSource(sources[0]);
+  });
+
+  document.addEventListener("mapForceBoxSelect", (ev) => {
+    setMapBoxSelection(true);
+  });
+
+  document.addEventListener("mapSelectionEnd", (ev) => {
+    setMapBoxSelection(false);
   });
 
   function hideAllMenus() {
@@ -147,6 +156,7 @@ export function UI() {
           mapHiddenTypes: mapHiddenTypes,
           mapSources: mapSources,
           activeMapSource: activeMapSource,
+          mapBoxSelection: mapBoxSelection,
         }}
       >
         <EventsProvider

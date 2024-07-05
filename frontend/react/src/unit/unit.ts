@@ -38,7 +38,6 @@ import {
   GAME_MASTER,
   IDLE,
   IRST,
-  MOVE_UNIT,
   OPTIC,
   RADAR,
   ROEs,
@@ -93,9 +92,11 @@ import {
   faArrowDown,
   faExclamation,
   faLocationCrosshairs,
+  faLocationDot,
   faMapLocation,
   faPeopleGroup,
   faQuestionCircle,
+  faRoute,
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaXmarksLines } from "react-icons/fa6";
@@ -429,11 +430,6 @@ export abstract class Unit extends CustomMarker {
    * @returns ObjectIconOptions
    */
   abstract getIconOptions(): ObjectIconOptions;
-
-  /** Get the actions that this unit can perform
-   *
-   */
-  abstract appendContextActions(contextActionSet: ContextActionSet): void;
 
   /**
    *
@@ -889,6 +885,38 @@ export abstract class Unit extends CustomMarker {
     this.#group = group;
   }
 
+  /** Get the actions that this unit can perform
+   *
+   */
+  appendContextActions(contextActionSet: ContextActionSet) {
+    contextActionSet.addContextAction(
+      this,
+      "move",
+      "Move",
+      "Click on the map to move the units there",
+      faLocationDot,
+      (units: Unit[], _, targetPosition) => {
+        getApp().getUnitsManager().clearDestinations(units);
+        if (targetPosition)
+          getApp().getUnitsManager().addDestination(targetPosition, false, 0);
+      }
+    );
+
+    contextActionSet.addContextAction(
+      this,
+      "path",
+      "Path",
+      "Click on the map to add a destination to the path",
+      faRoute,
+      (units: Unit[], _, targetPosition) => {
+        if (targetPosition)
+          getApp()
+            .getUnitsManager()
+            .addDestination(targetPosition, false, 0, units);
+      }
+    );
+  }
+
   drawLines() {
     /* Leaflet does not like it when you change coordinates when the map is zooming */
     if (!getApp().getMap().isZooming()) {
@@ -1187,6 +1215,15 @@ export abstract class Unit extends CustomMarker {
 
   clearDestinations() {
     if (!this.#human) this.#activePath = [];
+  }
+
+  updatePathFromMarkers() {
+    var path: any = {};
+    this.#pathMarkers.forEach((marker) => {
+      path[Object.keys(path).length.toString()] = marker.getLatLng();
+      console.log(marker.getLatLng());
+    });
+    getApp().getServerManager().addDestination(this.ID, path);
   }
 
   attackUnit(targetID: number) {
@@ -1521,11 +1558,7 @@ export abstract class Unit extends CustomMarker {
     this.#doubleClickTimer = window.setTimeout(() => {
       /* Still waiting so no doubleclick; do the click action */
       if (this.#waitingForDoubleClick) {
-        if (
-          getApp().getMap().getState() === IDLE ||
-          getApp().getMap().getState() === MOVE_UNIT ||
-          e.originalEvent.ctrlKey
-        ) {
+        if (getApp().getMap().getState() === IDLE || e.originalEvent.ctrlKey) {
           if (!e.originalEvent.ctrlKey)
             getApp().getUnitsManager().deselectAllUnits();
 
@@ -1781,9 +1814,13 @@ export abstract class Unit extends CustomMarker {
 
       /* Add markers if missing */
       while (this.#pathMarkers.length < Object.keys(this.#activePath).length) {
-        var marker = new Marker([0, 0], { icon: pathIcon }).addTo(
-          getApp().getMap()
-        );
+        var marker = new Marker([0, 0], {
+          icon: pathIcon,
+          draggable: true,
+        }).addTo(getApp().getMap());
+        marker.on("dragend", (event) => {
+          this.updatePathFromMarkers();
+        });
         this.#pathMarkers.push(marker);
       }
 
@@ -2144,6 +2181,8 @@ export abstract class AirUnit extends Unit {
   }
 
   appendContextActions(contextActionSet: ContextActionSet) {
+    super.appendContextActions(contextActionSet);
+
     /* Context actions to be executed immediately */
     contextActionSet.addContextAction(
       this,
@@ -2319,6 +2358,8 @@ export class GroundUnit extends Unit {
   }
 
   appendContextActions(contextActionSet: ContextActionSet) {
+    super.appendContextActions(contextActionSet);
+
     /* Context actions to be executed immediately */
     contextActionSet.addContextAction(
       this,
@@ -2522,6 +2563,8 @@ export class NavyUnit extends Unit {
   }
 
   appendContextActions(contextActionSet: ContextActionSet) {
+    super.appendContextActions(contextActionSet);
+
     /* Context actions to be executed immediately */
     contextActionSet.addContextAction(
       this,

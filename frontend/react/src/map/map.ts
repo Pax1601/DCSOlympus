@@ -18,7 +18,6 @@ import {
   minimapBoundaries,
   IDLE,
   COALITIONAREA_DRAW_POLYGON,
-  MOVE_UNIT,
   defaultMapMirrors,
   SPAWN_UNIT,
   CONTEXT_ACTION,
@@ -26,7 +25,6 @@ import {
   MAP_HIDDEN_TYPES_DEFAULTS,
 } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
-import { DrawingCursor } from "./coalitionarea/drawingcursor";
 import { TouchBoxSelect } from "./touchboxselect";
 import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
 
@@ -40,16 +38,7 @@ import { MapHiddenTypes, MapOptions } from "../types/types";
 import { SpawnRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 
-// Touch screen support temporarily disabled
-var hasTouchScreen = false;
-//if ("maxTouchPoints" in navigator)
-//    hasTouchScreen = navigator.maxTouchPoints > 0;
-
-if (hasTouchScreen)
-  L.Map.addInitHook("addHandler", "boxSelect", TouchBoxSelect);
-else L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
-
-//L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
+L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
 
 export class Map extends L.Map {
   /* Options */
@@ -95,9 +84,6 @@ export class Map extends L.Map {
 
   #coalitionAreas: CoalitionArea[] = [];
 
-  #drawingCursor: DrawingCursor = new DrawingCursor();
-  #spawnCursor: TemporaryUnitMarker | null = null;
-
   #mapLayers: any = defaultMapLayers;
   #mapMirrors: any = defaultMapMirrors;
   #layerName: string = "";
@@ -127,8 +113,7 @@ export class Map extends L.Map {
       maxBoundsViscosity: 1.0,
       minZoom: 7,
       keyboard: true,
-      keyboardPanDelta: 0,
-      gestureHandling: hasTouchScreen,
+      keyboardPanDelta: 0
     });
     this.setView([37.23, -115.8], 10);
 
@@ -373,20 +358,12 @@ export class Map extends L.Map {
       getApp().getUnitsManager().deselectAllUnits();
     } else if (this.#state === SPAWN_UNIT) {
       this.#spawnRequestTable = options?.spawnRequestTable ?? null;
-      this.#spawnCursor?.removeFrom(this);
-      this.#spawnCursor = new TemporaryUnitMarker(
-        new L.LatLng(0, 0),
-        this.#spawnRequestTable?.unit.unitType ?? "unknown",
-        this.#spawnRequestTable?.coalition ?? "blue"
-      );
     } else if (this.#state === CONTEXT_ACTION) {
       this.#contextAction = options?.contextAction ?? null;
     } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
       this.#coalitionAreas.push(new CoalitionArea([]));
       this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
     }
-
-    this.#updateCursor();
 
     document.dispatchEvent(
       new CustomEvent("mapStateChanged", { detail: this.#state })
@@ -535,7 +512,6 @@ export class Map extends L.Map {
       this.options.scrollWheelZoom = undefined;
       this.#centerUnit = null;
     }
-    this.#updateCursor();
   }
 
   getCenteredOnUnit() {
@@ -762,9 +738,6 @@ export class Map extends L.Map {
           this.hideAllContextMenus();
           if (this.#state === IDLE) {
             this.deselectAllCoalitionAreas();
-          } else if (this.#state === MOVE_UNIT) {
-            getApp().getUnitsManager().clearDestinations();
-            getApp().getUnitsManager().addDestination(e.latlng, false, 0);
           } else if (this.#state === SPAWN_UNIT) {
             if (this.#spawnRequestTable !== null) {
               const location = e.latlng;
@@ -820,7 +793,6 @@ export class Map extends L.Map {
 
   #onSelectionStart(e: any) {
     this.#selecting = true;
-    this.#updateCursor();
   }
 
   #onSelectionEnd(e: any) {
@@ -831,7 +803,7 @@ export class Map extends L.Map {
       this.#preventLeftClick = false;
     }, 200);
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
-    this.#updateCursor();
+    document.dispatchEvent(new CustomEvent("mapSelectionEnd"));
   }
 
   #onMouseDown(e: any) {}
@@ -841,15 +813,10 @@ export class Map extends L.Map {
     this.#lastMousePosition.y = e.originalEvent.y;
     this.#lastMouseCoordinates = this.mouseEventToLatLng(e.originalEvent);
 
-    this.#updateCursor();
-
-    if (this.#state === SPAWN_UNIT) {
-      this.#updateSpawnCursor();
-    } else if (
+    if (
       this.#state === COALITIONAREA_DRAW_POLYGON &&
       e.latlng !== undefined
     ) {
-      this.#drawingCursor.setLatLng(e.latlng);
       /* Update the polygon being drawn with the current position of the mouse cursor */
       this.getSelectedCoalitionArea()?.moveActiveVertex(e.latlng);
     }
@@ -857,12 +824,10 @@ export class Map extends L.Map {
 
   #onKeyDown(e: any) {
     this.#shiftKey = e.originalEvent.shiftKey;
-    this.#updateCursor();
   }
 
   #onKeyUp(e: any) {
     this.#shiftKey = e.originalEvent.shiftKey;
-    this.#updateCursor();
   }
 
   #onZoomStart(e: any) {
@@ -927,7 +892,6 @@ export class Map extends L.Map {
       unit.getPosition().lng
     );
     this.setView(unitPosition, this.getZoom(), { animate: false });
-    this.#updateCursor();
   }
 
   #getMinimapBoundaries() {
@@ -937,60 +901,6 @@ export class Map extends L.Map {
 
   #deselectSelectedCoalitionArea() {
     this.getSelectedCoalitionArea()?.setSelected(false);
-  }
-
-  /* Cursors */
-  #updateCursor() {
-    /* If we are performing an area selection, show the default cursor */
-    if (this.#selecting) {
-      /* Hide all non default cursors */
-      this.#hideDrawingCursor();
-      this.#hideSpawnCursor();
-
-      this.#showDefaultCursor();
-    } else {
-      /* Hide all the unnecessary cursors depending on the active state */
-      if (this.#state !== IDLE) this.#hideDefaultCursor();
-      if (this.#state !== SPAWN_UNIT) this.#hideSpawnCursor();
-      if (this.#state !== COALITIONAREA_DRAW_POLYGON) this.#hideDrawingCursor();
-
-      /* Show the active cursor depending on the active state */
-      if (this.#state === IDLE) this.#showDefaultCursor();
-      else if (this.#state === SPAWN_UNIT) this.#showSpawnCursor();
-      else if (this.#state === COALITIONAREA_DRAW_POLYGON)
-        this.#showDrawingCursor();
-    }
-  }
-
-  #showDefaultCursor() {
-    document.getElementById(this.#ID)?.classList.remove("hidden-cursor");
-  }
-
-  #hideDefaultCursor() {
-    document.getElementById(this.#ID)?.classList.add("hidden-cursor");
-  }
-
-  #showDrawingCursor() {
-    this.#hideDefaultCursor();
-    if (!this.hasLayer(this.#drawingCursor)) this.#drawingCursor.addTo(this);
-  }
-
-  #hideDrawingCursor() {
-    this.#drawingCursor.setLatLng(new L.LatLng(0, 0));
-    if (this.hasLayer(this.#drawingCursor))
-      this.#drawingCursor.removeFrom(this);
-  }
-
-  #showSpawnCursor() {
-    this.#spawnCursor?.addTo(this);
-  }
-
-  #updateSpawnCursor() {
-    this.#spawnCursor?.setLatLng(this.getMouseCoordinates());
-  }
-
-  #hideSpawnCursor() {
-    this.#spawnCursor?.removeFrom(this);
   }
 
   #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {

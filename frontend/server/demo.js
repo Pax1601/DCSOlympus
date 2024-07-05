@@ -62,7 +62,9 @@ module.exports = function (configLocation) {
 				generalSettings: { prohibitAA: false, prohibitAfterburner: false, prohibitAG: false, prohibitAirWpn: false, prohibitJettison: false },
 				ammo:  [],
 				contacts: [],
-				activePath: [],
+				activePath: [
+					{lat: 37.1, lng: -116.1}
+				],
 				isLeader: true
 			}
 

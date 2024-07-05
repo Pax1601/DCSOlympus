@@ -31,7 +31,7 @@ export function OlLabelToggle(props: {
       <span
         data-active={!(props.toggled ?? false)}
         className={`
-          my-auto pl-3 font-normal transition-colors z-ui-2
+          my-auto pl-3 font-normal transition-colors z-ui-1
           dark:data-[active='false']:text-gray-400
           dark:data-[active='true']:text-white
         `}
@@ -41,7 +41,7 @@ export function OlLabelToggle(props: {
       <span
         data-active={props.toggled ?? false}
         className={`
-          my-auto pr-3.5 font-normal transition-colors z-ui-2
+          my-auto pr-3.5 font-normal transition-colors z-ui-1
           dark:data-[active='false']:text-gray-400
           dark:data-[active='true']:text-white
         `}

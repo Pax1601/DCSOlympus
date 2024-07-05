@@ -1,4 +1,3 @@
-import { Map } from "leaflet";
 import { Handler } from "leaflet";
 import { Util } from "leaflet";
 import { DomUtil } from "leaflet";
@@ -12,15 +11,22 @@ export var BoxSelect = Handler.extend({
     this._container = map.getContainer();
     this._pane = map.getPanes().overlayPane;
     this._resetStateTimeout = 0;
+    this._forceBoxSelect = false;
     map.on("unload", this._destroy, this);
+
+    document.addEventListener("mapForceBoxSelect", () => {
+      this._forceBoxSelect = true;
+    });
   },
 
   addHooks: function () {
     DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
+    DomEvent.on(this._container, "touchstart", this._onMouseDown, this);
   },
 
   removeHooks: function () {
     DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
+    DomEvent.off(this._container, "touchstart", this._onMouseDown, this);
   },
 
   moved: function () {
@@ -45,7 +51,10 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseDown: function (e: any) {
-    if (e.which == 1 && e.button == 0 && e.shiftKey) {
+    if (
+      (e.which == 1 && e.button == 0 && (e.shiftKey || this._forceBoxSelect)) ||
+      (e.type === "touchstart" && this._forceBoxSelect)
+    ) {
       this._map.fire("selectionstart");
       // Clear the deferred resetState if it hasn't executed yet, otherwise it
       // will interrupt the interaction and orphan a box element in the container.
@@ -54,14 +63,21 @@ export var BoxSelect = Handler.extend({
 
       DomUtil.disableTextSelection();
       DomUtil.disableImageDrag();
+      this._map.dragging.disable();
 
-      this._startPoint = this._map.mouseEventToContainerPoint(e);
+      if (e.type === "touchstart")
+        this._startPoint = this._map.mouseEventToContainerPoint(e.touches[0]);
+      else
+        this._startPoint = this._map.mouseEventToContainerPoint(e);
 
-      //@ts-ignore
       DomEvent.on(
+        //@ts-ignore
         document,
         {
           contextmenu: DomEvent.stop,
+          touchmove: this._onMouseMove,
+          touchend: this._onMouseUp,
+          touchstart: this._onKeyDown,
           mousemove: this._onMouseMove,
           mouseup: this._onMouseUp,
           keydown: this._onKeyDown,
@@ -83,7 +99,10 @@ export var BoxSelect = Handler.extend({
       this._map.fire("boxzoomstart");
     }
 
-    this._point = this._map.mouseEventToContainerPoint(e);
+    if (e.type === "touchmove")
+      this._point = this._map.mouseEventToContainerPoint(e.touches[0]);
+    else
+      this._point = this._map.mouseEventToContainerPoint(e);
 
     var bounds = new Bounds(this._point, this._startPoint),
       size = bounds.getSize();
@@ -102,12 +121,16 @@ export var BoxSelect = Handler.extend({
 
     DomUtil.enableTextSelection();
     DomUtil.enableImageDrag();
+    this._map.dragging.enable();
 
-    //@ts-ignore
     DomEvent.off(
+      //@ts-ignore
       document,
       {
         contextmenu: DomEvent.stop,
+        touchmove: this._onMouseMove,
+        touchend: this._onMouseUp,
+        touchstart: this._onKeyDown,
         mousemove: this._onMouseMove,
         mouseup: this._onMouseUp,
         keydown: this._onKeyDown,
@@ -117,7 +140,7 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseUp: function (e: any) {
-    if (e.which !== 1 && e.button !== 0) {
+    if (e.which !== 1 && e.button !== 0 && e.type !== "touchend") {
       return;
     }
 
@@ -134,6 +157,7 @@ export var BoxSelect = Handler.extend({
       this._map.containerPointToLatLng(this._point)
     );
 
+    this._forceBoxSelect = false;
     this._map.fire("selectionend", { selectionBounds: bounds });
   },
 

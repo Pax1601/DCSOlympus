@@ -4,8 +4,9 @@ import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION, MOVE_UNIT } from "../../constants/constants";
+import { CONTEXT_ACTION } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 export function UnitMouseControlBar(props: {}) {
   var [open, setOpen] = useState(false);
@@ -16,6 +17,8 @@ export function UnitMouseControlBar(props: {}) {
   var [activeContextAction, setActiveContextAction] = useState(
     null as null | ContextAction
   );
+  const [scrolledLeft, setScrolledLeft] = useState(true);
+  const [scrolledRight, setScrolledRight] = useState(false);
 
   /* When a unit is selected, open the menu */
   document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
@@ -40,7 +43,7 @@ export function UnitMouseControlBar(props: {}) {
 
   /* Deselect the context action when exiting state */
   document.addEventListener("mapStateChanged", (ev) => {
-    setOpen((ev as CustomEvent).detail === CONTEXT_ACTION || (ev as CustomEvent).detail === MOVE_UNIT);
+    setOpen((ev as CustomEvent).detail === CONTEXT_ACTION);
   });
 
   /* Update the current values of the shown data */
@@ -58,6 +61,18 @@ export function UnitMouseControlBar(props: {}) {
     setActiveContextAction(null);
   }
 
+  function onScroll(ev) {
+    const sl = ev.target.scrollLeft;
+    const sr =
+      ev.target.scrollWidth - ev.target.scrollLeft - ev.target.clientWidth;
+
+    sl < 1 && !scrolledLeft && setScrolledLeft(true);
+    sl > 1 && scrolledLeft && setScrolledLeft(false);
+
+    sr < 1 && !scrolledRight && setScrolledRight(true);
+    sr > 1 && scrolledRight && setScrolledRight(false);
+  }
+
   return (
     <>
       {" "}
@@ -65,39 +80,59 @@ export function UnitMouseControlBar(props: {}) {
         <>
           <div
             className={`
-              absolute left-[50%] top-16 flex translate-x-[calc(-50%+2rem)]
-              gap-2 rounded-md bg-gray-200 p-2 z-ui-2
+              absolute left-[50%] top-16 flex max-w-[80%]
+              translate-x-[calc(-50%+2rem)] gap-2 rounded-md bg-gray-200 z-ui-2
               dark:bg-olympus-900
             `}
           >
-            {Object.values(contextActionsSet.getContextActions()).map(
-              (contextAction) => {
-                return (
-                  <OlStateButton
-                    checked={contextAction === activeContextAction}
-                    icon={contextAction.getIcon()}
-                    tooltip={contextAction.getLabel()}
-                    onClick={() => {
-                      if (contextAction.getOptions().executeImmediately) {
-                        setActiveContextAction(null);
-                        contextAction.executeCallback(null, null);
-                      } else {
-                        if (activeContextAction != contextAction) {
-                          setActiveContextAction(contextAction);
-                          getApp().getMap().setState(CONTEXT_ACTION, {
-                            contextAction: contextAction,
-                          });
-                        } else {
+            {!scrolledLeft && (
+              <FaChevronLeft
+                className={`
+                  absolute left-0 h-full w-6 rounded-lg px-2 py-3.5
+                  text-gray-200
+                  dark:bg-olympus-900
+                `}
+              />
+            )}
+            <div
+              className="flex gap-2 overflow-x-auto no-scrollbar p-2"
+              onScroll={(ev) => onScroll(ev)}
+            >
+              {Object.values(contextActionsSet.getContextActions()).map(
+                (contextAction) => {
+                  return (
+                    <OlStateButton
+                      checked={contextAction === activeContextAction}
+                      icon={contextAction.getIcon()}
+                      tooltip={contextAction.getLabel()}
+                      onClick={() => {
+                        if (contextAction.getOptions().executeImmediately) {
                           setActiveContextAction(null);
-                          getApp()
-                            .getMap()
-                            .setState(MOVE_UNIT);
+                          contextAction.executeCallback(null, null);
+                        } else {
+                          if (activeContextAction != contextAction) {
+                            setActiveContextAction(contextAction);
+                            getApp().getMap().setState(CONTEXT_ACTION, {
+                              contextAction: contextAction,
+                            });
+                          } else {
+                            setActiveContextAction(null);
+                          }
                         }
-                      }
-                    }}
-                  />
-                );
-              }
+                      }}
+                    />
+                  );
+                }
+              )}
+            </div>
+            {!scrolledRight && (
+              <FaChevronRight
+                className={`
+                  absolute right-0 h-full w-6 rounded-lg px-2 py-3.5
+                  text-gray-200
+                  dark:bg-olympus-900
+                `}
+              />
             )}
           </div>
           {activeContextAction && (
@@ -109,10 +144,12 @@ export function UnitMouseControlBar(props: {}) {
                 dark:bg-olympus-800
               `}
             >
-              <FaInfoCircle className={`
-                mr-2 hidden min-w-8 text-sm text-blue-500
-                md:block
-              `} />
+              <FaInfoCircle
+                className={`
+                  mr-2 hidden min-w-8 text-sm text-blue-500
+                  md:block
+                `}
+              />
               <div
                 className={`
                   px-2

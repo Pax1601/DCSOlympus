@@ -24,8 +24,7 @@ import {
   DataIndexes,
   GAME_MASTER,
   IADSDensities,
-  IDLE,
-  MOVE_UNIT,
+  IDLE
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
@@ -1954,7 +1953,6 @@ export class UnitsManager {
     if (this.getSelectedUnits().length > 0) {
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
       if (!this.#selectionEventDisabled) {
-        getApp().getMap().setState(MOVE_UNIT);
         window.setTimeout(() => {
           document.dispatchEvent(
             new CustomEvent("unitsSelection", {

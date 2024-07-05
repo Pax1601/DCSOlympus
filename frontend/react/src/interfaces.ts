@@ -75,8 +75,8 @@ export interface UnitSpawnTable {
   location: LatLng;
   skill: string;
   liveryID: string;
-  altitude: number;
-  loadout: string;
+  altitude?: number;
+  loadout?: string;
 }
 
 export interface ObjectIconOptions {

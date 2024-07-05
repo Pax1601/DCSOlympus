@@ -29,8 +29,24 @@ import {
   olButtonsVisibilityNavyunit,
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 export function Header() {
+  const [scrolledLeft, setScrolledLeft] = useState(true);
+  const [scrolledRight, setScrolledRight] = useState(false);
+
+  function onScroll(ev) {
+    const sl = ev.target.scrollLeft;
+    const sr =
+      ev.target.scrollWidth - ev.target.scrollLeft - ev.target.clientWidth;
+
+    sl < 1 && !scrolledLeft && setScrolledLeft(true);
+    sl > 1 && scrolledLeft && setScrolledLeft(false);
+
+    sr < 1 && !scrolledRight && setScrolledRight(true);
+    sr > 1 && scrolledRight && setScrolledRight(false);
+  }
+
   return (
     <StateConsumer>
       {(appState) => (
@@ -47,11 +63,21 @@ export function Header() {
                 src="images/icon.png"
                 className="my-auto h-10 w-10 rounded-md p-0"
               ></img>
+              {!scrolledLeft && (
+                <FaChevronLeft
+                  className={`
+                    absolute left-14 h-full w-6 rounded-lg px-2 py-3.5
+                    text-gray-200 z-ui-1
+                    dark:bg-olympus-900
+                  `}
+                />
+              )}
               <div
                 className={`
                   my-2 flex w-full items-center gap-3 overflow-x-scroll
                   no-scrollbar
                 `}
+                onScroll={(ev) => onScroll(ev)}
               >
                 <div
                   className={`
@@ -228,6 +254,15 @@ export function Header() {
                   })}
                 </OlDropdown>
               </div>
+              {!scrolledRight && (
+              <FaChevronRight
+                className={`
+                  absolute right-0 h-full w-6 rounded-lg px-2 py-3.5
+                  text-gray-200 z-ui-1
+                  dark:bg-olympus-900
+                `}
+              />
+            )}
             </nav>
           )}
         </EventsConsumer>

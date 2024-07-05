@@ -19,7 +19,21 @@ export function OlDropdown(props: {
     content.style.top = "0px";
     content.style.height = "";
 
-    /* Get the position and size of the button and the content elements */
+    /* Get the position and size of the button */
+    var [bxl, byt, bxr, byb, bw, bh] = [
+      button.getBoundingClientRect().x,
+      button.getBoundingClientRect().y,
+      button.getBoundingClientRect().x + button.clientWidth,
+      button.getBoundingClientRect().y + button.clientHeight,
+      button.clientWidth,
+      button.clientHeight,
+    ];
+
+    /* Set the minimum and maximum width to be equal to the button width */
+    content.style.minWidth = `${bw}px`;
+    content.style.maxWidth = `${bw}px`;
+
+    /* Get the position and size of the content element */
     var [cxl, cyt, cxr, cyb, cw, ch] = [
       content.getBoundingClientRect().x,
       content.getBoundingClientRect().y,
@@ -27,14 +41,6 @@ export function OlDropdown(props: {
       content.getBoundingClientRect().y + content.clientHeight,
       content.clientWidth,
       content.clientHeight,
-    ];
-    var [bxl, byt, bxr, byb, bbw, bh] = [
-      button.getBoundingClientRect().x,
-      button.getBoundingClientRect().y,
-      button.getBoundingClientRect().x + button.clientWidth,
-      button.getBoundingClientRect().y + button.clientHeight,
-      button.clientWidth,
-      button.clientHeight,
     ];
 
     /* Limit the maximum height */
@@ -134,8 +140,8 @@ export function OlDropdown(props: {
         ref={contentRef}
         data-open={open}
         className={`
-          absolute z-ui-4 divide-y divide-gray-100 overflow-y-scroll rounded-lg
-          bg-white p-2 shadow
+          absolute z-ui-4 divide-y divide-gray-100 overflow-y-scroll
+          no-scrollbar rounded-lg bg-white p-2 shadow
           dark:bg-gray-700
           data-[open='false']:hidden
         `}

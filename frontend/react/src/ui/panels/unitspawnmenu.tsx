@@ -87,7 +87,11 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
     <div className="flex flex-col">
       <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} />
       <div className="flex h-fit flex-col gap-5 px-5 pb-8 pt-6">
-        <div className="flex w-full flex-row content-center justify-between">
+        <div
+          className={`
+          inline-flex w-full flex-row content-center justify-between
+        `}
+        >
           <OlCoalitionToggle
             coalition={spawnCoalition}
             onClick={() => {
@@ -192,10 +196,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
               Weapons
             </span>
           </div>
-          <OlDropdown
-            label={spawnLoadoutName}
-            className={`w-full w-max-full`}
-          >
+          <OlDropdown label={spawnLoadoutName} className={`w-full w-max-full`}>
             {loadouts.map((loadout) => {
               return (
                 <OlDropdownItem
@@ -230,7 +231,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
               <div className="flex content-center gap-2">
                 <div
                   className={`
-                    my-auto w-6 rounded-full py-0.5 text-center text-sm
+                    my-auto w-6 min-w-6 rounded-full py-0.5 text-center text-sm
                     font-bold text-gray-500
                     dark:bg-[#17212D]
                   `}
@@ -239,7 +240,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
                 </div>
                 <div
                   className={`
-                    my-auto text-sm
+                    my-auto overflow-hidden text-ellipsis text-nowrap text-sm
                     dark:text-gray-300
                   `}
                 >

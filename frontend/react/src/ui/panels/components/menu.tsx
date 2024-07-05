@@ -19,20 +19,24 @@ export function Menu(props: {
   return (
     <div
       data-open={props.open}
-      data-hide={hide}
       className={`
-        absolute left-16 right-0 top-[58px] bg-gray-200 backdrop-grayscale
-        z-ui-3 h-[calc(100vh-58px)] backdrop-blur-lg transition-transform
-        dark:bg-olympus-800/90
-        data-[hide='true']:-translate-y-[calc(100vh-1.5rem-58px)]
+        absolute left-16 right-0 top-[58px] bg-transparent z-ui-3
+        pointer-events-none h-[calc(100vh-58px)] transition-transform
         data-[open='false']:-translate-x-full
         sm:w-[400px]
       `}
       tabIndex={-1}
     >
-      <div className={`
-        h-[calc(100vh-58px-1.5rem)] overflow-y-auto overflow-x-hidden
-      `}>
+      <div
+        data-hide={hide}
+        className={`
+          pointer-events-auto h-[calc(100vh-58px-2rem)] overflow-y-auto
+          overflow-x-hidden no-scrollbar backdrop-blur-lg backdrop-grayscale
+          transition-transform
+          dark:bg-olympus-800/90
+          data-[hide='true']:translate-y-[calc(100vh-58px)]
+        `}
+      >
         <h5
           className={`
             inline-flex w-full items-center px-5 py-3 pb-2 font-semibold
@@ -65,11 +69,15 @@ export function Menu(props: {
         {props.children}
       </div>
       {props.canBeHidden == true && (
-        <div className="flex h-6 justify-center" onClick={() => setHide(!hide)}>
+        <div className={`
+          flex h-8 justify-center z-ui-6 pointer-events-auto backdrop-blur-lg
+          backdrop-grayscale
+          dark:bg-olympus-800/90
+        `} onClick={() => setHide(!hide)}>
           {hide ? (
-            <FaChevronDown className="mx-auto my-auto text-gray-400" />
-          ) : (
             <FaChevronUp className="mx-auto my-auto text-gray-400" />
+          ) : (
+            <FaChevronDown className="mx-auto my-auto text-gray-400" />
           )}
         </div>
       )}

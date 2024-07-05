@@ -34,14 +34,14 @@ export function OlCoalitionToggle(props: {
       ></div>
       <span
         className={`
-          ms-3 text-gray-900
+          ms-3 overflow-hidden text-ellipsis text-nowrap text-gray-900
           dark:text-white
           data-[flash='true']:after:animate-pulse
         `}
       >
         {props.coalition
-          ? `Coalition (${props.coalition[0].toLocaleUpperCase() + props.coalition.substring(1)})`
-          : "Different values"}
+          ? `${props.coalition[0].toLocaleUpperCase() + props.coalition.substring(1)}`
+          : "Diff. values"}
       </span>
     </div>
   );
