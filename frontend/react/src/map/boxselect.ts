@@ -14,19 +14,21 @@ export var BoxSelect = Handler.extend({
     this._forceBoxSelect = false;
     map.on("unload", this._destroy, this);
 
-    document.addEventListener("mapForceBoxSelect", () => {
+    document.addEventListener("mapForceBoxSelect", (e) => {
       this._forceBoxSelect = true;
+      const originalEvent = (e as CustomEvent).detail;
+      this._onMouseDown(originalEvent);
     });
   },
 
   addHooks: function () {
     DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.on(this._container, "touchstart", this._onMouseDown, this);
+    DomEvent.on(this._container, "mapForceBoxSelect", this._onMouseDown, this);
   },
 
   removeHooks: function () {
     DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.off(this._container, "touchstart", this._onMouseDown, this);
+    DomEvent.off(this._container, "mapForceBoxSelect", this._onMouseDown, this);
   },
 
   moved: function () {

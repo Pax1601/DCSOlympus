@@ -7,9 +7,7 @@ import {
   faEllipsisV,
   faCog,
   faQuestionCircle,
-  faPlusSquare,
-  faBox,
-  faObjectGroup,
+  faPlusSquare
 } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
@@ -72,16 +70,6 @@ export function SideBar() {
                     checked={appState.drawingMenuVisible}
                     icon={faPencil}
                     tooltip="Hide/show drawing menu"
-                  ></OlStateButton>
-                  <OlStateButton
-                    onClick={() => {
-                      document.dispatchEvent(
-                        new CustomEvent("mapForceBoxSelect")
-                      );
-                    }}
-                    checked={appState.mapBoxSelection}
-                    icon={faObjectGroup}
-                    tooltip="Enable box selection on the map"
                   ></OlStateButton>
                 </div>
               </div>

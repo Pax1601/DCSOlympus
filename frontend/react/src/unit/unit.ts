@@ -1218,10 +1218,9 @@ export abstract class Unit extends CustomMarker {
   }
 
   updatePathFromMarkers() {
-    var path: any = {};
+    var path: any = [];
     this.#pathMarkers.forEach((marker) => {
       path[Object.keys(path).length.toString()] = marker.getLatLng();
-      console.log(marker.getLatLng());
     });
     getApp().getServerManager().addDestination(this.ID, path);
   }
@@ -1818,8 +1817,12 @@ export abstract class Unit extends CustomMarker {
           icon: pathIcon,
           draggable: true,
         }).addTo(getApp().getMap());
+        marker.on("dragstart", (event) => {
+          event.target.options["freeze"] = true;
+        })
         marker.on("dragend", (event) => {
           this.updatePathFromMarkers();
+          event.target.options["freeze"] = false;
         });
         this.#pathMarkers.push(marker);
       }
@@ -1835,10 +1838,13 @@ export abstract class Unit extends CustomMarker {
       /* Update the position of the existing markers (to avoid creating markers uselessly) */
       for (let WP in this.#activePath) {
         var destination = this.#activePath[WP];
-        this.#pathMarkers[parseInt(WP)].setLatLng([
-          destination.lat,
-          destination.lng,
-        ]);
+        var frozen = this.#pathMarkers[parseInt(WP)].options["freeze"];
+        if (!this.#pathMarkers[parseInt(WP)].options["freeze"]) {
+          this.#pathMarkers[parseInt(WP)].setLatLng([
+            destination.lat,
+            destination.lng,
+          ]);
+        }
         points.push(new LatLng(destination.lat, destination.lng));
         this.#pathPolyline.setLatLngs(points);
       }

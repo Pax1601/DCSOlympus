@@ -95,6 +95,8 @@ export class Map extends L.Map {
   #theatre: string = "";
   #waitingForDoubleClick: boolean = false;
   #doubleClickTimer: number = 0;
+  #longPressTimer: number = 0;
+  #dragging: boolean = false;
 
   /**
    *
@@ -138,9 +140,12 @@ export class Map extends L.Map {
     this.on("zoom", (e: any) => this.#onZoom(e));
     this.on("zoomend", (e: any) => this.#onZoomEnd(e));
     this.on("drag", (e: any) => this.centerOnUnit(null));
+    this.on("dragstart", (e: any) => this.#onDragStart());
+    this.on("dragend", (e: any) => this.#onDragEnd(null));
     this.on("contextmenu", (e: any) => this.#onContextMenu(e));
     this.on("selectionstart", (e: any) => this.#onSelectionStart(e));
     this.on("selectionend", (e: any) => this.#onSelectionEnd(e));
+    this.on("mouseup", (e: any) => this.#onMouseUp(e));
     this.on("mousedown", (e: any) => this.#onMouseDown(e));
     this.on("mousemove", (e: any) => this.#onMouseMove(e));
     this.on("keydown", (e: any) => this.#onKeyDown(e));
@@ -148,6 +153,9 @@ export class Map extends L.Map {
     this.on("move", (e: any) => {
       if (this.#slaveDCSCamera) this.#broadcastPosition();
     });
+
+    L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
+    L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
 
     /* Event listeners */
     document.addEventListener("hiddenTypesChanged", (ev: CustomEventInit) => {
@@ -735,7 +743,8 @@ export class Map extends L.Map {
       /* Still waiting so no doubleclick; do the click action */
       if (this.#waitingForDoubleClick) {
         if (!this.#preventLeftClick) {
-          this.hideAllContextMenus();
+
+          /* Execute the short click action */
           if (this.#state === IDLE) {
             this.deselectAllCoalitionAreas();
           } else if (this.#state === SPAWN_UNIT) {
@@ -791,6 +800,14 @@ export class Map extends L.Map {
 
   #onContextMenu(e: any) {}
 
+  #onDragStart(e: any) {
+    this.#dragging = true;
+  }
+
+  #onDragEnd(e: any) {
+    this.#dragging = false;
+  }
+
   #onSelectionStart(e: any) {
     this.#selecting = true;
   }
@@ -806,7 +823,19 @@ export class Map extends L.Map {
     document.dispatchEvent(new CustomEvent("mapSelectionEnd"));
   }
 
-  #onMouseDown(e: any) {}
+  #onMouseUp(e: any) {
+    window.clearTimeout(this.#longPressTimer);
+  }
+
+  #onMouseDown(e: any) {
+    this.#longPressTimer = window.setTimeout(()=> {
+      if (!this.#dragging)
+        if (e.type === "touchstart")
+          document.dispatchEvent(new CustomEvent("mapForceBoxSelect", {detail: e}));
+        else
+          document.dispatchEvent(new CustomEvent("mapForceBoxSelect", {detail: e.originalEvent}));
+    }, 500);
+  }
 
   #onMouseMove(e: any) {
     this.#lastMousePosition.x = e.originalEvent.x;

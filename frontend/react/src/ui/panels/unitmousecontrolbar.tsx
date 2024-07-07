@@ -117,6 +117,9 @@ export function UnitMouseControlBar(props: {}) {
                             });
                           } else {
                             setActiveContextAction(null);
+                            getApp().getMap().setState(CONTEXT_ACTION, {
+                              contextAction: null,
+                            });
                           }
                         }
                       }}
