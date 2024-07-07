@@ -72,7 +72,7 @@ export class Map extends L.Map {
 
   #temporaryMarkers: TemporaryUnitMarker[] = [];
 
-  #selecting: boolean = false;
+  #isSelecting: boolean = false;
   #isZooming: boolean = false;
   #previousZoom: number = 0;
 
@@ -96,7 +96,7 @@ export class Map extends L.Map {
   #waitingForDoubleClick: boolean = false;
   #doubleClickTimer: number = 0;
   #longPressTimer: number = 0;
-  #dragging: boolean = false;
+  #isDragging: boolean = false;
 
   /**
    *
@@ -801,19 +801,19 @@ export class Map extends L.Map {
   #onContextMenu(e: any) {}
 
   #onDragStart(e: any) {
-    this.#dragging = true;
+    this.#isDragging = true;
   }
 
   #onDragEnd(e: any) {
-    this.#dragging = false;
+    this.#isDragging = false;
   }
 
   #onSelectionStart(e: any) {
-    this.#selecting = true;
+    this.#isSelecting = true;
   }
 
   #onSelectionEnd(e: any) {
-    this.#selecting = false;
+    this.#isSelecting = false;
     clearTimeout(this.#leftClickTimer);
     this.#preventLeftClick = true;
     this.#leftClickTimer = window.setTimeout(() => {
@@ -829,7 +829,7 @@ export class Map extends L.Map {
 
   #onMouseDown(e: any) {
     this.#longPressTimer = window.setTimeout(()=> {
-      if (!this.#dragging)
+      if (!this.#isDragging && !this.#isZooming)
         if (e.type === "touchstart")
           document.dispatchEvent(new CustomEvent("mapForceBoxSelect", {detail: e}));
         else
