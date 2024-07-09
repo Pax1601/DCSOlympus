@@ -1,3 +1,3 @@
 call .\scripts\copy.bat
 call .\scripts\create-mock-dcs.bat
-node .\bin\demo --config %1
+nodemon --watch src\demo\**\*.ts --exec node --inspect -r ts-node\register .\src\demo\www.ts -c %1

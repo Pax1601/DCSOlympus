@@ -5,7 +5,8 @@
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
     "server": "node ./bin/www",
-    "client": "electron ."
+    "client": "electron .",
+    "debug": "nodemon --watch src/**/*.ts --exec ts-node src/www.ts"
   },
   "private": true,
   "dependencies": {
@@ -26,9 +27,12 @@
     "srtm-elevation": "^2.1.2",
     "tcp-ping-port": "^1.0.1",
     "uuid": "^9.0.1",
+    "ws": "^8.18.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
   }
 }

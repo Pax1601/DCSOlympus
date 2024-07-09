@@ -12,8 +12,8 @@
                 "<node_internals>/**"
             ],
             "args": ["--config",  "${input:enterDir}/Config/olympus.json"],
-            "program": "./bin/www",
-            "preLaunchTask": "check-setup"
+            "program": "./build/www.js",
+            "preLaunchTask": "build"
         }, 
         {
             "type": "node",
@@ -22,8 +22,20 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "args": ["--config",  "${input:enterDir}/Config/olympus.json"],
-            "program": "./bin/www",
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--watch",
+                "src/**/*.ts",
+                "--exec",
+                "node",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "src/www.ts",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json"
+            ],
+            "restart": true,
             "preLaunchTask": "demo-server"
         }
     ], 
