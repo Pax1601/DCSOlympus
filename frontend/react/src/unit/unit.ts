@@ -102,8 +102,8 @@ import {
 import { FaXmarksLines } from "react-icons/fa6";
 
 var pathIcon = new Icon({
-  iconUrl: "/resources/theme/images/markers/marker-icon.png",
-  shadowUrl: "/resources/theme/images/markers/marker-shadow.png",
+  iconUrl: "/images/markers/marker-icon.png",
+  shadowUrl: "/images/markers/marker-shadow.png",
   iconAnchor: [13, 41],
 });
 
@@ -991,7 +991,7 @@ export abstract class Unit extends CustomMarker {
       )
         marker = this.getDatabaseEntry()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `/resources/theme/images/units/${marker}.svg`;
+      img.src = `/images/units/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 

@@ -140,8 +140,8 @@ export class Map extends L.Map {
     this.on("zoom", (e: any) => this.#onZoom(e));
     this.on("zoomend", (e: any) => this.#onZoomEnd(e));
     this.on("drag", (e: any) => this.centerOnUnit(null));
-    this.on("dragstart", (e: any) => this.#onDragStart());
-    this.on("dragend", (e: any) => this.#onDragEnd(null));
+    this.on("dragstart", (e: any) => this.#onDragStart(e));
+    this.on("dragend", (e: any) => this.#onDragEnd(e));
     this.on("contextmenu", (e: any) => this.#onContextMenu(e));
     this.on("selectionstart", (e: any) => this.#onSelectionStart(e));
     this.on("selectionend", (e: any) => this.#onSelectionEnd(e));

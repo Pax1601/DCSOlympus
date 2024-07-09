@@ -194,7 +194,7 @@ export class Weapon extends CustomMarker {
       var unitIcon = document.createElement("div");
       unitIcon.classList.add("unit-icon");
       var img = document.createElement("img");
-      img.src = `/resources/theme/images/units/${this.getMarkerCategory()}.svg`;
+      img.src = `/images/units/${this.getMarkerCategory()}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
       unitIcon.toggleAttribute(

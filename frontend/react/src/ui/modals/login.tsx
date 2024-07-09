@@ -45,7 +45,7 @@ export function LoginModal(props: {
       `}
     >
       <img
-        src="/resources/theme/images/splash/1.jpg"
+        src="/images/splash/1.jpg"
         className={`contents-center w-full object-cover opacity-[7%]`}
       ></img>
       <div
@@ -110,9 +110,7 @@ export function LoginModal(props: {
                       className={`flex w-full`}
                     ></img>
                   </span>
-                  <div
-                    className={`flex flex-col items-start gap-1`}
-                  >
+                  <div className={`flex flex-col items-start gap-1`}>
                     <h1
                       className={`
                         flex text-wrap text-4xl font-bold text-gray-800
@@ -140,9 +138,7 @@ export function LoginModal(props: {
                   <>
                     {props.commandMode === null ? (
                       <>
-                        <div
-                          className={`flex flex-col items-start gap-2`}
-                        >
+                        <div className={`flex flex-col items-start gap-2`}>
                           <label
                             className={`
                               text-gray-800 text-md
@@ -192,19 +188,19 @@ export function LoginModal(props: {
                             />
                           </button>
                           {/*
-                                                        <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
-                                                            View Guide <FontAwesomeIcon className="my-auto text-xs" icon={faExternalLink} />
-                                                         </button>
-                                                         */}
+                            <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
+                                View Guide <FontAwesomeIcon className="my-auto text-xs" icon={faExternalLink} />
+                             </button>
+                          */}
                         </div>
                       </>
                     ) : (
                       <>
                         <div
                           className={`
-																																																					flex flex-col items-start
-																																																					gap-2
-																																																				`}
+														flex flex-col items-start
+														gap-2
+													`}
                         >
                           <label
                             className={`
@@ -216,6 +212,7 @@ export function LoginModal(props: {
                           </label>
                           <input
                             type="text"
+                            autoComplete="username"
                             onChange={(ev) =>
                               setDisplayName(ev.currentTarget.value)
                             }
@@ -282,8 +279,8 @@ export function LoginModal(props: {
                     ></ErrorCallout>
                     <div
                       className={`
-																																									text-sm font-medium text-gray-200
-																																								`}
+												text-sm font-medium text-gray-200
+											`}
                     >
                       Still having issues? See our{" "}
                       <a
@@ -335,7 +332,7 @@ export function LoginModal(props: {
           >
             <Card className="flex">
               <img
-                src="/resources/theme/images/splash/1.jpg"
+                src="/images/splash/1.jpg"
                 className={`
                   h-[40%] max-h-[120px] contents-center w-full rounded-md
                   object-cover
@@ -365,7 +362,7 @@ export function LoginModal(props: {
             </Card>
             <Card className="flex">
               <img
-                src="/resources/theme/images/splash/1.jpg"
+                src="/images/splash/1.jpg"
                 className={`
                   h-[40%] max-h-[120px] contents-center w-full rounded-md
                   object-cover
