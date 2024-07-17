@@ -1,5 +1,3 @@
-<img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/0ecff279-a87c-4e2d-a4c7-da98c74adf38">
-
 [**Join our Discord**](https://discord.gg/kNAQkhUHnQ)
 
 <img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/1c0dd3fd-339c-4b03-94da-3e5215b0358a">
@@ -27,14 +25,10 @@ Check the [Wiki](https://github.com/Pax1601/DCSOlympus/wiki) for installation in
 
 # Frequently Asked Questions
 ### Can I join up and help out with the project? ###
-We are currently running towards first release in the very near future so we are not looking to add more people to the core team for the moment. However that does not mean we are not open to collaborations and help going forward, if you want to help for now we are committed to the free and open source model so feel free to check out the github, familiarize yourself with the project and maybe even start submitting pull requests for open issues.
-
-Post-release we will be more interested in developing partnerships/collaborations with other teams/projects and potentially bringing in more team members, we will update this after release on how that will be managed!
+Absolutely, join the discord and ping any of the developers to get briefed.
 
 ### Can I be a beta/alpha-tester? ###
-With first public release planned for the very-near future we are fully committed to the final sprint, as such we will not be formally recruiting more people to test pre-release. 
-
-Post-release we will be eager to hear feedback of all forms and take in bug-reports, at this time after release we will begin considering bringing in more team members to test in development versions as we go.
+Same as above!
 
 ### Do you have a roadmap? ###
 We do not have a roadmap no, we have a laundry list of things we are hoping to do. 
