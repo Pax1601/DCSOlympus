@@ -1,0 +1,1 @@
+nodemon --watch .\**\*.* --exec ".\scripts\copy-package"

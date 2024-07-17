@@ -1,0 +1,72 @@
+<div id="command-mode-settings-dialog" class="ol-panel ol-dialog olympus-dialog-close hide" oncontextmenu="return false;">
+    <div class="ol-dialog-close" data-on-click="closeDialog"></div>
+
+    <div class="ol-dialog-header">
+        <h3 id="unit-name">Command mode settings</h3>
+    </div>
+
+    <div class="ol-dialog-content">
+        <div id="restrict-spawns" class="ol-checkbox">
+            <label title="If false, no spawn restrictions will be applied">
+                <input type="checkbox" data-on-click="toggleSpawnRestrictions"/>
+                Enable spawn restrictions
+            </label>
+        </div>
+
+        <hr />
+
+        <div id="restrict-to-coalition" class="ol-checkbox">
+            <label title="If true, commanders will be allowed to only spawn units that belong to their coalition. E.g. blue commanders will be able to spawn F/A-18 Hornets, but not MiG-29s.">
+                <input type="checkbox"/>
+                Restrict units to coalition
+            </label>
+        </div>
+
+        <div class="ol-group">
+            <label>Setup time: </label>
+            
+            <div class="ol-group">
+                <div id="setup-time" class="ol-text-input">
+                    <input type="number" min="-99999" max="99999" step="1" value="10" />
+                </div>
+                <label>minutes</label>
+            </div>
+        </div>
+
+        <div class="ol-group">
+            <label>Available eras: </label>
+            
+            <div id="command-mode-era-options" class="ol-select">
+                <div class="ol-select-value">Select eras</div>
+                <div class="ol-select-options">
+                    <!-- This is where all the available era buttons will be shown-->
+                </div>
+            </div>
+        </div>
+
+        <div class="ol-group">
+            <h4>Spawn points</h4>
+            <hr>
+        </div>
+
+        <div class="ol-group">
+            <label>Blue spawn points: </label>
+            <div id="blue-spawn-points" class="ol-text-input">
+                <input type="number" min="0" max="999999" step="1" value="1000">
+            </div>
+        </div>
+
+        <div class="ol-group">
+            <label>Red spawn points: </label>
+            <div id="red-spawn-points" class="ol-text-input">
+                <input type="number" min="0" max="999999" step="1" value="1000">
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="ol-dialog-footer ol-group">
+        <button class="ol-button-apply" data-on-click="applycommandModeOptions">Apply</button>
+        <button class="ol-button-close" data-on-click="closeDialog">Close</button>
+    </div>
+</div>

@@ -9,8 +9,6 @@
 
 # DCS Olympus
 
-![alt text](https://github.com/Pax1601/DCSOlympus/blob/main/client/sample.png?raw=true)
-
 ### What is this?
 DCS: Olympus is a free and open-source mod for DCS that enables dynamic real-time control through a map interface. The user is able to spawn units/groups, deploy a variety of effects such as smoke, flares, or explosions, and waypoints/tasks can be given to AI units in real-time in a way similar to a classic RTS game. 
 
@@ -23,18 +21,30 @@ Even better it requires no client mods be installed if used on a server
 The full feature list is simply too long to enumerate in a short summary but needless to say Olympus offers up a lot of unique gameplay that has previously not existed, and enhances many other elements of DCS in exciting ways 
 
 ### Installing DCS Olympus
-A prebuilt installer will soon be released and available here
+Check the [Wiki](https://github.com/Pax1601/DCSOlympus/wiki) for installation instructions
 
 # Frequently Asked Questions
-### Can I join up and help out with the project? ###
-We are currently running towards first release in the very near future so we are not looking to add more people to the core team for the moment. However that does not mean we are not open to collaborations and help going forward, if you want to help for now we are committed to the free and open source model so feel free to check out the github, familiarize yourself with the project and maybe even start submitting pull requests for open issues.
 
-Post-release we will be more interested in developing partnerships/collaborations with other teams/projects and potentially bringing in more team members, we will update this after release on how that will be managed!
+### I need troubleshooting guidance, please help? ###
+Read through the [Installation Guide](https://github.com/Pax1601/DCSOlympus/wiki) to ensure you have setup Olympus correctly.
+
+Read through [Setup Troubleshooting](https://github.com/Pax1601/DCSOlympus/wiki/Setup-Troubleshooting) for common issues and solutions.
+
+Read through the [Olympus User Guide](https://github.com/Pax1601/DCSOlympus/wiki/2.-User-Guide) to learn how to use Olympus.
+
+If you're still having issues after trying the steps above, please post in the ⁠community-support channel with the following:
+
+A detailed description of your issue
+Your Olympus log file \user home folder\AppData\Local\Temp\Olympus_log.txt for some it might be in \DCS Saved Games folder\Logs\Olympus_log.txt
+Your DCS log file \DCS Saved Games folder\Logs\dcs.log
+
+Screenshots of any relevant screens or issues and any other pertinent information.
+
+### Can I join up and help out with the project? ###
+Absolutely, join the discord and ping any of the developers to get briefed.
 
 ### Can I be a beta/alpha-tester? ###
-With first public release planned for the very-near future we are fully committed to the final sprint, as such we will not be formally recruiting more people to test pre-release. 
-
-Post-release we will be eager to hear feedback of all forms and take in bug-reports, at this time after release we will begin considering bringing in more team members to test in development versions as we go.
+Same as above!
 
 ### Do you have a roadmap? ###
 We do not have a roadmap no, we have a laundry list of things we are hoping to do. 
@@ -71,9 +81,5 @@ A and B never communicate when you connect the client you download the web page 
 Olympus by itself should not have a noticeable impact on server performance, however the ability for the user to spawn arbitrary units and command engagements means Olympus can be used in such a way that brings the game to it's knees.
 
 Be cognizant of how you play, whether it's done through Olympus or the mission editor 500 MLRS units firing at once is not going to go over well with most servers
- 
-    
-    
-    
 
     

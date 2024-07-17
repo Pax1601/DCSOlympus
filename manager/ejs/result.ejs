@@ -1,0 +1,124 @@
+<style>
+    #result-page {
+        display: flex;
+        flex-direction: column;
+        row-gap: 30px;
+        padding: 60px 120px;
+    }
+    
+    #result-page .instructions-group {
+        display: flex;
+        color: var(--offwhite);
+        flex-direction: column;
+        row-gap: 15px;
+    }
+
+    #result-page .usage-instructions {
+        background-color: var(--background-usage);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        column-gap: 25px;
+        align-items: center;
+        padding: 25px;
+    }
+
+    #result-page .usage-instructions>div {
+        color: var(--offwhite);
+        display: flex;
+        flex-direction: column;
+        row-gap: 5px;
+        justify-items: center;
+        align-items: start;
+        font-size: var(--normal);
+    }
+
+    #result-page .usage-instructions>div>img {
+        height: 40px;
+        width: 40px;
+    }
+
+    #result-page .usage-instructions>img {
+        height: 30px;
+        width: 30px;
+    }
+
+    #result-page .link {
+        display: inline;
+        color: #5CA7FF;
+        font-weight: bold;
+    }
+</style>
+<div id="result-page">
+    <div class="result-summary success hide">
+        <div class="title"><img src="./icons/check-solid-background.svg">Olympus successfully added to <i style="margin-left: 3px"><%= activeInstance["name"] %></i>!</div>
+        <div class="description">See the <b>DCS Olympus Wiki</b> for more information on how to use Olympus and for troubleshooting issues. You may now close the installer.</div>
+    </div>
+    <div class="result-summary error hide">
+        <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while adding Olympus to <i><%= activeInstance["name"] %></i></div>
+        <div class="description">See the manager log located in <i><%= logLocation %></i> for more information.</div>
+    </div>
+    <div class="instructions-group hide">
+        <div style="font-size: var(--very-large); font-weight: bold; color: var(--offwhite);">
+            How to launch Olympus
+        </div>
+        <div style="font-size: var(--normal); color: var(--offwhite);">
+            To launch Olympus, there are shortcuts available on the desktop and in the <i><b><%= activeInstance["name"] %></b></i> folder under <i><b>Saved Games</b></i>.
+        </div>
+        <% if (activeInstance["installationType"] === "singleplayer") { %>
+            <div class="usage-instructions" style="width: 600px;">
+                <div>
+                    <img src="./icons/olympus_white.png">
+                    <div>
+                        Launch the <b>Olympus Client</b> via the shortcut on your desktop or in <i><b><%= activeInstance["name"] %></b></i>.
+                    </div>
+                </div>
+                <img src="./icons/arrow-right-solid.svg">
+                <div>
+                    <img src="./icons/gamepad-solid.svg">
+                    <div>
+                        <b>Launch DCS</b>, load a mission and unpause the game. Enjoy!
+                    </div>
+                </div>
+            </div>
+            <div style="font-size: var(--normal);">
+                Alternatively, you can run the <b>Olympus Server</b> instead and visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["frontendPort"] %>')" >http://localhost:<%= activeInstance["frontendPort"] %></div> in a web browser (Google Chrome recommended) to replace the first step above.
+            </div>
+        <% } else { %>
+            <div class="usage-instructions">
+                <div>
+                    <img src="./icons/server-solid.svg">
+                    <div>
+                        Launch the <b>Olympus Server</b> via the shortcut on your desktop or in <b><%= activeInstance["name"] %></b>.
+                    </div>
+                </div>
+                <img src="./icons/arrow-right-solid.svg">
+                <div>
+                    <img src="./icons/chrome.svg">
+                    <div>
+                        To access Olympus remotely visit <div class="link" onclick="signal('onLinkClicked', 'http://<%= IP %>:<%= activeInstance["frontendPort"] %>')">http://<%= IP %>:<%= activeInstance["frontendPort"] %></div> <b>in a web browser</b> (Google Chrome recommended).
+                    </div>
+                </div>
+                <img src="./icons/arrow-right-solid.svg">
+                <div>
+                    <img src="./icons/gamepad-solid.svg">
+                    <div>
+                        <b>Launch DCS</b>, load a mission and unpause the game. Enjoy!
+                    </div>
+                </div>
+            </div>
+            <div style="font-size: var(--normal);">
+                <b>To access Olympus from this PC</b>, you need to visit <div class="link" onclick="signal('onLinkClicked', 'http://localhost:<%= activeInstance["frontendPort"] %>')">http://localhost:<%= activeInstance["frontendPort"] %></div> in a web browser (Google Chrome recommended) instead.
+            </div>
+        <% } %>
+    </div>
+
+    <div class="buttons-footer">
+        <div class="button back" style="color: var(--offwhite); background-color: var(--background); border: 1px solid var(--offwhite);" onclick="signal('onReturnClicked')">
+            Return to main menu
+        </div>
+        <div class="button next" style="color: var(--background); background-color: var(--offwhite);" onclick="signal('onCloseManagerClicked')">
+            Close manager
+        </div>
+    </div>
+</div>

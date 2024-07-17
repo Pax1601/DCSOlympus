@@ -4,9 +4,7 @@ import os
 import json
 import logging
 
-sys.path.append("..\..\..\dcs-master\dcs-master")
-
-SEARCH_FOLDER = "D:\\Eagle Dynamics\\DCS World OpenBeta"
+SEARCH_FOLDER = sys.argv[1]
 
 clsid_conversion = {
     'ExtFuelTankID'						: "{EFT_230GAL}"							,

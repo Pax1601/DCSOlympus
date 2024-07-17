@@ -1,0 +1,89 @@
+<style>
+    
+</style>
+    <div class="dashboard">
+        <div class="cancel" style="font-size: var(--normal); font-weight: 600; color: var(--offwhite); display: flex; align-items: center; column-gap: 10px; cursor: pointer; text-decoration: underline; " onclick="signal('onCancelClicked')">
+            <img src="./icons/chevron-left-solid.svg" style=" height: 14px;">Back to menu
+        </div>
+        <% if (state === 'EDIT') {%>
+            <div class="result-summary success <%= (activeInstance !== undefined && !activeInstance["error"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus settings updated for
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (activeInstance !== undefined && activeInstance["error"])? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while updating Olympus settings for
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } else {%>
+            <div class="result-summary success <%= (activeInstance !== undefined && !activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/check-solid-background.svg">Olympus removed successfully from
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i>!</div>
+            </div>
+            <div class="result-summary error <%= (activeInstance !== undefined && activeInstance["installed"])? "": "hide" %>">
+                <div class="title"><img src="./icons/triangle-exclamation-solid-background.svg">An error occurred while removing Olympus settings from
+                    <i style="margin-left: 3px"><%= activeInstance !== undefined? activeInstance["name"]: "" %></i></div>
+            </div>
+        <% } %>
+        <div class="content">
+            <div class="instructions">
+                <% if (instances.some(instance => instance.installed)) { %>
+                <span class="title">
+                    Change settings
+                </span>
+                <span class="subtitle">
+                    Here you can see the DCS instances on your computer that have Olympus installed. <br>
+                    You can edit settings and uninstall Olympus from this screen. 
+                </span>
+                <% } else { %>
+                <span class="title" style="margin-top: 150px;">
+                    No Olympus installs detected
+                </span>
+                <span class="subtitle">
+                    Use the <b>Add Olympus</b> option in the main manu to install Olympus in your DCS instance. <br>
+                    If you have more than one DCS instance, you will need to add Olympus to each one of them.
+                </span>
+                <% } %>
+            </div>
+            <div class="scroll-container">
+                <div class="scrollable">
+                    <% for (let i = 0; i < instances.length; i++) {%>
+                        <% if (instances[i].installed) { %>
+                            <div class="option <%= instances[i].installed? 'installed': '' %>" data-folder="<%= instances[i].folder %>">
+                                <div class="instance-info">
+                                    <span class="name"><%= instances[i].name %></span>
+                                    <span class="folder"><img src="./icons/folder-open-solid.svg"> <%= instances[i].folder %></span>
+                                    <div class="divider"></div>
+                                    <span class="status <%= instances[i].installed? (instances[i].error? 'error': 'installed'): '' %>"> 
+                                        <%= instances[i].installed? (instances[i].error? 'Corrupted/outdated Olympus installation': 'Olympus installed'): 'Olympus not installed' %>
+                                    </span>
+                                    <div class="summary">
+                                        <div class="info">
+                                            <div>Frontend port</div>
+                                            <div> <%= instances[i].installed? instances[i].frontendPort: "N/A" %> </div>
+                                        </div>
+                                        <div class="info">
+                                            <div>Backend port</div>
+                                            <div> <%= instances[i].installed? instances[i].backendPort: "N/A" %> </div>
+                                        </div>
+                                        <div class="info">
+                                            <div>Backend address</div>
+                                            <div> <%= instances[i].installed? instances[i].backendAddress: "N/A" %> </div>
+                                        </div>
+                                    </div>
+                                    <div class="logs-link" onclick="
+                                        signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/dcs.log' %>');
+                                        signal('onTextFileClicked', '<%= instances[i].folder.replaceAll('\\', '/')+'/Logs/Olympus_log.txt' %>');
+                                        ">Open logs</div>
+                                </div>
+                                <div class="instance-buttons">
+                                    <div class="button edit" onclick="signal('onEditClicked', '<%= instances[i].name %>')">Edit settings</div>
+                                    <div class="button uninstall" onclick="signal('onUninstallClicked', '<%= instances[i].name %>')">Uninstall Olympus</div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>

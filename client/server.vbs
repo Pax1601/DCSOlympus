@@ -1,1 +1,0 @@
-CreateObject("Wscript.Shell").Run "npm run start -- --config """&WScript.Arguments(0)&"""", 1

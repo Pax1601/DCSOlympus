@@ -1,19 +1,37 @@
 {
-    "server": {
-        "address": "localhost",
-        "port": 3001
-    },
-    "authentication": {
-        "gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",
-        "blueCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098",
-        "redCommanderPassword": "302bcbaf2a3fdcf175b689bf102d6cdf9328f68a13d4096101bba806482bfed9"
-    },
-    "client": {
-        "port": 3000,
-        "elevationProvider": {
-            "provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
-            "username": null,
-            "password": null
-        }
-    }
+	"backend": {
+		"address": "localhost",
+		"port": 4512
+	},
+	"authentication": {
+		"gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",
+		"blueCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098",
+		"redCommanderPassword": "302bcbaf2a3fdcf175b689bf102d6cdf9328f68a13d4096101bba806482bfed9"
+	},
+	"frontend": {
+		"port": 3000,
+		"elevationProvider": {
+			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
+			"username": null,
+			"password": null
+		},
+		"mapLayers": {
+			"ArcGIS Satellite": {
+				"urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+				"minZoom": 1,
+				"maxZoom": 19,
+				"attribution": "Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Mapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+			},
+			"OpenStreetMap Mapnik": {
+				"urlTemplate": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+				"minZoom": 1,
+				"maxZoom": 20,
+				"attribution": "OpenStreetMap contributors"
+			}
+		},
+		"mapMirrors": {
+			"DCS Map (Official)": "https://maps.dcsolympus.com/maps",
+			"DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
+		}
+	}
 }

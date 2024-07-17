@@ -1,0 +1,25 @@
+<style>
+    
+</style>
+<div>
+    <div class="instructions">
+        <div class="step">
+            Step <%= instances.length === 1? "5": "6" %> of <%= instances.length === 1? "5": "6" %>
+        </div>
+        <div class="title">
+            Do you want to install the camera control plugin?
+        </div>
+        <div class="description">
+            The camera control plugin allows you to control the camera position in DCS from Olympus. <br>
+            It is necessary to install it in DCS even if you plan to use Olympus on a remote machine via your browser.
+        </div>
+    </div>
+    <div class="wizard-inputs">
+        <div class="button radio install selected" onclick="signal('onInstallCameraControlClicked', 'install')">
+            Install
+        </div>
+        <div class="button radio no-install" onclick="signal('onInstallCameraControlClicked', 'no-install')">
+            Do not install
+        </div>
+    </div>
+</div>

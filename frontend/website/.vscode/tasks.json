@@ -1,0 +1,29 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "check-setup", 
+            "type": "shell",
+            "command": "cd .. ; ./check_setup.bat",
+            "isBackground": false
+        },
+        {
+            "label": "watch",
+            "type": "shell",
+            "command": "./scripts/watch.bat",
+            "isBackground": true,
+            "problemMatcher":{
+                "owner": "custom",
+                "base": "$tsc-watch",
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "watchify",
+                    "endsPattern": "bytes written"
+                }
+            },
+            "dependsOn": ["check-setup"]
+        }
+    ]
+}

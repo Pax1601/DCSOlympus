@@ -1,0 +1,59 @@
+  _____   _____  _____    ____  _                                 
+ |  __ \ / ____|/ ____|  / __ \| |                                
+ | |  | | |    | (___   | |  | | |_   _ _ __ ___  _ __  _   _ ___ 
+ | |  | | |     \___ \  | |  | | | | | | '_ ` _ \| '_ \| | | / __|
+ | |__| | |____ ____) | | |__| | | |_| | | | | | | |_) | |_| \__ \
+ |_____/ \_____|_____/   \____/|_|\__, |_| |_| |_| .__/ \__,_|___/
+                                   __/ |         | |              
+                                  |___/          |_|              
+
+{{OLYMPUS_VERSION_NUMBER}}
+
+==========================================
+INSTALLATION INSTRUCTIONS
+
+1) Close any applications which may interfere with installation, including Digital Combat Simulator (DCS) and previous versions of Olympus.
+
+2) If you DO NOT have Olympus already installed, SKIP THIS STEP. If you have already installed Olympus, do the following:
+    	NOTE: If you made any changes to your unit databases or mods.lua file (e.g. to support a third party mod) make a backup of the edited files before proceeding or changes will be lost;
+    	a) If you installed DCS Olympus v1.0.3 using the installer, simply remove it using Windows's "Add or remove programs" application. 
+    	b) If you installed DCS Olympus v1.0.3 using the archived version, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
+       	   Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package.
+
+3) Create a folder named "DCS Olympus" in your "Saved Games" directory and extract all the contents of the downloaded package into it.
+	NOTE:
+    	a) Do not extract the contents of the package directly in your Saved Games folder or in your DCS Saved Games folder. 
+        b) Unlike previous version of Olympus, it is no longer necessary to copy the packaged files into each DCS instance folder.
+
+4) Execute the "installer.bat" script by double-clicking on it. It is located in the folder you created in step 3. Wait for the installation script to complete. Installation may take a couple of minutes, after which the Manager will start automatically.
+	NOTE: depending on your Windows configuration, the script may be called "installer" (without .bat at the end).
+
+5) The Olympus Manager will open. This will allow you to add/remove Olympus to individual DCS instances.
+	Use the Olympus Manager and follow the instructions to install and setup Olympus.
+
+6) Start DCS and run a mission. Make sure it is UNPAUSED.
+
+7) Open Olympus via the shortcut and login using any username and the Game Master password set using the Manager. (NOTE: not your DCS server password).
+	Local installation: run the client from the provided desktop shortcut or start it using the "View and manage instances" page of the Manager. 
+	Dedicated server: users must first start the Olympus server from the provided desktop shortcut or using the "View and manage instances" page of the Manager. 
+			  Then log in using any browser and visiting "http:\\<server IP>:<frontend port>" (frontend port is 3000 by default, but can be edited using the Manager)
+
+8) You can use the manager at any time to change the ports and/or passwords. If you do, REMEMBER TO RESTART OLYMPUS AND DCS.
+
+
+NOTES:
+a) when launching the Manager you will be prompted to allow Electron to create a firewall rule. This is optional and can be denied without effect on the operation of the Manager;
+b) if you are using Olympus on a dedicated server with a router, you must enable port forwarding on the frontend port (3000 by default);
+c) unlike Olympus v1.0.3, running the netsh command is no longer required. It is also no longer required to create firewall rules or port forwarding for the backend port. (Optional) If you already performed this steps in the past you can delete the firewall and netsh rules.
+
+
+==========================================
+UPDATING INSTRUCTIONS
+
+IF YOU ARE UPDATING FROM DCS OLYMPUS v1.0.3, FOLLOW THE "INSTALLATION INSTRUCTIONS".
+
+To update your Olympus installation you have two options:
+a) download the new package from the GitHub releases page, delete the old unpacked package folder, then follow the INSTALLATION INSTRUCTIONS;
+b) run the Olympus Manager. If an update is available you will be given the option to automatically update Olympus from there.
+
+For either options a) or b), remember to close any applications which may interfere with installation, including Digital Combat Simulator (DCS) and previous versions of Olympus.

@@ -4,10 +4,18 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Start",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [ "start" ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug from package",
             "runtimeExecutable": "npm",
             "runtimeArgs": [ "start" ],
-            "port": 9229
+            "preLaunchTask": "mirror-package",
+            "cwd": "${workspaceFolder}\\..\\package\\manager"
         }
     ]
 }
