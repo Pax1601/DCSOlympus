@@ -1,3 +1,5 @@
+<img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/0ecff279-a87c-4e2d-a4c7-da98c74adf38">
+
 [**Join our Discord**](https://discord.gg/kNAQkhUHnQ)
 
 <img align="left" width="30" src="https://github.com/Pax1601/DCSOlympus/assets/103559271/1c0dd3fd-339c-4b03-94da-3e5215b0358a">
@@ -6,8 +8,6 @@
 
 
 # DCS Olympus
-
-![alt text](https://github.com/Pax1601/DCSOlympus/blob/main/frontend/website/sample.png?raw=true)
 
 ### What is this?
 DCS: Olympus is a free and open-source mod for DCS that enables dynamic real-time control through a map interface. The user is able to spawn units/groups, deploy a variety of effects such as smoke, flares, or explosions, and waypoints/tasks can be given to AI units in real-time in a way similar to a classic RTS game. 
