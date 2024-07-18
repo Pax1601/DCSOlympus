@@ -1,0 +1,395 @@
+{
+  "airfields": {
+      "Farah": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "33": {
+                              "magHeading": "328",
+                              "Heading": "330",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "15": {
+                              "magHeading": "148",
+                              "Heading": "150",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "6990"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OAFR",
+          "elevation": "2240"
+      },
+      "Kandahar": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "23": {
+                              "magHeading": "232",
+                              "Heading": "234",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "05": {
+                              "magHeading": "052",
+                              "Heading": "054",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "9779"
+              }
+          ],
+          "TACAN": "75X",
+          "ICAO": "OAKN",
+          "elevation": "3336"
+      },
+      "Bost": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "01": {
+                              "magHeading": "005",
+                              "Heading": "007",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "19": {
+                              "magHeading": "186",
+                              "Heading": "187",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "5758"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OABT",
+          "elevation": "2546"
+      },
+      "Kandahar Heliport": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "23": {
+                              "magHeading": "232",
+                              "Heading": "234",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "05": {
+                              "magHeading": "052",
+                              "Heading": "054",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "718"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "",
+          "elevation": "3336"
+      },
+      "Shindand Heliport": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "36": {
+                              "magHeading": "360",
+                              "Heading": "002",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "18": {
+                              "magHeading": "181",
+                              "Heading": "182",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "687"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "",
+          "elevation": "3798"
+      },
+      "Camp Bastion Heliport": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "01": {
+                              "magHeading": "008",
+                              "Heading": "010",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "19": {
+                              "magHeading": "189",
+                              "Heading": "190",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "1271"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "",
+          "elevation": "2901"
+      },
+      "Tarinkot": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "30": {
+                              "magHeading": "300",
+                              "Heading": "303",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "12": {
+                              "magHeading": "121",
+                              "Heading": "123",
+                              "ILS": ""
+
+                          }
+                      }
+                  ],
+                  "length": "5903"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OATN",
+          "elevation": "4373"
+      },
+      "Nimroz": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "14": {
+                              "magHeading": "138",
+                              "Heading": "140",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "32": {
+                              "magHeading": "318",
+                              "Heading": "320",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "6944"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OANZ",
+          "elevation": "1584"
+      },
+      "Dwyer": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "05": {
+                              "magHeading": "048",
+                              "Heading": "050",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "23": {
+                              "magHeading": "228",
+                              "Heading": "230",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "7458"
+              }
+          ],
+          "TACAN": "46X",
+          "ICAO": "OADY",
+          "elevation": "2398"
+      },
+      "Herat": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "18": {
+                              "magHeading": "186",
+                              "Heading": "188",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "36": {
+                              "magHeading": "006",
+                              "Heading": "008",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "8920"
+              }
+          ],
+          "TACAN": "54X",
+          "ICAO": "OAHR",
+          "elevation": "3182"
+      },
+      "Shindand": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "36": {
+                              "magHeading": "360",
+                              "Heading": "002",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "18": {
+                              "magHeading": "180",
+                              "Heading": "182",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "7032"
+              }
+          ],
+          "TACAN": "48X",
+          "ICAO": "OASD",
+          "elevation": "3715"
+      },
+      "Maymana Zahiraddin Faryabi": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "32": {
+                              "magHeading": "320",
+                              "Heading": "322",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "14": {
+                              "magHeading": "140",
+                              "Heading": "142",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "5542"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OAMN",
+          "elevation": "2758"
+      },
+      "Qala i Naw": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "22": {
+                              "magHeading": "218",
+                              "Heading": "220",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "04": {
+                              "magHeading": "038",
+                              "Heading": "040",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "6114"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OAQN",
+          "elevation": "2916"
+      },
+      "Chaghcharan": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "25": {
+                              "magHeading": "243",
+                              "Heading": "245",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "07": {
+                              "magHeading": "063",
+                              "Heading": "65",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "5709"
+              }
+          ],
+          "TACAN": "",
+          "ICAO": "OACC",
+          "elevation": "7451"
+      },
+      "Camp Bastion": {
+          "runways": [
+              {
+                  "headings": [
+                      {
+                          "01": {
+                              "magHeading": "008",
+                              "Heading": "010",
+                              "ILS": ""
+                          }
+                      },
+                      {
+                          "19": {
+                              "magHeading": "188",
+                              "Heading": "190",
+                              "ILS": ""
+                          }
+                      }
+                  ],
+                  "length": "10647"
+              }
+          ],
+          "TACAN": "98X",
+          "ICAO": "OAZI",
+          "elevation": "2886"
+      }
+  }
+}
