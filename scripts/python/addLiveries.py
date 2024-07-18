@@ -78,11 +78,11 @@ if len(sys.argv) > 1:
                     "countries": [country for country in livery.countries] if livery.countries != None else "All"
                 }
         except Exception as e:
-            print(f"Could not find data for aircraft of type {unit_name}: {e}, skipping...")
+            print(f"Could not find data for unitof type {unit_name}: {e}, skipping...")
 
     # Dump everything in the database
-    with open(filename, "w") as f:
-        json.dump(database, f, indent=2)
+    with  open(filename, "w", encoding='utf8') as f:
+        json.dump(database, f, indent='\t', ensure_ascii=False)
 
     # Done!
     print("Done!")
