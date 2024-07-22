@@ -25,6 +25,7 @@ private:
 
     mutex mutexLock;
 
+    void Clear();
     void Open();
     void Close();
 };
