@@ -284,7 +284,7 @@ export class Map extends L.Map {
         /* Periodically check if the camera control endpoint is available */
         this.#cameraControlTimer = window.setInterval(() => {
             this.#checkCameraPort();
-        }, 1000)
+        }, 10000)
 
         /* Option buttons */
         this.#createUnitMarkerControlButtons();
@@ -648,6 +648,7 @@ export class Map extends L.Map {
     }
 
     setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
+        this.#checkCameraPort();
         this.#slaveDCSCamera = newSlaveDCSCamera;
         let button = document.getElementById("camera-link-control");
         button?.classList.toggle("off", !newSlaveDCSCamera);

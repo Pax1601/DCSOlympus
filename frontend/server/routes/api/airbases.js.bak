@@ -17,8 +17,7 @@ const allowedTheatres = [
     "sinaimap",
     "syria",
     "thechannel",
-    "kola",
-    "afghanistan"
+    "kola"
 ];
 
 function getAirbasesData( theatreName ) {

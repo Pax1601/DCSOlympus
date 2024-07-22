@@ -31,11 +31,11 @@ void Logger::setDirectory(string newDirPath)
 void Logger::Open()
 {
     try {
-        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | ios::app);
+        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | std::ios::trunc);
     }
     catch (...) {
         std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
-        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | ios::app);
+        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | std::ios::trunc);
     }
 }
 

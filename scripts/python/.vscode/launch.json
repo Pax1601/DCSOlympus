@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Add missing units",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "addMissingUnits.py",
             "console": "integratedTerminal",
@@ -15,7 +15,7 @@
         },
         {
             "name": "Add liveries",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "addLiveries.py",
             "console": "integratedTerminal",
@@ -24,7 +24,7 @@
         },
         {
             "name": "Generate payload tables",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "generatePayloadTables.py",
             "console": "integratedTerminal",
@@ -33,7 +33,7 @@
         }, 
         {
             "name": "Add loadouts",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "addLoadouts.py",
             "console": "integratedTerminal",
@@ -42,7 +42,7 @@
         }, 
         {
             "name": "Add ranges",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "addRanges.py",
             "console": "integratedTerminal",

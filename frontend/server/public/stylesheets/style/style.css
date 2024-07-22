@@ -414,7 +414,7 @@ nav.ol-panel {
 
 .ol-panel .ol-group {
     align-items: center;
-    column-gap: 12px;
+    column-gap: 6px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
