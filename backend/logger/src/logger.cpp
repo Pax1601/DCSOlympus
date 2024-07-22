@@ -19,6 +19,7 @@ Logger* Logger::GetLogger()
 {
     if (m_pThis == NULL) {
         m_pThis = new Logger();
+        m_pThis->Clear();
     }
     return m_pThis;
 }
@@ -28,7 +29,7 @@ void Logger::setDirectory(string newDirPath)
     m_dirPath = newDirPath;
 }
 
-void Logger::Open()
+void Logger::Clear()
 {
     try {
         m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | std::ios::trunc);
@@ -36,6 +37,17 @@ void Logger::Open()
     catch (...) {
         std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
         m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | std::ios::trunc);
+    }
+}
+
+void Logger::Open()
+{
+    try {
+        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | std::ios::app);
+    }
+    catch (...) {
+        std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
+        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | std::ios::app);
     }
 }
 
