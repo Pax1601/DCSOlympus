@@ -5,6 +5,7 @@ local _prevLuaExportStop = LuaExportStop
 local server = nil
 local port = 3003
 local headers = "Access-Control-Allow-Private-Network: true\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: *\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Max-Age: 86400\r\nVary: Accept-Encoding, Origin\r\n\r\n"
+local positionToSet = nil
 
 function startTCPServer()
     log.write('OLYMPUSCAMERACONTROL.EXPORT.LUA', log.INFO, 'Starting TCP Server')
@@ -35,8 +36,6 @@ function receiveTCP()
 
             local acc = ""
             local data = ""
-
-            log.write('OLYMPUSCAMERACONTROL.EXPORT.LUA', log.INFO, 'CONNECTION')
             
             -- Start receiving data, accumulate it in acc
             while data ~= nil do
@@ -139,7 +138,9 @@ function setCameraPosition(position)
         z = {x = 0, y = 0, z = 1},	                
         p = {x = point.x, y = altitude, z = point.z}   
     }
-    LoSetCameraPosition(pos)
+
+    -- Store the value in a variable so that it can be set at the next frame
+    positionToSet = pos
 
     return '{"northRotation": ' .. rotation .. '}'
 end
@@ -160,6 +161,11 @@ LuaExportStart = function()
 end
 
 LuaExportBeforeNextFrame = function()
+    if positionToSet ~= nil then
+        LoSetCameraPosition(positionToSet)
+        positionToSet = nil
+    end
+
     receiveTCP()
 	
 	-- call original
