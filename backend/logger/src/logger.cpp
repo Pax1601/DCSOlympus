@@ -27,17 +27,18 @@ Logger* Logger::GetLogger()
 void Logger::setDirectory(string newDirPath)
 {
     m_dirPath = newDirPath;
+    Clear();
 }
 
 void Logger::Clear()
 {
     lock_guard<mutex> guard(mutexLock);
     try {
-        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | std::ios::trunc);
+        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | ios::trunc);
     }
     catch (...) {
         std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
-        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | std::ios::trunc);
+        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | ios::trunc);
     }
     m_Logfile << "Creating a new log instance\n";
     m_pThis->Close();
