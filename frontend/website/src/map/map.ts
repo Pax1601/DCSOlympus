@@ -343,6 +343,11 @@ export class Map extends L.Map {
         } else if (Object.keys(this.#mapMirrors).includes(layerName) ) {
             let layers: L.TileLayer[] = [];
 
+            layers.push(new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                minZoom: 1,
+                maxZoom: 19,
+            }))
+
             /* Load the configuration file */
             const mirror = this.#mapMirrors[layerName as any];
             const request = new Request(mirror + "/config.json");
