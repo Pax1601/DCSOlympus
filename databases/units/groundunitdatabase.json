@@ -77,7 +77,7 @@
 		"label": "SA-19 Tunguska",
 		"shortLabel": "19",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -164,7 +164,7 @@
 		"label": "SA-3 Launcher",
 		"shortLabel": "5p73 s-125 ln",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -959,7 +959,7 @@
 		"era": "Mid Cold War",
 		"label": "SA-13 Dog Ear",
 		"shortLabel": "Dog Ear",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -1231,7 +1231,7 @@
 		"label": "Hawk SAM Battery",
 		"shortLabel": "Hk",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 90000,
@@ -1251,7 +1251,7 @@
 		"label": "Hawk Continous Wave Acquisition Radar",
 		"shortLabel": "Hawk cwar",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -1282,7 +1282,7 @@
 		"era": "Late Cold War",
 		"label": "Hawk Launcher",
 		"shortLabel": "Hawk ln",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -1620,7 +1620,7 @@
 		"label": "Hawk Platoon Command Post",
 		"shortLabel": "Hawk pcp",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -1651,7 +1651,7 @@
 		"label": "Hawk Search Radar",
 		"shortLabel": "Hawk sr",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -1989,7 +1989,7 @@
 		"label": "Hawk Track Radar",
 		"shortLabel": "Hawk tr",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -2399,7 +2399,7 @@
 		"label": "SA-18 Igla",
 		"shortLabel": "18",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -2586,7 +2586,7 @@
 		"label": "SA-6 Straight flush",
 		"shortLabel": "Kub 1S91 str",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -2626,7 +2626,7 @@
 		"label": "SA-6 Launcher",
 		"shortLabel": "Kub 2P25 ln",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -3487,7 +3487,7 @@
 		"era": "Modern",
 		"label": "M1097 Avenger",
 		"shortLabel": "97",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 5200,
@@ -3588,7 +3588,7 @@
 		"era": "Mid Cold War",
 		"label": "M48 Chaparral",
 		"shortLabel": "48",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -3660,7 +3660,7 @@
 		"era": "Late Cold War",
 		"label": "M6 Linebacker",
 		"shortLabel": "M6",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -4007,7 +4007,7 @@
 		"label": "SA-8 Launcher",
 		"shortLabel": "Osa 9A33 ln",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4104,7 +4104,7 @@
 		"label": "Patriot Antenna Mast Group",
 		"shortLabel": "Patriot AMG",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4143,7 +4143,7 @@
 		"label": "Patriot Engagement Control Station",
 		"shortLabel": "Patriot ECS",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4182,7 +4182,7 @@
 		"label": "Patriot Electric Power Plant",
 		"shortLabel": "Patriot EPP",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4221,7 +4221,7 @@
 		"label": "Patriot Command Post",
 		"shortLabel": "Patriot cp",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4260,7 +4260,7 @@
 		"label": "Patriot Launcher",
 		"shortLabel": "Patriot ln",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4301,7 +4301,7 @@
 		"label": "Patriot SAM Battery",
 		"shortLabel": "Pt",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -4343,7 +4343,7 @@
 		"label": "Patriot Search/Track Radar",
 		"shortLabel": "Patriot str",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4425,7 +4425,7 @@
 		"label": "SA-5 Thin Shield",
 		"shortLabel": "RLS 19J6",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4461,7 +4461,7 @@
 		"label": "SA-5 Square Pair",
 		"shortLabel": "RPC 5N62V",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4543,7 +4543,7 @@
 		"era": "Late Cold War",
 		"label": "Roland ADS",
 		"shortLabel": "RO",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -4567,7 +4567,7 @@
 		"era": "Mid Cold War",
 		"label": "Roland Search Radar",
 		"shortLabel": "Roland Radar",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4591,7 +4591,7 @@
 		"label": "SA-5 Launcher",
 		"shortLabel": "S-200 Launcher",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4676,7 +4676,7 @@
 		"label": "SA-10 Tin Shield",
 		"shortLabel": "S-300PS 40B6M tr",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4716,7 +4716,7 @@
 		"label": "SA-10 Clam Shell",
 		"shortLabel": "S-300PS 40B6MD sr",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4756,7 +4756,7 @@
 		"label": "SA-10 Command Post",
 		"shortLabel": "S-300PS 54K6 cp",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4795,7 +4795,7 @@
 		"label": "SA-10 Launcher",
 		"shortLabel": "S-300PS 5P85C ln",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4837,7 +4837,7 @@
 		"label": "SA-10 Launcher",
 		"shortLabel": "S-300PS 5P85D ln",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4879,7 +4879,7 @@
 		"label": "SA-10 Big Bird",
 		"shortLabel": "S-300PS 64H6E sr",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -4919,7 +4919,7 @@
 		"label": "SA-10 SAM Battery",
 		"shortLabel": "10",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 300000,
@@ -4939,7 +4939,7 @@
 		"label": "SA-11 Command Post",
 		"shortLabel": "SA-11 Buk CC 9S470M1",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -5010,7 +5010,7 @@
 		"label": "SA-11 Launcher",
 		"shortLabel": "SA-11 Buk LN 9A310M1",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -5035,7 +5035,7 @@
 		"label": "SA-11 Snown Drift",
 		"shortLabel": "SA-11 Buk SR 9S18M1",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -5106,7 +5106,7 @@
 		"label": "SA-11 SAM Battery",
 		"shortLabel": "11",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 98000,
@@ -5126,7 +5126,7 @@
 		"label": "SA-18 Igla \"Grouse\" C2",
 		"shortLabel": "18",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": false,
 		"acquisitionRange": 5000,
@@ -5145,7 +5145,7 @@
 		"label": "SA-18 Igla \"Grouse\" C2",
 		"shortLabel": "18",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": false,
 		"acquisitionRange": 5000,
@@ -5164,7 +5164,7 @@
 		"label": "SA-2 SAM Battery",
 		"shortLabel": "2",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 160000,
@@ -5184,7 +5184,7 @@
 		"label": "SA-3 SAM Battery",
 		"shortLabel": "3",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 160000,
@@ -5204,7 +5204,7 @@
 		"label": "SA-5 SAM Battery",
 		"shortLabel": "5",
 		"range": "Long",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"acquisitionRange": 400000,
@@ -5224,7 +5224,7 @@
 		"label": "SA-6 SAM Battery",
 		"shortLabel": "6",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"description": "SA-6 Gainful radar SAM site 2K12. Range/alt max: 55 km, 50,000 ft. Tracked vehicle.",
@@ -5515,7 +5515,7 @@
 		"era": "Early Cold War",
 		"label": "SA-2 Fan Song",
 		"shortLabel": "SNR 75V",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -5554,7 +5554,7 @@
 		"era": "Early Cold War",
 		"label": "SA-2 Launcher",
 		"shortLabel": "S75M Volhov",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -6015,7 +6015,7 @@
 		"label": "Stinger",
 		"shortLabel": "Stinger",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": false,
 		"liveries": {
@@ -6056,7 +6056,7 @@
 		"label": "Stinger",
 		"shortLabel": "Stinger",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": false,
 		"liveries": {
@@ -6097,7 +6097,7 @@
 		"label": "SA-9 Gaskin",
 		"shortLabel": "9",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -6154,7 +6154,7 @@
 		"label": "SA-13  Gopher",
 		"shortLabel": "13",
 		"range": "Short",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -6521,7 +6521,7 @@
 		"label": "SA-15 Gauntlet",
 		"shortLabel": "15",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site",
 		"enabled": true,
 		"liveries": {
@@ -7608,7 +7608,7 @@
 		"era": "Mid Cold War",
 		"label": "SA-3 Flat Face B",
 		"shortLabel": "Flat Face B",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {
@@ -7664,7 +7664,7 @@
 		"label": "SA-3 Low Blow",
 		"shortLabel": "snr s-125 tr",
 		"range": "Medium",
-		"filename": "",
+		"filename": "sam.png",
 		"type": "SAM Site Parts",
 		"enabled": true,
 		"liveries": {

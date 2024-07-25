@@ -4,19 +4,23 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "check-setup", 
+            "label": "check-setup",
             "type": "shell",
             "command": "cd .. ; ./check_setup.bat",
             "isBackground": false
         },
         {
-            "label": "demo-server", 
+            "label": "demo-server",
             "type": "shell",
             "command": "./scripts/demo-server.bat",
-            "args": ["${input:enterDir}/Config/olympus.json"],
+            "args": [
+                "${input:enterDir}/Config/olympus.json"
+            ],
             "isBackground": true,
-            "dependsOn": ["check-setup"],
-            "problemMatcher":{
+            "dependsOn": [
+                "check-setup"
+            ],
+            "problemMatcher": {
                 "owner": "custom",
                 "base": "$tsc-watch",
                 "background": {
@@ -25,21 +29,16 @@
                     "endsPattern": "Waiting for connections..."
                 }
             }
-        },
-        {
-            "label": "copy", 
-            "type": "shell",
-            "command": "./scripts/copy.bat",
-            "isBackground": false,
-            "dependsOn": ["check-setup"],
         }
-    ], 
+    ],
     "inputs": [
         {
-          "id": "enterDir",
-          "type": "command",
-          "command": "extension.commandvariable.remember",
-          "args": { "key": "dir" }
+            "id": "enterDir",
+            "type": "command",
+            "command": "extension.commandvariable.promptStringRemember",
+            "args": {
+                "key": "dir"
+            }
         }
     ]
 }
