@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=8080",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "build-release": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

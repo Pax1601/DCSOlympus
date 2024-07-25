@@ -40,3 +40,4 @@ frontend/website/plugins/controltips/index.js
 *.pyc
 /scripts/**/*.jpg
 manager/manager.log
+/frontend/server/public/assets

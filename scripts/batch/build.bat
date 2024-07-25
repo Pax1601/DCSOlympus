@@ -7,21 +7,9 @@ cd ..
 
 cd frontend
 
-cd website
+cd react
 call npm install
-call npm run emit-declarations
-call npm run build-release
-
-cd plugins\controltips
-call npm install
-call npm run build-release
-cd ..\..
-
-cd plugins\databasemanager
-call npm install
-call npm run build-release
-cd ..\..
-
+call npm build-release
 cd ..
 
 cd server
