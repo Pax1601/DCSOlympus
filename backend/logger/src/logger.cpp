@@ -19,6 +19,7 @@ Logger* Logger::GetLogger()
 {
     if (m_pThis == NULL) {
         m_pThis = new Logger();
+        m_pThis->Clear();
     }
     return m_pThis;
 }
@@ -28,14 +29,28 @@ void Logger::setDirectory(string newDirPath)
     m_dirPath = newDirPath;
 }
 
-void Logger::Open()
+void Logger::Clear()
 {
+    lock_guard<mutex> guard(mutexLock);
     try {
-        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | ios::app);
+        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | std::ios::trunc);
     }
     catch (...) {
         std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
-        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | ios::app);
+        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | std::ios::trunc);
+    }
+    m_Logfile << "Creating a new log instance\n";
+    m_pThis->Close();
+}
+
+void Logger::Open()
+{
+    try {
+        m_Logfile.open((m_dirPath + m_sFileName).c_str(), ios::out | std::ios::app);
+    }
+    catch (...) {
+        std::filesystem::path m_dirPath = std::filesystem::temp_directory_path();
+        m_Logfile.open((m_dirPath.string() + m_sFileName).c_str(), ios::out | std::ios::app);
     }
 }
 

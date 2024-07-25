@@ -284,7 +284,7 @@ export class Map extends L.Map {
         /* Periodically check if the camera control endpoint is available */
         this.#cameraControlTimer = window.setInterval(() => {
             this.#checkCameraPort();
-        }, 1000)
+        }, 10000)
 
         /* Option buttons */
         this.#createUnitMarkerControlButtons();
@@ -342,6 +342,11 @@ export class Map extends L.Map {
         /* mirrored layers are handled here */
         } else if (Object.keys(this.#mapMirrors).includes(layerName) ) {
             let layers: L.TileLayer[] = [];
+
+            layers.push(new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                minZoom: 1,
+                maxZoom: 19,
+            }))
 
             /* Load the configuration file */
             const mirror = this.#mapMirrors[layerName as any];
@@ -648,6 +653,7 @@ export class Map extends L.Map {
     }
 
     setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
+        this.#checkCameraPort();
         this.#slaveDCSCamera = newSlaveDCSCamera;
         let button = document.getElementById("camera-link-control");
         button?.classList.toggle("off", !newSlaveDCSCamera);

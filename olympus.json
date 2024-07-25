@@ -30,7 +30,8 @@
 			}
 		},
 		"mapMirrors": {
-			"DCS Map (Refugees)": "https://refugees.dcsolympus.com/maps"
+			"DCS Map (Official)": "https://maps.dcsolympus.com/maps",
+			"DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
 		}
 	}
 }

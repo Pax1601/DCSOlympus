@@ -34,6 +34,9 @@ if "%errorlevel%" == "9009" (
 	echo node.js is already installed, continuing installation!
 )
 
+echo Installing Visual Studio redistributables 
+"%CD%\dependencies\VC_redist.x64.exe" /install /passive /norestart
+
 echo Installing node modules for frontend application...
 cd .\frontend
 call npm install --omit=dev

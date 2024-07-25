@@ -36,8 +36,8 @@ if len(sys.argv) > 1:
                 "name": unit.id,
                 "coalition": "",
                 "era": "",
-                "label": unit.livery_name,
-                "shortLabel": unit.livery_name,
+                "label": unit.livery_name if hasattr(unit, "livery_name") else unit.name,
+                "shortLabel": unit.livery_name if hasattr(unit, "livery_name") else unit.name,
                 "type": unit.__qualname__.split(".")[0],
                 "enabled": False,
                 "liveries": {}
@@ -69,7 +69,7 @@ if len(sys.argv) > 1:
         print("Changed case of unit " + id) 
 
     # Dump everything in the database
-    with open(filename, "w") as f:
-        json.dump(database, f, indent=2)
+    with open(filename, "w", encoding='utf-8') as f:
+        json.dump(database, f, indent='\t', ensure_ascii=False)
 
 print("Done!")

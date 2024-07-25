@@ -36,7 +36,10 @@ function checkVersion() {
             if (reg1[0] > reg2[0] || (reg1[0] == reg2[0] && reg1[1] > reg2[1]) || (reg1[0] == reg2[0] && reg1[1] == reg2[1] && reg1[2] > reg2[2])) {
                 logger.log(`New version available: ${res["version"]}`);
                 showConfirmPopup(`<div class='main-message'>You are currently running DCS Olympus ${VERSION}, but ${res["version"]} is available. </div><div class='sub-message'> Do you want to update DCS Olympus automatically? </div> <div style="max-width: 100%; color: orange">Note: DCS and Olympus MUST be stopped before proceeding.</div>`,
-                    () => {
+                    async () => {
+                        /* Nested popup calls need to wait for animation to complete */
+                        await sleep(300);
+
                         updateOlympusRelease();
                     }, () => {
                         logger.log("Update canceled");
@@ -116,8 +119,11 @@ async function updateOlympusRelease() {
         }
     })
 
+    /* Select the newest artifact */
+    var asset = res.data.assets.find((asset) => { return asset.name.includes("manager") });
+
     /* Run the update process */
-    updateOlympus(res.data.assets[0].browser_download_url)
+    updateOlympus(asset.browser_download_url)
 }
 
 function updateOlympus(location) {

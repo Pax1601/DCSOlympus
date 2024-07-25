@@ -147,6 +147,13 @@ export const minimapBoundaries = {
         new LatLng(63.570300, 39.364000),
         new LatLng(71.48000, 48.091100),
         new LatLng(72.055300, 4.01400003)
+    ],
+    "Afghanistan": [   // Afghanistan
+        new LatLng(39.27472222, 59.81138889),
+        new LatLng(29.41166667, 60.04305556),
+        new LatLng(28.97722222, 73.87666667),
+        new LatLng(38.40055556, 75.07638889),
+        new LatLng(39.27472222, 59.81138889)
     ]
 };
 
@@ -159,7 +166,8 @@ export const mapBounds = {
     "Falklands": { bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]), zoom: 3 },
     "Normandy": { bounds: new LatLngBounds([50.44, -3.29], [48.12, 3.70]), zoom: 5 },
     "SinaiMap": { bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]), zoom: 4 },
-    "Kola": { bounds: new LatLngBounds([61.59999, 4.29982], [75.05179, 44.29982]), zoom: 3}
+    "Kola": { bounds: new LatLngBounds([61.59999, 4.29982], [75.05179, 44.29982]), zoom: 3},
+    "Afghanistan": { bounds: new LatLngBounds([29.41166667, 60.04305556], [38.40055556, 75.07638889]), zoom: 3}
 }
 
 export const defaultMapMirrors = {}
