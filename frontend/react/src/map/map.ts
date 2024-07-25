@@ -115,7 +115,7 @@ export class Map extends L.Map {
       maxBoundsViscosity: 1.0,
       minZoom: 7,
       keyboard: true,
-      keyboardPanDelta: 0
+      keyboardPanDelta: 0,
     });
     this.setView([37.23, -115.8], 10);
 
@@ -299,6 +299,16 @@ export class Map extends L.Map {
       /* Mirrored layers are handled here */
     } else if (Object.keys(this.#mapMirrors).includes(layerName)) {
       let layers: L.TileLayer[] = [];
+
+      layers.push(
+        new L.TileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            minZoom: 1,
+            maxZoom: 19,
+          }
+        )
+      );
 
       /* Load the configuration file */
       const mirror = this.#mapMirrors[layerName as any];
@@ -743,7 +753,6 @@ export class Map extends L.Map {
       /* Still waiting so no doubleclick; do the click action */
       if (this.#waitingForDoubleClick) {
         if (!this.#preventLeftClick) {
-
           /* Execute the short click action */
           if (this.#state === IDLE) {
             this.deselectAllCoalitionAreas();
@@ -828,12 +837,16 @@ export class Map extends L.Map {
   }
 
   #onMouseDown(e: any) {
-    this.#longPressTimer = window.setTimeout(()=> {
+    this.#longPressTimer = window.setTimeout(() => {
       if (!this.#isDragging && !this.#isZooming)
         if (e.type === "touchstart")
-          document.dispatchEvent(new CustomEvent("mapForceBoxSelect", {detail: e}));
+          document.dispatchEvent(
+            new CustomEvent("mapForceBoxSelect", { detail: e })
+          );
         else
-          document.dispatchEvent(new CustomEvent("mapForceBoxSelect", {detail: e.originalEvent}));
+          document.dispatchEvent(
+            new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent })
+          );
     }, 500);
   }
 
@@ -842,10 +855,7 @@ export class Map extends L.Map {
     this.#lastMousePosition.y = e.originalEvent.y;
     this.#lastMouseCoordinates = this.mouseEventToLatLng(e.originalEvent);
 
-    if (
-      this.#state === COALITIONAREA_DRAW_POLYGON &&
-      e.latlng !== undefined
-    ) {
+    if (this.#state === COALITIONAREA_DRAW_POLYGON && e.latlng !== undefined) {
       /* Update the polygon being drawn with the current position of the mouse cursor */
       this.getSelectedCoalitionArea()?.moveActiveVertex(e.latlng);
     }
