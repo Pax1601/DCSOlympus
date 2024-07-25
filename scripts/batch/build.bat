@@ -9,7 +9,7 @@ cd frontend
 
 cd react
 call npm install
-call npm build-release
+call npm run build-release
 cd ..
 
 cd server

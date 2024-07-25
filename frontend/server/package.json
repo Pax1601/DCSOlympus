@@ -28,10 +28,10 @@
     "tcp-ping-port": "^1.0.1",
     "uuid": "^9.0.1",
     "ws": "^8.18.0",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
-    "cors": "^2.8.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   }
