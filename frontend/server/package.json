@@ -4,9 +4,9 @@
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
-    "server": "node ./bin/www",
+    "server": "node ./build/www.js",
     "client": "electron .",
-    "debug": "nodemon --watch src/**/*.ts --exec ts-node src/www.ts"
+    "tsc": "tsc"
   },
   "private": true,
   "dependencies": {

@@ -27,7 +27,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-	const server = spawn('node', [path.join('.', 'bin', 'www'), "--config", args["config"]]);
+	const server = spawn('node', [path.join('.', 'build', 'www.js'), "--config", args["config"]]);
 
 	server.stdout.on('data', (data) => {
 		console.log(`${data}`);

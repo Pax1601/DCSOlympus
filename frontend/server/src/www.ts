@@ -2,11 +2,15 @@ import yargs = require("yargs");
 import fs = require("fs");
 import http = require("http");
 
-/* Define configuration parameter */
+/* Define configuration parameters */
 yargs
   .alias("c", "config")
   .describe("c", "olympus.json config location")
-  .string("rp");
+  .string("c");
+yargs
+  .alias("v", "vite")
+  .describe("v", "proxy requests to vite server for development")
+  .boolean("v");
 const args = yargs.argv;
 
 /* Startup print */
@@ -20,7 +24,7 @@ if (fs.existsSync(args["config"])) {
   httpPort = json["frontend"]["port"];
 
   /* Load the dependencies. The app is loaded providing the configuration file location */
-  const app = require("./app")(args["config"]);
+  const app = require("./app")(args["config"], args["vite"]);
 
   /* Normalize port */
   const port = normalizePort(httpPort);
