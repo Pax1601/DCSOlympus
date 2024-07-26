@@ -4,15 +4,16 @@
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
-    "server": "node ./bin/www",
+    "server": "node ./build/www.js",
     "client": "electron .",
-    "debug": "nodemon --watch src/**/*.ts --exec ts-node src/www.ts"
+    "tsc": "tsc"
   },
   "private": true,
   "dependencies": {
     "appjs": "^0.0.20",
     "appjs-win32": "^0.0.19",
     "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
     "electron": "^28.0.0",
@@ -31,7 +32,6 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "cors": "^2.8.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   }

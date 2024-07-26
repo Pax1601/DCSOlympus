@@ -9,7 +9,7 @@ import cors = require("cors");
 /* Load the proxy middleware plugin */
 import httpProxyMiddleware = require("http-proxy-middleware");
 
-module.exports = function (configLocation) {
+module.exports = function (configLocation, viteProxy) {
   /* Config specific routers */
   const elevationRouter = require("./routes/api/elevation")(configLocation);
   const resourcesRouter = require("./routes/resources")(configLocation);
@@ -26,8 +26,6 @@ module.exports = function (configLocation) {
       "databases"
     )
   );
-  const indexRouter = require("./routes/index");
-  const pluginsRouter = require("./routes/plugins");
 
   /* Load the config and create the express app */
   let config = {};
@@ -57,22 +55,33 @@ module.exports = function (configLocation) {
       changeOrigin: true,
     })
   );
-  app.use(
-    "/vite",
-    httpProxyMiddleware.createProxyMiddleware({ target: `http://localhost:8080/`, ws: true })
-  );
+
+  if (viteProxy) {
+    app.use(
+      "/vite",
+      httpProxyMiddleware.createProxyMiddleware({
+        target: `http://localhost:8080/`,
+        ws: true,
+      })
+    );
+  }
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(path.join(__dirname, "..", "public")));
   app.use(cors());
 
   /* Apply routers */
-  app.use("/", indexRouter);
   app.use("/api/airbases", airbasesRouter);
   app.use("/api/elevation", elevationRouter);
   app.use("/api/databases", databasesRouter);
-  app.use("/plugins", pluginsRouter);
   app.use("/resources", resourcesRouter);
+
+  /* Set default index */
+  if (!viteProxy) {
+    app.get("/", function (req, res) {
+      res.sendfile(path.join(__dirname, "..", "public", "vite", "index.html"));
+    });
+  }
 
   return app;
 };

@@ -1,6 +1,0 @@
-{
-    "name": "Control Tip Plugin",
-    "version": "0.0.1",
-    "description": "This plugin shows useful control tips on the right side of the screen. The tips change dynamically depending on what the user does",
-    "author": "Peekaboo"
-}
