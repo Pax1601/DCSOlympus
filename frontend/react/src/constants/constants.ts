@@ -259,7 +259,8 @@ export const defaultMapLayers = {};
 export const IDLE = "Idle";
 export const SPAWN_UNIT = "Spawn unit";
 export const CONTEXT_ACTION = "Context action";
-export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
+export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area polygon";
+export const COALITIONAREA_EDIT = "Edit Coalition Area";
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = {

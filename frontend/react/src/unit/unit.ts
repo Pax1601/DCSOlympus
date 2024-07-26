@@ -102,8 +102,8 @@ import {
 import { FaXmarksLines } from "react-icons/fa6";
 
 var pathIcon = new Icon({
-  iconUrl: "/images/markers/marker-icon.png",
-  shadowUrl: "/images/markers/marker-shadow.png",
+  iconUrl: "/vite/images/markers/marker-icon.png",
+  shadowUrl: "/vite/images/markers/marker-shadow.png",
   iconAnchor: [13, 41],
 });
 
@@ -991,7 +991,7 @@ export abstract class Unit extends CustomMarker {
       )
         marker = this.getDatabaseEntry()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `/images/units/${marker}.svg`;
+      img.src = `/vite/images/units/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
@@ -1486,9 +1486,6 @@ export abstract class Unit extends CustomMarker {
       faExclamation,
       () => this.applyFollowOptions("custom", units)
     );
-
-    //getApp().getMap().getUnitContextMenu().setContextActions(contextActionSet);
-    getApp().getMap().showUnitContextMenu();
   }
 
   applyFollowOptions(formation: string, units: Unit[]) {

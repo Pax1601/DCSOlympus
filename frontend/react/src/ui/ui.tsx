@@ -24,6 +24,7 @@ import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
+import { DrawingMenu } from "./panels/drawingmenu";
 
 export type OlympusState = {
   mainMenuVisible: boolean;
@@ -237,6 +238,10 @@ export function UI() {
               <UnitControlMenu
                 open={unitControlMenuVisible}
                 onClose={() => setUnitControlMenuVisible(false)}
+              />
+              <DrawingMenu
+                open={drawingMenuVisible}
+                onClose={() => setDrawingMenuVisible(false)}
               />
               <div id="map-container" className="h-full w-screen" />
               <UnitMouseControlBar />

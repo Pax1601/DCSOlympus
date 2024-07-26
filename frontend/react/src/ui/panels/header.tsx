@@ -60,7 +60,7 @@ export function Header() {
               `}
             >
               <img
-                src="images/icon.png"
+                src="vite/images/icon.png"
                 className="my-auto h-10 w-10 rounded-md p-0"
               ></img>
               {!scrolledLeft && (

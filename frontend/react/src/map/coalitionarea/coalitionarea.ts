@@ -31,7 +31,6 @@ export class CoalitionArea extends Polygon {
 
     super(latlngs, options);
     this.#setColors();
-    this.#registerCallbacks();
 
     if (
       [BLUE_COMMANDER, RED_COMMANDER].includes(
@@ -174,21 +173,5 @@ export class CoalitionArea extends Polygon {
         lastLatLng = latlng;
       });
     }
-  }
-
-  #registerCallbacks() {
-    this.on("click", (e: any) => {
-      getApp().getMap().deselectAllCoalitionAreas();
-      if (!this.getSelected()) {
-        this.setSelected(true);
-      }
-    });
-
-    this.on("contextmenu", (e: any) => {
-      if (!this.getEditing()) {
-        getApp().getMap().deselectAllCoalitionAreas();
-        this.setSelected(true);
-      } else this.setEditing(false);
-    });
   }
 }

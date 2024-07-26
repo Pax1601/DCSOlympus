@@ -67,7 +67,7 @@ export class TemporaryUnitMarker extends CustomMarker {
     unitIcon.classList.add("unit-icon");
     var img = document.createElement("img");
 
-    img.src = `/images/units/${databaseEntry?.markerFile ?? category}.svg`;
+    img.src = `/vite/images/units/${databaseEntry?.markerFile ?? category}.svg`;
     img.onload = () => SVGInjector(img);
     unitIcon.appendChild(img);
     unitIcon.toggleAttribute("data-rotate-to-heading", false);

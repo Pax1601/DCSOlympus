@@ -23,7 +23,7 @@ export function OlUnitSummary(props: {
           className={`
             absolute right-5 top-0 h-full object-cover opacity-10 invert
           `}
-          src={"images/units/" + props.blueprint.filename}
+          src={"vite/images/units/" + props.blueprint.filename}
           alt=""
         />
         <div

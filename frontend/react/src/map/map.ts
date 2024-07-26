@@ -3,13 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import {
-  bearing,
-  deg2rad,
-  getGroundElevation,
-  polyContains,
-} from "../other/utils";
-import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
+import { deg2rad, getGroundElevation, polyContains } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -23,20 +17,18 @@ import {
   CONTEXT_ACTION,
   MAP_OPTIONS_DEFAULTS,
   MAP_HIDDEN_TYPES_DEFAULTS,
+  COALITIONAREA_EDIT,
 } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
-import { TouchBoxSelect } from "./touchboxselect";
-import { DestinationPreviewHandle } from "./markers/destinationpreviewHandle";
-
-import "./markers/stylesheets/airbase.css";
-import "./markers/stylesheets/bullseye.css";
-import "./markers/stylesheets/units.css";
-
-// Temporary
-import "./theme.css";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { SpawnRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
+
+/* Stylesheets */
+import "./markers/stylesheets/airbase.css";
+import "./markers/stylesheets/bullseye.css";
+import "./markers/stylesheets/units.css";
+import "./map.css";
 
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
 
@@ -45,58 +37,68 @@ export class Map extends L.Map {
   #options: MapOptions = MAP_OPTIONS_DEFAULTS;
   #hiddenTypes: MapHiddenTypes = MAP_HIDDEN_TYPES_DEFAULTS;
 
-  #ID: string;
+  /* State machine */
   #state: string;
+
+  /* Map layers */
+  #theatre: string = "";
   #layer: L.TileLayer | L.LayerGroup | null = null;
+  #layerName: string = "";
+  #mapLayers: any = defaultMapLayers;
+  #mapMirrors: any = defaultMapMirrors;
 
-  #spawnRequestTable: SpawnRequestTable | null = null;
+  /* Inputs timers */
+  #mouseCooldownTimer: number = 0;
+  #shortPressTimer: number = 0;
+  #longPressTimer: number = 0;
 
-  #preventLeftClick: boolean = false;
-  #leftClickTimer: number = 0;
-  #deafultPanDelta: number = 100;
+  /* Camera keyboard panning control */
+  defaultPanDelta: number = 100;
   #panInterval: number | null = null;
   #panLeft: boolean = false;
   #panRight: boolean = false;
   #panUp: boolean = false;
   #panDown: boolean = false;
 
-  #lastMousePosition: L.Point = new L.Point(0, 0);
-  #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
+  /* Keyboard state */
+  #isShiftKeyDown: boolean = false;
 
-  #shiftKey: boolean = false;
-  #centerUnit: Unit | null = null;
+  /* Center on unit target */
+  #centeredUnit: Unit | null = null;
 
+  /* Minimap */
   #miniMap: ClickableMiniMap | null = null;
   #miniMapLayerGroup: L.LayerGroup;
   #miniMapPolyline: L.Polyline;
 
-  #temporaryMarkers: TemporaryUnitMarker[] = [];
-
-  #isSelecting: boolean = false;
+  /* Other state controls */
+  #isMouseOnCooldown: boolean = false;
   #isZooming: boolean = false;
+  #isDragging: boolean = false;
+  #isMouseDown: boolean = false;
+  #lastMousePosition: L.Point = new L.Point(0, 0);
+  #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
   #previousZoom: number = 0;
 
+  /* Camera control plugin */
   #slaveDCSCamera: boolean = false;
   #slaveDCSCameraAvailable: boolean = false;
   #cameraControlTimer: number = 0;
   #cameraControlPort: number = 3003;
   #cameraControlMode: string = "map";
-
-  #coalitionAreas: CoalitionArea[] = [];
-
-  #mapLayers: any = defaultMapLayers;
-  #mapMirrors: any = defaultMapMirrors;
-  #layerName: string = "";
   #cameraOptionsXmlHttp: XMLHttpRequest | null = null;
   #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
   #cameraZoomRatio: number = 1.0;
 
+  /* Coalition areas drawing */
+  #coalitionAreas: CoalitionArea[] = [];
+
+  /* Unit context actions */
   #contextAction: null | ContextAction = null;
-  #theatre: string = "";
-  #waitingForDoubleClick: boolean = false;
-  #doubleClickTimer: number = 0;
-  #longPressTimer: number = 0;
-  #isDragging: boolean = false;
+
+  /* Unit spawning */
+  #spawnRequestTable: SpawnRequestTable | null = null;
+  #temporaryMarkers: TemporaryUnitMarker[] = [];
 
   /**
    *
@@ -119,8 +121,6 @@ export class Map extends L.Map {
     });
     this.setView([37.23, -115.8], 10);
 
-    this.#ID = ID;
-
     /* Minimap */
     var minimapLayer = new L.TileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -134,24 +134,28 @@ export class Map extends L.Map {
     this.#state = IDLE;
 
     /* Register event handles */
-    this.on("click", (e: any) => this.#onClick(e));
-    this.on("dblclick", (e: any) => this.#onDoubleClick(e));
     this.on("zoomstart", (e: any) => this.#onZoomStart(e));
     this.on("zoom", (e: any) => this.#onZoom(e));
     this.on("zoomend", (e: any) => this.#onZoomEnd(e));
-    this.on("drag", (e: any) => this.centerOnUnit(null));
+
     this.on("dragstart", (e: any) => this.#onDragStart(e));
+    this.on("drag", (e: any) => this.centerOnUnit(null));
     this.on("dragend", (e: any) => this.#onDragEnd(e));
-    this.on("contextmenu", (e: any) => this.#onContextMenu(e));
+
     this.on("selectionstart", (e: any) => this.#onSelectionStart(e));
     this.on("selectionend", (e: any) => this.#onSelectionEnd(e));
+
+    this.on("dblclick", (e: any) => this.#onDoubleClick(e));
     this.on("mouseup", (e: any) => this.#onMouseUp(e));
     this.on("mousedown", (e: any) => this.#onMouseDown(e));
+
     this.on("mousemove", (e: any) => this.#onMouseMove(e));
+
     this.on("keydown", (e: any) => this.#onKeyDown(e));
     this.on("keyup", (e: any) => this.#onKeyUp(e));
+
     this.on("move", (e: any) => {
-      if (this.#slaveDCSCamera) this.#broadcastPosition();
+      this.#onMapMove(e);
     });
 
     L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
@@ -259,11 +263,11 @@ export class Map extends L.Map {
         this.panBy(
           new L.Point(
             ((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) *
-              this.#deafultPanDelta *
-              (this.#shiftKey ? 3 : 1),
+              this.defaultPanDelta *
+              (this.#isShiftKeyDown ? 3 : 1),
             ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) *
-              this.#deafultPanDelta *
-              (this.#shiftKey ? 3 : 1)
+              this.defaultPanDelta *
+              (this.#isShiftKeyDown ? 3 : 1)
           )
         );
     }, 20);
@@ -368,6 +372,9 @@ export class Map extends L.Map {
 
     /* Operations to perform if you are NOT in a state */
     if (this.#state !== COALITIONAREA_DRAW_POLYGON) {
+      this.getSelectedCoalitionArea()?.setEditing(false);
+    }
+    if (this.#state !== COALITIONAREA_EDIT) {
       this.#deselectSelectedCoalitionArea();
     }
 
@@ -416,104 +423,6 @@ export class Map extends L.Map {
     return this.#hiddenTypes;
   }
 
-  /* Context Menus */
-  hideAllContextMenus() {
-    this.hideMapContextMenu();
-    this.hideUnitContextMenu();
-    this.hideAirbaseContextMenu();
-    this.hideAirbaseSpawnMenu();
-    this.hideCoalitionAreaContextMenu();
-  }
-
-  showMapContextMenu(x: number, y: number, latlng: L.LatLng) {
-    //this.hideAllContextMenus();
-    //this.#mapContextMenu.show(x, y, latlng);
-    //document.dispatchEvent(new CustomEvent("mapContextMenu"));
-  }
-
-  hideMapContextMenu() {
-    //this.#mapContextMenu.hide();
-    //document.dispatchEvent(new CustomEvent("mapContextMenu"));
-  }
-
-  getMapContextMenu() {
-    return null; //this.#mapContextMenu;
-  }
-
-  showUnitContextMenu(
-    x: number | undefined = undefined,
-    y: number | undefined = undefined,
-    latlng: L.LatLng | undefined = undefined
-  ) {
-    //this.hideAllContextMenus();
-    //this.#unitContextMenu.show(x, y, latlng);
-  }
-
-  getUnitContextMenu() {
-    return null; //this.#unitContextMenu;
-  }
-
-  hideUnitContextMenu() {
-    //this.#unitContextMenu.hide();
-  }
-
-  showAirbaseContextMenu(
-    airbase: Airbase,
-    x: number | undefined = undefined,
-    y: number | undefined = undefined,
-    latlng: L.LatLng | undefined = undefined
-  ) {
-    //this.hideAllContextMenus();
-    //this.#airbaseContextMenu.show(x, y, latlng);
-    //this.#airbaseContextMenu.setAirbase(airbase);
-  }
-
-  getAirbaseContextMenu() {
-    return null; //this.#airbaseContextMenu;
-  }
-
-  hideAirbaseContextMenu() {
-    //this.#airbaseContextMenu.hide();
-  }
-
-  showAirbaseSpawnMenu(
-    airbase: Airbase,
-    x: number | undefined = undefined,
-    y: number | undefined = undefined,
-    latlng: L.LatLng | undefined = undefined
-  ) {
-    //this.hideAllContextMenus();
-    //this.#airbaseSpawnMenu.show(x, y);
-    //this.#airbaseSpawnMenu.setAirbase(airbase);
-  }
-
-  getAirbaseSpawnMenu() {
-    return null; //this.#airbaseSpawnMenu;
-  }
-
-  hideAirbaseSpawnMenu() {
-    //this.#airbaseSpawnMenu.hide();
-  }
-
-  showCoalitionAreaContextMenu(
-    x: number,
-    y: number,
-    latlng: L.LatLng,
-    coalitionArea: CoalitionArea
-  ) {
-    //this.hideAllContextMenus();
-    //this.#coalitionAreaContextMenu.show(x, y, latlng);
-    //this.#coalitionAreaContextMenu.setCoalitionArea(coalitionArea);
-  }
-
-  getCoalitionAreaContextMenu() {
-    return null; //this.#coalitionAreaContextMenu;
-  }
-
-  hideCoalitionAreaContextMenu() {
-    //this.#coalitionAreaContextMenu.hide();
-  }
-
   getMousePosition() {
     return this.#lastMousePosition;
   }
@@ -525,15 +434,15 @@ export class Map extends L.Map {
   centerOnUnit(unit: Unit | null) {
     if (unit !== null) {
       this.options.scrollWheelZoom = "center";
-      this.#centerUnit = unit;
+      this.#centeredUnit = unit;
     } else {
       this.options.scrollWheelZoom = undefined;
-      this.#centerUnit = null;
+      this.#centeredUnit = null;
     }
   }
 
   getCenteredOnUnit() {
-    return this.#centerUnit;
+    return this.#centeredUnit;
   }
 
   setTheatre(theatre: string) {
@@ -688,10 +597,6 @@ export class Map extends L.Map {
     return false;
   }
 
-  getMapMarkerVisibilityControls() {
-    return null; //this.#mapMarkerVisibilityControls;
-  }
-
   setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
     this.#slaveDCSCamera = newSlaveDCSCamera;
     let button = document.getElementById("camera-link-control");
@@ -740,75 +645,6 @@ export class Map extends L.Map {
   }
 
   /* Event handlers */
-  #onClick(e: any) {
-    /*  Exit if we were waiting for a doubleclick */
-    if (this.#waitingForDoubleClick) {
-      return;
-    }
-
-    /* We'll wait for a doubleclick */
-    this.#waitingForDoubleClick = true;
-
-    this.#doubleClickTimer = window.setTimeout(() => {
-      /* Still waiting so no doubleclick; do the click action */
-      if (this.#waitingForDoubleClick) {
-        if (!this.#preventLeftClick) {
-          /* Execute the short click action */
-          if (this.#state === IDLE) {
-            this.deselectAllCoalitionAreas();
-          } else if (this.#state === SPAWN_UNIT) {
-            if (this.#spawnRequestTable !== null) {
-              const location = e.latlng;
-              this.#spawnRequestTable.unit.location = e.latlng;
-              getApp()
-                .getUnitsManager()
-                .spawnUnits(
-                  this.#spawnRequestTable.category,
-                  [this.#spawnRequestTable.unit],
-                  this.#spawnRequestTable.coalition,
-                  false,
-                  undefined,
-                  undefined,
-                  (hash) => {
-                    this.addTemporaryMarker(
-                      location,
-                      this.#spawnRequestTable?.unit.unitType ?? "unknown",
-                      this.#spawnRequestTable?.coalition ?? "blue",
-                      hash
-                    );
-                  }
-                );
-            }
-          } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
-            if (this.getSelectedCoalitionArea()?.getEditing()) {
-              this.getSelectedCoalitionArea()?.addTemporaryLatLng(e.latlng);
-            } else {
-              this.deselectAllCoalitionAreas();
-            }
-          } else if (this.#state === CONTEXT_ACTION) {
-            this.executeContextAction(null, e.latlng);
-          } else {
-            this.setState(IDLE);
-            getApp().getUnitsManager().deselectAllUnits();
-          }
-        }
-      }
-
-      /* No longer waiting for a doubleclick */
-      this.#waitingForDoubleClick = false;
-    }, 200);
-  }
-
-  #onDoubleClick(e: any) {
-    /* Let single clicks work again */
-    this.#waitingForDoubleClick = false;
-    clearTimeout(this.#doubleClickTimer);
-
-    this.setState(IDLE);
-  }
-
-  #onContextMenu(e: any) {}
-
   #onDragStart(e: any) {
     this.#isDragging = true;
   }
@@ -818,27 +654,103 @@ export class Map extends L.Map {
   }
 
   #onSelectionStart(e: any) {
-    this.#isSelecting = true;
   }
 
   #onSelectionEnd(e: any) {
-    this.#isSelecting = false;
-    clearTimeout(this.#leftClickTimer);
-    this.#preventLeftClick = true;
-    this.#leftClickTimer = window.setTimeout(() => {
-      this.#preventLeftClick = false;
-    }, 200);
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
     document.dispatchEvent(new CustomEvent("mapSelectionEnd"));
   }
 
   #onMouseUp(e: any) {
+    this.#isMouseDown = false;
     window.clearTimeout(this.#longPressTimer);
+
+    this.#isMouseOnCooldown = true;
+    this.#mouseCooldownTimer = window.setTimeout(() => {
+      this.#isMouseOnCooldown = false;
+    }, 200);
   }
 
   #onMouseDown(e: any) {
+    this.#isMouseDown = true;
+
+    if (this.#isMouseOnCooldown) {
+      return;
+    }
+
+    this.#shortPressTimer = window.setTimeout(() => {
+      /* If the mouse is no longer being pressed, execute the short press action */
+      if (!this.#isMouseDown) this.#onShortPress(e);
+    }, 200);
+
     this.#longPressTimer = window.setTimeout(() => {
-      if (!this.#isDragging && !this.#isZooming)
+      /* If the mouse is still being pressed, execute the long press action */
+      if (this.#isMouseDown) this.#onLongPress(e);
+    }, 500);
+  }
+
+  #onDoubleClick(e: any) {
+    console.log(`Double click at ${e.latlng}`);
+
+    window.clearTimeout(this.#shortPressTimer);
+    window.clearTimeout(this.#longPressTimer);
+
+    if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+      this.setState(COALITIONAREA_EDIT);
+    } else {
+      this.setState(IDLE);
+    }
+  }
+
+  #onShortPress(e: any) {
+    console.log(`Short press at ${e.latlng}`);
+
+    const location = new L.LatLng(e.latlng.lat, e.latlng.lng);
+
+    /* Execute the short click action */
+    if (this.#state === IDLE) {
+      this.deselectAllCoalitionAreas();
+    } else if (this.#state === SPAWN_UNIT) {
+      if (this.#spawnRequestTable !== null) {
+        this.#spawnRequestTable.unit.location = location;
+        getApp()
+          .getUnitsManager()
+          .spawnUnits(
+            this.#spawnRequestTable.category,
+            [this.#spawnRequestTable.unit],
+            this.#spawnRequestTable.coalition,
+            false,
+            undefined,
+            undefined,
+            (hash) => {
+              this.addTemporaryMarker(
+                location,
+                this.#spawnRequestTable?.unit.unitType ?? "unknown",
+                this.#spawnRequestTable?.coalition ?? "blue",
+                hash
+              );
+            }
+          );
+      }
+    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+      if (this.getSelectedCoalitionArea()?.getEditing()) {
+        this.getSelectedCoalitionArea()?.addTemporaryLatLng(location);
+      } else {
+        this.deselectAllCoalitionAreas();
+      }
+    } else if (this.#state === COALITIONAREA_EDIT) {
+      this.deselectAllCoalitionAreas();
+    } else if (this.#state === CONTEXT_ACTION) {
+      this.executeContextAction(null, e.latlng);
+    } else {
+    }
+  }
+
+  #onLongPress(e: any) {
+    console.log(`Long press at ${e.latlng}`);
+
+    if (!this.#isDragging && !this.#isZooming) {
+      if (this.getState() == IDLE) {
         if (e.type === "touchstart")
           document.dispatchEvent(
             new CustomEvent("mapForceBoxSelect", { detail: e })
@@ -847,36 +759,50 @@ export class Map extends L.Map {
           document.dispatchEvent(
             new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent })
           );
-    }, 500);
+      } else if (this.getState() == COALITIONAREA_EDIT) {
+        for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
+          if (polyContains(e.latlng, this.#coalitionAreas[idx])) {
+            this.#coalitionAreas[idx].setSelected(true);
+            break;
+          }
+        }
+      }
+    }
   }
 
   #onMouseMove(e: any) {
+    window.clearTimeout(this.#longPressTimer);
+
     this.#lastMousePosition.x = e.originalEvent.x;
     this.#lastMousePosition.y = e.originalEvent.y;
     this.#lastMouseCoordinates = this.mouseEventToLatLng(e.originalEvent);
 
     if (this.#state === COALITIONAREA_DRAW_POLYGON && e.latlng !== undefined) {
       /* Update the polygon being drawn with the current position of the mouse cursor */
-      this.getSelectedCoalitionArea()?.moveActiveVertex(e.latlng);
+      //this.getSelectedCoalitionArea()?.moveActiveVertex(e.latlng);
     }
   }
 
+  #onMapMove(e: any) {
+    if (this.#slaveDCSCamera) this.#broadcastPosition();
+  }
+
   #onKeyDown(e: any) {
-    this.#shiftKey = e.originalEvent.shiftKey;
+    this.#isShiftKeyDown = e.originalEvent.shiftKey;
   }
 
   #onKeyUp(e: any) {
-    this.#shiftKey = e.originalEvent.shiftKey;
+    this.#isShiftKeyDown = e.originalEvent.shiftKey;
   }
 
   #onZoomStart(e: any) {
     this.#previousZoom = this.getZoom();
-    if (this.#centerUnit != null) this.#panToUnit(this.#centerUnit);
+    if (this.#centeredUnit != null) this.#panToUnit(this.#centeredUnit);
     this.#isZooming = true;
   }
 
   #onZoom(e: any) {
-    if (this.#centerUnit != null) this.#panToUnit(this.#centerUnit);
+    if (this.#centeredUnit != null) this.#panToUnit(this.#centeredUnit);
   }
 
   #onZoomEnd(e: any) {

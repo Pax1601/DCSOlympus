@@ -38,7 +38,7 @@ export class Airbase extends CustomMarker {
     el.classList.add("airbase-icon");
     el.setAttribute("data-object", "airbase");
     var img = document.createElement("img");
-    img.src = "/images/markers/airbase.svg";
+    img.src = "/vite/images/markers/airbase.svg";
     img.onload = () => SVGInjector(img);
     el.appendChild(img);
     this.getElement()?.appendChild(el);

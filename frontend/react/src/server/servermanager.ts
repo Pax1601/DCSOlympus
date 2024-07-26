@@ -175,7 +175,7 @@ export class ServerManager {
   }
 
   setAddress(address: string) {
-    this.#REST_ADDRESS = `${address}olympus`;
+    this.#REST_ADDRESS = `${address.replace('vite', '')}olympus`;
     console.log(`Setting REST address to ${this.#REST_ADDRESS}`);
   }
 

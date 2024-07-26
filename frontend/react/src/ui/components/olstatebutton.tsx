@@ -16,6 +16,7 @@ export function OlStateButton(props: {
   icon: IconProp;
   tooltip: string;
   onClick: () => void;
+  children?: JSX.Element | JSX.Element[];
 }) {
   var [hover, setHover] = useState(false);
   var buttonRef = useRef(null);
@@ -47,7 +48,10 @@ export function OlStateButton(props: {
           setHover(false);
         }}
       >
-        <FontAwesomeIcon icon={props.icon} />
+        <div className="m-auto flex w-fit content-center justify-center gap-2">
+        <FontAwesomeIcon icon={props.icon} className="m-auto"/>
+        {props.children}
+        </div>
       </button>
       {hover && <OlTooltip buttonRef={buttonRef} content={props.tooltip} />}
     </>

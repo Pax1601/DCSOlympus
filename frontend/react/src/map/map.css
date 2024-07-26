@@ -1,0 +1,120 @@
+:root {
+  /**  Colours  **/
+
+  /*** Coalition: neutral  ***/
+  --primary-neutral: #949ba7;
+  --secondary-neutral-outline: #111111;
+  --secondary-neutral-text: #111111;
+  --unit-background-neutral: #cfd9e8;
+
+  /*** Coalition: blue  ***/
+  --primary-blue: #247be2;
+  --secondary-blue-outline: #082e44;
+  --secondary-blue-text: #017dc1;
+  --unit-background-blue: #3bb9ff;
+
+  /*** Coalition: red  ***/
+  --primary-red: #ff5858;
+  --secondary-red-outline: #262222;
+  --secondary-red-text: #d42121;
+  --unit-background-red: #ff5858;
+
+  /*** UI Colours **/
+  --accent-amber: #ffd828;
+  --accent-green: #8bff63;
+  --accent-light-blue: #5ca7ff;
+  --accent-dark-blue: #017dc1;
+  --transparent-accent-light-blue: rgba(92, 167, 255, 0.33);
+  --accent-light-red: #f5b6b6;
+
+  --background-grey: #3d4651;
+  --background-dark-grey: #35393d;
+  --background-slate-blue: #363c43;
+  --background-offwhite: #f2f2f3;
+  --background-steel: #202831;
+
+  --secondary-dark-steel: #181e25;
+  --secondary-gunmetal-grey: #2f2f2f;
+  --secondary-lighter-grey: #949ba7;
+  --secondary-light-grey: #797e83;
+  --secondary-semitransparent-white: #ffffffaa;
+  --secondary-transparent-white: #ffffff30;
+  --secondary-yellow: #ffd46893;
+
+  --background-hover: #f2f2f333;
+
+  --nav-text: #ececec;
+
+  --ol-select-secondary: #545f6c;
+  --ol-switch-off: #686868;
+  --ol-switch-undefined: #383838;
+
+  --ol-dialog-disabled-text-color: #ffffff20;
+
+  /*** General border radii  **/
+  --border-radius-xs: 2px;
+  --border-radius-sm: 5px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 15px;
+
+  /***  Fonts  **/
+  --font-weight-bolder: 600;
+
+  /***  Unit marker settings  ***/
+  /***   All markers  **/
+  --unit-border-radius: var(--border-radius-xs);
+  --unit-font-size: 14px;
+  --unit-font-weight: bolder;
+  --unit-label-border-width: 2px;
+  --unit-spotlight-fill: var(--secondary-yellow);
+  --unit-spotlight-radius: 26px;
+  --unit-stroke-width: 3px;
+  --unit-height: 50px;
+  --unit-width: 50px;
+
+  --unit-health-border-width: 2px;
+  --unit-health-height: 6px;
+  --unit-health-width: 36px;
+  --unit-health-x: 0px;
+  --unit-health-y: 26px;
+
+  /***  Air units  ***/
+  --unit-ammo-gap: calc(2px + var(--unit-stroke-width));
+  --unit-ammo-border-radius: 50%;
+  --unit-ammo-border-width: 2px;
+  --unit-ammo-radius: 2px;
+  --unit-ammo-spacing: 2px;
+  --unit-ammo-x: 0px;
+  --unit-ammo-y: 30px;
+  --unit-fuel-border-width: 2px;
+  --unit-fuel-height: 6px;
+  --unit-fuel-width: 36px;
+  --unit-fuel-x: 0px;
+  --unit-fuel-y: 22px;
+  --unit-vvi-width: 4px;
+}
+
+* {
+  font-weight: 600;
+}
+
+.ol-coalitionarea-handle-icon {
+  background-color: #FFFFFFAA;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.ol-coalitionarea-handle-icon {
+  background-color: #FFFFFFAA;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.ol-coalitionarea-middle-handle-icon {
+  background-color: #FFFFFFAA;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+}
