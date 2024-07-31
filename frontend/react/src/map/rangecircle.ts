@@ -1,5 +1,4 @@
-// @ts-nocheck
-// This is a horrible hack. But it is needed at the moment to ovveride a default behaviour of Leaflet. TODO please fix me the proper way.
+// @ts-nocheck <-- This is a horrible hack. But it is needed at the moment to ovveride a default behaviour of Leaflet. TODO please fix me the proper way.
 
 import { Circle, Point, Polyline } from "leaflet";
 

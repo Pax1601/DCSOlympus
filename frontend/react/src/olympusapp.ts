@@ -210,7 +210,7 @@ export class OlympusApp {
 
     /* Load the config file from the server */
     const configRequest = new Request(
-      window.location.href.split("?")[0].replace("/vite", "/") +
+      window.location.href.split("?")[0].replace("vite/", "") +
         "resources/config"
     );
     fetch(configRequest)

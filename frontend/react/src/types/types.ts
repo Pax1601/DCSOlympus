@@ -50,6 +50,6 @@ export type MGRS = {
   zoneNumber: string;
 };
 
-export type Coalition = "blue" | "neutral" | "red";
+export type Coalition = "blue" | "neutral" | "red" | "all";
 
 export type Context = string;

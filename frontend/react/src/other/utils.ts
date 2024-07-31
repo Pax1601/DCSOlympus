@@ -1,15 +1,12 @@
-import { LatLng, Point, Polygon } from "leaflet";
+import { LatLng, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
 import {
-  AircraftDatabase,
   aircraftDatabase,
 } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
-//import { Buffer } from "buffer";
 import {
-  GROUND_UNIT_AIR_DEFENCE_REGEX,
   ROEs,
   emissionsCountermeasures,
   reactionsToThreat,
@@ -290,12 +287,6 @@ export function mercatorToLatLng(x: number, y: number) {
   return { lng: lng, lat: lat };
 }
 
-export function createDivWithClass(className: string) {
-  var el = document.createElement("div");
-  el.classList.add(className);
-  return el;
-}
-
 export function knotsToMs(knots: number) {
   return knots / 1.94384;
 }
@@ -325,9 +316,16 @@ export function nmToFt(nm: number) {
 }
 
 export function polyContains(latlng: LatLng, polygon: Polygon) {
-  var poly = polygon.toGeoJSON();
+  const poly = polygon.toGeoJSON();
   return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
+
+export function polyCenter(polygon: Polygon) {
+  const poly = polygon.toGeoJSON();
+  const center = turf.center(poly);
+  return new LatLng(center.geometry.coordinates[1], center.geometry.coordinates[0]);
+}
+
 
 export function randomPointInPoly(polygon: Polygon): LatLng {
   var bounds = polygon.getBounds();
@@ -448,10 +446,6 @@ export function getUnitCategoryByBlueprint(blueprint: UnitBlueprint) {
     if (blueprint.name in database.blueprints) return database.getCategory();
   }
   return "unknown";
-}
-
-export function base64ToBytes(base64: string) {
-  //return Buffer.from(base64, 'base64').buffer;
 }
 
 export function enumToState(state: number) {

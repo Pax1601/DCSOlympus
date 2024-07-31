@@ -23,6 +23,7 @@ import {
   DateAndTime,
   MissionData,
 } from "../interfaces";
+import { Coalition } from "../types/types";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -253,10 +254,10 @@ export class MissionManager {
 
   getCommandedCoalition() {
     if (this.getCommandModeOptions().commandMode === BLUE_COMMANDER)
-      return "blue";
+      return "blue" as Coalition;
     else if (this.getCommandModeOptions().commandMode === RED_COMMANDER)
-      return "red";
-    else return "all";
+      return "red" as Coalition;
+    else return "all" as Coalition;
   }
 
   refreshSpawnPoints() {
@@ -395,14 +396,7 @@ export class MissionManager {
   }
 
   #onAirbaseClick(e: any) {
-    getApp()
-      .getMap()
-      .showAirbaseContextMenu(
-        e.sourceTarget,
-        e.originalEvent.x,
-        e.originalEvent.y,
-        e.latlng
-      );
+
   }
 
   #loadAirbaseChartData(callsign: string) {

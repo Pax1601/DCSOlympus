@@ -118,7 +118,7 @@ export abstract class UnitDatabase {
     return types;
   }
 
-  /* Returns a list of all possible periods in a database */
+  /* Returns a list of all possible eras in a database */
   getEras() {
     var filteredBlueprints = this.getBlueprints();
     var eras: string[] = [];

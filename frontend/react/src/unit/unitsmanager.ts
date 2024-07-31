@@ -16,7 +16,7 @@ import {
   randomPointInPoly,
   randomUnitBlueprint,
 } from "../other/utils";
-import { CoalitionArea } from "../map/coalitionarea/coalitionarea";
+import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import {
   DELETE_CYCLE_TIME,
@@ -24,7 +24,7 @@ import {
   DataIndexes,
   GAME_MASTER,
   IADSDensities,
-  IDLE
+  IDLE,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
@@ -1642,7 +1642,7 @@ export class UnitsManager {
    * @param distribution Value between 0 and 100, controls how "scattered" the units will be
    */
   createIADS(
-    coalitionArea: CoalitionArea,
+    coalitionArea: CoalitionPolygon,
     types: { [key: string]: boolean },
     eras: { [key: string]: boolean },
     ranges: { [key: string]: boolean },

@@ -105,16 +105,28 @@
   border-radius: 999px;
 }
 
-.ol-coalitionarea-handle-icon {
+.ol-coalitionarea-middle-handle-icon {
   background-color: #FFFFFFAA;
   width: 100%;
   height: 100%;
   border-radius: 999px;
 }
 
-.ol-coalitionarea-middle-handle-icon {
-  background-color: #FFFFFFAA;
-  width: 100%;
-  height: 100%;
-  border-radius: 999px;
+.ol-coalitionarea-label {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.ol-coalitionarea-label.selected {
+  color: white;
+  /* 1 pixel black shadow to left, top, right and bottom */
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.ol-coalitionarea-label.blue {
+  color: #0f3764;
+}
+
+.ol-coalitionarea-label.red {
+  color: #461818;
 }

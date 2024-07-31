@@ -1,24 +1,31 @@
 import {
-  DomUtil,
   LatLng,
   LatLngExpression,
   Map,
   Point,
   Polygon,
   PolylineOptions,
+  DivIcon,
+  Marker
 } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
 import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
+import { Coalition } from "../../types/types";
+import { polyCenter } from "../../other/utils";
 
-export class CoalitionArea extends Polygon {
-  #coalition: string = "blue";
+let totalAreas = 0;
+
+export class CoalitionPolygon extends Polygon {
+  #coalition: Coalition = "blue";
   #selected: boolean = true;
   #editing: boolean = true;
   #handles: CoalitionAreaHandle[] = [];
   #middleHandles: CoalitionAreaMiddleHandle[] = [];
   #activeIndex: number = 0;
+  #labelText: string;
+  #label: Marker;
 
   constructor(
     latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][],
@@ -26,11 +33,15 @@ export class CoalitionArea extends Polygon {
   ) {
     if (options === undefined) options = {};
 
+    totalAreas++;
+
     options.bubblingMouseEvents = false;
     options.interactive = false;
 
     super(latlngs, options);
     this.#setColors();
+
+    this.#labelText = `Polygon ${totalAreas}`
 
     if (
       [BLUE_COMMANDER, RED_COMMANDER].includes(
@@ -40,7 +51,7 @@ export class CoalitionArea extends Polygon {
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());
   }
 
-  setCoalition(coalition: string) {
+  setCoalition(coalition: Coalition) {
     this.#coalition = coalition;
     this.#setColors();
   }
@@ -53,6 +64,7 @@ export class CoalitionArea extends Polygon {
     this.#selected = selected;
     this.#setColors();
     this.#setHandles();
+    this.#drawLabel();
     this.setOpacity(selected ? 1 : 0.5);
     if (!this.getSelected() && this.getEditing()) {
       /* Remove the vertex we were working on */
@@ -88,15 +100,17 @@ export class CoalitionArea extends Polygon {
     this.#setHandles();
   }
 
-  moveActiveVertex(latlng: LatLng) {
-    var latlngs = this.getLatLngs()[0] as LatLng[];
-    latlngs[this.#activeIndex] = latlng;
-    this.setLatLngs(latlngs);
-    this.#setHandles();
-  }
-
   setOpacity(opacity: number) {
     this.setStyle({ opacity: opacity, fillOpacity: opacity * 0.25 });
+  }
+  
+  getLabelText() {
+    return this.#labelText;
+  }
+
+  setLabelText(labelText: string) {
+    this.#labelText = labelText;
+    this.#drawLabel();
   }
 
   onRemove(map: Map): this {
@@ -106,6 +120,12 @@ export class CoalitionArea extends Polygon {
       .forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) =>
         handle.removeFrom(getApp().getMap())
       );
+    return this;
+  }
+
+  setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]){
+    super.setLatLngs(latlngs);
+    this.#drawLabel();
     return this;
   }
 
@@ -165,6 +185,7 @@ export class CoalitionArea extends Polygon {
           const middleHandle = new CoalitionAreaMiddleHandle(middleLatLng);
           middleHandle.addTo(getApp().getMap());
           middleHandle.on("click", (e: any) => {
+            getApp().getMap().preventClicks();
             this.#activeIndex = idx - 1;
             this.addTemporaryLatLng(middleLatLng);
           });
@@ -174,4 +195,19 @@ export class CoalitionArea extends Polygon {
       });
     }
   }
+
+ #drawLabel() {
+  if (this.#label) {
+    this.#label.removeFrom(this._map);
+  }
+  this.#label = new Marker(polyCenter(this), {
+    icon: new DivIcon({
+      className: 'label',
+      html: this.#labelText,
+      iconSize: [100, 40]
+    }),
+    interactive: false
+  }).addTo(this._map);
+  this.#label.getElement()?.classList.add(`ol-coalitionarea-label`, `${this.#selected? "selected": `${this.#coalition}`}`);
+ }
 }
