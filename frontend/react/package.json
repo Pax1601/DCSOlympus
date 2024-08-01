@@ -22,6 +22,7 @@
     "js-sha256": "^0.11.0",
     "leaflet": "^1.9.4",
     "leaflet-control-mini-map": "^0.4.0",
+    "leaflet-path-drag": "^1.9.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",

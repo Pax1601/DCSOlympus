@@ -3,7 +3,13 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { deg2rad, getGroundElevation, polyContains } from "../other/utils";
+import {
+  areaContains,
+  circleContains,
+  deg2rad,
+  getGroundElevation,
+  polyContains,
+} from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -18,6 +24,7 @@ import {
   MAP_OPTIONS_DEFAULTS,
   MAP_HIDDEN_TYPES_DEFAULTS,
   COALITIONAREA_EDIT,
+  COALITIONAREA_DRAW_CIRCLE,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -29,6 +36,10 @@ import "./markers/stylesheets/airbase.css";
 import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
 import "./map.css";
+import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
+
+import "leaflet-path-drag";
+import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -92,7 +103,7 @@ export class Map extends L.Map {
   #cameraZoomRatio: number = 1.0;
 
   /* Coalition areas drawing */
-  #coalitionPolygons: CoalitionPolygon[] = [];
+  #coalitionAreas: (CoalitionPolygon | CoalitionCircle)[] = [];
 
   /* Unit context actions */
   #contextAction: null | ContextAction = null;
@@ -132,7 +143,7 @@ export class Map extends L.Map {
     this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
 
     /* Init the state machine */
-    this.#state = IDLE;
+    this.setState(IDLE);
 
     /* Register event handles */
     this.on("zoomstart", (e: any) => this.#onZoomStart(e));
@@ -173,18 +184,6 @@ export class Map extends L.Map {
         }
       );
     });
-
-    document.addEventListener(
-      "toggleCoalitionAreaDraw",
-      (ev: CustomEventInit) => {
-        this.deselectAllCoalitionAreas();
-        if (ev.detail?.type == "polygon") {
-          if (this.getState() !== COALITIONAREA_DRAW_POLYGON)
-            this.setState(COALITIONAREA_DRAW_POLYGON);
-          else this.setState(IDLE);
-        }
-      }
-    );
 
     //document.addEventListener("unitUpdated", (ev: CustomEvent) => {
     //    if (this.#centerUnit != null && ev.detail == this.#centerUnit)
@@ -366,27 +365,38 @@ export class Map extends L.Map {
     console.log(`Switching from state ${this.#state} to ${state}`);
 
     /* Operations to perform when leaving a state */
-    if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+    if (
+      this.#state === COALITIONAREA_DRAW_POLYGON ||
+      this.#state === COALITIONAREA_DRAW_CIRCLE
+    )
       this.getSelectedCoalitionArea()?.setEditing(false);
-    }
 
     this.#state = state;
 
     /* Operations to perform when entering a state */
     if (this.#state === IDLE) {
-      getApp().getUnitsManager().deselectAllUnits();
+      getApp().getUnitsManager()?.deselectAllUnits();
       this.deselectAllCoalitionAreas();
     } else if (this.#state === SPAWN_UNIT) {
+      this.deselectAllCoalitionAreas();
       this.#spawnRequestTable = options?.spawnRequestTable ?? null;
       console.log(`Spawn request table:`);
       console.log(this.#spawnRequestTable);
     } else if (this.#state === CONTEXT_ACTION) {
+      this.deselectAllCoalitionAreas();
       this.#contextAction = options?.contextAction ?? null;
       console.log(`Context action:`);
       console.log(this.#contextAction);
     } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
-      this.#coalitionPolygons.push(new CoalitionPolygon([]));
-      this.#coalitionPolygons[this.#coalitionPolygons.length - 1].addTo(this);
+      getApp().getUnitsManager().deselectAllUnits();
+      this.#coalitionAreas.push(new CoalitionPolygon([]));
+      this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
+    } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
+      getApp().getUnitsManager().deselectAllUnits();
+      this.#coalitionAreas.push(
+        new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 })
+      );
+      this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
     }
 
     document.dispatchEvent(
@@ -398,18 +408,122 @@ export class Map extends L.Map {
     return this.#state;
   }
 
+  getCurrentControls() {
+    if (this.#state === IDLE) {
+      return [
+        {
+          actions: ["Tap"],
+          text: "Select unit",
+        },
+        {
+          actions: ["Shift", "Drag"],
+          text: "Box selection",
+        },
+        {
+          actions: ["Drag"],
+          text: "Move map location",
+        },
+        {
+          actions: ["Long tap", "Drag"],
+          text: "Box selection",
+        },
+      ];
+    } else if (this.#state === SPAWN_UNIT) {
+      return [
+        {
+          actions: ["Tap"],
+          text: "Spawn unit",
+        },
+        {
+          actions: ["Double tap"],
+          text: "Exit spawn mode",
+        },
+        {
+          actions: ["Drag"],
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === CONTEXT_ACTION) {
+      return [
+        {
+          actions: ["Tap"],
+          text: this.#contextAction?.getLabel() ?? "",
+        },
+        {
+          actions: ["Double tap"],
+          text: "Exit action mode",
+        },
+        {
+          actions: ["Drag"],
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === COALITIONAREA_EDIT) {
+      return [
+        {
+          actions: ["Tap"],
+          text: "Select shape",
+        },
+        {
+          actions: ["Double tap"],
+          text: "Exit drawing mode",
+        },
+        {
+          actions: ["Drag"],
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+      return [
+        {
+          actions: ["Tap"],
+          text: "Add vertex to polygon",
+        },
+        {
+          actions: ["Double tap"],
+          text: "Finalize polygon",
+        },
+        {
+          actions: ["Drag"],
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
+      return [
+        {
+          actions: ["Tap"],
+          text: "Add circle",
+        },
+        {
+          actions: ["Drag"],
+          text: "Move map location",
+        },
+      ];
+    } else {
+      return [];
+    }
+  }
+
   deselectAllCoalitionAreas() {
-    this.#coalitionPolygons.forEach((coalitionPolygon: CoalitionPolygon) =>
-      coalitionPolygon.setSelected(false)
+    document.dispatchEvent(
+      new CustomEvent("coalitionAreaSelected", {
+        detail: null,
+      })
+    );
+
+    this.#coalitionAreas.forEach(
+      (coalitionArea: CoalitionPolygon | CoalitionCircle) =>
+        coalitionArea.setSelected(false)
     );
   }
 
-  deleteCoalitionArea(coalitionArea: CoalitionPolygon) {
-    if (this.#coalitionPolygons.includes(coalitionArea))
-      this.#coalitionPolygons.splice(
-        this.#coalitionPolygons.indexOf(coalitionArea),
+  deleteCoalitionArea(coalitionArea: CoalitionPolygon | CoalitionCircle) {
+    if (this.#coalitionAreas.includes(coalitionArea))
+      this.#coalitionAreas.splice(
+        this.#coalitionAreas.indexOf(coalitionArea),
         1
       );
+
     if (this.hasLayer(coalitionArea)) this.removeLayer(coalitionArea);
   }
 
@@ -550,15 +664,13 @@ export class Map extends L.Map {
   }
 
   getSelectedCoalitionArea() {
-    return this.#coalitionPolygons.find((coalitionPolygon: CoalitionPolygon) => {
-      return coalitionPolygon.getSelected();
-    });
-  }
+    const coalitionArea = this.#coalitionAreas.find(
+      (coalitionArea: CoalitionPolygon | CoalitionCircle) => {
+        return coalitionArea.getSelected();
+      }
+    );
 
-  bringCoalitionAreaToBack(coalitionArea: CoalitionPolygon) {
-    coalitionArea.bringToBack();
-    this.#coalitionPolygons.splice(this.#coalitionPolygons.indexOf(coalitionArea), 1);
-    this.#coalitionPolygons.unshift(coalitionArea);
+    return coalitionArea ?? null;
   }
 
   setOption(key, value) {
@@ -644,7 +756,7 @@ export class Map extends L.Map {
   }
 
   preventClicks() {
-    console.log("Preventing clicks on map")
+    console.log("Preventing clicks on map");
     window.clearTimeout(this.#shortPressTimer);
     window.clearTimeout(this.#longPressTimer);
   }
@@ -699,7 +811,10 @@ export class Map extends L.Map {
     window.clearTimeout(this.#shortPressTimer);
     window.clearTimeout(this.#longPressTimer);
 
-    if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+    if (
+      this.#state === COALITIONAREA_DRAW_POLYGON ||
+      this.#state === COALITIONAREA_DRAW_CIRCLE
+    ) {
       this.setState(COALITIONAREA_EDIT);
     } else {
       this.setState(IDLE);
@@ -736,11 +851,33 @@ export class Map extends L.Map {
           );
       }
     } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
-      this.getSelectedCoalitionArea()?.getEditing()
-        ? this.getSelectedCoalitionArea()?.addTemporaryLatLng(location)
-        : this.deselectAllCoalitionAreas();
-    } else if (this.#state === COALITIONAREA_EDIT) {
+      const selectedArea = this.getSelectedCoalitionArea();
+      if (selectedArea && selectedArea instanceof CoalitionPolygon) {
+        selectedArea.addTemporaryLatLng(location);
+      }
+    } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
+      const selectedArea = this.getSelectedCoalitionArea();
+      if (selectedArea && selectedArea instanceof CoalitionCircle) {
+        if (
+          selectedArea.getLatLng().lat == 0 &&
+          selectedArea.getLatLng().lng == 0
+        )
+          selectedArea.setLatLng(location);
+        this.setState(COALITIONAREA_EDIT);
+      }
+    } else if (this.#state == COALITIONAREA_EDIT) {
       this.deselectAllCoalitionAreas();
+      for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
+        if (areaContains(e.latlng, this.#coalitionAreas[idx])) {
+          this.#coalitionAreas[idx].setSelected(true);
+          document.dispatchEvent(
+            new CustomEvent("coalitionAreaSelected", {
+              detail: this.#coalitionAreas[idx],
+            })
+          );
+          break;
+        }
+      }
     } else if (this.#state === CONTEXT_ACTION) {
       this.executeContextAction(null, e.latlng);
     } else {
@@ -749,6 +886,8 @@ export class Map extends L.Map {
 
   #onLongPress(e: any) {
     console.log(`Long press at ${e.latlng}`);
+
+    this.deselectAllCoalitionAreas();
 
     if (!this.#isDragging && !this.#isZooming) {
       if (this.#state == IDLE) {
@@ -760,13 +899,6 @@ export class Map extends L.Map {
           document.dispatchEvent(
             new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent })
           );
-      } else if (this.#state == COALITIONAREA_EDIT) {
-        for (let idx = 0; idx < this.#coalitionPolygons.length; idx++) {
-          if (polyContains(e.latlng, this.#coalitionPolygons[idx])) {
-            this.#coalitionPolygons[idx].setSelected(true);
-            break;
-          }
-        }
       }
     }
   }

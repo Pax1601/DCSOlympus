@@ -25,6 +25,7 @@ import { sha256 } from "js-sha256";
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
 import { DrawingMenu } from "./panels/drawingmenu";
+import { ControlsPanel } from "./panels/controls";
 
 export type OlympusState = {
   mainMenuVisible: boolean;
@@ -235,6 +236,7 @@ export function UI() {
                 options={mapOptions}
               />
               <MiniMapPanel />
+              <ControlsPanel />
               <UnitControlMenu
                 open={unitControlMenuVisible}
                 onClose={() => setUnitControlMenuVisible(false)}

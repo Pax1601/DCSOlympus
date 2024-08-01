@@ -2,6 +2,7 @@ import { LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "../olympusapp";
 import { Unit } from "./unit";
 import {
+  areaContains,
   bearingAndDistanceToLatLng,
   deg2rad,
   getGroundElevation,
@@ -44,6 +45,7 @@ import {
 import { Group } from "./group";
 import { UnitDataFileExport } from "./importexport/unitdatafileexport";
 import { UnitDataFileImport } from "./importexport/unitdatafileimport";
+import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -1642,7 +1644,7 @@ export class UnitsManager {
    * @param distribution Value between 0 and 100, controls how "scattered" the units will be
    */
   createIADS(
-    coalitionArea: CoalitionPolygon,
+    coalitionArea: CoalitionPolygon | CoalitionCircle,
     types: { [key: string]: boolean },
     eras: { [key: string]: boolean },
     ranges: { [key: string]: boolean },
@@ -1665,7 +1667,7 @@ export class UnitsManager {
       var airbase = airbases[airbaseName];
       /* Check if the city is inside the coalition area */
       if (
-        polyContains(
+        areaContains(
           new LatLng(airbase.getLatLng().lat, airbase.getLatLng().lng),
           coalitionArea
         )
@@ -1684,7 +1686,7 @@ export class UnitsManager {
           );
 
           /* Make sure the unit is still inside the coalition area */
-          if (polyContains(latlng, coalitionArea)) {
+          if (areaContains(latlng, coalitionArea)) {
             const type =
               activeTypes[Math.floor(Math.random() * activeTypes.length)];
             if (Math.random() < IADSDensities[type]) {
@@ -1729,7 +1731,7 @@ export class UnitsManager {
     citiesDatabase.forEach(
       (city: { lat: number; lng: number; pop: number }) => {
         /* Check if the city is inside the coalition area */
-        if (polyContains(new LatLng(city.lat, city.lng), coalitionArea)) {
+        if (areaContains(new LatLng(city.lat, city.lng), coalitionArea)) {
           /* Arbitrary formula to obtain a number of units depending on the city population */
           var pointsNumber = 2 + (Math.pow(city.pop, 0.15) * density) / 100;
           for (let i = 0; i < pointsNumber; i++) {
@@ -1744,7 +1746,7 @@ export class UnitsManager {
             );
 
             /* Make sure the unit is still inside the coalition area */
-            if (polyContains(latlng, coalitionArea)) {
+            if (areaContains(latlng, coalitionArea)) {
               const type =
                 activeTypes[Math.floor(Math.random() * activeTypes.length)];
               if (Math.random() < IADSDensities[type]) {

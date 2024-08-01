@@ -1,4 +1,5 @@
 import { ServerStatus } from "./interfaces";
+import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Unit } from "./unit/unit";
 
 interface CustomEventMap {
@@ -20,7 +21,8 @@ interface CustomEventMap {
   contactsUpdated: CustomEvent<Unit>;
   activeCoalitionChanged: CustomEvent<any>;
   serverStatusUpdated: CustomEvent<ServerStatus>;
-  mapForceBoxSelect: CustomEvent<any>
+  mapForceBoxSelect: CustomEvent<any>;
+  coalitionAreaSelected: CustomEvent<CoalitionPolygon>;
 }
 
 declare global {

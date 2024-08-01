@@ -6,7 +6,7 @@ import {
   Polygon,
   PolylineOptions,
   DivIcon,
-  Marker
+  Marker,
 } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
@@ -37,11 +37,13 @@ export class CoalitionPolygon extends Polygon {
 
     options.bubblingMouseEvents = false;
     options.interactive = false;
+    //@ts-ignore draggable option added by leaflet-path-drag
+    options.draggable = true;
 
     super(latlngs, options);
     this.#setColors();
 
-    this.#labelText = `Polygon ${totalAreas}`
+    this.#labelText = `Polygon ${totalAreas}`;
 
     if (
       [BLUE_COMMANDER, RED_COMMANDER].includes(
@@ -49,6 +51,12 @@ export class CoalitionPolygon extends Polygon {
       )
     )
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());
+
+    this.on("drag", () => {
+      this.#setHandles();
+      this.#setMiddleHandles();
+      this.#drawLabel();
+    });
   }
 
   setCoalition(coalition: Coalition) {
@@ -73,6 +81,9 @@ export class CoalitionPolygon extends Polygon {
       this.setLatLngs(latlngs);
       this.setEditing(false);
     }
+
+    //@ts-ignore draggable option added by leaflet-path-drag
+    selected ? this.dragging.enable() : this.dragging.disable();
   }
 
   getSelected() {
@@ -103,7 +114,7 @@ export class CoalitionPolygon extends Polygon {
   setOpacity(opacity: number) {
     this.setStyle({ opacity: opacity, fillOpacity: opacity * 0.25 });
   }
-  
+
   getLabelText() {
     return this.#labelText;
   }
@@ -123,15 +134,19 @@ export class CoalitionPolygon extends Polygon {
     return this;
   }
 
-  setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]){
+  setLatLngs(
+    latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]
+  ) {
     super.setLatLngs(latlngs);
     this.#drawLabel();
     return this;
   }
 
   #setColors() {
-    const coalitionColor =
-      this.getCoalition() === "blue" ? "#247be2" : "#ff5858";
+    let coalitionColor = "#FFFFFF";
+    if (this.getCoalition() === "blue") coalitionColor = "#247be2";
+    else if (this.getCoalition() === "red") coalitionColor = "#ff5858";
+
     this.setStyle({
       color: this.getSelected() ? "white" : coalitionColor,
       fillColor: coalitionColor,
@@ -196,18 +211,25 @@ export class CoalitionPolygon extends Polygon {
     }
   }
 
- #drawLabel() {
-  if (this.#label) {
-    this.#label.removeFrom(this._map);
+  #drawLabel() {
+    if (this.#label) {
+      this.#label.removeFrom(this._map);
+    }
+    if ((this.getLatLngs()[0] as LatLng[]).length > 2) {
+      this.#label = new Marker(polyCenter(this), {
+        icon: new DivIcon({
+          className: "label",
+          html: this.#labelText,
+          iconSize: [100, 40],
+        }),
+        interactive: false,
+      }).addTo(this._map);
+      this.#label
+        .getElement()
+        ?.classList.add(
+          `ol-coalitionarea-label`,
+          `${this.#selected ? "selected" : `${this.#coalition}`}`
+        );
+    }
   }
-  this.#label = new Marker(polyCenter(this), {
-    icon: new DivIcon({
-      className: 'label',
-      html: this.#labelText,
-      iconSize: [100, 40]
-    }),
-    interactive: false
-  }).addTo(this._map);
-  this.#label.getElement()?.classList.add(`ol-coalitionarea-label`, `${this.#selected? "selected": `${this.#coalition}`}`);
- }
 }
