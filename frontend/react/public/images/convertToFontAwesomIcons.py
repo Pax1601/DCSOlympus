@@ -5,7 +5,7 @@ import svgelements
 
 result = [y for x in os.walk(".") for y in glob(os.path.join(x[0], '*.svg'))]
 
-with open(os.path.join( "..", "..", "..", "..",  "src", "ui", "components", "olicons.tsx"), "w") as fp:
+with open(os.path.join("..", "..",  "src", "ui", "components", "olicons.tsx"), "w") as fp:
     fp.write('import { IconDefinition, IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";\n')
     for filename in result:
         try: 
