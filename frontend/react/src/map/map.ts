@@ -3,7 +3,12 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { areaContains, deg2rad, getFunctionArguments, getGroundElevation } from "../other/utils";
+import {
+  areaContains,
+  deg2rad,
+  getFunctionArguments,
+  getGroundElevation,
+} from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -33,7 +38,13 @@ import "./map.css";
 import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
-import { faDrawPolygon, faJetFighter, faMap } from "@fortawesome/free-solid-svg-icons";
+import {
+  faComputerMouse,
+  faDrawPolygon,
+  faHandPointer,
+  faJetFighter,
+  faMap,
+} from "@fortawesome/free-solid-svg-icons";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -405,25 +416,27 @@ export class Map extends L.Map {
   }
 
   getCurrentControls() {
+    const touch = matchMedia("(hover: none)").matches;
     if (this.#state === IDLE) {
       return [
         {
-          actions: ["Tap"],
+          actions: [touch ? faHandPointer : faComputerMouse],
           target: faJetFighter,
           text: "Select unit",
         },
+        touch
+          ? {
+              actions: [faHandPointer, "Drag"],
+              target: faMap,
+              text: "Box selection",
+            }
+          : {
+              actions: ["Shift", faComputerMouse, "Drag"],
+              target: faMap,
+              text: "Box selection",
+            },
         {
-          actions: ["Shift", "Drag"],
-          target: faMap,
-          text: "Box selection",
-        },
-        {
-          actions: ["Press", "Drag"],
-          target: faMap,
-          text: "Box selection",
-        },
-        {
-          actions: ["Drag"],
+          actions: [touch ? faHandPointer : faComputerMouse, "Drag"],
           target: faMap,
           text: "Move map location",
         },
@@ -431,17 +444,20 @@ export class Map extends L.Map {
     } else if (this.#state === SPAWN_UNIT) {
       return [
         {
-          actions: ["Tap"],
+          actions: [touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Spawn unit",
         },
         {
-          actions: ["Double tap"],
+          actions: [
+            touch ? faHandPointer : faComputerMouse,
+            touch ? faHandPointer : faComputerMouse,
+          ],
           target: faMap,
           text: "Exit spawn mode",
         },
         {
-          actions: ["Drag"],
+          actions: [touch ? faHandPointer : faComputerMouse, "Drag"],
           target: faMap,
           text: "Move map location",
         },
@@ -449,12 +465,15 @@ export class Map extends L.Map {
     } else if (this.#state === CONTEXT_ACTION) {
       let controls = [
         {
-          actions: ["Double tap"],
+          actions: [
+            touch ? faHandPointer : faComputerMouse,
+            touch ? faHandPointer : faComputerMouse,
+          ],
           target: faMap,
           text: "Deselect units",
         },
         {
-          actions: ["Drag"],
+          actions: [touch ? faHandPointer : faComputerMouse, "Drag"],
           target: faMap,
           text: "Move map location",
         },
@@ -464,8 +483,8 @@ export class Map extends L.Map {
         /* TODO: I don't like this approach, it relies on the arguments names of the callback. We should find a better method */
         const args = getFunctionArguments(this.#contextAction.getCallback());
         controls.push({
-          actions: ["Tap"],
-          target: args.includes("targetUnit")? faJetFighter: faMap,
+          actions: [touch ? faHandPointer : faComputerMouse],
+          target: args.includes("targetUnit") ? faJetFighter : faMap,
           text: this.#contextAction?.getLabel() ?? "",
         });
       }
@@ -474,17 +493,20 @@ export class Map extends L.Map {
     } else if (this.#state === COALITIONAREA_EDIT) {
       return [
         {
-          actions: ["Tap"],
+          actions: [touch ? faHandPointer : faComputerMouse],
           target: faDrawPolygon,
           text: "Select shape",
         },
         {
-          actions: ["Double tap"],
+          actions: [
+            touch ? faHandPointer : faComputerMouse,
+            touch ? faHandPointer : faComputerMouse,
+          ],
           target: faMap,
           text: "Exit drawing mode",
         },
         {
-          actions: ["Drag"],
+          actions: [touch ? faHandPointer : faComputerMouse, "Drag"],
           target: faMap,
           text: "Move map location",
         },
@@ -492,17 +514,20 @@ export class Map extends L.Map {
     } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
       return [
         {
-          actions: ["Tap"],
+          actions: [touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Add vertex to polygon",
         },
         {
-          actions: ["Double tap"],
+          actions: [
+            touch ? faHandPointer : faComputerMouse,
+            touch ? faHandPointer : faComputerMouse,
+          ],
           target: faMap,
           text: "Finalize polygon",
         },
         {
-          actions: ["Drag"],
+          actions: [touch ? faHandPointer : faComputerMouse, "Drag"],
           target: faMap,
           text: "Move map location",
         },
@@ -510,12 +535,12 @@ export class Map extends L.Map {
     } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
       return [
         {
-          actions: ["Tap"],
+          actions: [touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Add circle",
         },
         {
-          actions: ["Drag"],
+          actions: [touch ? faHandPointer : faComputerMouse, "Drag"],
           target: faMap,
           text: "Move map location",
         },
