@@ -66,7 +66,7 @@ module.exports = function (configLocation) {
         isActiveAWACS: false,
         onOff: true,
         followRoads: false,
-        fuel: 50,
+        fuel: 10,
         desiredSpeed: 300,
         desiredSpeedType: 1,
         desiredAltitude: 1000,
@@ -87,7 +87,19 @@ module.exports = function (configLocation) {
           prohibitAirWpn: false,
           prohibitJettison: false,
         },
-        ammo: [],
+        ammo: [{
+          quantity: 2,
+          name: "A super nice missile",
+          guidance: 1,
+          category: 1,
+          missileCategory: 1
+        }, {
+          quantity: 4,
+          name: "A less nice missile",
+          guidance: 1,
+          category: 1,
+          missileCategory: 1
+        }],
         contacts: [],
         activePath: [{ lat: 37.1, lng: -116.1 }],
         isLeader: true,

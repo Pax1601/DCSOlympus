@@ -34,6 +34,7 @@ import {
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
+import { FaGasPump } from "react-icons/fa";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   var [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
@@ -184,7 +185,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   return (
     <Menu
       open={props.open}
-      title="Units selected (x)"
+      title={`Units selected (x${selectedUnits.length})`}
       onClose={props.onClose}
       canBeHidden={true}
     >
@@ -716,6 +717,67 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
           </>
         )}
       </div>
+      <>
+        {selectedUnits.length === 1 && (
+          <div
+            className={`
+              flex flex-col gap-4 border-l-4 border-l-olympus-100 bg-olympus-600
+              p-4
+            `}
+          >
+            <div className="flex border-b-2 border-b-white/10 pb-2">
+              <div
+                className={`
+                  flex content-center gap-2 rounded-full
+                  ${
+                    selectedUnits[0].getFuel() > 40 &&
+                    `bg-green-700`
+                  }
+                  ${
+                    selectedUnits[0].getFuel() > 10 &&
+                    selectedUnits[0].getFuel() <=
+                      40 && `bg-yellow-700`
+                  }
+                  ${
+                    selectedUnits[0].getFuel() <= 10 &&
+                    `bg-red-700`
+                  }
+                  px-2 py-1 text-sm font-bold text-white
+                `}
+              >
+                <FaGasPump className="my-auto" />
+                {selectedUnits[0].getFuel()}%
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              {selectedUnits[0].getAmmo().map((ammo) => {
+                return (
+                  <div className="flex content-center gap-2">
+                    <div
+                      className={`
+                        my-auto w-6 min-w-6 rounded-full py-0.5 text-center
+                        text-sm font-bold text-gray-500
+                        dark:bg-[#17212D]
+                      `}
+                    >
+                      {ammo.quantity}
+                    </div>
+                    <div
+                      className={`
+                        my-auto overflow-hidden text-ellipsis text-nowrap
+                        text-sm
+                        dark:text-gray-300
+                      `}
+                    >
+                      {ammo.name}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </>
     </Menu>
   );
 }
