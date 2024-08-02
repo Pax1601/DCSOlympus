@@ -61,7 +61,7 @@ module.exports = function (configLocation, viteProxy) {
       "/vite",
       httpProxyMiddleware.createProxyMiddleware({
         target: `http://localhost:8080/`,
-        ws: true,
+        ws: true
       })
     );
   }

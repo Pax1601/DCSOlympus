@@ -45,7 +45,7 @@ export function LoginModal(props: {
       `}
     >
       <img
-        src="/images/splash/1.jpg"
+        src="/vite/images/splash/1.jpg"
         className={`contents-center w-full object-cover opacity-[7%]`}
       ></img>
       <div
@@ -106,7 +106,7 @@ export function LoginModal(props: {
                 >
                   <span className="size-[80px] min-w-14">
                     <img
-                      src="..\images\olympus-500x500.png"
+                      src="..\vite\images\olympus-500x500.png"
                       className={`flex w-full`}
                     ></img>
                   </span>
@@ -332,7 +332,7 @@ export function LoginModal(props: {
           >
             <Card className="flex">
               <img
-                src="/images/splash/1.jpg"
+                src="/vite/images/splash/1.jpg"
                 className={`
                   h-[40%] max-h-[120px] contents-center w-full rounded-md
                   object-cover
@@ -362,7 +362,7 @@ export function LoginModal(props: {
             </Card>
             <Card className="flex">
               <img
-                src="/images/splash/1.jpg"
+                src="/vite/images/splash/1.jpg"
                 className={`
                   h-[40%] max-h-[120px] contents-center w-full rounded-md
                   object-cover

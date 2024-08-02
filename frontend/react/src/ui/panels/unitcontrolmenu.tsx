@@ -35,10 +35,7 @@ import {
 import { Coalition } from "../../types/types";
 import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 
-export function UnitControlMenu(props: {
-  open: boolean;
-  onClose: () => void;
-}) {
+export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   var [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
 
   var [selectedUnitsData, setSelectedUnitsData] = useState({
@@ -185,7 +182,12 @@ export function UnitControlMenu(props: {
     getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
   return (
-    <Menu open={props.open} title="Units selected (x)" onClose={props.onClose}>
+    <Menu
+      open={props.open}
+      title="Units selected (x)"
+      onClose={props.onClose}
+      canBeHidden={true}
+    >
       {/* Units list */}
       <div
         className={`

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Unit } from "../../unit/unit";
 import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
@@ -19,6 +19,14 @@ export function UnitMouseControlBar(props: {}) {
   );
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
+
+  /* Initialize the "scroll" position of the element */
+  var scrollRef = useRef(null);
+  useEffect(() => {
+    if (scrollRef.current) {
+      onScroll(scrollRef.current);
+    }
+  });
 
   /* When a unit is selected, open the menu */
   document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
@@ -61,10 +69,10 @@ export function UnitMouseControlBar(props: {}) {
     setActiveContextAction(null);
   }
 
-  function onScroll(ev) {
-    const sl = ev.target.scrollLeft;
+  function onScroll(el) {
+    const sl = el.scrollLeft;
     const sr =
-      ev.target.scrollWidth - ev.target.scrollLeft - ev.target.clientWidth;
+      el.scrollWidth - el.scrollLeft - el.clientWidth;
 
     sl < 1 && !scrolledLeft && setScrolledLeft(true);
     sl > 1 && scrolledLeft && setScrolledLeft(false);
@@ -96,7 +104,8 @@ export function UnitMouseControlBar(props: {}) {
             )}
             <div
               className="flex gap-2 overflow-x-auto no-scrollbar p-2"
-              onScroll={(ev) => onScroll(ev)}
+              onScroll={(ev) => onScroll(ev.target)}
+              ref={scrollRef}
             >
               {Object.values(contextActionsSet.getContextActions()).map(
                 (contextAction) => {

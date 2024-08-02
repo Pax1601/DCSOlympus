@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   OlRoundStateButton,
   OlStateButton,
@@ -35,10 +35,18 @@ export function Header() {
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
 
-  function onScroll(ev) {
-    const sl = ev.target.scrollLeft;
+   /* Initialize the "scroll" position of the element */
+   var scrollRef = useRef(null);
+   useEffect(() => {
+     if (scrollRef.current) {
+       onScroll(scrollRef.current);
+     }
+   });
+
+  function onScroll(el) {
+    const sl = el.scrollLeft;
     const sr =
-      ev.target.scrollWidth - ev.target.scrollLeft - ev.target.clientWidth;
+      el.scrollWidth - el.scrollLeft - el.clientWidth;
 
     sl < 1 && !scrolledLeft && setScrolledLeft(true);
     sl > 1 && scrolledLeft && setScrolledLeft(false);
@@ -60,7 +68,7 @@ export function Header() {
               `}
             >
               <img
-                src="images/icon.png"
+                src="vite/images/icon.png"
                 className="my-auto h-10 w-10 rounded-md p-0"
               ></img>
               {!scrolledLeft && (
@@ -77,7 +85,8 @@ export function Header() {
                   my-2 flex w-full items-center gap-3 overflow-x-scroll
                   no-scrollbar
                 `}
-                onScroll={(ev) => onScroll(ev)}
+                onScroll={(ev) => onScroll(ev.target)}
+                ref={scrollRef}
               >
                 <div
                   className={`

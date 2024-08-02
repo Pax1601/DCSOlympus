@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@tanem/svg-injector": "^10.1.68",
@@ -21,6 +22,7 @@
     "js-sha256": "^0.11.0",
     "leaflet": "^1.9.4",
     "leaflet-control-mini-map": "^0.4.0",
+    "leaflet-path-drag": "^1.9.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",

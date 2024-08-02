@@ -84,9 +84,8 @@ export function OlDropdown(props: {
         const target = event.target;
         if (
           target &&
-          /*!content.contains(target as HTMLElement) &&*/ !button.contains(
-            target as HTMLElement
-          )
+          !content.contains(target as HTMLElement) &&
+          !button.contains(target as HTMLElement)
         ) {
           setOpen(false);
         }
