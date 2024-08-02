@@ -20,6 +20,7 @@ import {
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import {
+  CONTEXT_ACTION,
   DELETE_CYCLE_TIME,
   DELETE_SLOW_THRESHOLD,
   DataIndexes,
@@ -1953,6 +1954,7 @@ export class UnitsManager {
 
   #onUnitSelection(unit: Unit) {
     if (this.getSelectedUnits().length > 0) {
+      getApp().getMap().setState(CONTEXT_ACTION);
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
       if (!this.#selectionEventDisabled) {
         window.setTimeout(() => {

@@ -1,9 +1,7 @@
 import { Circle, LatLng, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
-import {
-  aircraftDatabase,
-} from "../unit/databases/aircraftdatabase";
+import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import {
@@ -317,32 +315,51 @@ export function nmToFt(nm: number) {
 }
 
 export function areaContains(latlng: LatLng, area: Polygon | Circle) {
-  if (area instanceof Polygon)
-    return polyContains(latlng, area);
-  else
-    return circleContains(latlng, area);
+  if (area instanceof Polygon) return polyContains(latlng, area);
+  else return circleContains(latlng, area);
 }
 
 export function polyContains(latlng: LatLng, polygon: Polygon) {
-  let coordinates = [(polygon.getLatLngs()[0] as LatLng[]).map((latlng) => {return [latlng.lng, latlng.lat]} )];
-  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat])
+  let coordinates = [
+    (polygon.getLatLngs()[0] as LatLng[]).map((latlng) => {
+      return [latlng.lng, latlng.lat];
+    }),
+  ];
+  coordinates[0].push([
+    polygon.getLatLngs()[0][0].lng,
+    polygon.getLatLngs()[0][0].lat,
+  ]);
   const poly = turf.polygon(coordinates);
   return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
 
 export function circleContains(latlng: LatLng, circle: Circle) {
-  const poly = turf.circle(turf.point([circle.getLatLng().lng, circle.getLatLng().lat]), circle.getRadius() / 1000, 100, 'kilometers');
+  const poly = turf.circle(
+    turf.point([circle.getLatLng().lng, circle.getLatLng().lat]),
+    circle.getRadius() / 1000,
+    100,
+    "kilometers"
+  );
   return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
 
 export function polyCenter(polygon: Polygon) {
-  let coordinates = [(polygon.getLatLngs()[0] as LatLng[]).map((latlng) => {return [latlng.lng, latlng.lat]} )];
-  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat])
+  let coordinates = [
+    (polygon.getLatLngs()[0] as LatLng[]).map((latlng) => {
+      return [latlng.lng, latlng.lat];
+    }),
+  ];
+  coordinates[0].push([
+    polygon.getLatLngs()[0][0].lng,
+    polygon.getLatLngs()[0][0].lat,
+  ]);
   const poly = turf.polygon(coordinates);
   const center = turf.center(featureCollection([poly]));
-  return new LatLng(center.geometry.coordinates[1], center.geometry.coordinates[0]);
+  return new LatLng(
+    center.geometry.coordinates[1],
+    center.geometry.coordinates[0]
+  );
 }
-
 
 export function randomPointInPoly(polygon: Polygon): LatLng {
   var bounds = polygon.getBounds();
@@ -354,8 +371,15 @@ export function randomPointInPoly(polygon: Polygon): LatLng {
   var lat = y_min + Math.random() * (y_max - y_min);
   var lng = x_min + Math.random() * (x_max - x_min);
 
-  let coordinates = [(polygon.getLatLngs()[0] as LatLng[]).map((latlng) => {return [latlng.lng, latlng.lat]} )];
-  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat])
+  let coordinates = [
+    (polygon.getLatLngs()[0] as LatLng[]).map((latlng) => {
+      return [latlng.lng, latlng.lat];
+    }),
+  ];
+  coordinates[0].push([
+    polygon.getLatLngs()[0][0].lng,
+    polygon.getLatLngs()[0][0].lat,
+  ]);
   const poly = turf.polygon(coordinates);
   var inside = turf.inside(turf.point([lng, lat]), poly);
 
@@ -564,4 +588,16 @@ export function getWikipediaEntry(search: string, callback: CallableFunction) {
     }
   };
   xhr.send();
+}
+
+export function getFunctionArguments(func) {
+  var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
+  var ARGUMENT_NAMES = /([^\s,]+)/g;
+
+  var fnStr = func.toString().replace(STRIP_COMMENTS, "");
+  var result = fnStr
+    .slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")"))
+    .match(ARGUMENT_NAMES);
+  if (result === null) result = [];
+  return result;
 }

@@ -3,13 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import {
-  areaContains,
-  circleContains,
-  deg2rad,
-  getGroundElevation,
-  polyContains,
-} from "../other/utils";
+import { areaContains, deg2rad, getFunctionArguments, getGroundElevation } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -38,11 +32,13 @@ import "./markers/stylesheets/units.css";
 import "./map.css";
 import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 
-import "leaflet-path-drag";
-import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { initDraggablePath } from "./coalitionarea/draggablepath";
+import { faDrawPolygon, faJetFighter, faMap } from "@fortawesome/free-solid-svg-icons";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
+
+initDraggablePath();
 
 export class Map extends L.Map {
   /* Options */
@@ -413,63 +409,83 @@ export class Map extends L.Map {
       return [
         {
           actions: ["Tap"],
+          target: faJetFighter,
           text: "Select unit",
         },
         {
           actions: ["Shift", "Drag"],
+          target: faMap,
+          text: "Box selection",
+        },
+        {
+          actions: ["Press", "Drag"],
+          target: faMap,
           text: "Box selection",
         },
         {
           actions: ["Drag"],
+          target: faMap,
           text: "Move map location",
-        },
-        {
-          actions: ["Long tap", "Drag"],
-          text: "Box selection",
         },
       ];
     } else if (this.#state === SPAWN_UNIT) {
       return [
         {
           actions: ["Tap"],
+          target: faMap,
           text: "Spawn unit",
         },
         {
           actions: ["Double tap"],
+          target: faMap,
           text: "Exit spawn mode",
         },
         {
           actions: ["Drag"],
+          target: faMap,
           text: "Move map location",
         },
       ];
     } else if (this.#state === CONTEXT_ACTION) {
-      return [
-        {
-          actions: ["Tap"],
-          text: this.#contextAction?.getLabel() ?? "",
-        },
+      let controls = [
         {
           actions: ["Double tap"],
-          text: "Exit action mode",
+          target: faMap,
+          text: "Deselect units",
         },
         {
           actions: ["Drag"],
+          target: faMap,
           text: "Move map location",
         },
       ];
+
+      if (this.#contextAction) {
+        /* TODO: I don't like this approach, it relies on the arguments names of the callback. We should find a better method */
+        const args = getFunctionArguments(this.#contextAction.getCallback());
+        controls.push({
+          actions: ["Tap"],
+          target: args.includes("targetUnit")? faJetFighter: faMap,
+          text: this.#contextAction?.getLabel() ?? "",
+        });
+      }
+
+      return controls;
     } else if (this.#state === COALITIONAREA_EDIT) {
       return [
         {
           actions: ["Tap"],
+          target: faDrawPolygon,
           text: "Select shape",
         },
         {
           actions: ["Double tap"],
+          target: faMap,
           text: "Exit drawing mode",
         },
         {
           actions: ["Drag"],
+          target: faMap,
           text: "Move map location",
         },
       ];
@@ -477,14 +493,17 @@ export class Map extends L.Map {
       return [
         {
           actions: ["Tap"],
+          target: faMap,
           text: "Add vertex to polygon",
         },
         {
           actions: ["Double tap"],
+          target: faMap,
           text: "Finalize polygon",
         },
         {
           actions: ["Drag"],
+          target: faMap,
           text: "Move map location",
         },
       ];
@@ -492,10 +511,12 @@ export class Map extends L.Map {
       return [
         {
           actions: ["Tap"],
+          target: faMap,
           text: "Add circle",
         },
         {
           actions: ["Drag"],
+          target: faMap,
           text: "Move map location",
         },
       ];
@@ -801,7 +822,8 @@ export class Map extends L.Map {
 
     this.#longPressTimer = window.setTimeout(() => {
       /* If the mouse is still being pressed, execute the long press action */
-      if (this.#isMouseDown) this.#onLongPress(e);
+      if (this.#isMouseDown && !this.#isDragging && !this.#isZooming)
+        this.#onLongPress(e);
     }, 500);
   }
 
@@ -822,15 +844,20 @@ export class Map extends L.Map {
   }
 
   #onShortPress(e: any) {
-    console.log(`Short press at ${e.latlng}`);
+    let touchLocation: L.LatLng;
+    if (e.type === "touchstart")
+      touchLocation = this.containerPointToLatLng(
+        this.mouseEventToContainerPoint(e.touches[0])
+      );
+    else touchLocation = new L.LatLng(e.latlng.lat, e.latlng.lng);
 
-    const location = new L.LatLng(e.latlng.lat, e.latlng.lng);
+    console.log(`Short press at ${touchLocation}`);
 
     /* Execute the short click action */
     if (this.#state === IDLE) {
     } else if (this.#state === SPAWN_UNIT) {
       if (this.#spawnRequestTable !== null) {
-        this.#spawnRequestTable.unit.location = location;
+        this.#spawnRequestTable.unit.location = touchLocation;
         getApp()
           .getUnitsManager()
           .spawnUnits(
@@ -842,7 +869,7 @@ export class Map extends L.Map {
             undefined,
             (hash) => {
               this.addTemporaryMarker(
-                location,
+                touchLocation,
                 this.#spawnRequestTable?.unit.unitType ?? "unknown",
                 this.#spawnRequestTable?.coalition ?? "blue",
                 hash
@@ -853,7 +880,7 @@ export class Map extends L.Map {
     } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
       const selectedArea = this.getSelectedCoalitionArea();
       if (selectedArea && selectedArea instanceof CoalitionPolygon) {
-        selectedArea.addTemporaryLatLng(location);
+        selectedArea.addTemporaryLatLng(touchLocation);
       }
     } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
       const selectedArea = this.getSelectedCoalitionArea();
@@ -862,13 +889,13 @@ export class Map extends L.Map {
           selectedArea.getLatLng().lat == 0 &&
           selectedArea.getLatLng().lng == 0
         )
-          selectedArea.setLatLng(location);
+          selectedArea.setLatLng(touchLocation);
         this.setState(COALITIONAREA_EDIT);
       }
     } else if (this.#state == COALITIONAREA_EDIT) {
       this.deselectAllCoalitionAreas();
       for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
-        if (areaContains(e.latlng, this.#coalitionAreas[idx])) {
+        if (areaContains(touchLocation, this.#coalitionAreas[idx])) {
           this.#coalitionAreas[idx].setSelected(true);
           document.dispatchEvent(
             new CustomEvent("coalitionAreaSelected", {
@@ -879,18 +906,24 @@ export class Map extends L.Map {
         }
       }
     } else if (this.#state === CONTEXT_ACTION) {
-      this.executeContextAction(null, e.latlng);
+      this.executeContextAction(null, touchLocation);
     } else {
     }
   }
 
   #onLongPress(e: any) {
-    console.log(`Long press at ${e.latlng}`);
+    let touchLocation: L.LatLng;
+    if (e.type === "touchstart")
+      touchLocation = this.containerPointToLatLng(
+        this.mouseEventToContainerPoint(e.touches[0])
+      );
+    else touchLocation = new L.LatLng(e.latlng.lat, e.latlng.lng);
 
-    this.deselectAllCoalitionAreas();
+    console.log(`Long press at ${touchLocation}`);
 
     if (!this.#isDragging && !this.#isZooming) {
-      if (this.#state == IDLE) {
+      this.deselectAllCoalitionAreas();
+      if (this.#state === IDLE) {
         if (e.type === "touchstart")
           document.dispatchEvent(
             new CustomEvent("mapForceBoxSelect", { detail: e })
@@ -908,7 +941,7 @@ export class Map extends L.Map {
 
     this.#lastMousePosition.x = e.originalEvent.x;
     this.#lastMousePosition.y = e.originalEvent.y;
-    this.#lastMouseCoordinates = this.mouseEventToLatLng(e.originalEvent);
+    this.#lastMouseCoordinates = e.latlng;
   }
 
   #onMapMove(e: any) {

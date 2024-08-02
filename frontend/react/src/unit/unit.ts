@@ -892,7 +892,7 @@ export abstract class Unit extends CustomMarker {
     contextActionSet.addContextAction(
       this,
       "move",
-      "Move",
+      "Set destination",
       "Click on the map to move the units there",
       faLocationDot,
       (units: Unit[], _, targetPosition) => {
@@ -905,7 +905,7 @@ export abstract class Unit extends CustomMarker {
     contextActionSet.addContextAction(
       this,
       "path",
-      "Path",
+      "Append destination",
       "Click on the map to add a destination to the path",
       faRoute,
       (units: Unit[], _, targetPosition) => {
@@ -2190,7 +2190,7 @@ export abstract class AirUnit extends Unit {
     contextActionSet.addContextAction(
       this,
       "refuel",
-      "Refuel",
+      "Refuel at tanker",
       "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
       olStatesRefuel,
       (units: Unit[]) => {
@@ -2220,7 +2220,7 @@ export abstract class AirUnit extends Unit {
       (
         units: Unit[],
         targetUnit: Unit | null,
-        targetPosition: LatLng | null
+        _
       ) => {
         if (targetUnit)
           getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
@@ -2235,7 +2235,7 @@ export abstract class AirUnit extends Unit {
       (
         units: Unit[],
         targetUnit: Unit | null,
-        targetPosition: LatLng | null
+        _
       ) => {
         if (targetUnit) targetUnit.showFollowOptions(units);
       }
@@ -2245,12 +2245,12 @@ export abstract class AirUnit extends Unit {
     contextActionSet.addContextAction(
       this,
       "bomb",
-      "Precision bombing",
+      "Precision bomb location",
       "Click on a point to execute a precision bombing attack",
       faLocationCrosshairs,
       (
         units: Unit[],
-        targetUnit: Unit | null,
+        _,
         targetPosition: LatLng | null
       ) => {
         if (targetPosition)
@@ -2260,12 +2260,12 @@ export abstract class AirUnit extends Unit {
     contextActionSet.addContextAction(
       this,
       "carpet-bomb",
-      "Carpet bombing",
+      "Carpet bomb location",
       "Click on a point to execute a carpet bombing attack",
       faXmarksLines,
       (
         units: Unit[],
-        targetUnit: Unit | null,
+        _,
         targetPosition: LatLng | null
       ) => {
         if (targetPosition)
@@ -2311,12 +2311,12 @@ export class Helicopter extends AirUnit {
     contextActionSet.addContextAction(
       this,
       "land-at-point",
-      "Land here",
+      "Land at location",
       "Click on a point to land there",
       olIconsLandAtPoint,
       (
         units: Unit[],
-        targetUnit: Unit | null,
+        _,
         targetPosition: LatLng | null
       ) => {
         if (targetPosition)
@@ -2372,8 +2372,8 @@ export class GroundUnit extends Unit {
       faPeopleGroup,
       (
         units: Unit[],
-        targetUnit: Unit | null,
-        targetPosition: LatLng | null
+        _1,
+        _2
       ) => {
         getApp().getUnitsManager().createGroup(units);
       },
@@ -2426,7 +2426,7 @@ export class GroundUnit extends Unit {
       (
         units: Unit[],
         targetUnit: Unit | null,
-        targetPosition: LatLng | null
+        _
       ) => {
         if (targetUnit)
           getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
@@ -2443,7 +2443,7 @@ export class GroundUnit extends Unit {
         faLocationCrosshairs,
         (
           units: Unit[],
-          targetUnit: Unit | null,
+          _,
           targetPosition: LatLng | null
         ) => {
           if (targetPosition)
@@ -2458,7 +2458,7 @@ export class GroundUnit extends Unit {
         olButtonsContextSimulateFireFight,
         (
           units: Unit[],
-          targetUnit: Unit | null,
+          _,
           targetPosition: LatLng | null
         ) => {
           if (targetPosition)
@@ -2577,8 +2577,8 @@ export class NavyUnit extends Unit {
       faQuestionCircle,
       (
         units: Unit[],
-        targetUnit: Unit | null,
-        targetPosition: LatLng | null
+        _1,
+        _2
       ) => {
         getApp().getUnitsManager().createGroup(units);
       },
@@ -2606,7 +2606,7 @@ export class NavyUnit extends Unit {
       (
         units: Unit[],
         targetUnit: Unit | null,
-        targetPosition: LatLng | null
+        _
       ) => {
         if (targetUnit)
           getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
@@ -2622,7 +2622,7 @@ export class NavyUnit extends Unit {
       faQuestionCircle,
       (
         units: Unit[],
-        targetUnit: Unit | null,
+        _,
         targetPosition: LatLng | null
       ) => {
         if (targetPosition)

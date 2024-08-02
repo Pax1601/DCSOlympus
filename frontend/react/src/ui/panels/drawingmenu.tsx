@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
-import { FaQuestionCircle, FaRegCircle } from "react-icons/fa";
+import { FaQuestionCircle, FaRegCircle, FaTrash } from "react-icons/fa";
 import { getApp } from "../../olympusapp";
 import {
   COALITIONAREA_DRAW_CIRCLE,
@@ -60,6 +60,19 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
       activeCoalitionArea?.getCoalition() !== areaCoalition
     )
       setAreaCoalition(activeCoalitionArea?.getCoalition());
+  });
+
+  useEffect(() => {
+    if (!props.open) {
+      if (
+        [
+          COALITIONAREA_EDIT,
+          COALITIONAREA_DRAW_CIRCLE,
+          COALITIONAREA_DRAW_POLYGON,
+        ].includes(getApp()?.getMap()?.getState())
+      )
+        getApp().getMap().setState(IDLE);
+    }
   });
 
   document.addEventListener("mapStateChanged", (event: any) => {
@@ -147,7 +160,8 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 Click on the map to add a new circle.
               </div>
               <div className="text-gray-400">
-                You can drag the circle to move it and you can use the handle to set the radius.
+                You can drag the circle to move it and you can use the handle to
+                set the radius.
               </div>
             </div>
           </div>
@@ -197,11 +211,21 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 text-gray-200
               `}
             >
-              <div className="my-auto text-md">Area label </div>
+              <div className="my-auto flex justify-between text-md">
+                Area label
+                <div className="rounded-md bg-red-800 p-2" onClick={() => {
+                  getApp().getMap().deleteCoalitionArea(activeCoalitionArea);
+                  setActiveCoalitionArea(null);
+                }}>
+                  <FaTrash
+                    className={`text-gray-50`}
+                  ></FaTrash>
+                </div>
+              </div>
               <input
                 type="text"
                 className={`
-                  block max-w-80 flex-grow rounded-lg border border-gray-300
+                  block w-full flex-grow rounded-lg border border-gray-300
                   bg-gray-50 p-2.5 text-sm text-gray-900
                   dark:border-gray-600 dark:bg-gray-700 dark:text-white
                   dark:placeholder-gray-400 dark:focus:border-blue-500

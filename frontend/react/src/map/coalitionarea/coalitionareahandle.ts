@@ -4,6 +4,10 @@ import { CustomMarker } from "../markers/custommarker";
 export class CoalitionAreaHandle extends CustomMarker {
   constructor(latlng: LatLng) {
     super(latlng, { interactive: true, draggable: true });
+
+    this.on("add", (e) => {
+      this.getElement()?.addEventListener("touchstart", (e) => e.stopPropagation());
+    })
   }
 
   createIcon() {

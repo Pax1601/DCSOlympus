@@ -49,6 +49,10 @@ export class CoalitionCircle extends Circle {
       this.#setRadiusHandle();
       this.#drawLabel();
     });
+
+    this.on("remove", () => {
+      this.#label.removeFrom(this._map);
+    });
   }
 
   setCoalition(coalition: Coalition) {

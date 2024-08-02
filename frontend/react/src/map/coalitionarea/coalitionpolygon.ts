@@ -6,7 +6,7 @@ import {
   Polygon,
   PolylineOptions,
   DivIcon,
-  Marker,
+  Marker
 } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
@@ -56,6 +56,10 @@ export class CoalitionPolygon extends Polygon {
       this.#setHandles();
       this.#setMiddleHandles();
       this.#drawLabel();
+    });
+
+    this.on("remove", () => {
+      this.#label.removeFrom(this._map);
     });
   }
 
