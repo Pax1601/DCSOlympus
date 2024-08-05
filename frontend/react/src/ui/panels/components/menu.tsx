@@ -70,7 +70,7 @@ export function Menu(props: {
       </div>
       {props.canBeHidden == true && (
         <div className={`
-          flex h-8 justify-center z-ui-6 pointer-events-auto backdrop-blur-lg
+          flex h-8 justify-center z-ui-4 pointer-events-auto backdrop-blur-lg
           backdrop-grayscale
           dark:bg-olympus-800/90
         `} onClick={() => setHide(!hide)}>

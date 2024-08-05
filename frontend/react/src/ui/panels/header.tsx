@@ -35,18 +35,17 @@ export function Header() {
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
 
-   /* Initialize the "scroll" position of the element */
-   var scrollRef = useRef(null);
-   useEffect(() => {
-     if (scrollRef.current) {
-       onScroll(scrollRef.current);
-     }
-   });
+  /* Initialize the "scroll" position of the element */
+  var scrollRef = useRef(null);
+  useEffect(() => {
+    if (scrollRef.current) {
+      onScroll(scrollRef.current);
+    }
+  });
 
   function onScroll(el) {
     const sl = el.scrollLeft;
-    const sr =
-      el.scrollWidth - el.scrollLeft - el.clientWidth;
+    const sr = el.scrollWidth - el.scrollLeft - el.clientWidth;
 
     sl < 1 && !scrolledLeft && setScrolledLeft(true);
     sl > 1 && scrolledLeft && setScrolledLeft(false);
@@ -249,29 +248,28 @@ export function Header() {
                   onClick={() => {}}
                   tooltip="Activate/deactivate camera plugin"
                 />
-                <OlDropdown label={appState.activeMapSource} className="w-40">
+                <OlDropdown label={appState.activeMapSource} className="w-60">
                   {appState.mapSources.map((source) => {
                     return (
                       <OlDropdownItem
                         key={source}
-                        className="w-52"
                         onClick={() => getApp().getMap().setLayerName(source)}
                       >
-                        {source}
+                        <div className="truncate">{source}</div>
                       </OlDropdownItem>
                     );
                   })}
                 </OlDropdown>
               </div>
               {!scrolledRight && (
-              <FaChevronRight
-                className={`
-                  absolute right-0 h-full w-6 rounded-lg px-2 py-3.5
-                  text-gray-200 z-ui-1
-                  dark:bg-olympus-900
-                `}
-              />
-            )}
+                <FaChevronRight
+                  className={`
+                    absolute right-0 h-full w-6 rounded-lg px-2 py-3.5
+                    text-gray-200 z-ui-1
+                    dark:bg-olympus-900
+                  `}
+                />
+              )}
             </nav>
           )}
         </EventsConsumer>

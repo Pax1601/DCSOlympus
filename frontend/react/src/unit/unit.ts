@@ -443,18 +443,6 @@ export abstract class Unit extends CustomMarker {
    */
   abstract getDefaultMarker(): string;
 
-  /** Get the category but for display use - for the user.  (i.e. has spaces in it)
-   *
-   * @returns string
-   */
-  getCategoryLabel() {
-    return (
-      GROUND_UNIT_AIR_DEFENCE_REGEX.test(this.getType())
-        ? "Air Defence"
-        : this.getCategory()
-    ).replace(/([a-z])([A-Z])/g, "$1 $2");
-  }
-
   /********************** Unit data *************************/
   /** This function is called by the units manager to update all the data coming from the backend. It reads the binary raw data using a DataExtractor
    *
@@ -657,7 +645,6 @@ export abstract class Unit extends CustomMarker {
   getData(): UnitData {
     return {
       category: this.getCategory(),
-      categoryDisplayName: this.getCategoryLabel(),
       ID: this.ID,
       alive: this.#alive,
       human: this.#human,

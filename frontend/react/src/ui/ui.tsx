@@ -54,6 +54,7 @@ export function UI() {
   var [mapSources, setMapSources] = useState([] as string[]);
   var [activeMapSource, setActiveMapSource] = useState("");
   var [mapBoxSelection, setMapBoxSelection] = useState(false);
+  var [mapState, setMapState] = useState(IDLE);
 
   document.addEventListener("hiddenTypesChanged", (ev) => {
     setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
@@ -64,9 +65,10 @@ export function UI() {
   });
 
   document.addEventListener("mapStateChanged", (ev) => {
-    if ((ev as CustomEvent).detail == IDLE) {
+    if ((ev as CustomEvent).detail === IDLE && mapState !== IDLE) 
       hideAllMenus();
-    }
+    
+    setMapState(String((ev as CustomEvent).detail))
   });
 
   document.addEventListener("mapSourceChanged", (ev) => {

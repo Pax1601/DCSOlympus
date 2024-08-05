@@ -11,15 +11,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
-import { IDLE, SPAWN_UNIT } from "../../constants/constants";
 
 export function SideBar() {
-  const [mapState, setMapState] = useState(IDLE);
-
-  document.addEventListener("mapStateChanged", (ev) => {
-    setMapState((ev as CustomEvent).detail);
-  });
-
   return (
     <StateConsumer>
       {(appState) => (
