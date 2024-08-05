@@ -1,0 +1,26 @@
+.airbase-icon {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.airbase-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.airbase-icon[data-coalition="red"] svg * {
+  stroke: var(--unit-background-red);
+}
+
+.airbase-icon[data-coalition="blue"] svg * {
+  stroke: var(--unit-background-blue);
+}
+
+.airbase-icon[data-coalition="neutral"] svg * {
+  stroke: var(--unit-background-neutral);
+}
