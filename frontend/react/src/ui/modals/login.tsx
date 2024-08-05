@@ -96,7 +96,7 @@ export function LoginModal(props: {
                       dark:text-gray-200
                     `}
                   >
-                    {window.location.toString()}{" "}
+                    {window.location.toString()}
                   </div>
                 </div>
                 <div
@@ -145,7 +145,7 @@ export function LoginModal(props: {
                               dark:text-white
                             `}
                           >
-                            Password{" "}
+                            Password
                           </label>
                           <input
                             type="password"
@@ -181,7 +181,7 @@ export function LoginModal(props: {
                               hover:bg-blue-800
                             `}
                           >
-                            Login{" "}
+                            Login
                             <FontAwesomeIcon
                               className={`my-auto`}
                               icon={faArrowRight}
@@ -245,7 +245,7 @@ export function LoginModal(props: {
                               hover:bg-blue-800
                             `}
                           >
-                            Continue{" "}
+                            Continue
                             <FontAwesomeIcon
                               className={`my-auto`}
                               icon={faArrowRight}
@@ -282,7 +282,7 @@ export function LoginModal(props: {
 												text-sm font-medium text-gray-200
 											`}
                     >
-                      Still having issues? See our{" "}
+                      Still having issues? See our
                       <a
                         href=""
                         className={`
@@ -343,7 +343,7 @@ export function LoginModal(props: {
                   mt-2 flex content-center items-center gap-2 font-bold
                 `}
               >
-                YouTube Video Guide{" "}
+                YouTube Video Guide
                 <FontAwesomeIcon
                   className={`my-auto text-xs text-gray-400`}
                   icon={faExternalLink}
@@ -373,7 +373,7 @@ export function LoginModal(props: {
                   mt-2 flex content-center items-center gap-2 font-bold
                 `}
               >
-                Wiki Guide{" "}
+                Wiki Guide
                 <FontAwesomeIcon
                   className={`my-auto text-xs text-gray-400`}
                   icon={faExternalLink}

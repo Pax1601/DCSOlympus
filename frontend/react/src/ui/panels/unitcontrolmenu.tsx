@@ -49,11 +49,18 @@ import {
   mToFt,
   msToKnots,
 } from "../../other/utils";
-import { FaGasPump, FaQuestionCircle } from "react-icons/fa";
+import {
+  FaCog,
+  FaGasPump,
+  FaQuestionCircle,
+  FaSignal,
+  FaTag,
+} from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { UnitBlueprint } from "../../interfaces";
+import { FaRadio } from "react-icons/fa6";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   var [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
@@ -280,8 +287,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
               Selection tool
             </div>
             <div className="text-sm text-gray-400">
-              The selection tools allows you to select units depending on their category, coalition, and control mode. You can also 
-              select units depending on their specific type by using the search input.
+              The selection tools allows you to select units depending on their
+              category, coalition, and control mode. You can also select units
+              depending on their specific type by using the search input.
             </div>
             <div className="flex flex-col gap-4 rounded-lg bg-olympus-600 p-4">
               <div
@@ -489,14 +497,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       return;
 
                     if (
-                      unit.getControlled() &&
+                      unit.isControlledByOlympus() &&
                       !selectionFilter["control"]["olympus"]
                     )
                       return;
 
                     if (
-                      !unit.getHuman() &&
-                      !unit.getControlled() &&
+                      !unit.isControlledByDCS() &&
                       !selectionFilter["control"]["dcs"]
                     )
                       return;
@@ -744,45 +751,47 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   step={speedStep}
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <span
-                  className={`
-                    font-normal
-                    dark:text-white
-                  `}
-                >
-                  Rules of engagement
-                </span>
-                <OlButtonGroup>
-                  {[
-                    olButtonsRoeHold,
-                    olButtonsRoeReturn,
-                    olButtonsRoeDesignated,
-                    olButtonsRoeFree,
-                  ].map((icon, idx) => {
-                    return (
-                      <OlButtonGroupItem
-                        onClick={() => {
-                          selectedUnits.forEach((unit) => {
-                            unit.setROE(ROEs[idx]);
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
-                              ROE: ROEs[idx],
-                            });
-                          });
-                        }}
-                        active={selectedUnitsData.ROE === ROEs[idx]}
-                        icon={icon}
-                      />
-                    );
-                  })}
-                </OlButtonGroup>
-              </div>
+              {!(selectedUnits.length === 1 && selectedUnits[0].isTanker()) &&
+                !(selectedUnits.length === 1 && selectedUnits[0].isAWACS()) && (
+                  <div className="flex flex-col gap-2">
+                    <span
+                      className={`
+                        font-normal
+                        dark:text-white
+                      `}
+                    >
+                      Rules of engagement
+                    </span>
+                    <OlButtonGroup>
+                      {[
+                        olButtonsRoeHold,
+                        olButtonsRoeReturn,
+                        olButtonsRoeDesignated,
+                        olButtonsRoeFree,
+                      ].map((icon, idx) => {
+                        return (
+                          <OlButtonGroupItem
+                            onClick={() => {
+                              selectedUnits.forEach((unit) => {
+                                unit.setROE(ROEs[idx]);
+                                setSelectedUnitsData({
+                                  ...selectedUnitsData,
+                                  ROE: ROEs[idx],
+                                });
+                              });
+                            }}
+                            active={selectedUnitsData.ROE === ROEs[idx]}
+                            icon={icon}
+                          />
+                        );
+                      })}
+                    </OlButtonGroup>
+                  </div>
+                )}
               {selectedCategories.every((category) => {
                 return ["Aircraft", "Helicopter"].includes(category);
               }) && (
                 <>
-                  {" "}
                   <div className={`flex flex-col gap-2`}>
                     <span
                       className={`
@@ -876,8 +885,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       dark:text-white
                     `}
                   >
-                    {" "}
-                    Act as tanker{" "}
+                    Make tanker available
                   </span>
                   <OlToggle
                     toggled={selectedUnitsData.isActiveTanker}
@@ -911,8 +919,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       dark:text-white
                     `}
                   >
-                    {" "}
-                    Act as AWACS{" "}
+                    Make AWACS available
                   </span>
                   <OlToggle
                     toggled={selectedUnitsData.isActiveAWACS}
@@ -934,11 +941,24 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   />
                 </div>
               )}
+              {selectedUnits.length === 1 && selectedUnits[0].isTanker() && (
+                <div className="flex content-center justify-between">
+                  <button
+                    className={`
+                      flex w-full justify-center gap-2 rounded-md border-[1px]
+                      p-2 align-middle text-sm
+                      dark:text-white
+                      hover:bg-white/10
+                    `}
+                  >
+                    <FaCog className="my-auto" /> Configure tanker settings
+                  </button>
+                </div>
+              )}
               {selectedCategories.every((category) => {
                 return ["GroundUnit", "NavyUnit"].includes(category);
               }) && (
                 <>
-                  {" "}
                   <div className={`flex flex-col gap-2`}>
                     <span
                       className={`
@@ -1014,8 +1034,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         dark:text-white
                       `}
                     >
-                      {" "}
-                      Operate as{" "}
+                      Operate as
                     </span>
                     <OlCoalitionToggle
                       coalition={selectedUnitsData.operateAs as Coalition}
@@ -1044,8 +1063,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         dark:text-white
                       `}
                     >
-                      {" "}
-                      Follow roads{" "}
+                      Follow roads
                     </span>
                     <OlToggle
                       toggled={selectedUnitsData.followRoads}
@@ -1067,8 +1085,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         dark:text-white
                       `}
                     >
-                      {" "}
-                      Unit active{" "}
+                      Unit active
                     </span>
                     <OlToggle
                       toggled={selectedUnitsData.onOff}
@@ -1113,30 +1130,114 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    {selectedUnits[0].getAmmo().map((ammo) => {
-                      return (
-                        <div className="flex content-center gap-2">
-                          <div
-                            className={`
-                              my-auto w-6 min-w-6 rounded-full py-0.5
-                              text-center text-sm font-bold text-gray-500
-                              dark:bg-[#17212D]
-                            `}
-                          >
-                            {ammo.quantity}
+                    {selectedUnits[0].isControlledByOlympus() &&
+                      selectedUnits[0].isTanker() && (
+                        <>
+                          <div className="flex content-center justify-between">
+                            <div className="flex content-center gap-2">
+                              <div
+                                className={`
+                                  mx-auto my-auto flex h-6 w-6 rounded-full
+                                  text-center align-middle text-xs font-bold
+                                  text-gray-500
+                                  dark:bg-[#17212D]
+                                `}
+                              >
+                                <FaTag className="mx-auto my-auto" />
+                              </div>
+                              <div
+                                className={`
+                                  my-auto overflow-hidden text-ellipsis
+                                  text-nowrap text-sm
+                                  dark:text-gray-300
+                                `}
+                              >
+                                {`${["Texaco", "Arco", "Shell"][selectedUnits[0].getRadio().callsign]}-${
+                                  selectedUnits[0].getRadio().callsignNumber
+                                }`}
+                              </div>
+                            </div>
                           </div>
-                          <div
-                            className={`
-                              my-auto overflow-hidden text-ellipsis text-nowrap
-                              text-sm
-                              dark:text-gray-300
-                            `}
-                          >
-                            {ammo.name}
+                          <div className="flex content-center justify-between">
+                            <div className="flex content-center gap-2">
+                              <div
+                                className={`
+                                  mx-auto my-auto flex h-6 w-6 rounded-full
+                                  text-center align-middle text-xs font-bold
+                                  text-gray-500
+                                  dark:bg-[#17212D]
+                                `}
+                              >
+                                <FaRadio className="mx-auto my-auto" />
+                              </div>
+                              <div
+                                className={`
+                                  my-auto overflow-hidden text-ellipsis
+                                  text-nowrap text-sm
+                                  dark:text-gray-300
+                                `}
+                              >
+                                {`${(
+                                  selectedUnits[0].getRadio().frequency /
+                                  1000000
+                                ).toFixed(3)} MHz`}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+
+                          <div className="flex content-center justify-between">
+                            <div className="flex content-center gap-2">
+                              <div
+                                className={`
+                                  mx-auto my-auto flex h-6 w-6 rounded-full
+                                  text-center align-middle text-xs font-bold
+                                  text-gray-500
+                                  dark:bg-[#17212D]
+                                `}
+                              >
+                                <FaSignal className="mx-auto my-auto" />
+                              </div>
+                              <div
+                                className={`
+                                  my-auto overflow-hidden text-ellipsis
+                                  text-nowrap text-sm
+                                  dark:text-gray-300
+                                `}
+                              >
+                                {selectedUnits[0].getTACAN().isOn
+                                  ? `${selectedUnits[0].getTACAN().channel}${selectedUnits[0].getTACAN().XY} ${selectedUnits[0].getTACAN().callsign}`
+                                  : "TACAN OFF"}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    {!selectedUnits[0].isTanker() &&
+                      !selectedUnits[0].isAWACS() &&
+                      selectedUnits[0].getAmmo().map((ammo) => {
+                        return (
+                          <div className="flex content-center gap-2">
+                            <div
+                              className={`
+                                my-auto w-6 min-w-6 rounded-full py-0.5
+                                text-center text-sm font-bold text-gray-500
+                                dark:bg-[#17212D]
+                              `}
+                            >
+                              {ammo.quantity}
+                            </div>
+                            <div
+                              className={`
+                                my-auto overflow-hidden text-ellipsis
+                                text-nowrap text-sm
+                                dark:text-gray-300
+                              `}
+                            >
+                              {ammo.name}
+                            </div>
+                          </div>
+                        );
+                      })}
                   </div>
                 </div>
               )}

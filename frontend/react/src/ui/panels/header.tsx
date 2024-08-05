@@ -110,7 +110,7 @@ export function Header() {
                         dark:text-gray-200
                       `}
                     >
-                      {IP}{" "}
+                      {IP}
                       <FontAwesomeIcon
                         icon={connectedToServer ? faLink : faUnlink}
                         data-connected={connectedToServer}

@@ -42,10 +42,7 @@ export function MainMenu(props: {
               dark:text-green-400
             `}
           >
-            <FontAwesomeIcon
-              icon={faCheckCircle}
-              className={`my-auto`}
-            />
+            <FontAwesomeIcon icon={faCheckCircle} className={`my-auto`} />
             Olympus Version {VERSION}
           </div>
           <div className="text-sm text-gray-400">
@@ -63,7 +60,7 @@ export function MainMenu(props: {
           `}
         >
           {/*<FontAwesomeIcon icon={faGithub} className="my-auto w-4 text-gray-800 dark:text-gray-500" />*/}
-          View GitHub Repo{" "}
+          View GitHub Repo
           <FontAwesomeIcon
             icon={faExternalLinkAlt}
             className={`
@@ -91,7 +88,7 @@ export function MainMenu(props: {
           `}
         >
           {/*<FontAwesomeIcon icon={faFile} className="my-auto w-4  text-gray-800 dark:text-gray-500" />*/}
-          View User Guide{" "}
+          View User Guide
           <FontAwesomeIcon
             icon={faExternalLinkAlt}
             className={`
@@ -126,9 +123,7 @@ export function MainMenu(props: {
         >
           {/*<FontAwesomeIcon icon={faDatabase} className="my-auto w-4 text-gray-800 dark:text-gray-500" />*/}
           Open Olympus Manager
-          <div
-            className={`ml-auto flex items-center`}
-          >
+          <div className={`ml-auto flex items-center`}>
             <FontAwesomeIcon
               icon={faArrowRightLong}
               className={`
@@ -149,9 +144,7 @@ export function MainMenu(props: {
         >
           {/*<FontAwesomeIcon icon={faDatabase} className="my-auto w-4 text-gray-800 dark:text-gray-500" />*/}
           Database Manager
-          <div
-            className={`ml-auto flex items-center`}
-          >
+          <div className={`ml-auto flex items-center`}>
             <FontAwesomeIcon
               icon={faArrowRightLong}
               className={`
@@ -172,9 +165,7 @@ export function MainMenu(props: {
         >
           {/*<FontAwesomeIcon icon={faFileExport} className="my-auto w-4 text-gray-800 dark:text-gray-500" />*/}
           Export to file
-          <div
-            className={`ml-auto flex items-center`}
-          >
+          <div className={`ml-auto flex items-center`}>
             <FontAwesomeIcon
               icon={faArrowRightLong}
               className={`
@@ -195,9 +186,7 @@ export function MainMenu(props: {
         >
           {/*<FontAwesomeIcon icon={faFileImport} className="my-auto w-4 text-gray-800 dark:text-gray-500" />*/}
           Import from file
-          <div
-            className={`ml-auto flex items-center`}
-          >
+          <div className={`ml-auto flex items-center`}>
             <FontAwesomeIcon
               icon={faArrowRightLong}
               className={`
@@ -224,9 +213,7 @@ export function MainMenu(props: {
         >
           {/*<FontAwesomeIcon icon={faTimesCircle} className="my-auto w-4 text-gray-800 dark:text-gray-500" />*/}
           Close Olympus
-          <div
-            className={`ml-auto flex items-center`}
-          >
+          <div className={`ml-auto flex items-center`}>
             <FontAwesomeIcon
               icon={faArrowRightLong}
               className={`

@@ -71,8 +71,7 @@ export function UnitMouseControlBar(props: {}) {
 
   function onScroll(el) {
     const sl = el.scrollLeft;
-    const sr =
-      el.scrollWidth - el.scrollLeft - el.clientWidth;
+    const sr = el.scrollWidth - el.scrollLeft - el.clientWidth;
 
     sl < 1 && !scrolledLeft && setScrolledLeft(true);
     sl > 1 && scrolledLeft && setScrolledLeft(false);
@@ -83,7 +82,6 @@ export function UnitMouseControlBar(props: {}) {
 
   return (
     <>
-      {" "}
       {open && (
         <>
           <div

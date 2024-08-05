@@ -74,7 +74,6 @@ export function OlAccordion(props: {
       <div className={open ? "" : "hidden"}>
         {props.showArrows && (
           <div className="rotate-180">
-            {" "}
             {!scrolledUp && (
               <FontAwesomeIcon
                 icon={faArrowCircleDown}

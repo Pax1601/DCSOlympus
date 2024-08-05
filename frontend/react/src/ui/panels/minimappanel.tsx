@@ -91,20 +91,20 @@ export function MiniMapPanel(props: {}) {
         </div>
       ) : (
         <>
-          <div className="font-semibold">
-            FPS:{" "}
+          <div className="flex gap-2 font-semibold">
+            FPS:
             <span style={{ color: frameRateColor }} className={`font-semibold`}>
               {frameRate}
-            </span>{" "}
+            </span>
           </div>
-          <div className="font-semibold">
-            Load:{" "}
+          <div className="flex gap-2 font-semibold">
+            Load:
             <span style={{ color: loadColor }} className={`font-semibold`}>
               {load}
-            </span>{" "}
+            </span>
           </div>
-          <div className="font-semibold">
-            {showMissionTime ? "MT" : "ET"}: {timeString}{" "}
+          <div className="flex gap-2 font-semibold">
+            {showMissionTime ? "MT" : "ET"}: {timeString}
           </div>
           <div className={`relative h-4 w-4 rounded-full bg-[#8BFF63]`}></div>
         </>

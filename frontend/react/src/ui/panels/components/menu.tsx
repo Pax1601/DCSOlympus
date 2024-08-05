@@ -53,7 +53,7 @@ export function Menu(props: {
                 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
               `}
             />
-          )}{" "}
+          )}
           {props.title}
           <FontAwesomeIcon
             onClick={props.onClose}
@@ -69,11 +69,14 @@ export function Menu(props: {
         {props.children}
       </div>
       {props.canBeHidden == true && (
-        <div className={`
-          flex h-8 justify-center z-ui-4 pointer-events-auto backdrop-blur-lg
-          backdrop-grayscale
-          dark:bg-olympus-800/90
-        `} onClick={() => setHide(!hide)}>
+        <div
+          className={`
+            flex h-8 justify-center z-ui-4 pointer-events-auto backdrop-blur-lg
+            backdrop-grayscale
+            dark:bg-olympus-800/90
+          `}
+          onClick={() => setHide(!hide)}
+        >
           {hide ? (
             <FaChevronUp className="mx-auto my-auto text-gray-400" />
           ) : (

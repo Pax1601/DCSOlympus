@@ -101,13 +101,11 @@ export function CommandCallout(props: { coalition?: string }) {
         You are playing as
         {props.coalition == "blue" ? (
           <div className="inline-block font-bold text-blue-500">
-            {" "}
-            BLUE COMMANDER{" "}
+            BLUE COMMANDER
           </div>
         ) : (
           <div className="inline-block font-bold text-red-500">
-            {" "}
-            RED COMMANDER{" "}
+            RED COMMANDER
           </div>
         )}
       </div>
