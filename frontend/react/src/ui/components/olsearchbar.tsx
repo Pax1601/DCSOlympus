@@ -1,15 +1,17 @@
 import { faMultiply, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ChangeEvent, useId, useRef } from "react";
+import React, { useId, useRef } from "react";
 
 export function OlSearchBar(props: {
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: string) => void;
+  text: string;
 }) {
   const searchId = useId();
   const inputRef = useRef(null);
 
   function resetSearch() {
     inputRef.current && ((inputRef.current as HTMLInputElement).value = "");
+    props.onChange("");
   }
 
   return (
@@ -36,7 +38,7 @@ export function OlSearchBar(props: {
           type="search"
           ref={inputRef}
           id={searchId}
-          onChange={props.onChange}
+          onChange={(e) => props.onChange(e.currentTarget.value)}
           className={`
             mb-2 block w-full rounded-full border border-gray-300 bg-gray-50 p-3
             ps-10 text-sm text-gray-900
@@ -46,6 +48,7 @@ export function OlSearchBar(props: {
             focus:border-blue-500 focus:ring-blue-500
           `}
           placeholder="Search"
+          value={props.text}
           required
         />
         <FontAwesomeIcon

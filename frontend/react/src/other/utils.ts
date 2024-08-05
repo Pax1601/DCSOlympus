@@ -601,3 +601,55 @@ export function getFunctionArguments(func) {
   if (result === null) result = [];
   return result;
 }
+
+export function filterBlueprintsByLabel(
+  blueprints: { [key: string]: UnitBlueprint },
+  filterString: string
+) {
+  var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
+  if (blueprints) {
+    Object.entries(blueprints).forEach(([key, value]) => {
+      if (
+        value.enabled &&
+        (filterString === "" || value.label.includes(filterString))
+      )
+        filteredBlueprints[key] = value;
+    });
+  }
+  return filteredBlueprints;
+}
+
+export function getUnitsByLabel(filterString: string) {
+  /* Filter aircrafts, helicopters, and navyunits */
+  const filteredAircraft = filterBlueprintsByLabel(
+    getApp()?.getAircraftDatabase()?.blueprints,
+    filterString
+  );
+  const filteredHelicopters = filterBlueprintsByLabel(
+    getApp()?.getHelicopterDatabase()?.blueprints,
+    filterString
+  );
+  const filteredNavyUnits = filterBlueprintsByLabel(
+    getApp()?.getNavyUnitDatabase()?.blueprints,
+    filterString
+  );
+
+  /* Split ground units between air defence and all others */
+  var filteredAirDefense: { [key: string]: UnitBlueprint } = {};
+  var filteredGroundUnits: { [key: string]: UnitBlueprint } = {};
+  Object.keys(getApp()?.getGroundUnitDatabase()?.blueprints ?? {}).forEach(
+    (key) => {
+      var blueprint = getApp()?.getGroundUnitDatabase()?.blueprints[key];
+      var type = blueprint.label;
+      if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type)) {
+        filteredAirDefense[key] = blueprint;
+      } else {
+        filteredGroundUnits[key] = blueprint;
+      }
+    }
+  );
+  filteredAirDefense = filterBlueprintsByLabel(filteredAirDefense, filterString);
+  filteredGroundUnits = filterBlueprintsByLabel(filteredGroundUnits, filterString);
+
+  return [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits]
+}
