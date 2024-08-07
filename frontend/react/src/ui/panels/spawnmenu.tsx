@@ -20,26 +20,15 @@ import { getUnitsByLabel } from "../../other/utils";
 
 library.add(faPlus);
 
-export function SpawnMenu(props: {
-  open: boolean;
-  onClose: () => void;
-  children?: JSX.Element | JSX.Element[];
-}) {
-  var [blueprint, setBlueprint] = useState(null as null | UnitBlueprint);
-  var [filterString, setFilterString] = useState("");
+export function SpawnMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
+  const [blueprint, setBlueprint] = useState(null as null | UnitBlueprint);
+  const [filterString, setFilterString] = useState("");
 
-  const [
-    filteredAircraft,
-    filteredHelicopters,
-    filteredAirDefense,
-    filteredGroundUnits,
-    filteredNavyUnits,
-  ] = getUnitsByLabel(filterString);
+  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = getUnitsByLabel(filterString);
 
   useEffect(() => {
     if (!props.open) {
-      if (getApp()?.getMap()?.getState() === SPAWN_UNIT)
-        getApp().getMap().setState(IDLE);
+      if (getApp()?.getMap()?.getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
       if (blueprint !== null) setBlueprint(null);
     }
   });
@@ -58,10 +47,7 @@ export function SpawnMenu(props: {
       <>
         {blueprint === null && (
           <div className="p-5">
-            <OlSearchBar
-              onChange={(value) => setFilterString(value)}
-              text={filterString}
-            />
+            <OlSearchBar onChange={(value) => setFilterString(value)} text={filterString} />
             <OlAccordion title={`Aircraft`}>
               <div
                 className={`
@@ -69,14 +55,7 @@ export function SpawnMenu(props: {
                 `}
               >
                 {Object.entries(filteredAircraft).map((entry) => {
-                  return (
-                    <OlUnitEntryList
-                      key={entry[0]}
-                      icon={olButtonsVisibilityAircraft}
-                      blueprint={entry[1]}
-                      onClick={() => setBlueprint(entry[1])}
-                    />
-                  );
+                  return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityAircraft} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                 })}
               </div>
             </OlAccordion>
@@ -87,14 +66,7 @@ export function SpawnMenu(props: {
                 `}
               >
                 {Object.entries(filteredHelicopters).map((entry) => {
-                  return (
-                    <OlUnitEntryList
-                      key={entry[0]}
-                      icon={olButtonsVisibilityHelicopter}
-                      blueprint={entry[1]}
-                      onClick={() => setBlueprint(entry[1])}
-                    />
-                  );
+                  return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityHelicopter} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                 })}
               </div>
             </OlAccordion>
@@ -105,14 +77,7 @@ export function SpawnMenu(props: {
                 `}
               >
                 {Object.entries(filteredAirDefense).map((entry) => {
-                  return (
-                    <OlUnitEntryList
-                      key={entry[0]}
-                      icon={olButtonsVisibilityGroundunitSam}
-                      blueprint={entry[1]}
-                      onClick={() => setBlueprint(entry[1])}
-                    />
-                  );
+                  return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityGroundunitSam} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                 })}
               </div>
             </OlAccordion>
@@ -123,14 +88,7 @@ export function SpawnMenu(props: {
                 `}
               >
                 {Object.entries(filteredGroundUnits).map((entry) => {
-                  return (
-                    <OlUnitEntryList
-                      key={entry[0]}
-                      icon={olButtonsVisibilityGroundunit}
-                      blueprint={entry[1]}
-                      onClick={() => setBlueprint(entry[1])}
-                    />
-                  );
+                  return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityGroundunit} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                 })}
               </div>
             </OlAccordion>
@@ -141,14 +99,7 @@ export function SpawnMenu(props: {
                 `}
               >
                 {Object.entries(filteredNavyUnits).map((entry) => {
-                  return (
-                    <OlUnitEntryList
-                      key={entry[0]}
-                      icon={olButtonsVisibilityNavyunit}
-                      blueprint={entry[1]}
-                      onClick={() => setBlueprint(entry[1])}
-                    />
-                  );
+                  return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityNavyunit} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                 })}
               </div>
             </OlAccordion>

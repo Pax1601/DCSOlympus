@@ -43,18 +43,8 @@ export const states: string[] = [
   "land-at-point",
 ];
 export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
-export const reactionsToThreat: string[] = [
-  "none",
-  "manoeuvre",
-  "passive",
-  "evade",
-];
-export const emissionsCountermeasures: string[] = [
-  "silent",
-  "attack",
-  "defend",
-  "free",
-];
+export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
+export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
 export const ERAS = [
   {
@@ -217,17 +207,11 @@ export const mapBounds = {
     zoom: 5,
   },
   MarianaIslands: {
-    bounds: new LatLngBounds(
-      [10.5777778, 135.7477778],
-      [22.5127778, 149.5427778]
-    ),
+    bounds: new LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]),
     zoom: 5,
   },
   Nevada: {
-    bounds: new LatLngBounds(
-      [34.4037128, -119.7806729],
-      [39.7372411, -112.1130805]
-    ),
+    bounds: new LatLngBounds([34.4037128, -119.7806729], [39.7372411, -112.1130805]),
     zoom: 5,
   },
   PersianGulf: {
@@ -239,10 +223,7 @@ export const mapBounds = {
     zoom: 4,
   },
   Falklands: {
-    bounds: new LatLngBounds(
-      [-49.097217, -79.418267],
-      [-56.874517, -43.316433]
-    ),
+    bounds: new LatLngBounds([-49.097217, -79.418267], [-56.874517, -43.316433]),
     zoom: 3,
   },
   Normandy: { bounds: new LatLngBounds([50.44, -3.29], [48.12, 3.7]), zoom: 5 },
@@ -269,8 +250,7 @@ export const IADSDensities: { [key: string]: number } = {
   "SAM Site": 0.1,
   "Radar (EWR)": 0.05,
 };
-export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp =
-  /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
+export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
 
 export const MAP_OPTIONS_TOOLTIPS = {
   hideGroupMembers: "Hide group members when zoomed out",
@@ -293,7 +273,7 @@ export const MAP_OPTIONS_DEFAULTS = {
   showUnitsEngagementRings: true,
   showUnitsAcquisitionRings: true,
   fillSelectedRing: false,
-  showMinimap: false
+  showMinimap: false,
 } as MapOptions;
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {

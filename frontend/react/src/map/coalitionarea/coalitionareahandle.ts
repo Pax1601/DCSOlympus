@@ -7,7 +7,7 @@ export class CoalitionAreaHandle extends CustomMarker {
 
     this.on("add", (e) => {
       this.getElement()?.addEventListener("touchstart", (e) => e.stopPropagation());
-    })
+    });
   }
 
   createIcon() {

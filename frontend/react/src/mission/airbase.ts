@@ -43,23 +43,17 @@ export class Airbase extends CustomMarker {
     el.appendChild(img);
     this.getElement()?.appendChild(el);
     el.addEventListener("mouseover", (ev) => {
-      document.dispatchEvent(
-        new CustomEvent("airbaseMouseover", { detail: this })
-      );
+      document.dispatchEvent(new CustomEvent("airbaseMouseover", { detail: this }));
     });
     el.addEventListener("mouseout", (ev) => {
-      document.dispatchEvent(
-        new CustomEvent("airbaseMouseout", { detail: this })
-      );
+      document.dispatchEvent(new CustomEvent("airbaseMouseout", { detail: this }));
     });
     el.dataset.coalition = this.#coalition;
   }
 
   setCoalition(coalition: string) {
     this.#coalition = coalition;
-    (<HTMLElement>(
-      this.getElement()?.querySelector(".airbase-icon")
-    )).dataset.coalition = this.#coalition;
+    (<HTMLElement>this.getElement()?.querySelector(".airbase-icon")).dataset.coalition = this.#coalition;
   }
 
   getChartData() {

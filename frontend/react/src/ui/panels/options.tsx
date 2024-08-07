@@ -6,19 +6,9 @@ import { OlNumberInput } from "../components/olnumberinput";
 import { MapOptions } from "../../types/types";
 import { getApp } from "../../olympusapp";
 
-export function Options(props: {
-  open: boolean;
-  onClose: () => void;
-  options: MapOptions;
-  children?: JSX.Element | JSX.Element[];
-}) {
+export function Options(props: { open: boolean; onClose: () => void; options: MapOptions; children?: JSX.Element | JSX.Element[] }) {
   return (
-    <Menu
-      title="User preferences"
-      open={props.open}
-      showBackButton={false}
-      onClose={props.onClose}
-    >
+    <Menu title="User preferences" open={props.open} showBackButton={false} onClose={props.onClose}>
       <div
         className={`
           flex flex-col gap-2 p-5 font-normal text-gray-800
@@ -32,15 +22,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption("showUnitLabels", !props.options.showUnitLabels);
+            getApp().getMap().setOption("showUnitLabels", !props.options.showUnitLabels);
           }}
         >
-          <OlCheckbox
-            checked={props.options.showUnitLabels}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.showUnitLabels} onChange={() => {}}></OlCheckbox>
           <span>Show Unit Labels</span>
           <kbd
             className={`
@@ -59,18 +44,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption(
-                "showUnitsEngagementRings",
-                !props.options.showUnitsEngagementRings
-              );
+            getApp().getMap().setOption("showUnitsEngagementRings", !props.options.showUnitsEngagementRings);
           }}
         >
-          <OlCheckbox
-            checked={props.options.showUnitsEngagementRings}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.showUnitsEngagementRings} onChange={() => {}}></OlCheckbox>
           <span>Show Threat Rings</span>
           <kbd
             className={`
@@ -89,18 +66,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption(
-                "showUnitsAcquisitionRings",
-                !props.options.showUnitsAcquisitionRings
-              );
+            getApp().getMap().setOption("showUnitsAcquisitionRings", !props.options.showUnitsAcquisitionRings);
           }}
         >
-          <OlCheckbox
-            checked={props.options.showUnitsAcquisitionRings}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.showUnitsAcquisitionRings} onChange={() => {}}></OlCheckbox>
           <span>Show Detection rings</span>
           <kbd
             className={`
@@ -119,15 +88,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption("showUnitTargets", !props.options.showUnitTargets);
+            getApp().getMap().setOption("showUnitTargets", !props.options.showUnitTargets);
           }}
         >
-          <OlCheckbox
-            checked={props.options.showUnitTargets}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.showUnitTargets} onChange={() => {}}></OlCheckbox>
           <span>Show Detection lines</span>
           <kbd
             className={`
@@ -146,18 +110,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption(
-                "hideUnitsShortRangeRings",
-                !props.options.hideUnitsShortRangeRings
-              );
+            getApp().getMap().setOption("hideUnitsShortRangeRings", !props.options.hideUnitsShortRangeRings);
           }}
         >
-          <OlCheckbox
-            checked={props.options.hideUnitsShortRangeRings}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.hideUnitsShortRangeRings} onChange={() => {}}></OlCheckbox>
           <span>Hide Short range Rings</span>
           <kbd
             className={`
@@ -176,15 +132,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption("hideGroupMembers", !props.options.hideGroupMembers);
+            getApp().getMap().setOption("hideGroupMembers", !props.options.hideGroupMembers);
           }}
         >
-          <OlCheckbox
-            checked={props.options.hideGroupMembers}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.hideGroupMembers} onChange={() => {}}></OlCheckbox>
           <span>Hide Group members</span>
           <kbd
             className={`
@@ -203,15 +154,10 @@ export function Options(props: {
             dark:hover:bg-olympus-400
           `}
           onClick={() => {
-            getApp()
-              .getMap()
-              .setOption("showMinimap", !props.options.showMinimap);
+            getApp().getMap().setOption("showMinimap", !props.options.showMinimap);
           }}
         >
-          <OlCheckbox
-            checked={props.options.showMinimap}
-            onChange={() => {}}
-          ></OlCheckbox>
+          <OlCheckbox checked={props.options.showMinimap} onChange={() => {}}></OlCheckbox>
           <span>Show minimap</span>
           <kbd
             className={`

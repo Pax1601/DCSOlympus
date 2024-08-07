@@ -11,14 +11,7 @@ import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { Options } from "./panels/options";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import {
-  BLUE_COMMANDER,
-  GAME_MASTER,
-  IDLE,
-  MAP_HIDDEN_TYPES_DEFAULTS,
-  MAP_OPTIONS_DEFAULTS,
-  RED_COMMANDER,
-} from "../constants/constants";
+import { BLUE_COMMANDER, GAME_MASTER, IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
@@ -39,22 +32,22 @@ export type OlympusState = {
 };
 
 export function UI() {
-  var [loginModalVisible, setLoginModalVisible] = useState(true);
-  var [mainMenuVisible, setMainMenuVisible] = useState(false);
-  var [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
-  var [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
-  var [measureMenuVisible, setMeasureMenuVisible] = useState(false);
-  var [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
-  var [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
-  var [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
-  var [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
-  var [checkingPassword, setCheckingPassword] = useState(false);
-  var [loginError, setLoginError] = useState(false);
-  var [commandMode, setCommandMode] = useState(null as null | string);
-  var [mapSources, setMapSources] = useState([] as string[]);
-  var [activeMapSource, setActiveMapSource] = useState("");
-  var [mapBoxSelection, setMapBoxSelection] = useState(false);
-  var [mapState, setMapState] = useState(IDLE);
+  const [loginModalVisible, setLoginModalVisible] = useState(true);
+  const [mainMenuVisible, setMainMenuVisible] = useState(false);
+  const [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
+  const [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
+  const [measureMenuVisible, setMeasureMenuVisible] = useState(false);
+  const [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
+  const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
+  const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
+  const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
+  const [checkingPassword, setCheckingPassword] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+  const [commandMode, setCommandMode] = useState(null as null | string);
+  const [mapSources, setMapSources] = useState([] as string[]);
+  const [activeMapSource, setActiveMapSource] = useState("");
+  const [mapBoxSelection, setMapBoxSelection] = useState(false);
+  const [mapState, setMapState] = useState(IDLE);
 
   document.addEventListener("hiddenTypesChanged", (ev) => {
     setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
@@ -65,10 +58,9 @@ export function UI() {
   });
 
   document.addEventListener("mapStateChanged", (ev) => {
-    if ((ev as CustomEvent).detail === IDLE && mapState !== IDLE) 
-      hideAllMenus();
-    
-    setMapState(String((ev as CustomEvent).detail))
+    if ((ev as CustomEvent).detail === IDLE && mapState !== IDLE) hideAllMenus();
+
+    setMapState(String((ev as CustomEvent).detail));
   });
 
   document.addEventListener("mapSourceChanged", (ev) => {
@@ -78,9 +70,7 @@ export function UI() {
 
   document.addEventListener("configLoaded", (ev) => {
     let config = getApp().getConfig();
-    var sources = Object.keys(config.mapMirrors).concat(
-      Object.keys(config.mapLayers)
-    );
+    var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
     setMapSources(sources);
     setActiveMapSource(sources[0]);
   });
@@ -112,9 +102,7 @@ export function UI() {
         (response) => {
           const commandMode = response.mission.commandModeOptions.commandMode;
           try {
-            [GAME_MASTER, BLUE_COMMANDER, RED_COMMANDER].includes(commandMode)
-              ? setCommandMode(commandMode)
-              : setLoginError(true);
+            [GAME_MASTER, BLUE_COMMANDER, RED_COMMANDER].includes(commandMode) ? setCommandMode(commandMode) : setLoginError(true);
           } catch {
             setLoginError(true);
           }
@@ -197,14 +185,18 @@ export function UI() {
             },
           }}
         >
-          <div className="absolute left-0 top-0 flex h-full w-full flex-col">
+          <div
+            className={`
+            absolute left-0 top-0 flex h-full w-full flex-col
+          `}
+          >
             <Header />
-            <div className="flex h-full">
+            <div className="flex justify-reverse h-full">
               {loginModalVisible && (
                 <>
                   <div
                     className={`
-                      fixed left-0 top-0 h-full w-full z-ui-5 bg-[#111111]/95
+                      fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
                     `}
                   ></div>
                   <LoginModal
@@ -223,32 +215,17 @@ export function UI() {
                   />
                 </>
               )}
-              <SideBar />
-              <MainMenu
-                open={mainMenuVisible}
-                onClose={() => setMainMenuVisible(false)}
-              />
-              <SpawnMenu
-                open={spawnMenuVisible}
-                onClose={() => setSpawnMenuVisible(false)}
-              />
-              <Options
-                open={optionsMenuVisible}
-                onClose={() => setOptionsMenuVisible(false)}
-                options={mapOptions}
-              />
+              <div id="map-container" className="z-0 h-full w-screen" />
+              <MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
+              <SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
+              <Options open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
               <MiniMapPanel />
               <ControlsPanel />
-              <UnitControlMenu
-                open={unitControlMenuVisible}
-                onClose={() => setUnitControlMenuVisible(false)}
-              />
-              <DrawingMenu
-                open={drawingMenuVisible}
-                onClose={() => setDrawingMenuVisible(false)}
-              />
-              <div id="map-container" className="h-full w-screen" />
+              <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
+              <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
+
               <UnitMouseControlBar />
+              <SideBar />
             </div>
           </div>
         </EventsProvider>

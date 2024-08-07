@@ -1,23 +1,9 @@
 import { LatLng, DivIcon, Map } from "leaflet";
 import { getApp } from "../olympusapp";
-import {
-  enumToCoalition,
-  mToFt,
-  msToKnots,
-  rad2deg,
-  zeroAppend,
-} from "../other/utils";
+import { enumToCoalition, mToFt, msToKnots, rad2deg, zeroAppend } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
-import {
-  DLINK,
-  DataIndexes,
-  GAME_MASTER,
-  IRST,
-  OPTIC,
-  RADAR,
-  VISUAL,
-} from "../constants/constants";
+import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { ObjectIconOptions } from "../interfaces";
 
@@ -153,8 +139,7 @@ export class Weapon extends CustomMarker {
 
   belongsToCommandedCoalition() {
     if (
-      getApp().getMissionManager().getCommandModeOptions().commandMode !==
-        GAME_MASTER &&
+      getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER &&
       getApp().getMissionManager().getCommandedCoalition() !== this.#coalition
     )
       return false;
@@ -197,10 +182,7 @@ export class Weapon extends CustomMarker {
       img.src = `/vite/images/units/${this.getMarkerCategory()}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
-      unitIcon.toggleAttribute(
-        "data-rotate-to-heading",
-        this.getIconOptions().rotateToHeading
-      );
+      unitIcon.toggleAttribute("data-rotate-to-heading", this.getIconOptions().rotateToHeading);
       el.append(unitIcon);
     }
 
@@ -211,10 +193,7 @@ export class Weapon extends CustomMarker {
   updateVisibility() {
     const hiddenUnits = getApp().getMap().getHiddenTypes();
     var hidden =
-      hiddenUnits[this.getMarkerCategory()] ||
-      hiddenUnits[this.#coalition] ||
-      (!this.belongsToCommandedCoalition() &&
-        this.#detectionMethods.length == 0);
+      hiddenUnits[this.getMarkerCategory()] || hiddenUnits[this.#coalition] || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
 
     this.setHidden(hidden || !this.#alive);
   }
@@ -244,12 +223,7 @@ export class Weapon extends CustomMarker {
   setDetectionMethods(newDetectionMethods: number[]) {
     if (!this.belongsToCommandedCoalition()) {
       /* Check if the detection methods of this unit have changed */
-      if (
-        this.#detectionMethods.length !== newDetectionMethods.length ||
-        this.getDetectionMethods().some(
-          (value) => !newDetectionMethods.includes(value)
-        )
-      ) {
+      if (this.#detectionMethods.length !== newDetectionMethods.length || this.getDetectionMethods().some((value) => !newDetectionMethods.includes(value))) {
         /* Force a redraw of the unit to reflect the new status of the detection methods */
         this.setHidden(true);
         this.#detectionMethods = newDetectionMethods;
@@ -273,53 +247,35 @@ export class Weapon extends CustomMarker {
 
     /* Draw the marker */
     if (!this.getHidden()) {
-      if (
-        this.getLatLng().lat !== this.#position.lat ||
-        this.getLatLng().lng !== this.#position.lng
-      ) {
+      if (this.getLatLng().lat !== this.#position.lat || this.getLatLng().lng !== this.#position.lng) {
         this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
       }
 
       var element = this.getElement();
       if (element != null) {
         /* Draw the velocity vector */
-        element
-          .querySelector(".unit-vvi")
-          ?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
+        element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
 
         /* Set dead/alive flag */
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute("data-is-dead", !this.#alive);
+        element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
         /* Set altitude and speed */
         if (element.querySelector(".unit-altitude"))
-          (<HTMLElement>element.querySelector(".unit-altitude")).innerText =
-            "FL" +
-            zeroAppend(
-              Math.floor(mToFt(this.#position.alt as number) / 100),
-              3
-            );
+          (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
         if (element.querySelector(".unit-speed"))
-          (<HTMLElement>element.querySelector(".unit-speed")).innerText =
-            String(Math.floor(msToKnots(this.#speed))) + "GS";
+          (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
 
         /* Rotate elements according to heading */
         element.querySelectorAll("[data-rotate-to-heading]").forEach((el) => {
           const headingDeg = rad2deg(this.#heading);
           let currentStyle = el.getAttribute("style") || "";
-          el.setAttribute(
-            "style",
-            currentStyle + `transform:rotate(${headingDeg}deg);`
-          );
+          el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
         });
       }
 
       /* Set vertical offset for altitude stacking */
       var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
-      this.setZIndexOffset(
-        1000 + Math.floor(this.#position.alt as number) - pos.y
-      );
+      this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y);
     }
   }
 }
@@ -334,12 +290,7 @@ export class Missile extends Weapon {
   }
 
   getMarkerCategory() {
-    if (
-      this.belongsToCommandedCoalition() ||
-      this.getDetectionMethods().includes(VISUAL) ||
-      this.getDetectionMethods().includes(OPTIC)
-    )
-      return "missile";
+    if (this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC)) return "missile";
     else return "aircraft";
   }
 
@@ -348,35 +299,20 @@ export class Missile extends Weapon {
       showState: false,
       showVvi:
         !this.belongsToCommandedCoalition() &&
-        !this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC].includes(value)
-        ) &&
-        this.getDetectionMethods().some((value) =>
-          [RADAR, IRST, DLINK].includes(value)
-        ),
+        !this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)) &&
+        this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showHealth: false,
       showHotgroup: false,
-      showUnitIcon:
-        this.belongsToCommandedCoalition() ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
+      showUnitIcon: this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showShortLabel: false,
       showFuel: false,
       showAmmo: false,
       showSummary:
         !this.belongsToCommandedCoalition() &&
-        !this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC].includes(value)
-        ) &&
-        this.getDetectionMethods().some((value) =>
-          [RADAR, IRST, DLINK].includes(value)
-        ),
+        !this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)) &&
+        this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showCallsign: false,
-      rotateToHeading:
-        this.belongsToCommandedCoalition() ||
-        this.getDetectionMethods().includes(VISUAL) ||
-        this.getDetectionMethods().includes(OPTIC),
+      rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC),
     };
   }
 }
@@ -391,12 +327,7 @@ export class Bomb extends Weapon {
   }
 
   getMarkerCategory() {
-    if (
-      this.belongsToCommandedCoalition() ||
-      this.getDetectionMethods().includes(VISUAL) ||
-      this.getDetectionMethods().includes(OPTIC)
-    )
-      return "bomb";
+    if (this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC)) return "bomb";
     else return "aircraft";
   }
 
@@ -405,35 +336,20 @@ export class Bomb extends Weapon {
       showState: false,
       showVvi:
         !this.belongsToCommandedCoalition() &&
-        !this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC].includes(value)
-        ) &&
-        this.getDetectionMethods().some((value) =>
-          [RADAR, IRST, DLINK].includes(value)
-        ),
+        !this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)) &&
+        this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showHealth: false,
       showHotgroup: false,
-      showUnitIcon:
-        this.belongsToCommandedCoalition() ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
+      showUnitIcon: this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showShortLabel: false,
       showFuel: false,
       showAmmo: false,
       showSummary:
         !this.belongsToCommandedCoalition() &&
-        !this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC].includes(value)
-        ) &&
-        this.getDetectionMethods().some((value) =>
-          [RADAR, IRST, DLINK].includes(value)
-        ),
+        !this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)) &&
+        this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showCallsign: false,
-      rotateToHeading:
-        this.belongsToCommandedCoalition() ||
-        this.getDetectionMethods().includes(VISUAL) ||
-        this.getDetectionMethods().includes(OPTIC),
+      rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC),
     };
   }
 }

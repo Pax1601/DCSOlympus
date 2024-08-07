@@ -1,12 +1,5 @@
 import { LatLng } from "leaflet";
-import {
-  Ammo,
-  Contact,
-  GeneralSettings,
-  Offset,
-  Radio,
-  TACAN,
-} from "../interfaces";
+import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN } from "../interfaces";
 
 export class DataExtractor {
   #seekPosition = 0;
@@ -65,11 +58,7 @@ export class DataExtractor {
   }
 
   extractLatLng() {
-    return new LatLng(
-      this.extractFloat64(),
-      this.extractFloat64(),
-      this.extractFloat64()
-    );
+    return new LatLng(this.extractFloat64(), this.extractFloat64(), this.extractFloat64());
   }
 
   extractFromBitmask(bitmask: number, position: number) {
@@ -78,10 +67,7 @@ export class DataExtractor {
 
   extractString(length?: number) {
     if (length === undefined) length = this.extractUInt16();
-    var stringBuffer = this.#buffer.slice(
-      this.#seekPosition,
-      this.#seekPosition + length
-    );
+    var stringBuffer = this.#buffer.slice(this.#seekPosition, this.#seekPosition + length);
     var view = new Int8Array(stringBuffer);
     var stringLength = length;
     view.every((value: number, idx: number) => {

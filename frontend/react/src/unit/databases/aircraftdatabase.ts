@@ -4,10 +4,7 @@ import { UnitDatabase } from "./unitdatabase";
 
 export class AircraftDatabase extends UnitDatabase {
   constructor() {
-    super(
-      window.location.href.split("?")[0].replace("vite/", "") +
-        "api/databases/units/aircraftdatabase"
-    );
+    super(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/aircraftdatabase");
   }
 
   getCategory() {
@@ -15,11 +12,7 @@ export class AircraftDatabase extends UnitDatabase {
   }
 
   getSpawnPointsByName(name: string) {
-    if (
-      getApp().getMissionManager().getCommandModeOptions().commandMode ==
-        GAME_MASTER ||
-      !getApp().getMissionManager().getCommandModeOptions().restrictSpawns
-    )
+    if (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER || !getApp().getMissionManager().getCommandModeOptions().restrictSpawns)
       return 0;
 
     const blueprint = this.getByName(name);

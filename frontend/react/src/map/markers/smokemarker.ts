@@ -6,11 +6,7 @@ import { getApp } from "../../olympusapp";
 export class SmokeMarker extends CustomMarker {
   #color: string;
 
-  constructor(
-    latlng: LatLngExpression,
-    color: string,
-    options?: MarkerOptions
-  ) {
+  constructor(latlng: LatLngExpression, color: string, options?: MarkerOptions) {
     super(latlng, options);
     this.setZIndexOffset(9999);
     this.#color = color;

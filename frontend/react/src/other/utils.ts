@@ -4,12 +4,7 @@ import { UnitDatabase } from "../unit/databases/unitdatabase";
 import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
-import {
-  ROEs,
-  emissionsCountermeasures,
-  reactionsToThreat,
-  states,
-} from "../constants/constants";
+import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
 import { Converter } from "usng";
@@ -17,41 +12,27 @@ import { MGRS } from "../types/types";
 import { getApp } from "../olympusapp";
 import { featureCollection } from "turf";
 
-export function bearing(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-) {
+export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
   const φ2 = deg2rad(lat2);
   const λ1 = deg2rad(lon1); // φ, λ in radians
   const λ2 = deg2rad(lon2);
   const y = Math.sin(λ2 - λ1) * Math.cos(φ2);
-  const x =
-    Math.cos(φ1) * Math.sin(φ2) -
-    Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
   const θ = Math.atan2(y, x);
   const brng = (rad2deg(θ) + 360) % 360; // in degrees
 
   return brng;
 }
 
-export function distance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-) {
+export function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371e3; // metres
   const φ1 = deg2rad(lat1); // φ, λ in radians
   const φ2 = deg2rad(lat2);
   const Δφ = deg2rad(lat2 - lat1);
   const Δλ = deg2rad(lon2 - lon1);
 
-  const a =
-    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   const d = R * c; // in metres
@@ -59,25 +40,12 @@ export function distance(
   return d;
 }
 
-export function bearingAndDistanceToLatLng(
-  lat: number,
-  lon: number,
-  brng: number,
-  dist: number
-) {
+export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: number, dist: number) {
   const R = 6371e3; // metres
   const φ1 = deg2rad(lat); // φ, λ in radians
   const λ1 = deg2rad(lon);
-  const φ2 = Math.asin(
-    Math.sin(φ1) * Math.cos(dist / R) +
-      Math.cos(φ1) * Math.sin(dist / R) * Math.cos(brng)
-  );
-  const λ2 =
-    λ1 +
-    Math.atan2(
-      Math.sin(brng) * Math.sin(dist / R) * Math.cos(φ1),
-      Math.cos(dist / R) - Math.sin(φ1) * Math.sin(φ2)
-    );
+  const φ2 = Math.asin(Math.sin(φ1) * Math.cos(dist / R) + Math.cos(φ1) * Math.sin(dist / R) * Math.cos(brng));
+  const λ2 = λ1 + Math.atan2(Math.sin(brng) * Math.sin(dist / R) * Math.cos(φ1), Math.cos(dist / R) - Math.sin(φ1) * Math.sin(φ2));
 
   return new LatLng(rad2deg(φ2), rad2deg(λ2));
 }
@@ -89,30 +57,8 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
   var sec = (0 | (((D * 60) % 1) * 6000)) / 100;
   var dec = Math.round((sec - Math.floor(sec)) * 100);
   var sec = Math.floor(sec);
-  if (lng)
-    return (
-      dir +
-      zeroPad(deg, 3) +
-      "°" +
-      zeroPad(min, 2) +
-      "'" +
-      zeroPad(sec, 2) +
-      "." +
-      zeroPad(dec, 2) +
-      '"'
-    );
-  else
-    return (
-      dir +
-      zeroPad(deg, 2) +
-      "°" +
-      zeroPad(min, 2) +
-      "'" +
-      zeroPad(sec, 2) +
-      "." +
-      zeroPad(dec, 2) +
-      '"'
-    );
+  if (lng) return dir + zeroPad(deg, 3) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
+  else return dir + zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
 }
 
 export function dataPointMap(container: HTMLElement, data: any) {
@@ -149,10 +95,7 @@ export function generateUUIDv4() {
 
 export function keyEventWasInInput(event: KeyboardEvent) {
   const target = event.target;
-  return (
-    target instanceof HTMLElement &&
-    ["INPUT", "TEXTAREA"].includes(target.nodeName)
-  );
+  return target instanceof HTMLElement && ["INPUT", "TEXTAREA"].includes(target.nodeName);
 }
 
 export function reciprocalHeading(heading: number): number {
@@ -167,11 +110,7 @@ export function reciprocalHeading(heading: number): number {
  * @param decimal <boolean> whether this is a decimal number or not
  *
  * */
-export const zeroAppend = function (
-  num: number,
-  places: number,
-  decimal: boolean = false
-) {
+export const zeroAppend = function (num: number, places: number, decimal: boolean = false) {
   var string = decimal ? num.toFixed(2) : String(num);
   while (string.length < places) {
     string = "0" + string;
@@ -213,8 +152,7 @@ export function editDistance(s1: string, s2: string) {
       else {
         if (j > 0) {
           var newValue = costs[j - 1];
-          if (s1.charAt(i - 1) != s2.charAt(j - 1))
-            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+          if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
           costs[j - 1] = lastValue;
           lastValue = newValue;
         }
@@ -225,16 +163,9 @@ export function editDistance(s1: string, s2: string) {
   return costs[s2.length];
 }
 
-export function latLngToMGRS(
-  lat: number,
-  lng: number,
-  precision: number = 4
-): MGRS | false {
+export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | false {
   if (precision < 0 || precision > 6) {
-    console.error(
-      "latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " +
-        precision
-    );
+    console.error("latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " + precision);
     return false;
   }
   const mgrs = new Converter({}).LLtoMGRS(lat, lng, precision);
@@ -261,10 +192,7 @@ export function latLngToUTM(lat: number, lng: number) {
   return new Converter({}).LLtoUTM(lat, lng);
 }
 
-export function latLngToMercator(
-  lat: number,
-  lng: number
-): { x: number; y: number } {
+export function latLngToMercator(lat: number, lng: number): { x: number; y: number } {
   var rMajor = 6378137; //Equatorial Radius, WGS84
   var shift = Math.PI * rMajor;
   var x = (lng * shift) / 180;
@@ -279,9 +207,7 @@ export function mercatorToLatLng(x: number, y: number) {
   var shift = Math.PI * rMajor;
   var lng = (x / shift) * 180.0;
   var lat = (y / shift) * 180.0;
-  lat =
-    (180 / Math.PI) *
-    (2 * Math.atan(Math.exp((lat * Math.PI) / 180.0)) - Math.PI / 2.0);
+  lat = (180 / Math.PI) * (2 * Math.atan(Math.exp((lat * Math.PI) / 180.0)) - Math.PI / 2.0);
 
   return { lng: lng, lat: lat };
 }
@@ -325,21 +251,13 @@ export function polyContains(latlng: LatLng, polygon: Polygon) {
       return [latlng.lng, latlng.lat];
     }),
   ];
-  coordinates[0].push([
-    polygon.getLatLngs()[0][0].lng,
-    polygon.getLatLngs()[0][0].lat,
-  ]);
+  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat]);
   const poly = turf.polygon(coordinates);
   return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
 
 export function circleContains(latlng: LatLng, circle: Circle) {
-  const poly = turf.circle(
-    turf.point([circle.getLatLng().lng, circle.getLatLng().lat]),
-    circle.getRadius() / 1000,
-    100,
-    "kilometers"
-  );
+  const poly = turf.circle(turf.point([circle.getLatLng().lng, circle.getLatLng().lat]), circle.getRadius() / 1000, 100, "kilometers");
   return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
 
@@ -349,16 +267,10 @@ export function polyCenter(polygon: Polygon) {
       return [latlng.lng, latlng.lat];
     }),
   ];
-  coordinates[0].push([
-    polygon.getLatLngs()[0][0].lng,
-    polygon.getLatLngs()[0][0].lat,
-  ]);
+  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat]);
   const poly = turf.polygon(coordinates);
   const center = turf.center(featureCollection([poly]));
-  return new LatLng(
-    center.geometry.coordinates[1],
-    center.geometry.coordinates[0]
-  );
+  return new LatLng(center.geometry.coordinates[1], center.geometry.coordinates[0]);
 }
 
 export function randomPointInPoly(polygon: Polygon): LatLng {
@@ -376,10 +288,7 @@ export function randomPointInPoly(polygon: Polygon): LatLng {
       return [latlng.lng, latlng.lat];
     }),
   ];
-  coordinates[0].push([
-    polygon.getLatLngs()[0][0].lng,
-    polygon.getLatLngs()[0][0].lat,
-  ]);
+  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat]);
   const poly = turf.polygon(coordinates);
   var inside = turf.inside(turf.point([lng, lat]), poly);
 
@@ -410,9 +319,7 @@ export function randomUnitBlueprint(
 
   /* If a specific type or role is provided, use only the blueprints of that type or role */
   if (options.type && options.role) {
-    console.error(
-      "Can't create random unit if both type and role are provided. Either create by type or by role."
-    );
+    console.error("Can't create random unit if both type and role are provided. Either create by type or by role.");
     return null;
   }
 
@@ -439,18 +346,14 @@ export function randomUnitBlueprint(
   /* Keep only the units that have an era included in the requested values */
   if (options.eras) {
     unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
-      return unitBlueprint.era
-        ? options.eras?.includes(unitBlueprint.era)
-        : true;
+      return unitBlueprint.era ? options.eras?.includes(unitBlueprint.era) : true;
     });
   }
 
   /* Keep only the units that have the correct coalition, if selected */
   if (options.coalition) {
     unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
-      return unitBlueprint.coalition && unitBlueprint.coalition !== ""
-        ? options.coalition === unitBlueprint.coalition
-        : true;
+      return unitBlueprint.coalition && unitBlueprint.coalition !== "" ? options.coalition === unitBlueprint.coalition : true;
     });
   }
 
@@ -463,8 +366,7 @@ export function getMarkerCategoryByName(name: string) {
   else if (helicopterDatabase.getByName(name) != null) return "helicopter";
   else if (groundUnitDatabase.getByName(name) != null) {
     var type = groundUnitDatabase.getByName(name)?.type ?? "";
-    if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type))
-      return "groundunit-sam";
+    if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type)) return "groundunit-sam";
     else return "groundunit-other";
   } else if (navyUnitDatabase.getByName(name) != null) return "navyunit";
   else return "aircraft"; // TODO add other unit types
@@ -473,8 +375,7 @@ export function getMarkerCategoryByName(name: string) {
 export function getUnitDatabaseByCategory(category: string) {
   if (category.toLowerCase() == "aircraft") return aircraftDatabase;
   else if (category.toLowerCase() == "helicopter") return helicopterDatabase;
-  else if (category.toLowerCase().includes("groundunit"))
-    return groundUnitDatabase;
+  else if (category.toLowerCase().includes("groundunit")) return groundUnitDatabase;
   else if (category.toLowerCase().includes("navyunit")) return navyUnitDatabase;
   else return null;
 }
@@ -502,14 +403,12 @@ export function enumToROE(ROE: number) {
 }
 
 export function enumToReactionToThreat(reactionToThreat: number) {
-  if (reactionToThreat < reactionsToThreat.length)
-    return reactionsToThreat[reactionToThreat];
+  if (reactionToThreat < reactionsToThreat.length) return reactionsToThreat[reactionToThreat];
   else return reactionsToThreat[0];
 }
 
 export function enumToEmissioNCountermeasure(emissionCountermeasure: number) {
-  if (emissionCountermeasure < emissionsCountermeasures.length)
-    return emissionsCountermeasures[emissionCountermeasure];
+  if (emissionCountermeasure < emissionsCountermeasures.length) return emissionsCountermeasures[emissionCountermeasure];
   else return emissionsCountermeasures[0];
 }
 
@@ -595,25 +494,16 @@ export function getFunctionArguments(func) {
   var ARGUMENT_NAMES = /([^\s,]+)/g;
 
   var fnStr = func.toString().replace(STRIP_COMMENTS, "");
-  var result = fnStr
-    .slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")"))
-    .match(ARGUMENT_NAMES);
+  var result = fnStr.slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")")).match(ARGUMENT_NAMES);
   if (result === null) result = [];
   return result;
 }
 
-export function filterBlueprintsByLabel(
-  blueprints: { [key: string]: UnitBlueprint },
-  filterString: string
-) {
+export function filterBlueprintsByLabel(blueprints: { [key: string]: UnitBlueprint }, filterString: string) {
   var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
   if (blueprints) {
     Object.entries(blueprints).forEach(([key, value]) => {
-      if (
-        value.enabled &&
-        (filterString === "" || value.label.includes(filterString))
-      )
-        filteredBlueprints[key] = value;
+      if (value.enabled && (filterString === "" || value.label.includes(filterString))) filteredBlueprints[key] = value;
     });
   }
   return filteredBlueprints;
@@ -621,35 +511,24 @@ export function filterBlueprintsByLabel(
 
 export function getUnitsByLabel(filterString: string) {
   /* Filter aircrafts, helicopters, and navyunits */
-  const filteredAircraft = filterBlueprintsByLabel(
-    getApp()?.getAircraftDatabase()?.blueprints,
-    filterString
-  );
-  const filteredHelicopters = filterBlueprintsByLabel(
-    getApp()?.getHelicopterDatabase()?.blueprints,
-    filterString
-  );
-  const filteredNavyUnits = filterBlueprintsByLabel(
-    getApp()?.getNavyUnitDatabase()?.blueprints,
-    filterString
-  );
+  const filteredAircraft = filterBlueprintsByLabel(getApp()?.getAircraftDatabase()?.blueprints, filterString);
+  const filteredHelicopters = filterBlueprintsByLabel(getApp()?.getHelicopterDatabase()?.blueprints, filterString);
+  const filteredNavyUnits = filterBlueprintsByLabel(getApp()?.getNavyUnitDatabase()?.blueprints, filterString);
 
   /* Split ground units between air defence and all others */
   var filteredAirDefense: { [key: string]: UnitBlueprint } = {};
   var filteredGroundUnits: { [key: string]: UnitBlueprint } = {};
-  Object.keys(getApp()?.getGroundUnitDatabase()?.blueprints ?? {}).forEach(
-    (key) => {
-      var blueprint = getApp()?.getGroundUnitDatabase()?.blueprints[key];
-      var type = blueprint.label;
-      if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type)) {
-        filteredAirDefense[key] = blueprint;
-      } else {
-        filteredGroundUnits[key] = blueprint;
-      }
+  Object.keys(getApp()?.getGroundUnitDatabase()?.blueprints ?? {}).forEach((key) => {
+    var blueprint = getApp()?.getGroundUnitDatabase()?.blueprints[key];
+    var type = blueprint.label;
+    if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type)) {
+      filteredAirDefense[key] = blueprint;
+    } else {
+      filteredGroundUnits[key] = blueprint;
     }
-  );
+  });
   filteredAirDefense = filterBlueprintsByLabel(filteredAirDefense, filterString);
   filteredGroundUnits = filterBlueprintsByLabel(filteredGroundUnits, filterString);
 
-  return [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits]
+  return [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits];
 }

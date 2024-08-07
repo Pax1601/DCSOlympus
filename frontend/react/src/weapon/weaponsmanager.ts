@@ -12,9 +12,7 @@ export class WeaponsManager {
     this.#weapons = {};
 
     document.addEventListener("commandModeOptionsChanged", () => {
-      Object.values(this.#weapons).forEach((weapon: Weapon) =>
-        weapon.updateVisibility()
-      );
+      Object.values(this.#weapons).forEach((weapon: Weapon) => weapon.updateVisibility());
     });
   }
 
@@ -96,18 +94,9 @@ export class WeaponsManager {
     var detectionMethods: number[] = [];
     var units = getApp().getUnitsManager().getUnits();
     for (let idx in units) {
-      if (
-        units[idx].getAlive() &&
-        units[idx].getIsLeader() &&
-        units[idx].getCoalition() !== "neutral" &&
-        units[idx].getCoalition() != weapon.getCoalition()
-      ) {
+      if (units[idx].getAlive() && units[idx].getIsLeader() && units[idx].getCoalition() !== "neutral" && units[idx].getCoalition() != weapon.getCoalition()) {
         units[idx].getContacts().forEach((contact: Contact) => {
-          if (
-            contact.ID == weapon.ID &&
-            !detectionMethods.includes(contact.detectionMethod)
-          )
-            detectionMethods.push(contact.detectionMethod);
+          if (contact.ID == weapon.ID && !detectionMethods.includes(contact.detectionMethod)) detectionMethods.push(contact.detectionMethod);
         });
       }
     }

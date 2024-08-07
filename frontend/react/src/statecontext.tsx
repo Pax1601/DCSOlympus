@@ -1,8 +1,5 @@
 import { createContext } from "react";
-import {
-  MAP_HIDDEN_TYPES_DEFAULTS,
-  MAP_OPTIONS_DEFAULTS,
-} from "./constants/constants";
+import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "./constants/constants";
 
 export const StateContext = createContext({
   mainMenuVisible: false,
@@ -15,7 +12,7 @@ export const StateContext = createContext({
   mapOptions: MAP_OPTIONS_DEFAULTS,
   mapSources: [] as string[],
   activeMapSource: "",
-  mapBoxSelection: false
+  mapBoxSelection: false,
 });
 
 export const StateProvider = StateContext.Provider;

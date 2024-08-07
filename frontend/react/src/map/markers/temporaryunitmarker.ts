@@ -1,10 +1,7 @@
 import { CustomMarker } from "./custommarker";
 import { DivIcon, LatLng } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
-import {
-  getMarkerCategoryByName,
-  getUnitDatabaseByCategory,
-} from "../../other/utils";
+import { getMarkerCategoryByName, getUnitDatabaseByCategory } from "../../other/utils";
 import { getApp } from "../../olympusapp";
 
 export class TemporaryUnitMarker extends CustomMarker {
@@ -13,12 +10,7 @@ export class TemporaryUnitMarker extends CustomMarker {
   #commandHash: string | undefined = undefined;
   #timer: number = 0;
 
-  constructor(
-    latlng: LatLng,
-    name: string,
-    coalition: string,
-    commandHash?: string
-  ) {
+  constructor(latlng: LatLng, name: string, coalition: string, commandHash?: string) {
     super(latlng, { interactive: false });
     this.#name = name;
     this.#coalition = coalition;
@@ -45,9 +37,7 @@ export class TemporaryUnitMarker extends CustomMarker {
 
   createIcon() {
     const category = getMarkerCategoryByName(this.#name);
-    const databaseEntry = getUnitDatabaseByCategory(category)?.getByName(
-      this.#name
-    );
+    const databaseEntry = getUnitDatabaseByCategory(category)?.getByName(this.#name);
 
     /* Set the icon */
     var icon = new DivIcon({

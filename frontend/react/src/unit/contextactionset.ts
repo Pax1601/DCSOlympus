@@ -1,8 +1,4 @@
-import {
-  ContextAction,
-  ContextActionCallback,
-  ContextActionOptions,
-} from "./contextaction";
+import { ContextAction, ContextActionCallback, ContextActionOptions } from "./contextaction";
 import { Unit } from "./unit";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
@@ -21,14 +17,7 @@ export class ContextActionSet {
     options = options || {};
 
     if (!(id in this.#contextActions)) {
-      this.#contextActions[id] = new ContextAction(
-        id,
-        label,
-        description,
-        icon,
-        callback,
-        options
-      );
+      this.#contextActions[id] = new ContextAction(id, label, description, icon, callback, options);
     }
     this.#contextActions[id].addUnit(unit);
   }

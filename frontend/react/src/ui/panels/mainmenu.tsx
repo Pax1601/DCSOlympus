@@ -16,18 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { VERSION } from "../../olympusapp";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-export function MainMenu(props: {
-  open: boolean;
-  onClose: () => void;
-  children?: JSX.Element | JSX.Element[];
-}) {
+export function MainMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   return (
-    <Menu
-      title="Main Menu"
-      open={props.open}
-      showBackButton={false}
-      onClose={props.onClose}
-    >
+    <Menu title="Main Menu" open={props.open} showBackButton={false} onClose={props.onClose}>
       <div
         className={`
           flex flex-col gap-1 p-5 font-normal text-gray-900
@@ -45,10 +36,7 @@ export function MainMenu(props: {
             <FontAwesomeIcon icon={faCheckCircle} className={`my-auto`} />
             Olympus Version {VERSION}
           </div>
-          <div className="text-sm text-gray-400">
-            You can use the Olympus Manager to update port, passwords or other
-            settings.
-          </div>
+          <div className="text-sm text-gray-400">You can use the Olympus Manager to update port, passwords or other settings.</div>
         </div>
 
         <div

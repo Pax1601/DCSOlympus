@@ -25,9 +25,7 @@ export class Bullseye extends CustomMarker {
 
   setCoalition(coalition: string) {
     this.#coalition = coalition;
-    (<HTMLElement>(
-      this.getElement()?.querySelector(".bullseye-icon")
-    )).dataset.coalition = this.#coalition;
+    (<HTMLElement>this.getElement()?.querySelector(".bullseye-icon")).dataset.coalition = this.#coalition;
   }
 
   getCoalition() {

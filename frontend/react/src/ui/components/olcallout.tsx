@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  faSkull,
-  faCamera,
-  faFlag,
-  faLink,
-  faUnlink,
-  faAngleDoubleRight,
-  faExclamationCircle,
-  faInfoCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSkull, faCamera, faFlag, faLink, faUnlink, faAngleDoubleRight, faExclamationCircle, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Error message callout, only to be used for error messages
@@ -21,12 +12,7 @@ export function ErrorCallout(props: { title?: string; description?: string }) {
         dark:bg-gray-800 dark:text-red-500
       `}
     >
-      {props.title && (
-        <FontAwesomeIcon
-          className="mt-1"
-          icon={faExclamationCircle}
-        ></FontAwesomeIcon>
-      )}
+      {props.title && <FontAwesomeIcon className="mt-1" icon={faExclamationCircle}></FontAwesomeIcon>}
       <div
         className={`
           flex flex-col content-center items-start gap-2 text-pretty font-bold
@@ -55,9 +41,7 @@ export function InfoCallout(props: { title?: string; description?: string }) {
         dark:bg-gray-800 dark:text-blue-400
       `}
     >
-      {props.title && (
-        <FontAwesomeIcon className="mt-1" icon={faInfoCircle}></FontAwesomeIcon>
-      )}
+      {props.title && <FontAwesomeIcon className="mt-1" icon={faInfoCircle}></FontAwesomeIcon>}
       <div
         className={`
           flex flex-col content-center items-start gap-2 text-pretty font-medium
@@ -88,10 +72,7 @@ export function CommandCallout(props: { coalition?: string }) {
         dark:bg-gray-800 dark:text-gray-400
       `}
     >
-      <FontAwesomeIcon
-        className="mt-1"
-        icon={faAngleDoubleRight}
-      ></FontAwesomeIcon>
+      <FontAwesomeIcon className="mt-1" icon={faAngleDoubleRight}></FontAwesomeIcon>
       <div
         className={`
           content-center items-start gap-2 whitespace-break-spaces text-pretty
@@ -100,13 +81,9 @@ export function CommandCallout(props: { coalition?: string }) {
       >
         You are playing as
         {props.coalition == "blue" ? (
-          <div className="inline-block font-bold text-blue-500">
-            BLUE COMMANDER
-          </div>
+          <div className="inline-block font-bold text-blue-500">BLUE COMMANDER</div>
         ) : (
-          <div className="inline-block font-bold text-red-500">
-            RED COMMANDER
-          </div>
+          <div className="inline-block font-bold text-red-500">RED COMMANDER</div>
         )}
       </div>
     </div>

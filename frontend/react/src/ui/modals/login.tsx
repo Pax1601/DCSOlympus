@@ -1,27 +1,10 @@
-import React, { useState, version } from "react";
+import React, { useState } from "react";
 import { Modal } from "./components/modal";
 import { Card } from "./components/card";
-import {
-  ErrorCallout,
-  InfoCallout,
-  CommandCallout,
-} from "../../ui/components/olcallout";
+import { ErrorCallout } from "../../ui/components/olcallout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faCheckCircle,
-  faDatabase,
-  faExclamation,
-  faExclamationCircle,
-  faExternalLink,
-  faLink,
-  faServer,
-  faSitemap,
-  faUnlink,
-  faWindowMaximize,
-} from "@fortawesome/free-solid-svg-icons";
-import { VERSION, connectedToServer } from "../../olympusapp";
-import { faFirefoxBrowser } from "@fortawesome/free-brands-svg-icons";
+import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { VERSION } from "../../olympusapp";
 
 export function LoginModal(props: {
   checkingPassword: boolean;
@@ -38,7 +21,7 @@ export function LoginModal(props: {
     <Modal
       className={`
         inline-flex h-[75%] max-h-[530px] w-[80%] max-w-[1100px] overflow-y-auto
-        scroll-smooth bg-white z-ui-5
+        scroll-smooth bg-white
         dark:bg-olympus-800
         max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
         max-md:border-none
@@ -46,7 +29,9 @@ export function LoginModal(props: {
     >
       <img
         src="/vite/images/splash/1.jpg"
-        className={`contents-center w-full object-cover opacity-[7%]`}
+        className={`
+        contents-center w-full object-cover opacity-[7%]
+      `}
       ></img>
       <div
         className={`
@@ -107,7 +92,9 @@ export function LoginModal(props: {
                   <span className="size-[80px] min-w-14">
                     <img
                       src="..\vite\images\olympus-500x500.png"
-                      className={`flex w-full`}
+                      className={`
+                      flex w-full
+                    `}
                     ></img>
                   </span>
                   <div className={`flex flex-col items-start gap-1`}>
@@ -126,10 +113,7 @@ export function LoginModal(props: {
                         dark:text-green-400
                       `}
                     >
-                      <FontAwesomeIcon
-                        icon={faCheckCircle}
-                        className={`my-auto`}
-                      />
+                      <FontAwesomeIcon icon={faCheckCircle} className={`my-auto`} />
                       Version {VERSION}
                     </div>
                   </div>
@@ -149,9 +133,7 @@ export function LoginModal(props: {
                           </label>
                           <input
                             type="password"
-                            onChange={(ev) =>
-                              setPassword(ev.currentTarget.value)
-                            }
+                            onChange={(ev) => setPassword(ev.currentTarget.value)}
                             className={`
                               block w-full max-w-80 rounded-lg border
                               border-gray-300 bg-gray-50 p-2.5 text-sm
@@ -182,10 +164,7 @@ export function LoginModal(props: {
                             `}
                           >
                             Login
-                            <FontAwesomeIcon
-                              className={`my-auto`}
-                              icon={faArrowRight}
-                            />
+                            <FontAwesomeIcon className={`my-auto`} icon={faArrowRight} />
                           </button>
                           {/*
                             <button type="button" className="flex content-center items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-blue-800 rounded-sm dark:border-gray-600 border-[1px] dark:text-gray-400">
@@ -213,9 +192,7 @@ export function LoginModal(props: {
                           <input
                             type="text"
                             autoComplete="username"
-                            onChange={(ev) =>
-                              setDisplayName(ev.currentTarget.value)
-                            }
+                            onChange={(ev) => setDisplayName(ev.currentTarget.value)}
                             className={`
                               block w-full max-w-80 rounded-lg border
                               border-gray-300 bg-gray-50 p-2.5 text-sm
@@ -246,10 +223,7 @@ export function LoginModal(props: {
                             `}
                           >
                             Continue
-                            <FontAwesomeIcon
-                              className={`my-auto`}
-                              icon={faArrowRight}
-                            />
+                            <FontAwesomeIcon className={`my-auto`} icon={faArrowRight} />
                           </button>
                           <button
                             type="button"
@@ -344,10 +318,7 @@ export function LoginModal(props: {
                 `}
               >
                 YouTube Video Guide
-                <FontAwesomeIcon
-                  className={`my-auto text-xs text-gray-400`}
-                  icon={faExternalLink}
-                />
+                <FontAwesomeIcon className={`my-auto text-xs text-gray-400`} icon={faExternalLink} />
               </div>
               <div
                 className={`
@@ -355,9 +326,7 @@ export function LoginModal(props: {
                   dark:text-gray-400
                 `}
               >
-                Check out our official video tutorial on how to get started with
-                Olympus - so you can immediately start controlling the
-                battlefield.
+                Check out our official video tutorial on how to get started with Olympus - so you can immediately start controlling the battlefield.
               </div>
             </Card>
             <Card className="flex">
@@ -374,10 +343,7 @@ export function LoginModal(props: {
                 `}
               >
                 Wiki Guide
-                <FontAwesomeIcon
-                  className={`my-auto text-xs text-gray-400`}
-                  icon={faExternalLink}
-                />
+                <FontAwesomeIcon className={`my-auto text-xs text-gray-400`} icon={faExternalLink} />
               </div>
               <div
                 className={`
@@ -396,13 +362,9 @@ export function LoginModal(props: {
             max-lg:flex-col
           `}
         >
-          DCS Olympus (the "MATERIAL" or "Software") is provided completely free
-          to users subject to the terms of the CC BY-NC-SA 4.0 Licence except
-          where such terms conflict with this disclaimer, in which case, the
-          terms of this disclaimer shall prevail. Any party making use of the
-          Software in any manner agrees to be bound by the terms set out in the
-          disclaimer. THIS MATERIAL IS NOT MADE OR SUPPORTED BY EAGLE DYNAMICS
-          SA.
+          DCS Olympus (the "MATERIAL" or "Software") is provided completely free to users subject to the terms of the CC BY-NC-SA 4.0 Licence except where such
+          terms conflict with this disclaimer, in which case, the terms of this disclaimer shall prevail. Any party making use of the Software in any manner
+          agrees to be bound by the terms set out in the disclaimer. THIS MATERIAL IS NOT MADE OR SUPPORTED BY EAGLE DYNAMICS SA.
         </div>
       </div>
     </Modal>
