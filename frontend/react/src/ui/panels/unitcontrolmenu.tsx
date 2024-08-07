@@ -1099,7 +1099,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   </div>
                   <div className="flex content-center gap-2">
                     <span className="my-auto text-sm">Enabled</span>{" "}
-                    <OlToggle toggled={activeAdvancedSettings ? activeAdvancedSettings.TACAN.isOn : false} onClick={() => {}} />
+                    <OlToggle toggled={activeAdvancedSettings ? activeAdvancedSettings.TACAN.isOn : false} onClick={() => {
+                      if (activeAdvancedSettings) activeAdvancedSettings.TACAN.isOn = !activeAdvancedSettings.TACAN.isOn;
+                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                    }} />
                   </div>
 
                   <div className="text-sm text-gray-200">Radio frequency</div>
@@ -1184,7 +1187,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       onClick={() => {
                         if (activeAdvancedSettings)
                           selectedUnits[0].setAdvancedOptions(
-                            selectedUnits[0].getIsActiveAWACS(),
+                            selectedUnits[0].getIsActiveTanker(),
                             selectedUnits[0].getIsActiveAWACS(),
                             activeAdvancedSettings.TACAN,
                             activeAdvancedSettings.radio,
@@ -1248,7 +1251,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    {selectedUnits[0].isControlledByOlympus() && selectedUnits[0].isTanker() && (
+                    {selectedUnits[0].isControlledByOlympus() && (selectedUnits[0].isTanker() || selectedUnits[0].isAWACS()) && (
                       <>
                         {/* ============== Radio section START ============== */}
                         <div className="flex content-center justify-between">
