@@ -813,8 +813,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         `}
                         onClick={() => {
                           setActiveAdvancedSettings({
-                            radio: selectedUnits[0].getRadio(),
-                            TACAN: selectedUnits[0].getTACAN(),
+                            radio: JSON.parse(JSON.stringify(selectedUnits[0].getRadio())),
+                            TACAN: JSON.parse(JSON.stringify(selectedUnits[0].getTACAN())),
                           });
                           setShowAdvancedSettings(true);
                         }}
