@@ -1063,10 +1063,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown
-                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
-                      className={`my-auto w-20`}
-                    >
+                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
+                      my-auto w-20
+                    `}>
                       <OlDropdownItem
                         onClick={() => {
                           if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "X";
@@ -1099,10 +1098,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   </div>
                   <div className="flex content-center gap-2">
                     <span className="my-auto text-sm">Enabled</span>{" "}
-                    <OlToggle toggled={activeAdvancedSettings ? activeAdvancedSettings.TACAN.isOn : false} onClick={() => {
-                      if (activeAdvancedSettings) activeAdvancedSettings.TACAN.isOn = !activeAdvancedSettings.TACAN.isOn;
+                    <OlToggle
+                      toggled={activeAdvancedSettings ? activeAdvancedSettings.TACAN.isOn : false}
+                      onClick={() => {
+                        if (activeAdvancedSettings) activeAdvancedSettings.TACAN.isOn = !activeAdvancedSettings.TACAN.isOn;
                         setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                    }} />
+                      }}
+                    />
                   </div>
 
                   <div className="text-sm text-gray-200">Radio frequency</div>
@@ -1236,11 +1238,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${
-                          selectedUnits[0].getFuel() > 10 &&
-                          selectedUnits[0].getFuel() <= 40 &&
-                          `bg-yellow-700`
-                        }
+                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
+                          bg-yellow-700
+                        `}
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}
@@ -1273,7 +1273,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 dark:text-gray-300
                               `}
                             >
-                              {`${["Texaco", "Arco", "Shell"][selectedUnits[0].getRadio().callsign]}-${selectedUnits[0].getRadio().callsignNumber}`}
+                              {`${selectedUnits[0].isTanker() ? ["Texaco", "Arco", "Shell"][selectedUnits[0].getRadio().callsign - 1] : ["Overlord", "Magic", "Wizard", "Focus", "Darkstar"][selectedUnits[0].getRadio().callsign - 1]}-${selectedUnits[0].getRadio().callsignNumber}`}
                             </div>
                           </div>
                         </div>
