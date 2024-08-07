@@ -1,7 +1,7 @@
 import { LatLng } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { GAME_MASTER } from "../../constants/constants";
-import { UnitBlueprint } from "../../interfaces";
+import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
 
 export abstract class UnitDatabase {
   blueprints: { [key: string]: UnitBlueprint } = {};
@@ -49,15 +49,13 @@ export abstract class UnitDatabase {
 
   getBlueprints(includeDisabled: boolean = false) {
     if (
-      getApp().getMissionManager().getCommandModeOptions().commandMode ==
-        GAME_MASTER ||
+      getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER ||
       !getApp().getMissionManager().getCommandModeOptions().restrictSpawns
     ) {
       var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
       for (let unit in this.blueprints) {
         const blueprint = this.blueprints[unit];
-        if (blueprint.enabled || includeDisabled)
-          filteredBlueprints[unit] = blueprint;
+        if (blueprint.enabled || includeDisabled) filteredBlueprints[unit] = blueprint;
       }
       return filteredBlueprints;
     } else {
@@ -66,16 +64,10 @@ export abstract class UnitDatabase {
         const blueprint = this.blueprints[unit];
         if (
           (blueprint.enabled || includeDisabled) &&
-          this.getSpawnPointsByName(blueprint.name) <=
-            getApp().getMissionManager().getAvailableSpawnPoints() &&
-          getApp()
-            .getMissionManager()
-            .getCommandModeOptions()
-            .eras.includes(blueprint.era) &&
-          (!getApp().getMissionManager().getCommandModeOptions()
-            .restrictToCoalition ||
-            blueprint.coalition ===
-              getApp().getMissionManager().getCommandedCoalition() ||
+          this.getSpawnPointsByName(blueprint.name) <= getApp().getMissionManager().getAvailableSpawnPoints() &&
+          getApp().getMissionManager().getCommandModeOptions().eras.includes(blueprint.era) &&
+          (!getApp().getMissionManager().getCommandModeOptions().restrictToCoalition ||
+            blueprint.coalition === getApp().getMissionManager().getCommandedCoalition() ||
             blueprint.coalition === undefined)
         ) {
           filteredBlueprints[unit] = blueprint;
@@ -107,11 +99,7 @@ export abstract class UnitDatabase {
     var filteredBlueprints = this.getBlueprints();
     var types: string[] = [];
     for (let unit in filteredBlueprints) {
-      if (
-        typeof unitFilter === "function" &&
-        !unitFilter(filteredBlueprints[unit])
-      )
-        continue;
+      if (typeof unitFilter === "function" && !unitFilter(filteredBlueprints[unit])) continue;
       var type = filteredBlueprints[unit].type;
       if (type && type !== "" && !types.includes(type)) types.push(type);
     }
@@ -132,7 +120,7 @@ export abstract class UnitDatabase {
   /* Get all blueprints by range */
   getByRange(range: string) {
     var filteredBlueprints = this.getBlueprints();
-    var unitswithrange = [];
+    var unitswithrange: UnitBlueprint[] = [];
     var minRange = 0;
     var maxRange = 0;
 
@@ -161,7 +149,7 @@ export abstract class UnitDatabase {
   /* Get all blueprints by type */
   getByType(type: string) {
     var filteredBlueprints = this.getBlueprints();
-    var units = [];
+    var units: UnitBlueprint[] = [];
     for (let unit in filteredBlueprints) {
       if (filteredBlueprints[unit].type === type) {
         units.push(filteredBlueprints[unit]);
@@ -173,15 +161,12 @@ export abstract class UnitDatabase {
   /* Get all blueprints by role */
   getByRole(role: string) {
     var filteredBlueprints = this.getBlueprints();
-    var units = [];
+    var units: UnitBlueprint[] = [];
     for (let unit in filteredBlueprints) {
       var loadouts = filteredBlueprints[unit].loadouts;
       if (loadouts) {
         for (let loadout of loadouts) {
-          if (
-            loadout.roles.includes(role) ||
-            loadout.roles.includes(role.toLowerCase())
-          ) {
+          if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase())) {
             units.push(filteredBlueprints[unit]);
             break;
           }
@@ -194,7 +179,7 @@ export abstract class UnitDatabase {
   /* Get the names of all the loadouts for a specific unit and for a specific role */
   getLoadoutNamesByRole(name: string, role: string) {
     var filteredBlueprints = this.getBlueprints();
-    var loadoutsByRole = [];
+    var loadoutsByRole: string[] = [];
     var loadouts = filteredBlueprints[name].loadouts;
     if (loadouts) {
       for (let loadout of loadouts) {

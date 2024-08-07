@@ -1,15 +1,9 @@
 import React from "react";
 import { Coalition } from "../../types/types";
 
-export function OlCoalitionToggle(props: {
-  coalition: Coalition | undefined;
-  onClick: () => void;
-}) {
+export function OlCoalitionToggle(props: { coalition: Coalition | undefined; onClick: () => void }) {
   return (
-    <div
-      className="inline-flex cursor-pointer items-center"
-      onClick={props.onClick}
-    >
+    <div className="inline-flex cursor-pointer items-center" onClick={props.onClick}>
       <button className="peer sr-only" />
       <div
         data-flash={props.coalition === undefined}
@@ -39,9 +33,7 @@ export function OlCoalitionToggle(props: {
           data-[flash='true']:after:animate-pulse
         `}
       >
-        {props.coalition
-          ? `${props.coalition[0].toLocaleUpperCase() + props.coalition.substring(1)}`
-          : "Diff. values"}
+        {props.coalition ? `${props.coalition[0].toLocaleUpperCase() + props.coalition.substring(1)}` : "Diff. values"}
       </span>
     </div>
   );

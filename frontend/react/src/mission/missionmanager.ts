@@ -2,13 +2,7 @@ import { LatLng } from "leaflet";
 import { getApp } from "../olympusapp";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
-import {
-  BLUE_COMMANDER,
-  ERAS,
-  GAME_MASTER,
-  NONE,
-  RED_COMMANDER,
-} from "../constants/constants";
+import { BLUE_COMMANDER, ERAS, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 //import { Dropdown } from "../controls/dropdown";
 import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 //import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
@@ -16,13 +10,7 @@ import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
 import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 //import { Popup } from "../popups/popup";
-import {
-  AirbasesData,
-  BullseyesData,
-  CommandModeOptions,
-  DateAndTime,
-  MissionData,
-} from "../interfaces";
+import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 import { Coalition } from "../types/types";
 
 /** The MissionManager  */
@@ -53,18 +41,11 @@ export class MissionManager {
   #coalitions: { red: string[]; blue: string[] } = { red: [], blue: [] };
 
   constructor() {
-    document.addEventListener("applycommandModeOptions", () =>
-      this.#applycommandModeOptions()
-    );
-    document.addEventListener("showCommandModeDialog", () =>
-      this.showCommandModeDialog()
-    );
-    document.addEventListener(
-      "toggleSpawnRestrictions",
-      (ev: CustomEventInit) => {
-        this.#toggleSpawnRestrictions(ev.detail._element.checked);
-      }
-    );
+    document.addEventListener("applycommandModeOptions", () => this.#applycommandModeOptions());
+    document.addEventListener("showCommandModeDialog", () => this.showCommandModeDialog());
+    document.addEventListener("toggleSpawnRestrictions", (ev: CustomEventInit) => {
+      this.#toggleSpawnRestrictions(ev.detail._element.checked);
+    });
 
     /* command-mode settings dialog */
     //this.#commandModeDialog = document.querySelector("#command-mode-settings-dialog") as HTMLElement;
@@ -76,27 +57,19 @@ export class MissionManager {
    * @param object <BulleyesData>
    */
   updateBullseyes(data: BullseyesData) {
-    const commandMode = getApp()
-      .getMissionManager()
-      .getCommandModeOptions().commandMode;
+    const commandMode = getApp().getMissionManager().getCommandModeOptions().commandMode;
     for (let idx in data.bullseyes) {
       const bullseye = data.bullseyes[idx];
 
       //  Prevent Red and Blue coalitions seeing each other's bulleye(s)
-      if (
-        (bullseye.coalition === "red" && commandMode === BLUE_COMMANDER) ||
-        (bullseye.coalition === "blue" && commandMode === RED_COMMANDER)
-      ) {
+      if ((bullseye.coalition === "red" && commandMode === BLUE_COMMANDER) || (bullseye.coalition === "blue" && commandMode === RED_COMMANDER)) {
         continue;
       }
 
-      if (!(idx in this.#bullseyes))
-        this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getApp().getMap());
+      if (!(idx in this.#bullseyes)) this.#bullseyes[idx] = new Bullseye([0, 0]).addTo(getApp().getMap());
 
       if (bullseye.latitude && bullseye.longitude && bullseye.coalition) {
-        this.#bullseyes[idx].setLatLng(
-          new LatLng(bullseye.latitude, bullseye.longitude)
-        );
+        this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude));
         this.#bullseyes[idx].setCoalition(bullseye.coalition);
       }
     }
@@ -109,29 +82,17 @@ export class MissionManager {
   updateAirbases(data: AirbasesData) {
     for (let idx in data.airbases) {
       var airbase = data.airbases[idx];
-      if (
-        this.#airbases[airbase.callsign] === undefined &&
-        airbase.callsign != ""
-      ) {
+      if (this.#airbases[airbase.callsign] === undefined && airbase.callsign != "") {
         this.#airbases[airbase.callsign] = new Airbase({
           position: new LatLng(airbase.latitude, airbase.longitude),
           name: airbase.callsign,
         }).addTo(getApp().getMap());
-        this.#airbases[airbase.callsign].on("contextmenu", (e) =>
-          this.#onAirbaseClick(e)
-        );
+        this.#airbases[airbase.callsign].on("contextmenu", (e) => this.#onAirbaseClick(e));
         this.#loadAirbaseChartData(airbase.callsign);
       }
 
-      if (
-        this.#airbases[airbase.callsign] != undefined &&
-        airbase.latitude &&
-        airbase.longitude &&
-        airbase.coalition
-      ) {
-        this.#airbases[airbase.callsign].setLatLng(
-          new LatLng(airbase.latitude, airbase.longitude)
-        );
+      if (this.#airbases[airbase.callsign] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
+        this.#airbases[airbase.callsign].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
         this.#airbases[airbase.callsign].setCoalition(airbase.coalition);
       }
     }
@@ -159,23 +120,15 @@ export class MissionManager {
 
       /* Set the command mode options */
       this.#setcommandModeOptions(data.mission.commandModeOptions);
-      this.#remainingSetupTime =
-        this.getCommandModeOptions().setupTime -
-        this.getDateAndTime().elapsedTime;
-      var commandModePhaseEl = document.querySelector(
-        "#command-mode-phase"
-      ) as HTMLElement;
+      this.#remainingSetupTime = this.getCommandModeOptions().setupTime - this.getDateAndTime().elapsedTime;
+      var commandModePhaseEl = document.querySelector("#command-mode-phase") as HTMLElement;
       if (commandModePhaseEl) {
         if (this.#remainingSetupTime > 0) {
           var remainingTime = `-${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
           commandModePhaseEl.dataset.remainingTime = remainingTime;
         }
 
-        commandModePhaseEl.classList.toggle(
-          "setup-phase",
-          this.#remainingSetupTime > 0 &&
-            this.getCommandModeOptions().restrictSpawns
-        );
+        commandModePhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0 && this.getCommandModeOptions().restrictSpawns);
         //commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
         //commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
       }
@@ -239,24 +192,15 @@ export class MissionManager {
   }
 
   getAvailableSpawnPoints() {
-    if (this.getCommandModeOptions().commandMode === GAME_MASTER)
-      return Infinity;
-    else if (this.getCommandModeOptions().commandMode === BLUE_COMMANDER)
-      return (
-        this.getCommandModeOptions().spawnPoints.blue - this.#spentSpawnPoint
-      );
-    else if (this.getCommandModeOptions().commandMode === RED_COMMANDER)
-      return (
-        this.getCommandModeOptions().spawnPoints.red - this.#spentSpawnPoint
-      );
+    if (this.getCommandModeOptions().commandMode === GAME_MASTER) return Infinity;
+    else if (this.getCommandModeOptions().commandMode === BLUE_COMMANDER) return this.getCommandModeOptions().spawnPoints.blue - this.#spentSpawnPoint;
+    else if (this.getCommandModeOptions().commandMode === RED_COMMANDER) return this.getCommandModeOptions().spawnPoints.red - this.#spentSpawnPoint;
     else return 0;
   }
 
   getCommandedCoalition() {
-    if (this.getCommandModeOptions().commandMode === BLUE_COMMANDER)
-      return "blue" as Coalition;
-    else if (this.getCommandModeOptions().commandMode === RED_COMMANDER)
-      return "red" as Coalition;
+    if (this.getCommandModeOptions().commandMode === BLUE_COMMANDER) return "blue" as Coalition;
+    else if (this.getCommandModeOptions().commandMode === RED_COMMANDER) return "red" as Coalition;
     else return "all" as Coalition;
   }
 
@@ -335,41 +279,27 @@ export class MissionManager {
   #setcommandModeOptions(commandModeOptions: CommandModeOptions) {
     /* Refresh all the data if we have exited the NONE state */
     var requestRefresh = false;
-    if (
-      this.#commandModeOptions.commandMode === NONE &&
-      commandModeOptions.commandMode !== NONE
-    )
-      requestRefresh = true;
+    if (this.#commandModeOptions.commandMode === NONE && commandModeOptions.commandMode !== NONE) requestRefresh = true;
 
     /* Refresh the page if we have lost Game Master priviledges */
-    if (
-      this.#commandModeOptions.commandMode === GAME_MASTER &&
-      commandModeOptions.commandMode !== GAME_MASTER
-    )
-      location.reload();
+    if (this.#commandModeOptions.commandMode === GAME_MASTER && commandModeOptions.commandMode !== GAME_MASTER) location.reload();
 
     /* Check if any option has changed */
     var commandModeOptionsChanged =
       !commandModeOptions.eras.every((value: string, idx: number) => {
         return value === this.getCommandModeOptions().eras[idx];
       }) ||
-      commandModeOptions.spawnPoints.red !==
-        this.getCommandModeOptions().spawnPoints.red ||
-      commandModeOptions.spawnPoints.blue !==
-        this.getCommandModeOptions().spawnPoints.blue ||
-      commandModeOptions.restrictSpawns !==
-        this.getCommandModeOptions().restrictSpawns ||
-      commandModeOptions.restrictToCoalition !==
-        this.getCommandModeOptions().restrictToCoalition;
+      commandModeOptions.spawnPoints.red !== this.getCommandModeOptions().spawnPoints.red ||
+      commandModeOptions.spawnPoints.blue !== this.getCommandModeOptions().spawnPoints.blue ||
+      commandModeOptions.restrictSpawns !== this.getCommandModeOptions().restrictSpawns ||
+      commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition;
 
     this.#commandModeOptions = commandModeOptions;
     this.setSpentSpawnPoints(0);
     this.refreshSpawnPoints();
 
     if (commandModeOptionsChanged) {
-      document.dispatchEvent(
-        new CustomEvent("commandModeOptionsChanged", { detail: this })
-      );
+      document.dispatchEvent(new CustomEvent("commandModeOptionsChanged", { detail: this }));
       document.getElementById("command-mode-toolbar")?.classList.remove("hide");
       const el = document.getElementById("command-mode");
       if (el) {
@@ -380,24 +310,13 @@ export class MissionManager {
 
     document
       .querySelector("#spawn-points-container")
-      ?.classList.toggle(
-        "hide",
-        this.getCommandModeOptions().commandMode === GAME_MASTER ||
-          !this.getCommandModeOptions().restrictSpawns
-      );
-    document
-      .querySelector("#command-mode-settings-button")
-      ?.classList.toggle(
-        "hide",
-        this.getCommandModeOptions().commandMode !== GAME_MASTER
-      );
+      ?.classList.toggle("hide", this.getCommandModeOptions().commandMode === GAME_MASTER || !this.getCommandModeOptions().restrictSpawns);
+    document.querySelector("#command-mode-settings-button")?.classList.toggle("hide", this.getCommandModeOptions().commandMode !== GAME_MASTER);
 
     if (requestRefresh) getApp().getServerManager().refreshAll();
   }
 
-  #onAirbaseClick(e: any) {
-
-  }
+  #onAirbaseClick(e: any) {}
 
   #loadAirbaseChartData(callsign: string) {
     if (!this.#theatre) {
@@ -405,11 +324,7 @@ export class MissionManager {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open(
-      "GET",
-      `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`,
-      true
-    );
+    xhr.open("GET", `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
     xhr.responseType = "json";
     xhr.onload = () => {
       var status = xhr.status;

@@ -9,14 +9,10 @@ import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 export function UnitMouseControlBar(props: {}) {
-  var [open, setOpen] = useState(false);
-  var [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
-  var [contextActionsSet, setContextActionsSet] = useState(
-    new ContextActionSet()
-  );
-  var [activeContextAction, setActiveContextAction] = useState(
-    null as null | ContextAction
-  );
+  const [open, setOpen] = useState(false);
+  const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
+  const [contextActionsSet, setContextActionsSet] = useState(new ContextActionSet());
+  const [activeContextAction, setActiveContextAction] = useState(null as null | ContextAction);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
 
@@ -71,8 +67,7 @@ export function UnitMouseControlBar(props: {}) {
 
   function onScroll(el) {
     const sl = el.scrollLeft;
-    const sr =
-      el.scrollWidth - el.scrollLeft - el.clientWidth;
+    const sr = el.scrollWidth - el.scrollLeft - el.clientWidth;
 
     sl < 1 && !scrolledLeft && setScrolledLeft(true);
     sl > 1 && scrolledLeft && setScrolledLeft(false);
@@ -83,13 +78,12 @@ export function UnitMouseControlBar(props: {}) {
 
   return (
     <>
-      {" "}
       {open && (
         <>
           <div
             className={`
               absolute left-[50%] top-16 flex max-w-[80%]
-              translate-x-[calc(-50%+2rem)] gap-2 rounded-md bg-gray-200 z-ui-2
+              translate-x-[calc(-50%+2rem)] gap-2 rounded-md bg-gray-200
               dark:bg-olympus-900
             `}
           >
@@ -102,40 +96,34 @@ export function UnitMouseControlBar(props: {}) {
                 `}
               />
             )}
-            <div
-              className="flex gap-2 overflow-x-auto no-scrollbar p-2"
-              onScroll={(ev) => onScroll(ev.target)}
-              ref={scrollRef}
-            >
-              {Object.values(contextActionsSet.getContextActions()).map(
-                (contextAction) => {
-                  return (
-                    <OlStateButton
-                      checked={contextAction === activeContextAction}
-                      icon={contextAction.getIcon()}
-                      tooltip={contextAction.getLabel()}
-                      onClick={() => {
-                        if (contextAction.getOptions().executeImmediately) {
-                          setActiveContextAction(null);
-                          contextAction.executeCallback(null, null);
+            <div className="flex gap-2 overflow-x-auto no-scrollbar p-2" onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
+              {Object.values(contextActionsSet.getContextActions()).map((contextAction) => {
+                return (
+                  <OlStateButton
+                    checked={contextAction === activeContextAction}
+                    icon={contextAction.getIcon()}
+                    tooltip={contextAction.getLabel()}
+                    onClick={() => {
+                      if (contextAction.getOptions().executeImmediately) {
+                        setActiveContextAction(null);
+                        contextAction.executeCallback(null, null);
+                      } else {
+                        if (activeContextAction != contextAction) {
+                          setActiveContextAction(contextAction);
+                          getApp().getMap().setState(CONTEXT_ACTION, {
+                            contextAction: contextAction,
+                          });
                         } else {
-                          if (activeContextAction != contextAction) {
-                            setActiveContextAction(contextAction);
-                            getApp().getMap().setState(CONTEXT_ACTION, {
-                              contextAction: contextAction,
-                            });
-                          } else {
-                            setActiveContextAction(null);
-                            getApp().getMap().setState(CONTEXT_ACTION, {
-                              contextAction: null,
-                            });
-                          }
+                          setActiveContextAction(null);
+                          getApp().getMap().setState(CONTEXT_ACTION, {
+                            contextAction: null,
+                          });
                         }
-                      }}
-                    />
-                  );
-                }
-              )}
+                      }
+                    }}
+                  />
+                );
+              })}
             </div>
             {!scrolledRight && (
               <FaChevronRight
@@ -150,9 +138,9 @@ export function UnitMouseControlBar(props: {}) {
           {activeContextAction && (
             <div
               className={`
-                absolute left-[50%] top-32 flex translate-x-[calc(-50%+2rem)]
-                items-center gap-2 rounded-md bg-gray-200 p-4 z-ui-1
-                min-w-[300px]
+                absolute left-[50%] top-32 flex min-w-[300px]
+                translate-x-[calc(-50%+2rem)] items-center gap-2 rounded-md
+                bg-gray-200 p-4
                 dark:bg-olympus-800
               `}
             >

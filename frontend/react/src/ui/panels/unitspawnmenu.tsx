@@ -21,14 +21,12 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
   const altitudeStep = 500;
 
   /* State initialization */
-  var [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
-  var [spawnNumber, setSpawnNumber] = useState(1);
-  var [spawnRole, setSpawnRole] = useState("");
-  var [spawnLoadoutName, setSpawnLoadout] = useState("");
-  var [spawnAltitude, setSpawnAltitude] = useState(
-    (maxAltitude - minAltitude) / 2
-  );
-  var [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
+  const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
+  const [spawnNumber, setSpawnNumber] = useState(1);
+  const [spawnRole, setSpawnRole] = useState("");
+  const [spawnLoadoutName, setSpawnLoadout] = useState("");
+  const [spawnAltitude, setSpawnAltitude] = useState((maxAltitude - minAltitude) / 2);
+  const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
 
   /* When the menu is opened show the unit preview on the map as a cursor */
   useEffect(() => {
@@ -53,8 +51,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
           },
         });
     } else {
-      if (getApp()?.getMap()?.getState() === SPAWN_UNIT)
-        getApp().getMap().setState(IDLE);
+      if (getApp()?.getMap()?.getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
     }
   });
 
@@ -76,9 +73,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
   });
 
   /* Initialize the loadout */
-  spawnLoadoutName === "" &&
-    loadouts.length > 0 &&
-    setSpawnLoadout(loadouts[0].name);
+  spawnLoadoutName === "" && loadouts.length > 0 && setSpawnLoadout(loadouts[0].name);
   const spawnLoadout = props.blueprint.loadouts?.find((loadout) => {
     return loadout.name === spawnLoadoutName;
   });
@@ -111,13 +106,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
               setSpawnNumber(Math.min(maxNumber, spawnNumber + 1));
             }}
             onChange={(ev) => {
-              !isNaN(Number(ev.target.value)) &&
-                setSpawnNumber(
-                  Math.max(
-                    minNumber,
-                    Math.min(maxNumber, Number(ev.target.value))
-                  )
-                );
+              !isNaN(Number(ev.target.value)) && setSpawnNumber(Math.max(minNumber, Math.min(maxNumber, Number(ev.target.value))));
             }}
           />
         </div>
@@ -143,12 +132,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
                 `}
               >{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>
             </div>
-            <OlLabelToggle
-              toggled={spawnAltitudeType}
-              leftLabel={"AGL"}
-              rightLabel={"ASL"}
-              onClick={() => setSpawnAltitudeType(!spawnAltitudeType)}
-            />
+            <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
           </div>
           <OlRangeSlider
             onChange={(ev) => setSpawnAltitude(Number(ev.target.value))}

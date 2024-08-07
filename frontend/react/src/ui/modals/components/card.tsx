@@ -1,17 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faCheckCircle,
-  faExternalLink,
-  faLink,
-  faUnlink,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCheckCircle, faExternalLink, faLink, faUnlink } from "@fortawesome/free-solid-svg-icons";
 
-export function Card(props: {
-  children?: JSX.Element | JSX.Element[];
-  className?: string;
-}) {
+export function Card(props: { children?: JSX.Element | JSX.Element[]; className?: string }) {
   return (
     <div
       className={`

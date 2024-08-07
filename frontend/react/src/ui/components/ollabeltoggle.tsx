@@ -1,18 +1,13 @@
 import React from "react";
 
-export function OlLabelToggle(props: {
-  toggled: boolean | undefined;
-  leftLabel: string;
-  rightLabel: string;
-  onClick: () => void;
-}) {
+export function OlLabelToggle(props: { toggled: boolean | undefined; leftLabel: string; rightLabel: string; onClick: () => void }) {
   return (
     <button
       onClick={props.onClick}
       className={`
         relative flex h-10 w-[120px] flex-none cursor-pointer select-none
-        flex-row justify-between rounded-md border px-1 py-[5px] text-sm
-        contents-center
+        flex-row content-center justify-between rounded-md border px-1 py-[5px]
+        text-sm
         dark:border-gray-600 dark:border-transparent dark:bg-gray-700
         dark:hover:bg-gray-600 dark:focus:ring-blue-800
         focus:outline-none focus:ring-2 focus:ring-blue-300
@@ -31,7 +26,7 @@ export function OlLabelToggle(props: {
       <span
         data-active={!(props.toggled ?? false)}
         className={`
-          my-auto pl-3 font-normal transition-colors z-ui-1
+          absolute left-[17px] top-[8px] font-normal transition-colors
           dark:data-[active='false']:text-gray-400
           dark:data-[active='true']:text-white
         `}
@@ -41,7 +36,7 @@ export function OlLabelToggle(props: {
       <span
         data-active={props.toggled ?? false}
         className={`
-          my-auto pr-3.5 font-normal transition-colors z-ui-1
+          absolute right-[17px] top-[8px] font-normal transition-colors
           dark:data-[active='false']:text-gray-400
           dark:data-[active='true']:text-white
         `}

@@ -1,15 +1,23 @@
-import React, { ChangeEvent, useEffect, useId } from "react";
+import React, { ChangeEvent } from "react";
+import { zeroAppend } from "../../other/utils";
 
 export function OlNumberInput(props: {
   value: number;
   min: number;
   max: number;
+  minLength?: number;
+  className?: string;
   onDecrease: () => void;
   onIncrease: () => void;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <div className="min-w-32">
+    <div
+      className={`
+        ${props.className ?? ""}
+        min-w-32
+      `}
+    >
       <div className="relative flex max-w-[8rem] items-center">
         <button
           type="button"
@@ -31,13 +39,7 @@ export function OlNumberInput(props: {
             fill="none"
             viewBox="0 0 18 2"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h16"
-            />
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16" />
           </svg>
         </button>
         <input
@@ -53,7 +55,7 @@ export function OlNumberInput(props: {
             dark:focus:ring-blue-700
             focus:border-blue-700 focus:ring-blue-500
           `}
-          value={props.value}
+          value={zeroAppend(props.value, props.minLength ?? 0)}
         />
         <button
           type="button"
@@ -75,13 +77,7 @@ export function OlNumberInput(props: {
             fill="none"
             viewBox="0 0 18 18"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 1v16M1 9h16"
-            />
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
           </svg>
         </button>
       </div>

@@ -1,12 +1,4 @@
-import {
-  LatLngExpression,
-  Map,
-  Circle,
-  DivIcon,
-  Marker,
-  CircleOptions,
-  LatLng,
-} from "leaflet";
+import { LatLngExpression, Map, Circle, DivIcon, Marker, CircleOptions, LatLng } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
@@ -38,11 +30,7 @@ export class CoalitionCircle extends Circle {
 
     this.#labelText = `Circle ${totalAreas}`;
 
-    if (
-      [BLUE_COMMANDER, RED_COMMANDER].includes(
-        getApp().getMissionManager().getCommandModeOptions().commandMode
-      )
-    )
+    if ([BLUE_COMMANDER, RED_COMMANDER].includes(getApp().getMissionManager().getCommandModeOptions().commandMode))
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());
 
     this.on("drag", () => {
@@ -129,14 +117,8 @@ export class CoalitionCircle extends Circle {
     if (this.#radiusHandle) this.#radiusHandle.removeFrom(getApp().getMap());
 
     if (this.#selected) {
-      const dest = turf.destination(
-        turf.point([this.getLatLng().lng, this.getLatLng().lat]),
-        this.getRadius() / 1000,
-        0
-      );
-      this.#radiusHandle = new CoalitionAreaHandle(
-        new LatLng(dest.geometry.coordinates[1], dest.geometry.coordinates[0])
-      );
+      const dest = turf.destination(turf.point([this.getLatLng().lng, this.getLatLng().lat]), this.getRadius() / 1000, 0);
+      this.#radiusHandle = new CoalitionAreaHandle(new LatLng(dest.geometry.coordinates[1], dest.geometry.coordinates[0]));
       this.#radiusHandle.addTo(getApp().getMap());
       this.#radiusHandle.on("drag", (e: any) => {
         this.setRadius(this.getLatLng().distanceTo(e.latlng));
@@ -156,11 +138,6 @@ export class CoalitionCircle extends Circle {
       }),
       interactive: false,
     }).addTo(this._map);
-    this.#label
-      .getElement()
-      ?.classList.add(
-        `ol-coalitionarea-label`,
-        `${this.#selected ? "selected" : `${this.#coalition}`}`
-      );
+    this.#label.getElement()?.classList.add(`ol-coalitionarea-label`, `${this.#selected ? "selected" : `${this.#coalition}`}`);
   }
 }

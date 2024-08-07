@@ -1,11 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import {
-  faExternalLink,
-  faLock,
-  faLockOpen,
-  faUnlock,
-  faUnlockAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExternalLink, faLock, faLockOpen, faUnlock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { OlTooltip } from "./oltooltip";
@@ -18,7 +12,7 @@ export function OlStateButton(props: {
   onClick: () => void;
   children?: JSX.Element | JSX.Element[];
 }) {
-  var [hover, setHover] = useState(false);
+  const [hover, setHover] = useState(false);
   var buttonRef = useRef(null);
 
   const className =
@@ -49,8 +43,8 @@ export function OlStateButton(props: {
         }}
       >
         <div className="m-auto flex w-fit content-center justify-center gap-2">
-        <FontAwesomeIcon icon={props.icon} className="m-auto"/>
-        {props.children}
+          <FontAwesomeIcon icon={props.icon} className="m-auto" />
+          {props.children}
         </div>
       </button>
       {hover && <OlTooltip buttonRef={buttonRef} content={props.tooltip} />}
@@ -58,14 +52,8 @@ export function OlStateButton(props: {
   );
 }
 
-export function OlRoundStateButton(props: {
-  className?: string;
-  checked: boolean;
-  icon: IconProp;
-  tooltip: string;
-  onClick: () => void;
-}) {
-  var [hover, setHover] = useState(false);
+export function OlRoundStateButton(props: { className?: string; checked: boolean; icon: IconProp; tooltip: string; onClick: () => void }) {
+  const [hover, setHover] = useState(false);
   var buttonRef = useRef(null);
 
   const className =
@@ -106,13 +94,8 @@ export function OlRoundStateButton(props: {
   );
 }
 
-export function OlLockStateButton(props: {
-  className?: string;
-  checked: boolean;
-  tooltip: string;
-  onClick: () => void;
-}) {
-  var [hover, setHover] = useState(false);
+export function OlLockStateButton(props: { className?: string; checked: boolean; tooltip: string; onClick: () => void }) {
+  const [hover, setHover] = useState(false);
   var buttonRef = useRef(null);
 
   const className =
@@ -143,10 +126,7 @@ export function OlLockStateButton(props: {
           setHover(false);
         }}
       >
-        <FontAwesomeIcon
-          className="pt-[3px]"
-          icon={props.checked == true ? faUnlockAlt : faLock}
-        />
+        <FontAwesomeIcon className="pt-[3px]" icon={props.checked == true ? faUnlockAlt : faLock} />
       </button>
       {hover && <OlTooltip buttonRef={buttonRef} content={props.tooltip} />}
     </>

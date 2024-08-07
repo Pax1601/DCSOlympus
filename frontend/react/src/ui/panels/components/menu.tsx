@@ -20,8 +20,8 @@ export function Menu(props: {
     <div
       data-open={props.open}
       className={`
-        absolute left-16 right-0 top-[58px] bg-transparent z-ui-3
-        pointer-events-none h-[calc(100vh-58px)] transition-transform
+        pointer-events-none absolute left-16 right-0 top-[58px] z-10
+        h-[calc(100vh-58px)] bg-transparent transition-transform
         data-[open='false']:-translate-x-full
         sm:w-[400px]
       `}
@@ -53,7 +53,7 @@ export function Menu(props: {
                 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
               `}
             />
-          )}{" "}
+          )}
           {props.title}
           <FontAwesomeIcon
             onClick={props.onClose}
@@ -69,15 +69,22 @@ export function Menu(props: {
         {props.children}
       </div>
       {props.canBeHidden == true && (
-        <div className={`
-          flex h-8 justify-center z-ui-4 pointer-events-auto backdrop-blur-lg
-          backdrop-grayscale
-          dark:bg-olympus-800/90
-        `} onClick={() => setHide(!hide)}>
+        <div
+          className={`
+            pointer-events-auto flex h-8 justify-center backdrop-blur-lg
+            backdrop-grayscale
+            dark:bg-olympus-800/90
+          `}
+          onClick={() => setHide(!hide)}
+        >
           {hide ? (
             <FaChevronUp className="mx-auto my-auto text-gray-400" />
           ) : (
-            <FaChevronDown className="mx-auto my-auto text-gray-400" />
+            <FaChevronDown
+              className={`
+            mx-auto my-auto text-gray-400
+          `}
+            />
           )}
         </div>
       )}

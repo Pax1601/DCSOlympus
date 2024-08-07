@@ -2,10 +2,7 @@ import React from "react";
 import { UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
 
-export function OlUnitSummary(props: {
-  blueprint: UnitBlueprint;
-  coalition: Coalition;
-}) {
+export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coalition }) {
   return (
     <div
       data-coalition={props.coalition}

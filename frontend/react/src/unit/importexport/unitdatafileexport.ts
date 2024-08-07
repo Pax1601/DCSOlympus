@@ -15,11 +15,9 @@ export class UnitDataFileExport extends UnitDataFile {
     //this.dialog = new Dialog(elementId);
     //this.#element = this.dialog.getElement();
 
-    this.#element
-      .querySelector(".start-transfer")
-      ?.addEventListener("click", (ev: MouseEventInit) => {
-        this.#doExport();
-      });
+    this.#element.querySelector(".start-transfer")?.addEventListener("click", (ev: MouseEventInit) => {
+      this.#doExport();
+    });
   }
 
   /**
@@ -65,9 +63,7 @@ export class UnitDataFileExport extends UnitDataFile {
     let selectedUnits: Unit[] = [];
 
     this.#element
-      .querySelectorAll(
-        `input[type="checkbox"][name="category-coalition-selection"]:checked`
-      )
+      .querySelectorAll(`input[type="checkbox"][name="category-coalition-selection"]:checked`)
       .forEach(<HTMLInputElement>(checkbox: HTMLInputElement) => {
         if (checkbox instanceof HTMLInputElement) {
           const [category, coalition] = checkbox.value.split(":"); // e.g. "category:coalition"
@@ -83,8 +79,7 @@ export class UnitDataFileExport extends UnitDataFile {
     var unitsToExport: { [key: string]: any } = {};
     selectedUnits.forEach((unit: Unit) => {
       var data: any = unit.getData();
-      if (unit.getGroupName() in unitsToExport)
-        unitsToExport[unit.getGroupName()].push(data);
+      if (unit.getGroupName() in unitsToExport) unitsToExport[unit.getGroupName()].push(data);
       else unitsToExport[unit.getGroupName()] = [data];
     });
 

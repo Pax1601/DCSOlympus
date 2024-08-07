@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export function OlTooltip(props: {
-  content: string;
-  buttonRef: React.MutableRefObject<null>;
-}) {
+export function OlTooltip(props: { content: string; buttonRef: React.MutableRefObject<null> }) {
   var contentRef = useRef(null);
 
   function setPosition(content: HTMLDivElement, button: HTMLButtonElement) {
@@ -13,7 +10,7 @@ export function OlTooltip(props: {
     content.style.height = "";
 
     /* Get the position and size of the button and the content elements */
-    var [cxl, cyt, cxr, cyb, cw, ch] = [
+    let [cxl, cyt, cxr, cyb, cw, ch] = [
       content.getBoundingClientRect().x,
       content.getBoundingClientRect().y,
       content.getBoundingClientRect().x + content.clientWidth,
@@ -21,7 +18,7 @@ export function OlTooltip(props: {
       content.clientWidth,
       content.clientHeight,
     ];
-    var [bxl, byt, bxr, byb, bbw, bh] = [
+    let [bxl, byt, bxr, byb, bbw, bh] = [
       button.getBoundingClientRect().x,
       button.getBoundingClientRect().y,
       button.getBoundingClientRect().x + button.clientWidth,
@@ -73,8 +70,8 @@ export function OlTooltip(props: {
       <div
         ref={contentRef}
         className={`
-          absolute whitespace-nowrap z-ui-4 rounded-lg bg-gray-900 px-3 py-2
-          text-sm font-medium text-white shadow-sm
+          absolute whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm
+          font-medium text-white shadow-sm
           dark:bg-gray-700
         `}
       >

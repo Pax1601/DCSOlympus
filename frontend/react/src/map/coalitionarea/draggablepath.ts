@@ -1,6 +1,4 @@
-import * as L from "leaflet";
-
-export const initDraggablePath = () => {
+export const initDraggablePath = (L) => {
   //@ts-ignore
   L.PathDraggable = L.Draggable.extend({
     initialize: function (path) {
@@ -8,9 +6,7 @@ export const initDraggablePath = () => {
 
       this._canvas = path._map.getRenderer(path) instanceof L.Canvas;
 
-      var element = this._canvas
-        ? this._path._map.getRenderer(this._path)._container
-        : this._path._path;
+      var element = this._canvas ? this._path._map.getRenderer(this._path)._container : this._path._path;
 
       //@ts-ignore
       L.Draggable.prototype.initialize.call(this, element, element, true);
@@ -27,12 +23,7 @@ export const initDraggablePath = () => {
 
       this._startPoint = new L.Point(first.clientX, first.clientY);
 
-      if (
-        this._canvas &&
-        !this._path._containsPoint(
-          this._path._map.mouseEventToLayerPoint(first)
-        )
-      ) {
+      if (this._canvas && !this._path._containsPoint(this._path._map.mouseEventToLayerPoint(first))) {
         return;
       }
 
@@ -87,10 +78,7 @@ export const initDraggablePath = () => {
 
     _onDrag: function (e) {
       var path = this._path,
-        event =
-          e.originalEvent.touches && e.originalEvent.touches.length === 1
-            ? e.originalEvent.touches[0]
-            : e.originalEvent,
+        event = e.originalEvent.touches && e.originalEvent.touches.length === 1 ? e.originalEvent.touches[0] : e.originalEvent,
         newPoint = L.point(event.clientX, event.clientY),
         latlng = path._map.layerPointToLatLng(newPoint);
 
@@ -108,9 +96,7 @@ export const initDraggablePath = () => {
 
       path.fire("drag", e);
 
-      e.latlng = this._path.getCenter
-        ? this._path.getCenter()
-        : this._path.getLatLng();
+      e.latlng = this._path.getCenter ? this._path.getCenter() : this._path.getLatLng();
 
       path.fire("move", e);
     },

@@ -2,19 +2,10 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { UnitBlueprint } from "../../interfaces";
-import {
-  faArrowRightLong,
-  faCaretRight,
-  faCircleArrowRight,
-  faLongArrowAltRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightLong, faCaretRight, faCircleArrowRight, faLongArrowAltRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons/faArrowRight";
 
-export function OlUnitEntryList(props: {
-  icon: IconProp;
-  blueprint: UnitBlueprint;
-  onClick: () => void;
-}) {
+export function OlUnitEntryList(props: { icon: IconProp; blueprint: UnitBlueprint; onClick: () => void }) {
   return (
     <div
       onClick={props.onClick}
@@ -25,9 +16,7 @@ export function OlUnitEntryList(props: {
       `}
     >
       <FontAwesomeIcon icon={props.icon} className="text-sm"></FontAwesomeIcon>
-      <div className="flex-1 px-2 text-left font-normal">
-        {props.blueprint.label}
-      </div>
+      <div className="flex-1 px-2 text-left font-normal">{props.blueprint.label}</div>
       <div
         className={`
           rounded-full bg-olympus-800 px-2 py-0.5 text-xs font-bold

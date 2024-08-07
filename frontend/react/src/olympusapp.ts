@@ -19,12 +19,7 @@ import { UnitsManager } from "./unit/unitsmanager";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
 
-import {
-  BLUE_COMMANDER,
-  DEFAULT_CONTEXT,
-  GAME_MASTER,
-  RED_COMMANDER,
-} from "./constants/constants";
+import { BLUE_COMMANDER, DEFAULT_CONTEXT, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
 import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
@@ -96,10 +91,7 @@ export class OlympusApp {
    * @param newActiveCoalition
    */
   setActiveCoalition(newActiveCoalition: Coalition) {
-    if (
-      this.getMissionManager().getCommandModeOptions().commandMode ==
-      GAME_MASTER
-    ) {
+    if (this.getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER) {
       this.#activeCoalition = newActiveCoalition;
       document.dispatchEvent(new CustomEvent("activeCoalitionChanged"));
     }
@@ -110,22 +102,10 @@ export class OlympusApp {
    * @returns The active coalition
    */
   getActiveCoalition(): Coalition {
-    if (
-      this.getMissionManager().getCommandModeOptions().commandMode ==
-      GAME_MASTER
-    )
-      return this.#activeCoalition;
+    if (this.getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER) return this.#activeCoalition;
     else {
-      if (
-        this.getMissionManager().getCommandModeOptions().commandMode ==
-        BLUE_COMMANDER
-      )
-        return "blue";
-      else if (
-        this.getMissionManager().getCommandModeOptions().commandMode ==
-        RED_COMMANDER
-      )
-        return "red";
+      if (this.getMissionManager().getCommandModeOptions().commandMode == BLUE_COMMANDER) return "blue";
+      else if (this.getMissionManager().getCommandModeOptions().commandMode == RED_COMMANDER) return "red";
       else return "neutral";
     }
   }
@@ -173,46 +153,32 @@ export class OlympusApp {
     this.#weaponsManager = new WeaponsManager();
 
     /* Set the address of the server */
-    this.getServerManager().setAddress(
-      window.location.href.split("?")[0].replace("vite/", "")
-    );
+    this.getServerManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
 
     /* Setup all global events */
     this.#setupEvents();
 
     /* Check if we are running the latest version */
-    const request = new Request(
-      "https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json"
-    );
+    const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
     fetch(request)
       .then((response) => {
         if (response.status === 200) {
           return response.json();
         } else {
-          throw new Error(
-            "Error connecting to Github to retrieve latest version"
-          );
+          throw new Error("Error connecting to Github to retrieve latest version");
         }
       })
       .then((res) => {
         this.#latestVersion = res["version"];
-        const latestVersionSpan = document.getElementById(
-          "latest-version"
-        ) as HTMLElement;
+        const latestVersionSpan = document.getElementById("latest-version") as HTMLElement;
         if (latestVersionSpan) {
           latestVersionSpan.innerHTML = this.#latestVersion ?? "Unknown";
-          latestVersionSpan.classList.toggle(
-            "new-version",
-            this.#latestVersion !== VERSION
-          );
+          latestVersionSpan.classList.toggle("new-version", this.#latestVersion !== VERSION);
         }
       });
 
     /* Load the config file from the server */
-    const configRequest = new Request(
-      window.location.href.split("?")[0].replace("vite/", "") +
-        "resources/config"
-    );
+    const configRequest = new Request(window.location.href.split("?")[0].replace("vite/", "") + "resources/config");
     fetch(configRequest)
       .then((response) => {
         if (response.status === 200) {

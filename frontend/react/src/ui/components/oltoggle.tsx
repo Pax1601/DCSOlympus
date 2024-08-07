@@ -1,14 +1,8 @@
 import React from "react";
 
-export function OlToggle(props: {
-  toggled: boolean | undefined;
-  onClick: () => void;
-}) {
+export function OlToggle(props: { toggled: boolean | undefined; onClick: () => void }) {
   return (
-    <div
-      className="inline-flex cursor-pointer items-center"
-      onClick={props.onClick}
-    >
+    <div className="inline-flex cursor-pointer items-center" onClick={props.onClick}>
       <button className="peer sr-only" />
       <div
         data-flash={props.toggled === undefined}

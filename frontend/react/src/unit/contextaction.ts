@@ -6,11 +6,7 @@ export interface ContextActionOptions {
   executeImmediately?: boolean;
 }
 
-export type ContextActionCallback = (
-  units: Unit[],
-  targetUnit: Unit | null,
-  targetPosition: LatLng | null
-) => void;
+export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => void;
 
 export class ContextAction {
   #id: string = "";
@@ -21,14 +17,7 @@ export class ContextAction {
   #icon: IconDefinition;
   #options: ContextActionOptions;
 
-  constructor(
-    id: string,
-    label: string,
-    description: string,
-    icon: IconDefinition,
-    callback: ContextActionCallback,
-    options: ContextActionOptions
-  ) {
+  constructor(id: string, label: string, description: string, icon: IconDefinition, callback: ContextActionCallback, options: ContextActionOptions) {
     this.#id = id;
     this.#label = label;
     this.#description = description;

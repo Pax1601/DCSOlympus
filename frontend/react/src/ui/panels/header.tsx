@@ -1,17 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  OlRoundStateButton,
-  OlStateButton,
-  OlLockStateButton,
-} from "../components/olstatebutton";
-import {
-  faSkull,
-  faCamera,
-  faFlag,
-  faLink,
-  faUnlink,
-  faBars,
-} from "@fortawesome/free-solid-svg-icons";
+import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
+import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
@@ -61,20 +50,22 @@ export function Header() {
           {() => (
             <nav
               className={`
-                flex w-full gap-4 border-gray-200 bg-gray-300 px-3
-                drop-shadow-md z-ui-4 align-center
+                z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3
+                drop-shadow-md align-center
                 dark:border-gray-800 dark:bg-olympus-900
               `}
             >
               <img
                 src="vite/images/icon.png"
-                className="my-auto h-10 w-10 rounded-md p-0"
+                className={`
+                my-auto h-10 w-10 rounded-md p-0
+              `}
               ></img>
               {!scrolledLeft && (
                 <FaChevronLeft
                   className={`
                     absolute left-14 h-full w-6 rounded-lg px-2 py-3.5
-                    text-gray-200 z-ui-1
+                    text-gray-200
                     dark:bg-olympus-900
                   `}
                 />
@@ -110,7 +101,7 @@ export function Header() {
                         dark:text-gray-200
                       `}
                     >
-                      {IP}{" "}
+                      {IP}
                       <FontAwesomeIcon
                         icon={connectedToServer ? faLink : faUnlink}
                         data-connected={connectedToServer}
@@ -124,11 +115,7 @@ export function Header() {
                   </div>
                 </div>
                 <div>
-                  <OlLockStateButton
-                    checked={false}
-                    onClick={() => {}}
-                    tooltip="Lock/unlock protected units (from scripted mission)"
-                  />
+                  <OlLockStateButton checked={false} onClick={() => {}} tooltip="Lock/unlock protected units (from scripted mission)" />
                 </div>
                 <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
                 <div
@@ -145,12 +132,7 @@ export function Header() {
                       <OlRoundStateButton
                         key={entry[0]}
                         onClick={() => {
-                          getApp()
-                            .getMap()
-                            .setHiddenType(
-                              entry[0],
-                              !appState.mapHiddenTypes[entry[0]]
-                            );
+                          getApp().getMap().setHiddenType(entry[0], !appState.mapHiddenTypes[entry[0]]);
                         }}
                         checked={!appState.mapHiddenTypes[entry[0]]}
                         icon={entry[1]}
@@ -166,36 +148,21 @@ export function Header() {
                   `}
                 >
                   <OlRoundStateButton
-                    onClick={() =>
-                      getApp()
-                        .getMap()
-                        .setHiddenType("blue", !appState.mapHiddenTypes["blue"])
-                    }
+                    onClick={() => getApp().getMap().setHiddenType("blue", !appState.mapHiddenTypes["blue"])}
                     checked={!appState.mapHiddenTypes["blue"]}
                     icon={faFlag}
                     className={"!text-blue-500"}
                     tooltip={"Hide/show blue units"}
                   />
                   <OlRoundStateButton
-                    onClick={() =>
-                      getApp()
-                        .getMap()
-                        .setHiddenType("red", !appState.mapHiddenTypes["red"])
-                    }
+                    onClick={() => getApp().getMap().setHiddenType("red", !appState.mapHiddenTypes["red"])}
                     checked={!appState.mapHiddenTypes["red"]}
                     icon={faFlag}
                     className={"!text-red-500"}
                     tooltip={"Hide/show red units"}
                   />
                   <OlRoundStateButton
-                    onClick={() =>
-                      getApp()
-                        .getMap()
-                        .setHiddenType(
-                          "neutral",
-                          !appState.mapHiddenTypes["neutral"]
-                        )
-                    }
+                    onClick={() => getApp().getMap().setHiddenType("neutral", !appState.mapHiddenTypes["neutral"])}
                     checked={!appState.mapHiddenTypes["neutral"]}
                     icon={faFlag}
                     className={"!text-gray-500"}
@@ -221,12 +188,7 @@ export function Header() {
                       <OlRoundStateButton
                         key={entry[0]}
                         onClick={() => {
-                          getApp()
-                            .getMap()
-                            .setHiddenType(
-                              entry[0],
-                              !appState.mapHiddenTypes[entry[0]]
-                            );
+                          getApp().getMap().setHiddenType(entry[0], !appState.mapHiddenTypes[entry[0]]);
                         }}
                         checked={!appState.mapHiddenTypes[entry[0]]}
                         icon={entry[1]}
@@ -236,25 +198,12 @@ export function Header() {
                   })}
                 </div>
 
-                <OlLabelToggle
-                  toggled={false}
-                  leftLabel={"Live"}
-                  rightLabel={"Map"}
-                  onClick={() => {}}
-                ></OlLabelToggle>
-                <OlStateButton
-                  checked={false}
-                  icon={faCamera}
-                  onClick={() => {}}
-                  tooltip="Activate/deactivate camera plugin"
-                />
+                <OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
+                <OlStateButton checked={false} icon={faCamera} onClick={() => {}} tooltip="Activate/deactivate camera plugin" />
                 <OlDropdown label={appState.activeMapSource} className="w-60">
                   {appState.mapSources.map((source) => {
                     return (
-                      <OlDropdownItem
-                        key={source}
-                        onClick={() => getApp().getMap().setLayerName(source)}
-                      >
+                      <OlDropdownItem key={source} onClick={() => getApp().getMap().setLayerName(source)}>
                         <div className="truncate">{source}</div>
                       </OlDropdownItem>
                     );
@@ -265,7 +214,7 @@ export function Header() {
                 <FaChevronRight
                   className={`
                     absolute right-0 h-full w-6 rounded-lg px-2 py-3.5
-                    text-gray-200 z-ui-1
+                    text-gray-200
                     dark:bg-olympus-900
                   `}
                 />

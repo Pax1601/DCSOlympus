@@ -2,19 +2,11 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-export function OlButtonGroup(props: {
-  children?: JSX.Element | JSX.Element[];
-}) {
-  return (
-    <div className="inline-flex rounded-md shadow-sm">{props.children}</div>
-  );
+export function OlButtonGroup(props: { children?: JSX.Element | JSX.Element[] }) {
+  return <div className="inline-flex rounded-md shadow-sm">{props.children}</div>;
 }
 
-export function OlButtonGroupItem(props: {
-  icon: IconProp;
-  active: boolean;
-  onClick: () => void;
-}) {
+export function OlButtonGroupItem(props: { icon: IconProp; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={props.onClick}

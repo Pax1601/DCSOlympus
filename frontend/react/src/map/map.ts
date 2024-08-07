@@ -3,12 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import {
-  areaContains,
-  deg2rad,
-  getFunctionArguments,
-  getGroundElevation,
-} from "../other/utils";
+import { areaContains, deg2rad, getFunctionArguments, getGroundElevation } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -38,18 +33,12 @@ import "./map.css";
 import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
-import {
-  faComputerMouse,
-  faDrawPolygon,
-  faHandPointer,
-  faJetFighter,
-  faMap,
-} from "@fortawesome/free-solid-svg-icons";
+import { faComputerMouse, faDrawPolygon, faHandPointer, faJetFighter, faMap } from "@fortawesome/free-solid-svg-icons";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
 
-initDraggablePath();
+initDraggablePath(L);
 
 export class Map extends L.Map {
   /* Options */
@@ -141,10 +130,10 @@ export class Map extends L.Map {
     this.setView([37.23, -115.8], 10);
 
     /* Minimap */
-    var minimapLayer = new L.TileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      { minZoom: 0, maxZoom: 13 }
-    );
+    var minimapLayer = new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      minZoom: 0,
+      maxZoom: 13,
+    });
     this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
     this.#miniMapPolyline = new L.Polyline([], { color: "#202831" });
     this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
@@ -181,15 +170,11 @@ export class Map extends L.Map {
 
     /* Event listeners */
     document.addEventListener("hiddenTypesChanged", (ev: CustomEventInit) => {
-      Object.values(getApp().getUnitsManager().getUnits()).forEach(
-        (unit: Unit) => unit.updateVisibility()
-      );
-      Object.values(getApp().getMissionManager().getAirbases()).forEach(
-        (airbase: Airbase) => {
-          if (this.getHiddenTypes().airbase) airbase.removeFrom(this);
-          else airbase.addTo(this);
-        }
-      );
+      Object.values(getApp().getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+      Object.values(getApp().getMissionManager().getAirbases()).forEach((airbase: Airbase) => {
+        if (this.getHiddenTypes().airbase) airbase.removeFrom(this);
+        else airbase.addTo(this);
+      });
     });
 
     //document.addEventListener("unitUpdated", (ev: CustomEvent) => {
@@ -198,10 +183,7 @@ export class Map extends L.Map {
     //});
 
     document.addEventListener("mapOptionsChanged", () => {
-      this.getContainer().toggleAttribute(
-        "data-hide-labels",
-        !this.getOptions().showUnitLabels
-      );
+      this.getContainer().toggleAttribute("data-hide-labels", !this.getOptions().showUnitLabels);
       //this.#cameraControlPort = this.getOptions()[DCS_LINK_PORT] as number;
       //this.#cameraZoomRatio = 50 / (20 + (this.getOptions()[DCS_LINK_RATIO] as number));
 
@@ -263,12 +245,8 @@ export class Map extends L.Map {
       if (this.#panUp || this.#panDown || this.#panRight || this.#panLeft)
         this.panBy(
           new L.Point(
-            ((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) *
-              this.defaultPanDelta *
-              (this.#isShiftKeyDown ? 3 : 1),
-            ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) *
-              this.defaultPanDelta *
-              (this.#isShiftKeyDown ? 3 : 1)
+            ((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.defaultPanDelta * (this.#isShiftKeyDown ? 3 : 1),
+            ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.defaultPanDelta * (this.#isShiftKeyDown ? 3 : 1)
           )
         );
     }, 20);
@@ -289,10 +267,7 @@ export class Map extends L.Map {
       const layerData = this.#mapLayers[layerName];
       if (layerData instanceof Array) {
         let layers = layerData.map((layer: any) => {
-          return new L.TileLayer(
-            layer.urlTemplate.replace("{theatre}", theatre.toLowerCase()),
-            layer
-          );
+          return new L.TileLayer(layer.urlTemplate.replace("{theatre}", theatre.toLowerCase()), layer);
         });
         this.#layer = new L.LayerGroup(layers);
         this.#layer?.addTo(this);
@@ -306,13 +281,10 @@ export class Map extends L.Map {
       let layers: L.TileLayer[] = [];
 
       layers.push(
-        new L.TileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-          {
-            minZoom: 1,
-            maxZoom: 19,
-          }
-        )
+        new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+          minZoom: 1,
+          maxZoom: 19,
+        })
       );
 
       /* Load the configuration file */
@@ -348,9 +320,7 @@ export class Map extends L.Map {
     }
     this.#layerName = layerName;
 
-    document.dispatchEvent(
-      new CustomEvent("mapSourceChanged", { detail: layerName })
-    );
+    document.dispatchEvent(new CustomEvent("mapSourceChanged", { detail: layerName }));
   }
 
   getLayerName() {
@@ -372,11 +342,7 @@ export class Map extends L.Map {
     console.log(`Switching from state ${this.#state} to ${state}`);
 
     /* Operations to perform when leaving a state */
-    if (
-      this.#state === COALITIONAREA_DRAW_POLYGON ||
-      this.#state === COALITIONAREA_DRAW_CIRCLE
-    )
-      this.getSelectedCoalitionArea()?.setEditing(false);
+    if (this.#state === COALITIONAREA_DRAW_POLYGON || this.#state === COALITIONAREA_DRAW_CIRCLE) this.getSelectedCoalitionArea()?.setEditing(false);
 
     this.#state = state;
 
@@ -400,15 +366,11 @@ export class Map extends L.Map {
       this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
     } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
       getApp().getUnitsManager().deselectAllUnits();
-      this.#coalitionAreas.push(
-        new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 })
-      );
+      this.#coalitionAreas.push(new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 }));
       this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
     }
 
-    document.dispatchEvent(
-      new CustomEvent("mapStateChanged", { detail: this.#state })
-    );
+    document.dispatchEvent(new CustomEvent("mapStateChanged", { detail: this.#state }));
   }
 
   getState() {
@@ -449,10 +411,7 @@ export class Map extends L.Map {
           text: "Spawn unit",
         },
         {
-          actions: [
-            touch ? faHandPointer : faComputerMouse,
-            touch ? faHandPointer : faComputerMouse,
-          ],
+          actions: [touch ? faHandPointer : faComputerMouse, touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Exit spawn mode",
         },
@@ -465,10 +424,7 @@ export class Map extends L.Map {
     } else if (this.#state === CONTEXT_ACTION) {
       let controls = [
         {
-          actions: [
-            touch ? faHandPointer : faComputerMouse,
-            touch ? faHandPointer : faComputerMouse,
-          ],
+          actions: [touch ? faHandPointer : faComputerMouse, touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Deselect units",
         },
@@ -498,10 +454,7 @@ export class Map extends L.Map {
           text: "Select shape",
         },
         {
-          actions: [
-            touch ? faHandPointer : faComputerMouse,
-            touch ? faHandPointer : faComputerMouse,
-          ],
+          actions: [touch ? faHandPointer : faComputerMouse, touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Exit drawing mode",
         },
@@ -519,10 +472,7 @@ export class Map extends L.Map {
           text: "Add vertex to polygon",
         },
         {
-          actions: [
-            touch ? faHandPointer : faComputerMouse,
-            touch ? faHandPointer : faComputerMouse,
-          ],
+          actions: [touch ? faHandPointer : faComputerMouse, touch ? faHandPointer : faComputerMouse],
           target: faMap,
           text: "Finalize polygon",
         },
@@ -557,18 +507,11 @@ export class Map extends L.Map {
       })
     );
 
-    this.#coalitionAreas.forEach(
-      (coalitionArea: CoalitionPolygon | CoalitionCircle) =>
-        coalitionArea.setSelected(false)
-    );
+    this.#coalitionAreas.forEach((coalitionArea: CoalitionPolygon | CoalitionCircle) => coalitionArea.setSelected(false));
   }
 
   deleteCoalitionArea(coalitionArea: CoalitionPolygon | CoalitionCircle) {
-    if (this.#coalitionAreas.includes(coalitionArea))
-      this.#coalitionAreas.splice(
-        this.#coalitionAreas.indexOf(coalitionArea),
-        1
-      );
+    if (this.#coalitionAreas.includes(coalitionArea)) this.#coalitionAreas.splice(this.#coalitionAreas.indexOf(coalitionArea), 1);
 
     if (this.hasLayer(coalitionArea)) this.removeLayer(coalitionArea);
   }
@@ -617,9 +560,7 @@ export class Map extends L.Map {
     this.updateMinimap();
 
     const boundaries = this.#getMinimapBoundaries();
-    this.#miniMapPolyline.setLatLngs(
-      boundaries[theatre as keyof typeof boundaries]
-    );
+    this.#miniMapPolyline.setLatLngs(boundaries[theatre as keyof typeof boundaries]);
 
     this.setLayerName(this.#layerName);
   }
@@ -697,12 +638,7 @@ export class Map extends L.Map {
     }
   }
 
-  addTemporaryMarker(
-    latlng: L.LatLng,
-    name: string,
-    coalition: string,
-    commandHash?: string
-  ) {
+  addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string) {
     var marker = new TemporaryUnitMarker(latlng, name, coalition, commandHash);
     marker.addTo(this);
     this.#temporaryMarkers.push(marker);
@@ -710,11 +646,9 @@ export class Map extends L.Map {
   }
 
   getSelectedCoalitionArea() {
-    const coalitionArea = this.#coalitionAreas.find(
-      (coalitionArea: CoalitionPolygon | CoalitionCircle) => {
-        return coalitionArea.getSelected();
-      }
-    );
+    const coalitionArea = this.#coalitionAreas.find((coalitionArea: CoalitionPolygon | CoalitionCircle) => {
+      return coalitionArea.getSelected();
+    });
 
     return coalitionArea ?? null;
   }
@@ -794,10 +728,7 @@ export class Map extends L.Map {
     //}
   }
 
-  executeContextAction(
-    targetUnit: Unit | null,
-    targetPosition: L.LatLng | null
-  ) {
+  executeContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null) {
     this.#contextAction?.executeCallback(targetUnit, targetPosition);
   }
 
@@ -847,8 +778,7 @@ export class Map extends L.Map {
 
     this.#longPressTimer = window.setTimeout(() => {
       /* If the mouse is still being pressed, execute the long press action */
-      if (this.#isMouseDown && !this.#isDragging && !this.#isZooming)
-        this.#onLongPress(e);
+      if (this.#isMouseDown && !this.#isDragging && !this.#isZooming) this.#onLongPress(e);
     }, 500);
   }
 
@@ -858,10 +788,7 @@ export class Map extends L.Map {
     window.clearTimeout(this.#shortPressTimer);
     window.clearTimeout(this.#longPressTimer);
 
-    if (
-      this.#state === COALITIONAREA_DRAW_POLYGON ||
-      this.#state === COALITIONAREA_DRAW_CIRCLE
-    ) {
+    if (this.#state === COALITIONAREA_DRAW_POLYGON || this.#state === COALITIONAREA_DRAW_CIRCLE) {
       this.setState(COALITIONAREA_EDIT);
     } else {
       this.setState(IDLE);
@@ -870,10 +797,7 @@ export class Map extends L.Map {
 
   #onShortPress(e: any) {
     let touchLocation: L.LatLng;
-    if (e.type === "touchstart")
-      touchLocation = this.containerPointToLatLng(
-        this.mouseEventToContainerPoint(e.touches[0])
-      );
+    if (e.type === "touchstart") touchLocation = this.containerPointToLatLng(this.mouseEventToContainerPoint(e.touches[0]));
     else touchLocation = new L.LatLng(e.latlng.lat, e.latlng.lng);
 
     console.log(`Short press at ${touchLocation}`);
@@ -893,12 +817,7 @@ export class Map extends L.Map {
             undefined,
             undefined,
             (hash) => {
-              this.addTemporaryMarker(
-                touchLocation,
-                this.#spawnRequestTable?.unit.unitType ?? "unknown",
-                this.#spawnRequestTable?.coalition ?? "blue",
-                hash
-              );
+              this.addTemporaryMarker(touchLocation, this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? "blue", hash);
             }
           );
       }
@@ -910,11 +829,7 @@ export class Map extends L.Map {
     } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
       const selectedArea = this.getSelectedCoalitionArea();
       if (selectedArea && selectedArea instanceof CoalitionCircle) {
-        if (
-          selectedArea.getLatLng().lat == 0 &&
-          selectedArea.getLatLng().lng == 0
-        )
-          selectedArea.setLatLng(touchLocation);
+        if (selectedArea.getLatLng().lat == 0 && selectedArea.getLatLng().lng == 0) selectedArea.setLatLng(touchLocation);
         this.setState(COALITIONAREA_EDIT);
       }
     } else if (this.#state == COALITIONAREA_EDIT) {
@@ -938,10 +853,7 @@ export class Map extends L.Map {
 
   #onLongPress(e: any) {
     let touchLocation: L.LatLng;
-    if (e.type === "touchstart")
-      touchLocation = this.containerPointToLatLng(
-        this.mouseEventToContainerPoint(e.touches[0])
-      );
+    if (e.type === "touchstart") touchLocation = this.containerPointToLatLng(this.mouseEventToContainerPoint(e.touches[0]));
     else touchLocation = new L.LatLng(e.latlng.lat, e.latlng.lng);
 
     console.log(`Long press at ${touchLocation}`);
@@ -949,14 +861,8 @@ export class Map extends L.Map {
     if (!this.#isDragging && !this.#isZooming) {
       this.deselectAllCoalitionAreas();
       if (this.#state === IDLE) {
-        if (e.type === "touchstart")
-          document.dispatchEvent(
-            new CustomEvent("mapForceBoxSelect", { detail: e })
-          );
-        else
-          document.dispatchEvent(
-            new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent })
-          );
+        if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e }));
+        else document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent }));
       }
     }
   }
@@ -996,11 +902,7 @@ export class Map extends L.Map {
   }
 
   #broadcastPosition() {
-    if (
-      this.#bradcastPositionXmlHttp?.readyState !== 4 &&
-      this.#bradcastPositionXmlHttp !== null
-    )
-      return;
+    if (this.#bradcastPositionXmlHttp?.readyState !== 4 && this.#bradcastPositionXmlHttp !== null) return;
 
     getGroundElevation(this.getCenter(), (response: string) => {
       var groundElevation: number | null = null;
@@ -1009,18 +911,12 @@ export class Map extends L.Map {
         this.#bradcastPositionXmlHttp = new XMLHttpRequest();
         /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
                 browser if it first tries to send the request on the IPv6 address for localhost */
-        this.#bradcastPositionXmlHttp.open(
-          "POST",
-          `http://127.0.0.1:${this.#cameraControlPort}`
-        );
+        this.#bradcastPositionXmlHttp.open("POST", `http://127.0.0.1:${this.#cameraControlPort}`);
 
         const C = 40075016.686;
-        let mpp =
-          (C * Math.cos(deg2rad(this.getCenter().lat))) /
-          Math.pow(2, this.getZoom() + 8);
+        let mpp = (C * Math.cos(deg2rad(this.getCenter().lat))) / Math.pow(2, this.getZoom() + 8);
         let d = mpp * 1920;
-        let alt =
-          (((d / 2) * 1) / Math.tan(deg2rad(40))) * this.#cameraZoomRatio;
+        let alt = (((d / 2) * 1) / Math.tan(deg2rad(40))) * this.#cameraZoomRatio;
         alt = Math.min(alt, 50000);
         this.#bradcastPositionXmlHttp.send(
           JSON.stringify({
@@ -1038,10 +934,7 @@ export class Map extends L.Map {
 
   /* */
   #panToUnit(unit: Unit) {
-    var unitPosition = new L.LatLng(
-      unit.getPosition().lat,
-      unit.getPosition().lng
-    );
+    var unitPosition = new L.LatLng(unit.getPosition().lat, unit.getPosition().lng);
     this.setView(unitPosition, this.getZoom(), { animate: false });
   }
 
@@ -1067,23 +960,15 @@ export class Map extends L.Map {
 
   /* Check if the camera control plugin is available. Right now this will only change the color of the button, no changes in functionality */
   #checkCameraPort() {
-    if (this.#cameraOptionsXmlHttp?.readyState !== 4)
-      this.#cameraOptionsXmlHttp?.abort();
+    if (this.#cameraOptionsXmlHttp?.readyState !== 4) this.#cameraOptionsXmlHttp?.abort();
 
     this.#cameraOptionsXmlHttp = new XMLHttpRequest();
 
     /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
         browser if it first tries to send the request on the IPv6 address for localhost */
-    this.#cameraOptionsXmlHttp.open(
-      "OPTIONS",
-      `http://127.0.0.1:${this.#cameraControlPort}`
-    );
+    this.#cameraOptionsXmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
     this.#cameraOptionsXmlHttp.onload = (res: any) => {
-      if (
-        this.#cameraOptionsXmlHttp !== null &&
-        this.#cameraOptionsXmlHttp.status == 204
-      )
-        this.#setSlaveDCSCameraAvailable(true);
+      if (this.#cameraOptionsXmlHttp !== null && this.#cameraOptionsXmlHttp.status == 204) this.#setSlaveDCSCameraAvailable(true);
       else this.#setSlaveDCSCameraAvailable(false);
     };
     this.#cameraOptionsXmlHttp.onerror = (res: any) => {

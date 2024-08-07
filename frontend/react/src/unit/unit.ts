@@ -1,13 +1,4 @@
-import {
-  Marker,
-  LatLng,
-  Polyline,
-  Icon,
-  DivIcon,
-  CircleMarker,
-  Map,
-  Point,
-} from "leaflet";
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from "leaflet";
 import { getApp } from "../olympusapp";
 import {
   enumToCoalition,
@@ -24,7 +15,6 @@ import {
   ftToM,
   getGroundElevation,
   coalitionToEnum,
-  nmToFt,
   nmToM,
   zeroAppend,
 } from "../other/utils";
@@ -49,24 +39,13 @@ import {
   GROUPING_ZOOM_TRANSITION,
   MAX_SHOTS_SCATTER,
   SHOTS_SCATTER_DEGREES,
-  GROUND_UNIT_AIR_DEFENCE_REGEX,
   CONTEXT_ACTION,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import { navyUnitDatabase } from "./databases/navyunitdatabase";
 import { Weapon } from "../weapon/weapon";
-import {
-  Ammo,
-  Contact,
-  GeneralSettings,
-  LoadoutBlueprint,
-  ObjectIconOptions,
-  Offset,
-  Radio,
-  TACAN,
-  UnitData,
-} from "../interfaces";
+import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from "../interfaces";
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from "./group";
 import { ContextActionSet } from "./contextactionset";
@@ -75,18 +54,16 @@ import {
   olButtonsContextMissOnPurpose,
   olButtonsContextScenicAaa,
   olButtonsContextSimulateFireFight,
-  olIconsDiamond,
-  olIconsEchelonLh,
-  olIconsEchelonRh,
-  olIconsFollow,
-  olIconsFront,
-  olIconsGroupGround,
-  olIconsLandAtPoint,
-  olIconsLineAbreast,
-  olIconsTrail,
-  olStatesAttack,
-  olStatesMissOnPurpose,
-  olStatesRefuel,
+  olButtonsContextDiamond,
+  olButtonsContextEchelonLh,
+  olButtonsContextEchelonRh,
+  olButtonsContextFollow,
+  olButtonsContextFront,
+  olButtonsContextLandAtPoint,
+  olButtonsContextLineAbreast,
+  olButtonsContextTrail,
+  olButtonsContextAttack,
+  olButtonsContextRefuel,
 } from "../ui/components/olicons";
 import {
   faArrowDown,
@@ -381,9 +358,7 @@ export abstract class Unit extends CustomMarker {
     this.on("mouseover", () => {
       if (this.belongsToCommandedCoalition()) {
         this.setHighlighted(true);
-        document.dispatchEvent(
-          new CustomEvent("unitMouseover", { detail: this })
-        );
+        document.dispatchEvent(new CustomEvent("unitMouseover", { detail: this }));
       }
     });
     this.on("mouseout", () => {
@@ -547,9 +522,7 @@ export abstract class Unit extends CustomMarker {
           this.#desiredAltitude = dataExtractor.extractFloat64();
           break;
         case DataIndexes.desiredAltitudeType:
-          this.#desiredAltitudeType = dataExtractor.extractBool()
-            ? "AGL"
-            : "ASL";
+          this.#desiredAltitudeType = dataExtractor.extractBool() ? "AGL" : "ASL";
           break;
         case DataIndexes.leaderID:
           this.#leaderID = dataExtractor.extractUInt32();
@@ -567,14 +540,10 @@ export abstract class Unit extends CustomMarker {
           this.#ROE = enumToROE(dataExtractor.extractUInt8());
           break;
         case DataIndexes.reactionToThreat:
-          this.#reactionToThreat = enumToReactionToThreat(
-            dataExtractor.extractUInt8()
-          );
+          this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8());
           break;
         case DataIndexes.emissionsCountermeasures:
-          this.#emissionsCountermeasures = enumToEmissioNCountermeasure(
-            dataExtractor.extractUInt8()
-          );
+          this.#emissionsCountermeasures = enumToEmissioNCountermeasure(dataExtractor.extractUInt8());
           break;
         case DataIndexes.TACAN:
           this.#TACAN = dataExtractor.extractTACAN();
@@ -590,9 +559,7 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.contacts:
           this.#contacts = dataExtractor.extractContacts();
-          document.dispatchEvent(
-            new CustomEvent("contactsUpdated", { detail: this })
-          );
+          document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this }));
           break;
         case DataIndexes.activePath:
           this.#activePath = dataExtractor.extractActivePath();
@@ -634,8 +601,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     /* If the unit is selected or if the view is centered on this unit, sent the update signal so that other elements like the UnitControlPanel can be updated. */
-    if (this.getSelected() || getApp().getMap().getCenteredOnUnit() === this)
-      document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
+    if (this.getSelected() || getApp().getMap().getCenteredOnUnit() === this) document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
   }
 
   /** Get unit data collated into an object
@@ -706,8 +672,7 @@ export abstract class Unit extends CustomMarker {
    * @param newAlive (boolean) true = alive, false = dead
    */
   setAlive(newAlive: boolean) {
-    if (newAlive != this.#alive)
-      document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
+    if (newAlive != this.#alive) document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
     this.#alive = newAlive;
   }
 
@@ -717,11 +682,7 @@ export abstract class Unit extends CustomMarker {
    */
   setSelected(selected: boolean) {
     /* Only alive units can be selected that belong to the commanded coalition can be selected */
-    if (
-      (this.#alive || !selected) &&
-      this.belongsToCommandedCoalition() &&
-      this.getSelected() != selected
-    ) {
+    if ((this.#alive || !selected) && this.belongsToCommandedCoalition() && this.getSelected() != selected) {
       this.#selected = selected;
 
       /* If selected, update the marker to show the selected effects, else clear all the drawings that are only shown for selected units. */
@@ -734,35 +695,24 @@ export abstract class Unit extends CustomMarker {
       }
 
       /* When the group leader is selected, if grouping is active, all the other group members are also selected */
-      if (
-        this.getCategory() === "GroundUnit" &&
-        getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION
-      ) {
+      if (this.getCategory() === "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
         if (this.#isLeader) {
           /* Redraw the marker in case the leader unit was replaced by a group marker, like for SAM Sites */
           this.#redrawMarker();
-          this.getGroupMembers().forEach((unit: Unit) =>
-            unit.setSelected(selected)
-          );
+          this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
         } else {
           this.#updateMarker();
         }
       }
 
       /* Activate the selection effects on the marker */
-      this.getElement()
-        ?.querySelector(`.unit`)
-        ?.toggleAttribute("data-is-selected", selected);
+      this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
 
       /* Trigger events after all (de-)selecting has been done */
       if (selected) {
-        document.dispatchEvent(
-          new CustomEvent("unitSelection", { detail: this })
-        );
+        document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
       } else {
-        document.dispatchEvent(
-          new CustomEvent("unitDeselection", { detail: this })
-        );
+        document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
       }
     }
   }
@@ -799,12 +749,8 @@ export abstract class Unit extends CustomMarker {
   setHighlighted(highlighted: boolean) {
     if (this.#highlighted != highlighted) {
       this.#highlighted = highlighted;
-      this.getElement()
-        ?.querySelector(`[data-object|="unit"]`)
-        ?.toggleAttribute("data-is-highlighted", highlighted);
-      this.getGroupMembers().forEach((unit: Unit) =>
-        unit.setHighlighted(highlighted)
-      );
+      this.getElement()?.querySelector(`[data-object|="unit"]`)?.toggleAttribute("data-is-highlighted", highlighted);
+      this.getGroupMembers().forEach((unit: Unit) => unit.setHighlighted(highlighted));
     }
   }
 
@@ -842,8 +788,7 @@ export abstract class Unit extends CustomMarker {
    * @returns boolean
    */
   belongsToCommandedCoalition() {
-    return getApp().getMissionManager().getCommandModeOptions().commandMode !==
-      GAME_MASTER &&
+    return getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER &&
       getApp().getMissionManager().getCommandedCoalition() !== this.#coalition
       ? false
       : true;
@@ -858,10 +803,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   getDatabaseEntry() {
-    return (
-      this.getDatabase()?.getByName(this.#name) ??
-      this.getDatabase()?.getUnkownUnit(this.getName())
-    );
+    return this.getDatabase()?.getByName(this.#name) ?? this.getDatabase()?.getUnkownUnit(this.getName());
   }
 
   getGroup() {
@@ -884,8 +826,7 @@ export abstract class Unit extends CustomMarker {
       faLocationDot,
       (units: Unit[], _, targetPosition) => {
         getApp().getUnitsManager().clearDestinations(units);
-        if (targetPosition)
-          getApp().getUnitsManager().addDestination(targetPosition, false, 0);
+        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0);
       }
     );
 
@@ -896,10 +837,7 @@ export abstract class Unit extends CustomMarker {
       "Click on the map to add a destination to the path",
       faRoute,
       (units: Unit[], _, targetPosition) => {
-        if (targetPosition)
-          getApp()
-            .getUnitsManager()
-            .addDestination(targetPosition, false, 0, units);
+        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
   }
@@ -970,22 +908,14 @@ export abstract class Unit extends CustomMarker {
 
       /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
       var marker;
-      if (
-        this.belongsToCommandedCoalition() ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC].includes(value)
-        )
-      )
+      if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getDatabaseEntry()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
       img.src = `/vite/images/units/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
-      unitIcon.toggleAttribute(
-        "data-rotate-to-heading",
-        iconOptions.rotateToHeading
-      );
+      unitIcon.toggleAttribute("data-rotate-to-heading", iconOptions.rotateToHeading);
       el.append(unitIcon);
     }
 
@@ -1028,8 +958,7 @@ export abstract class Unit extends CustomMarker {
     if (iconOptions.showAmmo) {
       var ammoIndicator = document.createElement("div");
       ammoIndicator.classList.add("unit-ammo");
-      for (let i = 0; i <= 3; i++)
-        ammoIndicator.appendChild(document.createElement("div"));
+      for (let i = 0; i <= 3; i++) ammoIndicator.appendChild(document.createElement("div"));
       el.append(ammoIndicator);
     }
 
@@ -1069,18 +998,14 @@ export abstract class Unit extends CustomMarker {
       hiddenTypes[this.#coalition] ||
       /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
       (!this.belongsToCommandedCoalition() &&
-        (this.#detectionMethods.length == 0 ||
-          (this.#detectionMethods.length == 1 &&
-            this.#detectionMethods[0] === RWR))) ||
+        (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
       /* Hide the unit if grouping is activated, the unit is not the group leader, it is not selected, and the zoom is higher than the grouping threshold */
       (getApp().getMap().getOptions().hideGroupMembers &&
         !this.#isLeader &&
         !this.getSelected() &&
         this.getCategory() == "GroundUnit" &&
         getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION &&
-        (this.belongsToCommandedCoalition() ||
-          (!this.belongsToCommandedCoalition() &&
-            this.#detectionMethods.length == 0)));
+        (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)));
 
     /* Force dead units to be hidden */
     this.setHidden(hidden || !this.getAlive());
@@ -1123,12 +1048,7 @@ export abstract class Unit extends CustomMarker {
   setDetectionMethods(newDetectionMethods: number[]) {
     if (!this.belongsToCommandedCoalition()) {
       /* Check if the detection methods of this unit have changed */
-      if (
-        this.#detectionMethods.length !== newDetectionMethods.length ||
-        this.getDetectionMethods().some(
-          (value) => !newDetectionMethods.includes(value)
-        )
-      ) {
+      if (this.#detectionMethods.length !== newDetectionMethods.length || this.getDetectionMethods().some((value) => !newDetectionMethods.includes(value))) {
         /* Force a redraw of the unit to reflect the new status of the detection methods */
         this.setHidden(true);
         this.#detectionMethods = newDetectionMethods;
@@ -1214,16 +1134,12 @@ export abstract class Unit extends CustomMarker {
 
   attackUnit(targetID: number) {
     /* Units can't attack themselves */
-    if (!this.#human)
-      if (this.ID != targetID)
-        getApp().getServerManager().attackUnit(this.ID, targetID);
+    if (!this.#human) if (this.ID != targetID) getApp().getServerManager().attackUnit(this.ID, targetID);
   }
 
   followUnit(targetID: number, offset: { x: number; y: number; z: number }) {
     /* Units can't follow themselves */
-    if (!this.#human)
-      if (this.ID != targetID)
-        getApp().getServerManager().followUnit(this.ID, targetID, offset);
+    if (!this.#human) if (this.ID != targetID) getApp().getServerManager().followUnit(this.ID, targetID, offset);
   }
 
   landAt(latlng: LatLng) {
@@ -1231,13 +1147,11 @@ export abstract class Unit extends CustomMarker {
   }
 
   changeSpeed(speedChange: string) {
-    if (!this.#human)
-      getApp().getServerManager().changeSpeed(this.ID, speedChange);
+    if (!this.#human) getApp().getServerManager().changeSpeed(this.ID, speedChange);
   }
 
   changeAltitude(altitudeChange: string) {
-    if (!this.#human)
-      getApp().getServerManager().changeAltitude(this.ID, altitudeChange);
+    if (!this.#human) getApp().getServerManager().changeAltitude(this.ID, altitudeChange);
   }
 
   setSpeed(speed: number) {
@@ -1245,18 +1159,15 @@ export abstract class Unit extends CustomMarker {
   }
 
   setSpeedType(speedType: string) {
-    if (!this.#human)
-      getApp().getServerManager().setSpeedType(this.ID, speedType);
+    if (!this.#human) getApp().getServerManager().setSpeedType(this.ID, speedType);
   }
 
   setAltitude(altitude: number) {
-    if (!this.#human)
-      getApp().getServerManager().setAltitude(this.ID, altitude);
+    if (!this.#human) getApp().getServerManager().setAltitude(this.ID, altitude);
   }
 
   setAltitudeType(altitudeType: string) {
-    if (!this.#human)
-      getApp().getServerManager().setAltitudeType(this.ID, altitudeType);
+    if (!this.#human) getApp().getServerManager().setAltitudeType(this.ID, altitudeType);
   }
 
   setROE(ROE: string) {
@@ -1264,17 +1175,11 @@ export abstract class Unit extends CustomMarker {
   }
 
   setReactionToThreat(reactionToThreat: string) {
-    if (!this.#human)
-      getApp()
-        .getServerManager()
-        .setReactionToThreat(this.ID, reactionToThreat);
+    if (!this.#human) getApp().getServerManager().setReactionToThreat(this.ID, reactionToThreat);
   }
 
   setEmissionsCountermeasures(emissionCountermeasure: string) {
-    if (!this.#human)
-      getApp()
-        .getServerManager()
-        .setEmissionsCountermeasures(this.ID, emissionCountermeasure);
+    if (!this.#human) getApp().getServerManager().setEmissionsCountermeasures(this.ID, emissionCountermeasure);
   }
 
   setOnOff(onOff: boolean) {
@@ -1282,45 +1187,23 @@ export abstract class Unit extends CustomMarker {
   }
 
   setFollowRoads(followRoads: boolean) {
-    if (!this.#human)
-      getApp().getServerManager().setFollowRoads(this.ID, followRoads);
+    if (!this.#human) getApp().getServerManager().setFollowRoads(this.ID, followRoads);
   }
 
   setOperateAs(operateAs: string) {
-    if (!this.#human)
-      getApp()
-        .getServerManager()
-        .setOperateAs(this.ID, coalitionToEnum(operateAs));
+    if (!this.#human) getApp().getServerManager().setOperateAs(this.ID, coalitionToEnum(operateAs));
   }
 
   delete(explosion: boolean, explosionType: string, immediate: boolean) {
-    getApp()
-      .getServerManager()
-      .deleteUnit(this.ID, explosion, explosionType, immediate);
+    getApp().getServerManager().deleteUnit(this.ID, explosion, explosionType, immediate);
   }
 
   refuel() {
     if (!this.#human) getApp().getServerManager().refuel(this.ID);
   }
 
-  setAdvancedOptions(
-    isActiveTanker: boolean,
-    isActiveAWACS: boolean,
-    TACAN: TACAN,
-    radio: Radio,
-    generalSettings: GeneralSettings
-  ) {
-    if (!this.#human)
-      getApp()
-        .getServerManager()
-        .setAdvacedOptions(
-          this.ID,
-          isActiveTanker,
-          isActiveAWACS,
-          TACAN,
-          radio,
-          generalSettings
-        );
+  setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
+    if (!this.#human) getApp().getServerManager().setAdvacedOptions(this.ID, isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings);
   }
 
   bombPoint(latlng: LatLng) {
@@ -1350,18 +1233,10 @@ export abstract class Unit extends CustomMarker {
 
       /* DCS and SRTM altitude data is not exactly the same so to minimize error we use SRTM only to compute relative elevation difference */
       var altitude = this.getPosition().alt;
-      if (
-        altitude !== undefined &&
-        targetGroundElevation !== null &&
-        unitGroundElevation !== null
-      )
+      if (altitude !== undefined && targetGroundElevation !== null && unitGroundElevation !== null)
         getApp()
           .getServerManager()
-          .simulateFireFight(
-            this.ID,
-            latlng,
-            altitude + targetGroundElevation - unitGroundElevation
-          );
+          .simulateFireFight(this.ID, latlng, altitude + targetGroundElevation - unitGroundElevation);
     });
   }
 
@@ -1386,13 +1261,11 @@ export abstract class Unit extends CustomMarker {
   }
 
   setShotsScatter(shotsScatter: number) {
-    if (!this.#human)
-      getApp().getServerManager().setShotsScatter(this.ID, shotsScatter);
+    if (!this.#human) getApp().getServerManager().setShotsScatter(this.ID, shotsScatter);
   }
 
   setShotsIntensity(shotsIntensity: number) {
-    if (!this.#human)
-      getApp().getServerManager().setShotsIntensity(this.ID, shotsIntensity);
+    if (!this.#human) getApp().getServerManager().setShotsIntensity(this.ID, shotsIntensity);
   }
 
   /***********************************************/
@@ -1409,36 +1282,21 @@ export abstract class Unit extends CustomMarker {
     var contextActionSet = new ContextActionSet();
 
     // TODO FIX
-    contextActionSet.addContextAction(
-      this,
-      "trail",
-      "Trail",
-      "Follow unit in trail formation",
-      olIconsTrail,
-      () => this.applyFollowOptions("trail", units)
+    contextActionSet.addContextAction(this, "trail", "Trail", "Follow unit in trail formation", olButtonsContextTrail, () =>
+      this.applyFollowOptions("trail", units)
     );
-    contextActionSet.addContextAction(
-      this,
-      "echelon-lh",
-      "Echelon (LH)",
-      "Follow unit in echelon left formation",
-      olIconsEchelonLh,
-      () => this.applyFollowOptions("echelon-lh", units)
+    contextActionSet.addContextAction(this, "echelon-lh", "Echelon (LH)", "Follow unit in echelon left formation", olButtonsContextEchelonLh, () =>
+      this.applyFollowOptions("echelon-lh", units)
     );
-    contextActionSet.addContextAction(
-      this,
-      "echelon-rh",
-      "Echelon (RH)",
-      "Follow unit in echelon right formation",
-      olIconsEchelonRh,
-      () => this.applyFollowOptions("echelon-rh", units)
+    contextActionSet.addContextAction(this, "echelon-rh", "Echelon (RH)", "Follow unit in echelon right formation", olButtonsContextEchelonRh, () =>
+      this.applyFollowOptions("echelon-rh", units)
     );
     contextActionSet.addContextAction(
       this,
       "line-abreast-lh",
       "Line abreast (LH)",
       "Follow unit in line abreast left formation",
-      olIconsLineAbreast,
+      olButtonsContextLineAbreast,
       () => this.applyFollowOptions("line-abreast-lh", units)
     );
     contextActionSet.addContextAction(
@@ -1446,69 +1304,34 @@ export abstract class Unit extends CustomMarker {
       "line-abreast-rh",
       "Line abreast (RH)",
       "Follow unit in line abreast right formation",
-      olIconsLineAbreast,
+      olButtonsContextLineAbreast,
       () => this.applyFollowOptions("line-abreast-rh", units)
     );
-    contextActionSet.addContextAction(
-      this,
-      "front",
-      "Front",
-      "Fly in front of unit",
-      olIconsFront,
-      () => this.applyFollowOptions("front", units)
+    contextActionSet.addContextAction(this, "front", "Front", "Fly in front of unit", olButtonsContextFront, () => this.applyFollowOptions("front", units));
+    contextActionSet.addContextAction(this, "diamond", "Diamond", "Follow unit in diamond formation", olButtonsContextDiamond, () =>
+      this.applyFollowOptions("diamond", units)
     );
-    contextActionSet.addContextAction(
-      this,
-      "diamond",
-      "Diamond",
-      "Follow unit in diamond formation",
-      olIconsDiamond,
-      () => this.applyFollowOptions("diamond", units)
-    );
-    contextActionSet.addContextAction(
-      this,
-      "custom",
-      "Custom",
-      "Set a custom formation position",
-      faExclamation,
-      () => this.applyFollowOptions("custom", units)
+    contextActionSet.addContextAction(this, "custom", "Custom", "Set a custom formation position", faExclamation, () =>
+      this.applyFollowOptions("custom", units)
     );
   }
 
   applyFollowOptions(formation: string, units: Unit[]) {
     if (formation === "custom") {
-      document
-        .getElementById("custom-formation-dialog")
-        ?.classList.remove("hide");
+      document.getElementById("custom-formation-dialog")?.classList.remove("hide");
       document.addEventListener("applyCustomFormation", () => {
         var dialog = document.getElementById("custom-formation-dialog");
         if (dialog) {
           dialog.classList.add("hide");
           var clock = 1;
           while (clock < 8) {
-            if (
-              (<HTMLInputElement>dialog.querySelector(`#formation-${clock}`))
-                .checked
-            )
-              break;
+            if ((<HTMLInputElement>dialog.querySelector(`#formation-${clock}`)).checked) break;
             clock++;
           }
           var angleDeg = 360 - (clock - 1) * 45;
           var angleRad = deg2rad(angleDeg);
-          var distance = ftToM(
-            parseInt(
-              (<HTMLInputElement>(
-                dialog.querySelector(`#distance`)?.querySelector("input")
-              )).value
-            )
-          );
-          var upDown = ftToM(
-            parseInt(
-              (<HTMLInputElement>(
-                dialog.querySelector(`#up-down`)?.querySelector("input")
-              )).value
-            )
-          );
+          var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
+          var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
 
           // X: front-rear, positive front
           // Y: top-bottom, positive top
@@ -1517,15 +1340,11 @@ export abstract class Unit extends CustomMarker {
           var y = upDown;
           var z = distance * Math.sin(angleRad);
 
-          getApp()
-            .getUnitsManager()
-            .followUnit(this.ID, { x: x, y: y, z: z }, undefined, units);
+          getApp().getUnitsManager().followUnit(this.ID, { x: x, y: y, z: z }, undefined, units);
         }
       });
     } else {
-      getApp()
-        .getUnitsManager()
-        .followUnit(this.ID, undefined, formation, units);
+      getApp().getUnitsManager().followUnit(this.ID, undefined, formation, units);
     }
   }
 
@@ -1542,8 +1361,7 @@ export abstract class Unit extends CustomMarker {
       /* Still waiting so no doubleclick; do the click action */
       if (this.#waitingForDoubleClick) {
         if (getApp().getMap().getState() === IDLE || e.originalEvent.ctrlKey) {
-          if (!e.originalEvent.ctrlKey)
-            getApp().getUnitsManager().deselectAllUnits();
+          if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
 
           this.setSelected(!this.getSelected());
         } else if (getApp().getMap().getState() === CONTEXT_ACTION) {
@@ -1564,12 +1382,7 @@ export abstract class Unit extends CustomMarker {
     /* Select all matching units in the viewport */
     const unitsManager = getApp().getUnitsManager();
     Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
-      if (
-        unit.getAlive() === true &&
-        unit.getName() === this.getName() &&
-        unit.isInViewport()
-      )
-        unitsManager.selectUnit(unit.ID, false);
+      if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport()) unitsManager.selectUnit(unit.ID, false);
     });
   }
 
@@ -1578,83 +1391,49 @@ export abstract class Unit extends CustomMarker {
 
     /* Draw the minimap marker */
     var drawMiniMapMarker =
-      this.belongsToCommandedCoalition() ||
-      this.getDetectionMethods().some((value) =>
-        [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-      );
+      this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value));
     if (this.#alive && drawMiniMapMarker) {
       if (this.#miniMapMarker == null) {
-        this.#miniMapMarker = new CircleMarker(
-          new LatLng(this.#position.lat, this.#position.lng),
-          { radius: 0.5 }
-        );
-        if (this.#coalition == "neutral")
-          this.#miniMapMarker.setStyle({ color: "#CFD9E8", radius: 2 });
-        else if (this.#coalition == "red")
-          this.#miniMapMarker.setStyle({ color: "#ff5858", radius: 2 });
+        this.#miniMapMarker = new CircleMarker(new LatLng(this.#position.lat, this.#position.lng), { radius: 0.5 });
+        if (this.#coalition == "neutral") this.#miniMapMarker.setStyle({ color: "#CFD9E8", radius: 2 });
+        else if (this.#coalition == "red") this.#miniMapMarker.setStyle({ color: "#ff5858", radius: 2 });
         else this.#miniMapMarker.setStyle({ color: "#247be2", radius: 2 });
         this.#miniMapMarker.addTo(getApp().getMap().getMiniMapLayerGroup());
         this.#miniMapMarker.bringToBack();
       } else {
-        if (
-          this.#miniMapMarker.getLatLng().lat !== this.getPosition().lat ||
-          this.#miniMapMarker.getLatLng().lng !== this.getPosition().lng
-        ) {
-          this.#miniMapMarker.setLatLng(
-            new LatLng(this.#position.lat, this.#position.lng)
-          );
+        if (this.#miniMapMarker.getLatLng().lat !== this.getPosition().lat || this.#miniMapMarker.getLatLng().lng !== this.getPosition().lng) {
+          this.#miniMapMarker.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
           this.#miniMapMarker.bringToBack();
         }
       }
     } else {
-      if (
-        this.#miniMapMarker != null &&
-        getApp().getMap().getMiniMapLayerGroup().hasLayer(this.#miniMapMarker)
-      ) {
-        getApp()
-          .getMap()
-          .getMiniMapLayerGroup()
-          .removeLayer(this.#miniMapMarker);
+      if (this.#miniMapMarker != null && getApp().getMap().getMiniMapLayerGroup().hasLayer(this.#miniMapMarker)) {
+        getApp().getMap().getMiniMapLayerGroup().removeLayer(this.#miniMapMarker);
         this.#miniMapMarker = null;
       }
     }
 
     /* Draw the marker */
     if (!this.getHidden()) {
-      if (
-        this.getLatLng().lat !== this.#position.lat ||
-        this.getLatLng().lng !== this.#position.lng
-      ) {
+      if (this.getLatLng().lat !== this.#position.lat || this.getLatLng().lng !== this.#position.lng) {
         this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
       }
 
       var element = this.getElement();
       if (element != null) {
         /* Draw the velocity vector */
-        element
-          .querySelector(".unit-vvi")
-          ?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
+        element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
 
         /* Set fuel data */
-        element
-          .querySelector(".unit-fuel-level")
-          ?.setAttribute("style", `width: ${this.#fuel}%`);
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
+        element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);
+        element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
 
         /* Set health data */
-        element
-          .querySelector(".unit-health-level")
-          ?.setAttribute("style", `width: ${this.#health}%`);
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute("data-has-low-health", this.#health < 20);
+        element.querySelector(".unit-health-level")?.setAttribute("style", `width: ${this.#health}%`);
+        element.querySelector(".unit")?.toggleAttribute("data-has-low-health", this.#health < 20);
 
         /* Set dead/alive flag */
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute("data-is-dead", !this.#alive);
+        element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
         /* Set current unit state */
         if (this.#human) {
@@ -1663,27 +1442,14 @@ export abstract class Unit extends CustomMarker {
         } else if (!this.#controlled) {
           // Unit is under DCS control (not Olympus)
           element.querySelector(".unit")?.setAttribute("data-state", "dcs");
-        } else if (
-          (this.getCategory() == "Aircraft" ||
-            this.getCategory() == "Helicopter") &&
-          !this.#hasTask
-        ) {
+        } else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask) {
           element.querySelector(".unit")?.setAttribute("data-state", "no-task");
         } else {
           // Unit is under Olympus control
           if (this.#onOff) {
-            if (this.#isActiveTanker)
-              element
-                .querySelector(".unit")
-                ?.setAttribute("data-state", "tanker");
-            else if (this.#isActiveAWACS)
-              element
-                .querySelector(".unit")
-                ?.setAttribute("data-state", "AWACS");
-            else
-              element
-                .querySelector(".unit")
-                ?.setAttribute("data-state", this.#state.toLowerCase());
+            if (this.#isActiveTanker) element.querySelector(".unit")?.setAttribute("data-state", "tanker");
+            else if (this.#isActiveAWACS) element.querySelector(".unit")?.setAttribute("data-state", "AWACS");
+            else element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
           } else {
             element.querySelector(".unit")?.setAttribute("data-state", "off");
           }
@@ -1691,39 +1457,22 @@ export abstract class Unit extends CustomMarker {
 
         /* Set altitude and speed */
         if (element.querySelector(".unit-altitude"))
-          (<HTMLElement>element.querySelector(".unit-altitude")).innerText =
-            "FL" +
-            zeroAppend(
-              Math.floor(mToFt(this.#position.alt as number) / 100),
-              3
-            );
+          (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
         if (element.querySelector(".unit-speed"))
-          (<HTMLElement>element.querySelector(".unit-speed")).innerText =
-            String(Math.floor(msToKnots(this.#speed))) + "GS";
+          (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
 
         /* Rotate elements according to heading */
         element.querySelectorAll("[data-rotate-to-heading]").forEach((el) => {
           const headingDeg = rad2deg(this.#track);
           let currentStyle = el.getAttribute("style") || "";
-          el.setAttribute(
-            "style",
-            currentStyle + `transform:rotate(${headingDeg}deg);`
-          );
+          el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
         });
 
         /* Turn on ammo indicators */
-        var hasFox1 = element
-          .querySelector(".unit")
-          ?.hasAttribute("data-has-fox-1");
-        var hasFox2 = element
-          .querySelector(".unit")
-          ?.hasAttribute("data-has-fox-2");
-        var hasFox3 = element
-          .querySelector(".unit")
-          ?.hasAttribute("data-has-fox-3");
-        var hasOtherAmmo = element
-          .querySelector(".unit")
-          ?.hasAttribute("data-has-other-ammo");
+        var hasFox1 = element.querySelector(".unit")?.hasAttribute("data-has-fox-1");
+        var hasFox2 = element.querySelector(".unit")?.hasAttribute("data-has-fox-2");
+        var hasFox3 = element.querySelector(".unit")?.hasAttribute("data-has-fox-3");
+        var hasOtherAmmo = element.querySelector(".unit")?.hasAttribute("data-has-other-ammo");
 
         var newHasFox1 = false;
         var newHasFox2 = false;
@@ -1737,43 +1486,22 @@ export abstract class Unit extends CustomMarker {
           } else newHasOtherAmmo = true;
         });
 
-        if (hasFox1 != newHasFox1)
-          element
-            .querySelector(".unit")
-            ?.toggleAttribute("data-has-fox-1", newHasFox1);
-        if (hasFox2 != newHasFox2)
-          element
-            .querySelector(".unit")
-            ?.toggleAttribute("data-has-fox-2", newHasFox2);
-        if (hasFox3 != newHasFox3)
-          element
-            .querySelector(".unit")
-            ?.toggleAttribute("data-has-fox-3", newHasFox3);
-        if (hasOtherAmmo != newHasOtherAmmo)
-          element
-            .querySelector(".unit")
-            ?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
+        if (hasFox1 != newHasFox1) element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", newHasFox1);
+        if (hasFox2 != newHasFox2) element.querySelector(".unit")?.toggleAttribute("data-has-fox-2", newHasFox2);
+        if (hasFox3 != newHasFox3) element.querySelector(".unit")?.toggleAttribute("data-has-fox-3", newHasFox3);
+        if (hasOtherAmmo != newHasOtherAmmo) element.querySelector(".unit")?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
 
         /* Draw the hotgroup element */
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
+        element.querySelector(".unit")?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
         if (this.#hotgroup) {
-          const hotgroupEl = element.querySelector(
-            ".unit-hotgroup-id"
-          ) as HTMLElement;
+          const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
           if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
         }
       }
 
       /* Set vertical offset for altitude stacking */
       var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
-      this.setZIndexOffset(
-        1000 +
-          Math.floor(this.#position.alt as number) -
-          pos.y +
-          (this.#highlighted || this.#selected ? 5000 : 0)
-      );
+      this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
     }
   }
 
@@ -1782,16 +1510,11 @@ export abstract class Unit extends CustomMarker {
     this.#updateMarker();
 
     /* Activate the selection effects on the marker */
-    this.getElement()
-      ?.querySelector(`.unit`)
-      ?.toggleAttribute("data-is-selected", this.getSelected());
+    this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", this.getSelected());
   }
 
   #drawPath() {
-    if (
-      this.#activePath != undefined &&
-      getApp().getMap().getOptions().showUnitPaths
-    ) {
+    if (this.#activePath != undefined && getApp().getMap().getOptions().showUnitPaths) {
       var points: LatLng[] = [];
       points.push(new LatLng(this.#position.lat, this.#position.lng));
 
@@ -1803,7 +1526,7 @@ export abstract class Unit extends CustomMarker {
         }).addTo(getApp().getMap());
         marker.on("dragstart", (event) => {
           event.target.options["freeze"] = true;
-        })
+        });
         marker.on("dragend", (event) => {
           this.updatePathFromMarkers();
           event.target.options["freeze"] = false;
@@ -1824,10 +1547,7 @@ export abstract class Unit extends CustomMarker {
         var destination = this.#activePath[WP];
         var frozen = this.#pathMarkers[parseInt(WP)].options["freeze"];
         if (!this.#pathMarkers[parseInt(WP)].options["freeze"]) {
-          this.#pathMarkers[parseInt(WP)].setLatLng([
-            destination.lat,
-            destination.lng,
-          ]);
+          this.#pathMarkers[parseInt(WP)].setLatLng([destination.lat, destination.lng]);
         }
         points.push(new LatLng(destination.lat, destination.lng));
         this.#pathPolyline.setLatLngs(points);
@@ -1856,44 +1576,23 @@ export abstract class Unit extends CustomMarker {
         var contactData = this.#contacts[index];
         var contact: Unit | Weapon | null;
 
-        if (contactData.ID in getApp().getUnitsManager().getUnits())
-          contact = getApp().getUnitsManager().getUnitByID(contactData.ID);
-        else
-          contact = getApp().getWeaponsManager().getWeaponByID(contactData.ID);
+        if (contactData.ID in getApp().getUnitsManager().getUnits()) contact = getApp().getUnitsManager().getUnitByID(contactData.ID);
+        else contact = getApp().getWeaponsManager().getWeaponByID(contactData.ID);
 
         if (contact != null && contact.getAlive()) {
           var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
           var endLatLng: LatLng;
           if (contactData.detectionMethod === RWR) {
-            var bearingToContact = bearing(
-              this.#position.lat,
-              this.#position.lng,
-              contact.getPosition().lat,
-              contact.getPosition().lng
-            );
+            var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.getPosition().lat, contact.getPosition().lng);
             var startXY = getApp().getMap().latLngToContainerPoint(startLatLng);
             var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
             var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
-            endLatLng = getApp()
-              .getMap()
-              .containerPointToLatLng(new Point(endX, endY));
-          } else
-            endLatLng = new LatLng(
-              contact.getPosition().lat,
-              contact.getPosition().lng
-            );
+            endLatLng = getApp().getMap().containerPointToLatLng(new Point(endX, endY));
+          } else endLatLng = new LatLng(contact.getPosition().lat, contact.getPosition().lng);
 
           var color;
-          if (
-            contactData.detectionMethod === VISUAL ||
-            contactData.detectionMethod === OPTIC
-          )
-            color = "#FF00FF";
-          else if (
-            contactData.detectionMethod === RADAR ||
-            contactData.detectionMethod === IRST
-          )
-            color = "#FFFF00";
+          if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC) color = "#FF00FF";
+          else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST) color = "#FFFF00";
           else if (contactData.detectionMethod === RWR) color = "#00FF00";
           else color = "#FFFFFF";
           var contactPolyline = new Polyline([startLatLng, endLatLng], {
@@ -1922,24 +1621,17 @@ export abstract class Unit extends CustomMarker {
 
     /* Get the acquisition and engagement ranges of the entire group, not for each unit */
     if (this.getIsLeader()) {
-      var engagementRange =
-        this.getDatabase()?.getByName(this.getName())?.engagementRange ?? 0;
-      var acquisitionRange =
-        this.getDatabase()?.getByName(this.getName())?.acquisitionRange ?? 0;
+      var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange ?? 0;
+      var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange ?? 0;
 
       this.getGroupMembers().forEach((unit: Unit) => {
         if (unit.getAlive()) {
-          let unitEngagementRange =
-            unit.getDatabase()?.getByName(unit.getName())?.engagementRange ?? 0;
-          let unitAcquisitionRange =
-            unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange ??
-            0;
+          let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange ?? 0;
+          let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange ?? 0;
 
-          if (unitEngagementRange > engagementRange)
-            engagementRange = unitEngagementRange;
+          if (unitEngagementRange > engagementRange) engagementRange = unitEngagementRange;
 
-          if (unitAcquisitionRange > acquisitionRange)
-            acquisitionRange = unitAcquisitionRange;
+          if (unitAcquisitionRange > acquisitionRange) acquisitionRange = unitAcquisitionRange;
         }
       });
 
@@ -1947,26 +1639,17 @@ export abstract class Unit extends CustomMarker {
         this.#acquisitionCircle.setRadius(acquisitionRange);
       }
 
-      if (engagementRange !== this.#engagementCircle.getRadius())
-        this.#engagementCircle.setRadius(engagementRange);
+      if (engagementRange !== this.#engagementCircle.getRadius()) this.#engagementCircle.setRadius(engagementRange);
 
-      this.#engagementCircle.options.fillOpacity =
-        this.getSelected() && getApp().getMap().getOptions().fillSelectedRing
-          ? 0.3
-          : 0;
+      this.#engagementCircle.options.fillOpacity = this.getSelected() && getApp().getMap().getOptions().fillSelectedRing ? 0.3 : 0;
 
       /* Acquisition circles */
-      var shortAcquisitionRangeCheck =
-        acquisitionRange > nmToM(3) ||
-        !getApp().getMap().getOptions().hideUnitsShortRangeRings;
+      var shortAcquisitionRangeCheck = acquisitionRange > nmToM(3) || !getApp().getMap().getOptions().hideUnitsShortRangeRings;
 
       if (
         getApp().getMap().getOptions().showUnitsAcquisitionRings &&
         shortAcquisitionRangeCheck &&
-        (this.belongsToCommandedCoalition() ||
-          this.getDetectionMethods().some((value) =>
-            [VISUAL, OPTIC, IRST, RWR].includes(value)
-          ))
+        (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, IRST, RWR].includes(value)))
       ) {
         if (!getApp().getMap().hasLayer(this.#acquisitionCircle)) {
           this.#acquisitionCircle.addTo(getApp().getMap());
@@ -1982,24 +1665,17 @@ export abstract class Unit extends CustomMarker {
               break;
           }
         }
-        if (this.getPosition() != this.#acquisitionCircle.getLatLng())
-          this.#acquisitionCircle.setLatLng(this.getPosition());
+        if (this.getPosition() != this.#acquisitionCircle.getLatLng()) this.#acquisitionCircle.setLatLng(this.getPosition());
       } else {
-        if (getApp().getMap().hasLayer(this.#acquisitionCircle))
-          this.#acquisitionCircle.removeFrom(getApp().getMap());
+        if (getApp().getMap().hasLayer(this.#acquisitionCircle)) this.#acquisitionCircle.removeFrom(getApp().getMap());
       }
 
       /* Engagement circles */
-      var shortEngagementRangeCheck =
-        engagementRange > nmToM(3) ||
-        !getApp().getMap().getOptions().hideUnitsShortRangeRings;
+      var shortEngagementRangeCheck = engagementRange > nmToM(3) || !getApp().getMap().getOptions().hideUnitsShortRangeRings;
       if (
         getApp().getMap().getOptions().showUnitsEngagementRings &&
         shortEngagementRangeCheck &&
-        (this.belongsToCommandedCoalition() ||
-          this.getDetectionMethods().some((value) =>
-            [VISUAL, OPTIC, IRST, RWR].includes(value)
-          ))
+        (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, IRST, RWR].includes(value)))
       ) {
         if (!getApp().getMap().hasLayer(this.#engagementCircle)) {
           this.#engagementCircle.addTo(getApp().getMap());
@@ -2015,46 +1691,32 @@ export abstract class Unit extends CustomMarker {
               break;
           }
         }
-        if (this.getPosition() != this.#engagementCircle.getLatLng())
-          this.#engagementCircle.setLatLng(this.getPosition());
+        if (this.getPosition() != this.#engagementCircle.getLatLng()) this.#engagementCircle.setLatLng(this.getPosition());
       } else {
-        if (getApp().getMap().hasLayer(this.#engagementCircle))
-          this.#engagementCircle.removeFrom(getApp().getMap());
+        if (getApp().getMap().hasLayer(this.#engagementCircle)) this.#engagementCircle.removeFrom(getApp().getMap());
       }
     }
   }
 
   #clearRanges() {
-    if (getApp().getMap().hasLayer(this.#acquisitionCircle))
-      this.#acquisitionCircle.removeFrom(getApp().getMap());
+    if (getApp().getMap().hasLayer(this.#acquisitionCircle)) this.#acquisitionCircle.removeFrom(getApp().getMap());
 
-    if (getApp().getMap().hasLayer(this.#engagementCircle))
-      this.#engagementCircle.removeFrom(getApp().getMap());
+    if (getApp().getMap().hasLayer(this.#engagementCircle)) this.#engagementCircle.removeFrom(getApp().getMap());
   }
 
   #drawTarget() {
-    if (
-      this.#targetPosition.lat != 0 &&
-      this.#targetPosition.lng != 0 &&
-      getApp().getMap().getOptions().showUnitPaths
-    ) {
+    if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getOptions().showUnitPaths) {
       this.#drawTargetPosition(this.#targetPosition);
-    } else if (
-      this.#targetID != 0 &&
-      getApp().getMap().getOptions().showUnitTargets
-    ) {
+    } else if (this.#targetID != 0 && getApp().getMap().getOptions().showUnitTargets) {
       const target = getApp().getUnitsManager().getUnitByID(this.#targetID);
       if (
         target &&
-        (getApp().getMissionManager().getCommandModeOptions().commandMode ==
-          GAME_MASTER ||
+        (getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER ||
           (this.belongsToCommandedCoalition() &&
             getApp()
               .getUnitsManager()
               .getUnitDetectedMethods(target)
-              .some((value) =>
-                [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-              )))
+              .some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))))
       ) {
         this.#drawTargetPosition(target.getPosition());
       }
@@ -2062,72 +1724,36 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawTargetPosition(targetPosition: LatLng) {
-    if (!getApp().getMap().hasLayer(this.#targetPositionMarker))
-      this.#targetPositionMarker.addTo(getApp().getMap());
-    if (!getApp().getMap().hasLayer(this.#targetPositionPolyline))
-      this.#targetPositionPolyline.addTo(getApp().getMap());
-    this.#targetPositionMarker.setLatLng(
-      new LatLng(targetPosition.lat, targetPosition.lng)
-    );
+    if (!getApp().getMap().hasLayer(this.#targetPositionMarker)) this.#targetPositionMarker.addTo(getApp().getMap());
+    if (!getApp().getMap().hasLayer(this.#targetPositionPolyline)) this.#targetPositionPolyline.addTo(getApp().getMap());
+    this.#targetPositionMarker.setLatLng(new LatLng(targetPosition.lat, targetPosition.lng));
 
-    if (
-      this.getState() === "simulate-fire-fight" &&
-      this.getShotsScatter() != MAX_SHOTS_SCATTER
-    ) {
-      let turfUnitPosition = turf.point([
-        this.getPosition().lng,
-        this.getPosition().lat,
-      ]);
-      let turfTargetPosition = turf.point([
-        targetPosition.lng,
-        targetPosition.lat,
-      ]);
+    if (this.getState() === "simulate-fire-fight" && this.getShotsScatter() != MAX_SHOTS_SCATTER) {
+      let turfUnitPosition = turf.point([this.getPosition().lng, this.getPosition().lat]);
+      let turfTargetPosition = turf.point([targetPosition.lng, targetPosition.lat]);
 
       let bearing = turf.bearing(turfUnitPosition, turfTargetPosition);
       let scatterDistance =
-        turf.distance(turfUnitPosition, turfTargetPosition) *
-        Math.tan(
-          (MAX_SHOTS_SCATTER - this.getShotsScatter()) *
-            deg2rad(SHOTS_SCATTER_DEGREES)
-        );
-      let destination1 = turf.destination(
-        turfTargetPosition,
-        scatterDistance,
-        bearing + 90
-      );
-      let destination2 = turf.destination(
-        turfTargetPosition,
-        scatterDistance,
-        bearing - 90
-      );
+        turf.distance(turfUnitPosition, turfTargetPosition) * Math.tan((MAX_SHOTS_SCATTER - this.getShotsScatter()) * deg2rad(SHOTS_SCATTER_DEGREES));
+      let destination1 = turf.destination(turfTargetPosition, scatterDistance, bearing + 90);
+      let destination2 = turf.destination(turfTargetPosition, scatterDistance, bearing - 90);
 
       this.#targetPositionPolyline.setStyle({ dashArray: "4, 8" });
       this.#targetPositionPolyline.setLatLngs([
-        new LatLng(
-          destination1.geometry.coordinates[1],
-          destination1.geometry.coordinates[0]
-        ),
+        new LatLng(destination1.geometry.coordinates[1], destination1.geometry.coordinates[0]),
         new LatLng(this.#position.lat, this.#position.lng),
-        new LatLng(
-          destination2.geometry.coordinates[1],
-          destination2.geometry.coordinates[0]
-        ),
+        new LatLng(destination2.geometry.coordinates[1], destination2.geometry.coordinates[0]),
       ]);
     } else {
       this.#targetPositionPolyline.setStyle({ dashArray: "" });
-      this.#targetPositionPolyline.setLatLngs([
-        new LatLng(this.#position.lat, this.#position.lng),
-        new LatLng(targetPosition.lat, targetPosition.lng),
-      ]);
+      this.#targetPositionPolyline.setLatLngs([new LatLng(this.#position.lat, this.#position.lng), new LatLng(targetPosition.lat, targetPosition.lng)]);
     }
   }
 
   #clearTargetPosition() {
-    if (getApp().getMap().hasLayer(this.#targetPositionMarker))
-      this.#targetPositionMarker.removeFrom(getApp().getMap());
+    if (getApp().getMap().hasLayer(this.#targetPositionMarker)) this.#targetPositionMarker.removeFrom(getApp().getMap());
 
-    if (getApp().getMap().hasLayer(this.#targetPositionPolyline))
-      this.#targetPositionPolyline.removeFrom(getApp().getMap());
+    if (getApp().getMap().hasLayer(this.#targetPositionPolyline)) this.#targetPositionPolyline.removeFrom(getApp().getMap());
   }
 
   #onZoom(e: any) {
@@ -2141,30 +1767,14 @@ export abstract class AirUnit extends Unit {
     var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
     return {
       showState: belongsToCommandedCoalition,
-      showVvi:
-        belongsToCommandedCoalition ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
+      showVvi: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showHealth: false,
       showHotgroup: belongsToCommandedCoalition,
-      showUnitIcon:
-        belongsToCommandedCoalition ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
-      showShortLabel:
-        belongsToCommandedCoalition ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC].includes(value)
-        ),
+      showUnitIcon: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
+      showShortLabel: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)),
       showFuel: belongsToCommandedCoalition,
       showAmmo: belongsToCommandedCoalition,
-      showSummary:
-        belongsToCommandedCoalition ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
+      showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showCallsign: belongsToCommandedCoalition,
       rotateToHeading: false,
     };
@@ -2179,7 +1789,7 @@ export abstract class AirUnit extends Unit {
       "refuel",
       "Refuel at tanker",
       "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
-      olStatesRefuel,
+      olButtonsContextRefuel,
       (units: Unit[]) => {
         getApp().getUnitsManager().refuel(units);
       },
@@ -2203,14 +1813,9 @@ export abstract class AirUnit extends Unit {
       "attack",
       "Attack unit",
       "Click on a unit to attack it using A/A or A/G weapons",
-      olStatesAttack,
-      (
-        units: Unit[],
-        targetUnit: Unit | null,
-        _
-      ) => {
-        if (targetUnit)
-          getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
+      olButtonsContextAttack,
+      (units: Unit[], targetUnit: Unit | null, _) => {
+        if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       }
     );
     contextActionSet.addContextAction(
@@ -2218,12 +1823,8 @@ export abstract class AirUnit extends Unit {
       "follow",
       "Follow unit",
       "Click on a unit to follow it in formation",
-      olIconsFollow,
-      (
-        units: Unit[],
-        targetUnit: Unit | null,
-        _
-      ) => {
+      olButtonsContextFollow,
+      (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) targetUnit.showFollowOptions(units);
       }
     );
@@ -2235,13 +1836,8 @@ export abstract class AirUnit extends Unit {
       "Precision bomb location",
       "Click on a point to execute a precision bombing attack",
       faLocationCrosshairs,
-      (
-        units: Unit[],
-        _,
-        targetPosition: LatLng | null
-      ) => {
-        if (targetPosition)
-          getApp().getUnitsManager().bombPoint(targetPosition, units);
+      (units: Unit[], _, targetPosition: LatLng | null) => {
+        if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, units);
       }
     );
     contextActionSet.addContextAction(
@@ -2250,13 +1846,8 @@ export abstract class AirUnit extends Unit {
       "Carpet bomb location",
       "Click on a point to execute a carpet bombing attack",
       faXmarksLines,
-      (
-        units: Unit[],
-        _,
-        targetPosition: LatLng | null
-      ) => {
-        if (targetPosition)
-          getApp().getUnitsManager().carpetBomb(targetPosition, units);
+      (units: Unit[], _, targetPosition: LatLng | null) => {
+        if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, units);
       }
     );
   }
@@ -2300,14 +1891,9 @@ export class Helicopter extends AirUnit {
       "land-at-point",
       "Land at location",
       "Click on a point to land there",
-      olIconsLandAtPoint,
-      (
-        units: Unit[],
-        _,
-        targetPosition: LatLng | null
-      ) => {
-        if (targetPosition)
-          getApp().getUnitsManager().landAtPoint(targetPosition, units);
+      olButtonsContextLandAtPoint,
+      (units: Unit[], _, targetPosition: LatLng | null) => {
+        if (targetPosition) getApp().getUnitsManager().landAtPoint(targetPosition, units);
       }
     );
   }
@@ -2333,11 +1919,7 @@ export class GroundUnit extends Unit {
       showVvi: false,
       showHealth: true,
       showHotgroup: belongsToCommandedCoalition,
-      showUnitIcon:
-        belongsToCommandedCoalition ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
+      showUnitIcon: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showShortLabel: this.getDatabaseEntry()?.type === "SAM Site",
       showFuel: false,
       showAmmo: false,
@@ -2357,11 +1939,7 @@ export class GroundUnit extends Unit {
       "Group ground units",
       "Create a group of ground units",
       faPeopleGroup,
-      (
-        units: Unit[],
-        _1,
-        _2
-      ) => {
+      (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
       { executeImmediately: true }
@@ -2409,14 +1987,9 @@ export class GroundUnit extends Unit {
       "attack",
       "Attack unit",
       "Click on a unit to attack it",
-      olStatesAttack,
-      (
-        units: Unit[],
-        targetUnit: Unit | null,
-        _
-      ) => {
-        if (targetUnit)
-          getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
+      olButtonsContextAttack,
+      (units: Unit[], targetUnit: Unit | null, _) => {
+        if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       }
     );
 
@@ -2428,13 +2001,8 @@ export class GroundUnit extends Unit {
         "Fire at area",
         "Click on a point to precisely fire at it (if possible)",
         faLocationCrosshairs,
-        (
-          units: Unit[],
-          _,
-          targetPosition: LatLng | null
-        ) => {
-          if (targetPosition)
-            getApp().getUnitsManager().fireAtArea(targetPosition, units);
+        (units: Unit[], _, targetPosition: LatLng | null) => {
+          if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
         }
       );
       contextActionSet.addContextAction(
@@ -2443,13 +2011,8 @@ export class GroundUnit extends Unit {
         "Simulate fire fight",
         "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim",
         olButtonsContextSimulateFireFight,
-        (
-          units: Unit[],
-          _,
-          targetPosition: LatLng | null
-        ) => {
-          if (targetPosition)
-            getApp().getUnitsManager().simulateFireFight(targetPosition, units);
+        (units: Unit[], _, targetPosition: LatLng | null) => {
+          if (targetPosition) getApp().getUnitsManager().simulateFireFight(targetPosition, units);
         }
       );
     }
@@ -2473,31 +2036,15 @@ export class GroundUnit extends Unit {
       getApp().getMap().getOptions().hideGroupMembers &&
       getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION
     ) {
-      unitWhenGrouped =
-        this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
-      let member = this.getGroupMembers().reduce(
-        (prev: Unit | null, unit: Unit, index: number) => {
-          if (unit.getDatabaseEntry()?.unitWhenGrouped != undefined)
-            return unit;
-          return prev;
-        },
-        null
-      );
-      unitWhenGrouped =
-        member !== null
-          ? member?.getDatabaseEntry()?.unitWhenGrouped
-          : unitWhenGrouped;
+      unitWhenGrouped = this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
+      let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
+        if (unit.getDatabaseEntry()?.unitWhenGrouped != undefined) return unit;
+        return prev;
+      }, null);
+      unitWhenGrouped = member !== null ? member?.getDatabaseEntry()?.unitWhenGrouped : unitWhenGrouped;
     }
-    if (unitWhenGrouped)
-      return (
-        this.getDatabase()?.getByName(unitWhenGrouped) ??
-        this.getDatabase()?.getUnkownUnit(this.getName())
-      );
-    else
-      return (
-        this.getDatabase()?.getByName(this.getName()) ??
-        this.getDatabase()?.getUnkownUnit(this.getName())
-      );
+    if (unitWhenGrouped) return this.getDatabase()?.getByName(unitWhenGrouped) ?? this.getDatabase()?.getUnkownUnit(this.getName());
+    else return this.getDatabase()?.getByName(this.getName()) ?? this.getDatabase()?.getUnkownUnit(this.getName());
   }
 
   /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
@@ -2505,19 +2052,13 @@ export class GroundUnit extends Unit {
     return (
       this.getIsLeader() &&
       (getApp().getMap().getOptions().hideGroupMembers as boolean) &&
-      ((getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION &&
-        getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION) ||
-        (getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION &&
-          getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
+      ((getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION) ||
+        (getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
     );
   }
 
   getMarkerCategory() {
-    if (
-      /\bAAA|SAM\b/.test(this.getType()) ||
-      /\bmanpad|stinger\b/i.test(this.getType())
-    )
-      return "groundunit-sam";
+    if (/\bAAA|SAM\b/.test(this.getType()) || /\bmanpad|stinger\b/i.test(this.getType())) return "groundunit-sam";
     else return "groundunit";
   }
 
@@ -2538,11 +2079,7 @@ export class NavyUnit extends Unit {
       showVvi: false,
       showHealth: true,
       showHotgroup: true,
-      showUnitIcon:
-        belongsToCommandedCoalition ||
-        this.getDetectionMethods().some((value) =>
-          [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)
-        ),
+      showUnitIcon: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showShortLabel: false,
       showFuel: false,
       showAmmo: false,
@@ -2562,11 +2099,7 @@ export class NavyUnit extends Unit {
       "Group navy units",
       "Create a group of navy units",
       faQuestionCircle,
-      (
-        units: Unit[],
-        _1,
-        _2
-      ) => {
+      (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
       { executeImmediately: true }
@@ -2590,13 +2123,8 @@ export class NavyUnit extends Unit {
       "Attack unit",
       "Click on a unit to attack it",
       faQuestionCircle,
-      (
-        units: Unit[],
-        targetUnit: Unit | null,
-        _
-      ) => {
-        if (targetUnit)
-          getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
+      (units: Unit[], targetUnit: Unit | null, _) => {
+        if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       }
     );
 
@@ -2607,13 +2135,8 @@ export class NavyUnit extends Unit {
       "Fire at area",
       "Click on a point to precisely fire at it (if possible)",
       faQuestionCircle,
-      (
-        units: Unit[],
-        _,
-        targetPosition: LatLng | null
-      ) => {
-        if (targetPosition)
-          getApp().getUnitsManager().fireAtArea(targetPosition, units);
+      (units: Unit[], _, targetPosition: LatLng | null) => {
+        if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
       }
     );
   }

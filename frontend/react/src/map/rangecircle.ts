@@ -26,14 +26,8 @@ export class RangeCircle extends Circle {
     let pathBegun = false;
     let dtheta = (Math.PI * 2) / 120;
     for (let theta = 0; theta <= Math.PI * 2; theta += dtheta) {
-      let p1 = new Point(
-        p.x + r * Math.cos(theta),
-        p.y / s + r * Math.sin(theta)
-      );
-      let p2 = new Point(
-        p.x + r * Math.cos(theta + dtheta),
-        p.y / s + r * Math.sin(theta + dtheta)
-      );
+      let p1 = new Point(p.x + r * Math.cos(theta), p.y / s + r * Math.sin(theta));
+      let p2 = new Point(p.x + r * Math.cos(theta + dtheta), p.y / s + r * Math.sin(theta + dtheta));
       let l1 = this._map.layerPointToLatLng(p1);
       let l2 = this._map.layerPointToLatLng(p2);
       let line = new Polyline([l1, l2]);

@@ -53,10 +53,7 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseDown: function (e: any) {
-    if (
-      (e.which == 1 && e.button == 0 && (e.shiftKey || this._forceBoxSelect)) ||
-      (e.type === "touchstart" && this._forceBoxSelect)
-    ) {
+    if ((e.which == 1 && e.button == 0 && (e.shiftKey || this._forceBoxSelect)) || (e.type === "touchstart" && this._forceBoxSelect)) {
       this._map.fire("selectionstart");
       // Clear the deferred resetState if it hasn't executed yet, otherwise it
       // will interrupt the interaction and orphan a box element in the container.
@@ -67,10 +64,8 @@ export var BoxSelect = Handler.extend({
       DomUtil.disableImageDrag();
       this._map.dragging.disable();
 
-      if (e.type === "touchstart")
-        this._startPoint = this._map.mouseEventToContainerPoint(e.touches[0]);
-      else
-        this._startPoint = this._map.mouseEventToContainerPoint(e);
+      if (e.type === "touchstart") this._startPoint = this._map.mouseEventToContainerPoint(e.touches[0]);
+      else this._startPoint = this._map.mouseEventToContainerPoint(e);
 
       DomEvent.on(
         //@ts-ignore
@@ -101,10 +96,8 @@ export var BoxSelect = Handler.extend({
       this._map.fire("boxzoomstart");
     }
 
-    if (e.type === "touchmove")
-      this._point = this._map.mouseEventToContainerPoint(e.touches[0]);
-    else
-      this._point = this._map.mouseEventToContainerPoint(e);
+    if (e.type === "touchmove") this._point = this._map.mouseEventToContainerPoint(e.touches[0]);
+    else this._point = this._map.mouseEventToContainerPoint(e);
 
     var bounds = new Bounds(this._point, this._startPoint),
       size = bounds.getSize();
@@ -154,10 +147,7 @@ export var BoxSelect = Handler.extend({
     // Postpone to next JS tick so internal click event handling
     // still see it as "moved".
     window.setTimeout(Util.bind(this._resetState, this), 0);
-    var bounds = new LatLngBounds(
-      this._map.containerPointToLatLng(this._startPoint),
-      this._map.containerPointToLatLng(this._point)
-    );
+    var bounds = new LatLngBounds(this._map.containerPointToLatLng(this._startPoint), this._map.containerPointToLatLng(this._point));
 
     this._forceBoxSelect = false;
     this._map.fire("selectionend", { selectionBounds: bounds });

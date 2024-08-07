@@ -8,8 +8,7 @@ export class Group {
     this.#name = name;
 
     document.addEventListener("unitDeath", (e: any) => {
-      if (this.#members.includes(e.detail))
-        this.getLeader()?.onGroupChanged(e.detail);
+      if (this.#members.includes(e.detail)) this.getLeader()?.onGroupChanged(e.detail);
     });
   }
 

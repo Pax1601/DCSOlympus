@@ -11,11 +11,9 @@ export function OlDropdown(props: {
   buttonRef?: MutableRefObject<null> | null;
   open?: boolean;
 }) {
-  var [open, setOpen] =
-    props.open !== undefined ? [props.open, () => {}] : useState(false);
+  const [open, setOpen] = props.open !== undefined ? [props.open, () => {}] : useState(false);
   var contentRef = useRef(null);
-  var buttonRef =
-    props.buttonRef !== undefined ? props.buttonRef : useRef(null);
+  var buttonRef = props.buttonRef !== undefined ? props.buttonRef : useRef(null);
 
   function setPosition(content: HTMLDivElement, button: HTMLButtonElement) {
     /* Reset the position of the content */
@@ -24,7 +22,7 @@ export function OlDropdown(props: {
     content.style.height = "";
 
     /* Get the position and size of the button and the content elements */
-    var [cxl, cyt, cxr, cyb, cw, ch] = [
+    let [cxl, cyt, cxr, cyb, cw, ch] = [
       content.getBoundingClientRect().x,
       content.getBoundingClientRect().y,
       content.getBoundingClientRect().x + content.clientWidth,
@@ -32,7 +30,7 @@ export function OlDropdown(props: {
       content.clientWidth,
       content.clientHeight,
     ];
-    var [bxl, byt, bxr, byb, bbw, bh] = [
+    let [bxl, byt, bxr, byb, bbw, bh] = [
       button.getBoundingClientRect().x,
       button.getBoundingClientRect().y,
       button.getBoundingClientRect().x + button.clientWidth,
@@ -81,11 +79,7 @@ export function OlDropdown(props: {
       /* Register click events to automatically close the dropdown when clicked anywhere outside of it */
       document.addEventListener("click", function (event) {
         const target = event.target;
-        if (
-          target &&
-          !content.contains(target as HTMLElement) &&
-          !button.contains(target as HTMLElement)
-        ) {
+        if (target && !content.contains(target as HTMLElement) && !button.contains(target as HTMLElement)) {
           setOpen(false);
         }
       });
@@ -93,9 +87,7 @@ export function OlDropdown(props: {
   });
 
   return (
-    <div
-      className={props.className ?? ""}
-    >
+    <div className={props.className ?? ""}>
       {props.buttonRef === undefined && (
         <button
           ref={buttonRef}
@@ -111,12 +103,8 @@ export function OlDropdown(props: {
           `}
           type="button"
         >
-          {props.leftIcon && (
-            <FontAwesomeIcon icon={props.leftIcon} className={`mr-3`} />
-          )}
-          <span className="overflow-hidden text-ellipsis text-nowrap">
-            {props.label ?? ""}
-          </span>
+          {props.leftIcon && <FontAwesomeIcon icon={props.leftIcon} className={`mr-3`} />}
+          <span className="overflow-hidden text-ellipsis text-nowrap">{props.label ?? ""}</span>
           <svg
             className={`
               ml-auto ms-3 h-2.5 w-2.5 flex-none transition-transform
@@ -127,13 +115,7 @@ export function OlDropdown(props: {
             fill="none"
             viewBox="0 0 10 6"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 1 4 4 4-4"
-            />
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
           </svg>
         </button>
       )}
@@ -142,7 +124,7 @@ export function OlDropdown(props: {
         ref={contentRef}
         data-open={open}
         className={`
-          absolute divide-y divide-gray-100 overflow-y-scroll no-scrollbar
+          absolute z-40 divide-y divide-gray-100 overflow-y-scroll no-scrollbar
           rounded-lg bg-white p-2 shadow
           dark:bg-gray-700
           data-[open='false']:hidden

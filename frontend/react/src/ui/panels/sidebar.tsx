@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import {
-  faGamepad,
-  faRuler,
-  faPencil,
-  faEllipsisV,
-  faCog,
-  faQuestionCircle,
-  faPlusSquare
-} from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
 
@@ -20,7 +12,7 @@ export function SideBar() {
           {(events) => (
             <nav
               className={`
-                flex flex-col z-ui-4 h-full bg-gray-300
+                absolute left-0 z-20 flex h-full flex-col bg-gray-300
                 dark:bg-olympus-900
               `}
             >
@@ -52,12 +44,7 @@ export function SideBar() {
                     icon={faGamepad}
                     tooltip=""
                   ></OlStateButton>
-                  <OlStateButton
-                    onClick={events.toggleMeasureMenuVisible}
-                    checked={appState.measureMenuVisible}
-                    icon={faRuler}
-                    tooltip=""
-                  ></OlStateButton>
+                  <OlStateButton onClick={events.toggleMeasureMenuVisible} checked={appState.measureMenuVisible} icon={faRuler} tooltip=""></OlStateButton>
                   <OlStateButton
                     onClick={events.toggleDrawingMenuVisible}
                     checked={appState.drawingMenuVisible}
@@ -73,9 +60,7 @@ export function SideBar() {
                 `}
                 >
                   <OlStateButton
-                    onClick={() =>
-                      window.open("https://github.com/Pax1601/DCSOlympus/wiki")
-                    }
+                    onClick={() => window.open("https://github.com/Pax1601/DCSOlympus/wiki")}
                     checked={false}
                     icon={faQuestionCircle}
                     tooltip="Open user guide on separate window"

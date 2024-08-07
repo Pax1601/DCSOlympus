@@ -13,16 +13,7 @@ import {
   emissionsCountermeasures,
   reactionsToThreat,
 } from "../constants/constants";
-import {
-  AirbasesData,
-  BullseyesData,
-  GeneralSettings,
-  MissionData,
-  Radio,
-  ServerRequestOptions,
-  ServerStatus,
-  TACAN,
-} from "../interfaces";
+import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -67,11 +58,7 @@ export class ServerManager {
     /* If a request on this uri is still pending (meaning it's not done or did not yet fail), skip the request, to avoid clogging the TCP workers */
     /* If we are forcing the request we don't care if one already exists, just send it. CAREFUL: this makes sense only for low frequency requests, like refreshes, when we
             are reasonably confident any previous request will be done before we make a new one on the same URI. */
-    if (
-      uri in this.#requests &&
-      this.#requests[uri].readyState !== 4 &&
-      !force
-    ) {
+    if (uri in this.#requests && this.#requests[uri].readyState !== 4 && !force) {
       console.warn(`GET request on ${uri} URI still pending, skipping...`);
       return;
     }
@@ -81,33 +68,22 @@ export class ServerManager {
     /* Assemble the request options string */
     var optionsString = "";
     if (options?.time != undefined) optionsString = `time=${options.time}`;
-    if (options?.commandHash != undefined)
-      optionsString = `commandHash=${options.commandHash}`;
+    if (options?.commandHash != undefined) optionsString = `commandHash=${options.commandHash}`;
 
     /* On the connection */
-    xmlHttp.open(
-      "GET",
-      `${this.#REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ""}`,
-      true
-    );
+    xmlHttp.open("GET", `${this.#REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ""}`, true);
 
     /* If provided, set the credentials */
-    if (this.#username && this.#password)
-      xmlHttp.setRequestHeader(
-        "Authorization",
-        "Basic " + btoa(`${this.#username}:${this.#password}`)
-      );
+    if (this.#username && this.#password) xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username}:${this.#password}`));
 
     /* If specified, set the response type */
-    if (responseType)
-      xmlHttp.responseType = responseType as XMLHttpRequestResponseType;
+    if (responseType) xmlHttp.responseType = responseType as XMLHttpRequestResponseType;
 
     xmlHttp.onload = (e) => {
       if (xmlHttp.status == 200) {
         /* Success */
         this.setConnected(true);
-        if (xmlHttp.responseType == "arraybuffer")
-          this.#lastUpdateTimes[uri] = callback(xmlHttp.response);
+        if (xmlHttp.responseType == "arraybuffer") this.#lastUpdateTimes[uri] = callback(xmlHttp.response);
         else {
           const result = JSON.parse(xmlHttp.responseText);
           this.#lastUpdateTimes[uri] = callback(result);
@@ -141,11 +117,7 @@ export class ServerManager {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("PUT", this.#REST_ADDRESS);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
-    if (this.#username && this.#password)
-      xmlHttp.setRequestHeader(
-        "Authorization",
-        "Basic " + btoa(`${this.#username}:${this.#password}`)
-      );
+    if (this.#username && this.#password) xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username}:${this.#password}`));
     xmlHttp.onload = (res: any) => {
       var res = JSON.parse(xmlHttp.responseText);
       callback(res.commandHash);
@@ -157,99 +129,47 @@ export class ServerManager {
 
   getConfig(callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open(
-      "GET",
-      window.location.href.split("?")[0].replace("vite/", "") + "config",
-      true
-    );
+    xmlHttp.open("GET", window.location.href.split("?")[0].replace("vite/", "") + "config", true);
     xmlHttp.onload = function (e) {
       var data = JSON.parse(xmlHttp.responseText);
       callback(data);
     };
     xmlHttp.onerror = function () {
-      console.error(
-        "An error occurred during the XMLHttpRequest, could not retrieve configuration file"
-      );
+      console.error("An error occurred during the XMLHttpRequest, could not retrieve configuration file");
     };
     xmlHttp.send(null);
   }
 
   setAddress(address: string) {
-    this.#REST_ADDRESS = `${address.replace('vite/', '')}olympus`;
+    this.#REST_ADDRESS = `${address.replace("vite/", "")}olympus`;
     console.log(`Setting REST address to ${this.#REST_ADDRESS}`);
   }
 
-  getAirbases(
-    callback: CallableFunction,
-    errorCallback: CallableFunction = () => {}
-  ) {
+  getAirbases(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, AIRBASES_URI);
   }
 
-  getBullseye(
-    callback: CallableFunction,
-    errorCallback: CallableFunction = () => {}
-  ) {
+  getBullseye(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, BULLSEYE_URI);
   }
 
-  getLogs(
-    callback: CallableFunction,
-    refresh: boolean = false,
-    errorCallback: CallableFunction = () => {}
-  ) {
-    this.GET(
-      callback,
-      errorCallback,
-      LOGS_URI,
-      { time: refresh ? 0 : this.#lastUpdateTimes[LOGS_URI] },
-      "text",
-      refresh
-    );
+  getLogs(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+    this.GET(callback, errorCallback, LOGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[LOGS_URI] }, "text", refresh);
   }
 
-  getMission(
-    callback: CallableFunction,
-    errorCallback: CallableFunction = () => {}
-  ) {
+  getMission(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, MISSION_URI);
   }
 
-  getUnits(
-    callback: CallableFunction,
-    refresh: boolean = false,
-    errorCallback: CallableFunction = () => {}
-  ) {
-    this.GET(
-      callback,
-      errorCallback,
-      UNITS_URI,
-      { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] },
-      "arraybuffer",
-      refresh
-    );
+  getUnits(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+    this.GET(callback, errorCallback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, "arraybuffer", refresh);
   }
 
-  getWeapons(
-    callback: CallableFunction,
-    refresh: boolean = false,
-    errorCallback: CallableFunction = () => {}
-  ) {
-    this.GET(
-      callback,
-      errorCallback,
-      WEAPONS_URI,
-      { time: refresh ? 0 : this.#lastUpdateTimes[WEAPONS_URI] },
-      "arraybuffer",
-      refresh
-    );
+  getWeapons(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+    this.GET(callback, errorCallback, WEAPONS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[WEAPONS_URI] }, "arraybuffer", refresh);
   }
 
-  isCommandExecuted(
-    callback: CallableFunction,
-    commandHash: string,
-    errorCallback: CallableFunction = () => {}
-  ) {
+  isCommandExecuted(callback: CallableFunction, commandHash: string, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, COMMANDS_URI, {
       commandHash: commandHash,
     });
@@ -261,22 +181,13 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  spawnSmoke(
-    color: string,
-    latlng: LatLng,
-    callback: CallableFunction = () => {}
-  ) {
+  spawnSmoke(color: string, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { color: color, location: latlng };
     var data = { smoke: command };
     this.PUT(data, callback);
   }
 
-  spawnExplosion(
-    intensity: number,
-    explosionType: string,
-    latlng: LatLng,
-    callback: CallableFunction = () => {}
-  ) {
+  spawnExplosion(intensity: number, explosionType: string, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = {
       explosionType: explosionType,
       intensity: intensity,
@@ -328,14 +239,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  spawnGroundUnits(
-    units: any,
-    coalition: string,
-    country: string,
-    immediate: boolean,
-    spawnPoints: number,
-    callback: CallableFunction = () => {}
-  ) {
+  spawnGroundUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = {
       units: units,
       coalition: coalition,
@@ -347,14 +251,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  spawnNavyUnits(
-    units: any,
-    coalition: string,
-    country: string,
-    immediate: boolean,
-    spawnPoints: number,
-    callback: CallableFunction = () => {}
-  ) {
+  spawnNavyUnits(units: any, coalition: string, country: string, immediate: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = {
       units: units,
       coalition: coalition,
@@ -366,22 +263,13 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  attackUnit(
-    ID: number,
-    targetID: number,
-    callback: CallableFunction = () => {}
-  ) {
+  attackUnit(ID: number, targetID: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, targetID: targetID };
     var data = { attackUnit: command };
     this.PUT(data, callback);
   }
 
-  followUnit(
-    ID: number,
-    targetID: number,
-    offset: { x: number; y: number; z: number },
-    callback: CallableFunction = () => {}
-  ) {
+  followUnit(ID: number, targetID: number, offset: { x: number; y: number; z: number }, callback: CallableFunction = () => {}) {
     // X: front-rear, positive front
     // Y: top-bottom, positive bottom
     // Z: left-right, positive right
@@ -397,12 +285,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  cloneUnits(
-    units: { ID: number; location: LatLng }[],
-    deleteOriginal: boolean,
-    spawnPoints: number,
-    callback: CallableFunction = () => {}
-  ) {
+  cloneUnits(units: { ID: number; location: LatLng }[], deleteOriginal: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
     var command = {
       units: units,
       deleteOriginal: deleteOriginal,
@@ -412,13 +295,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  deleteUnit(
-    ID: number,
-    explosion: boolean,
-    explosionType: string,
-    immediate: boolean,
-    callback: CallableFunction = () => {}
-  ) {
+  deleteUnit(ID: number, explosion: boolean, explosionType: string, immediate: boolean, callback: CallableFunction = () => {}) {
     var command = {
       ID: ID,
       explosion: explosion,
@@ -435,11 +312,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  changeSpeed(
-    ID: number,
-    speedChange: string,
-    callback: CallableFunction = () => {}
-  ) {
+  changeSpeed(ID: number, speedChange: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, change: speedChange };
     var data = { changeSpeed: command };
     this.PUT(data, callback);
@@ -451,52 +324,31 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  setSpeedType(
-    ID: number,
-    speedType: string,
-    callback: CallableFunction = () => {}
-  ) {
+  setSpeedType(ID: number, speedType: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, speedType: speedType };
     var data = { setSpeedType: command };
     this.PUT(data, callback);
   }
 
-  changeAltitude(
-    ID: number,
-    altitudeChange: string,
-    callback: CallableFunction = () => {}
-  ) {
+  changeAltitude(ID: number, altitudeChange: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, change: altitudeChange };
     var data = { changeAltitude: command };
     this.PUT(data, callback);
   }
 
-  setAltitudeType(
-    ID: number,
-    altitudeType: string,
-    callback: CallableFunction = () => {}
-  ) {
+  setAltitudeType(ID: number, altitudeType: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, altitudeType: altitudeType };
     var data = { setAltitudeType: command };
     this.PUT(data, callback);
   }
 
-  setAltitude(
-    ID: number,
-    altitude: number,
-    callback: CallableFunction = () => {}
-  ) {
+  setAltitude(ID: number, altitude: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, altitude: altitude };
     var data = { setAltitude: command };
     this.PUT(data, callback);
   }
 
-  createFormation(
-    ID: number,
-    isLeader: boolean,
-    wingmenIDs: number[],
-    callback: CallableFunction = () => {}
-  ) {
+  createFormation(ID: number, isLeader: boolean, wingmenIDs: number[], callback: CallableFunction = () => {}) {
     var command = { ID: ID, wingmenIDs: wingmenIDs, isLeader: isLeader };
     var data = { setLeader: command };
     this.PUT(data, callback);
@@ -508,11 +360,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  setReactionToThreat(
-    ID: number,
-    reactionToThreat: string,
-    callback: CallableFunction = () => {}
-  ) {
+  setReactionToThreat(ID: number, reactionToThreat: string, callback: CallableFunction = () => {}) {
     var command = {
       ID: ID,
       reactionToThreat: reactionsToThreat.indexOf(reactionToThreat),
@@ -521,16 +369,10 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  setEmissionsCountermeasures(
-    ID: number,
-    emissionCountermeasure: string,
-    callback: CallableFunction = () => {}
-  ) {
+  setEmissionsCountermeasures(ID: number, emissionCountermeasure: string, callback: CallableFunction = () => {}) {
     var command = {
       ID: ID,
-      emissionsCountermeasures: emissionsCountermeasures.indexOf(
-        emissionCountermeasure
-      ),
+      emissionsCountermeasures: emissionsCountermeasures.indexOf(emissionCountermeasure),
     };
     var data = { setEmissionsCountermeasures: command };
     this.PUT(data, callback);
@@ -542,21 +384,13 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  setFollowRoads(
-    ID: number,
-    followRoads: boolean,
-    callback: CallableFunction = () => {}
-  ) {
+  setFollowRoads(ID: number, followRoads: boolean, callback: CallableFunction = () => {}) {
     var command = { ID: ID, followRoads: followRoads };
     var data = { setFollowRoads: command };
     this.PUT(data, callback);
   }
 
-  setOperateAs(
-    ID: number,
-    operateAs: number,
-    callback: CallableFunction = () => {}
-  ) {
+  setOperateAs(ID: number, operateAs: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, operateAs: operateAs };
     var data = { setOperateAs: command };
     this.PUT(data, callback);
@@ -574,94 +408,57 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  carpetBomb(
-    ID: number,
-    latlng: LatLng,
-    callback: CallableFunction = () => {}
-  ) {
+  carpetBomb(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng };
     var data = { carpetBomb: command };
     this.PUT(data, callback);
   }
 
-  bombBuilding(
-    ID: number,
-    latlng: LatLng,
-    callback: CallableFunction = () => {}
-  ) {
+  bombBuilding(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng };
     var data = { bombBuilding: command };
     this.PUT(data, callback);
   }
 
-  fireAtArea(
-    ID: number,
-    latlng: LatLng,
-    callback: CallableFunction = () => {}
-  ) {
+  fireAtArea(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng };
     var data = { fireAtArea: command };
     this.PUT(data, callback);
   }
 
-  simulateFireFight(
-    ID: number,
-    latlng: LatLng,
-    altitude: number,
-    callback: CallableFunction = () => {}
-  ) {
+  simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng, altitude: altitude };
     var data = { simulateFireFight: command };
     this.PUT(data, callback);
   }
 
   // TODO: Remove coalition
-  scenicAAA(
-    ID: number,
-    coalition: string,
-    callback: CallableFunction = () => {}
-  ) {
+  scenicAAA(ID: number, coalition: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, coalition: coalition };
     var data = { scenicAAA: command };
     this.PUT(data, callback);
   }
 
   // TODO: Remove coalition
-  missOnPurpose(
-    ID: number,
-    coalition: string,
-    callback: CallableFunction = () => {}
-  ) {
+  missOnPurpose(ID: number, coalition: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, coalition: coalition };
     var data = { missOnPurpose: command };
     this.PUT(data, callback);
   }
 
-  landAtPoint(
-    ID: number,
-    latlng: LatLng,
-    callback: CallableFunction = () => {}
-  ) {
+  landAtPoint(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng };
     var data = { landAtPoint: command };
     this.PUT(data, callback);
   }
 
-  setShotsScatter(
-    ID: number,
-    shotsScatter: number,
-    callback: CallableFunction = () => {}
-  ) {
+  setShotsScatter(ID: number, shotsScatter: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, shotsScatter: shotsScatter };
     var data = { setShotsScatter: command };
     this.PUT(data, callback);
   }
 
-  setShotsIntensity(
-    ID: number,
-    shotsIntensity: number,
-    callback: CallableFunction = () => {}
-  ) {
+  setShotsIntensity(ID: number, shotsIntensity: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, shotsIntensity: shotsIntensity };
     var data = { setShotsIntensity: command };
     this.PUT(data, callback);
@@ -735,11 +532,7 @@ export class ServerManager {
 
     this.#intervals.push(
       window.setInterval(() => {
-        if (
-          !this.getPaused() &&
-          getApp().getMissionManager().getCommandModeOptions().commandMode !=
-            NONE
-        ) {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getAirbases((data: AirbasesData) => {
             this.checkSessionHash(data.sessionHash);
             getApp().getMissionManager()?.updateAirbases(data);
@@ -751,11 +544,7 @@ export class ServerManager {
 
     this.#intervals.push(
       window.setInterval(() => {
-        if (
-          !this.getPaused() &&
-          getApp().getMissionManager().getCommandModeOptions().commandMode !=
-            NONE
-        ) {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getBullseye((data: BullseyesData) => {
             this.checkSessionHash(data.sessionHash);
             getApp().getMissionManager()?.updateBullseyes(data);
@@ -767,11 +556,7 @@ export class ServerManager {
 
     this.#intervals.push(
       window.setInterval(() => {
-        if (
-          !this.getPaused() &&
-          getApp().getMissionManager().getCommandModeOptions().commandMode !=
-            NONE
-        ) {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getLogs((data: any) => {
             this.checkSessionHash(data.sessionHash);
             //(getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
@@ -783,11 +568,7 @@ export class ServerManager {
 
     this.#intervals.push(
       window.setInterval(() => {
-        if (
-          !this.getPaused() &&
-          getApp().getMissionManager().getCommandModeOptions().commandMode !=
-            NONE
-        ) {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getUnits((buffer: ArrayBuffer) => {
             var time = getApp().getUnitsManager()?.update(buffer);
             return time;
@@ -798,11 +579,7 @@ export class ServerManager {
 
     this.#intervals.push(
       window.setInterval(() => {
-        if (
-          !this.getPaused() &&
-          getApp().getMissionManager().getCommandModeOptions().commandMode !=
-            NONE
-        ) {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getWeapons((buffer: ArrayBuffer) => {
             var time = getApp().getWeaponsManager()?.update(buffer);
             return time;
@@ -814,11 +591,7 @@ export class ServerManager {
     this.#intervals.push(
       window.setInterval(
         () => {
-          if (
-            !this.getPaused() &&
-            getApp().getMissionManager().getCommandModeOptions().commandMode !=
-              NONE
-          ) {
+          if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             this.getUnits((buffer: ArrayBuffer) => {
               var time = getApp().getUnitsManager()?.update(buffer);
               return time;
@@ -832,11 +605,8 @@ export class ServerManager {
     //  Mission clock and elapsed time
     this.#intervals.push(
       window.setInterval(() => {
-        const elapsedMissionTime = getApp()
-          .getMissionManager()
-          .getDateAndTime().elapsedTime;
-        this.#serverIsPaused =
-          elapsedMissionTime === this.#previousMissionElapsedTime;
+        const elapsedMissionTime = getApp().getMissionManager().getDateAndTime().elapsedTime;
+        this.#serverIsPaused = elapsedMissionTime === this.#previousMissionElapsedTime;
         this.#previousMissionElapsedTime = elapsedMissionTime;
 
         document.dispatchEvent(
@@ -844,8 +614,7 @@ export class ServerManager {
             detail: {
               frameRate: getApp().getMissionManager().getFrameRate(),
               load: getApp().getMissionManager().getLoad(),
-              elapsedTime: getApp().getMissionManager().getDateAndTime()
-                .elapsedTime,
+              elapsedTime: getApp().getMissionManager().getDateAndTime().elapsedTime,
               missionTime: getApp().getMissionManager().getDateAndTime().time,
               connected: this.getConnected(),
               paused: this.getPaused(),
@@ -857,11 +626,7 @@ export class ServerManager {
 
     this.#intervals.push(
       window.setInterval(() => {
-        if (
-          !this.getPaused() &&
-          getApp().getMissionManager().getCommandModeOptions().commandMode !=
-            NONE
-        ) {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getWeapons((buffer: ArrayBuffer) => {
             var time = getApp().getWeaponsManager()?.update(buffer);
             return time;

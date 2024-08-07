@@ -24,8 +24,8 @@ export function ControlsPanel(props: {}) {
   return (
     <div
       className={`
-        absolute bottom-[20px] right-[10px] w-80 z-ui-0 flex flex-col
-        items-center justify-between gap-1 p-3 text-sm
+        absolute bottom-[20px] right-[10px] flex w-80 flex-col items-center
+        justify-between gap-1 p-3 text-sm
       `}
     >
       {controls.map((control) => {
@@ -37,9 +37,7 @@ export function ControlsPanel(props: {}) {
               dark:bg-olympus-800/90 dark:text-gray-200
             `}
           >
-            <div className="my-auto overflow-hidden text-nowrap">
-              {control.text}
-            </div>
+            <div className="my-auto overflow-hidden text-nowrap">{control.text}</div>
             <div
               className={`
                 ml-auto flex gap-1 rounded-full bg-olympus-500 px-2 py-0.5
@@ -55,7 +53,9 @@ export function ControlsPanel(props: {}) {
                       ) : (
                         <FontAwesomeIcon
                           icon={action}
-                          className={`my-auto ml-auto`}
+                          className={`
+                      my-auto ml-auto
+                    `}
                         />
                       )}
                     </div>

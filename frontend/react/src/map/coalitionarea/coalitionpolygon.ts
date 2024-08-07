@@ -1,13 +1,4 @@
-import {
-  LatLng,
-  LatLngExpression,
-  Map,
-  Point,
-  Polygon,
-  PolylineOptions,
-  DivIcon,
-  Marker
-} from "leaflet";
+import { LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions, DivIcon, Marker } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
@@ -27,10 +18,7 @@ export class CoalitionPolygon extends Polygon {
   #labelText: string;
   #label: Marker;
 
-  constructor(
-    latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][],
-    options?: PolylineOptions
-  ) {
+  constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolylineOptions) {
     if (options === undefined) options = {};
 
     totalAreas++;
@@ -45,11 +33,7 @@ export class CoalitionPolygon extends Polygon {
 
     this.#labelText = `Polygon ${totalAreas}`;
 
-    if (
-      [BLUE_COMMANDER, RED_COMMANDER].includes(
-        getApp().getMissionManager().getCommandModeOptions().commandMode
-      )
-    )
+    if ([BLUE_COMMANDER, RED_COMMANDER].includes(getApp().getMissionManager().getCommandModeOptions().commandMode))
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());
 
     this.on("drag", () => {
@@ -130,17 +114,11 @@ export class CoalitionPolygon extends Polygon {
 
   onRemove(map: Map): this {
     super.onRemove(map);
-    this.#handles
-      .concat(this.#middleHandles)
-      .forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) =>
-        handle.removeFrom(getApp().getMap())
-      );
+    this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getApp().getMap()));
     return this;
   }
 
-  setLatLngs(
-    latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]
-  ) {
+  setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]) {
     super.setLatLngs(latlngs);
     this.#drawLabel();
     return this;
@@ -158,9 +136,7 @@ export class CoalitionPolygon extends Polygon {
   }
 
   #setHandles() {
-    this.#handles.forEach((handle: CoalitionAreaHandle) =>
-      handle.removeFrom(getApp().getMap())
-    );
+    this.#handles.forEach((handle: CoalitionAreaHandle) => handle.removeFrom(getApp().getMap()));
     this.#handles = [];
     if (this.getSelected()) {
       var latlngs = this.getLatLngs()[0] as LatLng[];
@@ -181,9 +157,7 @@ export class CoalitionPolygon extends Polygon {
   }
 
   #setMiddleHandles() {
-    this.#middleHandles.forEach((handle: CoalitionAreaMiddleHandle) =>
-      handle.removeFrom(getApp().getMap())
-    );
+    this.#middleHandles.forEach((handle: CoalitionAreaMiddleHandle) => handle.removeFrom(getApp().getMap()));
     this.#middleHandles = [];
     var latlngs = this.getLatLngs()[0] as LatLng[];
     if (this.getSelected() && latlngs.length >= 2) {
@@ -193,13 +167,8 @@ export class CoalitionPolygon extends Polygon {
         if (lastLatLng != null) {
           const handle1Point = getApp().getMap().latLngToLayerPoint(latlng);
           const handle2Point = getApp().getMap().latLngToLayerPoint(lastLatLng);
-          const middlePoint = new Point(
-            (handle1Point.x + handle2Point.x) / 2,
-            (handle1Point.y + handle2Point.y) / 2
-          );
-          const middleLatLng = getApp()
-            .getMap()
-            .layerPointToLatLng(middlePoint);
+          const middlePoint = new Point((handle1Point.x + handle2Point.x) / 2, (handle1Point.y + handle2Point.y) / 2);
+          const middleLatLng = getApp().getMap().layerPointToLatLng(middlePoint);
 
           const middleHandle = new CoalitionAreaMiddleHandle(middleLatLng);
           middleHandle.addTo(getApp().getMap());
@@ -228,12 +197,7 @@ export class CoalitionPolygon extends Polygon {
         }),
         interactive: false,
       }).addTo(this._map);
-      this.#label
-        .getElement()
-        ?.classList.add(
-          `ol-coalitionarea-label`,
-          `${this.#selected ? "selected" : `${this.#coalition}`}`
-        );
+      this.#label.getElement()?.classList.add(`ol-coalitionarea-label`, `${this.#selected ? "selected" : `${this.#coalition}`}`);
     }
   }
 }

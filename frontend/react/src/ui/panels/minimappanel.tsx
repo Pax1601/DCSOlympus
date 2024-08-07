@@ -5,18 +5,18 @@ import { getApp } from "../../olympusapp";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 
 export function MiniMapPanel(props: {}) {
-  var [frameRate, setFrameRate] = useState(0);
-  var [load, setLoad] = useState(0);
-  var [elapsedTime, setElapsedTime] = useState(0);
-  var [missionTime, setMissionTime] = useState({
+  const [frameRate, setFrameRate] = useState(0);
+  const [load, setLoad] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [missionTime, setMissionTime] = useState({
     h: 0,
     m: 0,
     s: 0,
   } as DateAndTime["time"]);
-  var [connected, setConnected] = useState(false);
-  var [paused, setPaused] = useState(false);
-  var [showMissionTime, setShowMissionTime] = useState(false);
-  var [showMinimap, setShowMinimap] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [showMissionTime, setShowMissionTime] = useState(false);
+  const [showMinimap, setShowMinimap] = useState(false);
 
   document.addEventListener("serverStatusUpdated", (ev) => {
     const detail = (ev as CustomEvent).detail;
@@ -73,7 +73,7 @@ export function MiniMapPanel(props: {}) {
       className={`
         absolute right-[10px]
         ${showMinimap ? `top-[232px]` : `top-[70px]`}
-        w-[288px] z-ui-0 flex items-center justify-between
+        flex w-[288px] items-center justify-between
         ${showMinimap ? `rounded-b-lg` : `rounded-lg`}
         bg-gray-200 p-3 text-sm backdrop-blur-lg backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
@@ -91,20 +91,20 @@ export function MiniMapPanel(props: {}) {
         </div>
       ) : (
         <>
-          <div className="font-semibold">
-            FPS:{" "}
+          <div className="flex gap-2 font-semibold">
+            FPS:
             <span style={{ color: frameRateColor }} className={`font-semibold`}>
               {frameRate}
-            </span>{" "}
+            </span>
           </div>
-          <div className="font-semibold">
-            Load:{" "}
+          <div className="flex gap-2 font-semibold">
+            Load:
             <span style={{ color: loadColor }} className={`font-semibold`}>
               {load}
-            </span>{" "}
+            </span>
           </div>
-          <div className="font-semibold">
-            {showMissionTime ? "MT" : "ET"}: {timeString}{" "}
+          <div className="flex gap-2 font-semibold">
+            {showMissionTime ? "MT" : "ET"}: {timeString}
           </div>
           <div className={`relative h-4 w-4 rounded-full bg-[#8BFF63]`}></div>
         </>

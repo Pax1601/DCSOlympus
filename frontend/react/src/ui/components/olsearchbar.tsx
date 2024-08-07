@@ -2,10 +2,7 @@ import { faMultiply, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useId, useRef } from "react";
 
-export function OlSearchBar(props: {
-  onChange: (e: string) => void;
-  text: string;
-}) {
+export function OlSearchBar(props: { onChange: (e: string) => void; text: string }) {
   const searchId = useId();
   const inputRef = useRef(null);
 

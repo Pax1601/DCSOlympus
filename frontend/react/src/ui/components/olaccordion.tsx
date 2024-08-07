@@ -2,31 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown } from "@fortawesome/free-solid-svg-icons";
 
-export function OlAccordion(props: {
-  title: string;
-  children?: JSX.Element | JSX.Element[];
-  showArrows?: boolean;
-}) {
-  var [open, setOpen] = useState(false);
-  var [scrolledUp, setScrolledUp] = useState(true);
-  var [scrolledDown, setScrolledDown] = useState(false);
+export function OlAccordion(props: { title: string; children?: JSX.Element | JSX.Element[]; showArrows?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [scrolledUp, setScrolledUp] = useState(true);
+  const [scrolledDown, setScrolledDown] = useState(false);
 
   var contentRef = useRef(null);
 
   useEffect(() => {
     contentRef.current &&
-      (contentRef.current as HTMLElement).children[0]?.addEventListener(
-        "scroll",
-        (e: any) => {
-          if (e.target.clientHeight < e.target.scrollHeight) {
-            setScrolledDown(
-              e.target.scrollTop ===
-                e.target.scrollHeight - e.target.offsetHeight
-            );
-            setScrolledUp(e.target.scrollTop === 0);
-          }
+      (contentRef.current as HTMLElement).children[0]?.addEventListener("scroll", (e: any) => {
+        if (e.target.clientHeight < e.target.scrollHeight) {
+          setScrolledDown(e.target.scrollTop === e.target.scrollHeight - e.target.offsetHeight);
+          setScrolledUp(e.target.scrollTop === 0);
         }
-      );
+      });
   });
 
   return (
@@ -61,20 +51,13 @@ export function OlAccordion(props: {
             fill="none"
             viewBox="0 0 10 6"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5 5 1 1 5"
-            />
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
           </svg>
         </button>
       </h3>
       <div className={open ? "" : "hidden"}>
         {props.showArrows && (
           <div className="rotate-180">
-            {" "}
             {!scrolledUp && (
               <FontAwesomeIcon
                 icon={faArrowCircleDown}

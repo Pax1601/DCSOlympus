@@ -18,18 +18,14 @@ export class ShortcutManager {
     });
 
     document.addEventListener("keyup", (ev: KeyboardEvent) => {
-      this.#keysBeingHeld = this.#keysBeingHeld.filter(
-        (held) => held !== ev.code
-      );
+      this.#keysBeingHeld = this.#keysBeingHeld.filter((held) => held !== ev.code);
       this.#keyUpCallbacks.forEach((callback) => callback(ev));
     });
 
     this.addKeyboardShortcut("togglePause", {
       altKey: false,
       callback: () => {
-        getApp()
-          .getServerManager()
-          .setPaused(!getApp().getServerManager().getPaused());
+        getApp().getServerManager().setPaused(!getApp().getServerManager().getPaused());
       },
       code: "Space",
       context: DEFAULT_CONTEXT,
@@ -45,12 +41,7 @@ export class ShortcutManager {
       .addKeyboardShortcut("toggleUnitLabels", {
         altKey: false,
         callback: () => {
-          getApp()
-            .getMap()
-            .setOption(
-              "showUnitLabels",
-              !getApp().getMap().getOptions().showUnitLabels
-            );
+          getApp().getMap().setOption("showUnitLabels", !getApp().getMap().getOptions().showUnitLabels);
         },
         code: "KeyL",
         context: DEFAULT_CONTEXT,
@@ -60,12 +51,7 @@ export class ShortcutManager {
       .addKeyboardShortcut("toggleAcquisitionRings", {
         altKey: false,
         callback: () => {
-          getApp()
-            .getMap()
-            .setOption(
-              "showUnitsAcquisitionRings",
-              !getApp().getMap().getOptions().showUnitsAcquisitionRings
-            );
+          getApp().getMap().setOption("showUnitsAcquisitionRings", !getApp().getMap().getOptions().showUnitsAcquisitionRings);
         },
         code: "KeyE",
         context: DEFAULT_CONTEXT,
@@ -75,12 +61,7 @@ export class ShortcutManager {
       .addKeyboardShortcut("toggleEngagementRings", {
         altKey: false,
         callback: () => {
-          getApp()
-            .getMap()
-            .setOption(
-              "showUnitsEngagementRings",
-              !getApp().getMap().getOptions().showUnitsEngagementRings
-            );
+          getApp().getMap().setOption("showUnitsEngagementRings", !getApp().getMap().getOptions().showUnitsEngagementRings);
         },
         code: "KeyQ",
         context: DEFAULT_CONTEXT,
@@ -90,12 +71,7 @@ export class ShortcutManager {
       .addKeyboardShortcut("toggleHideShortEngagementRings", {
         altKey: false,
         callback: () => {
-          getApp()
-            .getMap()
-            .setOption(
-              "hideUnitsShortRangeRings",
-              !getApp().getMap().getOptions().hideUnitsShortRangeRings
-            );
+          getApp().getMap().setOption("hideUnitsShortRangeRings", !getApp().getMap().getOptions().hideUnitsShortRangeRings);
         },
         code: "KeyR",
         context: DEFAULT_CONTEXT,
@@ -105,12 +81,7 @@ export class ShortcutManager {
       .addKeyboardShortcut("toggleDetectionLines", {
         altKey: false,
         callback: () => {
-          getApp()
-            .getMap()
-            .setOption(
-              "showUnitTargets",
-              !getApp().getMap().getOptions().showUnitTargets
-            );
+          getApp().getMap().setOption("showUnitTargets", !getApp().getMap().getOptions().showUnitTargets);
         },
         code: "KeyF",
         context: DEFAULT_CONTEXT,
@@ -120,12 +91,7 @@ export class ShortcutManager {
       .addKeyboardShortcut("toggleGroupMembers", {
         altKey: false,
         callback: () => {
-          getApp()
-            .getMap()
-            .setOption(
-              "hideGroupMembers",
-              !getApp().getMap().getOptions().hideGroupMembers
-            );
+          getApp().getMap().setOption("hideGroupMembers", !getApp().getMap().getOptions().hideGroupMembers);
         },
         code: "KeyG",
         context: DEFAULT_CONTEXT,
@@ -153,16 +119,7 @@ export class ShortcutManager {
         shiftKey: false,
       });
 
-    [
-      "KeyW",
-      "KeyA",
-      "KeyS",
-      "KeyD",
-      "ArrowLeft",
-      "ArrowRight",
-      "ArrowUp",
-      "ArrowDown",
-    ].forEach((code) => {
+    ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach((code) => {
       this.addKeyboardShortcut(`pan${code}keydown`, {
         altKey: false,
         callback: (ev: KeyboardEvent) => {
@@ -183,17 +140,7 @@ export class ShortcutManager {
       });
     });
 
-    const digits = [
-      "Digit1",
-      "Digit2",
-      "Digit3",
-      "Digit4",
-      "Digit5",
-      "Digit6",
-      "Digit7",
-      "Digit8",
-      "Digit9",
-    ];
+    const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
 
     digits.forEach((code) => {
       this.addKeyboardShortcut(`hotgroup${code}`, {
@@ -202,15 +149,18 @@ export class ShortcutManager {
           if (ev.ctrlKey && ev.shiftKey)
             getApp()
               .getUnitsManager()
-              .selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false); //  "Select hotgroup X in addition to any units already selected"
+              .selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
+          //  "Select hotgroup X in addition to any units already selected"
           else if (ev.ctrlKey && !ev.shiftKey)
             getApp()
               .getUnitsManager()
-              .setHotgroup(parseInt(ev.code.substring(5))); //  "These selected units are hotgroup X (forget any previous membership)"
+              .setHotgroup(parseInt(ev.code.substring(5)));
+          //  "These selected units are hotgroup X (forget any previous membership)"
           else if (!ev.ctrlKey && ev.shiftKey)
             getApp()
               .getUnitsManager()
-              .addToHotgroup(parseInt(ev.code.substring(5))); //  "Add (append) these units to hotgroup X (in addition to any existing members)"
+              .addToHotgroup(parseInt(ev.code.substring(5)));
+          //  "Add (append) these units to hotgroup X (in addition to any existing members)"
           else
             getApp()
               .getUnitsManager()
@@ -221,22 +171,14 @@ export class ShortcutManager {
 
       //  Stop hotgroup controls sending the browser to another tab
       document.addEventListener("keydown", (ev: KeyboardEvent) => {
-        if (
-          ev.code === code &&
-          ev.ctrlKey === true &&
-          ev.altKey === false &&
-          ev.shiftKey === false
-        ) {
+        if (ev.code === code && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false) {
           ev.preventDefault();
         }
       });
     });
   }
 
-  addKeyboardShortcut(
-    name: string,
-    shortcutKeyboardOptions: ShortcutKeyboardOptions
-  ) {
+  addKeyboardShortcut(name: string, shortcutKeyboardOptions: ShortcutKeyboardOptions) {
     this.#items[name] = new ShortcutKeyboard(shortcutKeyboardOptions);
     return this;
   }
