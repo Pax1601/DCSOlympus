@@ -38,7 +38,7 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
-import { ftToM, getUnitsByLabel, knotsToMs, mToFt, msToKnots } from "../../other/utils";
+import { ftToM, getUnitDatabaseByCategory, getUnitsByLabel, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -105,9 +105,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
   useEffect(() => {
     if (!searchBarRefState) setSearchBarRefState(searchBarRef);
-
     if (!props.open && selectionBlueprint !== null) setSelectionBlueprint(null);
-
     if (!props.open && filterString !== "") setFilterString("");
   });
 
@@ -147,23 +145,23 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     ? 5
     : 10;
 
-  /* When a unit is selected, open the menu */
-  document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
-    setSelectedUnits(ev.detail as Unit[]);
+  useEffect(() => {
+    /* When a unit is selected, update the data */
+    document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
+      setSelectedUnits(ev.detail as Unit[]);
+      updateData();
+    });
 
-    updateData();
-  });
+    /* When a unit is deselected, refresh the view */
+    document.addEventListener("unitDeselection", (ev: CustomEventInit) => {
+      window.setTimeout(() => updateData(), 200);
+    });
 
-  /* When a unit is deselected, refresh the view */
-  document.addEventListener("unitDeselection", (ev: CustomEventInit) => {
-    /* TODO add delay to avoid doing it too many times */
-    updateData();
-  });
-
-  /* When all units are deselected clean the view */
-  document.addEventListener("clearSelection", () => {
-    setSelectedUnits([]);
-  });
+    /* When all units are deselected clean the view */
+    document.addEventListener("clearSelection", () => {
+      setSelectedUnits([]);
+    });
+  }, []);
 
   /* Update the current values of the shown data */
   function updateData() {
@@ -220,15 +218,20 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   }
 
   /* Count how many units are selected of each type, divided by coalition */
-  var unitOccurences = {
+  var unitOccurences: {
+    blue: { [key: string]: { label: string; occurences: number } };
+    red: { [key: string]: { label: string; occurences: number } };
+    neutral: { [key: string]: { label: string; occurences: number } };
+  } = {
     blue: {},
     red: {},
     neutral: {},
   };
 
   selectedUnits.forEach((unit) => {
-    if (!(unit.getName() in unitOccurences[unit.getCoalition()])) unitOccurences[unit.getCoalition()][unit.getName()] = 1;
-    else unitOccurences[unit.getCoalition()][unit.getName()]++;
+    if (!(unit.getName() in unitOccurences[unit.getCoalition()]))
+      unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label };
+    else unitOccurences[unit.getCoalition()][unit.getName()].occurences++;
   });
 
   const selectedCategories = getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
@@ -421,7 +424,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
                   /* If a specific unit is being selected check that the label is correct, otherwise check if the unit type is active for the coalition */
                   if (selectionBlueprint) {
-                    if (unit.getDatabaseEntry()?.label === undefined || unit.getDatabaseEntry()?.label !== selectionBlueprint.label) return;
+                    if (unit.getBlueprint()?.label === undefined || unit.getBlueprint()?.label !== selectionBlueprint.label) return;
 
                     /* This is a trick to easily reuse the same checkboxes used to globally enable unit types for a coalition,
                       since those checkboxes are checked if at least one type is selected for a specific coalition.
@@ -480,7 +483,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 dark:text-white
                               `}
                             >
-                              {name}
+                              {unitOccurences[coalition][name].label}
                             </span>
                             <span
                               className={`
@@ -488,7 +491,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 dark:text-gray-500
                               `}
                             >
-                              x{unitOccurences[coalition][name]}
+                              x{unitOccurences[coalition][name].occurences}
                             </span>
                           </div>
                         );
@@ -1337,7 +1340,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <div className="flex content-center gap-2">
                             <div
                               className={`
-                                my-auto w-6 min-w-6 rounded-full py-0.5
+                                my-auto w-fit rounded-full px-2 py-0.5
                                 text-center text-sm font-bold text-gray-500
                                 dark:bg-[#17212D]
                               `}

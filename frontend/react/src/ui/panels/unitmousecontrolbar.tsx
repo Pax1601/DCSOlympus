@@ -10,7 +10,6 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 export function UnitMouseControlBar(props: {}) {
   const [open, setOpen] = useState(false);
-  const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
   const [contextActionsSet, setContextActionsSet] = useState(new ContextActionSet());
   const [activeContextAction, setActiveContextAction] = useState(null as null | ContextAction);
   const [scrolledLeft, setScrolledLeft] = useState(true);
@@ -19,36 +18,34 @@ export function UnitMouseControlBar(props: {}) {
   /* Initialize the "scroll" position of the element */
   var scrollRef = useRef(null);
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current) 
       onScroll(scrollRef.current);
-    }
   });
 
-  /* When a unit is selected, open the menu */
-  document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
-    setOpen(true);
-    setSelectedUnits(ev.detail as Unit[]);
+  useEffect(() => {
+    /* When a unit is selected, open the menu */
+    document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
+      setOpen(true);
+      updateData();
+      setActiveContextAction(null);
+    });
 
-    updateData();
-  });
+    /* When a unit is deselected, refresh the view */
+    document.addEventListener("unitDeselection", (ev: CustomEventInit) => {
+      window.setTimeout(() => updateData(), 200);
+    });
 
-  /* When a unit is deselected, refresh the view */
-  document.addEventListener("unitDeselection", (ev: CustomEventInit) => {
-    /* TODO add delay to avoid doing it too many times */
-    updateData();
-  });
+    /* When all units are deselected clean the view */
+    document.addEventListener("clearSelection", () => {
+      setOpen(false);
+      updateData();
+    });
 
-  /* When all units are deselected clean the view */
-  document.addEventListener("clearSelection", () => {
-    setOpen(false);
-    setSelectedUnits([]);
-    updateData();
-  });
-
-  /* Deselect the context action when exiting state */
-  document.addEventListener("mapStateChanged", (ev) => {
-    setOpen((ev as CustomEvent).detail === CONTEXT_ACTION);
-  });
+    /* Deselect the context action when exiting state */
+    document.addEventListener("mapStateChanged", (ev) => {
+      setOpen((ev as CustomEvent).detail === CONTEXT_ACTION);
+    });
+  }, []);
 
   /* Update the current values of the shown data */
   function updateData() {
@@ -62,7 +59,7 @@ export function UnitMouseControlBar(props: {}) {
       });
 
     setContextActionsSet(newContextActionSet);
-    setActiveContextAction(null);
+    return newContextActionSet;
   }
 
   function onScroll(el) {
@@ -78,7 +75,7 @@ export function UnitMouseControlBar(props: {}) {
 
   return (
     <>
-      {open && (
+      {open && Object.keys(contextActionsSet.getContextActions()).length > 0 && (
         <>
           <div
             className={`
@@ -108,15 +105,17 @@ export function UnitMouseControlBar(props: {}) {
                         setActiveContextAction(null);
                         contextAction.executeCallback(null, null);
                       } else {
-                        if (activeContextAction != contextAction) {
+                        if (activeContextAction !== contextAction) {
                           setActiveContextAction(contextAction);
                           getApp().getMap().setState(CONTEXT_ACTION, {
                             contextAction: contextAction,
+                            defaultContextAction: contextActionsSet.getDefaultContextAction()
                           });
                         } else {
                           setActiveContextAction(null);
                           getApp().getMap().setState(CONTEXT_ACTION, {
                             contextAction: null,
+                            defaultContextAction: contextActionsSet.getDefaultContextAction()
                           });
                         }
                       }

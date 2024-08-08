@@ -34,6 +34,7 @@ import { Group } from "./group";
 import { UnitDataFileExport } from "./importexport/unitdatafileexport";
 import { UnitDataFileImport } from "./importexport/unitdatafileimport";
 import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
+import { ContextActionSet } from "./contextactionset";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -1731,7 +1732,6 @@ export class UnitsManager {
 
   #onUnitSelection(unit: Unit) {
     if (this.getSelectedUnits().length > 0) {
-      getApp().getMap().setState(CONTEXT_ACTION);
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
       if (!this.#selectionEventDisabled) {
         window.setTimeout(() => {
@@ -1740,6 +1740,14 @@ export class UnitsManager {
               detail: this.getSelectedUnits(),
             })
           );
+
+          let newContextActionSet = new ContextActionSet();
+          this.getSelectedUnits().forEach((unit) => unit.appendContextActions(newContextActionSet));
+          getApp().getMap().setState(CONTEXT_ACTION, {
+            contextAction: null,
+            defaultContextAction: newContextActionSet.getDefaultContextAction(),
+          });
+
           this.#selectionEventDisabled = false;
           this.#showNumberOfSelectedProtectedUnits();
         }, 100);

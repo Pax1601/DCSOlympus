@@ -27,9 +27,8 @@ export function Header() {
   /* Initialize the "scroll" position of the element */
   var scrollRef = useRef(null);
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current) 
       onScroll(scrollRef.current);
-    }
   });
 
   function onScroll(el) {
@@ -56,10 +55,8 @@ export function Header() {
               `}
             >
               <img
-                src="vite/images/icon.png"
-                className={`
-                my-auto h-10 w-10 rounded-md p-0
-              `}
+                src="images/icon.png"
+                className={`my-auto h-10 w-10 rounded-md p-0`}
               ></img>
               {!scrolledLeft && (
                 <FaChevronLeft

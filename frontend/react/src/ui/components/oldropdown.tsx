@@ -103,7 +103,12 @@ export function OlDropdown(props: {
           `}
           type="button"
         >
-          {props.leftIcon && <FontAwesomeIcon icon={props.leftIcon} className={`mr-3`} />}
+          {props.leftIcon && (
+            <FontAwesomeIcon
+              icon={props.leftIcon}
+              className={`mr-3`}
+            />
+          )}
           <span className="overflow-hidden text-ellipsis text-nowrap">{props.label ?? ""}</span>
           <svg
             className={`
@@ -144,7 +149,11 @@ export function OlDropdown(props: {
 }
 
 /* Conveniency Component for dropdown elements */
-export function OlDropdownItem(props) {
+export function OlDropdownItem(props: {
+  onClick?: () => void;
+  className?: string;
+  children?: string | JSX.Element | JSX.Element[];
+}) {
   return (
     <button
       onClick={props.onClick ?? (() => {})}

@@ -39,26 +39,26 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
     /* Align the state of the coalition toggle to the coalition of the area */
     if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
-  });
 
-  useEffect(() => {
     if (!props.open) {
       if ([COALITIONAREA_EDIT, COALITIONAREA_DRAW_CIRCLE, COALITIONAREA_DRAW_POLYGON].includes(getApp()?.getMap()?.getState()))
         getApp().getMap().setState(IDLE);
     }
   });
 
-  document.addEventListener("mapStateChanged", (event: any) => {
-    if (drawingPolygon && getApp().getMap().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
+  useEffect(() => {
+    document.addEventListener("mapStateChanged", (event: any) => {
+      if (drawingPolygon && getApp().getMap().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
 
-    if (getApp().getMap().getState() == COALITIONAREA_EDIT) {
-      setActiveCoalitionArea(getApp().getMap().getSelectedCoalitionArea() ?? null);
-    }
-  });
+      if (getApp().getMap().getState() == COALITIONAREA_EDIT) {
+        setActiveCoalitionArea(getApp().getMap().getSelectedCoalitionArea() ?? null);
+      }
+    });
 
-  document.addEventListener("coalitionAreaSelected", (event: any) => {
-    setActiveCoalitionArea(event.detail);
-  });
+    document.addEventListener("coalitionAreaSelected", (event: any) => {
+      setActiveCoalitionArea(event.detail);
+    });
+  }, []);
 
   return (
     <Menu
@@ -232,7 +232,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                             setTypesSelection(JSON.parse(JSON.stringify(typesSelection)));
                           }}
                         />
-                        {type}
+                        <div>{type}</div>
                       </OlDropdownItem>
                     );
                   })}
@@ -256,7 +256,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                             setErasSelection(JSON.parse(JSON.stringify(erasSelection)));
                           }}
                         />
-                        {era}
+                        <div>{era}</div>
                       </OlDropdownItem>
                     );
                   })}
@@ -277,7 +277,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                           setErasSelection(JSON.parse(JSON.stringify(rangesSelection)));
                         }}
                       />
-                      {range}
+                      <div>{range}</div>
                     </OlDropdownItem>
                   );
                 })}

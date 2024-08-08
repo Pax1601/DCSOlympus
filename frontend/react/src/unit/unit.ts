@@ -1,4 +1,4 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point } from "leaflet";
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, LeafletMouseEvent, DomEvent, DomUtil } from "leaflet";
 import { getApp } from "../olympusapp";
 import {
   enumToCoalition,
@@ -77,6 +77,7 @@ import {
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaXmarksLines } from "react-icons/fa6";
+import { ContextAction } from "./contextaction";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -160,7 +161,6 @@ export abstract class Unit extends CustomMarker {
   #selected: boolean = false;
   #hidden: boolean = false;
   #highlighted: boolean = false;
-  #waitingForDoubleClick: boolean = false;
   #pathMarkers: Marker[] = [];
   #pathPolyline: Polyline;
   #contactsPolylines: Polyline[] = [];
@@ -169,9 +169,15 @@ export abstract class Unit extends CustomMarker {
   #miniMapMarker: CircleMarker | null = null;
   #targetPositionMarker: TargetMarker;
   #targetPositionPolyline: Polyline;
-  #doubleClickTimer: number = 0;
   #hotgroup: number | null = null;
   #detectionMethods: number[] = [];
+
+  /* Inputs timers */
+  #mouseCooldownTimer: number = 0;
+  #shortPressTimer: number = 0;
+  #longPressTimer: number = 0;
+  #isMouseOnCooldown: boolean = false;
+  #isMouseDown: boolean = false;
 
   /* Getters for backend driven data */
   getAlive() {
@@ -315,7 +321,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   constructor(ID: number) {
-    super(new LatLng(0, 0), { riseOnHover: true, keyboard: false });
+    super(new LatLng(0, 0), { riseOnHover: true, keyboard: false, bubblingMouseEvents: false });
 
     this.ID = ID;
 
@@ -353,7 +359,8 @@ export abstract class Unit extends CustomMarker {
     });
 
     /* Leaflet events listeners */
-    this.on("click", (e) => this.#onClick(e));
+    this.on("mousedown", (e) => this.#onMouseDown(e));
+    this.on("mouseup", (e) => this.#onMouseUp(e));
     this.on("dblclick", (e) => this.#onDoubleClick(e));
     this.on("mouseover", () => {
       if (this.belongsToCommandedCoalition()) {
@@ -802,7 +809,7 @@ export abstract class Unit extends CustomMarker {
     return this.getDatabase()?.getSpawnPointsByName(this.getName());
   }
 
-  getDatabaseEntry() {
+  getBlueprint() {
     return this.getDatabase()?.getByName(this.#name) ?? this.getDatabase()?.getUnkownUnit(this.getName());
   }
 
@@ -824,9 +831,10 @@ export abstract class Unit extends CustomMarker {
       "Set destination",
       "Click on the map to move the units there",
       faLocationDot,
+      "position",
       (units: Unit[], _, targetPosition) => {
         getApp().getUnitsManager().clearDestinations(units);
-        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0);
+        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
 
@@ -836,10 +844,26 @@ export abstract class Unit extends CustomMarker {
       "Append destination",
       "Click on the map to add a destination to the path",
       faRoute,
+      "position",
       (units: Unit[], _, targetPosition) => {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
+
+    contextActionSet.addDefaultContextAction(
+      this,
+      "default",
+      "Set destination",
+      "",
+      faRoute,
+      null,
+      (units: Unit[], targetUnit, targetPosition) => {
+        if (targetPosition) {
+          getApp().getUnitsManager().clearDestinations(units);
+          getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
+        }
+      }
+    )
   }
 
   drawLines() {
@@ -909,7 +933,7 @@ export abstract class Unit extends CustomMarker {
       /* If a unit does not belong to the commanded coalition or it is not visually detected, show it with the generic aircraft square */
       var marker;
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
-        marker = this.getDatabaseEntry()?.markerFile ?? this.getDefaultMarker();
+        marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
       img.src = `/vite/images/units/${marker}.svg`;
       img.onload = () => SVGInjector(img);
@@ -930,7 +954,7 @@ export abstract class Unit extends CustomMarker {
     if (iconOptions.showShortLabel) {
       var shortLabel = document.createElement("div");
       shortLabel.classList.add("unit-short-label");
-      shortLabel.innerText = this.getDatabaseEntry()?.shortLabel || "";
+      shortLabel.innerText = this.getBlueprint()?.shortLabel || "";
       el.append(shortLabel);
     }
 
@@ -1068,7 +1092,7 @@ export abstract class Unit extends CustomMarker {
   canFulfillRole(roles: string | string[]) {
     if (typeof roles === "string") roles = [roles];
 
-    var loadouts = this.getDatabaseEntry()?.loadouts;
+    var loadouts = this.getBlueprint()?.loadouts;
     if (loadouts) {
       return loadouts.some((loadout: LoadoutBlueprint) => {
         return (roles as string[]).some((role: string) => {
@@ -1083,19 +1107,19 @@ export abstract class Unit extends CustomMarker {
   }
 
   canTargetPoint() {
-    return this.getDatabaseEntry()?.canTargetPoint === true;
+    return this.getBlueprint()?.canTargetPoint === true;
   }
 
   canRearm() {
-    return this.getDatabaseEntry()?.canRearm === true;
+    return this.getBlueprint()?.canRearm === true;
   }
 
   canAAA() {
-    return this.getDatabaseEntry()?.canAAA === true;
+    return this.getBlueprint()?.canAAA === true;
   }
 
   isIndirectFire() {
-    return this.getDatabaseEntry()?.indirectFire === true;
+    return this.getBlueprint()?.indirectFire === true;
   }
 
   isTanker() {
@@ -1282,13 +1306,13 @@ export abstract class Unit extends CustomMarker {
     var contextActionSet = new ContextActionSet();
 
     // TODO FIX
-    contextActionSet.addContextAction(this, "trail", "Trail", "Follow unit in trail formation", olButtonsContextTrail, () =>
+    contextActionSet.addContextAction(this, "trail", "Trail", "Follow unit in trail formation", olButtonsContextTrail, null, () =>
       this.applyFollowOptions("trail", units)
     );
-    contextActionSet.addContextAction(this, "echelon-lh", "Echelon (LH)", "Follow unit in echelon left formation", olButtonsContextEchelonLh, () =>
+    contextActionSet.addContextAction(this, "echelon-lh", "Echelon (LH)", "Follow unit in echelon left formation", olButtonsContextEchelonLh, null, () =>
       this.applyFollowOptions("echelon-lh", units)
     );
-    contextActionSet.addContextAction(this, "echelon-rh", "Echelon (RH)", "Follow unit in echelon right formation", olButtonsContextEchelonRh, () =>
+    contextActionSet.addContextAction(this, "echelon-rh", "Echelon (RH)", "Follow unit in echelon right formation", olButtonsContextEchelonRh, null, () =>
       this.applyFollowOptions("echelon-rh", units)
     );
     contextActionSet.addContextAction(
@@ -1297,7 +1321,7 @@ export abstract class Unit extends CustomMarker {
       "Line abreast (LH)",
       "Follow unit in line abreast left formation",
       olButtonsContextLineAbreast,
-      () => this.applyFollowOptions("line-abreast-lh", units)
+      null, () => this.applyFollowOptions("line-abreast-lh", units)
     );
     contextActionSet.addContextAction(
       this,
@@ -1305,13 +1329,13 @@ export abstract class Unit extends CustomMarker {
       "Line abreast (RH)",
       "Follow unit in line abreast right formation",
       olButtonsContextLineAbreast,
-      () => this.applyFollowOptions("line-abreast-rh", units)
+      null, () => this.applyFollowOptions("line-abreast-rh", units)
     );
-    contextActionSet.addContextAction(this, "front", "Front", "Fly in front of unit", olButtonsContextFront, () => this.applyFollowOptions("front", units));
-    contextActionSet.addContextAction(this, "diamond", "Diamond", "Follow unit in diamond formation", olButtonsContextDiamond, () =>
+    contextActionSet.addContextAction(this, "front", "Front", "Fly in front of unit", olButtonsContextFront, null, () => this.applyFollowOptions("front", units));
+    contextActionSet.addContextAction(this, "diamond", "Diamond", "Follow unit in diamond formation", olButtonsContextDiamond, null, () =>
       this.applyFollowOptions("diamond", units)
     );
-    contextActionSet.addContextAction(this, "custom", "Custom", "Set a custom formation position", faExclamation, () =>
+    contextActionSet.addContextAction(this, "custom", "Custom", "Set a custom formation position", faExclamation, null, () =>
       this.applyFollowOptions("custom", units)
     );
   }
@@ -1349,35 +1373,73 @@ export abstract class Unit extends CustomMarker {
   }
 
   /***********************************************/
-  #onClick(e: any) {
-    /*  Exit if we were waiting for a doubleclick */
-    if (this.#waitingForDoubleClick) {
-      return;
-    }
+  #onMouseUp(e: any) {
+    this.#isMouseDown = false;
 
-    /* We'll wait for a doubleclick */
-    this.#waitingForDoubleClick = true;
-    this.#doubleClickTimer = window.setTimeout(() => {
-      /* Still waiting so no doubleclick; do the click action */
-      if (this.#waitingForDoubleClick) {
-        if (getApp().getMap().getState() === IDLE || e.originalEvent.ctrlKey) {
-          if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
+    DomEvent.stop(e);
+    DomEvent.preventDefault(e);
+    e.originalEvent.stopImmediatePropagation();
 
-          this.setSelected(!this.getSelected());
-        } else if (getApp().getMap().getState() === CONTEXT_ACTION) {
-          getApp().getMap().executeContextAction(this, null);
-        }
-      }
+    e.originalEvent.stopPropagation();
 
-      /* No longer waiting for a doubleclick */
-      this.#waitingForDoubleClick = false;
+    window.clearTimeout(this.#longPressTimer);
+
+    this.#isMouseOnCooldown = true;
+    this.#mouseCooldownTimer = window.setTimeout(() => {
+      this.#isMouseOnCooldown = false;
     }, 200);
   }
 
+  #onMouseDown(e: any) {
+    this.#isMouseDown = true;
+
+    DomEvent.stop(e);
+    DomEvent.preventDefault(e);
+    e.originalEvent.stopImmediatePropagation();
+
+    if (this.#isMouseOnCooldown) {
+      return;
+    }
+
+    this.#shortPressTimer = window.setTimeout(() => {
+      /* If the mouse is no longer being pressed, execute the short press action */
+      if (!this.#isMouseDown) this.#onShortPress(e);
+    }, 200);
+
+    this.#longPressTimer = window.setTimeout(() => {
+      /* If the mouse is still being pressed, execute the long press action */
+      if (this.#isMouseDown) this.#onLongPress(e);
+    }, 350);
+  }
+
+  #onShortPress(e: LeafletMouseEvent) {
+    console.log(`Short press on ${this.getUnitName()}`);
+
+    if (getApp().getMap().getState() === IDLE || e.originalEvent.ctrlKey) {
+      if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
+      this.setSelected(!this.getSelected());
+    } else if (getApp().getMap().getState() === CONTEXT_ACTION) {
+      if (getApp().getMap().getContextAction()) getApp().getMap().executeContextAction(this, null);
+      else {
+        getApp().getUnitsManager().deselectAllUnits();
+        this.setSelected(!this.getSelected());
+      }
+    }
+  }
+
+  #onLongPress(e: any) {
+    console.log(`Long press on ${this.getUnitName()}`);
+    
+    if (e.originalEvent.button === 2) {
+      document.dispatchEvent(new CustomEvent("showUnitContextMenu", { detail: e }));
+    }
+  }
+
   #onDoubleClick(e: any) {
-    /* Let single clicks work again */
-    this.#waitingForDoubleClick = false;
-    clearTimeout(this.#doubleClickTimer);
+    console.log(`Double click on ${this.getUnitName()}`);
+
+    window.clearTimeout(this.#shortPressTimer);
+    window.clearTimeout(this.#longPressTimer);
 
     /* Select all matching units in the viewport */
     const unitsManager = getApp().getUnitsManager();
@@ -1790,6 +1852,7 @@ export abstract class AirUnit extends Unit {
       "Refuel at tanker",
       "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
       olButtonsContextRefuel,
+      null, 
       (units: Unit[]) => {
         getApp().getUnitsManager().refuel(units);
       },
@@ -1801,19 +1864,21 @@ export abstract class AirUnit extends Unit {
       "Center map",
       "Center the map on the unit and follow it",
       faMapLocation,
+      null, 
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
       { executeImmediately: true }
     );
 
-    /* Context actions with a target unit */
+    /* Context actions that require a target unit */
     contextActionSet.addContextAction(
       this,
       "attack",
       "Attack unit",
       "Click on a unit to attack it using A/A or A/G weapons",
       olButtonsContextAttack,
+      "unit",
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       }
@@ -1824,18 +1889,20 @@ export abstract class AirUnit extends Unit {
       "Follow unit",
       "Click on a unit to follow it in formation",
       olButtonsContextFollow,
+      "unit",
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) targetUnit.showFollowOptions(units);
       }
     );
 
-    /* Context actions with a target position */
+    /* Context actions that require a target position */
     contextActionSet.addContextAction(
       this,
       "bomb",
       "Precision bomb location",
       "Click on a point to execute a precision bombing attack",
       faLocationCrosshairs,
+      "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, units);
       }
@@ -1846,6 +1913,7 @@ export abstract class AirUnit extends Unit {
       "Carpet bomb location",
       "Click on a point to execute a carpet bombing attack",
       faXmarksLines,
+      "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, units);
       }
@@ -1892,6 +1960,7 @@ export class Helicopter extends AirUnit {
       "Land at location",
       "Click on a point to land there",
       olButtonsContextLandAtPoint,
+      "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().landAtPoint(targetPosition, units);
       }
@@ -1920,7 +1989,7 @@ export class GroundUnit extends Unit {
       showHealth: true,
       showHotgroup: belongsToCommandedCoalition,
       showUnitIcon: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
-      showShortLabel: this.getDatabaseEntry()?.type === "SAM Site",
+      showShortLabel: this.getBlueprint()?.type === "SAM Site",
       showFuel: false,
       showAmmo: false,
       showSummary: false,
@@ -1939,6 +2008,7 @@ export class GroundUnit extends Unit {
       "Group ground units",
       "Create a group of ground units",
       faPeopleGroup,
+      null,
       (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
@@ -1950,6 +2020,7 @@ export class GroundUnit extends Unit {
       "Center map",
       "Center the map on the unit and follow it",
       faMapLocation,
+      null,
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
@@ -1963,6 +2034,7 @@ export class GroundUnit extends Unit {
         "Scenic AAA",
         "Shoot AAA in the air without aiming at any target, when an enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim",
         olButtonsContextScenicAaa,
+        null,
         (units: Unit[]) => {
           getApp().getUnitsManager().scenicAAA(units);
         },
@@ -1974,6 +2046,7 @@ export class GroundUnit extends Unit {
         "Dynamic accuracy AAA",
         "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim",
         olButtonsContextMissOnPurpose,
+        null,
         (units: Unit[]) => {
           getApp().getUnitsManager().missOnPurpose(units);
         },
@@ -1988,6 +2061,7 @@ export class GroundUnit extends Unit {
       "Attack unit",
       "Click on a unit to attack it",
       olButtonsContextAttack,
+      "unit",
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       }
@@ -2001,6 +2075,7 @@ export class GroundUnit extends Unit {
         "Fire at area",
         "Click on a point to precisely fire at it (if possible)",
         faLocationCrosshairs,
+        "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
           if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
         }
@@ -2011,6 +2086,7 @@ export class GroundUnit extends Unit {
         "Simulate fire fight",
         "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim",
         olButtonsContextSimulateFireFight,
+        "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
           if (targetPosition) getApp().getUnitsManager().simulateFireFight(targetPosition, units);
         }
@@ -2028,7 +2104,7 @@ export class GroundUnit extends Unit {
   }
 
   /* When a unit is a leader of a group, the map is zoomed out and grouping when zoomed out is enabled, check if the unit should be shown as a specific group. This is used to show a SAM battery instead of the group leader */
-  getDatabaseEntry() {
+  getBlueprint() {
     let unitWhenGrouped: string | undefined | null = null;
     if (
       !this.getSelected() &&
@@ -2038,10 +2114,10 @@ export class GroundUnit extends Unit {
     ) {
       unitWhenGrouped = this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
       let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
-        if (unit.getDatabaseEntry()?.unitWhenGrouped != undefined) return unit;
+        if (unit.getBlueprint()?.unitWhenGrouped != undefined) return unit;
         return prev;
       }, null);
-      unitWhenGrouped = member !== null ? member?.getDatabaseEntry()?.unitWhenGrouped : unitWhenGrouped;
+      unitWhenGrouped = member !== null ? member?.getBlueprint()?.unitWhenGrouped : unitWhenGrouped;
     }
     if (unitWhenGrouped) return this.getDatabase()?.getByName(unitWhenGrouped) ?? this.getDatabase()?.getUnkownUnit(this.getName());
     else return this.getDatabase()?.getByName(this.getName()) ?? this.getDatabase()?.getUnkownUnit(this.getName());
@@ -2099,6 +2175,7 @@ export class NavyUnit extends Unit {
       "Group navy units",
       "Create a group of navy units",
       faQuestionCircle,
+      null,
       (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
@@ -2110,6 +2187,7 @@ export class NavyUnit extends Unit {
       "Center map",
       "Center the map on the unit and follow it",
       faMapLocation,
+      null,
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
@@ -2123,6 +2201,7 @@ export class NavyUnit extends Unit {
       "Attack unit",
       "Click on a unit to attack it",
       faQuestionCircle,
+      "unit",
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       }
@@ -2135,6 +2214,7 @@ export class NavyUnit extends Unit {
       "Fire at area",
       "Click on a point to precisely fire at it (if possible)",
       faQuestionCircle,
+      "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
       }

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
+import { IDLE } from "../../constants/constants";
 
 export function SideBar() {
   return (
@@ -12,7 +13,7 @@ export function SideBar() {
           {(events) => (
             <nav
               className={`
-                absolute left-0 z-20 flex h-full flex-col bg-gray-300
+                z-20 flex h-full flex-col bg-gray-300
                 dark:bg-olympus-900
               `}
             >
@@ -41,10 +42,10 @@ export function SideBar() {
                   <OlStateButton
                     onClick={events.toggleUnitControlMenuVisible}
                     checked={appState.unitControlMenuVisible}
-                    icon={faGamepad}
-                    tooltip=""
+                    icon={appState.mapState === IDLE? faMagnifyingGlass: faGamepad}
+                    tooltip="Hide/show selection tool and unit control menu"
                   ></OlStateButton>
-                  <OlStateButton onClick={events.toggleMeasureMenuVisible} checked={appState.measureMenuVisible} icon={faRuler} tooltip=""></OlStateButton>
+                  <OlStateButton onClick={events.toggleMeasureMenuVisible} checked={appState.measureMenuVisible} icon={faRuler} tooltip="NOT IMPLEMENTED"></OlStateButton>
                   <OlStateButton
                     onClick={events.toggleDrawingMenuVisible}
                     checked={appState.drawingMenuVisible}

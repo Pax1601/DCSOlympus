@@ -130,3 +130,9 @@
 .ol-coalitionarea-label.red {
   color: #461818;
 }
+
+.ol-target-icon {
+  background-image: url("/vite/images/markers/target.svg");
+  height: 100%;
+  width: 100%;
+}

@@ -141,7 +141,10 @@ export class ServerManager {
   }
 
   setAddress(address: string) {
-    this.#REST_ADDRESS = `${address.replace("vite/", "")}olympus`;
+    this.#REST_ADDRESS = `${address.replace("vite/", "").replace("vite", "")}olympus`;
+    // TODO: TEMPORARY FOR DEBUGGING
+    // this.#REST_ADDRESS = `https://refugees.dcsolympus.com/olympus`;
+    
     console.log(`Setting REST address to ${this.#REST_ADDRESS}`);
   }
 

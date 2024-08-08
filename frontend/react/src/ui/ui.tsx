@@ -11,7 +11,7 @@ import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { Options } from "./panels/options";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import { BLUE_COMMANDER, GAME_MASTER, IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../constants/constants";
+import { BLUE_COMMANDER, CONTEXT_ACTION, GAME_MASTER, IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
@@ -19,6 +19,7 @@ import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
 import { DrawingMenu } from "./panels/drawingmenu";
 import { ControlsPanel } from "./panels/controls";
+import { MapContextMenu } from "./contextmenus/mapcontextmenu";
 
 export type OlympusState = {
   mainMenuVisible: boolean;
@@ -46,42 +47,35 @@ export function UI() {
   const [commandMode, setCommandMode] = useState(null as null | string);
   const [mapSources, setMapSources] = useState([] as string[]);
   const [activeMapSource, setActiveMapSource] = useState("");
-  const [mapBoxSelection, setMapBoxSelection] = useState(false);
   const [mapState, setMapState] = useState(IDLE);
 
-  document.addEventListener("hiddenTypesChanged", (ev) => {
-    setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
-  });
+  useEffect(() => {
+    document.addEventListener("hiddenTypesChanged", (ev) => {
+      setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
+    });
 
-  document.addEventListener("mapOptionsChanged", (ev) => {
-    setMapOptions({ ...getApp().getMap().getOptions() });
-  });
+    document.addEventListener("mapOptionsChanged", (ev) => {
+      setMapOptions({ ...getApp().getMap().getOptions() });
+    });
 
-  document.addEventListener("mapStateChanged", (ev) => {
-    if ((ev as CustomEvent).detail === IDLE && mapState !== IDLE) hideAllMenus();
+    document.addEventListener("mapStateChanged", (ev) => {
+      if ((ev as CustomEvent).detail === IDLE) hideAllMenus();
+      else if ((ev as CustomEvent).detail === CONTEXT_ACTION) setUnitControlMenuVisible(true);
+      setMapState(String((ev as CustomEvent).detail));
+    });
 
-    setMapState(String((ev as CustomEvent).detail));
-  });
+    document.addEventListener("mapSourceChanged", (ev) => {
+      var source = (ev as CustomEvent).detail;
+      setActiveMapSource(source);
+    });
 
-  document.addEventListener("mapSourceChanged", (ev) => {
-    var source = (ev as CustomEvent).detail;
-    if (source !== activeMapSource) setActiveMapSource(source);
-  });
-
-  document.addEventListener("configLoaded", (ev) => {
-    let config = getApp().getConfig();
-    var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
-    setMapSources(sources);
-    setActiveMapSource(sources[0]);
-  });
-
-  document.addEventListener("mapForceBoxSelect", (ev) => {
-    setMapBoxSelection(true);
-  });
-
-  document.addEventListener("mapSelectionEnd", (ev) => {
-    setMapBoxSelection(false);
-  });
+    document.addEventListener("configLoaded", (ev) => {
+      let config = getApp().getConfig();
+      var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
+      setMapSources(sources);
+      setActiveMapSource(sources[0]);
+    });
+  }, []);
 
   function hideAllMenus() {
     setMainMenuVisible(false);
@@ -132,7 +126,8 @@ export function UI() {
   return (
     <div
       className={`
-        absolute left-0 top-0 h-screen w-screen overflow-hidden font-sans
+        absolute left-0 top-0 flex h-screen w-screen flex-col overflow-hidden
+        font-sans
       `}
       onLoad={setupApp}
     >
@@ -148,7 +143,7 @@ export function UI() {
           mapHiddenTypes: mapHiddenTypes,
           mapSources: mapSources,
           activeMapSource: activeMapSource,
-          mapBoxSelection: mapBoxSelection,
+          mapState: mapState,
         }}
       >
         <EventsProvider
@@ -185,48 +180,43 @@ export function UI() {
             },
           }}
         >
-          <div
-            className={`
-            absolute left-0 top-0 flex h-full w-full flex-col
-          `}
-          >
-            <Header />
-            <div className="flex justify-reverse h-full">
-              {loginModalVisible && (
-                <>
-                  <div
-                    className={`
-                      fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
-                    `}
-                  ></div>
-                  <LoginModal
-                    onLogin={(password) => {
-                      checkPassword(password);
-                    }}
-                    onContinue={(username) => {
-                      connect(username);
-                    }}
-                    onBack={() => {
-                      setCommandMode(null);
-                    }}
-                    checkingPassword={checkingPassword}
-                    loginError={loginError}
-                    commandMode={commandMode}
-                  />
-                </>
-              )}
-              <div id="map-container" className="z-0 h-full w-screen" />
-              <MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
-              <SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
-              <Options open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
-              <MiniMapPanel />
-              <ControlsPanel />
-              <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
-              <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
+          <Header />
+          <div className="flex h-full w-full flex-row-reverse">
+            {loginModalVisible && (
+              <>
+                <div
+                  className={`
+                    fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
+                  `}
+                ></div>
+                <LoginModal
+                  onLogin={(password) => {
+                    checkPassword(password);
+                  }}
+                  onContinue={(username) => {
+                    connect(username);
+                  }}
+                  onBack={() => {
+                    setCommandMode(null);
+                  }}
+                  checkingPassword={checkingPassword}
+                  loginError={loginError}
+                  commandMode={commandMode}
+                />
+              </>
+            )}
+            <div id="map-container" className="z-0 h-full w-screen" />
+            <MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
+            <SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
+            <Options open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
+            <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
+            <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
 
-              <UnitMouseControlBar />
-              <SideBar />
-            </div>
+            <MiniMapPanel />
+            <ControlsPanel />
+            <UnitMouseControlBar />
+            <MapContextMenu />
+            <SideBar />
           </div>
         </EventsProvider>
       </StateProvider>

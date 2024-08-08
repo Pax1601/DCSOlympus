@@ -18,15 +18,17 @@ export function MiniMapPanel(props: {}) {
   const [showMissionTime, setShowMissionTime] = useState(false);
   const [showMinimap, setShowMinimap] = useState(false);
 
-  document.addEventListener("serverStatusUpdated", (ev) => {
-    const detail = (ev as CustomEvent).detail;
-    setFrameRate(detail.frameRate);
-    setLoad(detail.load);
-    setElapsedTime(detail.elapsedTime);
-    setMissionTime(detail.missionTime);
-    setConnected(detail.connected);
-    setPaused(detail.paused);
-  });
+  useEffect(() => {
+    document.addEventListener("serverStatusUpdated", (ev) => {
+      const detail = (ev as CustomEvent).detail;
+      setFrameRate(detail.frameRate);
+      setLoad(detail.load);
+      setElapsedTime(detail.elapsedTime);
+      setMissionTime(detail.missionTime);
+      setConnected(detail.connected);
+      setPaused(detail.paused);
+    });
+  }, []);
 
   // A bit of a hack to set the rounded borders to the minimap
   useEffect(() => {

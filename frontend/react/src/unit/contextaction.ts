@@ -16,11 +16,13 @@ export class ContextAction {
   #units: Unit[] = [];
   #icon: IconDefinition;
   #options: ContextActionOptions;
+  #target: "unit" | "position" | null = null;
 
-  constructor(id: string, label: string, description: string, icon: IconDefinition, callback: ContextActionCallback, options: ContextActionOptions) {
+  constructor(id: string, label: string, description: string, icon: IconDefinition, target: "unit" | "position" | null, callback: ContextActionCallback, options: ContextActionOptions) {
     this.#id = id;
     this.#label = label;
     this.#description = description;
+    this.#target = target;
     this.#callback = callback;
     this.#icon = icon;
     this.#options = {
@@ -55,6 +57,10 @@ export class ContextAction {
 
   getIcon() {
     return this.#icon;
+  }
+
+  getTarget() {
+    return this.#target;
   }
 
   executeCallback(targetUnit: Unit | null, targetPosition: LatLng | null) {

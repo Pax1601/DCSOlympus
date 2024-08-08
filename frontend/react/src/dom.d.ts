@@ -11,7 +11,6 @@ interface CustomEventMap {
   unitDeath: CustomEvent<Unit>;
   unitUpdated: CustomEvent<Unit>;
   mapStateChanged: CustomEvent<string>;
-  mapContextMenu: CustomEvent<any>;
   mapOptionChanged: CustomEvent<any>;
   mapSourceChanged: CustomEvent<string>;
   mapOptionsChanged: CustomEvent<any>; // TODO not very clear, why the two options?
@@ -23,6 +22,10 @@ interface CustomEventMap {
   serverStatusUpdated: CustomEvent<ServerStatus>;
   mapForceBoxSelect: CustomEvent<any>;
   coalitionAreaSelected: CustomEvent<CoalitionPolygon>;
+  showMapContextMenu: CustomEvent<any>;
+  hideMapContextMenu: CustomEvent<any>;
+  showUnitContextMenu: CustomEvent<any>;
+  hideUnitContextMenu: CustomEvent<any>;
 }
 
 declare global {

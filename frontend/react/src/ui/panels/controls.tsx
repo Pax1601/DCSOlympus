@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
     [] as {
-      actions: (string | IconDefinition)[];
+      actions: (string | number | IconDefinition)[];
       target: IconDefinition;
       text: string;
     }[]
@@ -17,9 +17,11 @@ export function ControlsPanel(props: {}) {
     }
   });
 
-  document.addEventListener("mapStateChanged", (ev) => {
-    setControls(getApp().getMap().getCurrentControls());
-  });
+  useEffect(() => {
+    document.addEventListener("mapStateChanged", (ev) => {
+      setControls(getApp().getMap().getCurrentControls());
+    });
+  }, []);
 
   return (
     <div
@@ -48,18 +50,12 @@ export function ControlsPanel(props: {}) {
                 return (
                   <>
                     <div className={``}>
-                      {typeof action === "string" ? (
-                        action
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={action}
-                          className={`
-                      my-auto ml-auto
-                    `}
-                        />
-                      )}
+                      {typeof action === "string" || typeof action === "number" ? action : <FontAwesomeIcon icon={action} className={`
+                        my-auto ml-auto
+                      `} />}
                     </div>
-                    {idx < control.actions.length - 1 && <div>+</div>}
+                    {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "string" && <div>+</div>}
+                    {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "number" && <div>x</div>}
                   </>
                 );
               })}
