@@ -60,7 +60,7 @@ export function UI() {
 
     document.addEventListener("mapStateChanged", (ev) => {
       if ((ev as CustomEvent).detail === IDLE) hideAllMenus();
-      else if ((ev as CustomEvent).detail === CONTEXT_ACTION) setUnitControlMenuVisible(true);
+      else if ((ev as CustomEvent).detail === CONTEXT_ACTION && window.innerWidth > 1000) setUnitControlMenuVisible(true);
       setMapState(String((ev as CustomEvent).detail));
     });
 
