@@ -880,7 +880,7 @@ export class Map extends L.Map {
         }
       }
     } else if (this.#state === CONTEXT_ACTION) {
-      if (e.originalEvent.buttons === 1) {
+      if (e.type === 'touchstart' || e.originalEvent.buttons === 1) {
         if (this.#contextAction !== null) this.executeContextAction(null, pressLocation);
         else this.setState(IDLE);
       } else if (e.originalEvent.buttons === 2) {
