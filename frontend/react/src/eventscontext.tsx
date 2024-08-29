@@ -7,12 +7,14 @@ export const EventsContext = createContext({
   setMeasureMenuVisible: (e: boolean) => {},
   setDrawingMenuVisible: (e: boolean) => {},
   setOptionsMenuVisible: (e: boolean) => {},
+  setAirbaseMenuVisible: (e: boolean) => {},
   toggleMainMenuVisible: () => {},
   toggleSpawnMenuVisible: () => {},
   toggleUnitControlMenuVisible: () => {},
   toggleMeasureMenuVisible: () => {},
   toggleDrawingMenuVisible: () => {},
   toggleOptionsMenuVisible: () => {},
+  toggleAirbaseMenuVisible: () => {},
 });
 
 export const EventsProvider = EventsContext.Provider;

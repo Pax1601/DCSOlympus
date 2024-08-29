@@ -12,7 +12,6 @@ export class Airbase extends CustomMarker {
     runways: [],
   };
   #coalition: string = "";
-  #hasChartDataBeenSet: boolean = false;
   #properties: string[] = [];
   #parkings: string[] = [];
 
@@ -20,10 +19,6 @@ export class Airbase extends CustomMarker {
     super(options.position, { riseOnHover: true });
 
     this.#name = options.name;
-  }
-
-  chartDataHasBeenSet() {
-    return this.#hasChartDataBeenSet;
   }
 
   createIcon() {
@@ -43,10 +38,10 @@ export class Airbase extends CustomMarker {
     el.appendChild(img);
     this.getElement()?.appendChild(el);
     el.addEventListener("mouseover", (ev) => {
-      document.dispatchEvent(new CustomEvent("airbaseMouseover", { detail: this }));
+      document.dispatchEvent(new CustomEvent("airbasemouseover", { detail: this }));
     });
     el.addEventListener("mouseout", (ev) => {
-      document.dispatchEvent(new CustomEvent("airbaseMouseout", { detail: this }));
+      document.dispatchEvent(new CustomEvent("airbasemouseout", { detail: this }));
     });
     el.dataset.coalition = this.#coalition;
   }
@@ -73,7 +68,6 @@ export class Airbase extends CustomMarker {
   }
 
   setChartData(chartData: AirbaseChartData) {
-    this.#hasChartDataBeenSet = true;
     this.#chartData = chartData;
   }
 

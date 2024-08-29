@@ -8,6 +8,7 @@ export const StateContext = createContext({
   measureMenuVisible: false,
   drawingMenuVisible: false,
   optionsMenuVisible: false,
+  airbaseMenuVisible: false,
   mapHiddenTypes: MAP_HIDDEN_TYPES_DEFAULTS,
   mapOptions: MAP_OPTIONS_DEFAULTS,
   mapSources: [] as string[],

@@ -87,7 +87,7 @@ export class MissionManager {
           position: new LatLng(airbase.latitude, airbase.longitude),
           name: airbase.callsign,
         }).addTo(getApp().getMap());
-        this.#airbases[airbase.callsign].on("contextmenu", (e) => this.#onAirbaseClick(e));
+        this.#airbases[airbase.callsign].on("click", (e) => this.#onAirbaseClick(e));
         this.#loadAirbaseChartData(airbase.callsign);
       }
 
@@ -316,7 +316,9 @@ export class MissionManager {
     if (requestRefresh) getApp().getServerManager().refreshAll();
   }
 
-  #onAirbaseClick(e: any) {}
+  #onAirbaseClick(ev: any) {
+    document.dispatchEvent(new CustomEvent("airbaseclick", { detail: ev.target }));
+  }
 
   #loadAirbaseChartData(callsign: string) {
     if (!this.#theatre) {
@@ -324,7 +326,7 @@ export class MissionManager {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
+    xhr.open("GET", window.location.href.split("?")[0].replace("vite/", "") + `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
     xhr.responseType = "json";
     xhr.onload = () => {
       var status = xhr.status;

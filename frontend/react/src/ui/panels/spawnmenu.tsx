@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Menu } from "./components/menu";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
 import { getApp } from "../../olympusapp";
@@ -17,8 +15,6 @@ import {
 } from "../components/olicons";
 import { IDLE, SPAWN_UNIT } from "../../constants/constants";
 import { getUnitsByLabel } from "../../other/utils";
-
-library.add(faPlus);
 
 export function SpawnMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [blueprint, setBlueprint] = useState(null as null | UnitBlueprint);
@@ -107,7 +103,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
           </div>
         )}
 
-        {!(blueprint === null) && <UnitSpawnMenu blueprint={blueprint} />}
+        {!(blueprint === null) && <UnitSpawnMenu blueprint={blueprint} spawnAtLocation={true} />}
       </>
     </Menu>
   );

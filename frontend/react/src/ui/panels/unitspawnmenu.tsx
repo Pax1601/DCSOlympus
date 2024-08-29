@@ -11,8 +11,9 @@ import { getApp } from "../../olympusapp";
 import { IDLE, SPAWN_UNIT } from "../../constants/constants";
 import { ftToM, getUnitCategoryByBlueprint } from "../../other/utils";
 import { LatLng } from "leaflet";
+import { Airbase } from "../../mission/airbase";
 
-export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
+export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation: boolean; airbase?: Airbase | null; coalition?: Coalition }) {
   /* Compute the min and max values depending on the unit type */
   const minNumber = 1;
   const maxNumber = 4;
@@ -30,30 +31,59 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
 
   /* When the menu is opened show the unit preview on the map as a cursor */
   useEffect(() => {
-    if (props.blueprint !== null) {
-      getApp()
-        ?.getMap()
-        ?.setState(SPAWN_UNIT, {
-          spawnRequestTable: {
-            category: getUnitCategoryByBlueprint(props.blueprint),
-            unit: {
-              unitType: props.blueprint.name,
-              location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
-              skill: "High",
-              liveryID: "",
-              altitude: ftToM(spawnAltitude),
-              loadout:
-                props.blueprint.loadouts?.find((loadout) => {
-                  return loadout.name === spawnLoadoutName;
-                })?.code ?? "",
+    if (props.coalition && props.coalition !== spawnCoalition) {
+      setSpawnCoalition(props.coalition);
+    }
+    if (props.spawnAtLocation) {
+      if (props.blueprint !== null) {
+        getApp()
+          ?.getMap()
+          ?.setState(SPAWN_UNIT, {
+            spawnRequestTable: {
+              category: getUnitCategoryByBlueprint(props.blueprint),
+              unit: {
+                unitType: props.blueprint.name,
+                location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+                skill: "High",
+                liveryID: "",
+                altitude: ftToM(spawnAltitude),
+                loadout:
+                  props.blueprint.loadouts?.find((loadout) => {
+                    return loadout.name === spawnLoadoutName;
+                  })?.code ?? "",
+              },
+              coalition: spawnCoalition,
             },
-            coalition: spawnCoalition,
-          },
-        });
-    } else {
-      if (getApp()?.getMap()?.getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
+          });
+      } else {
+        if (getApp()?.getMap()?.getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
+      }
     }
   });
+
+  function spawnAtAirbase() {
+    getApp()
+      .getUnitsManager()
+      .spawnUnits(
+        getUnitCategoryByBlueprint(props.blueprint),
+        [
+          {
+            unitType: props.blueprint.name,
+            location: new LatLng(0, 0), // Not relevant spawning at airbase
+            skill: "High",
+            liveryID: "",
+            altitude: 0,
+            loadout:
+              props.blueprint.loadouts?.find((loadout) => {
+                return loadout.name === spawnLoadoutName;
+              })?.code ?? "",
+          },
+        ],
+        props.coalition,
+        false,
+        props.airbase?.getName()
+      );
+  }
 
   /* Get a list of all the roles */
   const roles: string[] = [];
@@ -87,14 +117,16 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
           inline-flex w-full flex-row content-center justify-between
         `}
         >
-          <OlCoalitionToggle
-            coalition={spawnCoalition}
-            onClick={() => {
-              spawnCoalition === "blue" && setSpawnCoalition("neutral");
-              spawnCoalition === "neutral" && setSpawnCoalition("red");
-              spawnCoalition === "red" && setSpawnCoalition("blue");
-            }}
-          />
+          {!props.coalition && (
+            <OlCoalitionToggle
+              coalition={spawnCoalition}
+              onClick={() => {
+                spawnCoalition === "blue" && setSpawnCoalition("neutral");
+                spawnCoalition === "neutral" && setSpawnCoalition("red");
+                spawnCoalition === "red" && setSpawnCoalition("blue");
+              }}
+            />
+          )}
           <OlNumberInput
             value={spawnNumber}
             min={minNumber}
@@ -203,14 +235,14 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
           </OlDropdown>
         </div>
       </div>
-      <div
-        className={`
-          flex h-fit flex-col gap-1 p-4
-          dark:bg-olympus-200/30
-        `}
-      >
-        {spawnLoadout &&
-          spawnLoadout.items.map((item) => {
+      {spawnLoadout && spawnLoadout.items.length > 0 && (
+        <div
+          className={`
+            flex h-fit flex-col gap-1 p-4
+            dark:bg-olympus-200/30
+          `}
+        >
+          {spawnLoadout.items.map((item) => {
             return (
               <div className="flex content-center gap-2">
                 <div
@@ -233,7 +265,25 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint }) {
               </div>
             );
           })}
-      </div>
+        </div>
+      )}
+      {!props.spawnAtLocation && (
+        <button
+          type="button"
+          className={`
+            m-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium
+            text-white
+            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+            focus:outline-none focus:ring-4 focus:ring-blue-300
+            hover:bg-blue-800
+          `}
+          onClick={() => {
+            spawnAtAirbase();
+          }}
+        >
+          Spawn
+        </button>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass, faPlaneDeparture } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
 import { IDLE } from "../../constants/constants";
@@ -51,6 +51,12 @@ export function SideBar() {
                     checked={appState.drawingMenuVisible}
                     icon={faPencil}
                     tooltip="Hide/show drawing menu"
+                  ></OlStateButton>
+                  <OlStateButton
+                    onClick={events.toggleAirbaseMenuVisible}
+                    checked={appState.airbaseMenuVisible}
+                    icon={faPlaneDeparture}
+                    tooltip="Hide/show airbase menu"
                   ></OlStateButton>
                 </div>
               </div>

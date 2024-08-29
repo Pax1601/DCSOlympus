@@ -18,16 +18,19 @@ import { sha256 } from "js-sha256";
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
 import { DrawingMenu } from "./panels/drawingmenu";
-import { ControlsPanel } from "./panels/controls";
+import { ControlsPanel } from "./panels/controlspanel";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
+import { AirbaseMenu } from "./panels/airbasemenu";
+import { Airbase } from "../mission/airbase";
 
-export type OlympusState = {
+export type OlympusUIState = {
   mainMenuVisible: boolean;
   spawnMenuVisible: boolean;
   unitControlMenuVisible: boolean;
   measureMenuVisible: boolean;
   drawingMenuVisible: boolean;
   optionsMenuVisible: boolean;
+  airbaseMenuVisible: boolean;
   mapHiddenTypes: MapHiddenTypes;
   mapOptions: MapOptions;
 };
@@ -40,6 +43,7 @@ export function UI() {
   const [measureMenuVisible, setMeasureMenuVisible] = useState(false);
   const [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
   const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
+  const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [checkingPassword, setCheckingPassword] = useState(false);
@@ -48,6 +52,7 @@ export function UI() {
   const [mapSources, setMapSources] = useState([] as string[]);
   const [activeMapSource, setActiveMapSource] = useState("");
   const [mapState, setMapState] = useState(IDLE);
+  const [airbase, setAirbase] = useState(null as null | Airbase);
 
   useEffect(() => {
     document.addEventListener("hiddenTypesChanged", (ev) => {
@@ -75,6 +80,13 @@ export function UI() {
       setMapSources(sources);
       setActiveMapSource(sources[0]);
     });
+
+    document.addEventListener("airbaseclick", (ev) => {
+      hideAllMenus();
+      getApp().getMap().setState(IDLE);
+      setAirbase((ev as CustomEvent).detail);
+      setAirbaseMenuVisible(true);
+    });
   }, []);
 
   function hideAllMenus() {
@@ -84,6 +96,7 @@ export function UI() {
     setMeasureMenuVisible(false);
     setDrawingMenuVisible(false);
     setOptionsMenuVisible(false);
+    setAirbaseMenuVisible(false);
   }
 
   function checkPassword(password: string) {
@@ -139,6 +152,7 @@ export function UI() {
           measureMenuVisible: measureMenuVisible,
           drawingMenuVisible: drawingMenuVisible,
           optionsMenuVisible: optionsMenuVisible,
+          airbaseMenuVisible: airbaseMenuVisible,
           mapOptions: mapOptions,
           mapHiddenTypes: mapHiddenTypes,
           mapSources: mapSources,
@@ -154,6 +168,7 @@ export function UI() {
             setDrawingMenuVisible: setDrawingMenuVisible,
             setMeasureMenuVisible: setMeasureMenuVisible,
             setOptionsMenuVisible: setOptionsMenuVisible,
+            setAirbaseMenuVisible: setAirbaseMenuVisible,
             toggleMainMenuVisible: () => {
               hideAllMenus();
               setMainMenuVisible(!mainMenuVisible);
@@ -177,6 +192,10 @@ export function UI() {
             toggleOptionsMenuVisible: () => {
               hideAllMenus();
               setOptionsMenuVisible(!optionsMenuVisible);
+            },
+            toggleAirbaseMenuVisible: () => {
+              hideAllMenus();
+              setAirbaseMenuVisible(!airbaseMenuVisible);
             },
           }}
         >
@@ -211,6 +230,7 @@ export function UI() {
             <Options open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
             <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
             <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
+            <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase}/>
 
             <MiniMapPanel />
             <ControlsPanel />
