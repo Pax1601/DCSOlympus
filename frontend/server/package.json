@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@discordjs/opus": "^0.9.0",
     "appjs": "^0.0.20",
     "appjs-win32": "^0.0.19",
     "body-parser": "^1.20.2",
@@ -21,6 +22,7 @@
     "express-basic-auth": "^1.2.1",
     "http-proxy-middleware": "^2.0.6",
     "morgan": "~1.9.1",
+    "node-opus": "^0.3.3",
     "open": "^10.0.0",
     "regedit": "^5.1.2",
     "save": "^2.9.0",
@@ -28,6 +30,7 @@
     "srtm-elevation": "^2.1.2",
     "tcp-ping-port": "^1.0.1",
     "uuid": "^9.0.1",
+    "wavefile": "^11.0.0",
     "ws": "^8.18.0",
     "yargs": "^17.7.2"
   },

@@ -291,3 +291,11 @@ export interface ServerStatus {
   connected: boolean;
   paused: boolean;
 }
+
+export interface AudioRadioSetting {
+  frequency: number;
+  modulation: number;
+  volume: number;
+  ptt: boolean;
+  tuned: boolean;
+}

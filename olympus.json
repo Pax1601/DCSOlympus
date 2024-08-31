@@ -1,7 +1,7 @@
 {
 	"backend": {
 		"address": "localhost",
-		"port": 4512
+		"port": 3001
 	},
 	"authentication": {
 		"gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",
@@ -33,5 +33,9 @@
 			"DCS Map (Official)": "https://maps.dcsolympus.com/maps",
 			"DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
 		}
+	},
+	"audio": {
+		"SRSPort": 5002,
+		"WSPort": 4000
 	}
 }

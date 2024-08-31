@@ -6,7 +6,7 @@ import { OlNumberInput } from "../components/olnumberinput";
 import { MapOptions } from "../../types/types";
 import { getApp } from "../../olympusapp";
 
-export function Options(props: { open: boolean; onClose: () => void; options: MapOptions; children?: JSX.Element | JSX.Element[] }) {
+export function OptionsMenu(props: { open: boolean; onClose: () => void; options: MapOptions; children?: JSX.Element | JSX.Element[] }) {
   return (
     <Menu title="User preferences" open={props.open} showBackButton={false} onClose={props.onClose}>
       <div

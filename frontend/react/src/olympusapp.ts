@@ -25,6 +25,7 @@ import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { Coalition, Context } from "./types/types";
+import { AudioManager } from "./audio/audiomanager";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -45,6 +46,7 @@ export class OlympusApp {
   #shortcutManager: ShortcutManager | null = null;
   #unitsManager: UnitsManager | null = null;
   #weaponsManager: WeaponsManager | null = null;
+  #audioManager: AudioManager | null = null;
   //#pluginsManager: // TODO
 
   /* Current context */
@@ -78,6 +80,10 @@ export class OlympusApp {
 
   getMissionManager() {
     return this.#missionManager as MissionManager;
+  }
+  
+  getAudioManager() {
+    return this.#audioManager as AudioManager;
   }
 
   /* TODO
@@ -151,9 +157,11 @@ export class OlympusApp {
     this.#shortcutManager = new ShortcutManager();
     this.#unitsManager = new UnitsManager();
     this.#weaponsManager = new WeaponsManager();
+    this.#audioManager = new AudioManager();
 
     /* Set the address of the server */
     this.getServerManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
+    this.getAudioManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
 
     /* Setup all global events */
     this.#setupEvents();
