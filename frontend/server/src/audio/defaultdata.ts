@@ -2,7 +2,7 @@ export var defaultSRSData = {
     ClientGuid: "",
     Name: "",
     Seat: 0,
-    Coalition: 0,
+    Coalition: 2,
     AllowRecord: false,
     RadioInfo: {
       radios: [

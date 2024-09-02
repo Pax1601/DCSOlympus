@@ -12,7 +12,7 @@ import { OlLabelToggle } from "../components/ollabeltoggle";
 import { FaVolumeHigh } from "react-icons/fa6";
 
 export function RadioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
-  const [frequency1, setFrequency1] = useState(124000000);
+  const [frequency1, setFrequency1] = useState(251000000);
   const [ptt1, setPTT1] = useState(false);
   const [frequency2, setFrequency2] = useState(251000000);
   const [frequency3, setFrequency3] = useState(243000000);

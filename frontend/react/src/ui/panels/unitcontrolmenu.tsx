@@ -1113,7 +1113,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
                   <div className="text-sm text-gray-200">Radio frequency</div>
                   <div className="flex content-center gap-2">
-                    <OlFrequencyInput value={activeAdvancedSettings? activeAdvancedSettings.radio.frequency: 124000000} onChange={(value) => {
+                    <OlFrequencyInput value={activeAdvancedSettings? activeAdvancedSettings.radio.frequency: 251000000} onChange={(value) => {
                       if (activeAdvancedSettings) {
                         activeAdvancedSettings.radio.frequency = value;
                         setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));

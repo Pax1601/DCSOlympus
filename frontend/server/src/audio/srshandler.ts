@@ -1,4 +1,7 @@
 import { defaultSRSData } from "./defaultdata";
+const { OpusEncoder } = require("@discordjs/opus");
+const encoder = new OpusEncoder(16000, 1);
+
 var net = require("net");
 
 const SRS_VERSION = "2.1.0.10";
@@ -41,12 +44,10 @@ export class SRSHandler {
     this.ws.on("message", (data) => {
       switch (data[0]) {
         case MessageType.audio:
-          this.udp.send(data.slice(1), 5002, "localhost", function (error) {
-            if (error) {
-              console.log("Error!!!");
-            } else {
-              console.log("Data sent");
-            }
+          let audioBuffer = data.slice(1);
+          this.udp.send(audioBuffer, SRSPort, "localhost", (error) => {
+            if (error)
+              console.log(`Error sending data to SRS server: ${error}`);
           });
           break;
         case MessageType.settings:
@@ -54,7 +55,7 @@ export class SRSHandler {
           message.settings.forEach((setting, idx) => {
             this.data.RadioInfo.radios[idx].freq = setting.frequency;
             this.data.RadioInfo.radios[idx].modulation = setting.modulation;
-          })
+          });
           break;
         default:
           break;
@@ -65,8 +66,12 @@ export class SRSHandler {
     });
 
     /* TCP */
+    this.tcp.on("error", (ex) => {
+      console.log("Could not connect to SRS Server");
+    });
+
     this.tcp.connect(SRSPort, "localhost", () => {
-      console.log("Connected");
+      console.log(`Connected to SRS Server on TCP Port ${SRSPort}`);
 
       this.syncInterval = setInterval(() => {
         let SYNC = {
@@ -75,10 +80,24 @@ export class SRSHandler {
           Version: SRS_VERSION,
         };
 
+        this.udp.send(this.data.ClientGuid, SRSPort, "localhost", (error) => {
+          if (error) console.log(`Error pinging SRS server on UDP: ${error}`);
+        });
+
         if (this.tcp.readyState == "open")
           this.tcp.write(`${JSON.stringify(SYNC)}\n`);
         else clearInterval(this.syncInterval);
       }, 1000);
+    });
+
+    /* UDP */
+    this.udp.on("listening", () => {
+      console.log(`Listening to SRS Server on UDP port ${SRSPort}`)
+    });
+
+    this.udp.on("message", (message, remote) => {
+      if (this.ws && message.length > 22)
+        this.ws.send(message);
     });
   }
 }

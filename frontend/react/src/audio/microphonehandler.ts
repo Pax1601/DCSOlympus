@@ -1,5 +1,6 @@
 import { AudioRadioSetting } from "../interfaces";
 import { AudioPacket } from "./audiopacket";
+import { CapturePipeline } from "./capturepipeline";
 
 export class MicrophoneHandler {
   #socket: WebSocket;
@@ -11,42 +12,23 @@ export class MicrophoneHandler {
 
     console.log("Starting microphone handler");
 
-    //@ts-ignore
-    let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    const pipeline = new CapturePipeline();
 
-    if (getUserMedia) {
-      //@ts-ignore
-      navigator.getUserMedia(
-        { audio: {
-          sampleRate: 16000,
-          channelCount: 1,
-          volume: 1.0
-        } },
-        (stream) => {
-          this.start_microphone(stream);
-        },
-         (e) => {
-          alert("Error capturing audio.");
-        }
-      );
-    } else {
-      alert("getUserMedia not supported in this browser.");
-    }
-  }
+    navigator.mediaDevices.enumerateDevices()
+    .then(function(devices) {
+      devices.forEach(function(device) {
+        console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+      });
+    })
 
-  start_microphone(stream) {
-    const recorder = new MediaRecorder(stream);
-
-    // fires every one second and passes an BlobEvent
-    recorder.ondataavailable = async (event) => {
-      // get the Blob from the event
-      const blob = event.data;
-
-      let rawData = await blob.arrayBuffer();
-      let packet = new AudioPacket(new Uint8Array(rawData), this.#setting);
-      this.#socket.send(packet.getArray());
-    };
-
-    recorder.start(200);
+    pipeline.connect().then(() => {
+      pipeline.onencoded = (data) => {
+        let buffer = new ArrayBuffer(data.byteLength);
+        data.copyTo(buffer);
+        let packet = new AudioPacket(new Uint8Array(buffer), this.#setting);
+        this.#socket.send(packet.getArray());
+      }
+    })
   }
 }

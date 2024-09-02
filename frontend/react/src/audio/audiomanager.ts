@@ -2,16 +2,28 @@ import { AudioRadioSetting } from "../interfaces";
 import { getApp } from "../olympusapp";
 import { Buffer } from "buffer";
 import { MicrophoneHandler } from "./microphonehandler";
+import { PlaybackPipeline } from "./playbackpipeline";
 
 enum MessageType {
   audio,
   settings,
 }
 
+function fromBytes(array) {
+  let res = 0;
+  for (let i = 0; i < array.length; i++) {
+    res = res << 8;
+    res += array[array.length - i - 1];
+  }
+  return res;
+}
+
+var context = new AudioContext();
+
 export class AudioManager {
   #radioSettings: AudioRadioSetting[] = [
     {
-      frequency: 124000000,
+      frequency: 251000000,
       modulation: 0,
       ptt: false,
       tuned: false,
@@ -19,7 +31,7 @@ export class AudioManager {
     },
   ];
 
-  #microphoneHandlers: (MicrophoneHandler | null)[] =[];
+  #microphoneHandlers: (MicrophoneHandler | null)[] = [];
 
   #address: string = "localhost";
   #port: number = 4000;
@@ -38,6 +50,7 @@ export class AudioManager {
   }
 
   start() {
+    const pipeline = new PlaybackPipeline();
     let res = this.#address.match(/(?:http|https):\/\/(.+):/);
     let wsAddress = res ? res[1] : this.#address;
 
@@ -51,8 +64,13 @@ export class AudioManager {
       console.log(event);
     });
 
-    this.#socket.addEventListener("message", (event) => {
-      console.log("Message from server ", event.data);
+    this.#socket.addEventListener("message", async (event) => {
+      let bytes = event.data;
+      let packet = new Uint8Array(await bytes.arrayBuffer())
+      let audioLength = fromBytes(packet.slice(2, 4));
+      let audioData = packet.slice(6, 6 + audioLength);
+      let frequency = new DataView(packet.slice(6 + audioLength, 6 + audioLength  + 8).reverse().buffer).getFloat64(0);
+      pipeline.play(audioData.buffer);
     });
   }
 
@@ -80,9 +98,8 @@ export class AudioManager {
       if (setting.ptt && !this.#microphoneHandlers[idx]) {
         this.#microphoneHandlers[idx] = new MicrophoneHandler(this.#socket, setting);
       }
-    })
+    });
 
-    if (this.#socket?.readyState == 1)
-      this.#socket?.send(new Uint8Array([MessageType.settings, ...Buffer.from(JSON.stringify(message), "utf-8")]));
+    if (this.#socket?.readyState == 1) this.#socket?.send(new Uint8Array([MessageType.settings, ...Buffer.from(JSON.stringify(message), "utf-8")]));
   }
 }

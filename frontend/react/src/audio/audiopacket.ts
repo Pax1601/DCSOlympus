@@ -60,7 +60,6 @@ export class AudioPacket {
     packet[4] = frequencyAudioLen[0];
     packet[5] = frequencyAudioLen[1];
 
-
     this.#packet = new Uint8Array([0].concat(packet));
   }
 
