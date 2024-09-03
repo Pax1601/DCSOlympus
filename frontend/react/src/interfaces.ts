@@ -292,10 +292,17 @@ export interface ServerStatus {
   paused: boolean;
 }
 
-export interface AudioRadioSetting {
+export interface SRSRadioSetting {
   frequency: number;
   modulation: number;
   volume: number;
   ptt: boolean;
   tuned: boolean;
 }
+
+export interface AudioSourceSetting {
+  filename: string;
+  playing: boolean;
+  connectedTo: string;
+}
+

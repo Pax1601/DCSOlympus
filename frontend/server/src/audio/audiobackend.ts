@@ -17,11 +17,5 @@ export class AudioBackend {
     wss.on("connection", (ws) => {
       this.handlers.push(new SRSHandler(ws, this.SRSPort));
     });
-
-    wss.on("disconnection", (ws) => {
-      this.handlers = this.handlers.filter((handler) => {
-        handler.ws != ws;
-      });
-    });
   }
 }

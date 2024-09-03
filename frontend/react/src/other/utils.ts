@@ -532,3 +532,38 @@ export function getUnitsByLabel(filterString: string) {
 
   return [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits];
 }
+
+export function fromBytes(array) {
+  let res = 0;
+  for (let i = 0; i < array.length; i++) {
+    res = res << 8;
+    res += array[array.length - i - 1];
+  }
+  return res;
+}
+
+export function makeID(length) {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+export function bufferToF32Planar(input: AudioBuffer): Float32Array {
+  const result = new Float32Array(input.length * 1);
+
+  let offset = 0;
+  for (let i = 0; i < 1; i++) {
+    const data = input.getChannelData(i);
+    result.set(data, offset);
+    offset = data.length;
+  }
+
+  return result;
+}

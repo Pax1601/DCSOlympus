@@ -13,28 +13,15 @@ enum MessageType {
   settings,
 }
 
-function makeID(length) {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
-
 export class SRSHandler {
   ws: any;
   tcp = new net.Socket();
   udp = require("dgram").createSocket("udp4");
   data = JSON.parse(JSON.stringify(defaultSRSData));
   syncInterval: any;
+  packetQueue = [];
 
   constructor(ws, SRSPort) {
-    this.data.ClientGuid = "ImF72dh9EYcIDyYRGaF9S9";
     this.data.Name = `Olympus${globalIndex}`;
     globalIndex += 1;
 
@@ -45,6 +32,7 @@ export class SRSHandler {
       switch (data[0]) {
         case MessageType.audio:
           let audioBuffer = data.slice(1);
+          this.packetQueue.push(audioBuffer);
           this.udp.send(audioBuffer, SRSPort, "localhost", (error) => {
             if (error)
               console.log(`Error sending data to SRS server: ${error}`);
@@ -52,6 +40,8 @@ export class SRSHandler {
           break;
         case MessageType.settings:
           let message = JSON.parse(data.slice(1));
+          this.data.ClientGuid = message.guid;
+          this.data.Coalition = message.coalition;
           message.settings.forEach((setting, idx) => {
             this.data.RadioInfo.radios[idx].freq = setting.frequency;
             this.data.RadioInfo.radios[idx].modulation = setting.modulation;
@@ -80,9 +70,10 @@ export class SRSHandler {
           Version: SRS_VERSION,
         };
 
-        this.udp.send(this.data.ClientGuid, SRSPort, "localhost", (error) => {
-          if (error) console.log(`Error pinging SRS server on UDP: ${error}`);
-        });
+        this.data.ClientGuid !== "" &&
+          this.udp.send(this.data.ClientGuid, SRSPort, "localhost", (error) => {
+            if (error) console.log(`Error pinging SRS server on UDP: ${error}`);
+          });
 
         if (this.tcp.readyState == "open")
           this.tcp.write(`${JSON.stringify(SYNC)}\n`);
@@ -92,12 +83,11 @@ export class SRSHandler {
 
     /* UDP */
     this.udp.on("listening", () => {
-      console.log(`Listening to SRS Server on UDP port ${SRSPort}`)
+      console.log(`Listening to SRS Server on UDP port ${SRSPort}`);
     });
 
     this.udp.on("message", (message, remote) => {
-      if (this.ws && message.length > 22)
-        this.ws.send(message);
+      if (this.ws && message.length > 22) this.ws.send(message);
     });
   }
 }

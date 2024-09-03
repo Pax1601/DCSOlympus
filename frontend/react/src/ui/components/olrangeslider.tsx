@@ -6,6 +6,7 @@ export function OlRangeSlider(props: {
   max?: number;
   step?: number;
   className?: string;
+  vertical?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
   var elementRef = useRef(null);
@@ -33,6 +34,7 @@ export function OlRangeSlider(props: {
         h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200
         dark:bg-gray-700
       `}
+
     />
   );
 }

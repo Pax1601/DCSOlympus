@@ -1,82 +1,56 @@
+import { getApp } from "../olympusapp";
+
 export class PlaybackPipeline {
-  sampleRate: any;
-  codec: any;
-  sourceId: any;
-  onrawdata: any;
-  ondecoded: any;
-  deviceId: any;
-  audioContext: any;
-  mic: any;
-  source: any;
-  destination: any;
-  decoder: any;
-  audioTrackProcessor: any;
-  duration: any;
-  trackGenerator: any;
-  writer: any;
+  #decoder = new AudioDecoder({
+    output: (chunk) => this.#handleDecodedData(chunk),
+    error: (e) => console.log(e),
+  });
+  #trackGenerator: any; // TODO can we have typings?
+  #writer: any;
+  #gainNode: GainNode;
 
-  constructor(codec = "opus", sampleRate = 16000, duration = 40000) {
-    this.sampleRate = sampleRate;
-    this.codec = codec;
-    this.duration = duration;
-    this.ondecoded = null;
-    this.audioContext = new AudioContext();
-
-    this.decoder = new AudioDecoder({
-      output: (chunk) => this.handleDecodedData(chunk),
-      error: this.handleDecodingError.bind(this),
-    });
-
-    this.decoder.configure({
-      codec: this.codec,
+  constructor() {
+    this.#decoder.configure({
+      codec: 'opus',
       numberOfChannels: 1,
-      sampleRate: this.sampleRate,
+      sampleRate: 16000,
+      //@ts-ignore // TODO why is this giving an error?
       opus: {
-        frameDuration: this.duration,
+        frameDuration: 40000,
       },
       bitrateMode: "constant",
     });
 
     //@ts-ignore
-    this.trackGenerator = new MediaStreamTrackGenerator({ kind: "audio" });
-    this.writer = this.trackGenerator.writable.getWriter();
+    this.#trackGenerator = new MediaStreamTrackGenerator({ kind: "audio" });
+    this.#writer = this.#trackGenerator.writable.getWriter();
 
-    const stream = new MediaStream([this.trackGenerator]);
+    const stream = new MediaStream([this.#trackGenerator]);
+    const mediaStreamSource = getApp().getAudioManager().getAudioContext().createMediaStreamSource(stream);
 
-    const mediaStreamSource = this.audioContext.createMediaStreamSource(stream);
-    mediaStreamSource.connect(this.audioContext.destination)
+    /* Connect to the device audio output */
+    this.#gainNode = getApp().getAudioManager().getAudioContext().createGain();
+    mediaStreamSource.connect(this.#gainNode);
+    this.#gainNode.connect(getApp().getAudioManager().getAudioContext().destination);
   }
 
-  play(buffer) {
+  play(arrayBuffer) {
     const init = {
       type: "key",
-      data: buffer,
-      timestamp: 23000000,
+      data: arrayBuffer,
+      timestamp: 0,
       duration: 2000000,
-      transfer: [buffer],
+      transfer: [arrayBuffer],
     };
-    //@ts-ignore
-    let chunk = new EncodedAudioChunk(init);
+    //@ts-ignore //TODO Typings?
+    let encodedAudioChunk = new EncodedAudioChunk(init);
 
-    this.decoder.decode(chunk);
+    this.#decoder.decode(encodedAudioChunk);
   }
 
-  disconnect() {
-    this.source.disconnect();
-    delete this.audioTrackProcessor;
-    delete this.decoder;
-    delete this.destination;
-    delete this.mic;
-    delete this.source;
-  }
-
-  handleDecodedData(chunk) {
-    this.writer.ready.then(() => {
-        this.writer.write(chunk);
+  #handleDecodedData(audioData) {
+    this.#writer.ready.then(() => {
+        this.#writer.write(audioData);
     })
   }
-  handleDecodingError(e) {
-    console.log(e);
-  }
-
 }

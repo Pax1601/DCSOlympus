@@ -23,7 +23,7 @@ var packetID = 0;
 export class AudioPacket {
   #packet: Uint8Array;
 
-  constructor(data, settings) {
+  constructor(data, settings, guid) {
     let header: number[] = [0, 0, 0, 0, 0, 0];
 
     let encFrequency: number[] = [...doubleToByteArray(settings.frequency)];
@@ -44,8 +44,8 @@ export class AudioPacket {
       encUnitID,
       encPacketID,
       encHops,
-      [...Buffer.from("ImF72dh9EYcIDyYRGaF9S9", "utf-8")],
-      [...Buffer.from("ImF72dh9EYcIDyYRGaF9S9", "utf-8")]
+      [...Buffer.from(guid, "utf-8")],
+      [...Buffer.from(guid, "utf-8")]
     );
 
     let encPacketLen = getBytes(packet.length, 2);

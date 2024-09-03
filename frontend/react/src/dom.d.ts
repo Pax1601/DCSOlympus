@@ -26,6 +26,8 @@ interface CustomEventMap {
   hideMapContextMenu: CustomEvent<any>;
   showUnitContextMenu: CustomEvent<any>;
   hideUnitContextMenu: CustomEvent<any>;
+  audioSourcesUpdated: CustomEvent<any>;
+  radiosUpdated: CustomEvent<any>;
 }
 
 declare global {
