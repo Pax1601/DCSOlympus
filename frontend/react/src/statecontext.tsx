@@ -10,6 +10,7 @@ export const StateContext = createContext({
   optionsMenuVisible: false,
   airbaseMenuVisible: false,
   radioMenuVisible: false,
+  audioMenuVisible: false,
   mapHiddenTypes: MAP_HIDDEN_TYPES_DEFAULTS,
   mapOptions: MAP_OPTIONS_DEFAULTS,
   mapSources: [] as string[],

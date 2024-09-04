@@ -4,20 +4,20 @@ import { getApp } from "../../olympusapp";
 import { OlToggle } from "../components/oltoggle";
 import { RadioPanel } from "./components/radiopanel";
 import { FaQuestionCircle } from "react-icons/fa";
-import { SRSRadioSetting } from "../../interfaces";
+import { RadioSink } from "../../audio/radiosink";
 
 export function RadioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
-  const [radioEnabled, setRadioEnabled] = useState(false);
-  const [radioSettings, setRadioSettings] = useState([] as SRSRadioSetting[]);
+  const [radios, setRadios] = useState([] as RadioSink[]);
 
   useEffect(() => {
     /* Force a rerender */
-    document.addEventListener("radiosUpdated", () => {
-      setRadioSettings(
+    document.addEventListener("audioSinksUpdated", () => {
+      setRadios(
         getApp()
           ?.getAudioManager()
-          .getRadios()
-          .map((radio) => radio.getSetting())
+          .getSinks()
+          .filter((sink) => sink instanceof RadioSink)
+          .map((radio) => radio)
       );
     });
   }, []);
@@ -40,28 +40,10 @@ export function RadioMenu(props: { open: boolean; onClose: () => void; children?
           dark:text-white
         `}
       >
-        <div className="flex justify-between">
-          <span>Enable radio:</span>
-          <OlToggle
-            toggled={radioEnabled}
-            onClick={() => {
-              radioEnabled ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
-              setRadioEnabled(!radioEnabled);
-            }}
-          />
-        </div>
-        {radioEnabled && radioSettings.map((setting, idx) => {
-          return (
-            <RadioPanel
-              index={idx}
-              setting={setting}
-              onSettingUpdate={(setting) => {
-                getApp().getAudioManager().getRadios()[idx].setSetting(setting);
-              }}
-            ></RadioPanel>
-          );
+        {radios.map((radio) => {
+          return <RadioPanel radio={radio}></RadioPanel>;
         })}
-        {radioEnabled && radioSettings.length < 10 && (
+        {radios.length < 10 && (
           <button
             type="button"
             className={`
@@ -80,28 +62,3 @@ export function RadioMenu(props: { open: boolean; onClose: () => void; children?
     </Menu>
   );
 }
-
-/* 
-{refreshSources >= 0 &&
-          getApp()
-            ?.getAudioManager()
-            .getSources()
-            .map((source, idx) => {
-              return <AudioSourcePanel index={idx} source={source} />;
-            })}
-<button
-          onClick={() => {
-            var input = document.createElement("input");
-            input.type = "file";
-            input.click();
-            input.onchange = (e: Event) => {
-              let target = e.target as HTMLInputElement;
-              if (target && target.files) {
-                var file = target.files[0];
-                getApp().getAudioManager().addFileSource(file);
-              }
-            };
-          }}
-        >
-          Add audio source
-        </button> */

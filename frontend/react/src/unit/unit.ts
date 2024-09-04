@@ -74,6 +74,7 @@ import {
   faPeopleGroup,
   faQuestionCircle,
   faRoute,
+  faVolumeHigh,
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaXmarksLines } from "react-icons/fa6";
@@ -848,6 +849,19 @@ export abstract class Unit extends CustomMarker {
       (units: Unit[], _, targetPosition) => {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
+    );
+
+    contextActionSet.addContextAction(
+      this,
+      "speaker",
+      "Make audio source",
+      "Make this unit an audio source (loudspeakers)",
+      faVolumeHigh,
+      null,
+      (units: Unit[], _1, _2) => {
+        units.forEach((unit) => getApp().getAudioManager().addUnitSink(unit));
+      },
+      { executeImmediately: true }
     );
 
     contextActionSet.addDefaultContextAction(

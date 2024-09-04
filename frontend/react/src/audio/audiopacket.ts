@@ -30,7 +30,7 @@ export class AudioPacket {
     let encModulation: number[] = [settings.modulation];
     let encEncryption: number[] = [0];
 
-    let encUnitID: number[] = getBytes(100000001, 4);
+    let encUnitID: number[] = getBytes(0, 4);
     let encPacketID: number[] = getBytes(packetID, 8);
     packetID++;
     let encHops: number[] = [0];

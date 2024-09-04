@@ -1,5 +1,6 @@
 import { LatLng } from "leaflet";
 import { Coalition, Context } from "./types/types";
+import { AudioSink } from "./audio/audiosink";
 
 class Airbase {}
 
@@ -292,17 +293,5 @@ export interface ServerStatus {
   paused: boolean;
 }
 
-export interface SRSRadioSetting {
-  frequency: number;
-  modulation: number;
-  volume: number;
-  ptt: boolean;
-  tuned: boolean;
-}
 
-export interface AudioSourceSetting {
-  filename: string;
-  playing: boolean;
-  connectedTo: string;
-}
 

@@ -6,6 +6,8 @@ export class MicrophoneSource extends AudioSource {
 
   constructor() {
     super();
+
+    this.setName("Microphone");
   }
 
   async initialize() {
@@ -21,9 +23,5 @@ export class MicrophoneSource extends AudioSource {
 
   play() {
     // TODO, now is always on
-  }
-
-  getName() {
-    return "Microphone"
   }
 }

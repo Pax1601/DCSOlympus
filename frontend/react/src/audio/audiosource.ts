@@ -1,22 +1,33 @@
-import { AudioSourceSetting } from "../interfaces";
 import { AudioSink } from "./audiosink";
 
 export abstract class AudioSource {
-  #setting: AudioSourceSetting = {
-    connectedTo: "",
-    filename: "",
-    playing: true,
-  };
+  #connectedTo: AudioSink[] = [];
+  #name = "";
+  #playing = false;
 
-  getSetting() {
-    return this.#setting;
+  connect(sink: AudioSink) {
+    this.getNode().connect(sink.getNode());
+    this.#connectedTo.push(sink);
+    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
   }
 
-  setSetting(setting: AudioSourceSetting) {
-    this.#setting = setting;
+  disconnect() {
+    this.getNode().disconnect();
+    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+  }
+
+  setName(name) {
+    this.#name = name;
+  }
+
+  getName() {
+    return this.#name;
+  }
+
+  getConnectedTo() {
+    return this.#connectedTo;
   }
 
   abstract play(): void;
   abstract getNode(): AudioNode;
-  abstract getName(): string;
 }

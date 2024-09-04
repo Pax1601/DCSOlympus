@@ -1,12 +1,15 @@
 import { AudioMessageType } from "../constants/constants";
 import { MicrophoneSource } from "./microphonesource";
-import { SRSRadio } from "./srsradio";
+import { RadioSink } from "./radiosink";
 import { getApp } from "../olympusapp";
 import { fromBytes, makeID } from "../other/utils";
-import { AudioFileSource } from "./audiofilesource";
+import { FileSource } from "./filesource";
 import { AudioSource } from "./audiosource";
 import { Buffer } from "buffer";
 import { PlaybackPipeline } from "./playbackpipeline";
+import { AudioSink } from "./audiosink";
+import { Unit } from "../unit/unit";
+import { UnitSink } from "./unitsink";
 
 export class AudioManager {
   #audioContext: AudioContext;
@@ -14,8 +17,8 @@ export class AudioManager {
   /* The playback pipeline enables audio playback on the speakers/headphones */
   #playbackPipeline: PlaybackPipeline;
 
-  /* The SRS radio audio sinks used to transmit the audio stream to the SRS backend */
-  #radios: SRSRadio[] = [];
+  /* The audio sinks used to transmit the audio stream to the SRS backend */
+  #sinks: AudioSink[] = [];
 
   /* List of all possible audio sources (microphone, file stream etc...) */
   #sources: AudioSource[] = [];
@@ -59,44 +62,49 @@ export class AudioManager {
 
     /* Handle the reception of a new message */
     this.#socket.addEventListener("message", (event) => {
-      this.#radios.forEach(async (radio) => {
-        /* Extract the audio data as array */
-        let packetUint8Array = new Uint8Array(await event.data.arrayBuffer());
+      this.#sinks.forEach(async (sink) => {
+        if (sink instanceof RadioSink) {
+          /* Extract the audio data as array */
+          let packetUint8Array = new Uint8Array(await event.data.arrayBuffer());
 
-        /* Extract the encoded audio data */
-        let audioLength = fromBytes(packetUint8Array.slice(2, 4));
-        let audioUint8Array = packetUint8Array.slice(6, 6 + audioLength);
+          /* Extract the encoded audio data */
+          let audioLength = fromBytes(packetUint8Array.slice(2, 4));
+          let audioUint8Array = packetUint8Array.slice(6, 6 + audioLength);
 
-        /* Extract the frequency value and play it on the speakers if we are listening to it*/
-        let frequency = new DataView(packetUint8Array.slice(6 + audioLength, 6 + audioLength + 8).reverse().buffer).getFloat64(0);
-        if (radio.getSetting().frequency === frequency) {
-          this.#playbackPipeline.play(audioUint8Array.buffer);
+          /* Extract the frequency value and play it on the speakers if we are listening to it*/
+          let frequency = new DataView(packetUint8Array.slice(6 + audioLength, 6 + audioLength + 8).reverse().buffer).getFloat64(0);
+          if (sink.getFrequency() === frequency) {
+            this.#playbackPipeline.play(audioUint8Array.buffer);
+          }
         }
       });
     });
 
-    /* Add two default radios */
-    this.#radios = [new SRSRadio(), new SRSRadio()];
-    document.dispatchEvent(new CustomEvent("radiosUpdated"));
-
     /* Add the microphone source and connect it directly to the radio */
     const microphoneSource = new MicrophoneSource();
     microphoneSource.initialize().then(() => {
-      this.#radios.forEach((radio) => {
-        microphoneSource.getNode().connect(radio.getNode());
+      this.#sinks.forEach((sink) => {
+        if (sink instanceof RadioSink)
+          microphoneSource.connect(sink);
       });
       this.#sources.push(microphoneSource);
       document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+
+      /* Add two default radios */
+      this.addRadio();
+      this.addRadio();
     });
   }
 
   stop() {
     this.#sources.forEach((source) => {
-      source.getNode().disconnect();
+      source.disconnect();
     });
     this.#sources = [];
+    this.#sinks = [];
 
-    this.#radios = [];
+    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
 
   setAddress(address) {
@@ -108,27 +116,38 @@ export class AudioManager {
   }
 
   addFileSource(file) {
-    const newSource = new AudioFileSource(file);
+    const newSource = new FileSource(file);
     this.#sources.push(newSource);
-    newSource.getNode().connect(this.#radios[0].getNode());
+    newSource.connect(this.#sinks[0]);
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
   }
 
-  getRadios() {
-    return this.#radios;
+  addUnitSink(unit: Unit) {
+    this.#sinks.push(new UnitSink(unit));
+    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+  }
+
+  getSinks() {
+    return this.#sinks;
   }
 
   addRadio() {
-    const newRadio = new SRSRadio();
-    this.#sources[0].getNode().connect(newRadio.getNode());
-    this.#radios.push(newRadio);
-    document.dispatchEvent(new CustomEvent("radiosUpdated"));
+    const newRadio = new RadioSink();
+    this.#sinks.push(newRadio);
+    newRadio.setName(`Radio ${this.#sinks.length}`);
+    this.#sources[0].connect(newRadio);
+    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
 
-  removeRadio(idx) {
-    this.#radios[idx].getNode().disconnect();
-    this.#radios.splice(idx, 1);
-    document.dispatchEvent(new CustomEvent("radiosUpdated"));
+  removeSink(sink) {
+    sink.disconnect();
+    this.#sinks = this.#sinks.filter((v) => v != sink);
+    let idx = 1;
+    this.#sinks.forEach((sink) => {
+      if (sink instanceof RadioSink)
+        sink.setName(`Radio ${idx++}`);
+    });
+    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
 
   getSources() {
@@ -152,8 +171,12 @@ export class AudioManager {
       type: "Settings update",
       guid: this.#guid,
       coalition: 2,
-      settings: this.#radios.map((radio) => {
-        return radio.getSetting();
+      settings: this.#sinks.filter((sink) => sink instanceof RadioSink).map((radio) => {
+        return {
+          frequency: radio.getFrequency(),
+          modulation: radio.getModulation(),
+          ptt: radio.getPtt(),
+        };
       }),
     };
 

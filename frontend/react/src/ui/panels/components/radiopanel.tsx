@@ -4,11 +4,10 @@ import { FaTrash } from "react-icons/fa6";
 import { OlLabelToggle } from "../../components/ollabeltoggle";
 import { OlStateButton } from "../../components/olstatebutton";
 import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
-import { SRSRadio } from "../../../audio/srsradio";
-import { SRSRadioSetting } from "../../../interfaces";
+import { RadioSink } from "../../../audio/radiosink";
 import { getApp } from "../../../olympusapp";
 
-export function RadioPanel(props: { index: number; setting: SRSRadioSetting, onSettingUpdate: (SRSRadioSetting) => void }) {
+export function RadioPanel(props: { radio: RadioSink }) {
   return (
     <div
       className={`
@@ -17,50 +16,42 @@ export function RadioPanel(props: { index: number; setting: SRSRadioSetting, onS
       `}
     >
       <div className="flex content-center justify-between">
-        <span className="my-auto">Radio {props.index + 1}</span>
-        <div className="rounded-md bg-red-800 p-2" onClick={() => {getApp().getAudioManager().removeRadio(props.index);}}>
+        <span className="my-auto">{props.radio.getName()}</span>
+        <div className="rounded-md bg-red-800 p-2" onClick={() => {getApp().getAudioManager().removeSink(props.radio);}}>
           <FaTrash className={`text-gray-50`}></FaTrash>
         </div>
       </div>
       <OlFrequencyInput
-        value={props.setting.frequency}
+        value={props.radio.getFrequency()}
         onChange={(value) => {
-          let setting = props.setting;
-          setting.frequency = value;
-          props.onSettingUpdate(setting);
+          props.radio.setFrequency(value)
         }}
       />
       <div className="flex flex-row gap-2">
         <OlLabelToggle
           leftLabel="AM"
           rightLabel="FM"
-          toggled={props.setting.modulation !== 0}
+          toggled={props.radio.getModulation() !== 0}
           onClick={() => {
-            let setting = props.setting;
-            setting.modulation = setting.modulation === 1 ? 0 : 1;
-            props.onSettingUpdate(setting);
+            props.radio.setModulation(props.radio.getModulation() === 1 ? 0 : 1);
           }}
         ></OlLabelToggle>
 
         <OlStateButton
           className="ml-auto"
-          checked={props.setting.ptt}
+          checked={props.radio.getPtt()}
           icon={faMicrophoneLines}
           onClick={() => {
-            let setting = props.setting;
-            setting.ptt = !setting.ptt;
-            props.onSettingUpdate(setting);
+            props.radio.setPtt(!props.radio.getPtt());
           }}
           tooltip="Talk on frequency"
         ></OlStateButton>
 
         <OlStateButton
-          checked={props.setting.tuned}
+          checked={props.radio.getTuned()}
           icon={faEarListen}
           onClick={() => {
-            let setting = props.setting;
-            setting.tuned = !setting.tuned;
-            props.onSettingUpdate(setting);
+            props.radio.setTuned(!props.radio.getTuned());
           }}
           tooltip="Tune to radio"
         ></OlStateButton>

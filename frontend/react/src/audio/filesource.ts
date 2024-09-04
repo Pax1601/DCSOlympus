@@ -2,7 +2,7 @@ import { AudioSource } from "./audiosource";
 import { bufferToF32Planar } from "../other/utils";
 import { getApp } from "../olympusapp";
 
-export class AudioFileSource extends AudioSource {
+export class FileSource extends AudioSource {
   #gainNode: GainNode;
   #file: File | null = null;
   #source: AudioBufferSourceNode;
@@ -10,6 +10,8 @@ export class AudioFileSource extends AudioSource {
   constructor(file) {
     super();
     this.#file = file;
+
+    this.setName(this.#file?.name ?? "N/A");
 
     this.#gainNode = getApp().getAudioManager().getAudioContext().createGain();
   }
@@ -30,6 +32,7 @@ export class AudioFileSource extends AudioSource {
           this.#source = getApp().getAudioManager().getAudioContext().createBufferSource();
           this.#source.buffer = arrayBuffer;
           this.#source.connect(this.#gainNode);
+          this.#source.loop = true;
           this.#source.start();
         });
       }
@@ -43,9 +46,5 @@ export class AudioFileSource extends AudioSource {
 
   setGain(gain) {
     this.#gainNode.gain.setValueAtTime(gain, getApp().getAudioManager().getAudioContext().currentTime);
-  }
-
-  getName() {
-    return this.#file?.name ?? "N/A";
   }
 }
