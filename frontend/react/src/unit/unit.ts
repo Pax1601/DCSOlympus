@@ -851,6 +851,7 @@ export abstract class Unit extends CustomMarker {
       }
     );
 
+    /* Temporarily removed until more work can be done for external sounds
     contextActionSet.addContextAction(
       this,
       "speaker",
@@ -863,6 +864,7 @@ export abstract class Unit extends CustomMarker {
       },
       { executeImmediately: true }
     );
+    */
 
     contextActionSet.addDefaultContextAction(
       this,

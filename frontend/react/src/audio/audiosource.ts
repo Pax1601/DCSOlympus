@@ -11,8 +11,14 @@ export abstract class AudioSource {
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
   }
 
-  disconnect() {
-    this.getNode().disconnect();
+  disconnect(sinkToDisconnect?: AudioSink) {
+    if (sinkToDisconnect !== undefined) {
+      this.getNode().disconnect(sinkToDisconnect.getNode());
+      this.#connectedTo = this.#connectedTo.filter((sink) => sink != sinkToDisconnect);
+    } else {
+      this.getNode().disconnect();
+    }
+    
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
   }
 
