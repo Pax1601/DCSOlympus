@@ -149,6 +149,12 @@ export class AudioManager {
     });
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
+  
+  removeSource(source) {
+    source.disconnect();
+    this.#sources = this.#sources.filter((v) => v != source);
+    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+  }
 
   getSources() {
     return this.#sources;

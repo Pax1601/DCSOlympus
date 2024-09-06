@@ -27,7 +27,10 @@ export class UnitSink extends AudioSink {
         frequency: 243000000,
         modulation: 255, // HOPEFULLY this will never be used by SRS, indicates "loudspeaker" mode
       },
-      getApp().getAudioManager().getGuid()
+      getApp().getAudioManager().getGuid(),
+      this.#unit.getPosition().lat,
+      this.#unit.getPosition().lng,
+      this.#unit.getPosition().alt
     );
     getApp().getAudioManager().send(packet.getArray());
   }

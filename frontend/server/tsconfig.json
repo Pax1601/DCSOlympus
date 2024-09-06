@@ -2,7 +2,7 @@
     "compilerOptions": {
         "outDir": "./build",
         "allowJs": true,
-        "target": "es5",
+        "target": "ES2023",
         "module": "Node16",
         "moduleResolution": "Node16"
     },

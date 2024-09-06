@@ -850,8 +850,7 @@ export abstract class Unit extends CustomMarker {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
-
-    /* Temporarily removed until more work can be done for external sounds
+    
     contextActionSet.addContextAction(
       this,
       "speaker",
@@ -864,7 +863,6 @@ export abstract class Unit extends CustomMarker {
       },
       { executeImmediately: true }
     );
-    */
 
     contextActionSet.addDefaultContextAction(
       this,

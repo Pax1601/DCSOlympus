@@ -17,7 +17,7 @@ export function RadioPanel(props: { radio: RadioSink }) {
     >
       <div className="flex content-center justify-between">
         <span className="my-auto">{props.radio.getName()}</span>
-        <div className="rounded-md bg-red-800 p-2" onClick={() => {getApp().getAudioManager().removeSink(props.radio);}}>
+        <div className="cursor-pointer rounded-md bg-red-800 p-2" onClick={() => {getApp().getAudioManager().removeSink(props.radio);}}>
           <FaTrash className={`text-gray-50`}></FaTrash>
         </div>
       </div>

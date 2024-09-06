@@ -134,14 +134,6 @@ export function UI() {
     setLoginModalVisible(false);
   }
 
-  /* Temporary during devel */
-  //useEffect(() => {
-  //	window.setTimeout(() => {
-  //		checkPassword("admin");
-  //		connect("devel");
-  //	}, 1000)
-  //}, [])
-
   return (
     <div
       className={`

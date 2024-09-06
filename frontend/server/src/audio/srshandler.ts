@@ -1,6 +1,12 @@
 import { defaultSRSData } from "./defaultdata";
+
 const { OpusEncoder } = require("@discordjs/opus");
 const encoder = new OpusEncoder(16000, 1);
+
+let decoder = null;
+import('opus-decoder').then((res) => {
+  decoder = new res.OpusDecoder();
+});
 
 var net = require("net");
 var bufferString = "";
@@ -117,6 +123,7 @@ export class SRSHandler {
         let offset = 6 + audioLength + frequenciesLength;
         
         if (modulation == 255) {
+          packetUint8Array = packetUint8Array.slice(0, -24) // Remove position data
           packetUint8Array[6 + audioLength + 8] = 2;
           this.clients.forEach((client) => {
             getBytes(client.RadioInfo.unitId, 4).forEach((value, idx) => {

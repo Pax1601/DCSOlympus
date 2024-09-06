@@ -23,7 +23,7 @@ var packetID = 0;
 export class AudioPacket {
   #packet: Uint8Array;
 
-  constructor(data, settings, guid) {
+  constructor(data, settings, guid, lat?, lng?, alt?) {
     let header: number[] = [0, 0, 0, 0, 0, 0];
 
     let encFrequency: number[] = [...doubleToByteArray(settings.frequency)];
@@ -47,6 +47,10 @@ export class AudioPacket {
       [...Buffer.from(guid, "utf-8")],
       [...Buffer.from(guid, "utf-8")]
     );
+
+    if (lat !== undefined && lng !== undefined && alt !== undefined) {
+      packet.concat([...doubleToByteArray(lat)], [...doubleToByteArray(lng)], [...doubleToByteArray(alt)]);
+    }
 
     let encPacketLen = getBytes(packet.length, 2);
     packet[0] = encPacketLen[0];

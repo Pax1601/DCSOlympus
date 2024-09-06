@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
 import { FaQuestionCircle } from "react-icons/fa";
-import { AudioSourcePanel } from "./components/audiosourcepanel";
+import { AudioSourcePanel } from "./components/sourcepanel";
 import { AudioSource } from "../../audio/audiosource";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {

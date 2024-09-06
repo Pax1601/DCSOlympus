@@ -3,7 +3,6 @@ import { getApp } from "../olympusapp";
 import {WebAudioPeakMeter} from 'web-audio-peak-meter';
 
 export class FileSource extends AudioSource {
-  #gainNode: GainNode;
   #file: File | null = null;
   #source: AudioBufferSourceNode;
   #duration: number = 0;
@@ -14,8 +13,6 @@ export class FileSource extends AudioSource {
   #audioBuffer: AudioBuffer;
   #restartTimeout: any;
   #looping = false;
-  #meter: WebAudioPeakMeter;
-  #volume: number = 1.0;
 
   constructor(file) {
     super();
@@ -23,11 +20,10 @@ export class FileSource extends AudioSource {
 
     this.setName(this.#file?.name ?? "N/A");
 
-    this.#gainNode = getApp().getAudioManager().getAudioContext().createGain();
-
     if (!this.#file) {
       return;
     }
+    
     var reader = new FileReader();
     reader.onload = (e) => {
       var contents = e.target?.result;
@@ -44,17 +40,11 @@ export class FileSource extends AudioSource {
     reader.readAsArrayBuffer(this.#file);
   }
 
-  getNode() {
-    return this.#gainNode;
-  }
-
   play() {
     this.#source = getApp().getAudioManager().getAudioContext().createBufferSource();
     this.#source.buffer = this.#audioBuffer;
-    this.#source.connect(this.#gainNode);
+    this.#source.connect(this.getNode());
     this.#source.loop = this.#looping;
-
-    this.#meter = new WebAudioPeakMeter(this.#gainNode, document.createElement('div'));
 
     this.#source.start(0, this.#currentPosition);
     this.#playing = true;
@@ -79,6 +69,7 @@ export class FileSource extends AudioSource {
 
   stop() {
     this.#source.stop();
+    this.#source.disconnect();
     this.#playing = false;
 
     const now = Date.now() / 1000;
@@ -86,10 +77,6 @@ export class FileSource extends AudioSource {
     clearInterval(this.#updateInterval);
 
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
-  }
-
-  setGain(gain) {
-    this.#gainNode.gain.setValueAtTime(gain, getApp().getAudioManager().getAudioContext().currentTime);
   }
 
   getPlaying() {
@@ -122,18 +109,5 @@ export class FileSource extends AudioSource {
 
   getLooping() {
     return this.#looping;
-  }
-
-  getMeter() {
-    return this.#meter;
-  }
-
-  setVolume(volume) {
-    this.#volume = volume;
-    this.#gainNode.gain.exponentialRampToValueAtTime(volume, getApp().getAudioManager().getAudioContext().currentTime + 0.02);
-  }
-
-  getVolume() {
-    return this.#volume;
   }
 }
