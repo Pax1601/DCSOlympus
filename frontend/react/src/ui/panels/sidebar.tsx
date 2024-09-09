@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass, faPlaneDeparture } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass, faPlaneDeparture, faRadio, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
 import { IDLE } from "../../constants/constants";
+import { faSpeakerDeck } from "@fortawesome/free-brands-svg-icons";
 
 export function SideBar() {
   return (
@@ -57,6 +58,18 @@ export function SideBar() {
                     checked={appState.airbaseMenuVisible}
                     icon={faPlaneDeparture}
                     tooltip="Hide/show airbase menu"
+                  ></OlStateButton>
+                  <OlStateButton
+                    onClick={events.toggleRadioMenuVisible}
+                    checked={appState.radioMenuVisible}
+                    icon={faRadio}
+                    tooltip="Hide/show radio menu"
+                  ></OlStateButton>
+                  <OlStateButton
+                    onClick={events.toggleAudioMenuVisible}
+                    checked={appState.audioMenuVisible}
+                    icon={faVolumeHigh}
+                    tooltip="Hide/show audio menu"
                   ></OlStateButton>
                 </div>
               </div>

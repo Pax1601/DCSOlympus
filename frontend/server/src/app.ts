@@ -5,6 +5,7 @@ import logger = require("morgan");
 import fs = require("fs");
 import bodyParser = require("body-parser");
 import cors = require("cors");
+import { AudioBackend } from "./audio/audiobackend";
 
 /* Load the proxy middleware plugin */
 import httpProxyMiddleware = require("http-proxy-middleware");
@@ -81,6 +82,11 @@ module.exports = function (configLocation, viteProxy) {
     app.get("/", function (req, res) {
       res.sendfile(path.join(__dirname, "..", "public", "vite", "index.html"));
     });
+  }
+
+  if (config["audio"]) {
+    let audioBackend = new AudioBackend(config["audio"]["SRSPort"], config["audio"]["WSPort"]);
+    audioBackend.start();
   }
 
   return app;

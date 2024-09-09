@@ -9,7 +9,7 @@ import { SpawnMenu } from "./panels/spawnmenu";
 import { UnitControlMenu } from "./panels/unitcontrolmenu";
 import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
-import { Options } from "./panels/options";
+import { OptionsMenu } from "./panels/optionsmenu";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { BLUE_COMMANDER, CONTEXT_ACTION, GAME_MASTER, IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
@@ -22,6 +22,8 @@ import { ControlsPanel } from "./panels/controlspanel";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
 import { AirbaseMenu } from "./panels/airbasemenu";
 import { Airbase } from "../mission/airbase";
+import { RadioMenu } from "./panels/radiomenu";
+import { AudioMenu } from "./panels/audiomenu";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -42,6 +44,8 @@ export function UI() {
   const [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
   const [measureMenuVisible, setMeasureMenuVisible] = useState(false);
   const [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
+  const [radioMenuVisible, setRadioMenuVisible] = useState(false);
+  const [audioMenuVisible, setAudioMenuVisible] = useState(false);
   const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
   const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -97,6 +101,8 @@ export function UI() {
     setDrawingMenuVisible(false);
     setOptionsMenuVisible(false);
     setAirbaseMenuVisible(false);
+    setRadioMenuVisible(false);
+    setAudioMenuVisible(false);
   }
 
   function checkPassword(password: string) {
@@ -128,14 +134,6 @@ export function UI() {
     setLoginModalVisible(false);
   }
 
-  /* Temporary during devel */
-  //useEffect(() => {
-  //	window.setTimeout(() => {
-  //		checkPassword("admin");
-  //		connect("devel");
-  //	}, 1000)
-  //}, [])
-
   return (
     <div
       className={`
@@ -153,6 +151,8 @@ export function UI() {
           drawingMenuVisible: drawingMenuVisible,
           optionsMenuVisible: optionsMenuVisible,
           airbaseMenuVisible: airbaseMenuVisible,
+          radioMenuVisible: radioMenuVisible,
+          audioMenuVisible: audioMenuVisible,
           mapOptions: mapOptions,
           mapHiddenTypes: mapHiddenTypes,
           mapSources: mapSources,
@@ -169,6 +169,8 @@ export function UI() {
             setMeasureMenuVisible: setMeasureMenuVisible,
             setOptionsMenuVisible: setOptionsMenuVisible,
             setAirbaseMenuVisible: setAirbaseMenuVisible,
+            setRadioMenuVisible: setRadioMenuVisible,
+            setAudioMenuVisible: setAudioMenuVisible,
             toggleMainMenuVisible: () => {
               hideAllMenus();
               setMainMenuVisible(!mainMenuVisible);
@@ -196,6 +198,14 @@ export function UI() {
             toggleAirbaseMenuVisible: () => {
               hideAllMenus();
               setAirbaseMenuVisible(!airbaseMenuVisible);
+            },
+            toggleRadioMenuVisible: () => {
+              hideAllMenus();
+              setRadioMenuVisible(!radioMenuVisible);
+            },
+            toggleAudioMenuVisible: () => {
+              hideAllMenus();
+              setAudioMenuVisible(!audioMenuVisible);
             },
           }}
         >
@@ -227,10 +237,12 @@ export function UI() {
             <div id="map-container" className="z-0 h-full w-screen" />
             <MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
             <SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
-            <Options open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
+            <OptionsMenu open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
             <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
             <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
             <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase}/>
+            <RadioMenu open={radioMenuVisible} onClose={() => setRadioMenuVisible(false)} />
+            <AudioMenu open={audioMenuVisible} onClose={() => setAudioMenuVisible(false)} />
 
             <MiniMapPanel />
             <ControlsPanel />

@@ -40,4 +40,8 @@
   z-index: 2006;
 }
 
+.vertical-slider {
+  writing-mode: vertical-lr !important; 
+  direction: rtl !important;
+}
 

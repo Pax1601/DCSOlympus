@@ -48,6 +48,7 @@ import { FaRadio } from "react-icons/fa6";
 import { OlNumberInput } from "../components/olnumberinput";
 import { Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
+import { OlFrequencyInput } from "../components/olfrequencyinput";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
@@ -1112,71 +1113,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
                   <div className="text-sm text-gray-200">Radio frequency</div>
                   <div className="flex content-center gap-2">
-                    <OlNumberInput
-                      min={1}
-                      max={400}
-                      onChange={(e) => {
-                        let newValue = Math.max(Math.min(Number(e.target.value), 400), 1) * 1000000;
-                        if (activeAdvancedSettings) {
-                          let decimalPart = activeAdvancedSettings.radio.frequency - Math.floor(activeAdvancedSettings.radio.frequency / 1000000) * 1000000;
-                          activeAdvancedSettings.radio.frequency = newValue + decimalPart;
-                        }
+                    <OlFrequencyInput value={activeAdvancedSettings? activeAdvancedSettings.radio.frequency: 251000000} onChange={(value) => {
+                      if (activeAdvancedSettings) {
+                        activeAdvancedSettings.radio.frequency = value;
                         setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }}
-                      onDecrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.radio.frequency = Math.max(
-                            Math.min(Number(activeAdvancedSettings.radio.frequency - 1000000), 400000000),
-                            1000000
-                          );
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }}
-                      onIncrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.radio.frequency = Math.max(
-                            Math.min(Number(activeAdvancedSettings.radio.frequency + 1000000), 400000000),
-                            1000000
-                          );
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }}
-                      value={activeAdvancedSettings ? Math.floor(activeAdvancedSettings.radio.frequency / 1000000) : 124}
-                    ></OlNumberInput>
-                    <div className="my-auto">.</div>
-                    <OlNumberInput
-                      min={0}
-                      max={990}
-                      minLength={3}
-                      onChange={(e) => {
-                        let newValue = Math.max(Math.min(Number(e.target.value), 990), 0) * 1000;
-                        if (activeAdvancedSettings) {
-                          let integerPart = Math.floor(activeAdvancedSettings.radio.frequency / 1000000) * 1000000;
-                          activeAdvancedSettings.radio.frequency = newValue + integerPart;
-                        }
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }}
-                      onDecrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.radio.frequency = Math.max(
-                            Math.min(Number(activeAdvancedSettings.radio.frequency - 25000), 400000000),
-                            1000000
-                          );
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }}
-                      onIncrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.radio.frequency = Math.max(
-                            Math.min(Number(activeAdvancedSettings.radio.frequency + 25000), 400000000),
-                            1000000
-                          );
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }}
-                      value={
-                        activeAdvancedSettings
-                          ? (activeAdvancedSettings.radio.frequency - Math.floor(activeAdvancedSettings.radio.frequency / 1000000) * 1000000) / 1000
-                          : 0
                       }
-                    ></OlNumberInput>
-                    <div className="my-auto">MHz</div>
+                    }}/>
                   </div>
 
                   <div className="flex pt-8">

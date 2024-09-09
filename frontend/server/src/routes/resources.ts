@@ -7,7 +7,7 @@ module.exports = function (configLocation) {
         if (fs.existsSync(configLocation)) {
             let rawdata = fs.readFileSync(configLocation, "utf-8");
             const config = JSON.parse(rawdata);
-            res.send(JSON.stringify(config.frontend));
+            res.send(JSON.stringify({...config.frontend, ...(config.audio ?? {}) }));
             res.end()
         } else {
             res.sendStatus(404);

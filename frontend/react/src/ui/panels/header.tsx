@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
@@ -23,12 +23,12 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 export function Header() {
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false);
 
   /* Initialize the "scroll" position of the element */
   var scrollRef = useRef(null);
   useEffect(() => {
-    if (scrollRef.current) 
-      onScroll(scrollRef.current);
+    if (scrollRef.current) onScroll(scrollRef.current);
   });
 
   function onScroll(el) {
@@ -54,10 +54,9 @@ export function Header() {
                 dark:border-gray-800 dark:bg-olympus-900
               `}
             >
-              <img
-                src="images/icon.png"
-                className={`my-auto h-10 w-10 rounded-md p-0`}
-              ></img>
+              <img src="images/icon.png" className={`
+                my-auto h-10 w-10 rounded-md p-0
+              `}></img>
               {!scrolledLeft && (
                 <FaChevronLeft
                   className={`
@@ -111,8 +110,21 @@ export function Header() {
                     </div>
                   </div>
                 </div>
-                <div>
+                <div
+                  className={`
+                    flex h-fit flex-row items-center justify-start gap-1
+                  `}
+                >
                   <OlLockStateButton checked={false} onClick={() => {}} tooltip="Lock/unlock protected units (from scripted mission)" />
+                  <OlRoundStateButton
+                    checked={audioEnabled}
+                    onClick={() => {
+                      audioEnabled ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
+                      setAudioEnabled(!audioEnabled);
+                    }}
+                    tooltip="Enable/disable audio and radio backend"
+                    icon={faVolumeHigh}
+                  />
                 </div>
                 <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
                 <div
