@@ -15,17 +15,17 @@ export abstract class AudioSource {
   }
 
   connect(sink: AudioSink) {
-    this.getNode().connect(sink.getNode());
+    this.getOutputNode().connect(sink.getInputNode());
     this.#connectedTo.push(sink);
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
   }
 
   disconnect(sinkToDisconnect?: AudioSink) {
     if (sinkToDisconnect !== undefined) {
-      this.getNode().disconnect(sinkToDisconnect.getNode());
+      this.getOutputNode().disconnect(sinkToDisconnect.getInputNode());
       this.#connectedTo = this.#connectedTo.filter((sink) => sink != sinkToDisconnect);
     } else {
-      this.getNode().disconnect();
+      this.getOutputNode().disconnect();
     }
 
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
@@ -57,7 +57,7 @@ export abstract class AudioSource {
     return this.#meter;
   }
 
-  getNode() {
+  getOutputNode() {
     return this.#gainNode;
   }
 

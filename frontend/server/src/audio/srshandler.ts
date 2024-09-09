@@ -1,42 +1,12 @@
+import { MessageType } from "./audiopacket";
 import { defaultSRSData } from "./defaultdata";
 
-const { OpusEncoder } = require("@discordjs/opus");
-const encoder = new OpusEncoder(16000, 1);
-
-let decoder = null;
-import('opus-decoder').then((res) => {
-  decoder = new res.OpusDecoder();
-});
-
+/* TCP/IP socket */
 var net = require("net");
 var bufferString = "";
 
 const SRS_VERSION = "2.1.0.10";
-
 var globalIndex = 1;
-
-enum MessageType {
-  audio,
-  settings,
-}
-
-function fromBytes(array) {
-  let res = 0;
-  for (let i = 0; i < array.length; i++) {
-    res = res << 8;
-    res += array[array.length - i - 1];
-  }
-  return res;
-}
-
-function getBytes(value, length) {
-  let res: number[] = [];
-  for (let i = 0; i < length; i++) {
-    res.push(value & 255);
-    value = value >> 8;
-  }
-  return res;
-}
 
 export class SRSHandler {
   ws: any;
@@ -85,6 +55,19 @@ export class SRSHandler {
         if (this.tcp.readyState == "open")
           this.tcp.write(`${JSON.stringify(SYNC)}\n`);
         else clearInterval(this.syncInterval);
+
+        let unitsBuffer = Buffer.from(
+          JSON.stringify({
+            unitIDs: this.clients.map((client) => {
+              return client.RadioInfo.unitId;
+            }),
+          }),
+          "utf-8"
+        );
+
+        this.ws.send(
+          ([] as number[]).concat([MessageType.unitIDs], [...unitsBuffer])
+        );
       }, 1000);
     });
 
@@ -94,8 +77,7 @@ export class SRSHandler {
         try {
           let message = JSON.parse(bufferString.split("\n")[0]);
           bufferString = bufferString.slice(bufferString.indexOf("\n") + 1);
-          if (message.Clients !== undefined)
-            this.clients = message.Clients;
+          if (message.Clients !== undefined) this.clients = message.Clients;
         } catch (e) {
           console.log(e);
         }
@@ -108,44 +90,20 @@ export class SRSHandler {
     });
 
     this.udp.on("message", (message, remote) => {
-      if (this.ws && message.length > 22) this.ws.send(message);
+      if (this.ws && message.length > 22)
+        this.ws.send(
+          ([] as number[]).concat([MessageType.audio], [...message])
+        );
     });
   }
 
-  decodeData(data){
+  decodeData(data) {
     switch (data[0]) {
       case MessageType.audio:
-        let packetUint8Array = new Uint8Array(data.slice(1));
-
-        let audioLength = fromBytes(packetUint8Array.slice(2, 4));
-        let frequenciesLength = fromBytes(packetUint8Array.slice(4, 6));
-        let modulation = fromBytes(packetUint8Array.slice(6 + audioLength + 8, 6 + audioLength + 8 + 1));
-        let offset = 6 + audioLength + frequenciesLength;
-        
-        if (modulation == 255) {
-          packetUint8Array = packetUint8Array.slice(0, -24) // Remove position data
-          packetUint8Array[6 + audioLength + 8] = 2;
-          this.clients.forEach((client) => {
-            getBytes(client.RadioInfo.unitId, 4).forEach((value, idx) => {
-              packetUint8Array[offset + idx] = value;
-            });
-
-            var dst = new ArrayBuffer(packetUint8Array.byteLength);
-            let newBuffer = new Uint8Array(dst);
-            newBuffer.set(new Uint8Array(packetUint8Array));
-            this.udp.send(newBuffer, this.SRSPort, "localhost", (error) => {
-              if (error)
-                console.log(`Error sending data to SRS server: ${error}`);
-            })
-          })
-        } else {
-          this.udp.send(packetUint8Array, this.SRSPort, "localhost", (error) => {
-            if (error)
-              console.log(`Error sending data to SRS server: ${error}`);
-          });
-        }
-
-        
+        const encodedData = new Uint8Array(data.slice(1));
+        this.udp.send(encodedData, this.SRSPort, "localhost", (error) => {
+          if (error) console.log(`Error sending data to SRS server: ${error}`);
+        });
         break;
       case MessageType.settings:
         let message = JSON.parse(data.slice(1));

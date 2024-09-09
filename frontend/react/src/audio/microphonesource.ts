@@ -15,7 +15,7 @@ export class MicrophoneSource extends AudioSource {
     if (getApp().getAudioManager().getAudioContext()) {
       this.#node = getApp().getAudioManager().getAudioContext().createMediaStreamSource(microphone);
 
-      this.#node.connect(this.getNode());
+      this.#node.connect(this.getOutputNode());
     }
   }
 

@@ -43,7 +43,7 @@ export class FileSource extends AudioSource {
   play() {
     this.#source = getApp().getAudioManager().getAudioContext().createBufferSource();
     this.#source.buffer = this.#audioBuffer;
-    this.#source.connect(this.getNode());
+    this.#source.connect(this.getOutputNode());
     this.#source.loop = this.#looping;
 
     this.#source.start(0, this.#currentPosition);

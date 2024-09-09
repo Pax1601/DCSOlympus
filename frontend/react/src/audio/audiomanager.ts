@@ -2,7 +2,7 @@ import { AudioMessageType } from "../constants/constants";
 import { MicrophoneSource } from "./microphonesource";
 import { RadioSink } from "./radiosink";
 import { getApp } from "../olympusapp";
-import { fromBytes, makeID } from "../other/utils";
+import { makeID } from "../other/utils";
 import { FileSource } from "./filesource";
 import { AudioSource } from "./audiosource";
 import { Buffer } from "buffer";
@@ -10,6 +10,7 @@ import { PlaybackPipeline } from "./playbackpipeline";
 import { AudioSink } from "./audiosink";
 import { Unit } from "../unit/unit";
 import { UnitSink } from "./unitsink";
+import { AudioPacket, MessageType } from "./audiopacket";
 
 export class AudioManager {
   #audioContext: AudioContext;
@@ -27,6 +28,7 @@ export class AudioManager {
   #port: number = 4000;
   #socket: WebSocket | null = null;
   #guid: string = makeID(22);
+  #SRSClientUnitIDs: number[] = [];
 
   constructor() {
     document.addEventListener("configLoaded", () => {
@@ -67,14 +69,19 @@ export class AudioManager {
           /* Extract the audio data as array */
           let packetUint8Array = new Uint8Array(await event.data.arrayBuffer());
 
-          /* Extract the encoded audio data */
-          let audioLength = fromBytes(packetUint8Array.slice(2, 4));
-          let audioUint8Array = packetUint8Array.slice(6, 6 + audioLength);
+          if (packetUint8Array[0] === MessageType.audio) {
+            /* Extract the encoded audio data */
+            let audioPacket = new AudioPacket();
+            audioPacket.fromByteArray(packetUint8Array.slice(1));
 
-          /* Extract the frequency value and play it on the speakers if we are listening to it*/
-          let frequency = new DataView(packetUint8Array.slice(6 + audioLength, 6 + audioLength + 8).reverse().buffer).getFloat64(0);
-          if (sink.getFrequency() === frequency) {
-            this.#playbackPipeline.play(audioUint8Array.buffer);
+            /* Extract the frequency value and play it on the speakers if we are listening to it*/
+            audioPacket.getFrequencies().forEach((frequencyInfo) => {
+              if (sink.getFrequency() === frequencyInfo.frequency && sink.getModulation() === frequencyInfo.modulation) {
+                this.#playbackPipeline.play(audioPacket.getAudioData().buffer);
+              }
+            });
+          } else {
+            this.#SRSClientUnitIDs = JSON.parse(new TextDecoder().decode(packetUint8Array.slice(1))).unitIDs;
           }
         }
       });
@@ -84,8 +91,7 @@ export class AudioManager {
     const microphoneSource = new MicrophoneSource();
     microphoneSource.initialize().then(() => {
       this.#sinks.forEach((sink) => {
-        if (sink instanceof RadioSink)
-          microphoneSource.connect(sink);
+        if (sink instanceof RadioSink) microphoneSource.connect(sink);
       });
       this.#sources.push(microphoneSource);
       document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
@@ -144,12 +150,11 @@ export class AudioManager {
     this.#sinks = this.#sinks.filter((v) => v != sink);
     let idx = 1;
     this.#sinks.forEach((sink) => {
-      if (sink instanceof RadioSink)
-        sink.setName(`Radio ${idx++}`);
+      if (sink instanceof RadioSink) sink.setName(`Radio ${idx++}`);
     });
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
-  
+
   removeSource(source) {
     source.disconnect();
     this.#sources = this.#sources.filter((v) => v != source);
@@ -172,18 +177,24 @@ export class AudioManager {
     return this.#audioContext;
   }
 
+  getSRSClientsUnitIDs() {
+    return this.#SRSClientUnitIDs;
+  }
+
   #syncRadioSettings() {
     let message = {
       type: "Settings update",
       guid: this.#guid,
       coalition: 2,
-      settings: this.#sinks.filter((sink) => sink instanceof RadioSink).map((radio) => {
-        return {
-          frequency: radio.getFrequency(),
-          modulation: radio.getModulation(),
-          ptt: radio.getPtt(),
-        };
-      }),
+      settings: this.#sinks
+        .filter((sink) => sink instanceof RadioSink)
+        .map((radio) => {
+          return {
+            frequency: radio.getFrequency(),
+            modulation: radio.getModulation(),
+            ptt: radio.getPtt(),
+          };
+        }),
     };
 
     if (this.#socket?.readyState == 1) this.#socket?.send(new Uint8Array([AudioMessageType.settings, ...Buffer.from(JSON.stringify(message), "utf-8")]));
