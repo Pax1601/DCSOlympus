@@ -34,7 +34,7 @@ export class PlaybackPipeline {
     this.#gainNode.connect(getApp().getAudioManager().getAudioContext().destination);
   }
 
-  play(arrayBuffer) {
+  playBuffer(arrayBuffer) {
     const init = {
       type: "key",
       data: arrayBuffer,

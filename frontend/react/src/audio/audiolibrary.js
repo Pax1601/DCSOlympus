@@ -1,4 +1,6 @@
 // TODO Convert to typescript
+// Audio library I shamelessly copied from the web
+
 // SAFARI Polyfills
 if (!window.AudioBuffer.prototype.copyToChannel) {
   window.AudioBuffer.prototype.copyToChannel = function copyToChannel(buffer, channel) {

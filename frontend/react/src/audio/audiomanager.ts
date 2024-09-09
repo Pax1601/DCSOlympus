@@ -24,6 +24,9 @@ export class AudioManager {
   /* List of all possible audio sources (microphone, file stream etc...) */
   #sources: AudioSource[] = [];
 
+  /* The audio backend must be manually started so that the browser can detect the user is enabling audio.
+  Otherwise, no playback will be performed. */
+  #running: boolean = false;
   #address: string = "localhost";
   #port: number = 4000;
   #socket: WebSocket | null = null;
@@ -44,6 +47,7 @@ export class AudioManager {
   }
 
   start() {
+    this.#running = true;
     this.#audioContext = new AudioContext({ sampleRate: 16000 });
     this.#playbackPipeline = new PlaybackPipeline();
 
@@ -77,7 +81,7 @@ export class AudioManager {
             /* Extract the frequency value and play it on the speakers if we are listening to it*/
             audioPacket.getFrequencies().forEach((frequencyInfo) => {
               if (sink.getFrequency() === frequencyInfo.frequency && sink.getModulation() === frequencyInfo.modulation) {
-                this.#playbackPipeline.play(audioPacket.getAudioData().buffer);
+                this.#playbackPipeline.playBuffer(audioPacket.getAudioData().buffer);
               }
             });
           } else {
@@ -99,18 +103,25 @@ export class AudioManager {
       /* Add two default radios */
       this.addRadio();
       this.addRadio();
+      
     });
+    document.dispatchEvent(new CustomEvent("audioManagerStateChanged"));
   }
 
   stop() {
+    this.#running = false;
     this.#sources.forEach((source) => {
       source.disconnect();
+    });
+    this.#sinks.forEach((sink) => {
+      sink.disconnect();
     });
     this.#sources = [];
     this.#sinks = [];
 
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    document.dispatchEvent(new CustomEvent("audioManagerStateChanged"));
   }
 
   setAddress(address) {
@@ -122,22 +133,47 @@ export class AudioManager {
   }
 
   addFileSource(file) {
+    console.log(`Adding file source from ${file.name}`);
+    if (!this.#running) {
+      console.log("Audio manager not started, aborting...");
+      return;
+    }
     const newSource = new FileSource(file);
     this.#sources.push(newSource);
-    newSource.connect(this.#sinks[0]);
+    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+  }
+
+  getSources() {
+    return this.#sources;
+  }
+
+  removeSource(source: AudioSource) {
+    console.log(`Removing source ${source.getName()}`);
+    if (!this.#running) {
+      console.log("Audio manager not started, aborting...");
+      return;
+    }
+    source.disconnect();
+    this.#sources = this.#sources.filter((v) => v != source);
     document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
   }
 
   addUnitSink(unit: Unit) {
+    console.log(`Adding unit sink for unit with ID ${unit.ID}`);
+    if (!this.#running) {
+      console.log("Audio manager not started, aborting...");
+      return;
+    }
     this.#sinks.push(new UnitSink(unit));
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
 
-  getSinks() {
-    return this.#sinks;
-  }
-
   addRadio() {
+    console.log("Adding new radio");
+    if (!this.#running) {
+      console.log("Audio manager not started, aborting...");
+      return;
+    }
     const newRadio = new RadioSink();
     this.#sinks.push(newRadio);
     newRadio.setName(`Radio ${this.#sinks.length}`);
@@ -145,7 +181,16 @@ export class AudioManager {
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
   }
 
+  getSinks() {
+    return this.#sinks;
+  }
+
   removeSink(sink) {
+    console.log(`Removing sink ${sink.getName()}`);
+    if (!this.#running) {
+      console.log("Audio manager not started, aborting...");
+      return;
+    }
     sink.disconnect();
     this.#sinks = this.#sinks.filter((v) => v != sink);
     let idx = 1;
@@ -153,16 +198,6 @@ export class AudioManager {
       if (sink instanceof RadioSink) sink.setName(`Radio ${idx++}`);
     });
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
-  }
-
-  removeSource(source) {
-    source.disconnect();
-    this.#sources = this.#sources.filter((v) => v != source);
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
-  }
-
-  getSources() {
-    return this.#sources;
   }
 
   getGuid() {
@@ -179,6 +214,10 @@ export class AudioManager {
 
   getSRSClientsUnitIDs() {
     return this.#SRSClientUnitIDs;
+  }
+
+  isRunning() {
+    return this.#running;
   }
 
   #syncRadioSettings() {

@@ -1,6 +1,7 @@
 import { getApp } from "../olympusapp";
 
-export abstract class AudioSink {
+/* Base audio sink class */
+export class AudioSink {
   #name: string;
   #gainNode: GainNode;
 

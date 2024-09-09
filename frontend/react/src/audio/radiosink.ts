@@ -2,6 +2,7 @@ import { AudioSink } from "./audiosink";
 import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
 
+/* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
   #encoder: AudioEncoder;
   #desinationNode: MediaStreamAudioDestinationNode;
