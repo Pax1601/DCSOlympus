@@ -2,6 +2,8 @@ import { AudioSink } from "./audiosink";
 import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
 
+let packetID = 0;
+
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
   #encoder: AudioEncoder;
@@ -102,6 +104,7 @@ export class RadioSink extends AudioSink {
     if (this.#ptt) {
       let audioPacket = new AudioPacket();
       audioPacket.setAudioData(new Uint8Array(arrayBuffer));
+      audioPacket.setPacketID(packetID++);
       audioPacket.setFrequencies([{
           frequency: this.#frequency,
           modulation: this.#modulation,
