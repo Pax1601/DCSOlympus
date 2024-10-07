@@ -23,8 +23,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
   const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = getUnitsByLabel(filterString);
 
   useEffect(() => {
-    if (!props.open) {
-      if (getApp()?.getMap()?.getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
+    if (!props.open && getApp()) {
+      if (getApp().getMap().getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
       if (blueprint !== null) setBlueprint(null);
     }
   });

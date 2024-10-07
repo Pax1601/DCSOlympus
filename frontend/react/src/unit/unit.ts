@@ -77,8 +77,7 @@ import {
   faVolumeHigh,
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
-import { FaXmarksLines } from "react-icons/fa6";
-import { ContextAction } from "./contextaction";
+import { Carrier } from "../mission/carrier";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -850,7 +849,7 @@ export abstract class Unit extends CustomMarker {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
-    
+
     contextActionSet.addContextAction(
       this,
       "speaker",
@@ -864,20 +863,12 @@ export abstract class Unit extends CustomMarker {
       { executeImmediately: true }
     );
 
-    contextActionSet.addDefaultContextAction(
-      this,
-      "default",
-      "Set destination",
-      "",
-      faRoute,
-      null,
-      (units: Unit[], targetUnit, targetPosition) => {
-        if (targetPosition) {
-          getApp().getUnitsManager().clearDestinations(units);
-          getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
-        }
+    contextActionSet.addDefaultContextAction(this, "default", "Set destination", "", faRoute, null, (units: Unit[], targetUnit, targetPosition) => {
+      if (targetPosition) {
+        getApp().getUnitsManager().clearDestinations(units);
+        getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
-    )
+    });
   }
 
   drawLines() {
@@ -1335,7 +1326,8 @@ export abstract class Unit extends CustomMarker {
       "Line abreast (LH)",
       "Follow unit in line abreast left formation",
       olButtonsContextLineAbreast,
-      null, () => this.applyFollowOptions("line-abreast-lh", units)
+      null,
+      () => this.applyFollowOptions("line-abreast-lh", units)
     );
     contextActionSet.addContextAction(
       this,
@@ -1343,9 +1335,12 @@ export abstract class Unit extends CustomMarker {
       "Line abreast (RH)",
       "Follow unit in line abreast right formation",
       olButtonsContextLineAbreast,
-      null, () => this.applyFollowOptions("line-abreast-rh", units)
+      null,
+      () => this.applyFollowOptions("line-abreast-rh", units)
     );
-    contextActionSet.addContextAction(this, "front", "Front", "Fly in front of unit", olButtonsContextFront, null, () => this.applyFollowOptions("front", units));
+    contextActionSet.addContextAction(this, "front", "Front", "Fly in front of unit", olButtonsContextFront, null, () =>
+      this.applyFollowOptions("front", units)
+    );
     contextActionSet.addContextAction(this, "diamond", "Diamond", "Follow unit in diamond formation", olButtonsContextDiamond, null, () =>
       this.applyFollowOptions("diamond", units)
     );
@@ -1443,7 +1438,7 @@ export abstract class Unit extends CustomMarker {
 
   #onLongPress(e: any) {
     console.log(`Long press on ${this.getUnitName()}`);
-    
+
     if (e.originalEvent.button === 2) {
       document.dispatchEvent(new CustomEvent("showUnitContextMenu", { detail: e }));
     }
@@ -1866,7 +1861,7 @@ export abstract class AirUnit extends Unit {
       "Refuel at tanker",
       "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
       olButtonsContextRefuel,
-      null, 
+      null,
       (units: Unit[]) => {
         getApp().getUnitsManager().refuel(units);
       },
@@ -1878,7 +1873,7 @@ export abstract class AirUnit extends Unit {
       "Center map",
       "Center the map on the unit and follow it",
       faMapLocation,
-      null, 
+      null,
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
@@ -2158,6 +2153,8 @@ export class GroundUnit extends Unit {
 }
 
 export class NavyUnit extends Unit {
+  #carrier: Carrier;
+
   constructor(ID: number) {
     super(ID);
   }
@@ -2250,5 +2247,32 @@ export class NavyUnit extends Unit {
 
   getDefaultMarker() {
     return "navyunit";
+  }
+
+  setData(dataExtractor: DataExtractor) {
+    super.setData(dataExtractor);
+
+    if (this.#carrier) {
+      this.#carrier.setLatLng(this.getPosition());
+      this.#carrier.setHeading(this.getHeading());
+      this.#carrier.updateSize();
+    } 
+  }
+
+  onAdd(map: Map): this {
+    super.onAdd(map);
+    if (this.getBlueprint()?.type === "Aircraft Carrier")
+      this.#carrier = new Carrier({
+        position: this.getPosition(),
+        name: this.getUnitName(),
+      }).addTo(getApp().getMap());
+    return this;
+  }
+
+  onRemove(map: Map): this {
+    super.onRemove(map);
+    if (this.#carrier)
+      this.#carrier.removeFrom(getApp().getMap())
+    return this;
   }
 }

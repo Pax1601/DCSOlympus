@@ -18,8 +18,7 @@ export function UnitMouseControlBar(props: {}) {
   /* Initialize the "scroll" position of the element */
   var scrollRef = useRef(null);
   useEffect(() => {
-    if (scrollRef.current) 
-      onScroll(scrollRef.current);
+    if (scrollRef.current) onScroll(scrollRef.current);
   });
 
   useEffect(() => {
@@ -94,9 +93,10 @@ export function UnitMouseControlBar(props: {}) {
               />
             )}
             <div className="flex gap-2 overflow-x-auto no-scrollbar p-2" onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
-              {Object.values(contextActionsSet.getContextActions()).map((contextAction) => {
+              {Object.values(contextActionsSet.getContextActions()).map((contextAction: ContextAction) => {
                 return (
                   <OlStateButton
+                    key={contextAction.getId()}
                     checked={contextAction === activeContextAction}
                     icon={contextAction.getIcon()}
                     tooltip={contextAction.getLabel()}
@@ -109,13 +109,13 @@ export function UnitMouseControlBar(props: {}) {
                           setActiveContextAction(contextAction);
                           getApp().getMap().setState(CONTEXT_ACTION, {
                             contextAction: contextAction,
-                            defaultContextAction: contextActionsSet.getDefaultContextAction()
+                            defaultContextAction: contextActionsSet.getDefaultContextAction(),
                           });
                         } else {
                           setActiveContextAction(null);
                           getApp().getMap().setState(CONTEXT_ACTION, {
                             contextAction: null,
-                            defaultContextAction: contextActionsSet.getDefaultContextAction()
+                            defaultContextAction: contextActionsSet.getDefaultContextAction(),
                           });
                         }
                       }

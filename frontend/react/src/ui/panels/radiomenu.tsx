@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
-import { OlToggle } from "../components/oltoggle";
 import { RadioPanel } from "./components/radiopanel";
 import { FaQuestionCircle } from "react-icons/fa";
 import { RadioSink } from "../../audio/radiosink";
+import { FaVolumeHigh } from "react-icons/fa6";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+
+let shortcutKeys = ["Z", "X", "C", "V", "B", "N", "M", "K", "L"];
 
 export function RadioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [radios, setRadios] = useState([] as RadioSink[]);
+  const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
+  const [showTip, setShowTip] = useState(true);
 
   useEffect(() => {
     /* Force a rerender */
@@ -20,30 +26,76 @@ export function RadioMenu(props: { open: boolean; onClose: () => void; children?
           .map((radio) => radio)
       );
     });
+
+    document.addEventListener("audioManagerStateChanged", () => {
+      setAudioManagerEnabled(getApp().getAudioManager().isRunning());
+    });
   }, []);
 
   return (
     <Menu title="Radio" open={props.open} showBackButton={false} onClose={props.onClose}>
       <div className="p-4 text-sm text-gray-400">The radio menu allows you to talk on radio to the players online using SRS.</div>
-      <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
-        <div>
-          <FaQuestionCircle className="my-4 ml-2 mr-6 text-gray-400" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <div className="text-gray-100">Use the radio controls to tune to a frequency, then click on the PTT button to talk. </div>
-          <div className="text-gray-400">You can add up to 10 radios. Use the audio effects menu to play audio tracks or to add background noises.</div>
-        </div>
-      </div>
+      <>
+        {showTip && (
+          <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
+            {audioManagerEnabled ? (
+              <>
+                <div className="my-auto">
+                  <FaQuestionCircle className="my-auto ml-2 mr-6 text-gray-400" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-gray-100">Use the radio controls to tune to a frequency, then click on the PTT button to talk. </div>
+                  <div className="text-gray-400">You can add up to 10 radios. Use the audio effects menu to play audio tracks or to add background noises.</div>
+                </div>
+                <div>
+                  <FontAwesomeIcon
+                    onClick={() => setShowTip(false)}
+                    icon={faClose}
+                    className={`
+                      ml-2 flex cursor-pointer items-center justify-center
+                      rounded-md p-2 text-lg
+                      dark:text-gray-500 dark:hover:bg-gray-700
+                      dark:hover:text-white
+                      hover:bg-gray-200
+                    `}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <FaQuestionCircle className="my-4 ml-2 mr-6 text-gray-400" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-gray-100">
+                    To enable the radio menu, first start the audio backend with the{" "}
+                    <span
+                      className={`
+                        mx-1 mt-[-7px] inline-block translate-y-2 rounded-full
+                        border-[1px] border-white p-1
+                      `}
+                    >
+                      <FaVolumeHigh />
+                    </span>{" "}
+                    button on the navigation header.
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </>
+
       <div
         className={`
           flex flex-col gap-2 p-5 font-normal text-gray-800
           dark:text-white
         `}
       >
-        {radios.map((radio) => {
-          return <RadioPanel radio={radio}></RadioPanel>;
+        {radios.map((radio, idx) => {
+          return <RadioPanel shortcutKey={shortcutKeys[idx]} key={radio.getName()} radio={radio}></RadioPanel>;
         })}
-        {radios.length < 10 && (
+        {audioManagerEnabled && radios.length < 10 && (
           <button
             type="button"
             className={`

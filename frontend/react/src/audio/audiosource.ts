@@ -2,6 +2,7 @@ import { getApp } from "../olympusapp";
 import { AudioSink } from "./audiosink";
 import { WebAudioPeakMeter } from "web-audio-peak-meter";
 
+/* Base abstract audio source class */
 export abstract class AudioSource {
   #connectedTo: AudioSink[] = [];
   #name = "";
@@ -11,7 +12,9 @@ export abstract class AudioSource {
 
   constructor() {
     this.#gainNode = getApp().getAudioManager().getAudioContext().createGain();
-    this.#meter = new WebAudioPeakMeter(this.#gainNode, document.createElement('div'));
+
+    /* This library requires a div element to initialize the object. Create a fake element, we will read the data and render it ourselves. */
+    this.#meter = new WebAudioPeakMeter(this.#gainNode, document.createElement("div"));
   }
 
   connect(sink: AudioSink) {
@@ -61,5 +64,6 @@ export abstract class AudioSource {
     return this.#gainNode;
   }
 
+  /* Play method must be implemented by child classes */
   abstract play(): void;
 }

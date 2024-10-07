@@ -15,7 +15,9 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"carrierFilename": "nimitz.svg",
+		"length": 300
 	},
 	"CVN_72": {
 		"name": "CVN_72",
@@ -33,7 +35,9 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"carrierFilename": "nimitz.svg",
+		"length": 300
 	},
 	"CVN_73": {
 		"name": "CVN_73",
@@ -51,7 +55,9 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"carrierFilename": "nimitz.svg",
+		"length": 300
 	},
 	"CVN_75": {
 		"name": "CVN_75",
@@ -91,7 +97,9 @@
 		"description": "",
 		"abilities": "",
 		"canTargetPoint": false,
-		"canRearm": false
+		"canRearm": false,
+		"carrierFilename": "nimitz.svg",
+		"length": 300
 	},
 	"CV_1143_5": {
 		"name": "CV_1143_5",

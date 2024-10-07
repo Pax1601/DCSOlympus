@@ -2,7 +2,7 @@ import { getApp } from "../olympusapp";
 import { AudioSource } from "./audiosource";
 
 export class MicrophoneSource extends AudioSource {
-  #node: MediaStreamAudioSourceNode;
+  #sourceNode: MediaStreamAudioSourceNode;
 
   constructor() {
     super();
@@ -10,12 +10,12 @@ export class MicrophoneSource extends AudioSource {
     this.setName("Microphone");
   }
 
+  /* Asynchronously initialize the microphone and connect it to the output node */
   async initialize() {
     const microphone = await navigator.mediaDevices.getUserMedia({ audio: true });
     if (getApp().getAudioManager().getAudioContext()) {
-      this.#node = getApp().getAudioManager().getAudioContext().createMediaStreamSource(microphone);
-
-      this.#node.connect(this.getOutputNode());
+      this.#sourceNode = getApp().getAudioManager().getAudioContext().createMediaStreamSource(microphone);
+      this.#sourceNode.connect(this.getOutputNode());
     }
   }
 

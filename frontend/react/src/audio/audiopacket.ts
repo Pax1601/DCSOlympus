@@ -1,3 +1,4 @@
+// TODO This code is in common with the backend, would be nice to share it */
 import { byteArrayToDouble, byteArrayToInteger, doubleToByteArray, integerToByteArray } from "../other/utils";
 import { Buffer } from "buffer";
 
@@ -19,11 +20,6 @@ export class AudioPacket {
   /* Default data */
   #unitID: number = 0;
   #hops: number = 0;
-
-  /* Out of standard data (this is not compliant with SRS standard, used for external audio effects) */
-  #latitude: number | null = null;
-  #longitude: number | null = null;
-  #altitude: number | null = null;
 
   /* Usually internally set only */
   #packetID: number | null = null;
@@ -138,18 +134,6 @@ export class AudioPacket {
       [...Buffer.from(this.#clientGUID, "utf-8")]
     );
 
-    if (
-      this.#latitude !== undefined &&
-      this.#longitude !== undefined &&
-      this.#altitude !== undefined
-    ) {
-      encodedData.concat(
-        [...doubleToByteArray(this.#latitude)],
-        [...doubleToByteArray(this.#longitude)],
-        [...doubleToByteArray(this.#altitude)]
-      );
-    }
-
     // Set the lengths of the parts
     let encPacketLen = integerToByteArray(encodedData.length, 2);
     encodedData[0] = encPacketLen[0];
@@ -222,29 +206,5 @@ export class AudioPacket {
 
   getHops() {
     return this.#hops;
-  }
-
-  setLatitude(latitude: number) {
-    this.#latitude = latitude;
-  }
-
-  getLatitude() {
-    return this.#latitude;
-  }
-
-  setLongitude(longitude: number) {
-    this.#longitude = longitude;
-  }
-
-  getLongitude() {
-    return this.#longitude;
-  }
-
-  setAltitude(altitude: number) {
-    this.#altitude = altitude;
-  }
-
-  getAltitude() {
-    return this.#altitude;
   }
 }

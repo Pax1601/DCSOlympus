@@ -33,6 +33,7 @@ export function ControlsPanel(props: {}) {
       {controls.map((control) => {
         return (
           <div
+            key={control.text}
             className={`
               flex w-full justify-between gap-2 rounded-full py-1 pl-4 pr-1
               backdrop-blur-lg
@@ -48,15 +49,15 @@ export function ControlsPanel(props: {}) {
             >
               {control.actions.map((action, idx) => {
                 return (
-                  <>
-                    <div className={``}>
+                  <div key={idx} className="flex gap-1">
+                    <div>
                       {typeof action === "string" || typeof action === "number" ? action : <FontAwesomeIcon icon={action} className={`
                         my-auto ml-auto
                       `} />}
                     </div>
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "string" && <div>+</div>}
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "number" && <div>x</div>}
-                  </>
+                  </div>
                 );
               })}
             </div>

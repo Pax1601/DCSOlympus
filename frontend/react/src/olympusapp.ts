@@ -81,7 +81,7 @@ export class OlympusApp {
   getMissionManager() {
     return this.#missionManager as MissionManager;
   }
-  
+
   getAudioManager() {
     return this.#audioManager as AudioManager;
   }
