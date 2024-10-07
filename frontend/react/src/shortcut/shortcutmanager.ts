@@ -1,3 +1,4 @@
+import { RadioSink } from "../audio/radiosink";
 import { DEFAULT_CONTEXT } from "../constants/constants";
 import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
@@ -119,7 +120,45 @@ export class ShortcutManager {
         shiftKey: false,
       });
 
-    ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].forEach((code) => {
+    let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyK", "KeyL"];
+    PTTKeys.forEach((key, idx) => {
+      this.addKeyboardShortcut(`PTT${idx}Active`, {
+        altKey: false,
+        callback: () => {
+          getApp()
+            .getAudioManager()
+            .getSinks()
+            .filter((sink) => {
+              return sink instanceof RadioSink;
+            })
+            [idx]?.setPtt(true);
+        },
+        code: key,
+        context: DEFAULT_CONTEXT,
+        ctrlKey: false,
+        shiftKey: false,
+        event: "keydown",
+      }).addKeyboardShortcut(`PTT${idx}Active`, {
+        altKey: false,
+        callback: () => {
+          getApp()
+            .getAudioManager()
+            .getSinks()
+            .filter((sink) => {
+              return sink instanceof RadioSink;
+            })
+            [idx]?.setPtt(false);
+        },
+        code: key,
+        context: DEFAULT_CONTEXT,
+        ctrlKey: false,
+        shiftKey: false,
+        event: "keyup",
+      });
+    });
+
+    let panKeys = ["KeyW", "KeyA", "KeyS", "KeyD", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+    panKeys.forEach((code) => {
       this.addKeyboardShortcut(`pan${code}keydown`, {
         altKey: false,
         callback: (ev: KeyboardEvent) => {

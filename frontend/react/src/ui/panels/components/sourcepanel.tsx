@@ -54,7 +54,7 @@ export function AudioSourcePanel(props: { source: AudioSource }) {
               checked={false}
               icon={props.source.getPlaying() ? faPause : faPlay}
               onClick={() => {
-                if (props.source instanceof FileSource) props.source.getPlaying() ? props.source.stop() : props.source.play();
+                if (props.source instanceof FileSource) props.source.getPlaying() ? props.source.pause() : props.source.play();
               }}
               tooltip="Play file"
             ></OlStateButton>
@@ -106,9 +106,10 @@ export function AudioSourcePanel(props: { source: AudioSource }) {
 
       <span className="text-sm">Connected to:</span>
       <div className="flex flex-col gap-1">
-        {props.source.getConnectedTo().map((sink) => {
+        {props.source.getConnectedTo().map((sink, idx) => {
           return (
             <div
+              key={idx}
               className={`
                 flex justify-start gap-2 rounded-full bg-olympus-400 px-4 py-1
                 text-sm
@@ -123,9 +124,10 @@ export function AudioSourcePanel(props: { source: AudioSource }) {
       </div>
       {availabileSinks.length > 0 && (
         <OlDropdown label="Connect to:">
-          {availabileSinks.map((sink) => {
+          {availabileSinks.map((sink, idx) => {
             return (
               <OlDropdownItem
+                key={idx}
                 onClick={() => {
                   props.source.connect(sink);
                 }}

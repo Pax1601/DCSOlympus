@@ -27,22 +27,27 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [erasSelection, setErasSelection] = useState({});
   const [rangesSelection, setRangesSelection] = useState({});
 
+  const [showPolygonTip, setShowPolygonTip] = useState(true);
+  const [showCircleTip, setShowCircleTip] = useState(true);
+
   useEffect(() => {
-    /* If we are not in polygon drawing mode, force the draw polygon button off */
-    if (drawingPolygon && getApp().getMap().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
+    if (getApp()) {
+      /* If we are not in polygon drawing mode, force the draw polygon button off */
+      if (drawingPolygon && getApp().getMap().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
 
-    /* If we are not in circle drawing mode, force the draw circle button off */
-    if (drawingCircle && getApp().getMap().getState() !== COALITIONAREA_DRAW_CIRCLE) setDrawingCircle(false);
+      /* If we are not in circle drawing mode, force the draw circle button off */
+      if (drawingCircle && getApp().getMap().getState() !== COALITIONAREA_DRAW_CIRCLE) setDrawingCircle(false);
 
-    /* If we are not in any drawing mode, force the map in edit mode */
-    if (props.open && !drawingPolygon && !drawingCircle) getApp().getMap().setState(COALITIONAREA_EDIT);
+      /* If we are not in any drawing mode, force the map in edit mode */
+      if (props.open && !drawingPolygon && !drawingCircle) getApp().getMap().setState(COALITIONAREA_EDIT);
 
-    /* Align the state of the coalition toggle to the coalition of the area */
-    if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
+      /* Align the state of the coalition toggle to the coalition of the area */
+      if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
 
-    if (!props.open) {
-      if ([COALITIONAREA_EDIT, COALITIONAREA_DRAW_CIRCLE, COALITIONAREA_DRAW_POLYGON].includes(getApp()?.getMap()?.getState()))
-        getApp().getMap().setState(IDLE);
+      if (!props.open) {
+        if ([COALITIONAREA_EDIT, COALITIONAREA_DRAW_CIRCLE, COALITIONAREA_DRAW_POLYGON].includes(getApp().getMap().getState()))
+          getApp().getMap().setState(IDLE);
+      }
     }
   });
 
@@ -79,8 +84,8 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               The draw tool allows you to quickly draw areas on the map and use these areas to spawn units and activate triggers.
             </div>
             <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
-              <div>
-                <FaQuestionCircle className="my-4 ml-2 mr-6 text-gray-400" />
+              <div className="my-auto">
+                <FaQuestionCircle className="my-auto ml-2 mr-6 text-gray-400" />
               </div>
               <div className="flex flex-col gap-1">
                 <div className="text-gray-100">Use the polygon or circle tool to draw areas on the map.</div>
@@ -217,14 +222,14 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 {getApp()
                   .getGroundUnitDatabase()
                   .getTypes()
-                  .map((type) => {
+                  .map((type, idx) => {
                     if (!(type in typesSelection)) {
                       typesSelection[type] = true;
                       setTypesSelection(JSON.parse(JSON.stringify(typesSelection)));
                     }
 
                     return (
-                      <OlDropdownItem className={`flex gap-4`}>
+                      <OlDropdownItem key={idx} className={`flex gap-4`}>
                         <OlCheckbox
                           checked={typesSelection[type]}
                           onChange={(ev) => {

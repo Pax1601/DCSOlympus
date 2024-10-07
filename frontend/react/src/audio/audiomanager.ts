@@ -86,6 +86,7 @@ export class AudioManager {
             });
           } else {
             this.#SRSClientUnitIDs = JSON.parse(new TextDecoder().decode(packetUint8Array.slice(1))).unitIDs;
+            document.dispatchEvent(new CustomEvent("SRSClientsUpdated"));
           }
         }
       });

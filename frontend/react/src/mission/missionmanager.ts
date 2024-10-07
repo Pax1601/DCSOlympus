@@ -12,11 +12,13 @@ import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 //import { Popup } from "../popups/popup";
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 import { Coalition } from "../types/types";
+import { Carrier } from "./carrier";
+import { NavyUnit } from "../unit/unit";
 
 /** The MissionManager  */
 export class MissionManager {
   #bullseyes: { [name: string]: Bullseye } = {};
-  #airbases: { [name: string]: Airbase } = {};
+  #airbases: { [name: string]: Airbase | Carrier } = {};
   #theatre: string = "";
   #dateAndTime: DateAndTime = {
     date: { Year: 0, Month: 0, Day: 0 },
@@ -82,18 +84,21 @@ export class MissionManager {
   updateAirbases(data: AirbasesData) {
     for (let idx in data.airbases) {
       var airbase = data.airbases[idx];
-      if (this.#airbases[airbase.callsign] === undefined && airbase.callsign != "") {
-        this.#airbases[airbase.callsign] = new Airbase({
-          position: new LatLng(airbase.latitude, airbase.longitude),
-          name: airbase.callsign,
-        }).addTo(getApp().getMap());
-        this.#airbases[airbase.callsign].on("click", (e) => this.#onAirbaseClick(e));
-        this.#loadAirbaseChartData(airbase.callsign);
+      var airbaseCallsign = airbase.callsign !== ""? airbase.callsign: `carrier-${airbase.unitId}`
+      if (this.#airbases[airbaseCallsign] === undefined) {
+        if (airbase.callsign != "") {
+          this.#airbases[airbaseCallsign] = new Airbase({
+            position: new LatLng(airbase.latitude, airbase.longitude),
+            name: airbaseCallsign,
+          }).addTo(getApp().getMap());
+          this.#airbases[airbaseCallsign].on("click", (e) => this.#onAirbaseClick(e));
+          this.#loadAirbaseChartData(airbaseCallsign);
+        }
       }
 
-      if (this.#airbases[airbase.callsign] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
-        this.#airbases[airbase.callsign].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
-        this.#airbases[airbase.callsign].setCoalition(airbase.coalition);
+      if (this.#airbases[airbaseCallsign] != undefined && airbase.latitude && airbase.longitude && airbase.coalition) {
+        this.#airbases[airbaseCallsign].setLatLng(new LatLng(airbase.latitude, airbase.longitude));
+        this.#airbases[airbaseCallsign].setCoalition(airbase.coalition);
       }
     }
   }

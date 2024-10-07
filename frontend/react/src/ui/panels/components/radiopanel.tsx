@@ -7,7 +7,7 @@ import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icon
 import { RadioSink } from "../../../audio/radiosink";
 import { getApp } from "../../../olympusapp";
 
-export function RadioPanel(props: { radio: RadioSink }) {
+export function RadioPanel(props: { radio: RadioSink; shortcutKey: string }) {
   return (
     <div
       className={`
@@ -17,14 +17,19 @@ export function RadioPanel(props: { radio: RadioSink }) {
     >
       <div className="flex content-center justify-between">
         <span className="my-auto">{props.radio.getName()}</span>
-        <div className="cursor-pointer rounded-md bg-red-800 p-2" onClick={() => {getApp().getAudioManager().removeSink(props.radio);}}>
+        <div
+          className="cursor-pointer rounded-md bg-red-800 p-2"
+          onClick={() => {
+            getApp().getAudioManager().removeSink(props.radio);
+          }}
+        >
           <FaTrash className={`text-gray-50`}></FaTrash>
         </div>
       </div>
       <OlFrequencyInput
         value={props.radio.getFrequency()}
         onChange={(value) => {
-          props.radio.setFrequency(value)
+          props.radio.setFrequency(value);
         }}
       />
       <div className="flex flex-row gap-2">
@@ -37,8 +42,17 @@ export function RadioPanel(props: { radio: RadioSink }) {
           }}
         ></OlLabelToggle>
 
+        <kbd
+          className={`
+            my-auto ml-auto rounded-lg border border-gray-200 bg-gray-100 px-2
+            py-1.5 text-xs font-semibold text-gray-800
+            dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+          `}
+        >
+          {props.shortcutKey}
+        </kbd>
+
         <OlStateButton
-          className="ml-auto"
           checked={props.radio.getPtt()}
           icon={faMicrophoneLines}
           onClick={() => {

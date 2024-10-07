@@ -237,6 +237,7 @@ export const defaultMapMirrors = {};
 export const defaultMapLayers = {};
 
 /* Map constants */
+export const NOT_INITIALIZED = "Not initialized";
 export const IDLE = "Idle";
 export const SPAWN_UNIT = "Spawn unit";
 export const CONTEXT_ACTION = "Context action";

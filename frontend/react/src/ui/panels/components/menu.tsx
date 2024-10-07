@@ -30,9 +30,10 @@ export function Menu(props: {
       <div
         data-hide={hide}
         className={`
-          pointer-events-auto h-[calc(100vh-58px-2rem)] overflow-y-auto
-          overflow-x-hidden no-scrollbar backdrop-blur-lg backdrop-grayscale
-          transition-transform
+          pointer-events-auto
+          h-[calc(100vh-58px${props.canBeHidden ? "-2rem" : ""})]
+          overflow-y-auto overflow-x-hidden no-scrollbar backdrop-blur-lg
+          backdrop-grayscale transition-transform
           dark:bg-olympus-800/90
           data-[hide='true']:translate-y-[calc(100vh-58px)]
         `}
@@ -81,9 +82,7 @@ export function Menu(props: {
             <FaChevronUp className="mx-auto my-auto text-gray-400" />
           ) : (
             <FaChevronDown
-              className={`
-            mx-auto my-auto text-gray-400
-          `}
+              className={`mx-auto my-auto text-gray-400`}
             />
           )}
         </div>

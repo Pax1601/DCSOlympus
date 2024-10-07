@@ -19,6 +19,7 @@ import {
   MAP_HIDDEN_TYPES_DEFAULTS,
   COALITIONAREA_EDIT,
   COALITIONAREA_DRAW_CIRCLE,
+  NOT_INITIALIZED,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -46,7 +47,7 @@ export class Map extends L.Map {
   #hiddenTypes: MapHiddenTypes = MAP_HIDDEN_TYPES_DEFAULTS;
 
   /* State machine */
-  #state: string;
+  #state: string = NOT_INITIALIZED;
 
   /* Map layers */
   #theatre: string = "";
@@ -140,7 +141,7 @@ export class Map extends L.Map {
     this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
 
     /* Init the state machine */
-    this.setState(IDLE);
+    setTimeout(() => this.setState(IDLE), 100);
 
     /* Register event handles */
     this.on("zoomstart", (e: any) => this.#onZoomStart(e));

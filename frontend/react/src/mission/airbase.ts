@@ -14,11 +14,13 @@ export class Airbase extends CustomMarker {
   #coalition: string = "";
   #properties: string[] = [];
   #parkings: string[] = [];
+  #img: HTMLImageElement;
 
   constructor(options: AirbaseOptions) {
     super(options.position, { riseOnHover: true });
 
     this.#name = options.name;
+    this.#img = document.createElement("img");
   }
 
   createIcon() {
@@ -32,10 +34,10 @@ export class Airbase extends CustomMarker {
     var el = document.createElement("div");
     el.classList.add("airbase-icon");
     el.setAttribute("data-object", "airbase");
-    var img = document.createElement("img");
-    img.src = "/vite/images/markers/airbase.svg";
-    img.onload = () => SVGInjector(img);
-    el.appendChild(img);
+    
+    this.#img.src = "/vite/images/markers/airbase.svg";
+    this.#img.onload = () => SVGInjector(this.#img);
+    el.appendChild(this.#img);
     this.getElement()?.appendChild(el);
     el.addEventListener("mouseover", (ev) => {
       document.dispatchEvent(new CustomEvent("airbasemouseover", { detail: this }));
@@ -85,5 +87,9 @@ export class Airbase extends CustomMarker {
 
   getParkings() {
     return this.#parkings;
+  }
+
+  getImg() {
+    return this.#img;
   }
 }

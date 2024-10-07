@@ -38,7 +38,7 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
-import { ftToM, getUnitDatabaseByCategory, getUnitsByLabel, knotsToMs, mToFt, msToKnots } from "../../other/utils";
+import { ftToM, getUnitsByLabel, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -272,9 +272,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   human: ["Human", olButtonsVisibilityHuman],
                   olympus: ["Olympus controlled", olButtonsVisibilityOlympus],
                   dcs: ["From DCS mission", olButtonsVisibilityDcs],
-                }).map((entry) => {
+                }).map((entry, idx) => {
                   return (
-                    <div className="flex justify-between">
+                    <div className="flex justify-between" key={idx}>
                       <span className="font-light text-white">{entry[1][0] as string}</span>
                       <OlToggle
                         key={entry[0]}
@@ -297,81 +297,83 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                 Types and coalitions
               </div>
               <table>
-                <tr>
-                  <td></td>
-                  <td className="pb-4 text-center font-bold text-blue-500">BLUE</td>
-                  <td className="pb-4 text-center font-bold text-gray-500">NEUTRAL</td>
-                  <td className="pb-4 text-center font-bold text-red-500">RED</td>
-                </tr>
-                {selectionBlueprint === null &&
-                  Object.entries({
-                    aircraft: olButtonsVisibilityAircraft,
-                    helicopter: olButtonsVisibilityHelicopter,
-                    "groundunit-sam": olButtonsVisibilityGroundunitSam,
-                    groundunit: olButtonsVisibilityGroundunit,
-                    navyunit: olButtonsVisibilityNavyunit,
-                  }).map((entry) => {
-                    return (
-                      <tr>
-                        <td className="text-lg text-gray-200">
-                          <FontAwesomeIcon icon={entry[1]} />
-                        </td>
-                        {["blue", "neutral", "red"].map((coalition) => {
-                          return (
-                            <td className="text-center">
-                              <OlCheckbox
-                                checked={selectionFilter[coalition][entry[0]]}
-                                disabled={selectionBlueprint !== null}
-                                onChange={() => {
-                                  selectionFilter[coalition][entry[0]] = !selectionFilter[coalition][entry[0]];
-                                  setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                                }}
-                              />
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                <tr>
-                  <td className="text-gray-200"></td>
-                  <td className="text-center">
-                    <OlCheckbox
-                      checked={Object.values(selectionFilter["blue"]).some((value) => value)}
-                      onChange={() => {
-                        const newValue = !Object.values(selectionFilter["blue"]).some((value) => value);
-                        Object.keys(selectionFilter["blue"]).forEach((key) => {
-                          selectionFilter["blue"][key] = newValue;
-                        });
-                        setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                      }}
-                    />
-                  </td>
-                  <td className="text-center">
-                    <OlCheckbox
-                      checked={Object.values(selectionFilter["neutral"]).some((value) => value)}
-                      onChange={() => {
-                        const newValue = !Object.values(selectionFilter["neutral"]).some((value) => value);
-                        Object.keys(selectionFilter["neutral"]).forEach((key) => {
-                          selectionFilter["neutral"][key] = newValue;
-                        });
-                        setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                      }}
-                    />
-                  </td>
-                  <td className="text-center">
-                    <OlCheckbox
-                      checked={Object.values(selectionFilter["red"]).some((value) => value)}
-                      onChange={() => {
-                        const newValue = !Object.values(selectionFilter["red"]).some((value) => value);
-                        Object.keys(selectionFilter["red"]).forEach((key) => {
-                          selectionFilter["red"][key] = newValue;
-                        });
-                        setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                      }}
-                    />
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td className="pb-4 text-center font-bold text-blue-500">BLUE</td>
+                    <td className="pb-4 text-center font-bold text-gray-500">NEUTRAL</td>
+                    <td className="pb-4 text-center font-bold text-red-500">RED</td>
+                  </tr>
+                  {selectionBlueprint === null &&
+                    Object.entries({
+                      aircraft: olButtonsVisibilityAircraft,
+                      helicopter: olButtonsVisibilityHelicopter,
+                      "groundunit-sam": olButtonsVisibilityGroundunitSam,
+                      groundunit: olButtonsVisibilityGroundunit,
+                      navyunit: olButtonsVisibilityNavyunit,
+                    }).map((entry, idx) => {
+                      return (
+                        <tr key={idx}>
+                          <td className="text-lg text-gray-200">
+                            <FontAwesomeIcon icon={entry[1]} />
+                          </td>
+                          {["blue", "neutral", "red"].map((coalition) => {
+                            return (
+                              <td className="text-center" key={coalition}>
+                                <OlCheckbox
+                                  checked={selectionFilter[coalition][entry[0]]}
+                                  disabled={selectionBlueprint !== null}
+                                  onChange={() => {
+                                    selectionFilter[coalition][entry[0]] = !selectionFilter[coalition][entry[0]];
+                                    setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                                  }}
+                                />
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  <tr>
+                    <td className="text-gray-200"></td>
+                    <td className="text-center">
+                      <OlCheckbox
+                        checked={Object.values(selectionFilter["blue"]).some((value) => value)}
+                        onChange={() => {
+                          const newValue = !Object.values(selectionFilter["blue"]).some((value) => value);
+                          Object.keys(selectionFilter["blue"]).forEach((key) => {
+                            selectionFilter["blue"][key] = newValue;
+                          });
+                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                        }}
+                      />
+                    </td>
+                    <td className="text-center">
+                      <OlCheckbox
+                        checked={Object.values(selectionFilter["neutral"]).some((value) => value)}
+                        onChange={() => {
+                          const newValue = !Object.values(selectionFilter["neutral"]).some((value) => value);
+                          Object.keys(selectionFilter["neutral"]).forEach((key) => {
+                            selectionFilter["neutral"][key] = newValue;
+                          });
+                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                        }}
+                      />
+                    </td>
+                    <td className="text-center">
+                      <OlCheckbox
+                        checked={Object.values(selectionFilter["red"]).some((value) => value)}
+                        onChange={() => {
+                          const newValue = !Object.values(selectionFilter["red"]).some((value) => value);
+                          Object.keys(selectionFilter["red"]).forEach((key) => {
+                            selectionFilter["red"][key] = newValue;
+                          });
+                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                        }}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
               </table>
               <div>
                 <div ref={searchBarRef}>
@@ -466,9 +468,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                 {
                   <>
                     {["blue", "red", "neutral"].map((coalition) => {
-                      return Object.keys(unitOccurences[coalition]).map((name) => {
+                      return Object.keys(unitOccurences[coalition]).map((name, idx) => {
                         return (
                           <div
+                            key={idx}
                             data-coalition={coalition}
                             className={`
                               flex content-center justify-between border-l-4
@@ -648,6 +651,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated, olButtonsRoeFree].map((icon, idx) => {
                           return (
                             <OlButtonGroupItem
+                              key={idx}
                               onClick={() => {
                                 selectedUnits.forEach((unit) => {
                                   unit.setROE(ROEs[idx]);
@@ -685,6 +689,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {[olButtonsThreatNone, olButtonsThreatPassive, olButtonsThreatManoeuvre, olButtonsThreatEvade].map((icon, idx) => {
                             return (
                               <OlButtonGroupItem
+                                key={idx}
                                 onClick={() => {
                                   selectedUnits.forEach((unit) => {
                                     unit.setReactionToThreat(reactionsToThreat[idx]);
@@ -716,6 +721,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {[olButtonsEmissionsSilent, olButtonsEmissionsDefend, olButtonsEmissionsAttack, olButtonsEmissionsFree].map((icon, idx) => {
                             return (
                               <OlButtonGroupItem
+                                key={idx}
                                 onClick={() => {
                                   selectedUnits.forEach((unit) => {
                                     unit.setEmissionsCountermeasures(emissionsCountermeasures[idx]);
@@ -847,6 +853,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {[olButtonsScatter1, olButtonsScatter2, olButtonsScatter3].map((icon, idx) => {
                             return (
                               <OlButtonGroupItem
+                                key={idx}
                                 onClick={() => {
                                   selectedUnits.forEach((unit) => {
                                     unit.setShotsScatter(idx + 1);
@@ -878,6 +885,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
                             return (
                               <OlButtonGroupItem
+                                key={idx}
                                 onClick={() => {
                                   selectedUnits.forEach((unit) => {
                                     unit.setShotsIntensity(idx + 1);
@@ -992,6 +1000,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             {["Overlord", "Magic", "Wizard", "Focus", "Darkstar"].map((name, idx) => {
                               return (
                                 <OlDropdownItem
+                                  key={idx}
                                   onClick={() => {
                                     if (activeAdvancedSettings) activeAdvancedSettings.radio.callsign = idx + 1;
                                     setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
@@ -1010,6 +1019,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             {["Texaco", "Arco", "Shell"].map((name, idx) => {
                               return (
                                 <OlDropdownItem
+                                  key={idx}
                                   onClick={() => {
                                     if (activeAdvancedSettings) activeAdvancedSettings.radio.callsign = idx + 1;
                                     setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
@@ -1071,6 +1081,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       my-auto w-20
                     `}>
                       <OlDropdownItem
+                        key={"X"}
                         onClick={() => {
                           if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "X";
                           setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
@@ -1079,6 +1090,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         X
                       </OlDropdownItem>
                       <OlDropdownItem
+                        key={"Y"}
                         onClick={() => {
                           if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "Y";
                           setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
@@ -1113,12 +1125,15 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
                   <div className="text-sm text-gray-200">Radio frequency</div>
                   <div className="flex content-center gap-2">
-                    <OlFrequencyInput value={activeAdvancedSettings? activeAdvancedSettings.radio.frequency: 251000000} onChange={(value) => {
-                      if (activeAdvancedSettings) {
-                        activeAdvancedSettings.radio.frequency = value;
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
-                      }
-                    }}/>
+                    <OlFrequencyInput
+                      value={activeAdvancedSettings ? activeAdvancedSettings.radio.frequency : 251000000}
+                      onChange={(value) => {
+                        if (activeAdvancedSettings) {
+                          activeAdvancedSettings.radio.frequency = value;
+                          setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        }
+                      }}
+                    />
                   </div>
 
                   <div className="flex pt-8">
