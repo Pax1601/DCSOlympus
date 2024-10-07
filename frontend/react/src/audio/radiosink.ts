@@ -2,6 +2,8 @@ import { AudioSink } from "./audiosink";
 import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
 
+let packetID = 0;
+
 export class RadioSink extends AudioSink {
   #encoder: AudioEncoder;
   #desinationNode: MediaStreamAudioDestinationNode;
@@ -101,6 +103,7 @@ export class RadioSink extends AudioSink {
     if (this.#ptt) {
       let audioPacket = new AudioPacket();
       audioPacket.setAudioData(new Uint8Array(arrayBuffer));
+      audioPacket.setPacketID(packetID++);
       audioPacket.setFrequencies([{
           frequency: this.#frequency,
           modulation: this.#modulation,

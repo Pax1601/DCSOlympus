@@ -3,6 +3,8 @@ import { Unit } from "../unit/unit";
 import { Filter, Noise } from "./audiolibrary";
 import { AudioPacket } from "./audiopacket";
 
+let packetID = 0;
+
 export class AudioUnitPipeline {
   #inputNode: GainNode;
   #sourceUnit: Unit;
@@ -97,6 +99,7 @@ export class AudioUnitPipeline {
 
     let audioPacket = new AudioPacket();
     audioPacket.setAudioData(new Uint8Array(arrayBuffer));
+    audioPacket.setPacketID(packetID++);
     audioPacket.setFrequencies([
       {
         frequency: 100,
