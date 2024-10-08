@@ -849,20 +849,7 @@ export abstract class Unit extends CustomMarker {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
-
-    contextActionSet.addContextAction(
-      this,
-      "speaker",
-      "Make audio source",
-      "Make this unit an audio source (loudspeakers)",
-      faVolumeHigh,
-      null,
-      (units: Unit[], _1, _2) => {
-        units.forEach((unit) => getApp().getAudioManager().addUnitSink(unit));
-      },
-      { executeImmediately: true }
-    );
-
+    
     contextActionSet.addDefaultContextAction(this, "default", "Set destination", "", faRoute, null, (units: Unit[], targetUnit, targetPosition) => {
       if (targetPosition) {
         getApp().getUnitsManager().clearDestinations(units);

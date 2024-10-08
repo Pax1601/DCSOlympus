@@ -29,12 +29,13 @@ export function Menu(props: {
     >
       <div
         data-hide={hide}
+        data-canBeHidden={props.canBeHidden}
         className={`
-          pointer-events-auto
-          h-[calc(100vh-58px${props.canBeHidden ? "-2rem" : ""})]
-          overflow-y-auto overflow-x-hidden no-scrollbar backdrop-blur-lg
-          backdrop-grayscale transition-transform
+          pointer-events-auto h-[calc(100vh-58px)] overflow-y-auto
+          overflow-x-hidden backdrop-blur-lg backdrop-grayscale
+          transition-transform no-scrollbar
           dark:bg-olympus-800/90
+          data-[canBeHidden='true']:h-[calc(100vh-58px-2rem)]
           data-[hide='true']:translate-y-[calc(100vh-58px)]
         `}
       >
@@ -78,13 +79,9 @@ export function Menu(props: {
           `}
           onClick={() => setHide(!hide)}
         >
-          {hide ? (
-            <FaChevronUp className="mx-auto my-auto text-gray-400" />
-          ) : (
-            <FaChevronDown
-              className={`mx-auto my-auto text-gray-400`}
-            />
-          )}
+          {hide ? <FaChevronUp className="mx-auto my-auto text-gray-400" /> : <FaChevronDown className={`
+            mx-auto my-auto text-gray-400
+          `} />}
         </div>
       )}
     </div>

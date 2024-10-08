@@ -49,6 +49,7 @@ import { OlNumberInput } from "../components/olnumberinput";
 import { Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
+import { UnitSink } from "../../audio/unitsink";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
@@ -62,11 +63,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     emissionsCountermeasures: undefined as undefined | string,
     shotsScatter: undefined as undefined | number,
     shotsIntensity: undefined as undefined | number,
-    operateAs: undefined as undefined | string,
+    operateAs: undefined as undefined | Coalition,
     followRoads: undefined as undefined | boolean,
     isActiveAWACS: undefined as undefined | boolean,
     isActiveTanker: undefined as undefined | boolean,
     onOff: undefined as undefined | boolean,
+    isAudioSink: undefined as undefined | boolean,
   });
   const [selectionFilter, setSelectionFilter] = useState({
     control: {
@@ -208,6 +210,18 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       },
       onOff: (unit: Unit) => {
         return unit.getOnOff();
+      },
+      isAudioSink: (unit: Unit) => {
+        return (
+          getApp()?.getAudioManager().getSinks().filter((sink) => {
+            return sink instanceof UnitSink}).length > 0 &&
+          getApp()
+            ?.getAudioManager()
+            .getSinks()
+            .find((sink) => {
+              return sink instanceof UnitSink && sink.getUnit() === unit;
+            }) !== undefined
+        );
       },
     } as { [key in keyof typeof selectedUnitsData]: (unit: Unit) => void };
 
@@ -974,10 +988,48 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           }}
                         />
                       </div>
-
                       {/* ============== Unit active toggle END ============== */}
                     </>
                   )}
+                  {/* ============== Audio sink toggle START ============== */}
+                  <div className="flex content-center justify-between">
+                    <span
+                      className={`
+                        font-normal
+                        dark:text-white
+                      `}
+                    >
+                      Enable loudspeakers
+                    </span>
+                    <OlToggle
+                      toggled={selectedUnitsData.isAudioSink}
+                      onClick={() => {
+                        selectedUnits.forEach((unit) => {
+                          if (!selectedUnitsData.isAudioSink) {
+                            getApp()?.getAudioManager().addUnitSink(unit);
+                            setSelectedUnitsData({
+                              ...selectedUnitsData,
+                              isAudioSink: true,
+                            });
+                          } else {
+                            let sink = getApp()
+                              ?.getAudioManager()
+                              .getSinks()
+                              .find((sink) => {
+                                return sink instanceof UnitSink && sink.getUnit() === unit;
+                              });
+                            if (sink !== undefined) getApp()?.getAudioManager().removeSink(sink);
+
+                            setSelectedUnitsData({
+                              ...selectedUnitsData,
+                              isAudioSink: false,
+                            });
+                          }
+                        });
+                      }}
+                    />
+                  </div>
+                  {/* ============== Audio sink toggle END ============== */}
                 </div>
               )}
               {/* ============== Advanced settings START ============== */}

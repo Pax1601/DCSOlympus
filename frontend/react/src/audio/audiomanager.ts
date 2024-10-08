@@ -54,7 +54,10 @@ export class AudioManager {
     /* Connect the audio websocket */
     let res = this.#address.match(/(?:http|https):\/\/(.+):/);
     let wsAddress = res ? res[1] : this.#address;
-    this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`);
+    if (this.#address.includes("https"))
+      this.#socket = new WebSocket(`wss://${wsAddress}/${getApp().getConfig()['WSAddress']}`);
+    else
+      this.#socket = new WebSocket(`ws://${wsAddress}:${getApp().getConfig()['WSPort']}`);
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {
@@ -63,7 +66,7 @@ export class AudioManager {
 
     /* Log any websocket errors */
     this.#socket.addEventListener("error", (event) => {
-      console.log(event);
+      console.log("An error occurred while connecting the WebSocket: " + event);
     });
 
     /* Handle the reception of a new message */

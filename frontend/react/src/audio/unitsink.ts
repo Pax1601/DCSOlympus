@@ -37,7 +37,7 @@ export class UnitSink extends AudioSink {
       });
 
     Object.keys(this.#unitPipelines).forEach((unitID) => {
-      if (!(unitID in getApp().getAudioManager().getSRSClientsUnitIDs())) {
+      if (!(getApp().getAudioManager().getSRSClientsUnitIDs().includes(parseInt(unitID)))) {
         delete this.#unitPipelines[unitID];
       }
     });
