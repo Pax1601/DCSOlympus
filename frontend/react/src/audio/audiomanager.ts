@@ -39,7 +39,7 @@ export class AudioManager {
       let config = getApp().getConfig();
       if (config["WSPort"]) {
         this.setPort(config["WSPort"]);
-      } 
+      }
       if (config["WSAddress"]) {
         this.setEndpoint(config["WSEndpoint"]);
       }
@@ -57,11 +57,11 @@ export class AudioManager {
 
     /* Connect the audio websocket */
     let res = this.#address.match(/(?:http|https):\/\/(.+):/);
+    if (res === null) res = this.#address.match(/(?:http|https):\/\/(.+)/);
+
     let wsAddress = res ? res[1] : this.#address;
-    if (this.#address.includes("https"))
-      this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
-    else
-      this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
+    if (this.#address.includes("https")) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
+    else this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {
@@ -111,7 +111,6 @@ export class AudioManager {
       /* Add two default radios */
       this.addRadio();
       this.addRadio();
-      
     });
     document.dispatchEvent(new CustomEvent("audioManagerStateChanged"));
   }
