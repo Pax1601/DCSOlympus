@@ -16,7 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@tanem/svg-injector": "^10.1.68",
     "@turf/turf": "^6.5.0",
-    "@types/dom-webcodecs": "^0.1.11",
+    "@types/dom-webcodecs": "^0.1.12",
     "@types/leaflet": "^1.9.8",
     "@types/react-leaflet": "^3.0.0",
     "@types/turf": "^3.5.32",

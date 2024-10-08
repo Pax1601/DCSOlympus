@@ -3,7 +3,6 @@ import { Unit } from "../unit/unit";
 import { Filter, Noise } from "./audiolibrary";
 import { AudioPacket } from "./audiopacket";
 
-let packetID = 0;
 const MAX_DISTANCE = 1852; // Ignore clients that are further away than 1NM, to save performance.
 
 export class AudioUnitPipeline {
@@ -23,6 +22,7 @@ export class AudioUnitPipeline {
   #tailOsc: Noise;
 
   #distance: number = 0;
+  #packetID = 0;
 
   constructor(sourceUnit: Unit, unitID: number, inputNode: GainNode) {
     this.#sourceUnit = sourceUnit;
@@ -108,7 +108,7 @@ export class AudioUnitPipeline {
 
     let audioPacket = new AudioPacket();
     audioPacket.setAudioData(new Uint8Array(arrayBuffer));
-    audioPacket.setPacketID(packetID++);
+    audioPacket.setPacketID(this.#packetID++);
     audioPacket.setFrequencies([
       {
         frequency: 100,

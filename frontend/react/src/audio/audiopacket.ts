@@ -58,9 +58,6 @@ export class AudioPacket {
       offset += 10;
     }
 
-    /* If necessary increase the packetID */
-    if (this.#packetID === null) this.#packetID = packetID++;
-
     /* Extract the remaining data */
     this.#unitID = byteArrayToInteger(byteArray.slice(offset, offset + 4));
     offset += 4;
@@ -116,6 +113,9 @@ export class AudioPacket {
         [data.encryption]
       );
     });
+
+	/* If necessary increase the packetID */
+    if (this.#packetID === null) this.#packetID = packetID++;
 
     // Encode unitID, packetID, hops
     let encUnitID: number[] = integerToByteArray(this.#unitID, 4);
