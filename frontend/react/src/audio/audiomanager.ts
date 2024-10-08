@@ -29,6 +29,7 @@ export class AudioManager {
   #running: boolean = false;
   #address: string = "localhost";
   #port: number = 4000;
+  #endpoint: string = "audio";
   #socket: WebSocket | null = null;
   #guid: string = makeID(22);
   #SRSClientUnitIDs: number[] = [];
@@ -38,6 +39,9 @@ export class AudioManager {
       let config = getApp().getConfig();
       if (config["WSPort"]) {
         this.setPort(config["WSPort"]);
+      } 
+      if (config["WSAddress"]) {
+        this.setEndpoint(config["WSEndpoint"]);
       }
     });
 
@@ -55,9 +59,9 @@ export class AudioManager {
     let res = this.#address.match(/(?:http|https):\/\/(.+):/);
     let wsAddress = res ? res[1] : this.#address;
     if (this.#address.includes("https"))
-      this.#socket = new WebSocket(`wss://${wsAddress}/${getApp().getConfig()['WSAddress']}`);
+      this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
     else
-      this.#socket = new WebSocket(`ws://${wsAddress}:${getApp().getConfig()['WSPort']}`);
+      this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {
@@ -134,6 +138,10 @@ export class AudioManager {
 
   setPort(port) {
     this.#port = port;
+  }
+
+  setEndpoint(endpoint) {
+    this.#endpoint = endpoint;
   }
 
   addFileSource(file) {

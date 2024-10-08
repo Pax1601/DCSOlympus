@@ -37,6 +37,6 @@
 	"audio": {
 		"SRSPort": 5002,
 		"WSPort": 4000,
-		"WSAddress": "audio"
+		"WSEndpoint": "audio"
 	}
 }
