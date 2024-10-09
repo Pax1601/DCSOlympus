@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { getApp } from "../../olympusapp";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
-    [] as {
+    null as {
       actions: (string | number | IconDefinition)[];
       target: IconDefinition;
       text: string;
-    }[]
+    }[] | null
   );
 
   useEffect(() => {
-    if (getApp() && controls.length === 0) {
+    if (getApp() && controls === null) {
       setControls(getApp().getMap().getCurrentControls());
     }
   });
@@ -30,7 +31,7 @@ export function ControlsPanel(props: {}) {
         justify-between gap-1 p-3 text-sm
       `}
     >
-      {controls.map((control) => {
+      {controls?.map((control) => {
         return (
           <div
             key={control.text}

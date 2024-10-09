@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { Menu } from "./components/menu";
-import { OlCheckbox } from "../components/olcheckbox";
-import { OlRangeSlider } from "../components/olrangeslider";
-import { OlNumberInput } from "../components/olnumberinput";
-import { Coalition, MapOptions } from "../../types/types";
-import { getApp } from "../../olympusapp";
+import { Coalition } from "../../types/types";
 import { Airbase } from "../../mission/airbase";
 import { FaArrowLeft, FaCompass } from "react-icons/fa6";
 import { getUnitsByLabel } from "../../other/utils";
 import { UnitBlueprint } from "../../interfaces";
-import { IDLE } from "../../constants/constants";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
 import { OlUnitEntryList } from "../components/olunitlistentry";
@@ -20,7 +15,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
   const [blueprint, setBlueprint] = useState(null as null | UnitBlueprint);
   const [filterString, setFilterString] = useState("");
 
-  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = getUnitsByLabel(filterString);
+  const [filteredAircraft, filteredHelicopters, _1, _2, _3] = getUnitsByLabel(filterString);
 
   return (
     <Menu title={props.airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>

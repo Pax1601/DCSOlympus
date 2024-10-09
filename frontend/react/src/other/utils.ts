@@ -503,7 +503,7 @@ export function filterBlueprintsByLabel(blueprints: { [key: string]: UnitBluepri
   var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
   if (blueprints) {
     Object.entries(blueprints).forEach(([key, value]) => {
-      if (value.enabled && (filterString === "" || value.label.includes(filterString))) filteredBlueprints[key] = value;
+      if (value.enabled && (filterString === "" || value.label.toLowerCase().includes(filterString.toLowerCase()))) filteredBlueprints[key] = value;
     });
   }
   return filteredBlueprints;

@@ -29,13 +29,13 @@ export function Menu(props: {
     >
       <div
         data-hide={hide}
-        data-canBeHidden={props.canBeHidden}
+        data-canbehidden={props.canBeHidden}
         className={`
           pointer-events-auto h-[calc(100vh-58px)] overflow-y-auto
           overflow-x-hidden backdrop-blur-lg backdrop-grayscale
           transition-transform no-scrollbar
           dark:bg-olympus-800/90
-          data-[canBeHidden='true']:h-[calc(100vh-58px-2rem)]
+          data-[canbehidden='true']:h-[calc(100vh-58px-2rem)]
           data-[hide='true']:translate-y-[calc(100vh-58px)]
         `}
       >

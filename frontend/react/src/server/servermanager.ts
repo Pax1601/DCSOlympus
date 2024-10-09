@@ -59,7 +59,7 @@ export class ServerManager {
     /* If we are forcing the request we don't care if one already exists, just send it. CAREFUL: this makes sense only for low frequency requests, like refreshes, when we
             are reasonably confident any previous request will be done before we make a new one on the same URI. */
     if (uri in this.#requests && this.#requests[uri].readyState !== 4 && !force) {
-      console.warn(`GET request on ${uri} URI still pending, skipping...`);
+      //console.warn(`GET request on ${uri} URI still pending, skipping...`);
       return;
     }
 

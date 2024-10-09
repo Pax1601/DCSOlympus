@@ -1463,9 +1463,9 @@ export class UnitsManager {
         getApp()
           .getServerManager()
           .cloneUnits(units, false, spawnPoints, (res: any) => {
-            if (res.commandHash !== undefined) {
+            if (res !== undefined) {
               markers.forEach((marker: TemporaryUnitMarker) => {
-                marker.setCommandHash(res.commandHash);
+                marker.setCommandHash(res);
               });
             }
           });
