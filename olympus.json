@@ -9,7 +9,7 @@
 		"redCommanderPassword": "302bcbaf2a3fdcf175b689bf102d6cdf9328f68a13d4096101bba806482bfed9"
 	},
 	"frontend": {
-		"port": 3001,
+		"port": 3000,
 		"elevationProvider": {
 			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
 			"username": null,

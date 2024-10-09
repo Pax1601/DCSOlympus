@@ -15,7 +15,7 @@ export function AudioSourcePanel(props: { source: AudioSource }) {
 
   useEffect(() => {
     setInterval(() => {
-      setMeterLevel(props.source.getMeter().getPeaks().current[0]);
+      setMeterLevel(Math.min(100, props.source.getMeter().getPeaks().current[0]));
     }, 50);
   }, []);
 
@@ -92,14 +92,16 @@ export function AudioSourcePanel(props: { source: AudioSource }) {
             </div>
             <OlRangeSlider
               value={props.source.getVolume() * 100}
+              min={0}
+              max={200}
               onChange={(ev) => {
                 props.source.setVolume(parseFloat(ev.currentTarget.value) / 100);
               }}
               className="absolute top-[18px]"
             />
           </div>
-          <div className="h-[40px] min-w-[40px] p-2">
-            <span>{Math.round(props.source.getVolume() * 100)}</span>
+          <div className="h-[40px] min-w-[60px] p-2 text-md">
+            <span>{Math.round(props.source.getVolume() * 100)}%</span>
           </div>
         </div>
       </div>
