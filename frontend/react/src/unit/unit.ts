@@ -849,7 +849,7 @@ export abstract class Unit extends CustomMarker {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     );
-    
+
     contextActionSet.addDefaultContextAction(this, "default", "Set destination", "", faRoute, null, (units: Unit[], targetUnit, targetPosition) => {
       if (targetPosition) {
         getApp().getUnitsManager().clearDestinations(units);
@@ -1292,48 +1292,6 @@ export abstract class Unit extends CustomMarker {
 
   onGroupChanged(member: Unit) {
     this.#redrawMarker();
-  }
-
-  showFollowOptions(units: Unit[]) {
-    var contextActionSet = new ContextActionSet();
-
-    // TODO FIX
-    contextActionSet.addContextAction(this, "trail", "Trail", "Follow unit in trail formation", olButtonsContextTrail, null, () =>
-      this.applyFollowOptions("trail", units)
-    );
-    contextActionSet.addContextAction(this, "echelon-lh", "Echelon (LH)", "Follow unit in echelon left formation", olButtonsContextEchelonLh, null, () =>
-      this.applyFollowOptions("echelon-lh", units)
-    );
-    contextActionSet.addContextAction(this, "echelon-rh", "Echelon (RH)", "Follow unit in echelon right formation", olButtonsContextEchelonRh, null, () =>
-      this.applyFollowOptions("echelon-rh", units)
-    );
-    contextActionSet.addContextAction(
-      this,
-      "line-abreast-lh",
-      "Line abreast (LH)",
-      "Follow unit in line abreast left formation",
-      olButtonsContextLineAbreast,
-      null,
-      () => this.applyFollowOptions("line-abreast-lh", units)
-    );
-    contextActionSet.addContextAction(
-      this,
-      "line-abreast-rh",
-      "Line abreast (RH)",
-      "Follow unit in line abreast right formation",
-      olButtonsContextLineAbreast,
-      null,
-      () => this.applyFollowOptions("line-abreast-rh", units)
-    );
-    contextActionSet.addContextAction(this, "front", "Front", "Fly in front of unit", olButtonsContextFront, null, () =>
-      this.applyFollowOptions("front", units)
-    );
-    contextActionSet.addContextAction(this, "diamond", "Diamond", "Follow unit in diamond formation", olButtonsContextDiamond, null, () =>
-      this.applyFollowOptions("diamond", units)
-    );
-    contextActionSet.addContextAction(this, "custom", "Custom", "Set a custom formation position", faExclamation, null, () =>
-      this.applyFollowOptions("custom", units)
-    );
   }
 
   applyFollowOptions(formation: string, units: Unit[]) {
@@ -1887,7 +1845,16 @@ export abstract class AirUnit extends Unit {
       olButtonsContextFollow,
       "unit",
       (units: Unit[], targetUnit: Unit | null, _) => {
-        if (targetUnit) targetUnit.showFollowOptions(units);
+        if (targetUnit) {
+          document.dispatchEvent(
+            new CustomEvent("createFormation", {
+              detail: {
+                leader: targetUnit,
+                wingmen: units.filter((unit) => unit !== targetUnit),
+              },
+            })
+          );
+        }
       }
     );
 
@@ -2243,7 +2210,7 @@ export class NavyUnit extends Unit {
       this.#carrier.setLatLng(this.getPosition());
       this.#carrier.setHeading(this.getHeading());
       this.#carrier.updateSize();
-    } 
+    }
   }
 
   onAdd(map: Map): this {
@@ -2258,8 +2225,7 @@ export class NavyUnit extends Unit {
 
   onRemove(map: Map): this {
     super.onRemove(map);
-    if (this.#carrier)
-      this.#carrier.removeFrom(getApp().getMap())
+    if (this.#carrier) this.#carrier.removeFrom(getApp().getMap());
     return this;
   }
 }

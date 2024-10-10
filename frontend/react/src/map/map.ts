@@ -3,7 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { areaContains, deg2rad, getFunctionArguments, getGroundElevation } from "../other/utils";
+import { areaContains, deg2rad, getGroundElevation } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -24,7 +24,7 @@ import {
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { SpawnRequestTable } from "../interfaces";
-import { ContextAction, ContextActionCallback } from "../unit/contextaction";
+import { ContextAction } from "../unit/contextaction";
 
 /* Stylesheets */
 import "./markers/stylesheets/airbase.css";
@@ -109,6 +109,7 @@ export class Map extends L.Map {
   /* Unit spawning */
   #spawnRequestTable: SpawnRequestTable | null = null;
   #temporaryMarkers: TemporaryUnitMarker[] = [];
+  #currentSpawnMarker: TemporaryUnitMarker | null = null;
 
   /**
    *
@@ -349,6 +350,8 @@ export class Map extends L.Map {
 
     /* Operations to perform when leaving a state */
     if (this.#state === COALITIONAREA_DRAW_POLYGON || this.#state === COALITIONAREA_DRAW_CIRCLE) this.getSelectedCoalitionArea()?.setEditing(false);
+    this.#currentSpawnMarker?.removeFrom(this);
+    this.#currentSpawnMarker = null;
 
     this.#state = state;
 
@@ -361,6 +364,8 @@ export class Map extends L.Map {
       this.#spawnRequestTable = options?.spawnRequestTable ?? null;
       console.log(`Spawn request table:`);
       console.log(this.#spawnRequestTable);
+      this.#currentSpawnMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
+      this.#currentSpawnMarker.addTo(this);
     } else if (this.#state === CONTEXT_ACTION) {
       this.deselectAllCoalitionAreas();
       this.#contextAction = options?.contextAction ?? null;
@@ -840,7 +845,7 @@ export class Map extends L.Map {
     /* Execute the short click action */
     if (this.#state === IDLE) {
     } else if (this.#state === SPAWN_UNIT) {
-      if (this.#spawnRequestTable !== null) {
+      if (e.originalEvent.button != 2 && this.#spawnRequestTable !== null) {
         this.#spawnRequestTable.unit.location = pressLocation;
         getApp()
           .getUnitsManager()
@@ -920,6 +925,10 @@ export class Map extends L.Map {
     this.#lastMousePosition.x = e.originalEvent.x;
     this.#lastMousePosition.y = e.originalEvent.y;
     this.#lastMouseCoordinates = e.latlng;
+
+    if (this.#currentSpawnMarker) {
+      this.#currentSpawnMarker.setLatLng(e.latlng);
+    }
   }
 
   #onMapMove(e: any) {

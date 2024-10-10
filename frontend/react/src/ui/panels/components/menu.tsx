@@ -29,19 +29,19 @@ export function Menu(props: {
     >
       <div
         data-hide={hide}
-        data-canBeHidden={props.canBeHidden}
+        data-canbehidden={props.canBeHidden}
         className={`
           pointer-events-auto h-[calc(100vh-58px)] overflow-y-auto
           overflow-x-hidden backdrop-blur-lg backdrop-grayscale
           transition-transform no-scrollbar
           dark:bg-olympus-800/90
-          data-[canBeHidden='true']:h-[calc(100vh-58px-2rem)]
+          data-[canbehidden='true']:h-[calc(100vh-58px-2rem)]
           data-[hide='true']:translate-y-[calc(100vh-58px)]
         `}
       >
         <h5
           className={`
-            inline-flex w-full items-center px-5 py-3 pb-2 font-semibold
+            inline-flex h-12 w-full items-center px-5 py-3 pb-2 font-semibold
             text-gray-800 shadow-lg
             dark:text-gray-400
           `}
@@ -51,7 +51,7 @@ export function Menu(props: {
               onClick={props.onBack ?? (() => {})}
               icon={faArrowLeft}
               className={`
-                mr-1 cursor-pointer rounded-md p-2
+                mr-1 h-8 cursor-pointer rounded-md p-2
                 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
               `}
             />
@@ -68,7 +68,9 @@ export function Menu(props: {
             `}
           />
         </h5>
+        <div className="h-[calc(100%-3rem)]">
         {props.children}
+        </div>
       </div>
       {props.canBeHidden == true && (
         <div

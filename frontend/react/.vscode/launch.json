@@ -10,7 +10,11 @@
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:3000/vite/",
             "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "npm: dev"
-        }
+            "preLaunchTask": "npm: dev",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        },
     ]
 }

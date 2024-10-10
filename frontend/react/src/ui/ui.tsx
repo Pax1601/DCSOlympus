@@ -24,6 +24,8 @@ import { AirbaseMenu } from "./panels/airbasemenu";
 import { Airbase } from "../mission/airbase";
 import { RadioMenu } from "./panels/radiomenu";
 import { AudioMenu } from "./panels/audiomenu";
+import { FormationMenu } from "./panels/formationmenu";
+import { Unit } from "../unit/unit";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -48,6 +50,7 @@ export function UI() {
   const [audioMenuVisible, setAudioMenuVisible] = useState(false);
   const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
   const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
+  const [formationMenuVisible, setFormationMenuVisible] = useState(false);
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [checkingPassword, setCheckingPassword] = useState(false);
@@ -57,6 +60,8 @@ export function UI() {
   const [activeMapSource, setActiveMapSource] = useState("");
   const [mapState, setMapState] = useState(IDLE);
   const [airbase, setAirbase] = useState(null as null | Airbase);
+  const [formationLeader, setFormationLeader] = useState(null as null | Unit);
+  const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
 
   useEffect(() => {
     document.addEventListener("hiddenTypesChanged", (ev) => {
@@ -91,6 +96,12 @@ export function UI() {
       setAirbase((ev as CustomEvent).detail);
       setAirbaseMenuVisible(true);
     });
+
+    document.addEventListener("createFormation", (ev) => {
+      setFormationMenuVisible(true);
+      setFormationLeader((ev as CustomEvent).detail.leader);
+      setFormationWingmen((ev as CustomEvent).detail.wingmen);
+    });
   }, []);
 
   function hideAllMenus() {
@@ -103,6 +114,7 @@ export function UI() {
     setAirbaseMenuVisible(false);
     setRadioMenuVisible(false);
     setAudioMenuVisible(false);
+    setFormationMenuVisible(false);
   }
 
   function checkPassword(password: string) {
@@ -243,6 +255,7 @@ export function UI() {
             <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase}/>
             <RadioMenu open={radioMenuVisible} onClose={() => setRadioMenuVisible(false)} />
             <AudioMenu open={audioMenuVisible} onClose={() => setAudioMenuVisible(false)} />
+            <FormationMenu open={formationMenuVisible} leader={formationLeader} wingmen={formationWingmen} onClose={() => setFormationMenuVisible(false)} />
 
             <MiniMapPanel />
             <ControlsPanel />

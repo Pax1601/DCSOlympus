@@ -485,7 +485,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       return Object.keys(unitOccurences[coalition]).map((name, idx) => {
                         return (
                           <div
-                            key={idx}
+                            key={`coalition-${idx}`}
                             data-coalition={coalition}
                             className={`
                               flex content-center justify-between border-l-4
@@ -1344,9 +1344,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     {/* ============== Payload section START ============== */}
                     {!selectedUnits[0].isTanker() &&
                       !selectedUnits[0].isAWACS() &&
-                      selectedUnits[0].getAmmo().map((ammo) => {
+                      selectedUnits[0].getAmmo().map((ammo, idx) => {
                         return (
-                          <div className="flex content-center gap-2">
+                          <div className="flex content-center gap-2" key={idx}>
                             <div
                               className={`
                                 my-auto w-fit rounded-full px-2 py-0.5
