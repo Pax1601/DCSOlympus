@@ -44,8 +44,8 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
       const [parentTop, parentLeft, parentWidth, parentHeight] = [parentRect.top, parentRect.left, parentRect.width, parentRect.height];
 
       setFinalPosition({
-        x: Math.max(width / 2, Math.min(mouseX - parentLeft, parentWidth - width / 2)),
-        y: Math.max(height / 2, Math.min(mouseY - parentTop, parentHeight - height / 2)),
+        x: Math.round(Math.max(width / 2, Math.min(mouseX - parentLeft, parentWidth - width / 2)) / 10) * 10,
+        y: Math.round(Math.max(height / 2, Math.min(mouseY - parentTop, parentHeight - height / 2)) / 10) * 10,
       });
     },
     [isDragging, props.ref]

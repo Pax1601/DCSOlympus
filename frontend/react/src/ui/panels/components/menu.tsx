@@ -41,7 +41,7 @@ export function Menu(props: {
       >
         <h5
           className={`
-            inline-flex w-full items-center px-5 py-3 pb-2 font-semibold
+            inline-flex h-12 w-full items-center px-5 py-3 pb-2 font-semibold
             text-gray-800 shadow-lg
             dark:text-gray-400
           `}
@@ -51,7 +51,7 @@ export function Menu(props: {
               onClick={props.onBack ?? (() => {})}
               icon={faArrowLeft}
               className={`
-                mr-1 cursor-pointer rounded-md p-2
+                mr-1 h-8 cursor-pointer rounded-md p-2
                 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
               `}
             />
@@ -68,7 +68,9 @@ export function Menu(props: {
             `}
           />
         </h5>
+        <div className="h-[calc(100%-3rem)]">
         {props.children}
+        </div>
       </div>
       {props.canBeHidden == true && (
         <div
