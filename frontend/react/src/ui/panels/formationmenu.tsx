@@ -3,6 +3,7 @@ import { Menu } from "./components/menu";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { useDrag } from "../libs/useDrag";
 import { Unit } from "../../unit/unit";
+import { OlRangeSlider } from "../components/olrangeslider";
 
 export function FormationMenu(props: {
   open: boolean;
@@ -12,8 +13,8 @@ export function FormationMenu(props: {
   children?: JSX.Element | JSX.Element[];
 }) {
   const [formationType, setFormationType] = useState("echelon-lh");
-  const [horizontalStep, setHorizontalStep] = useState(50);
-  const [verticalStep, setVerticalStep] = useState(15);
+  const [horizontalScale, setHorizontalScale] = useState(0);
+  const [verticalScale, setVerticalScale] = useState(30);
   const [count, setCount] = useState(0);
 
   let units = Array(128).fill(null) as (Unit | null)[];
@@ -32,7 +33,7 @@ export function FormationMenu(props: {
     return useDrag({
       ref: silhouetteReferences[idx],
       initialPosition: { x: offset.z + center.x, y: -offset.x + center.y },
-      count: count
+      count: count,
     });
   });
 
@@ -64,6 +65,26 @@ export function FormationMenu(props: {
             );
           })}
         </OlDropdown>
+        <div className="flex">
+          <span>Parade</span>
+          <OlRangeSlider
+            value={horizontalScale}
+            onChange={(ev) => {
+              setHorizontalScale(Number(ev.target.value));
+            }}
+          />
+          <span>Tactical</span>
+        </div>
+        <div className="flex">
+          <span>Down</span>
+          <OlRangeSlider
+            value={verticalScale}
+            onChange={(ev) => {
+              setVerticalScale(Number(ev.target.value));
+            }}
+          />
+          <span>Up</span>
+        </div>
         <button
           type="button"
           onClick={() => {
@@ -77,13 +98,20 @@ export function FormationMenu(props: {
             units
               .filter((unit) => unit !== null)
               .forEach((unit, idx) => {
-                if (idx != 0) {
+                if (units.length > 0 && units[0] !== null && idx != 0) {
                   const ID = units[0].ID;
+                  const horizontalRatio = 1 + horizontalScale;
+                  const verticalRatio = (verticalScale - 50) / 50;
+                  const [dx, dz] = [
+                    -(silhouetteHandles[idx].position.y - silhouetteHandles[0].position.y),
+                    silhouetteHandles[idx].position.x - silhouetteHandles[0].position.x
+                  ];
+                  const distance = Math.sqrt(dx ** 2 + dz ** 2);
                   const offset = {
-                    x: -(silhouetteHandles[idx].position.y - silhouetteHandles[0].position.y),
-                    y: 0,
-                    z: silhouetteHandles[idx].position.x - silhouetteHandles[0].position.x
-                  }
+                    x: dx * horizontalRatio,
+                    y: distance * verticalRatio,
+                    z: dz * horizontalRatio,
+                  };
                   unit.followUnit(ID, offset);
                 }
               });
