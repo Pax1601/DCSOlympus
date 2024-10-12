@@ -91,7 +91,6 @@ export class MissionManager {
             position: new LatLng(airbase.latitude, airbase.longitude),
             name: airbaseCallsign,
           }).addTo(getApp().getMap());
-          this.#airbases[airbaseCallsign].on("click", (e) => this.#onAirbaseClick(e));
           this.#loadAirbaseChartData(airbaseCallsign);
         }
       }
@@ -319,10 +318,6 @@ export class MissionManager {
     document.querySelector("#command-mode-settings-button")?.classList.toggle("hide", this.getCommandModeOptions().commandMode !== GAME_MASTER);
 
     if (requestRefresh) getApp().getServerManager().refreshAll();
-  }
-
-  #onAirbaseClick(ev: any) {
-    document.dispatchEvent(new CustomEvent("airbaseclick", { detail: ev.target }));
   }
 
   #loadAirbaseChartData(callsign: string) {

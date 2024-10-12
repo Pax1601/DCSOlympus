@@ -20,6 +20,7 @@ export type MapOptions = {
   showUnitsAcquisitionRings: boolean;
   fillSelectedRing: boolean;
   showMinimap: boolean;
+  protectDCSUnits: boolean;
 };
 
 export type MapHiddenTypes = {

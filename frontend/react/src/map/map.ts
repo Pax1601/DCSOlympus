@@ -20,10 +20,11 @@ import {
   COALITIONAREA_EDIT,
   COALITIONAREA_DRAW_CIRCLE,
   NOT_INITIALIZED,
+  SPAWN_EFFECT,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import { SpawnRequestTable } from "../interfaces";
+import { EffectRequestTable, SpawnRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 
 /* Stylesheets */
@@ -35,6 +36,7 @@ import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
 import { faDrawPolygon, faHandPointer, faJetFighter, faMap } from "@fortawesome/free-solid-svg-icons";
+import { ExplosionMarker } from "./markers/explosionmarker";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -108,6 +110,7 @@ export class Map extends L.Map {
 
   /* Unit spawning */
   #spawnRequestTable: SpawnRequestTable | null = null;
+  #effectRequestTable: EffectRequestTable | null = null;
   #temporaryMarkers: TemporaryUnitMarker[] = [];
   #currentSpawnMarker: TemporaryUnitMarker | null = null;
 
@@ -342,6 +345,7 @@ export class Map extends L.Map {
     state: string,
     options?: {
       spawnRequestTable?: SpawnRequestTable;
+      effectRequestTable?: EffectRequestTable;
       contextAction?: ContextAction | null;
       defaultContextAction?: ContextAction | null;
     }
@@ -366,6 +370,13 @@ export class Map extends L.Map {
       console.log(this.#spawnRequestTable);
       this.#currentSpawnMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
       this.#currentSpawnMarker.addTo(this);
+    } else if (this.#state === SPAWN_EFFECT) {
+      this.deselectAllCoalitionAreas();
+      this.#effectRequestTable = options?.effectRequestTable ?? null;
+      console.log(`Effect request table:`);
+      console.log(this.#effectRequestTable);
+      //this.#currentEffectMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
+      //this.#currentEffectMarker.addTo(this);
     } else if (this.#state === CONTEXT_ACTION) {
       this.deselectAllCoalitionAreas();
       this.#contextAction = options?.contextAction ?? null;
@@ -423,6 +434,24 @@ export class Map extends L.Map {
           actions: [touch ? faHandPointer : "LMB"],
           target: faMap,
           text: "Spawn unit",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", 2],
+          target: faMap,
+          text: "Exit spawn mode",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          target: faMap,
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === SPAWN_EFFECT) {
+      return [
+        {
+          actions: [touch ? faHandPointer : "LMB"],
+          target: faMap,
+          text: "Spawn effect",
         },
         {
           actions: [touch ? faHandPointer : "LMB", 2],
@@ -670,6 +699,12 @@ export class Map extends L.Map {
     return marker;
   }
 
+  addExplosionMarker(latlng: L.LatLng, timeout: number = 30) {
+    var marker = new ExplosionMarker(latlng, timeout);
+    marker.addTo(this);
+    return marker;
+  }
+
   getSelectedCoalitionArea() {
     const coalitionArea = this.#coalitionAreas.find((coalitionArea: CoalitionPolygon | CoalitionCircle) => {
       return coalitionArea.getSelected();
@@ -693,24 +728,6 @@ export class Map extends L.Map {
 
   getPreviousZoom() {
     return this.#previousZoom;
-  }
-
-  getIsUnitProtected(unit: Unit) {
-    //const toggles = this.#mapMarkerVisibilityControls.reduce((list, control: MapMarkerVisibilityControl) => {
-    //    if (control.isProtected) {
-    //        list = list.concat(control.toggles);
-    //    }
-    //    return list;
-    //}, [] as string[]);
-    //
-    //if (toggles.length === 0)
-    //    return false;
-    //
-    //return toggles.some((toggle: string) => {
-    //    //  Specific coding for robots - extend later if needed
-    //    return (toggle === "dcs" && !unit.getControlled() && !unit.getHuman());
-    //});
-    return false;
   }
 
   setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
@@ -829,6 +846,7 @@ export class Map extends L.Map {
       this.setState(COALITIONAREA_EDIT);
     } else {
       this.setState(IDLE);
+      document.dispatchEvent(new CustomEvent("hideAllMenus"))
     }
   }
 
@@ -861,7 +879,11 @@ export class Map extends L.Map {
             }
           );
       }
-    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+    } else if (this.#state === SPAWN_EFFECT) {
+      if (e.originalEvent.button != 2 && this.#effectRequestTable !== null) {
+        getApp().getServerManager().spawnExplosion(50, 'normal', pressLocation);
+      }
+    }  else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
       const selectedArea = this.getSelectedCoalitionArea();
       if (selectedArea && selectedArea instanceof CoalitionPolygon) {
         selectedArea.addTemporaryLatLng(pressLocation);

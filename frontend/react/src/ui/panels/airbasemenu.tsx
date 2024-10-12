@@ -7,7 +7,7 @@ import { getUnitsByLabel } from "../../other/utils";
 import { UnitBlueprint } from "../../interfaces";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
-import { OlUnitEntryList } from "../components/olunitlistentry";
+import { OlUnitListEntry } from "../components/olunitlistentry";
 import { olButtonsVisibilityAircraft, olButtonsVisibilityHelicopter } from "../components/olicons";
 import { UnitSpawnMenu } from "./unitspawnmenu";
 
@@ -103,7 +103,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
                   `}
                 >
                   {Object.entries(filteredAircraft).map((entry) => {
-                    return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityAircraft} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
+                    return <OlUnitListEntry key={entry[0]} icon={olButtonsVisibilityAircraft} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                   })}
                 </div>
               </OlAccordion>
@@ -114,7 +114,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
                   `}
                 >
                   {Object.entries(filteredHelicopters).map((entry) => {
-                    return <OlUnitEntryList key={entry[0]} icon={olButtonsVisibilityHelicopter} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
+                    return <OlUnitListEntry key={entry[0]} icon={olButtonsVisibilityHelicopter} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
                   })}
                 </div>
               </OlAccordion>

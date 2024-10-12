@@ -51,7 +51,7 @@ export function Menu(props: {
               onClick={props.onBack ?? (() => {})}
               icon={faArrowLeft}
               className={`
-                mr-1 h-8 cursor-pointer rounded-md p-2
+                mr-1 h-4 cursor-pointer rounded-md p-2
                 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
               `}
             />

@@ -26,6 +26,8 @@ import { RadioMenu } from "./panels/radiomenu";
 import { AudioMenu } from "./panels/audiomenu";
 import { FormationMenu } from "./panels/formationmenu";
 import { Unit } from "../unit/unit";
+import { ProtectionPrompt } from "./modals/protectionprompt";
+import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -51,6 +53,7 @@ export function UI() {
   const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
   const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
   const [formationMenuVisible, setFormationMenuVisible] = useState(false);
+  const [unitExplosionMenuVisible, setUnitExplosionMenuVisible] = useState(false);
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [checkingPassword, setCheckingPassword] = useState(false);
@@ -62,6 +65,10 @@ export function UI() {
   const [airbase, setAirbase] = useState(null as null | Airbase);
   const [formationLeader, setFormationLeader] = useState(null as null | Unit);
   const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
+  const [protectionPromptVisible, setProtectionPromptVisible] = useState(false);
+  const [protectionCallback, setProtectionCallback] = useState(null as any);
+  const [protectionUnits, setProtectionUnits] = useState([] as Unit[]);
+  const [unitExplosionUnits, setUnitExplosionUnits] = useState([] as Unit[]);
 
   useEffect(() => {
     document.addEventListener("hiddenTypesChanged", (ev) => {
@@ -73,9 +80,13 @@ export function UI() {
     });
 
     document.addEventListener("mapStateChanged", (ev) => {
-      if ((ev as CustomEvent).detail === IDLE) hideAllMenus();
-      else if ((ev as CustomEvent).detail === CONTEXT_ACTION && window.innerWidth > 1000) setUnitControlMenuVisible(true);
+      //if ((ev as CustomEvent).detail === IDLE) hideAllMenus();
+      /*else*/ if ((ev as CustomEvent).detail === CONTEXT_ACTION && window.innerWidth > 1000) setUnitControlMenuVisible(true);
       setMapState(String((ev as CustomEvent).detail));
+    });
+
+    document.addEventListener("hideAllMenus", (ev) => {
+      hideAllMenus();
     });
 
     document.addEventListener("mapSourceChanged", (ev) => {
@@ -90,18 +101,29 @@ export function UI() {
       setActiveMapSource(sources[0]);
     });
 
-    document.addEventListener("airbaseclick", (ev) => {
+    document.addEventListener("airbaseClick", (ev) => {
       hideAllMenus();
       getApp().getMap().setState(IDLE);
       setAirbase((ev as CustomEvent).detail);
       setAirbaseMenuVisible(true);
     });
 
-    document.addEventListener("createFormation", (ev) => {
+    document.addEventListener("showFormationMenu", (ev) => {
       setFormationMenuVisible(true);
       setFormationLeader((ev as CustomEvent).detail.leader);
       setFormationWingmen((ev as CustomEvent).detail.wingmen);
     });
+
+    document.addEventListener("showProtectionPrompt", (ev: CustomEventInit) => {
+      setProtectionPromptVisible(true);
+      setProtectionCallback(() => {return ev.detail.callback});
+      setProtectionUnits(ev.detail.units);
+    });
+
+    document.addEventListener("showUnitExplosionMenu", (ev) => {
+      setUnitExplosionMenuVisible(true);
+      setUnitExplosionUnits((ev as CustomEvent).detail.units);
+    })
   }, []);
 
   function hideAllMenus() {
@@ -115,6 +137,7 @@ export function UI() {
     setRadioMenuVisible(false);
     setAudioMenuVisible(false);
     setFormationMenuVisible(false);
+    setUnitExplosionMenuVisible(false);
   }
 
   function checkPassword(password: string) {
@@ -246,16 +269,36 @@ export function UI() {
                 />
               </>
             )}
+            {protectionPromptVisible && (
+              <>
+                <div
+                  className={`
+                    fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
+                  `}
+                ></div>
+                <ProtectionPrompt
+                  onContinue={(units) => {
+                    protectionCallback(units);
+                    setProtectionPromptVisible(false);
+                  }}
+                  onBack={() => {
+                    setProtectionPromptVisible(false);
+                  }}
+                  units={protectionUnits}
+                />
+              </>
+            )}
             <div id="map-container" className="z-0 h-full w-screen" />
             <MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
             <SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
             <OptionsMenu open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
             <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
             <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
-            <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase}/>
+            <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase} />
             <RadioMenu open={radioMenuVisible} onClose={() => setRadioMenuVisible(false)} />
             <AudioMenu open={audioMenuVisible} onClose={() => setAudioMenuVisible(false)} />
             <FormationMenu open={formationMenuVisible} leader={formationLeader} wingmen={formationWingmen} onClose={() => setFormationMenuVisible(false)} />
+            <UnitExplosionMenu open={unitExplosionMenuVisible} units={unitExplosionUnits} onClose={() => setUnitExplosionMenuVisible(false)} />
 
             <MiniMapPanel />
             <ControlsPanel />

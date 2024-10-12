@@ -240,6 +240,7 @@ export const defaultMapLayers = {};
 export const NOT_INITIALIZED = "Not initialized";
 export const IDLE = "Idle";
 export const SPAWN_UNIT = "Spawn unit";
+export const SPAWN_EFFECT = "Spawn effect";
 export const CONTEXT_ACTION = "Context action";
 export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area polygon";
 export const COALITIONAREA_DRAW_CIRCLE = "Draw Coalition Area circle";
@@ -275,6 +276,7 @@ export const MAP_OPTIONS_DEFAULTS = {
   showUnitsAcquisitionRings: true,
   fillSelectedRing: false,
   showMinimap: false,
+  protectDCSUnits: true
 } as MapOptions;
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {

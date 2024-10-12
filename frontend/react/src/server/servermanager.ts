@@ -349,7 +349,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  createFormation(ID: number, isLeader: boolean, wingmenIDs: number[], callback: CallableFunction = () => {}) {
+  showFormationMenu(ID: number, isLeader: boolean, wingmenIDs: number[], callback: CallableFunction = () => {}) {
     var command = { ID: ID, wingmenIDs: wingmenIDs, isLeader: isLeader };
     var data = { setLeader: command };
     this.PUT(data, callback);

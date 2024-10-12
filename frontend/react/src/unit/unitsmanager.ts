@@ -62,23 +62,10 @@ export class UnitsManager {
       this.#requestDetectionUpdate = true;
     });
     document.addEventListener("copy", () => this.copy());
-    document.addEventListener("deleteSelectedUnits", () => this.delete());
-    document.addEventListener("explodeSelectedUnits", (e: any) => this.delete(true, e.detail.type));
-    document.addEventListener("exportToFile", () => this.exportToFile());
-    document.addEventListener("importFromFile", () => this.importFromFile());
     document.addEventListener("keyup", (event) => this.#onKeyUp(event));
     document.addEventListener("paste", () => this.paste());
-    document.addEventListener("selectedUnitsChangeAltitude", (e: any) => {
-      this.changeAltitude(e.detail.type);
-    });
-    document.addEventListener("selectedUnitsChangeSpeed", (e: any) => {
-      this.changeSpeed(e.detail.type);
-    });
     document.addEventListener("unitDeselection", (e) => this.#onUnitDeselection((e as CustomEvent).detail));
     document.addEventListener("unitSelection", (e) => this.#onUnitSelection((e as CustomEvent).detail));
-    document.addEventListener("toggleMarkerProtection", (e) => {
-      this.#showNumberOfSelectedProtectedUnits();
-    });
 
     //this.#slowDeleteDialog = new Dialog("slow-delete-dialog");
   }
@@ -125,45 +112,6 @@ export class UnitsManager {
         this.#units[ID] = new constructor(ID);
       }
     }
-  }
-
-  /** Sort units segregated groups based on controlling type and protection, if DCS-controlled
-   *
-   * @param units <Unit[]>
-   * @returns Object
-   */
-  segregateUnits(units: Unit[]): { [key: string]: [] } {
-    const data: any = {
-      controllable: [],
-      dcsProtected: [],
-      dcsUnprotected: [],
-      human: [],
-      olympus: [],
-    };
-    const map = getApp().getMap();
-
-    units.forEach((unit) => {
-      if (unit.getHuman()) data.human.push(unit);
-      else if (unit.isControlledByOlympus()) data.olympus.push(unit);
-      else if (map.getIsUnitProtected(unit)) data.dcsProtected.push(unit);
-      else data.dcsUnprotected.push(unit);
-    });
-    data.controllable = [].concat(data.dcsUnprotected, data.human, data.olympus);
-    return data;
-  }
-
-  /**
-   *
-   * @param numOfProtectedUnits number
-   */
-  showProtectedUnitsPopup(numOfProtectedUnits: number) {
-    if (numOfProtectedUnits < 1) return;
-    const messageText = numOfProtectedUnits === 1 ? `Unit is protected` : `All selected units are protected`;
-    //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(messageText);
-    //  Cheap way for now until we use more locks
-    let lock = <HTMLElement>document.querySelector("#unit-visibility-control button.lock");
-    lock.classList.add("prompt");
-    setTimeout(() => lock.classList.remove("prompt"), 4000);
   }
 
   /** Update the data of all the units. The data is directly decoded from the binary buffer received from the REST Server. This is necessary for performance and bandwidth reasons.
@@ -301,38 +249,10 @@ export class UnitsManager {
 
   /** Get all the currently selected units
    *
-   * @param options Selection options
    * @returns Array of selected units
    */
-  getSelectedUnits(options?: { excludeHumans?: boolean; excludeProtected?: boolean; onlyOnePerGroup?: boolean; showProtectionReminder?: boolean }) {
-    let selectedUnits: Unit[] = [];
-    let numProtectedUnits = 0;
-    for (const [ID, unit] of Object.entries(this.#units)) {
-      if (unit.getSelected()) {
-        if (options) {
-          if (options.excludeHumans && unit.getHuman()) continue;
-
-          if (options.excludeProtected === true && this.#unitIsProtected(unit)) {
-            numProtectedUnits++;
-            continue;
-          }
-        }
-        selectedUnits.push(unit);
-      }
-    }
-    if (options) {
-      if (options.showProtectionReminder === true && numProtectedUnits > selectedUnits.length && selectedUnits.length === 0)
-        this.showProtectedUnitsPopup(numProtectedUnits);
-
-      if (options.onlyOnePerGroup) {
-        var temp: Unit[] = [];
-        for (let unit of selectedUnits) {
-          if (!temp.some((otherUnit: Unit) => unit.getGroupName() == otherUnit.getGroupName())) temp.push(unit);
-        }
-        selectedUnits = temp;
-      }
-    }
-    return selectedUnits;
+  getSelectedUnits() {
+    return Object.values(this.#units).filter((unit) => unit.getSelected());
   }
 
   /** Deselects all currently selected units
@@ -344,15 +264,7 @@ export class UnitsManager {
     }
   }
 
-  /** Deselect a specific unit
-   *
-   * @param ID ID of the unit to deselect
-   */
-  deselectUnit(ID: number) {
-    this.#units[ID]?.setSelected(false);
-  }
-
-  /** This function allows to quickly determine the categories (Aircraft, Helicopter, GroundUnit, NavyUnit) of an array units. This allows to enable/disable specific controls which can only be applied
+  /** This function allows to quickly determine the categories (Aircraft, Helicopter, GroundUnit, NavyUnit) of an array of units. This allows to enable/disable specific controls which can only be applied
    * to specific categories.
    *
    * @param units Array of units of which to retrieve the categories
@@ -418,71 +330,62 @@ export class UnitsManager {
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   addDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
-
-    units = segregatedUnits.controllable;
-
-    /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
-    var unitDestinations: { [key: number]: LatLng } = {};
-    if (mantainRelativePosition) unitDestinations = this.computeGroupDestination(latlng, rotation);
-    else
-      units.forEach((unit: Unit) => {
-        unitDestinations[unit.ID] = latlng;
-      });
-
-    units.forEach((unit: Unit) => {
-      /* If a unit is following another unit, and that unit is also selected, send the command to the followed ("leader") unit */
-      if (unit.getState() === "follow") {
-        const leader = this.getUnitByID(unit.getLeaderID());
-        if (leader && leader.getSelected()) leader.addDestination(latlng);
-        else unit.addDestination(latlng);
-      } else {
-        if (unit.ID in unitDestinations) unit.addDestination(unitDestinations[unit.ID]);
-      }
+    units = units.filter((unit) => {
+      return !unit.getHuman();
     });
-    this.#showActionMessage(units, " new destination added");
+
+    let callback = (units) => {
+      /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
+      var unitDestinations: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitDestinations = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitDestinations[unit.ID] = latlng;
+        });
+
+      units.forEach((unit: Unit) => {
+        /* If a unit is following another unit, and that unit is also selected, send the command to the followed ("leader") unit */
+        if (unit.getState() === "follow") {
+          const leader = this.getUnitByID(unit.getLeaderID());
+          if (leader && leader.getSelected()) leader.addDestination(latlng);
+          else unit.addDestination(latlng);
+        } else {
+          if (unit.ID in unitDestinations) unit.addDestination(unitDestinations[unit.ID]);
+        }
+      });
+      this.#showActionMessage(units, " new destination added");
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
 
   /** Clear the destinations of all the selected units
    *
    */
   clearDestinations(units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: false,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      for (let idx in units) {
+        const unit = units[idx];
+        if (unit.getState() === "follow") {
+          const leader = this.getUnitByID(unit.getLeaderID());
+          if (leader && leader.getSelected()) leader.clearDestinations();
+          else unit.clearDestinations();
+        } else unit.clearDestinations();
+      }
 
-    units = segregatedUnits.controllable;
-
-    for (let idx in units) {
-      const unit = units[idx];
-      if (unit.getState() === "follow") {
-        const leader = this.getUnitByID(unit.getLeaderID());
-        if (leader && leader.getSelected()) leader.clearDestinations();
-        else unit.clearDestinations();
-      } else unit.clearDestinations();
-    }
+      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+        document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+      else callback(units);
+    };
   }
 
   /** Instruct all the selected units to land at a specific location
@@ -491,311 +394,239 @@ export class UnitsManager {
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   landAt(latlng: LatLng, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.landAt(latlng));
 
-    units = segregatedUnits.controllable;
+      this.#showActionMessage(units, " landing");
+    };
 
-    units.forEach((unit: Unit) => unit.landAt(latlng));
-
-    this.#showActionMessage(units, " landing");
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct all the selected units to change their speed
    *
    * @param speedChange Speed change, either "stop", "slow", or "fast". The specific value depends on the unit category
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   changeSpeed(speedChange: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct all the selected units to change their altitude
    *
    * @param altitudeChange Altitude change, either "climb" or "descend". The specific value depends on the unit category
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   changeAltitude(altitudeChange: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific speed to all the selected units
    *
    * @param speed Value to set, in m/s
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setSpeed(speed: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setSpeed(speed));
+      this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setSpeed(speed));
-    this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific speed type to all the selected units
    *
    * @param speedType Value to set, either "CAS" or "GS". If "CAS" is selected, the unit will try to maintain the selected Calibrated Air Speed, but DCS will still only maintain a Ground Speed value so errors may arise depending on wind.
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setSpeedType(speedType: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setSpeedType(speedType));
+      this.#showActionMessage(units, `setting speed type to ${speedType}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setSpeedType(speedType));
-    this.#showActionMessage(units, `setting speed type to ${speedType}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific altitude to all the selected units
    *
    * @param altitude Value to set, in m
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setAltitude(altitude: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setAltitude(altitude));
+      this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setAltitude(altitude));
-    this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific altitude type to all the selected units
    *
    * @param altitudeType Value to set, either "ASL" or "AGL". If "AGL" is selected, the unit will try to maintain the selected Above Ground Level altitude. Due to a DCS bug, this will only be true at the final position.
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setAltitudeType(altitudeType: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setAltitudeType(altitudeType));
+      this.#showActionMessage(units, `setting altitude type to ${altitudeType}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setAltitudeType(altitudeType));
-    this.#showActionMessage(units, `setting altitude type to ${altitudeType}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific ROE to all the selected units
    *
    * @param ROE Value to set, see constants for acceptable values
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setROE(ROE: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setROE(ROE));
+      this.#showActionMessage(units, `ROE set to ${ROE}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setROE(ROE));
-    this.#showActionMessage(units, `ROE set to ${ROE}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific reaction to threat to all the selected units
    *
    * @param reactionToThreat Value to set, see constants for acceptable values
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setReactionToThreat(reactionToThreat: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setReactionToThreat(reactionToThreat));
+      this.#showActionMessage(units, `reaction to threat set to ${reactionToThreat}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setReactionToThreat(reactionToThreat));
-    this.#showActionMessage(units, `reaction to threat set to ${reactionToThreat}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific emissions & countermeasures to all the selected units
    *
    * @param emissionCountermeasure Value to set, see constants for acceptable values
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setEmissionsCountermeasures(emissionCountermeasure: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setEmissionsCountermeasures(emissionCountermeasure));
+      this.#showActionMessage(units, `emissions & countermeasures set to ${emissionCountermeasure}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setEmissionsCountermeasures(emissionCountermeasure));
-    this.#showActionMessage(units, `emissions & countermeasures set to ${emissionCountermeasure}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Turn selected units on or off, only works on ground and navy units
    *
    * @param onOff If true, the unit will be turned on
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setOnOff(onOff: boolean, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setOnOff(onOff));
+      this.#showActionMessage(units, `unit active set to ${onOff}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setOnOff(onOff));
-    this.#showActionMessage(units, `unit active set to ${onOff}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct the selected units to follow roads, only works on ground units
    *
    * @param followRoads If true, units will follow roads
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setFollowRoads(followRoads: boolean, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setFollowRoads(followRoads));
+      this.#showActionMessage(units, `follow roads set to ${followRoads}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setFollowRoads(followRoads));
-    this.#showActionMessage(units, `follow roads set to ${followRoads}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct selected units to operate as a certain coalition
    *
    * @param operateAsBool If true, units will operate as blue
@@ -803,74 +634,59 @@ export class UnitsManager {
    */
   setOperateAs(operateAsBool: boolean, units: Unit[] | null = null) {
     var operateAs = operateAsBool ? "blue" : "red";
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setOperateAs(operateAs));
+      this.#showActionMessage(units, `operate as set to ${operateAs}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setOperateAs(operateAs));
-    this.#showActionMessage(units, `operate as set to ${operateAs}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct units to attack a specific unit
    *
    * @param ID ID of the unit to attack
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   attackUnit(ID: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.attackUnit(ID));
+      this.#showActionMessage(units, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.attackUnit(ID));
-    this.#showActionMessage(units, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct units to refuel at the nearest tanker, if possible. Else units will RTB
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   refuel(units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    segregatedUnits.controllable.forEach((unit: Unit) => unit.refuel());
-    this.#showActionMessage(segregatedUnits.controllable, `sent to nearest tanker`);
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.refuel());
+      this.#showActionMessage(units, `sent to nearest tanker`);
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
    *
    * @param ID ID of the unit to follow
@@ -879,52 +695,46 @@ export class UnitsManager {
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   followUnit(ID: number, offset?: { x: number; y: number; z: number }, formation?: string, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      if (offset == undefined) {
+        /* Simple formations with fixed offsets */
+        offset = { x: 0, y: 0, z: 0 };
+        if (formation === "trail") {
+          offset.x = -50;
+          offset.y = -30;
+          offset.z = 0;
+        } else if (formation === "echelon-lh") {
+          offset.x = -50;
+          offset.y = -10;
+          offset.z = -50;
+        } else if (formation === "echelon-rh") {
+          offset.x = -50;
+          offset.y = -10;
+          offset.z = 50;
+        } else if (formation === "line-abreast-lh") {
+          offset.x = 0;
+          offset.y = 0;
+          offset.z = -50;
+        } else if (formation === "line-abreast-rh") {
+          offset.x = 0;
+          offset.y = 0;
+          offset.z = 50;
+        } else if (formation === "front") {
+          offset.x = 100;
+          offset.y = 0;
+          offset.z = 0;
+        } else offset = undefined;
+      }
 
-    units = segregatedUnits.controllable;
-
-    if (offset == undefined) {
-      /* Simple formations with fixed offsets */
-      offset = { x: 0, y: 0, z: 0 };
-      if (formation === "trail") {
-        offset.x = -50;
-        offset.y = -30;
-        offset.z = 0;
-      } else if (formation === "echelon-lh") {
-        offset.x = -50;
-        offset.y = -10;
-        offset.z = -50;
-      } else if (formation === "echelon-rh") {
-        offset.x = -50;
-        offset.y = -10;
-        offset.z = 50;
-      } else if (formation === "line-abreast-lh") {
-        offset.x = 0;
-        offset.y = 0;
-        offset.z = -50;
-      } else if (formation === "line-abreast-rh") {
-        offset.x = 0;
-        offset.y = 0;
-        offset.z = 50;
-      } else if (formation === "front") {
-        offset.x = 100;
-        offset.y = 0;
-        offset.z = 0;
-      } else offset = undefined;
-    }
-
+      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+        document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+      else callback(units);
+    };
     var count = 1;
     var xr = 0;
     var yr = 1;
@@ -974,234 +784,183 @@ export class UnitsManager {
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   bombPoint(latlng: LatLng, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.bombPoint(latlng));
+      this.#showActionMessage(units, `unit bombing point`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.bombPoint(latlng));
-    this.#showActionMessage(units, `unit bombing point`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct the selected units to perform carpet bombing of specific coordinates
    *
    * @param latlng Location to bomb
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   carpetBomb(latlng: LatLng, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.carpetBomb(latlng));
+      this.#showActionMessage(units, `unit carpet bombing point`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.carpetBomb(latlng));
-    this.#showActionMessage(units, `unit carpet bombing point`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct the selected units to fire at specific coordinates
    *
    * @param latlng Location to fire at
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   fireAtArea(latlng: LatLng, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.fireAtArea(latlng));
+      this.#showActionMessage(units, `unit firing at area`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.fireAtArea(latlng));
-    this.#showActionMessage(units, `unit firing at area`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct the selected units to simulate a fire fight at specific coordinates
    *
    * @param latlng Location to fire at
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   simulateFireFight(latlng: LatLng, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
-
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
-
-    units = segregatedUnits.controllable;
-
-    getGroundElevation(latlng, (response: string) => {
-      var groundElevation: number | null = null;
-      try {
-        groundElevation = parseFloat(response);
-      } catch {
-        console.warn("Simulate fire fight: could not retrieve ground elevation");
-      }
-      units?.forEach((unit: Unit) => unit.simulateFireFight(latlng, groundElevation));
-    });
-    this.#showActionMessage(units, `unit simulating fire fight`);
+    // TODO
+    //    if (units === null)
+    //      units = this.getSelectedUnits();
+    //    units = units.filter((unit => {!unit.getHuman()}));
+    //
+    //    let callback = (units) => {
+    //
+    //    getGroundElevation(latlng, (response: string) => {
+    //      var groundElevation: number | null = null;
+    //      try {
+    //        groundElevation = parseFloat(response);
+    //      } catch {
+    //        console.warn("Simulate fire fight: could not retrieve ground elevation");
+    //      }
+    //
+    //if (getApp().getMap().getOptions().protectDCSUnits && !units.every(unit => unit.isControlledByOlympus()))
+    //      this.showProtectedUnitsPopup(units.filter(unit => unit.isControlledByDCS()).length, callback);}      units?.forEach((unit: Unit) => unit.simulateFireFight(latlng, groundElevation));
+    //    });
+    //    this.#showActionMessage(units, `unit simulating fire fight`);
   }
 
   /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   scenicAAA(units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.scenicAAA());
+      this.#showActionMessage(units, `unit set to perform scenic AAA`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.scenicAAA());
-    this.#showActionMessage(units, `unit set to perform scenic AAA`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct units to enter into dynamic accuracy/miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   missOnPurpose(units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.missOnPurpose());
+      this.#showActionMessage(units, `unit set to perform miss-on-purpose AAA`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.missOnPurpose());
-    this.#showActionMessage(units, `unit set to perform miss-on-purpose AAA`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Instruct units to land at specific point
    *
    * @param latlng Point where to land
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   landAtPoint(latlng: LatLng, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.landAtPoint(latlng));
+      this.#showActionMessage(units, `unit landing at point`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.landAtPoint(latlng));
-    this.#showActionMessage(units, `unit landing at point`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific shots scatter to all the selected units
    *
    * @param shotsScatter Value to set
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setShotsScatter(shotsScatter: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        onlyOnePerGroup: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setShotsScatter(shotsScatter));
+      this.#showActionMessage(units, `shots scatter set to ${shotsScatter}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setShotsScatter(shotsScatter));
-    this.#showActionMessage(units, `shots scatter set to ${shotsScatter}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /** Set a specific shots intensity to all the selected units
    *
    * @param shotsScatter Value to set
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
   setShotsIntensity(shotsIntensity: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        onlyOnePerGroup: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      units.forEach((unit: Unit) => unit.setShotsIntensity(shotsIntensity));
+      this.#showActionMessage(units, `shots intensity set to ${shotsIntensity}`);
+    };
 
-    units = segregatedUnits.controllable;
-
-    units.forEach((unit: Unit) => unit.setShotsIntensity(shotsIntensity));
-    this.#showActionMessage(units, `shots intensity set to ${shotsIntensity}`);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
-
   /*********************** Control operations on selected units ************************/
   /**  See getUnitsCategories for more info
    *
@@ -1224,30 +983,25 @@ export class UnitsManager {
    *
    */
   createGroup(units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: false,
-        showProtectionReminder: true,
-      });
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
+    let callback = (units) => {
+      if (this.getUnitsCategories(units).length == 1) {
+        var unitsData: { ID: number; location: LatLng }[] = [];
+        units.forEach((unit: Unit) => unitsData.push({ ID: unit.ID, location: unit.getPosition() }));
+        getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */);
+        this.#showActionMessage(units, `created a group`);
+      } else {
+        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
+      }
 
-    units = segregatedUnits.controllable;
-
-    if (this.getUnitsCategories(units).length == 1) {
-      var unitsData: { ID: number; location: LatLng }[] = [];
-      units.forEach((unit: Unit) => unitsData.push({ ID: unit.ID, location: unit.getPosition() }));
-      getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */);
-      this.#showActionMessage(units, `created a group`);
-    } else {
-      //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
-    }
+      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+        document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+      else callback(units);
+    };
   }
 
   /** Set the hotgroup for the selected units. It will be the only hotgroup of the unit
@@ -1279,45 +1033,17 @@ export class UnitsManager {
    * @returns
    */
   delete(explosion: boolean = false, explosionType: string = "", units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeProtected: true,
-        showProtectionReminder: true,
-      }); /* Can be applied to humans too */
+    // TODO add fast delete option
+    if (units === null) units = this.getSelectedUnits(); /* Can be applied to humans too */
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return;
-    }
-
-    units = segregatedUnits.controllable;
-
-    const selectionContainsAHuman = units.some((unit: Unit) => {
-      return unit.getHuman() === true;
-    });
-
-    if (
-      selectionContainsAHuman &&
-      !confirm("Your selection includes a human player. Deleting humans causes their vehicle to crash.\n\nAre you sure you want to do this?")
-    ) {
-      return;
-    }
-
-    const doDelete = (explosion = false, explosionType = "", immediate = false) => {
-      units?.forEach((unit: Unit) => unit.delete(explosion, explosionType, immediate));
+    let callback = (units) => {
+      units?.forEach((unit: Unit) => unit.delete(explosion, explosionType, false));
       this.#showActionMessage(units as Unit[], `deleted`);
     };
 
-    //if (units.length >= DELETE_SLOW_THRESHOLD)
-    //    //this.#showSlowDeleteDialog(units).then((action: any) => {
-    //    //    if (action === "delete-slow")
-    //    //        doDelete(explosion, explosionType, false);
-    //    //    else if (action === "delete-immediate")
-    //    //        doDelete(explosion, explosionType, true);
-    //    //})
-    //else
-    doDelete(explosion, explosionType);
+    if ((getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) || units.find((unit) => unit.getHuman()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
 
   /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
@@ -1328,20 +1054,12 @@ export class UnitsManager {
    * @returns Array of positions for each unit, in order
    */
   computeGroupDestination(latlng: LatLng, rotation: number, units: Unit[] | null = null) {
-    if (units === null)
-      units = this.getSelectedUnits({
-        excludeHumans: true,
-        excludeProtected: true,
-        onlyOnePerGroup: true,
-      });
+    // TODO handle protected units
+    if (units === null) units = this.getSelectedUnits();
 
-    const segregatedUnits = this.segregateUnits(units);
-    if (segregatedUnits.controllable.length === 0) {
-      this.showProtectedUnitsPopup(segregatedUnits.dcsProtected.length);
-      return {};
-    }
-
-    units = segregatedUnits.controllable;
+    units = units.filter((unit) => {
+      return !unit.getHuman();
+    });
 
     if (units.length === 0) return {};
 
@@ -1818,16 +1536,12 @@ export class UnitsManager {
     const map = getApp().getMap();
     const units = this.getSelectedUnits();
     const numSelectedUnits = units.length;
-    const numProtectedUnits = units.filter((unit: Unit) => map.getIsUnitProtected(unit)).length;
+    //const numProtectedUnits = units.filter((unit: Unit) => map.getIsUnitProtected(unit)).length;
 
     //if (numProtectedUnits === 1 && numSelectedUnits === numProtectedUnits)
     //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: unit is protected`);
 
     //if (numProtectedUnits > 1)
     //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: selection contains ${numProtectedUnits} protected units.`);
-  }
-
-  #unitIsProtected(unit: Unit) {
-    return getApp().getMap().getIsUnitProtected(unit);
   }
 }

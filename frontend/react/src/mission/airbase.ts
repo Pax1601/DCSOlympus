@@ -2,6 +2,8 @@ import { DivIcon } from "leaflet";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 import { AirbaseChartData, AirbaseOptions } from "../interfaces";
+import { getApp } from "../olympusapp";
+import { IDLE } from "../constants/constants";
 
 export class Airbase extends CustomMarker {
   #name: string = "";
@@ -21,6 +23,12 @@ export class Airbase extends CustomMarker {
 
     this.#name = options.name;
     this.#img = document.createElement("img");
+
+    this.addEventListener("click", (ev) => {
+      if (getApp().getMap().getState() === IDLE) {
+        document.dispatchEvent(new CustomEvent("airbaseClick", { detail: ev.target }));
+      }
+    });
   }
 
   createIcon() {
@@ -34,7 +42,7 @@ export class Airbase extends CustomMarker {
     var el = document.createElement("div");
     el.classList.add("airbase-icon");
     el.setAttribute("data-object", "airbase");
-    
+
     this.#img.src = "/vite/images/markers/airbase.svg";
     this.#img.onload = () => SVGInjector(this.#img);
     el.appendChild(this.#img);

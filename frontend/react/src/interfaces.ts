@@ -71,6 +71,10 @@ export interface SpawnRequestTable {
   unit: UnitSpawnTable;
 }
 
+export interface EffectRequestTable {
+  type: string;
+}
+
 export interface UnitSpawnTable {
   unitType: string;
   location: LatLng;

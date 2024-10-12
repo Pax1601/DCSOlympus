@@ -84,6 +84,7 @@ export function MapContextMenu(props: {}) {
     getApp()
       .getUnitsManager()
       .getSelectedUnits()
+      .filter(unit => !unit.getHuman())
       .forEach((unit: Unit) => {
         unit.appendContextActions(newContextActionSet);
       });

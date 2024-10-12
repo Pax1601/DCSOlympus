@@ -2,8 +2,6 @@ import { DivIcon, LatLng, Map } from "leaflet";
 import { Airbase } from "./airbase";
 
 export class Carrier extends Airbase {
-  #heading: number = 0;
-
   createIcon() {
     var icon = new DivIcon({
       className: "leaflet-airbase-marker",
@@ -42,7 +40,6 @@ export class Carrier extends Airbase {
   }
 
   setHeading(heading: number) {
-    this.#heading = heading;
     this.getImg().style.transform = `rotate(${heading - 3.14 / 2}rad)`;
   }
 
@@ -53,6 +50,7 @@ export class Carrier extends Airbase {
       const maxMeters = this._map.containerPointToLatLng([0, y]).distanceTo(this._map.containerPointToLatLng([x, y]));
       const meterPerPixel = maxMeters / x;
       this.getImg().style.width = `${Math.round(333 / meterPerPixel)}px`;
+      this.setZIndexOffset(-10000);
     }
   }
 }

@@ -61,6 +61,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     ROE: undefined as undefined | string,
     reactionToThreat: undefined as undefined | string,
     emissionsCountermeasures: undefined as undefined | string,
+    scenicAAA: undefined as undefined | boolean,
+    missOnPurpose: undefined as undefined | boolean,
     shotsScatter: undefined as undefined | number,
     shotsIntensity: undefined as undefined | number,
     operateAs: undefined as undefined | Coalition,
@@ -112,42 +114,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     if (!props.open && filterString !== "") setFilterString("");
   });
 
-  /* */
-  const minAltitude = 0;
-  const maxAltitude = getApp()
-    ?.getUnitsManager()
-    ?.getSelectedUnitsCategories()
-    .every((category) => {
-      return category === "Helicopter";
-    })
-    ? 20000
-    : 60000;
-  const altitudeStep = getApp()
-    ?.getUnitsManager()
-    ?.getSelectedUnitsCategories()
-    .every((category) => {
-      return category === "Helicopter";
-    })
-    ? 100
-    : 500;
-  const minSpeed = 0;
-  const maxSpeed = getApp()
-    ?.getUnitsManager()
-    ?.getSelectedUnitsCategories()
-    .every((category) => {
-      return category === "Helicopter";
-    })
-    ? 200
-    : 800;
-  const speedStep = getApp()
-    ?.getUnitsManager()
-    ?.getSelectedUnitsCategories()
-    .every((category) => {
-      return category === "Helicopter";
-    })
-    ? 5
-    : 10;
-
   useEffect(() => {
     /* When a unit is selected, update the data */
     document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
@@ -190,6 +156,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       emissionsCountermeasures: (unit: Unit) => {
         return unit.getEmissionsCountermeasures();
       },
+      scenicAAA: (unit: Unit) => {
+        return unit.getState() === "scenic-aaa";
+      },
+      missOnPurpose: (unit: Unit) => {
+        return unit.getState() === "miss-on-purpose";
+      },
       shotsScatter: (unit: Unit) => {
         return unit.getShotsScatter();
       },
@@ -213,8 +185,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       },
       isAudioSink: (unit: Unit) => {
         return (
-          getApp()?.getAudioManager().getSinks().filter((sink) => {
-            return sink instanceof UnitSink}).length > 0 &&
+          getApp()
+            ?.getAudioManager()
+            .getSinks()
+            .filter((sink) => {
+              return sink instanceof UnitSink;
+            }).length > 0 &&
           getApp()
             ?.getAudioManager()
             .getSinks()
@@ -256,6 +232,37 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const mergedFilteredUnits = Object.assign({}, filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits) as {
     [key: string]: UnitBlueprint;
   };
+
+  const everyUnitIsGround = selectedCategories.every((category) => {
+    return category === "GroundUnit";
+  });
+  const everyUnitIsNavy = selectedCategories.every((category) => {
+    return category === "NavyUnit";
+  });
+  const everyUnitIsHelicopter = selectedCategories.every((category) => {
+    return category === "Helicopter";
+  });
+
+  const minAltitude = 0;
+  const minSpeed = 0;
+
+  let maxAltitude = 60000;
+  let maxSpeed = 800;
+
+  let altitudeStep = 500;
+  let speedStep = 10;
+
+  if (everyUnitIsHelicopter) {
+    maxAltitude = 20000;
+    maxSpeed = 200;
+    speedStep = 5;
+    altitudeStep = 100;
+  }
+
+  if (everyUnitIsGround || everyUnitIsNavy) {
+    maxSpeed = 60;
+    speedStep = 1;
+  }
 
   return (
     <Menu
@@ -618,20 +625,22 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {selectedUnitsData.desiredSpeed !== undefined ? selectedUnitsData.desiredSpeed + " KTS" : "Different values"}
                         </span>
                       </div>
-                      <OlLabelToggle
-                        toggled={selectedUnitsData.desiredSpeedType === undefined ? undefined : selectedUnitsData.desiredSpeedType === "GS"}
-                        leftLabel={"GS"}
-                        rightLabel={"CAS"}
-                        onClick={() => {
-                          selectedUnits.forEach((unit) => {
-                            unit.setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS");
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
-                              desiredSpeedType: selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS",
+                      {!(everyUnitIsGround || everyUnitIsNavy) && (
+                        <OlLabelToggle
+                          toggled={selectedUnitsData.desiredSpeedType === undefined ? undefined : selectedUnitsData.desiredSpeedType === "GS"}
+                          leftLabel={"GS"}
+                          rightLabel={"CAS"}
+                          onClick={() => {
+                            selectedUnits.forEach((unit) => {
+                              unit.setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS");
+                              setSelectedUnitsData({
+                                ...selectedUnitsData,
+                                desiredSpeedType: selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS",
+                              });
                             });
-                          });
-                        }}
-                      />
+                          }}
+                        />
+                      )}
                     </div>
                     <OlRangeSlider
                       onChange={(ev) => {
@@ -853,94 +862,152 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     return ["GroundUnit", "NavyUnit"].includes(category);
                   }) && (
                     <>
-                      {/* ============== Shots scatter START ============== */}
-                      <div className={`flex flex-col gap-2`}>
-                        <span
-                          className={`
-                            font-normal
-                            dark:text-white
-                          `}
-                        >
-                          Shots scatter
-                        </span>
-                        <OlButtonGroup>
-                          {[olButtonsScatter1, olButtonsScatter2, olButtonsScatter3].map((icon, idx) => {
-                            return (
-                              <OlButtonGroupItem
-                                key={idx}
-                                onClick={() => {
-                                  selectedUnits.forEach((unit) => {
-                                    unit.setShotsScatter(idx + 1);
-                                    setSelectedUnitsData({
-                                      ...selectedUnitsData,
-                                      shotsScatter: idx + 1,
-                                    });
-                                  });
-                                }}
-                                active={selectedUnitsData.shotsScatter === idx + 1}
-                                icon={icon}
-                              />
-                            );
-                          })}
-                        </OlButtonGroup>
-                      </div>
-                      {/* ============== Shots scatter END ============== */}
-                      {/* ============== Shots intensity START ============== */}
-                      <div className="flex flex-col gap-2">
-                        <span
-                          className={`
-                            font-normal
-                            dark:text-white
-                          `}
-                        >
-                          Shots intensity
-                        </span>
-                        <OlButtonGroup>
-                          {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
-                            return (
-                              <OlButtonGroupItem
-                                key={idx}
-                                onClick={() => {
-                                  selectedUnits.forEach((unit) => {
-                                    unit.setShotsIntensity(idx + 1);
-                                    setSelectedUnitsData({
-                                      ...selectedUnitsData,
-                                      shotsIntensity: idx + 1,
-                                    });
-                                  });
-                                }}
-                                active={selectedUnitsData.shotsIntensity === idx + 1}
-                                icon={icon}
-                              />
-                            );
-                          })}
-                        </OlButtonGroup>
-                      </div>
-                      {/* ============== Shots intensity END ============== */}
-                      {/* ============== Operate as toggle START ============== */}
-                      <div className="flex content-center justify-between">
-                        <span
-                          className={`
-                            font-normal
-                            dark:text-white
-                          `}
-                        >
-                          Operate as
-                        </span>
-                        <OlCoalitionToggle
-                          coalition={selectedUnitsData.operateAs as Coalition}
-                          onClick={() => {
-                            selectedUnits.forEach((unit) => {
-                              unit.setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue");
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
-                                operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
+                      <div
+                        className={`
+                          flex flex-col gap-4 rounded-md bg-olympus-200/30 p-4
+                        `}
+                      >
+                        {/* ============== Scenic AAA toggle START ============== */}
+                        <div className="flex content-center justify-between">
+                          <span
+                            className={`
+                              font-normal
+                              dark:text-white
+                            `}
+                          >
+                            Scenic AAA mode
+                          </span>
+                          <OlToggle
+                            toggled={selectedUnitsData.scenicAAA}
+                            onClick={() => {
+                              selectedUnits.forEach((unit) => {
+                                selectedUnitsData.scenicAAA ? unit.changeSpeed("stop") : unit.scenicAAA();
+                                setSelectedUnitsData({
+                                  ...selectedUnitsData,
+                                  scenicAAA: !selectedUnitsData.scenicAAA,
+                                  missOnPurpose: false,
+                                });
                               });
-                            });
-                          }}
-                        />
+                            }}
+                          />
+                        </div>
+                        {/* ============== Scenic AAA toggle END ============== */}
+                        {/* ============== Miss on purpose toggle START ============== */}
+                        <div className="flex content-center justify-between">
+                          <span
+                            className={`
+                              font-normal
+                              dark:text-white
+                            `}
+                          >
+                            Miss on purpose mode
+                          </span>
+                          <OlToggle
+                            toggled={selectedUnitsData.missOnPurpose}
+                            onClick={() => {
+                              selectedUnits.forEach((unit) => {
+                                selectedUnitsData.missOnPurpose ? unit.changeSpeed("stop") : unit.missOnPurpose();
+                                setSelectedUnitsData({
+                                  ...selectedUnitsData,
+                                  scenicAAA: false,
+                                  missOnPurpose: !selectedUnitsData.missOnPurpose,
+                                });
+                              });
+                            }}
+                          />
+                        </div>
+                        {/* ============== Miss on purpose toggle END ============== */}
+                        <div className="flex gap-4">
+                          {/* ============== Shots scatter START ============== */}
+                          <div className={`flex flex-col gap-2`}>
+                            <span
+                              className={`
+                                font-normal
+                                dark:text-white
+                              `}
+                            >
+                              Shots scatter
+                            </span>
+                            <OlButtonGroup>
+                              {[olButtonsScatter1, olButtonsScatter2, olButtonsScatter3].map((icon, idx) => {
+                                return (
+                                  <OlButtonGroupItem
+                                    key={idx}
+                                    onClick={() => {
+                                      selectedUnits.forEach((unit) => {
+                                        unit.setShotsScatter(idx + 1);
+                                        setSelectedUnitsData({
+                                          ...selectedUnitsData,
+                                          shotsScatter: idx + 1,
+                                        });
+                                      });
+                                    }}
+                                    active={selectedUnitsData.shotsScatter === idx + 1}
+                                    icon={icon}
+                                  />
+                                );
+                              })}
+                            </OlButtonGroup>
+                          </div>
+                          {/* ============== Shots scatter END ============== */}
+                          {/* ============== Shots intensity START ============== */}
+                          <div className="flex flex-col gap-2">
+                            <span
+                              className={`
+                                font-normal
+                                dark:text-white
+                              `}
+                            >
+                              Shots intensity
+                            </span>
+                            <OlButtonGroup>
+                              {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
+                                return (
+                                  <OlButtonGroupItem
+                                    key={idx}
+                                    onClick={() => {
+                                      selectedUnits.forEach((unit) => {
+                                        unit.setShotsIntensity(idx + 1);
+                                        setSelectedUnitsData({
+                                          ...selectedUnitsData,
+                                          shotsIntensity: idx + 1,
+                                        });
+                                      });
+                                    }}
+                                    active={selectedUnitsData.shotsIntensity === idx + 1}
+                                    icon={icon}
+                                  />
+                                );
+                              })}
+                            </OlButtonGroup>
+                          </div>
+                          {/* ============== Shots intensity END ============== */}
+                        </div>
+                        {/* ============== Operate as toggle START ============== */}
+                        <div className="flex content-center justify-between">
+                          <span
+                            className={`
+                              font-normal
+                              dark:text-white
+                            `}
+                          >
+                            Operate as
+                          </span>
+                          <OlCoalitionToggle
+                            coalition={selectedUnitsData.operateAs as Coalition}
+                            onClick={() => {
+                              selectedUnits.forEach((unit) => {
+                                unit.setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue");
+                                setSelectedUnitsData({
+                                  ...selectedUnitsData,
+                                  operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
+                                });
+                              });
+                            }}
+                          />
+                        </div>
+                        {/* ============== Operate as toggle END ============== */}
                       </div>
-                      {/* ============== Operate as toggle END ============== */}
                       {/* ============== Follow roads toggle START ============== */}
                       <div className="flex content-center justify-between">
                         <span
@@ -1129,9 +1196,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
-                      my-auto w-20
-                    `}>
+                    <OlDropdown
+                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
+                      className={`my-auto w-20`}
+                    >
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1250,9 +1318,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
-                          bg-yellow-700
-                        `}
+                        ${
+                          selectedUnits[0].getFuel() > 10 &&
+                          selectedUnits[0].getFuel() <= 40 &&
+                          `bg-yellow-700`
+                        }
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}

@@ -12,7 +12,6 @@ import {
   rad2deg,
   bearing,
   deg2rad,
-  ftToM,
   getGroundElevation,
   coalitionToEnum,
   nmToM,
@@ -51,30 +50,22 @@ import { Group } from "./group";
 import { ContextActionSet } from "./contextactionset";
 import * as turf from "@turf/turf";
 import {
-  olButtonsContextMissOnPurpose,
-  olButtonsContextScenicAaa,
   olButtonsContextSimulateFireFight,
-  olButtonsContextDiamond,
-  olButtonsContextEchelonLh,
-  olButtonsContextEchelonRh,
   olButtonsContextFollow,
-  olButtonsContextFront,
   olButtonsContextLandAtPoint,
-  olButtonsContextLineAbreast,
-  olButtonsContextTrail,
   olButtonsContextAttack,
   olButtonsContextRefuel,
 } from "../ui/components/olicons";
 import {
-  faArrowDown,
-  faExclamation,
+  faExplosion,
   faLocationCrosshairs,
   faLocationDot,
   faMapLocation,
   faPeopleGroup,
+  faPlaneArrival,
   faQuestionCircle,
   faRoute,
-  faVolumeHigh,
+  faTrash,
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { Carrier } from "../mission/carrier";
@@ -841,12 +832,42 @@ export abstract class Unit extends CustomMarker {
     contextActionSet.addContextAction(
       this,
       "path",
-      "Append destination",
+      "Create route",
       "Click on the map to add a destination to the path",
       faRoute,
       "position",
       (units: Unit[], _, targetPosition) => {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
+      }
+    );
+
+    contextActionSet.addContextAction(
+      this,
+      "delete",
+      "Delete unit",
+      "Deletes the unit",
+      faTrash,
+      null,
+      (units: Unit[], _1, _2) => {
+        getApp().getUnitsManager().delete(false);
+      },
+      {
+        executeImmediately: true,
+      }
+    );
+
+    contextActionSet.addContextAction(
+      this,
+      "explode",
+      "Explode unit",
+      "Explodes the unit",
+      faExplosion,
+      null,
+      (units: Unit[], _1, _2) => {
+        document.dispatchEvent(new CustomEvent("showUnitExplosionMenu", { detail: { units: units } }));
+      },
+      {
+        executeImmediately: true,
       }
     );
 
@@ -1211,7 +1232,24 @@ export abstract class Unit extends CustomMarker {
   }
 
   delete(explosion: boolean, explosionType: string, immediate: boolean) {
-    getApp().getServerManager().deleteUnit(this.ID, explosion, explosionType, immediate);
+    getApp()
+      .getServerManager()
+      .deleteUnit(this.ID, explosion, explosionType, immediate, (commandHash) => {
+        /* When the command is executed, add an explosion marker where the unit was */
+        if (explosion) {
+          // TODO some commands don't currently return a commandHash, fix that!
+          let timer = window.setTimeout(() => {
+            //getApp()
+            //  .getServerManager()
+            //  .isCommandExecuted((res: any) => {
+            //    if (res.commandExecuted) {
+                  getApp().getMap().addExplosionMarker(this.getPosition());
+                  window.clearInterval(timer);
+           //    }
+           //  }, commandHash);
+          }, 500);
+        }
+      });
   }
 
   refuel() {
@@ -1292,38 +1330,6 @@ export abstract class Unit extends CustomMarker {
 
   onGroupChanged(member: Unit) {
     this.#redrawMarker();
-  }
-
-  applyFollowOptions(formation: string, units: Unit[]) {
-    if (formation === "custom") {
-      document.getElementById("custom-formation-dialog")?.classList.remove("hide");
-      document.addEventListener("applyCustomFormation", () => {
-        var dialog = document.getElementById("custom-formation-dialog");
-        if (dialog) {
-          dialog.classList.add("hide");
-          var clock = 1;
-          while (clock < 8) {
-            if ((<HTMLInputElement>dialog.querySelector(`#formation-${clock}`)).checked) break;
-            clock++;
-          }
-          var angleDeg = 360 - (clock - 1) * 45;
-          var angleRad = deg2rad(angleDeg);
-          var distance = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#distance`)?.querySelector("input")).value));
-          var upDown = ftToM(parseInt((<HTMLInputElement>dialog.querySelector(`#up-down`)?.querySelector("input")).value));
-
-          // X: front-rear, positive front
-          // Y: top-bottom, positive top
-          // Z: left-right, positive right
-          var x = distance * Math.cos(angleRad);
-          var y = upDown;
-          var z = distance * Math.sin(angleRad);
-
-          getApp().getUnitsManager().followUnit(this.ID, { x: x, y: y, z: z }, undefined, units);
-        }
-      });
-    } else {
-      getApp().getUnitsManager().followUnit(this.ID, undefined, formation, units);
-    }
   }
 
   /***********************************************/
@@ -1847,7 +1853,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) {
           document.dispatchEvent(
-            new CustomEvent("createFormation", {
+            new CustomEvent("showFormationMenu", {
               detail: {
                 leader: targetUnit,
                 wingmen: units.filter((unit) => unit !== targetUnit),
@@ -1879,6 +1885,18 @@ export abstract class AirUnit extends Unit {
       "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, units);
+      }
+    );
+
+    contextActionSet.addContextAction(
+      this,
+      "land",
+      "Land",
+      "Click on a point to land at the nearest airbase",
+      faPlaneArrival,
+      "position",
+      (units: Unit[], _, targetPosition: LatLng | null) => {
+        if (targetPosition) getApp().getUnitsManager().landAt(targetPosition, units);
       }
     );
   }
@@ -1989,33 +2007,6 @@ export class GroundUnit extends Unit {
       },
       { executeImmediately: true }
     );
-
-    if (this.canAAA()) {
-      contextActionSet.addContextAction(
-        this,
-        "scenic-aaa",
-        "Scenic AAA",
-        "Shoot AAA in the air without aiming at any target, when an enemy unit gets close enough. WARNING: works correctly only on neutral units, blue or red units will aim",
-        olButtonsContextScenicAaa,
-        null,
-        (units: Unit[]) => {
-          getApp().getUnitsManager().scenicAAA(units);
-        },
-        { executeImmediately: true }
-      );
-      contextActionSet.addContextAction(
-        this,
-        "miss-aaa",
-        "Dynamic accuracy AAA",
-        "Shoot AAA towards the closest enemy unit, but don't aim precisely. WARNING: works correctly only on neutral units, blue or red units will aim",
-        olButtonsContextMissOnPurpose,
-        null,
-        (units: Unit[]) => {
-          getApp().getUnitsManager().missOnPurpose(units);
-        },
-        { executeImmediately: true }
-      );
-    }
 
     /* Context actions that require a target unit */
     contextActionSet.addContextAction(

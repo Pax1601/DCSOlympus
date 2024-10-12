@@ -115,7 +115,7 @@ export function Header() {
                     flex h-fit flex-row items-center justify-start gap-1
                   `}
                 >
-                  <OlLockStateButton checked={false} onClick={() => {}} tooltip="Lock/unlock protected units (from scripted mission)" />
+                  <OlLockStateButton checked={!appState.mapOptions.protectDCSUnits} onClick={() => {getApp().getMap().setOption("protectDCSUnits", !appState.mapOptions.protectDCSUnits)}} tooltip="Lock/unlock protected units (from scripted mission)" />
                   <OlRoundStateButton
                     checked={audioEnabled}
                     onClick={() => {
