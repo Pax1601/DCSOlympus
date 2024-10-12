@@ -15,10 +15,6 @@ export class AudioUnitPipeline {
   #encoder: AudioEncoder;
 
   #convolverNode: ConvolverNode;
-  #preDelayNode: DelayNode;
-  #multitapNodes: DelayNode[];
-  #multitapGainNode: GainNode;
-  #wetGainNode: GainNode;
   #tailOsc: Noise;
 
   #distance: number = 0;
@@ -68,37 +64,6 @@ export class AudioUnitPipeline {
     /* Create the pipeline */
     this.#inputNode = inputNode;
     this.#setupEffects();
-
-    /* Create the interval task to update the data */
-    setInterval(() => {
-      /* Get the destination unit and compute the distance to it */
-      let destinationUnit = getApp().getUnitsManager().getUnitByID(this.#unitID);
-      if (destinationUnit) {
-        let distance = destinationUnit?.getPosition().distanceTo(this.#sourceUnit.getPosition());
-
-        /* The units positions are updated at a low frequency. Filter the distance to avoid sudden volume jumps */
-        this.#distance = 0.9 * this.#distance + 0.1 * distance;
-
-        /* Don't bother updating parameters if the client is too far away */
-        if (this.#distance < MAX_DISTANCE) {
-          /* Compute a new gain decreasing with distance. */
-          let newGain = 1.0 - Math.pow(this.#distance / 1000, 0.5); // Arbitrary
-
-          /* Set the values of the main gain node and the multitap gain node, used for reverb effect */
-          this.#gainNode.gain.setValueAtTime(newGain, getApp().getAudioManager().getAudioContext().currentTime);
-          this.#multitapGainNode.gain.setValueAtTime(newGain / 10, getApp().getAudioManager().getAudioContext().currentTime);
-
-          /* Increase reverb and predelay with distance */
-          let reverbTime = this.#distance / 1000 / 4; //Arbitrary
-          let preDelay = this.#distance / 1000 / 2; // Arbitrary
-          this.#preDelayNode.delayTime.setValueAtTime(preDelay, getApp().getAudioManager().getAudioContext().currentTime);
-          this.#multitapNodes.forEach((t, i) => {
-            t.delayTime.setValueAtTime(0.001 + i * (preDelay / 2), getApp().getAudioManager().getAudioContext().currentTime);
-          });
-          this.#tailOsc.release = reverbTime / 3;
-        }
-      }
-    }, 100);
   }
 
   handleEncodedData(encodedAudioChunk, unitID) {
@@ -136,44 +101,28 @@ export class AudioUnitPipeline {
   #setupEffects() {
     /* Create the nodes necessary for the pipeline */
     this.#convolverNode = getApp().getAudioManager().getAudioContext().createConvolver();
-    this.#preDelayNode = getApp().getAudioManager().getAudioContext().createDelay(1);
-    this.#multitapGainNode = getApp().getAudioManager().getAudioContext().createGain();
-    this.#wetGainNode = getApp().getAudioManager().getAudioContext().createGain();
-    this.#multitapNodes = [];
-    for (let i = 2; i > 0; i--) {
-      this.#multitapNodes.push(getApp().getAudioManager().getAudioContext().createDelay(1));
-    }
 
-    /* Connect the nodes as follows 
-                                       /------> pre delay -> convolver ------\ 
-      input -> main gain -> wet gain -<                                       >-> destination
-                                       \-> multitap[0] -> ... -> multitap[n]-/ 
-
-      The multitap nodes simulate distinct echoes coming from the original sound. Multitap[0] is the original sound.
-      The predelay and convolver nodes simulate reverb.
-    */
+    let wetGainNode = getApp().getAudioManager().getAudioContext().createGain();
+    wetGainNode.gain.setValueAtTime(2.0, getApp().getAudioManager().getAudioContext().currentTime)
+    let delayNode = getApp().getAudioManager().getAudioContext().createDelay(1);
+    delayNode.delayTime.setValueAtTime(0.09, getApp().getAudioManager().getAudioContext().currentTime)
 
     this.#inputNode.connect(this.#gainNode);
-    this.#gainNode.connect(this.#wetGainNode);
-    this.#wetGainNode.connect(this.#preDelayNode);
-    this.#wetGainNode.connect(this.#multitapNodes[0]);
-    this.#multitapNodes.map((t, i) => {
-      if (this.#multitapNodes[i + 1]) {
-        t.connect(this.#multitapNodes[i + 1]);
-      }
-    });
-    this.#multitapNodes[this.#multitapNodes.length - 1].connect(this.#multitapGainNode);
-    this.#multitapGainNode.connect(this.#destinationNode);
-    this.#preDelayNode.connect(this.#convolverNode);
+
+    this.#gainNode.connect(this.#destinationNode);
+
+    this.#gainNode.connect(wetGainNode);
+    wetGainNode.connect(delayNode);
+    delayNode.connect(this.#convolverNode);
     this.#convolverNode.connect(this.#destinationNode);
 
     /* Render the random noise needed for the convolver node to simulate reverb */
-    this.#renderTail(0.1); //Arbitrary
+    this.#renderTail(0.2); //Arbitrary
   }
 
   #renderTail(reverbTime) {
-    let attack = 0;
-    let decay = 0.0;
+    let attack = 0.15;
+    let decay = 0.09;
 
     /* Generate an offline audio context to render the reverb noise */
     const tailContext = new OfflineAudioContext(
