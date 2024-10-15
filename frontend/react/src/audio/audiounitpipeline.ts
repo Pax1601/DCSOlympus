@@ -80,7 +80,7 @@ export class AudioUnitPipeline {
         /* Don't bother updating parameters if the client is too far away */
         if (this.#distance < this.#maxDistance) {
           /* Compute a new gain decreasing with distance. */
-          let newGain = 1.0 - Math.pow(this.#distance / this.#maxDistance, 2); // Arbitrary
+          let newGain = 1.0 - Math.pow(this.#distance / this.#maxDistance, 1); // Arbitrary
 
           /* Set the values of the main gain node and the multitap gain node, used for reverb effect */
           this.#gainNode.gain.setValueAtTime(newGain, getApp().getAudioManager().getAudioContext().currentTime);
