@@ -209,6 +209,10 @@ export class AudioManager {
       if (sink instanceof RadioSink) sink.setName(`Radio ${idx++}`);
     });
     document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    this.#sources.forEach((source) => {
+      if (source.getConnectedTo().includes(sink))
+        source.disconnect(sink)
+    })
   }
 
   getGuid() {

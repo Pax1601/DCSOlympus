@@ -18,9 +18,11 @@ export abstract class AudioSource {
   }
 
   connect(sink: AudioSink) {
-    this.getOutputNode().connect(sink.getInputNode());
-    this.#connectedTo.push(sink);
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    if (!this.#connectedTo.includes(sink)) {
+      this.getOutputNode().connect(sink.getInputNode());
+      this.#connectedTo.push(sink);
+      document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    }
   }
 
   disconnect(sinkToDisconnect?: AudioSink) {

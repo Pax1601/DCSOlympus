@@ -53,12 +53,6 @@ export function SideBar() {
                     tooltip="Hide/show drawing menu"
                   ></OlStateButton>
                   <OlStateButton
-                    onClick={events.toggleRadioMenuVisible}
-                    checked={appState.radioMenuVisible}
-                    icon={faRadio}
-                    tooltip="Hide/show radio menu"
-                  ></OlStateButton>
-                  <OlStateButton
                     onClick={events.toggleAudioMenuVisible}
                     checked={appState.audioMenuVisible}
                     icon={faVolumeHigh}

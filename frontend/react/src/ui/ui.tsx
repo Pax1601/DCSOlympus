@@ -22,7 +22,6 @@ import { ControlsPanel } from "./panels/controlspanel";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
 import { AirbaseMenu } from "./panels/airbasemenu";
 import { Airbase } from "../mission/airbase";
-import { RadioMenu } from "./panels/radiomenu";
 import { AudioMenu } from "./panels/audiomenu";
 import { FormationMenu } from "./panels/formationmenu";
 import { Unit } from "../unit/unit";
@@ -48,7 +47,6 @@ export function UI() {
   const [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
   const [measureMenuVisible, setMeasureMenuVisible] = useState(false);
   const [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
-  const [radioMenuVisible, setRadioMenuVisible] = useState(false);
   const [audioMenuVisible, setAudioMenuVisible] = useState(false);
   const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
   const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
@@ -134,7 +132,6 @@ export function UI() {
     setDrawingMenuVisible(false);
     setOptionsMenuVisible(false);
     setAirbaseMenuVisible(false);
-    setRadioMenuVisible(false);
     setAudioMenuVisible(false);
     setFormationMenuVisible(false);
     setUnitExplosionMenuVisible(false);
@@ -186,7 +183,6 @@ export function UI() {
           drawingMenuVisible: drawingMenuVisible,
           optionsMenuVisible: optionsMenuVisible,
           airbaseMenuVisible: airbaseMenuVisible,
-          radioMenuVisible: radioMenuVisible,
           audioMenuVisible: audioMenuVisible,
           mapOptions: mapOptions,
           mapHiddenTypes: mapHiddenTypes,
@@ -204,7 +200,6 @@ export function UI() {
             setMeasureMenuVisible: setMeasureMenuVisible,
             setOptionsMenuVisible: setOptionsMenuVisible,
             setAirbaseMenuVisible: setAirbaseMenuVisible,
-            setRadioMenuVisible: setRadioMenuVisible,
             setAudioMenuVisible: setAudioMenuVisible,
             toggleMainMenuVisible: () => {
               hideAllMenus();
@@ -233,10 +228,6 @@ export function UI() {
             toggleAirbaseMenuVisible: () => {
               hideAllMenus();
               setAirbaseMenuVisible(!airbaseMenuVisible);
-            },
-            toggleRadioMenuVisible: () => {
-              hideAllMenus();
-              setRadioMenuVisible(!radioMenuVisible);
             },
             toggleAudioMenuVisible: () => {
               hideAllMenus();
@@ -295,7 +286,6 @@ export function UI() {
             <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
             <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
             <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase} />
-            <RadioMenu open={radioMenuVisible} onClose={() => setRadioMenuVisible(false)} />
             <AudioMenu open={audioMenuVisible} onClose={() => setAudioMenuVisible(false)} />
             <FormationMenu open={formationMenuVisible} leader={formationLeader} wingmen={formationWingmen} onClose={() => setFormationMenuVisible(false)} />
             <UnitExplosionMenu open={unitExplosionMenuVisible} units={unitExplosionUnits} onClose={() => setUnitExplosionMenuVisible(false)} />

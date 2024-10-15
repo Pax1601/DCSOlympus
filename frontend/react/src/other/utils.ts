@@ -11,6 +11,7 @@ import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { getApp } from "../olympusapp";
 import { featureCollection } from "turf";
+import { randomUUID } from "crypto";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -110,8 +111,8 @@ export function reciprocalHeading(heading: number): number {
  * @param decimal <boolean> whether this is a decimal number or not
  *
  * */
-export const zeroAppend = function (num: number, places: number, decimal: boolean = false) {
-  var string = decimal ? num.toFixed(2) : String(num);
+export const zeroAppend = function (num: number, places: number, decimal: boolean = false, decimalPlaces: number = 2) {
+  var string = decimal ? num.toFixed(decimalPlaces) : String(num);
   while (string.length < places) {
     string = "0" + string;
   }
@@ -575,4 +576,15 @@ export function doubleToByteArray(number) {
 
 export function byteArrayToDouble(array) {
   return new DataView(array.reverse().buffer).getFloat64(0);
+}
+
+export function rand(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+export function getRandomColor(seed) {
+  var h = (seed * Math.PI * 100) % 360 + 1;
+  var s = 50;
+  var l = 50;
+  return 'hsl(' + h + ',' + s + '%,' + l + '%)';
 }

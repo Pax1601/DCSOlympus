@@ -8,6 +8,8 @@ scramble calls and so on. Ideally, one may want to move this code to the backend
 export class UnitSink extends AudioSink {
   #unit: Unit;
   #unitPipelines: { [key: string]: AudioUnitPipeline } = {};
+  #ptt: boolean = false;
+  #maxDistance: number = 1852;
 
   constructor(unit: Unit) {
     super();
@@ -33,6 +35,8 @@ export class UnitSink extends AudioSink {
       .forEach((unitID) => {
         if (unitID !== 0 && !(unitID in this.#unitPipelines)) {
           this.#unitPipelines[unitID] = new AudioUnitPipeline(this.#unit, unitID, this.getInputNode());
+          this.#unitPipelines[unitID].setPtt(false);
+          this.#unitPipelines[unitID].setMaxDistance(this.#maxDistance);
         }
       });
 
@@ -41,5 +45,29 @@ export class UnitSink extends AudioSink {
         delete this.#unitPipelines[unitID];
       }
     });
+  }
+
+  setPtt(ptt) {
+    this.#ptt = ptt;
+    Object.values(this.#unitPipelines).forEach((pipeline) => {
+      pipeline.setPtt(ptt);
+    })
+    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+  }
+
+  getPtt() {
+    return this.#ptt;
+  }
+
+  setMaxDistance(maxDistance) {
+    this.#maxDistance = maxDistance;
+    Object.values(this.#unitPipelines).forEach((pipeline) => {
+      pipeline.setMaxDistance(maxDistance);
+    })
+    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+  }
+
+  getMaxDistance() {
+    return this.#maxDistance;
   }
 }

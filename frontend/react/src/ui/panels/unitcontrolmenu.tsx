@@ -44,7 +44,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { UnitBlueprint } from "../../interfaces";
-import { FaRadio } from "react-icons/fa6";
+import { FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlNumberInput } from "../components/olnumberinput";
 import { Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
@@ -105,6 +105,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [filterString, setFilterString] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
+  const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
 
   var searchBarRef = useRef(null);
 
@@ -129,6 +130,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     /* When all units are deselected clean the view */
     document.addEventListener("clearSelection", () => {
       setSelectedUnits([]);
+    });
+
+    document.addEventListener("audioManagerStateChanged", () => {
+      setAudioManagerEnabled(getApp().getAudioManager().isRunning());
     });
   }, []);
 
@@ -545,7 +550,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <div className="flex flex-col">
                           <span
                             className={`
-                              font-normal
+                              my-auto font-normal
                               dark:text-white
                             `}
                           >
@@ -608,7 +613,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <div className="flex flex-col">
                         <span
                           className={`
-                            font-normal
+                            my-auto font-normal
                             dark:text-white
                           `}
                         >
@@ -664,7 +669,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     <div className="flex flex-col gap-2">
                       <span
                         className={`
-                          font-normal
+                          my-auto font-normal
                           dark:text-white
                         `}
                       >
@@ -702,7 +707,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <div className={`flex flex-col gap-2`}>
                         <span
                           className={`
-                            font-normal
+                            my-auto font-normal
                             dark:text-white
                           `}
                         >
@@ -734,7 +739,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <div className="flex flex-col gap-2">
                         <span
                           className={`
-                            font-normal
+                            my-auto font-normal
                             dark:text-white
                           `}
                         >
@@ -773,7 +778,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     <div className="flex content-center justify-between">
                       <span
                         className={`
-                          font-normal
+                          my-auto font-normal
                           dark:text-white
                         `}
                       >
@@ -807,7 +812,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     <div className="flex content-center justify-between">
                       <span
                         className={`
-                          font-normal
+                          my-auto font-normal
                           dark:text-white
                         `}
                       >
@@ -871,7 +876,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <div className="flex content-center justify-between">
                           <span
                             className={`
-                              font-normal
+                              my-auto font-normal
                               dark:text-white
                             `}
                           >
@@ -896,7 +901,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <div className="flex content-center justify-between">
                           <span
                             className={`
-                              font-normal
+                              my-auto font-normal
                               dark:text-white
                             `}
                           >
@@ -922,7 +927,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <div className={`flex flex-col gap-2`}>
                             <span
                               className={`
-                                font-normal
+                                my-auto font-normal
                                 dark:text-white
                               `}
                             >
@@ -954,7 +959,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <div className="flex flex-col gap-2">
                             <span
                               className={`
-                                font-normal
+                                my-auto font-normal
                                 dark:text-white
                               `}
                             >
@@ -987,7 +992,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <div className="flex content-center justify-between">
                           <span
                             className={`
-                              font-normal
+                              my-auto font-normal
                               dark:text-white
                             `}
                           >
@@ -1012,7 +1017,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <div className="flex content-center justify-between">
                         <span
                           className={`
-                            font-normal
+                            my-auto font-normal
                             dark:text-white
                           `}
                         >
@@ -1036,7 +1041,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <div className="flex content-center justify-between">
                         <span
                           className={`
-                            font-normal
+                            my-auto font-normal
                             dark:text-white
                           `}
                         >
@@ -1062,40 +1067,55 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   <div className="flex content-center justify-between">
                     <span
                       className={`
-                        font-normal
+                        my-auto font-normal
                         dark:text-white
                       `}
                     >
-                      Enable loudspeakers
+                      Loudspeakers
                     </span>
-                    <OlToggle
-                      toggled={selectedUnitsData.isAudioSink}
-                      onClick={() => {
-                        selectedUnits.forEach((unit) => {
-                          if (!selectedUnitsData.isAudioSink) {
-                            getApp()?.getAudioManager().addUnitSink(unit);
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
-                              isAudioSink: true,
-                            });
-                          } else {
-                            let sink = getApp()
-                              ?.getAudioManager()
-                              .getSinks()
-                              .find((sink) => {
-                                return sink instanceof UnitSink && sink.getUnit() === unit;
+                    {audioManagerEnabled ? (
+                      <OlToggle
+                        toggled={selectedUnitsData.isAudioSink}
+                        onClick={() => {
+                          selectedUnits.forEach((unit) => {
+                            if (!selectedUnitsData.isAudioSink) {
+                              getApp()?.getAudioManager().addUnitSink(unit);
+                              setSelectedUnitsData({
+                                ...selectedUnitsData,
+                                isAudioSink: true,
                               });
-                            if (sink !== undefined) getApp()?.getAudioManager().removeSink(sink);
+                            } else {
+                              let sink = getApp()
+                                ?.getAudioManager()
+                                .getSinks()
+                                .find((sink) => {
+                                  return sink instanceof UnitSink && sink.getUnit() === unit;
+                                });
+                              if (sink !== undefined) getApp()?.getAudioManager().removeSink(sink);
 
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
-                              isAudioSink: false,
-                            });
-                          }
-                        });
-                      }}
-                    />
+                              setSelectedUnitsData({
+                                ...selectedUnitsData,
+                                isAudioSink: false,
+                              });
+                            }
+                          });
+                        }}
+                      />
+                    ) : (
+                      <div className="text-white">
+                        Enable audio with{" "}
+                        <span
+                          className={`
+                            mx-1 mt-[-7px] inline-block translate-y-2
+                            rounded-full border-[1px] border-white p-1
+                          `}
+                        >
+                          <FaVolumeHigh />
+                        </span>{" "}first
+                      </div>
+                    )}
                   </div>
+
                   {/* ============== Audio sink toggle END ============== */}
                 </div>
               )}
@@ -1196,10 +1216,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown
-                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
-                      className={`my-auto w-20`}
-                    >
+                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
+                      my-auto w-20
+                    `}>
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1318,11 +1337,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${
-                          selectedUnits[0].getFuel() > 10 &&
-                          selectedUnits[0].getFuel() <= 40 &&
-                          `bg-yellow-700`
-                        }
+                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
+                          bg-yellow-700
+                        `}
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}

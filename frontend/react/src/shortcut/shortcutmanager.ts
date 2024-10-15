@@ -128,9 +128,6 @@ export class ShortcutManager {
           getApp()
             .getAudioManager()
             .getSinks()
-            .filter((sink) => {
-              return sink instanceof RadioSink;
-            })
             [idx]?.setPtt(true);
         },
         code: key,
@@ -144,9 +141,6 @@ export class ShortcutManager {
           getApp()
             .getAudioManager()
             .getSinks()
-            .filter((sink) => {
-              return sink instanceof RadioSink;
-            })
             [idx]?.setPtt(false);
         },
         code: key,

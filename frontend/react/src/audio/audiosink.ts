@@ -1,7 +1,7 @@
 import { getApp } from "../olympusapp";
 
 /* Base audio sink class */
-export class AudioSink {
+export abstract class AudioSink {
   #name: string;
   #gainNode: GainNode;
 
@@ -25,4 +25,7 @@ export class AudioSink {
   getInputNode() {
     return this.#gainNode;
   }
+
+  abstract setPtt(ptt: boolean): void;
+  abstract getPtt(): boolean;
 }

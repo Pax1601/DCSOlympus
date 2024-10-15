@@ -1,5 +1,4 @@
 import React from "react";
-import { ChangeEvent } from "react";
 import { OlNumberInput } from "./olnumberinput";
 
 export function OlFrequencyInput(props: { value: number; className?: string; onChange: (value: number) => void }) {
@@ -28,6 +27,7 @@ export function OlFrequencyInput(props: { value: number; className?: string; onC
           props.onChange(frequency);
         }}
         value={Math.floor(frequency / 1000000)}
+        className="!min-w-28"
       ></OlNumberInput>
       <div className="my-auto">.</div>
       <OlNumberInput
@@ -49,8 +49,8 @@ export function OlFrequencyInput(props: { value: number; className?: string; onC
           props.onChange(frequency);
         }}
         value={(frequency - Math.floor(frequency / 1000000) * 1000000) / 1000}
+        className="!min-w-28"
       ></OlNumberInput>
-      <div className="my-auto">MHz</div>
     </div>
   );
 }
