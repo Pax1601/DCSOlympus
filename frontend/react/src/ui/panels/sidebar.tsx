@@ -1,6 +1,6 @@
 import React from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass, faRadio, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass, faRadio, faVolumeHigh, faJ } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
 import { IDLE } from "../../constants/constants";
@@ -57,6 +57,12 @@ export function SideBar() {
                     checked={appState.audioMenuVisible}
                     icon={faVolumeHigh}
                     tooltip="Hide/show audio menu"
+                  ></OlStateButton>
+                  <OlStateButton
+                    onClick={events.toggleJTACMenuVisible}
+                    checked={appState.JTACMenuVisible}
+                    icon={faJ}
+                    tooltip="Hide/show JTAC menu"
                   ></OlStateButton>
                 </div>
               </div>

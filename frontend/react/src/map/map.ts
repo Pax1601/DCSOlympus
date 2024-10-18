@@ -21,6 +21,9 @@ import {
   COALITIONAREA_DRAW_CIRCLE,
   NOT_INITIALIZED,
   SPAWN_EFFECT,
+  SELECT_JTAC_TARGET,
+  SELECT_JTAC_ECHO,
+  SELECT_JTAC_IP,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -37,6 +40,8 @@ import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 import { initDraggablePath } from "./coalitionarea/draggablepath";
 import { faDrawPolygon, faHandPointer, faJetFighter, faMap } from "@fortawesome/free-solid-svg-icons";
 import { ExplosionMarker } from "./markers/explosionmarker";
+import { TextMarker } from "./markers/textmarker";
+import { TargetMarker } from "./markers/targetmarker";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -113,6 +118,12 @@ export class Map extends L.Map {
   #effectRequestTable: EffectRequestTable | null = null;
   #temporaryMarkers: TemporaryUnitMarker[] = [];
   #currentSpawnMarker: TemporaryUnitMarker | null = null;
+
+  /* JTAC tools */
+  #ECHOPoint: TextMarker | null = null;
+  #IPPoint: TextMarker | null = null;
+  #targetPoint: TargetMarker | null = null;
+  #IPToTargetLine: L.Polygon | null = null;
 
   /**
    *
@@ -249,6 +260,57 @@ export class Map extends L.Map {
       this.#broadcastPosition();
     });
 
+    document.addEventListener("selectJTACECHO", (ev: CustomEventInit) => {
+      if (!this.#ECHOPoint) {
+        this.#ECHOPoint = new TextMarker(ev.detail, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+        this.#ECHOPoint.addTo(this);
+        this.#ECHOPoint.on("dragstart", (event) => {
+          event.target.options["freeze"] = true;
+        });
+        this.#ECHOPoint.on("dragend", (event) => {
+          document.dispatchEvent(new CustomEvent("selectJTACECHO", { detail: this.#ECHOPoint?.getLatLng() }));
+          event.target.options["freeze"] = false;
+        });
+      } else this.#ECHOPoint.setLatLng(ev.detail);
+
+    });
+
+    document.addEventListener("selectJTACIP", (ev: CustomEventInit) => {
+      if (!this.#IPPoint) {
+        this.#IPPoint = new TextMarker(ev.detail, "IP", "rgb(168 85 247)", { interactive: true, draggable: true });
+        this.#IPPoint.addTo(this);
+        this.#IPPoint.on("dragstart", (event) => {
+          event.target.options["freeze"] = true;
+        });
+        this.#IPPoint.on("dragend", (event) => {
+          document.dispatchEvent(new CustomEvent("selectJTACIP", { detail: this.#IPPoint?.getLatLng() }));
+          event.target.options["freeze"] = false;
+        });
+      } else this.#IPPoint.setLatLng(ev.detail);
+
+      this.#drawIPToTargetLine();
+    });
+
+    document.addEventListener("selectJTACTarget", (ev: CustomEventInit) => {
+      if (ev.detail.location) {
+        if (!this.#targetPoint) {
+          this.#targetPoint = new TargetMarker(ev.detail.location, { interactive: true, draggable: true });
+          this.#targetPoint.addTo(this);
+          this.#targetPoint.on("dragstart", (event) => {
+            event.target.options["freeze"] = true;
+          });
+          this.#targetPoint.on("dragend", (event) => {
+            document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: {location: this.#targetPoint?.getLatLng() }}));
+            event.target.options["freeze"] = false;
+          });
+        } else this.#targetPoint.setLatLng(ev.detail.location);
+      } else {
+        this.#targetPoint?.removeFrom(this);
+        this.#targetPoint = null;
+      }
+      this.#drawIPToTargetLine();
+    });
+
     /* Pan interval */
     this.#panInterval = window.setInterval(() => {
       if (this.#panUp || this.#panDown || this.#panRight || this.#panLeft)
@@ -368,7 +430,11 @@ export class Map extends L.Map {
       this.#spawnRequestTable = options?.spawnRequestTable ?? null;
       console.log(`Spawn request table:`);
       console.log(this.#spawnRequestTable);
-      this.#currentSpawnMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
+      this.#currentSpawnMarker = new TemporaryUnitMarker(
+        new L.LatLng(0, 0),
+        this.#spawnRequestTable?.unit.unitType ?? "",
+        this.#spawnRequestTable?.coalition ?? "neutral"
+      );
       this.#currentSpawnMarker.addTo(this);
     } else if (this.#state === SPAWN_EFFECT) {
       this.deselectAllCoalitionAreas();
@@ -542,6 +608,60 @@ export class Map extends L.Map {
           actions: [touch ? faHandPointer : "LMB"],
           target: faMap,
           text: "Add circle",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          target: faMap,
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === SELECT_JTAC_TARGET) {
+      return [
+        {
+          actions: [touch ? faHandPointer : "LMB"],
+          target: faMap,
+          text: "Set unit/location as target",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", 2],
+          target: faMap,
+          text: "Exit selection mode",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          target: faMap,
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === SELECT_JTAC_ECHO) {
+      return [
+        {
+          actions: [touch ? faHandPointer : "LMB"],
+          target: faMap,
+          text: "Set location as ECHO point",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", 2],
+          target: faMap,
+          text: "Exit selection mode",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          target: faMap,
+          text: "Move map location",
+        },
+      ];
+    } else if (this.#state === SELECT_JTAC_IP) {
+      return [
+        {
+          actions: [touch ? faHandPointer : "LMB"],
+          target: faMap,
+          text: "Set location as IP point",
+        },
+        {
+          actions: [touch ? faHandPointer : "LMB", 2],
+          target: faMap,
+          text: "Exit selection mode",
         },
         {
           actions: [touch ? faHandPointer : "LMB", "Drag"],
@@ -846,7 +966,7 @@ export class Map extends L.Map {
       this.setState(COALITIONAREA_EDIT);
     } else {
       this.setState(IDLE);
-      document.dispatchEvent(new CustomEvent("hideAllMenus"))
+      document.dispatchEvent(new CustomEvent("hideAllMenus"));
     }
   }
 
@@ -881,9 +1001,9 @@ export class Map extends L.Map {
       }
     } else if (this.#state === SPAWN_EFFECT) {
       if (e.originalEvent.button != 2 && this.#effectRequestTable !== null) {
-        getApp().getServerManager().spawnExplosion(50, 'normal', pressLocation);
+        getApp().getServerManager().spawnExplosion(50, "normal", pressLocation);
       }
-    }  else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
+    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
       const selectedArea = this.getSelectedCoalitionArea();
       if (selectedArea && selectedArea instanceof CoalitionPolygon) {
         selectedArea.addTemporaryLatLng(pressLocation);
@@ -908,12 +1028,21 @@ export class Map extends L.Map {
         }
       }
     } else if (this.#state === CONTEXT_ACTION) {
-      if (e.type === 'touchstart' || e.originalEvent.buttons === 1) {
+      if (e.type === "touchstart" || e.originalEvent.buttons === 1) {
         if (this.#contextAction !== null) this.executeContextAction(null, pressLocation);
         else this.setState(IDLE);
       } else if (e.originalEvent.buttons === 2) {
         if (this.#defaultContextAction !== null) this.executeDefaultContextAction(null, pressLocation);
       }
+    } else if (this.#state === SELECT_JTAC_TARGET) {
+      document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { location: pressLocation } }));
+      this.setState(IDLE);
+    } else if (this.#state === SELECT_JTAC_ECHO) {
+      document.dispatchEvent(new CustomEvent("selectJTACECHO", { detail: pressLocation }));
+      this.setState(IDLE);
+    } else if (this.#state === SELECT_JTAC_IP) {
+      document.dispatchEvent(new CustomEvent("selectJTACIP", { detail: pressLocation }));
+      this.setState(IDLE);
     } else {
     }
   }
@@ -1057,5 +1186,14 @@ export class Map extends L.Map {
     };
     this.#cameraOptionsXmlHttp.timeout = 500;
     this.#cameraOptionsXmlHttp.send("");
+  }
+
+  #drawIPToTargetLine() {
+    if (this.#targetPoint && this.#IPPoint) {
+      if (!this.#IPToTargetLine) {
+        this.#IPToTargetLine = new L.Polygon([this.#targetPoint.getLatLng(), this.#IPPoint.getLatLng()]);
+        this.#IPToTargetLine.addTo(this);
+      } else this.#IPToTargetLine.setLatLngs([this.#targetPoint.getLatLng(), this.#IPPoint.getLatLng()]);
+    }
   }
 }

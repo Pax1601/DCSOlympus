@@ -39,6 +39,7 @@ import {
   MAX_SHOTS_SCATTER,
   SHOTS_SCATTER_DEGREES,
   CONTEXT_ACTION,
+  SELECT_JTAC_TARGET,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
@@ -1384,6 +1385,9 @@ export abstract class Unit extends CustomMarker {
         getApp().getUnitsManager().deselectAllUnits();
         this.setSelected(!this.getSelected());
       }
+    } else if (getApp().getMap().getState() === SELECT_JTAC_TARGET) {
+      document.dispatchEvent(new CustomEvent("selectJTACTarget", {detail: {unit: this}}))
+      getApp().getMap().setState(IDLE)
     }
   }
 

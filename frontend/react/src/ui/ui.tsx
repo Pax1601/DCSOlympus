@@ -27,6 +27,7 @@ import { FormationMenu } from "./panels/formationmenu";
 import { Unit } from "../unit/unit";
 import { ProtectionPrompt } from "./modals/protectionprompt";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
+import { JTACMenu } from "./panels/jtacmenu";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -52,6 +53,7 @@ export function UI() {
   const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
   const [formationMenuVisible, setFormationMenuVisible] = useState(false);
   const [unitExplosionMenuVisible, setUnitExplosionMenuVisible] = useState(false);
+  const [JTACMenuVisible, setJTACMenuVisible] = useState(false);
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [checkingPassword, setCheckingPassword] = useState(false);
@@ -184,6 +186,7 @@ export function UI() {
           optionsMenuVisible: optionsMenuVisible,
           airbaseMenuVisible: airbaseMenuVisible,
           audioMenuVisible: audioMenuVisible,
+          JTACMenuVisible: JTACMenuVisible,
           mapOptions: mapOptions,
           mapHiddenTypes: mapHiddenTypes,
           mapSources: mapSources,
@@ -200,6 +203,7 @@ export function UI() {
             setMeasureMenuVisible: setMeasureMenuVisible,
             setOptionsMenuVisible: setOptionsMenuVisible,
             setAirbaseMenuVisible: setAirbaseMenuVisible,
+            setJTACMenuVisible: setJTACMenuVisible,
             setAudioMenuVisible: setAudioMenuVisible,
             toggleMainMenuVisible: () => {
               hideAllMenus();
@@ -232,6 +236,10 @@ export function UI() {
             toggleAudioMenuVisible: () => {
               hideAllMenus();
               setAudioMenuVisible(!audioMenuVisible);
+            },
+            toggleJTACMenuVisible: () => {
+              hideAllMenus();
+              setJTACMenuVisible(!JTACMenuVisible);
             },
           }}
         >
@@ -289,6 +297,7 @@ export function UI() {
             <AudioMenu open={audioMenuVisible} onClose={() => setAudioMenuVisible(false)} />
             <FormationMenu open={formationMenuVisible} leader={formationLeader} wingmen={formationWingmen} onClose={() => setFormationMenuVisible(false)} />
             <UnitExplosionMenu open={unitExplosionMenuVisible} units={unitExplosionUnits} onClose={() => setUnitExplosionMenuVisible(false)} />
+            <JTACMenu open={JTACMenuVisible} onClose={() => setJTACMenuVisible(false)} />
 
             <MiniMapPanel />
             <ControlsPanel />

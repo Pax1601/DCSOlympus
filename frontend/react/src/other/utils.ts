@@ -52,14 +52,13 @@ export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: numbe
 }
 
 export function ConvertDDToDMS(D: number, lng: boolean) {
-  var dir = D < 0 ? (lng ? "W" : "S") : lng ? "E" : "N";
   var deg = 0 | (D < 0 ? (D = -D) : D);
   var min = 0 | (((D += 1e-9) % 1) * 60);
   var sec = (0 | (((D * 60) % 1) * 6000)) / 100;
   var dec = Math.round((sec - Math.floor(sec)) * 100);
   var sec = Math.floor(sec);
-  if (lng) return dir + zeroPad(deg, 3) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
-  else return dir + zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
+  if (lng) return zeroPad(deg, 3) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
+  else return zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
 }
 
 export function dataPointMap(container: HTMLElement, data: any) {
@@ -122,7 +121,7 @@ export const zeroAppend = function (num: number, places: number, decimal: boolea
 export const zeroPad = function (num: number, places: number) {
   var string = String(num);
   while (string.length < places) {
-    string += "0";
+    string = "0" + string;
   }
   return string;
 };

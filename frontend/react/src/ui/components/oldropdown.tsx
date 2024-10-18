@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 export function OlDropdown(props: {
+  disableAutoClose?: boolean;
   className?: string;
   leftIcon?: IconProp;
   rightIcon?: IconProp;
@@ -103,12 +104,9 @@ export function OlDropdown(props: {
           `}
           type="button"
         >
-          {props.leftIcon && (
-            <FontAwesomeIcon
-              icon={props.leftIcon}
-              className={`mr-3`}
-            />
-          )}
+          {props.leftIcon && <FontAwesomeIcon icon={props.leftIcon} className={`
+            mr-3
+          `} />}
           <span className="overflow-hidden text-ellipsis text-nowrap">{props.label ?? ""}</span>
           <svg
             className={`
@@ -140,6 +138,9 @@ export function OlDropdown(props: {
             h-fit w-full text-sm text-gray-700
             dark:text-gray-200
           `}
+          onClick={() => {
+            props.disableAutoClose !== true && setOpen(false);
+          }}
         >
           {props.children}
         </div>
@@ -149,11 +150,7 @@ export function OlDropdown(props: {
 }
 
 /* Conveniency Component for dropdown elements */
-export function OlDropdownItem(props: {
-  onClick?: () => void;
-  className?: string;
-  children?: string | JSX.Element | JSX.Element[];
-}) {
+export function OlDropdownItem(props: { onClick?: () => void; className?: string; children?: string | JSX.Element | JSX.Element[] }) {
   return (
     <button
       onClick={props.onClick ?? (() => {})}

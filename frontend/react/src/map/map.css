@@ -136,3 +136,13 @@
   height: 100%;
   width: 100%;
 }
+
+.ol-text-icon {
+  color: #111111;
+  text-align: center;
+  padding: 7px;
+  border-radius: 999px;
+  font-weight: bold;
+  border: 2px solid black;
+  font-size: 14px;
+}

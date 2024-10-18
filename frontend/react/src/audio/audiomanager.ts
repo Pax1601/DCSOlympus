@@ -61,7 +61,9 @@ export class AudioManager {
 
     let wsAddress = res ? res[1] : this.#address;
     if (this.#address.includes("https")) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
-    else this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`);
+    else this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
+
+    this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`); // TODO: remove, used for testing!
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {
