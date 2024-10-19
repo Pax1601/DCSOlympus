@@ -37,6 +37,7 @@ export class UnitSink extends AudioSink {
           this.#unitPipelines[unitID] = new AudioUnitPipeline(this.#unit, unitID, this.getInputNode());
           this.#unitPipelines[unitID].setPtt(false);
           this.#unitPipelines[unitID].setMaxDistance(this.#maxDistance);
+          console.log(`Added unit pipeline for unitID ${unitID} ` )
         }
       });
 

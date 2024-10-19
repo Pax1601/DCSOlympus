@@ -79,14 +79,13 @@ export function UI() {
       setMapOptions({ ...getApp().getMap().getOptions() });
     });
 
-    document.addEventListener("mapStateChanged", (ev) => {
-      //if ((ev as CustomEvent).detail === IDLE) hideAllMenus();
-      /*else*/ if ((ev as CustomEvent).detail === CONTEXT_ACTION && window.innerWidth > 1000) setUnitControlMenuVisible(true);
-      setMapState(String((ev as CustomEvent).detail));
-    });
+    document.addEventListener("mapStateChanged", (ev: CustomEventInit) => {
+      if (ev.detail === IDLE || ev.detail === CONTEXT_ACTION || mapState !== IDLE) {
+        hideAllMenus();
+      }
 
-    document.addEventListener("hideAllMenus", (ev) => {
-      hideAllMenus();
+      if (ev.detail === CONTEXT_ACTION && window.innerWidth > 1000) setUnitControlMenuVisible(true);
+      setMapState(ev.detail);
     });
 
     document.addEventListener("mapSourceChanged", (ev) => {
@@ -116,14 +115,16 @@ export function UI() {
 
     document.addEventListener("showProtectionPrompt", (ev: CustomEventInit) => {
       setProtectionPromptVisible(true);
-      setProtectionCallback(() => {return ev.detail.callback});
+      setProtectionCallback(() => {
+        return ev.detail.callback;
+      });
       setProtectionUnits(ev.detail.units);
     });
 
     document.addEventListener("showUnitExplosionMenu", (ev) => {
       setUnitExplosionMenuVisible(true);
       setUnitExplosionUnits((ev as CustomEvent).detail.units);
-    })
+    });
   }, []);
 
   function hideAllMenus() {
@@ -137,6 +138,7 @@ export function UI() {
     setAudioMenuVisible(false);
     setFormationMenuVisible(false);
     setUnitExplosionMenuVisible(false);
+    setJTACMenuVisible(false);
   }
 
   function checkPassword(password: string) {

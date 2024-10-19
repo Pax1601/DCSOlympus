@@ -16,7 +16,7 @@ export function MapContextMenu(props: {}) {
   const [xPosition, setXPosition] = useState(0);
   const [yPosition, setYPosition] = useState(0);
   const [latLng, setLatLng] = useState(null as null | LatLng);
-  const [unit, setUnit] = useState(null as null | Unit)
+  const [unit, setUnit] = useState(null as null | Unit);
 
   var contentRef = useRef(null);
 
@@ -84,7 +84,7 @@ export function MapContextMenu(props: {}) {
     getApp()
       .getUnitsManager()
       .getSelectedUnits()
-      .filter(unit => !unit.getHuman())
+      .filter((unit) => !unit.getHuman())
       .forEach((unit: Unit) => {
         unit.appendContextActions(newContextActionSet);
       });
@@ -92,6 +92,15 @@ export function MapContextMenu(props: {}) {
     setContextActionsSet(newContextActionSet);
     return newContextActionSet;
   }
+
+  let colors = [null, "white", "green", "purple", "blue", "red"];
+  let reorderedActions: ContextAction[] = [];
+  colors.forEach((color) => {
+    Object.values(contextActionsSet.getContextActions()).forEach((contextAction: ContextAction) => {
+      if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
+      else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
+    });
+  });
 
   return (
     <>
@@ -108,10 +117,19 @@ export function MapContextMenu(props: {}) {
                 flex w-full flex-col gap-2 overflow-x-auto no-scrollbar p-2
               `}
             >
-              {Object.values(contextActionsSet.getContextActions(latLng? "position": "unit")).map((contextAction) => {
+              {Object.values(contextActionsSet.getContextActions(latLng ? "position" : "unit")).map((contextAction) => {
+                const colorString = contextAction.getOptions().buttonColor
+                  ? `
+                  border-2
+                  border-${contextAction.getOptions().buttonColor}-500
+                `
+                  : "";
                 return (
                   <OlDropdownItem
-                    className="flex w-full content-center gap-2 text-white"
+                    className={`
+                      flex w-full content-center gap-2 text-white
+                      ${colorString}
+                    `}
                     onClick={() => {
                       if (contextAction.getOptions().executeImmediately) {
                         contextAction.executeCallback(null, null);

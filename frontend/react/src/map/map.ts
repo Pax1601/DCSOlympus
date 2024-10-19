@@ -67,8 +67,10 @@ export class Map extends L.Map {
   #mouseCooldownTimer: number = 0;
   #shortPressTimer: number = 0;
   #longPressTimer: number = 0;
+  #selecting: boolean = false;
 
   /* Camera keyboard panning control */
+  // TODO add back
   defaultPanDelta: number = 100;
   #panInterval: number | null = null;
   #panLeft: boolean = false;
@@ -80,6 +82,7 @@ export class Map extends L.Map {
   #isShiftKeyDown: boolean = false;
 
   /* Center on unit target */
+  // TODO add back
   #centeredUnit: Unit | null = null;
 
   /* Minimap */
@@ -721,6 +724,10 @@ export class Map extends L.Map {
     return this.#centeredUnit;
   }
 
+  isSelecting() {
+    return this.#selecting;
+  }
+
   setTheatre(theatre: string) {
     this.#theatre = theatre;
 
@@ -921,11 +928,14 @@ export class Map extends L.Map {
     this.#isDragging = false;
   }
 
-  #onSelectionStart(e: any) {}
+  #onSelectionStart(e: any) {
+    this.#selecting = true;
+  }
 
   #onSelectionEnd(e: any) {
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
     document.dispatchEvent(new CustomEvent("mapSelectionEnd"));
+    this.#selecting = false;
   }
 
   #onMouseUp(e: any) {
@@ -966,7 +976,6 @@ export class Map extends L.Map {
       this.setState(COALITIONAREA_EDIT);
     } else {
       this.setState(IDLE);
-      document.dispatchEvent(new CustomEvent("hideAllMenus"));
     }
   }
 

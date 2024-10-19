@@ -89,11 +89,8 @@ export var BoxSelect = Handler.extend({
   _onMouseMove: function (e: any) {
     if (!this._moved) {
       this._moved = true;
-
       this._box = DomUtil.create("div", "leaflet-zoom-box", this._container);
       DomUtil.addClass(this._container, "leaflet-crosshair");
-
-      this._map.fire("boxzoomstart");
     }
 
     if (e.type === "touchmove") this._point = this._map.mouseEventToContainerPoint(e.touches[0]);
@@ -117,6 +114,7 @@ export var BoxSelect = Handler.extend({
     DomUtil.enableTextSelection();
     DomUtil.enableImageDrag();
     this._map.dragging.enable();
+    this._forceBoxSelect = false;
 
     DomEvent.off(
       //@ts-ignore
@@ -149,7 +147,6 @@ export var BoxSelect = Handler.extend({
     window.setTimeout(Util.bind(this._resetState, this), 0);
     var bounds = new LatLngBounds(this._map.containerPointToLatLng(this._startPoint), this._map.containerPointToLatLng(this._point));
 
-    this._forceBoxSelect = false;
     this._map.fire("selectionend", { selectionBounds: bounds });
   },
 

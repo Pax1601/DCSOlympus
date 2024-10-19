@@ -72,6 +72,15 @@ export function UnitMouseControlBar(props: {}) {
     sr > 1 && scrolledRight && setScrolledRight(false);
   }
 
+  let colors = [null, "white", "green", "purple", "blue", "red"];
+  let reorderedActions: ContextAction[] = [];
+  colors.forEach((color) => {
+    Object.values(contextActionsSet.getContextActions()).forEach((contextAction: ContextAction) => {
+      if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
+      else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
+    });
+  });
+
   return (
     <>
       {open && Object.keys(contextActionsSet.getContextActions()).length > 0 && (
@@ -93,13 +102,21 @@ export function UnitMouseControlBar(props: {}) {
               />
             )}
             <div className="flex gap-2 overflow-x-auto no-scrollbar p-2" onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
-              {Object.values(contextActionsSet.getContextActions()).map((contextAction: ContextAction) => {
+              {reorderedActions.map((contextAction: ContextAction) => {
                 return (
                   <OlStateButton
                     key={contextAction.getId()}
                     checked={contextAction === activeContextAction}
                     icon={contextAction.getIcon()}
                     tooltip={contextAction.getLabel()}
+                    className={
+                      contextAction.getOptions().buttonColor
+                        ? `
+                          border-2
+                          border-${contextAction.getOptions().buttonColor}-500
+                        `
+                        : ""
+                    }
                     onClick={() => {
                       if (contextAction.getOptions().executeImmediately) {
                         setActiveContextAction(null);

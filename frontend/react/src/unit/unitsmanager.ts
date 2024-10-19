@@ -381,11 +381,11 @@ export class UnitsManager {
           else unit.clearDestinations();
         } else unit.clearDestinations();
       }
-
-      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-        document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-      else callback(units);
     };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
+      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
+    else callback(units);
   }
 
   /** Instruct all the selected units to land at a specific location

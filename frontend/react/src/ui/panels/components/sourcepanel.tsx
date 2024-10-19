@@ -116,7 +116,7 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
               <OlRangeSlider
                 value={props.source.getVolume() * 100}
                 min={0}
-                max={200}
+                max={100}
                 onChange={(ev) => {
                   props.source.setVolume(parseFloat(ev.currentTarget.value) / 100);
                 }}

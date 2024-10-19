@@ -43,11 +43,6 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
       /* Align the state of the coalition toggle to the coalition of the area */
       if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
-
-      if (!props.open) {
-        if ([COALITIONAREA_EDIT, COALITIONAREA_DRAW_CIRCLE, COALITIONAREA_DRAW_POLYGON].includes(getApp().getMap().getState()))
-          getApp().getMap().setState(IDLE);
-      }
     }
   });
 

@@ -4,6 +4,7 @@ import { LatLng } from "leaflet";
 
 export interface ContextActionOptions {
   executeImmediately?: boolean;
+  buttonColor?: string;
 }
 
 export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => void;

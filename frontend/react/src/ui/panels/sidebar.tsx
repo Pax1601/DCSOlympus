@@ -3,7 +3,7 @@ import { OlStateButton } from "../components/olstatebutton";
 import { faGamepad, faRuler, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faMagnifyingGlass, faRadio, faVolumeHigh, faJ } from "@fortawesome/free-solid-svg-icons";
 import { EventsConsumer } from "../../eventscontext";
 import { StateConsumer } from "../../statecontext";
-import { IDLE } from "../../constants/constants";
+import { CONTEXT_ACTION, IDLE } from "../../constants/constants";
 
 export function SideBar() {
   return (
@@ -42,7 +42,7 @@ export function SideBar() {
                   <OlStateButton
                     onClick={events.toggleUnitControlMenuVisible}
                     checked={appState.unitControlMenuVisible}
-                    icon={appState.mapState === IDLE? faMagnifyingGlass: faGamepad}
+                    icon={appState.mapState !== CONTEXT_ACTION? faMagnifyingGlass: faGamepad}
                     tooltip="Hide/show selection tool and unit control menu"
                   ></OlStateButton>
                   <OlStateButton onClick={events.toggleMeasureMenuVisible} checked={appState.measureMenuVisible} icon={faRuler} tooltip="NOT IMPLEMENTED"></OlStateButton>

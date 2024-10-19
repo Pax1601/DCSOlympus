@@ -15,7 +15,7 @@ export function LoginModal(props: {
   onBack: () => void;
 }) {
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState("Game Master");
 
   return (
     <Modal
@@ -29,9 +29,7 @@ export function LoginModal(props: {
     >
       <img
         src="/vite/images/splash/1.jpg"
-        className={`
-        contents-center w-full object-cover opacity-[7%]
-      `}
+        className={`contents-center w-full object-cover opacity-[7%]`}
       ></img>
       <div
         className={`
@@ -92,9 +90,7 @@ export function LoginModal(props: {
                   <span className="size-[80px] min-w-14">
                     <img
                       src="..\vite\images\olympus-500x500.png"
-                      className={`
-                      flex w-full
-                    `}
+                      className={`flex w-full`}
                     ></img>
                   </span>
                   <div className={`flex flex-col items-start gap-1`}>
@@ -204,6 +200,7 @@ export function LoginModal(props: {
                               focus:border-blue-500 focus:ring-blue-500
                             `}
                             placeholder="Enter display name"
+                            value={displayName}
                             required
                           />
                         </div>

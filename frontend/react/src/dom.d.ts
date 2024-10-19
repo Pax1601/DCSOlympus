@@ -3,6 +3,7 @@ import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Unit } from "./unit/unit";
 
 interface CustomEventMap {
+  // TODO add missing events and remove unused
   unitSelection: CustomEvent<Unit>;
   unitDeselection: CustomEvent<Unit>;
   unitsSelection: CustomEvent<Unit[]>;

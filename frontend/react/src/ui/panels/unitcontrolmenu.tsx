@@ -137,6 +137,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     });
   }, []);
 
+  useEffect(() => {
+    setShowAdvancedSettings(false);
+  }, [selectedUnits])
+
   /* Update the current values of the shown data */
   function updateData() {
     const getters = {

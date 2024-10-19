@@ -103,6 +103,7 @@ export function FormationMenu(props: {
               .map((optionFormationType) => {
                 return (
                   <OlDropdownItem
+                    key={optionFormationType}
                     onClick={() => {
                       setCount(count + 1);
                       setFormationType(optionFormationType);
@@ -231,7 +232,7 @@ export function FormationMenu(props: {
               .forEach((unit, idx) => {
                 if (units.length > 0 && units[0] !== null && idx != 0) {
                   const ID = units[0].ID;
-                  
+
                   const [dx, dz] = [
                     -(silhouetteHandles[idx].position.y - silhouetteHandles[0].position.y),
                     silhouetteHandles[idx].position.x - silhouetteHandles[0].position.x,
@@ -265,7 +266,9 @@ export function FormationMenu(props: {
             style={{
               width: `${referenceWidth}px`,
             }}
-          ><div className="translate-y-[-8px]">{referenceDistance}ft</div></div>
+          >
+            <div className="translate-y-[-8px]">{referenceDistance}ft</div>
+          </div>
         </div>
 
         <div

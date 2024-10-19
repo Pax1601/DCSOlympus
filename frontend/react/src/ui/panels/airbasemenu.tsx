@@ -50,12 +50,14 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
 
           <OlAccordion title={`Runways`} className="!p-0 !text-gray-400">
             <div className="flex flex-col gap-2">
-              {props.airbase?.getChartData().runways.map((runway) => {
+              {props.airbase?.getChartData().runways.map((runway, idx) => {
                 return (
                   <>
                     {Object.keys(runway.headings[0]).map((runwayName) => {
                       return (
-                        <div className="flex w-full justify-between">
+                        <div key={`${idx}-${runwayName}`} className={`
+                          flex w-full justify-between
+                        `}>
                           <span>
                             {" "}
                             <span className="text-gray-400">RWY</span> {runwayName}
