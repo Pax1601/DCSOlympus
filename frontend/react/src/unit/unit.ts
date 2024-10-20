@@ -40,6 +40,8 @@ import {
   SHOTS_SCATTER_DEGREES,
   CONTEXT_ACTION,
   SELECT_JTAC_TARGET,
+  ContextActionColors,
+  CONTEXT_ACTION_COLORS,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
@@ -828,7 +830,7 @@ export abstract class Unit extends CustomMarker {
         getApp().getUnitsManager().clearDestinations(units);
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       },
-      { buttonColor: "white" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.MOVE] }
     );
 
     contextActionSet.addContextAction(
@@ -841,7 +843,7 @@ export abstract class Unit extends CustomMarker {
       (units: Unit[], _, targetPosition) => {
         if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       },
-      { buttonColor: "white" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.MOVE] }
     );
 
     contextActionSet.addContextAction(
@@ -856,7 +858,7 @@ export abstract class Unit extends CustomMarker {
       },
       {
         executeImmediately: true,
-        buttonColor: "red",
+        buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.DELETE],
       }
     );
 
@@ -872,7 +874,7 @@ export abstract class Unit extends CustomMarker {
       },
       {
         executeImmediately: true,
-        buttonColor: "red",
+        buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.DELETE],
       }
     );
 
@@ -1826,7 +1828,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[]) => {
         getApp().getUnitsManager().refuel(units);
       },
-      { executeImmediately: true, buttonColor: "purple" }
+      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
     );
     contextActionSet.addContextAction(
       this,
@@ -1838,7 +1840,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
-      { executeImmediately: true, buttonColor: "green" }
+      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
     );
 
     /* Context actions that require a target unit */
@@ -1852,8 +1854,9 @@ export abstract class AirUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       },
-      { buttonColor: "blue" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
     );
+
     contextActionSet.addContextAction(
       this,
       "follow",
@@ -1873,34 +1876,37 @@ export abstract class AirUnit extends Unit {
           );
         }
       },
-      { buttonColor: "purple" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
     );
 
-    /* Context actions that require a target position */
-    contextActionSet.addContextAction(
-      this,
-      "bomb",
-      "Precision bomb location",
-      "Click on a point to execute a precision bombing attack",
-      faLocationCrosshairs,
-      "position",
-      (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, units);
-      },
-      { buttonColor: "blue" }
-    );
-    contextActionSet.addContextAction(
-      this,
-      "carpet-bomb",
-      "Carpet bomb location",
-      "Click on a point to execute a carpet bombing attack",
-      faXmarksLines,
-      "position",
-      (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, units);
-      },
-      { buttonColor: "blue" }
-    );
+    if (this.canTargetPoint()) {
+      /* Context actions that require a target position */
+      contextActionSet.addContextAction(
+        this,
+        "bomb",
+        "Precision bomb location",
+        "Click on a point to execute a precision bombing attack",
+        faLocationCrosshairs,
+        "position",
+        (units: Unit[], _, targetPosition: LatLng | null) => {
+          if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, units);
+        },
+        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+      );
+
+      contextActionSet.addContextAction(
+        this,
+        "carpet-bomb",
+        "Carpet bomb location",
+        "Click on a point to execute a carpet bombing attack",
+        faXmarksLines,
+        "position",
+        (units: Unit[], _, targetPosition: LatLng | null) => {
+          if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, units);
+        },
+        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+      );
+    }
 
     contextActionSet.addContextAction(
       this,
@@ -1912,7 +1918,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().landAt(targetPosition, units);
       },
-      { buttonColor: "purple" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
     );
   }
 }
@@ -1960,7 +1966,7 @@ export class Helicopter extends AirUnit {
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().landAtPoint(targetPosition, units);
       },
-      { buttonColor: "purple" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
     );
   }
 
@@ -2009,7 +2015,7 @@ export class GroundUnit extends Unit {
       (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
-      { executeImmediately: true, buttonColor: "green" }
+      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
     );
     contextActionSet.addContextAction(
       this,
@@ -2021,7 +2027,7 @@ export class GroundUnit extends Unit {
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
-      { executeImmediately: true, buttonColor: "green" }
+      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
     );
 
     /* Context actions that require a target unit */
@@ -2035,7 +2041,7 @@ export class GroundUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       },
-      { buttonColor: "blue" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
     );
 
     /* Context actions that require a target position */
@@ -2050,7 +2056,7 @@ export class GroundUnit extends Unit {
         (units: Unit[], _, targetPosition: LatLng | null) => {
           if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
         },
-        { buttonColor: "blue" }
+        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
       );
       contextActionSet.addContextAction(
         this,
@@ -2062,7 +2068,7 @@ export class GroundUnit extends Unit {
         (units: Unit[], _, targetPosition: LatLng | null) => {
           if (targetPosition) getApp().getUnitsManager().simulateFireFight(targetPosition, units);
         },
-        { buttonColor: "purple" }
+        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
       );
     }
   }
@@ -2154,7 +2160,7 @@ export class NavyUnit extends Unit {
       (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
-      { executeImmediately: true, buttonColor: "green" }
+      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
     );
     contextActionSet.addContextAction(
       this,
@@ -2166,7 +2172,7 @@ export class NavyUnit extends Unit {
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
-      { executeImmediately: true, buttonColor: "green" }
+      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
     );
 
     /* Context actions that require a target unit */
@@ -2180,7 +2186,7 @@ export class NavyUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       },
-      { buttonColor: "blue" }
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
     );
 
     /* Context actions that require a target position */
@@ -2193,7 +2199,8 @@ export class NavyUnit extends Unit {
       "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
-      }, { buttonColor: "blue" }
+      },
+      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
     );
   }
 

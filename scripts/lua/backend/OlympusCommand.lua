@@ -381,25 +381,50 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			end
 			Olympus.debug("Olympus.move executed successfully on Helicopter", 2)
 		elseif category == "GroundUnit" then
-			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
-			local bearing = math.atan2(endPoint.z - startPoint.z, endPoint.x - startPoint.x)
 
-			vars = {
-				group = group, 
-				point = endPoint,
-				heading = bearing,
-				speed = speed
-			}
-
+			local action = "Off Road"
+			local disableRoads = true
 			if taskOptions and taskOptions['id'] == 'FollowRoads' and taskOptions['value'] == true then
-				vars["disableRoads"] = false
-			else
-				vars["form"] = "Off Road"
-				vars["disableRoads"] = true
+				action = "On Road"
+				disableRoads = false
 			end
-
-			mist.groupToRandomPoint(vars)
+			
+			missionTask = { 
+				id = 'Mission', 
+				params = { 
+					route = { 
+						points = { 
+							[1] = { 
+								type = "Turning Point",
+								action = action,
+								disableRoads = disableRoads,
+								x = endPoint.x, 
+								y = endPoint.z, 
+								speed = speed, 
+								speed_locked = false, 
+								ETA_locked = false, 
+								name = 'Mission1', 
+							},
+							[2] = { 
+								type = "Turning Point",
+								action = action,
+								disableRoads = disableRoads,
+								x = endPoint.x, 
+								y = endPoint.z, 
+								speed = speed, 
+								speed_locked = false, 
+								ETA_locked = false, 
+								name = 'Mission1', 
+							}, 
+						} 
+					}, 
+				} 
+			} 
+			local groupCon = group:getController()
+			if groupCon then
+				groupCon:setTask(missionTask)
+			end
 			Olympus.debug("Olympus.move executed successfully on GroundUnit", 2)
 		elseif category == "NavyUnit" then
 			local startPoint = mist.getLeadPos(group)

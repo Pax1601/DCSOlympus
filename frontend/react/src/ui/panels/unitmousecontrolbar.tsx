@@ -4,7 +4,7 @@ import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION } from "../../constants/constants";
+import { CONTEXT_ACTION, CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
@@ -72,9 +72,8 @@ export function UnitMouseControlBar(props: {}) {
     sr > 1 && scrolledRight && setScrolledRight(false);
   }
 
-  let colors = [null, "white", "green", "purple", "blue", "red"];
   let reorderedActions: ContextAction[] = [];
-  colors.forEach((color) => {
+  CONTEXT_ACTION_COLORS.forEach((color) => {
     Object.values(contextActionsSet.getContextActions()).forEach((contextAction: ContextAction) => {
       if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
       else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);

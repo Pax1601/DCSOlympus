@@ -367,3 +367,13 @@ export enum AudioMessageType {
   audio,
   settings,
 }
+
+export const CONTEXT_ACTION_COLORS = [null, "white", "green", "purple", "blue", "red"];
+export enum ContextActionColors {
+  NO_COLOR,
+  MOVE,
+  OTHER,
+  ADMIN,
+  ENGAGE,
+  DELETE
+}

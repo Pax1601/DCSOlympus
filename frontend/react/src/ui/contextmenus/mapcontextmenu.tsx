@@ -4,7 +4,7 @@ import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION } from "../../constants/constants";
+import { CONTEXT_ACTION, CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LatLng } from "leaflet";
@@ -93,9 +93,8 @@ export function MapContextMenu(props: {}) {
     return newContextActionSet;
   }
 
-  let colors = [null, "white", "green", "purple", "blue", "red"];
   let reorderedActions: ContextAction[] = [];
-  colors.forEach((color) => {
+  CONTEXT_ACTION_COLORS.forEach((color) => {
     Object.values(contextActionsSet.getContextActions()).forEach((contextAction: ContextAction) => {
       if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
       else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
