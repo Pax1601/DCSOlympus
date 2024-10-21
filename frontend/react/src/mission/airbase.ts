@@ -3,7 +3,7 @@ import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 import { AirbaseChartData, AirbaseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
-import { IDLE } from "../constants/constants";
+import { OlympusState } from "../constants/constants";
 
 export class Airbase extends CustomMarker {
   #name: string = "";
@@ -25,8 +25,9 @@ export class Airbase extends CustomMarker {
     this.#img = document.createElement("img");
 
     this.addEventListener("click", (ev) => {
-      if (getApp().getMap().getState() === IDLE) {
-        document.dispatchEvent(new CustomEvent("airbaseClick", { detail: ev.target }));
+      if (getApp().getState() === OlympusState.IDLE) {
+        getApp().setState(OlympusState.AIRBASE)
+        // TODO: document.dispatchEvent(new CustomEvent("airbaseClick", { detail: ev.target }));
       }
     });
   }

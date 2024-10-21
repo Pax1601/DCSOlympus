@@ -8,10 +8,10 @@ import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
 import { getApp } from "../../olympusapp";
-import { IDLE, SPAWN_UNIT } from "../../constants/constants";
 import { ftToM, getUnitCategoryByBlueprint } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
+import { OlympusState, SpawnSubState } from "../../constants/constants";
 
 export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation: boolean; airbase?: Airbase | null; coalition?: Coalition }) {
   /* Compute the min and max values depending on the unit type */
@@ -38,25 +38,24 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
       if (props.blueprint !== null) {
         getApp()
           ?.getMap()
-          ?.setState(SPAWN_UNIT, {
-            spawnRequestTable: {
-              category: getUnitCategoryByBlueprint(props.blueprint),
-              unit: {
-                unitType: props.blueprint.name,
-                location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
-                skill: "High",
-                liveryID: "",
-                altitude: ftToM(spawnAltitude),
-                loadout:
-                  props.blueprint.loadouts?.find((loadout) => {
-                    return loadout.name === spawnLoadoutName;
-                  })?.code ?? "",
-              },
-              coalition: spawnCoalition,
+          ?.setSpawnRequestTable({
+            category: getUnitCategoryByBlueprint(props.blueprint),
+            unit: {
+              unitType: props.blueprint.name,
+              location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+              skill: "High",
+              liveryID: "",
+              altitude: ftToM(spawnAltitude),
+              loadout:
+                props.blueprint.loadouts?.find((loadout) => {
+                  return loadout.name === spawnLoadoutName;
+                })?.code ?? "",
             },
+            coalition: spawnCoalition,
           });
+          getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT)
       } else {
-        if (getApp().getMap().getState() === SPAWN_UNIT) getApp().getMap().setState(IDLE);
+        if (getApp().getState() === OlympusState.SPAWN) getApp().setState(OlympusState.IDLE);
       }
     }
   });

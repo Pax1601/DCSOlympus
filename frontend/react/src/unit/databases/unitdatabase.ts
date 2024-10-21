@@ -48,6 +48,8 @@ export abstract class UnitDatabase {
   }
 
   getBlueprints(includeDisabled: boolean = false) {
+    if (!getApp()) return {};
+    
     if (
       getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER ||
       !getApp().getMissionManager().getCommandModeOptions().restrictSpawns

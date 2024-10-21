@@ -25,7 +25,6 @@ import {
   DLINK,
   DataIndexes,
   GAME_MASTER,
-  IDLE,
   IRST,
   OPTIC,
   RADAR,
@@ -38,10 +37,10 @@ import {
   GROUPING_ZOOM_TRANSITION,
   MAX_SHOTS_SCATTER,
   SHOTS_SCATTER_DEGREES,
-  CONTEXT_ACTION,
-  SELECT_JTAC_TARGET,
   ContextActionColors,
   CONTEXT_ACTION_COLORS,
+  OlympusState,
+  JTACSubState,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
@@ -1384,18 +1383,18 @@ export abstract class Unit extends CustomMarker {
   #onShortPress(e: LeafletMouseEvent) {
     console.log(`Short press on ${this.getUnitName()}`);
 
-    if (getApp().getMap().getState() === IDLE || e.originalEvent.ctrlKey) {
+    if (getApp().getState() === OlympusState.IDLE || e.originalEvent.ctrlKey) {
       if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
       this.setSelected(!this.getSelected());
-    } else if (getApp().getMap().getState() === CONTEXT_ACTION) {
+    } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
       if (getApp().getMap().getContextAction()) getApp().getMap().executeContextAction(this, null);
       else {
         getApp().getUnitsManager().deselectAllUnits();
         this.setSelected(!this.getSelected());
       }
-    } else if (getApp().getMap().getState() === SELECT_JTAC_TARGET) {
+    } else if (getApp().getState() === OlympusState.JTAC && getApp().getSubState() === JTACSubState.SELECT_TARGET) {
       document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { unit: this } }));
-      getApp().getMap().setState(IDLE);
+      getApp().setState(OlympusState.IDLE);
     }
   }
 

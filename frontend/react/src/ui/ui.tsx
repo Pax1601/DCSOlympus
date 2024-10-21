@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ui.css";
 
-import { EventsProvider } from "../eventscontext";
 import { StateProvider } from "../statecontext";
 
 import { Header } from "./panels/header";
@@ -11,7 +10,7 @@ import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { OptionsMenu } from "./panels/optionsmenu";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import { BLUE_COMMANDER, CONTEXT_ACTION, GAME_MASTER, IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../constants/constants";
+import { BLUE_COMMANDER, GAME_MASTER, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusEvent, OlympusState, OlympusSubState, RED_COMMANDER, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
@@ -42,50 +41,40 @@ export type OlympusUIState = {
 };
 
 export function UI() {
-  const [loginModalVisible, setLoginModalVisible] = useState(true);
-  const [mainMenuVisible, setMainMenuVisible] = useState(false);
-  const [spawnMenuVisible, setSpawnMenuVisible] = useState(false);
-  const [unitControlMenuVisible, setUnitControlMenuVisible] = useState(false);
-  const [measureMenuVisible, setMeasureMenuVisible] = useState(false);
-  const [drawingMenuVisible, setDrawingMenuVisible] = useState(false);
-  const [audioMenuVisible, setAudioMenuVisible] = useState(false);
-  const [optionsMenuVisible, setOptionsMenuVisible] = useState(false);
-  const [airbaseMenuVisible, setAirbaseMenuVisible] = useState(false);
-  const [formationMenuVisible, setFormationMenuVisible] = useState(false);
-  const [unitExplosionMenuVisible, setUnitExplosionMenuVisible] = useState(false);
-  const [JTACMenuVisible, setJTACMenuVisible] = useState(false);
+  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
+  const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
+
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
+  const [mapSources, setMapSources] = useState([] as string[]);
+  const [activeMapSource, setActiveMapSource] = useState("");
+
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [commandMode, setCommandMode] = useState(null as null | string);
-  const [mapSources, setMapSources] = useState([] as string[]);
-  const [activeMapSource, setActiveMapSource] = useState("");
-  const [mapState, setMapState] = useState(IDLE);
+  
   const [airbase, setAirbase] = useState(null as null | Airbase);
+
   const [formationLeader, setFormationLeader] = useState(null as null | Unit);
   const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
   const [protectionPromptVisible, setProtectionPromptVisible] = useState(false);
   const [protectionCallback, setProtectionCallback] = useState(null as any);
   const [protectionUnits, setProtectionUnits] = useState([] as Unit[]);
+
   const [unitExplosionUnits, setUnitExplosionUnits] = useState([] as Unit[]);
 
   useEffect(() => {
+    getApp()?.registerEventCallback(OlympusEvent.STATE_CHANGED, (state, subState) => {
+      setAppState(state);
+      setAppSubState(subState);
+    })
+
     document.addEventListener("hiddenTypesChanged", (ev) => {
       setMapHiddenTypes({ ...getApp().getMap().getHiddenTypes() });
     });
 
     document.addEventListener("mapOptionsChanged", (ev) => {
       setMapOptions({ ...getApp().getMap().getOptions() });
-    });
-
-    document.addEventListener("mapStateChanged", (ev: CustomEventInit) => {
-      if (ev.detail === IDLE || ev.detail === CONTEXT_ACTION || mapState !== IDLE) {
-        hideAllMenus();
-      }
-
-      if (ev.detail === CONTEXT_ACTION && window.innerWidth > 1000) setUnitControlMenuVisible(true);
-      setMapState(ev.detail);
     });
 
     document.addEventListener("mapSourceChanged", (ev) => {
@@ -99,20 +88,7 @@ export function UI() {
       setMapSources(sources);
       setActiveMapSource(sources[0]);
     });
-
-    document.addEventListener("airbaseClick", (ev) => {
-      hideAllMenus();
-      getApp().getMap().setState(IDLE);
-      setAirbase((ev as CustomEvent).detail);
-      setAirbaseMenuVisible(true);
-    });
-
-    document.addEventListener("showFormationMenu", (ev) => {
-      setFormationMenuVisible(true);
-      setFormationLeader((ev as CustomEvent).detail.leader);
-      setFormationWingmen((ev as CustomEvent).detail.wingmen);
-    });
-
+    
     document.addEventListener("showProtectionPrompt", (ev: CustomEventInit) => {
       setProtectionPromptVisible(true);
       setProtectionCallback(() => {
@@ -120,26 +96,7 @@ export function UI() {
       });
       setProtectionUnits(ev.detail.units);
     });
-
-    document.addEventListener("showUnitExplosionMenu", (ev) => {
-      setUnitExplosionMenuVisible(true);
-      setUnitExplosionUnits((ev as CustomEvent).detail.units);
-    });
   }, []);
-
-  function hideAllMenus() {
-    setMainMenuVisible(false);
-    setSpawnMenuVisible(false);
-    setUnitControlMenuVisible(false);
-    setMeasureMenuVisible(false);
-    setDrawingMenuVisible(false);
-    setOptionsMenuVisible(false);
-    setAirbaseMenuVisible(false);
-    setAudioMenuVisible(false);
-    setFormationMenuVisible(false);
-    setUnitExplosionMenuVisible(false);
-    setJTACMenuVisible(false);
-  }
 
   function checkPassword(password: string) {
     setCheckingPassword(true);
@@ -167,7 +124,7 @@ export function UI() {
   function connect(username: string) {
     getApp().getServerManager().setUsername(username);
     getApp().getServerManager().startUpdate();
-    setLoginModalVisible(false);
+    getApp().setState(OlympusState.IDLE);
   }
 
   return (
@@ -180,74 +137,18 @@ export function UI() {
     >
       <StateProvider
         value={{
-          mainMenuVisible: mainMenuVisible,
-          spawnMenuVisible: spawnMenuVisible,
-          unitControlMenuVisible: unitControlMenuVisible,
-          measureMenuVisible: measureMenuVisible,
-          drawingMenuVisible: drawingMenuVisible,
-          optionsMenuVisible: optionsMenuVisible,
-          airbaseMenuVisible: airbaseMenuVisible,
-          audioMenuVisible: audioMenuVisible,
-          JTACMenuVisible: JTACMenuVisible,
-          mapOptions: mapOptions,
-          mapHiddenTypes: mapHiddenTypes,
-          mapSources: mapSources,
-          activeMapSource: activeMapSource,
-          mapState: mapState,
+          appState,
+          appSubState,
+          mapOptions,
+          mapHiddenTypes,
+          mapSources,
+          activeMapSource,
         }}
       >
-        <EventsProvider
-          value={{
-            setMainMenuVisible: setMainMenuVisible,
-            setSpawnMenuVisible: setSpawnMenuVisible,
-            setUnitControlMenuVisible: setUnitControlMenuVisible,
-            setDrawingMenuVisible: setDrawingMenuVisible,
-            setMeasureMenuVisible: setMeasureMenuVisible,
-            setOptionsMenuVisible: setOptionsMenuVisible,
-            setAirbaseMenuVisible: setAirbaseMenuVisible,
-            setJTACMenuVisible: setJTACMenuVisible,
-            setAudioMenuVisible: setAudioMenuVisible,
-            toggleMainMenuVisible: () => {
-              hideAllMenus();
-              setMainMenuVisible(!mainMenuVisible);
-            },
-            toggleSpawnMenuVisible: () => {
-              hideAllMenus();
-              setSpawnMenuVisible(!spawnMenuVisible);
-            },
-            toggleUnitControlMenuVisible: () => {
-              hideAllMenus();
-              setUnitControlMenuVisible(!unitControlMenuVisible);
-            },
-            toggleMeasureMenuVisible: () => {
-              hideAllMenus();
-              setMeasureMenuVisible(!measureMenuVisible);
-            },
-            toggleDrawingMenuVisible: () => {
-              hideAllMenus();
-              setDrawingMenuVisible(!drawingMenuVisible);
-            },
-            toggleOptionsMenuVisible: () => {
-              hideAllMenus();
-              setOptionsMenuVisible(!optionsMenuVisible);
-            },
-            toggleAirbaseMenuVisible: () => {
-              hideAllMenus();
-              setAirbaseMenuVisible(!airbaseMenuVisible);
-            },
-            toggleAudioMenuVisible: () => {
-              hideAllMenus();
-              setAudioMenuVisible(!audioMenuVisible);
-            },
-            toggleJTACMenuVisible: () => {
-              hideAllMenus();
-              setJTACMenuVisible(!JTACMenuVisible);
-            },
-          }}
-        >
+        
           <Header />
           <div className="flex h-full w-full flex-row-reverse">
-            {loginModalVisible && (
+            {appState === OlympusState.LOGIN && (
               <>
                 <div
                   className={`
@@ -290,16 +191,19 @@ export function UI() {
               </>
             )}
             <div id="map-container" className="z-0 h-full w-screen" />
-            <MainMenu open={mainMenuVisible} onClose={() => setMainMenuVisible(false)} />
-            <SpawnMenu open={spawnMenuVisible} onClose={() => setSpawnMenuVisible(false)} />
-            <OptionsMenu open={optionsMenuVisible} onClose={() => setOptionsMenuVisible(false)} options={mapOptions} />
-            <UnitControlMenu open={unitControlMenuVisible} onClose={() => setUnitControlMenuVisible(false)} />
-            <DrawingMenu open={drawingMenuVisible} onClose={() => setDrawingMenuVisible(false)} />
-            <AirbaseMenu open={airbaseMenuVisible} onClose={() => setAirbaseMenuVisible(false)} airbase={airbase} />
-            <AudioMenu open={audioMenuVisible} onClose={() => setAudioMenuVisible(false)} />
-            <FormationMenu open={formationMenuVisible} leader={formationLeader} wingmen={formationWingmen} onClose={() => setFormationMenuVisible(false)} />
-            <UnitExplosionMenu open={unitExplosionMenuVisible} units={unitExplosionUnits} onClose={() => setUnitExplosionMenuVisible(false)} />
-            <JTACMenu open={JTACMenuVisible} onClose={() => setJTACMenuVisible(false)} />
+            <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() =>getApp().setState(OlympusState.IDLE)} options={mapOptions} />
+
+            <UnitControlMenu open={appState === OlympusState.UNIT_CONTROL && appSubState !== UnitControlSubState.FORMATION} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <FormationMenu open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION} leader={formationLeader} wingmen={formationWingmen} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            
+            <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() =>getApp().setState(OlympusState.IDLE)} airbase={airbase} />
+            <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
+           
+            {/* TODO} <UnitExplosionMenu open={appState === OlympusState.MAIN_MENU} units={unitExplosionUnits} onClose={() => getApp().setState(OlympusState.IDLE)} /> {*/}
+            <JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
             <MiniMapPanel />
             <ControlsPanel />
@@ -307,7 +211,6 @@ export function UI() {
             <MapContextMenu />
             <SideBar />
           </div>
-        </EventsProvider>
       </StateProvider>
     </div>
   );

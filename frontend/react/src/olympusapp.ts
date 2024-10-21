@@ -18,24 +18,32 @@ import { ShortcutManager } from "./shortcut/shortcutmanager";
 import { UnitsManager } from "./unit/unitsmanager";
 import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
+import { AudioManager } from "./audio/audiomanager";
 
-import { BLUE_COMMANDER, DEFAULT_CONTEXT, GAME_MASTER, RED_COMMANDER } from "./constants/constants";
+import { DEFAULT_CONTEXT, NO_SUBSTATE, OlympusEvent, OlympusState, OlympusSubState } from "./constants/constants";
 import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
 import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { Coalition, Context } from "./types/types";
-import { AudioManager } from "./audio/audiomanager";
+import { Unit } from "./unit/unit";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
 export var connectedToServer = true; // TODO Temporary
 
+
 export class OlympusApp {
   /* Global data */
-  #activeCoalition: Coalition = "blue";
   #latestVersion: string | undefined = undefined;
   #config: any = {};
+  #state: OlympusState = OlympusState.NOT_INITIALIZED;
+  #subState: OlympusSubState = NO_SUBSTATE;
+
+  #events = {
+    [OlympusEvent.STATE_CHANGED]: [] as ((state: OlympusState, subState: OlympusSubState) => void)[],
+    [OlympusEvent.UNITS_SELECTED]: [] as ((units: Unit[]) => void)[]
+  };
 
   /* Main leaflet map, extended by custom methods */
   #map: Map | null = null;
@@ -92,30 +100,6 @@ export class OlympusApp {
     }
     */
 
-  /** Set the active coalition, i.e. the currently controlled coalition. A game master can change the active coalition, while a commander is bound to his/her coalition
-   *
-   * @param newActiveCoalition
-   */
-  setActiveCoalition(newActiveCoalition: Coalition) {
-    if (this.getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER) {
-      this.#activeCoalition = newActiveCoalition;
-      document.dispatchEvent(new CustomEvent("activeCoalitionChanged"));
-    }
-  }
-
-  /**
-   *
-   * @returns The active coalition
-   */
-  getActiveCoalition(): Coalition {
-    if (this.getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER) return this.#activeCoalition;
-    else {
-      if (this.getMissionManager().getCommandModeOptions().commandMode == BLUE_COMMANDER) return "blue";
-      else if (this.getMissionManager().getCommandModeOptions().commandMode == RED_COMMANDER) return "red";
-      else return "neutral";
-    }
-  }
-
   /**
    *
    * @returns The aircraft database
@@ -163,9 +147,6 @@ export class OlympusApp {
     this.getServerManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
     this.getAudioManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
 
-    /* Setup all global events */
-    this.#setupEvents();
-
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
     fetch(request)
@@ -198,17 +179,39 @@ export class OlympusApp {
       .then((res) => {
         this.#config = res;
         document.dispatchEvent(new CustomEvent("configLoaded"));
+        this.setState(OlympusState.LOGIN);
       });
+      
   }
 
   getConfig() {
     return this.#config;
   }
 
-  #setupEvents() {
-    /* Reload the page, used to mimic a restart of the app */
-    document.addEventListener("reloadPage", () => {
-      location.reload();
-    });
+  setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {
+    this.#state = state;
+    this.#subState = subState;
+
+    console.log(`App state set to ${state}, substate ${subState}`)
+    this.dispatchEvent(OlympusEvent.STATE_CHANGED, state, subState)
+  }
+
+  getState() {
+    return this.#state;
+  }
+
+  getSubState() {
+    return this.#subState;
+  }
+
+  registerEventCallback(event: OlympusEvent, callback: any) {
+    this.#events[event].push(callback)
+  }
+
+  dispatchEvent(event: OlympusEvent, ...args) {
+    console.log(`Dispatching event ${event}. Arguments: ${args}`)
+    this.#events[event].forEach((event) => {
+      event(args);
+    })
   }
 }

@@ -4,9 +4,10 @@ import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION, CONTEXT_ACTION_COLORS } from "../../constants/constants";
+import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { OlympusState } from "../../constants/constants";
 
 export function UnitMouseControlBar(props: {}) {
   const [open, setOpen] = useState(false);
@@ -41,8 +42,8 @@ export function UnitMouseControlBar(props: {}) {
     });
 
     /* Deselect the context action when exiting state */
-    document.addEventListener("mapStateChanged", (ev) => {
-      setOpen((ev as CustomEvent).detail === CONTEXT_ACTION);
+    document.addEventListener("appStateChanged", (ev) => {
+      setOpen((ev as CustomEvent).detail.state === OlympusState.UNIT_CONTROL);
     });
   }, []);
 
@@ -123,16 +124,12 @@ export function UnitMouseControlBar(props: {}) {
                       } else {
                         if (activeContextAction !== contextAction) {
                           setActiveContextAction(contextAction);
-                          getApp().getMap().setState(CONTEXT_ACTION, {
-                            contextAction: contextAction,
-                            defaultContextAction: contextActionsSet.getDefaultContextAction(),
-                          });
+                          getApp().getMap().setContextAction(contextAction);
+                          getApp().getMap().setDefaultContextAction(contextActionsSet.getDefaultContextAction());
                         } else {
                           setActiveContextAction(null);
-                          getApp().getMap().setState(CONTEXT_ACTION, {
-                            contextAction: null,
-                            defaultContextAction: contextActionsSet.getDefaultContextAction(),
-                          });
+                          getApp().getMap().setContextAction(null);
+                          getApp().getMap().setDefaultContextAction(null);
                         }
                       }
                     }}

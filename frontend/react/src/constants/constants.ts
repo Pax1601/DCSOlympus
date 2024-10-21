@@ -3,6 +3,11 @@ import { Context, MapOptions } from "../types/types";
 
 export const DEFAULT_CONTEXT: Context = "default context";
 
+export enum OlympusEvent {
+  STATE_CHANGED = "State changed",
+  UNITS_SELECTED = "Unit selected"
+}
+
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
 export const LOGS_URI = "logs";
@@ -236,18 +241,48 @@ export const mapBounds = {
 export const defaultMapMirrors = {};
 export const defaultMapLayers = {};
 
-/* Map constants */
-export const NOT_INITIALIZED = "Not initialized";
-export const IDLE = "Idle";
-export const SPAWN_UNIT = "Spawn unit";
-export const SPAWN_EFFECT = "Spawn effect";
-export const CONTEXT_ACTION = "Context action";
-export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area polygon";
-export const COALITIONAREA_DRAW_CIRCLE = "Draw Coalition Area circle";
-export const COALITIONAREA_EDIT = "Edit Coalition Area";
-export const SELECT_JTAC_TARGET = "Select JTAC target"
-export const SELECT_JTAC_ECHO = "Select JTAC echo point"
-export const SELECT_JTAC_IP = "Select JTAC IP"
+export enum OlympusState {
+  NOT_INITIALIZED = "Not initialized",
+  LOGIN = "Login",
+  IDLE = "Idle",
+  MAIN_MENU = "Main menu",
+  UNIT_CONTROL = "Unit control",
+  SPAWN = "Spawn",
+  DRAW = "Draw",
+  JTAC = "JTAC",
+  OPTIONS = "Options",
+  AUDIO = "Audio",
+  AIRBASE = "Airbase"
+}
+
+export const NO_SUBSTATE = "No substate";
+
+export enum UnitControlSubState {
+  NO_SUBSTATE = "No substate",
+  FORMATION = "Formation"
+}
+
+export enum DrawSubState {
+  NO_SUBSTATE = "No substate",
+  DRAW_POLYGON = "Polygon",
+  DRAW_CIRCLE = "Circle",
+  EDIT = "Edit"
+}
+
+export enum JTACSubState {
+  NO_SUBSTATE = "No substate",
+  SELECT_ECHO_POINT = "ECHO",
+  SELECT_IP = "IP",
+  SELECT_TARGET = "Target"
+}
+
+export enum SpawnSubState {
+  NO_SUBSTATE = "No substate",
+  SPAWN_UNIT = "Unit",
+  SPAWN_EFFECT = "Effect"
+}
+
+export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | string;
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = {

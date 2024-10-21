@@ -38,7 +38,7 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
-import { ftToM, getUnitsByLabel, knotsToMs, mToFt, msToKnots } from "../../other/utils";
+import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -236,7 +236,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
   const selectedCategories = getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
-  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = getUnitsByLabel(filterString);
+  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = [{}, {}, {}, {}, {}] // TODOgetUnitsByLabel(filterString);
 
   const mergedFilteredUnits = Object.assign({}, filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits) as {
     [key: string]: UnitBlueprint;

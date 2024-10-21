@@ -70,6 +70,14 @@ export class CoalitionPolygon extends Polygon {
       this.setEditing(false);
     }
 
+    if (selected) {
+      document.dispatchEvent(
+        new CustomEvent("coalitionAreaSelected", {
+          detail: this,
+        })
+      );
+    }
+
     //@ts-ignore draggable option added by leaflet-path-drag
     selected ? this.dragging.enable() : this.dragging.disable();
   }

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
-import { FaQuestionCircle, FaRegCircle, FaTrash } from "react-icons/fa";
+import { FaQuestionCircle, FaTrash } from "react-icons/fa";
 import { getApp } from "../../olympusapp";
-import { COALITIONAREA_DRAW_CIRCLE, COALITIONAREA_DRAW_POLYGON, COALITIONAREA_EDIT, IDLE } from "../../constants/constants";
 import { OlStateButton } from "../components/olstatebutton";
 import { faDrawPolygon } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
@@ -13,10 +12,11 @@ import { OlCheckbox } from "../components/olcheckbox";
 import { Coalition } from "../../types/types";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
+import { DrawSubState, NO_SUBSTATE, OlympusState } from "../../constants/constants";
 
 export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
-  const [drawingPolygon, setDrawingPolygon] = useState(false);
-  const [drawingCircle, setDrawingCircle] = useState(false);
+  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
+  const [appSubState, setAppSubState] = useState(NO_SUBSTATE);
   const [activeCoalitionArea, setActiveCoalitionArea] = useState(null as null | CoalitionPolygon | CoalitionCircle);
   const [areaCoalition, setAreaCoalition] = useState("blue" as Coalition);
   const [IADSDensity, setIADSDensity] = useState(50);
@@ -27,36 +27,31 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [erasSelection, setErasSelection] = useState({});
   const [rangesSelection, setRangesSelection] = useState({});
 
-  const [showPolygonTip, setShowPolygonTip] = useState(true);
-  const [showCircleTip, setShowCircleTip] = useState(true);
-
   useEffect(() => {
     if (getApp()) {
-      /* If we are not in polygon drawing mode, force the draw polygon button off */
-      if (drawingPolygon && getApp().getMap().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
-
-      /* If we are not in circle drawing mode, force the draw circle button off */
-      if (drawingCircle && getApp().getMap().getState() !== COALITIONAREA_DRAW_CIRCLE) setDrawingCircle(false);
-
-      /* If we are not in any drawing mode, force the map in edit mode */
-      if (props.open && !drawingPolygon && !drawingCircle) getApp().getMap().setState(COALITIONAREA_EDIT);
-
-      /* Align the state of the coalition toggle to the coalition of the area */
-      if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
+      // TODO
+      ///* If we are not in polygon drawing mode, force the draw polygon button off */
+      //if (drawingPolygon && getApp().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
+//
+      ///* If we are not in circle drawing mode, force the draw circle button off */
+      //if (drawingCircle && getApp().getState() !== COALITIONAREA_DRAW_CIRCLE) setDrawingCircle(false);
+//
+      ///* If we are not in any drawing mode, force the map in edit mode */
+      //if (props.open && !drawingPolygon && !drawingCircle) getApp().getMap().setState(COALITIONAREA_EDIT);
+//
+      ///* Align the state of the coalition toggle to the coalition of the area */
+      //if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
     }
   });
 
   useEffect(() => {
-    document.addEventListener("mapStateChanged", (event: any) => {
-      if (drawingPolygon && getApp().getMap().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
-
-      if (getApp().getMap().getState() == COALITIONAREA_EDIT) {
-        setActiveCoalitionArea(getApp().getMap().getSelectedCoalitionArea() ?? null);
-      }
-    });
-
     document.addEventListener("coalitionAreaSelected", (event: any) => {
       setActiveCoalitionArea(event.detail);
+    });
+
+    document.addEventListener("appStateChanged", (ev: CustomEventInit) => {
+      setAppState(ev.detail.state);
+      setAppSubState(ev.detail.subState);
     });
   }, []);
 
@@ -68,71 +63,20 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
       canBeHidden={true}
       showBackButton={activeCoalitionArea !== null}
       onBack={() => {
-        setActiveCoalitionArea(null);
-        getApp().getMap().deselectAllCoalitionAreas();
+        getApp().setState(OlympusState.DRAW, DrawSubState.NO_SUBSTATE)
       }}
     >
       <>
-        {activeCoalitionArea === null && !drawingPolygon && !drawingCircle && (
-          <>
-            <div className="p-4 text-sm text-gray-400">
-              The draw tool allows you to quickly draw areas on the map and use these areas to spawn units and activate triggers.
-            </div>
-            <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
-              <div className="my-auto">
-                <FaQuestionCircle className="my-auto ml-2 mr-6 text-gray-400" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-gray-100">Use the polygon or circle tool to draw areas on the map.</div>
-                <div className="text-gray-400">After drawing a shape, select it to see the options for spawning units. Click on a shape to select it.</div>
-              </div>
-            </div>
-          </>
-        )}
-      </>
-
-      <>
-        {activeCoalitionArea === null && drawingPolygon && (
-          <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
-            <div>
-              <FaQuestionCircle className="my-4 ml-2 mr-6 text-gray-400" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="text-gray-100">Click on the map to add vertices to the polygon.</div>
-              <div className="text-gray-400">
-                When you are done, double click on the map to finalize the polygon. Vertices can be dragged or added to adjust the shape.
-              </div>
-            </div>
-          </div>
-        )}
-      </>
-
-      <>
-        {activeCoalitionArea === null && drawingCircle && (
-          <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
-            <div>
-              <FaQuestionCircle className="my-4 ml-2 mr-6 text-gray-400" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="text-gray-100">Click on the map to add a new circle.</div>
-              <div className="text-gray-400">You can drag the circle to move it and you can use the handle to set the radius.</div>
-            </div>
-          </div>
-        )}
-      </>
-
-      <>
-        {activeCoalitionArea === null && (
+        {appState === OlympusState.DRAW && appSubState !== DrawSubState.EDIT && (
           <div className="flex flex-col gap-2 p-6 text-sm text-gray-400">
             <OlStateButton
               className="!w-full"
               icon={faDrawPolygon}
               tooltip={"Add a new polygon"}
-              checked={drawingPolygon}
+              checked={appSubState === DrawSubState.DRAW_POLYGON}
               onClick={() => {
-                if (drawingPolygon) getApp().getMap().setState(COALITIONAREA_EDIT);
-                else getApp().getMap().setState(COALITIONAREA_DRAW_POLYGON);
-                setDrawingPolygon(!drawingPolygon);
+                if (appSubState === DrawSubState.DRAW_POLYGON) getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+                else getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_POLYGON);
               }}
             >
               <div className="text-sm">Add polygon</div>
@@ -141,11 +85,10 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               className="!w-full"
               icon={faCircle}
               tooltip={"Add a new circle"}
-              checked={drawingCircle}
+              checked={appSubState === DrawSubState.DRAW_CIRCLE}
               onClick={() => {
-                if (drawingCircle) getApp().getMap().setState(COALITIONAREA_EDIT);
-                else getApp().getMap().setState(COALITIONAREA_DRAW_CIRCLE);
-                setDrawingCircle(!drawingCircle);
+                if (appSubState === DrawSubState.DRAW_CIRCLE) getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+                else getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_CIRCLE);
               }}
             >
               <div className="text-sm">Add circle</div>
@@ -154,7 +97,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
         )}
       </>
       <div>
-        {activeCoalitionArea !== null && (
+        {activeCoalitionArea !== null && appSubState === DrawSubState.EDIT && (
           <div className={`flex flex-col gap-4 py-4`}>
             <div
               className={`

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
-import { IDLE, SELECT_JTAC_ECHO, SELECT_JTAC_IP, SELECT_JTAC_TARGET } from "../../constants/constants";
 import { LatLng } from "leaflet";
 import { Unit } from "../../unit/unit";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
@@ -10,6 +9,7 @@ import { ConvertDDToDMS, latLngToMGRS, mToFt, zeroAppend } from "../../other/uti
 import { FaMousePointer } from "react-icons/fa";
 import { OlLocation } from "../components/ollocation";
 import { FaBullseye } from "react-icons/fa6";
+import { JTACSubState, OlympusState } from "../../constants/constants";
 
 export function JTACMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [referenceSystem, setReferenceSystem] = useState("LatLngDec");
@@ -17,7 +17,6 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
   const [targetUnit, setTargetUnit] = useState(null as null | Unit);
   const [IP, setIP] = useState(null as null | LatLng);
   const [ECHO, setECHO] = useState(null as null | LatLng);
-  const [mapState, setMapState] = useState(IDLE);
   const [callsign, setCallsign] = useState("Eyeball");
   const [humanUnits, setHumanUnits] = useState([] as Unit[]);
   const [attacker, setAttacker] = useState(null as null | Unit);
@@ -40,9 +39,8 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
       setIP(ev.detail);
     });
 
-    document.addEventListener("mapStateChanged", (ev: CustomEventInit) => {
-      setMapState(ev.detail);
-      if (ev.detail === SELECT_JTAC_TARGET) {
+    document.addEventListener("appStateChanged", (ev: CustomEventInit) => {
+      if (ev.detail.subState === JTACSubState.SELECT_TARGET) {
         setTargetLocation(null);
         setTargetUnit(null);
       }
@@ -124,7 +122,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
             <button
               type="button"
               onClick={() => {
-                getApp().getMap().setState(SELECT_JTAC_ECHO);
+                getApp().setState(OlympusState.JTAC, JTACSubState.SELECT_ECHO_POINT);
               }}
               className={`
                 rounded-r-md bg-blue-700 px-3 py-2.5 text-md font-medium
@@ -161,7 +159,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
             <button
               type="button"
               onClick={() => {
-                getApp().getMap().setState(SELECT_JTAC_IP);
+                getApp().setState(OlympusState.JTAC, JTACSubState.SELECT_IP);
               }}
               className={`
                 rounded-r-lg bg-blue-700 px-3 py-2.5 text-md font-medium
@@ -198,7 +196,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
             <button
               type="button"
               onClick={() => {
-                getApp().getMap().setState(SELECT_JTAC_TARGET);
+                getApp().setState(OlympusState.JTAC, JTACSubState.SELECT_TARGET);
               }}
               className={`
                 rounded-r-lg bg-blue-700 px-3 py-2.5 text-md font-medium

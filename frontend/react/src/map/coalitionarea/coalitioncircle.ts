@@ -59,6 +59,14 @@ export class CoalitionCircle extends Circle {
     this.#drawLabel();
     this.setOpacity(selected ? 1 : 0.5);
 
+    if (selected) {
+      document.dispatchEvent(
+        new CustomEvent("coalitionAreaSelected", {
+          detail: this,
+        })
+      );
+    }
+
     //@ts-ignore draggable option added by leaflet-path-drag
     selected ? this.dragging.enable() : this.dragging.disable();
   }

@@ -1,21 +1,13 @@
 import { createContext } from "react";
-import { IDLE, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "./constants/constants";
+import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
 
 export const StateContext = createContext({
-  mainMenuVisible: false,
-  spawnMenuVisible: false,
-  unitControlMenuVisible: false,
-  measureMenuVisible: false,
-  drawingMenuVisible: false,
-  optionsMenuVisible: false,
-  airbaseMenuVisible: false,
-  audioMenuVisible: false,
-  JTACMenuVisible: false,
+  appState: OlympusState.NOT_INITIALIZED as OlympusState,
+  appSubState: NO_SUBSTATE as OlympusSubState,
   mapHiddenTypes: MAP_HIDDEN_TYPES_DEFAULTS,
   mapOptions: MAP_OPTIONS_DEFAULTS,
   mapSources: [] as string[],
-  activeMapSource: "",
-  mapState: IDLE
+  activeMapSource: ""
 });
 
 export const StateProvider = StateContext.Provider;

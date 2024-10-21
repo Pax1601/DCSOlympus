@@ -19,7 +19,7 @@ import {
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
-import { CONTEXT_ACTION, DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, IDLE } from "../constants/constants";
+import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
 import { aircraftDatabase } from "./databases/aircraftdatabase";
@@ -1461,10 +1461,9 @@ export class UnitsManager {
 
           let newContextActionSet = new ContextActionSet();
           this.getSelectedUnits().forEach((unit) => unit.appendContextActions(newContextActionSet));
-          getApp().getMap().setState(CONTEXT_ACTION, {
-            contextAction: null,
-            defaultContextAction: newContextActionSet.getDefaultContextAction(),
-          });
+          getApp().getMap().setContextAction(null);
+          getApp().getMap().setDefaultContextAction(newContextActionSet.getDefaultContextAction());
+          getApp().setState(OlympusState.UNIT_CONTROL);
 
           this.#selectionEventDisabled = false;
           this.#showNumberOfSelectedProtectedUnits();
@@ -1472,14 +1471,15 @@ export class UnitsManager {
         this.#selectionEventDisabled = true;
       }
     } else {
-      getApp().getMap().setState(IDLE);
+      getApp().setState(OlympusState.IDLE);
       document.dispatchEvent(new CustomEvent("clearSelection"));
     }
   }
 
   #onUnitDeselection(unit: Unit) {
     if (this.getSelectedUnits().length == 0) {
-      getApp().getMap().setState(IDLE);
+      if (getApp().getState() === OlympusState.UNIT_CONTROL)
+        getApp().setState(OlympusState.IDLE);
       document.dispatchEvent(new CustomEvent("clearSelection"));
     } else {
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */

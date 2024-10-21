@@ -10,20 +10,15 @@ import {
   defaultMapLayers,
   mapBounds,
   minimapBoundaries,
-  IDLE,
-  COALITIONAREA_DRAW_POLYGON,
   defaultMapMirrors,
-  SPAWN_UNIT,
-  CONTEXT_ACTION,
   MAP_OPTIONS_DEFAULTS,
   MAP_HIDDEN_TYPES_DEFAULTS,
-  COALITIONAREA_EDIT,
-  COALITIONAREA_DRAW_CIRCLE,
-  NOT_INITIALIZED,
-  SPAWN_EFFECT,
-  SELECT_JTAC_TARGET,
-  SELECT_JTAC_ECHO,
-  SELECT_JTAC_IP,
+  OlympusState,
+  OlympusSubState,
+  NO_SUBSTATE,
+  SpawnSubState,
+  DrawSubState,
+  JTACSubState,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -52,9 +47,6 @@ export class Map extends L.Map {
   /* Options */
   #options: MapOptions = MAP_OPTIONS_DEFAULTS;
   #hiddenTypes: MapHiddenTypes = MAP_HIDDEN_TYPES_DEFAULTS;
-
-  /* State machine */
-  #state: string = NOT_INITIALIZED;
 
   /* Map layers */
   #theatre: string = "";
@@ -158,9 +150,6 @@ export class Map extends L.Map {
     this.#miniMapPolyline = new L.Polyline([], { color: "#202831" });
     this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
 
-    /* Init the state machine */
-    setTimeout(() => this.setState(IDLE), 100);
-
     /* Register event handles */
     this.on("zoomstart", (e: any) => this.#onZoomStart(e));
     this.on("zoom", (e: any) => this.#onZoom(e));
@@ -192,6 +181,10 @@ export class Map extends L.Map {
     L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
 
     /* Event listeners */
+    document.addEventListener("appStateChanged", (ev: CustomEventInit) => {
+      this.#onStateChanged(ev.detail.state, ev.detail.subState);
+    });
+
     document.addEventListener("hiddenTypesChanged", (ev: CustomEventInit) => {
       Object.values(getApp().getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
       Object.values(getApp().getMissionManager().getAirbases()).forEach((airbase: Airbase) => {
@@ -274,8 +267,10 @@ export class Map extends L.Map {
           document.dispatchEvent(new CustomEvent("selectJTACECHO", { detail: this.#ECHOPoint?.getLatLng() }));
           event.target.options["freeze"] = false;
         });
+        this.#ECHOPoint.on("click", (event) => {
+          getApp().setState(OlympusState.JTAC)
+        })
       } else this.#ECHOPoint.setLatLng(ev.detail);
-
     });
 
     document.addEventListener("selectJTACIP", (ev: CustomEventInit) => {
@@ -289,6 +284,9 @@ export class Map extends L.Map {
           document.dispatchEvent(new CustomEvent("selectJTACIP", { detail: this.#IPPoint?.getLatLng() }));
           event.target.options["freeze"] = false;
         });
+        this.#IPPoint.on("click", (event) => {
+          getApp().setState(OlympusState.JTAC)
+        })
       } else this.#IPPoint.setLatLng(ev.detail);
 
       this.#drawIPToTargetLine();
@@ -303,9 +301,12 @@ export class Map extends L.Map {
             event.target.options["freeze"] = true;
           });
           this.#targetPoint.on("dragend", (event) => {
-            document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: {location: this.#targetPoint?.getLatLng() }}));
+            document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { location: this.#targetPoint?.getLatLng() } }));
             event.target.options["freeze"] = false;
           });
+          this.#targetPoint.on("click", (event) => {
+            getApp().setState(OlympusState.JTAC)
+          })
         } else this.#targetPoint.setLatLng(ev.detail.location);
       } else {
         this.#targetPoint?.removeFrom(this);
@@ -405,276 +406,280 @@ export class Map extends L.Map {
     return Object.keys(this.#mapLayers);
   }
 
-  /* State machine */
-  setState(
-    state: string,
-    options?: {
-      spawnRequestTable?: SpawnRequestTable;
-      effectRequestTable?: EffectRequestTable;
-      contextAction?: ContextAction | null;
-      defaultContextAction?: ContextAction | null;
-    }
-  ) {
-    console.log(`Switching from state ${this.#state} to ${state}`);
+  setSpawnRequestTable(spawnRequestTable: SpawnRequestTable) {
+    this.#spawnRequestTable = spawnRequestTable;
+  }
 
+  setEffectRequestTable(effectRequestTable: EffectRequestTable) {
+    this.#effectRequestTable = effectRequestTable;
+  }
+
+  setContextAction(contextAction: ContextAction | null) {
+    this.#contextAction = contextAction;
+  }
+
+  setDefaultContextAction(defaultContextAction: ContextAction | null) {
+    this.#defaultContextAction = defaultContextAction;
+  }
+
+  #onStateChanged(state: OlympusState, subState: OlympusSubState) {
     /* Operations to perform when leaving a state */
-    if (this.#state === COALITIONAREA_DRAW_POLYGON || this.#state === COALITIONAREA_DRAW_CIRCLE) this.getSelectedCoalitionArea()?.setEditing(false);
+    this.getSelectedCoalitionArea()?.setEditing(false);
     this.#currentSpawnMarker?.removeFrom(this);
     this.#currentSpawnMarker = null;
 
-    this.#state = state;
+    if (state !== OlympusState.UNIT_CONTROL) {
+      getApp().getUnitsManager().deselectAllUnits();
+    }
+
+    if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) {
+      this.deselectAllCoalitionAreas();
+    }
 
     /* Operations to perform when entering a state */
-    if (this.#state === IDLE) {
+    if (state === OlympusState.IDLE) {
       getApp().getUnitsManager()?.deselectAllUnits();
-      this.deselectAllCoalitionAreas();
-    } else if (this.#state === SPAWN_UNIT) {
-      this.deselectAllCoalitionAreas();
-      this.#spawnRequestTable = options?.spawnRequestTable ?? null;
-      console.log(`Spawn request table:`);
-      console.log(this.#spawnRequestTable);
-      this.#currentSpawnMarker = new TemporaryUnitMarker(
-        new L.LatLng(0, 0),
-        this.#spawnRequestTable?.unit.unitType ?? "",
-        this.#spawnRequestTable?.coalition ?? "neutral"
-      );
-      this.#currentSpawnMarker.addTo(this);
-    } else if (this.#state === SPAWN_EFFECT) {
-      this.deselectAllCoalitionAreas();
-      this.#effectRequestTable = options?.effectRequestTable ?? null;
-      console.log(`Effect request table:`);
-      console.log(this.#effectRequestTable);
-      //this.#currentEffectMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
-      //this.#currentEffectMarker.addTo(this);
-    } else if (this.#state === CONTEXT_ACTION) {
-      this.deselectAllCoalitionAreas();
-      this.#contextAction = options?.contextAction ?? null;
-      this.#defaultContextAction = options?.defaultContextAction ?? null;
+    } else if (state === OlympusState.SPAWN) {
+      if (subState === SpawnSubState.SPAWN_UNIT) {
+        console.log(`Spawn request table:`);
+        console.log(this.#spawnRequestTable);
+        this.#currentSpawnMarker = new TemporaryUnitMarker(
+          new L.LatLng(0, 0),
+          this.#spawnRequestTable?.unit.unitType ?? "",
+          this.#spawnRequestTable?.coalition ?? "neutral"
+        );
+        this.#currentSpawnMarker.addTo(this);
+      } else if (subState === SpawnSubState.SPAWN_EFFECT) {
+        console.log(`Effect request table:`);
+        console.log(this.#effectRequestTable);
+        // TODO
+        //this.#currentEffectMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
+        //this.#currentEffectMarker.addTo(this);
+      }
+    } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
       console.log(this.#contextAction);
       console.log(`Default context action callback:`);
       console.log(this.#defaultContextAction);
-    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
-      getApp().getUnitsManager().deselectAllUnits();
-      this.#coalitionAreas.push(new CoalitionPolygon([]));
-      this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
-    } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
-      getApp().getUnitsManager().deselectAllUnits();
-      this.#coalitionAreas.push(new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 }));
-      this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
+    } else if (state === OlympusState.DRAW) {
+      if (subState == DrawSubState.DRAW_POLYGON) {
+        this.#coalitionAreas.push(new CoalitionPolygon([]));
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);        
+      } else if (subState === DrawSubState.DRAW_CIRCLE) {
+        this.#coalitionAreas.push(new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 }));
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
+      }
     }
-
-    document.dispatchEvent(new CustomEvent("mapStateChanged", { detail: this.#state }));
-  }
-
-  getState() {
-    return this.#state;
   }
 
   getCurrentControls() {
     const touch = matchMedia("(hover: none)").matches;
-    if (this.#state === IDLE) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faJetFighter,
-          text: "Select unit",
-        },
-        touch
-          ? {
-              actions: [faHandPointer, "Drag"],
-              target: faMap,
-              text: "Box selection",
-            }
-          : {
-              actions: ["Shift", "LMB", "Drag"],
-              target: faMap,
-              text: "Box selection",
-            },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === SPAWN_UNIT) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Spawn unit",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Exit spawn mode",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === SPAWN_EFFECT) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Spawn effect",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Exit spawn mode",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === CONTEXT_ACTION) {
-      let controls = [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Deselect units",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-
-      if (this.#contextAction) {
-        controls.push({
-          actions: [touch ? faHandPointer : "LMB"],
-          target: this.#contextAction.getTarget() === "unit" ? faJetFighter : faMap,
-          text: this.#contextAction?.getLabel() ?? "",
-        });
-      }
-
-      if (!touch && this.#defaultContextAction) {
-        controls.push({
-          actions: ["RMB"],
-          target: faMap,
-          text: this.#defaultContextAction?.getLabel() ?? "",
-        });
-        controls.push({
-          actions: ["RMB", "hold"],
-          target: faMap,
-          text: "Open context menu",
-        });
-      }
-
-      return controls;
-    } else if (this.#state === COALITIONAREA_EDIT) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faDrawPolygon,
-          text: "Select shape",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Exit drawing mode",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Add vertex to polygon",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Finalize polygon",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Add circle",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === SELECT_JTAC_TARGET) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Set unit/location as target",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Exit selection mode",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === SELECT_JTAC_ECHO) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Set location as ECHO point",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Exit selection mode",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else if (this.#state === SELECT_JTAC_IP) {
-      return [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
-          text: "Set location as IP point",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
-          text: "Exit selection mode",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
-    } else {
-      return [];
-    }
+    return [];
+    // TODO
+    //if (getApp().getState() === IDLE) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faJetFighter,
+    //      text: "Select unit",
+    //    },
+    //    touch
+    //      ? {
+    //          actions: [faHandPointer, "Drag"],
+    //          target: faMap,
+    //          text: "Box selection",
+    //        }
+    //      : {
+    //          actions: ["Shift", "LMB", "Drag"],
+    //          target: faMap,
+    //          text: "Box selection",
+    //        },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === SPAWN_UNIT) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Spawn unit",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Exit spawn mode",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === SPAWN_EFFECT) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Spawn effect",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Exit spawn mode",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === CONTEXT_ACTION) {
+    //  let controls = [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Deselect units",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //
+    //  if (this.#contextAction) {
+    //    controls.push({
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: this.#contextAction.getTarget() === "unit" ? faJetFighter : faMap,
+    //      text: this.#contextAction?.getLabel() ?? "",
+    //    });
+    //  }
+    //
+    //  if (!touch && this.#defaultContextAction) {
+    //    controls.push({
+    //      actions: ["RMB"],
+    //      target: faMap,
+    //      text: this.#defaultContextAction?.getLabel() ?? "",
+    //    });
+    //    controls.push({
+    //      actions: ["RMB", "hold"],
+    //      target: faMap,
+    //      text: "Open context menu",
+    //    });
+    //  }
+    //
+    //  return controls;
+    //} else if (getApp().getState() === COALITIONAREA_EDIT) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faDrawPolygon,
+    //      text: "Select shape",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Exit drawing mode",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === COALITIONAREA_DRAW_POLYGON) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Add vertex to polygon",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Finalize polygon",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === COALITIONAREA_DRAW_CIRCLE) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Add circle",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === SELECT_JTAC_TARGET) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Set unit/location as target",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Exit selection mode",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === SELECT_JTAC_ECHO) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Set location as ECHO point",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Exit selection mode",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else if (getApp().getState() === SELECT_JTAC_IP) {
+    //  return [
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB"],
+    //      target: faMap,
+    //      text: "Set location as IP point",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", 2],
+    //      target: faMap,
+    //      text: "Exit selection mode",
+    //    },
+    //    {
+    //      actions: [touch ? faHandPointer : "LMB", "Drag"],
+    //      target: faMap,
+    //      text: "Move map location",
+    //    },
+    //  ];
+    //} else {
+    //  return [];
+    //}
   }
 
   deselectAllCoalitionAreas() {
@@ -972,10 +977,10 @@ export class Map extends L.Map {
     window.clearTimeout(this.#shortPressTimer);
     window.clearTimeout(this.#longPressTimer);
 
-    if (this.#state === COALITIONAREA_DRAW_POLYGON || this.#state === COALITIONAREA_DRAW_CIRCLE) {
-      this.setState(COALITIONAREA_EDIT);
+    if (getApp().getSubState() !== NO_SUBSTATE) {
+      getApp().setState(getApp().getState(), NO_SUBSTATE);
     } else {
-      this.setState(IDLE);
+      getApp().setState(OlympusState.IDLE);
     }
   }
 
@@ -990,68 +995,69 @@ export class Map extends L.Map {
     document.dispatchEvent(new CustomEvent("hideUnitContextMenu"));
 
     /* Execute the short click action */
-    if (this.#state === IDLE) {
-    } else if (this.#state === SPAWN_UNIT) {
-      if (e.originalEvent.button != 2 && this.#spawnRequestTable !== null) {
-        this.#spawnRequestTable.unit.location = pressLocation;
-        getApp()
-          .getUnitsManager()
-          .spawnUnits(
-            this.#spawnRequestTable.category,
-            [this.#spawnRequestTable.unit],
-            this.#spawnRequestTable.coalition,
-            false,
-            undefined,
-            undefined,
-            (hash) => {
-              this.addTemporaryMarker(pressLocation, this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? "blue", hash);
-            }
-          );
-      }
-    } else if (this.#state === SPAWN_EFFECT) {
-      if (e.originalEvent.button != 2 && this.#effectRequestTable !== null) {
-        getApp().getServerManager().spawnExplosion(50, "normal", pressLocation);
-      }
-    } else if (this.#state === COALITIONAREA_DRAW_POLYGON) {
-      const selectedArea = this.getSelectedCoalitionArea();
-      if (selectedArea && selectedArea instanceof CoalitionPolygon) {
-        selectedArea.addTemporaryLatLng(pressLocation);
-      }
-    } else if (this.#state === COALITIONAREA_DRAW_CIRCLE) {
-      const selectedArea = this.getSelectedCoalitionArea();
-      if (selectedArea && selectedArea instanceof CoalitionCircle) {
-        if (selectedArea.getLatLng().lat == 0 && selectedArea.getLatLng().lng == 0) selectedArea.setLatLng(pressLocation);
-        this.setState(COALITIONAREA_EDIT);
-      }
-    } else if (this.#state == COALITIONAREA_EDIT) {
-      this.deselectAllCoalitionAreas();
-      for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
-        if (areaContains(pressLocation, this.#coalitionAreas[idx])) {
-          this.#coalitionAreas[idx].setSelected(true);
-          document.dispatchEvent(
-            new CustomEvent("coalitionAreaSelected", {
-              detail: this.#coalitionAreas[idx],
-            })
-          );
-          break;
+    if (getApp().getState() === OlympusState.IDLE) {
+      /* Do nothing */
+    } else if (getApp().getState() === OlympusState.SPAWN) {
+      if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
+        if (e.originalEvent.button != 2 && this.#spawnRequestTable !== null) {
+          this.#spawnRequestTable.unit.location = pressLocation;
+          getApp()
+            .getUnitsManager()
+            .spawnUnits(
+              this.#spawnRequestTable.category,
+              [this.#spawnRequestTable.unit],
+              this.#spawnRequestTable.coalition,
+              false,
+              undefined,
+              undefined,
+              (hash) => {
+                this.addTemporaryMarker(pressLocation, this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? "blue", hash);
+              }
+            );
+        }
+      } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
+        if (e.originalEvent.button != 2 && this.#effectRequestTable !== null) {
+          getApp().getServerManager().spawnExplosion(50, "normal", pressLocation);
         }
       }
-    } else if (this.#state === CONTEXT_ACTION) {
+    } else if (getApp().getState() === OlympusState.DRAW) {
+      if (getApp().getSubState() === DrawSubState.DRAW_POLYGON) {
+        const selectedArea = this.getSelectedCoalitionArea();
+        if (selectedArea && selectedArea instanceof CoalitionPolygon) {
+          selectedArea.addTemporaryLatLng(pressLocation);
+        }
+      } else if (getApp().getSubState() === DrawSubState.DRAW_CIRCLE) {
+        const selectedArea = this.getSelectedCoalitionArea();
+        if (selectedArea && selectedArea instanceof CoalitionCircle) {
+          if (selectedArea.getLatLng().lat == 0 && selectedArea.getLatLng().lng == 0) selectedArea.setLatLng(pressLocation);
+          getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+        }
+      } else if (getApp().getSubState() == DrawSubState.NO_SUBSTATE) {
+        this.deselectAllCoalitionAreas();
+        for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
+          if (areaContains(pressLocation, this.#coalitionAreas[idx])) {
+            this.#coalitionAreas[idx].setSelected(true);
+            getApp().setState(OlympusState.DRAW, DrawSubState.EDIT)
+            break;
+          }
+        }
+      }
+    } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
       if (e.type === "touchstart" || e.originalEvent.buttons === 1) {
         if (this.#contextAction !== null) this.executeContextAction(null, pressLocation);
-        else this.setState(IDLE);
+        else getApp().setState(OlympusState.IDLE);
       } else if (e.originalEvent.buttons === 2) {
         if (this.#defaultContextAction !== null) this.executeDefaultContextAction(null, pressLocation);
       }
-    } else if (this.#state === SELECT_JTAC_TARGET) {
-      document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { location: pressLocation } }));
-      this.setState(IDLE);
-    } else if (this.#state === SELECT_JTAC_ECHO) {
-      document.dispatchEvent(new CustomEvent("selectJTACECHO", { detail: pressLocation }));
-      this.setState(IDLE);
-    } else if (this.#state === SELECT_JTAC_IP) {
-      document.dispatchEvent(new CustomEvent("selectJTACIP", { detail: pressLocation }));
-      this.setState(IDLE);
+    } else if (getApp().getState() === OlympusState.JTAC) {
+      if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
+        document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { location: pressLocation } }));
+      } else if (getApp().getSubState() === JTACSubState.SELECT_ECHO_POINT) {
+        document.dispatchEvent(new CustomEvent("selectJTACECHO", { detail: pressLocation }));
+      } else if (getApp().getSubState() === JTACSubState.SELECT_IP) {
+        document.dispatchEvent(new CustomEvent("selectJTACIP", { detail: pressLocation }));
+      }
+      getApp().setState(OlympusState.JTAC);
     } else {
     }
   }
@@ -1065,10 +1071,10 @@ export class Map extends L.Map {
 
     if (!this.#isDragging && !this.#isZooming) {
       this.deselectAllCoalitionAreas();
-      if (this.#state === IDLE) {
+      if (getApp().getState() === OlympusState.IDLE) {
         if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e }));
         else document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent }));
-      } else if (this.#state === CONTEXT_ACTION) {
+      } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
           document.dispatchEvent(new CustomEvent("showMapContextMenu", { detail: e }));
         } else {

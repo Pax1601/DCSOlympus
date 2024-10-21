@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown } from "@fortawesome/free-solid-svg-icons";
 
-export function OlAccordion(props: { title: string; children?: JSX.Element | JSX.Element[]; showArrows?: boolean; className?: string }) {
-  const [open, setOpen] = useState(false);
+export function OlAccordion(props: { title: string; open: boolean, onClick: () => void; children?: JSX.Element | JSX.Element[]; showArrows?: boolean; className?: string }) {
   const [scrolledUp, setScrolledUp] = useState(true);
   const [scrolledDown, setScrolledDown] = useState(false);
 
@@ -29,7 +28,7 @@ export function OlAccordion(props: { title: string; children?: JSX.Element | JSX
       <h3>
         <button
           type="button"
-          onClick={() => setOpen(!open)}
+          onClick={() => props.onClick()}
           className={`
             ${props.className ?? ""}
             flex w-full items-center justify-between gap-3 border-gray-200 py-2
@@ -56,7 +55,7 @@ export function OlAccordion(props: { title: string; children?: JSX.Element | JSX
           </svg>
         </button>
       </h3>
-      <div className={open ? "" : "hidden"}>
+      <div className={props.open ? "" : "hidden"}>
         {props.showArrows && (
           <div className="rotate-180">
             {!scrolledUp && (

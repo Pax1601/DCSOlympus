@@ -19,7 +19,7 @@ export function ControlsPanel(props: {}) {
   });
 
   useEffect(() => {
-    document.addEventListener("mapStateChanged", (ev) => {
+    document.addEventListener("appStateChanged", (ev) => {
       setControls(getApp().getMap().getCurrentControls());
     });
   }, []);

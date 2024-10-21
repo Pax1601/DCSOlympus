@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Unit } from "../../unit/unit";
 import { ContextActionSet } from "../../unit/contextactionset";
-import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION, CONTEXT_ACTION_COLORS } from "../../constants/constants";
+import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LatLng } from "leaflet";

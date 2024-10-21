@@ -3,7 +3,6 @@ import { Menu } from "./components/menu";
 import { Coalition } from "../../types/types";
 import { Airbase } from "../../mission/airbase";
 import { FaArrowLeft, FaCompass } from "react-icons/fa6";
-import { getUnitsByLabel } from "../../other/utils";
 import { UnitBlueprint } from "../../interfaces";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
@@ -15,7 +14,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
   const [blueprint, setBlueprint] = useState(null as null | UnitBlueprint);
   const [filterString, setFilterString] = useState("");
 
-  const [filteredAircraft, filteredHelicopters, _1, _2, _3] = getUnitsByLabel(filterString);
+  const [filteredAircraft, filteredHelicopters] = [{}, {}] // TODOgetUnitsByLabel(filterString);
 
   return (
     <Menu title={props.airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
@@ -47,7 +46,9 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
             <span className="text-gray-400">Elevation</span>
             <span>{props.airbase?.getChartData().elevation !== "" ? props.airbase?.getChartData().elevation : "N/A"}ft</span>
           </div>
-
+          {
+          // TODO 
+          }
           <OlAccordion title={`Runways`} className="!p-0 !text-gray-400">
             <div className="flex flex-col gap-2">
               {props.airbase?.getChartData().runways.map((runway, idx) => {
