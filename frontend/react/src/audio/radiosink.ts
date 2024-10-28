@@ -1,6 +1,7 @@
 import { AudioSink } from "./audiosink";
 import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
+import { AudioSinksChangedEvent } from "../events";
 
 let packetID = 0;
 
@@ -54,7 +55,7 @@ export class RadioSink extends AudioSink {
 
   setFrequency(frequency) {
     this.#frequency = frequency;
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getFrequency() {
@@ -63,7 +64,7 @@ export class RadioSink extends AudioSink {
 
   setModulation(modulation) {
     this.#modulation = modulation;
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getModulation() {
@@ -72,7 +73,7 @@ export class RadioSink extends AudioSink {
 
   setPtt(ptt) {
     this.#ptt = ptt;
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getPtt() {
@@ -81,7 +82,7 @@ export class RadioSink extends AudioSink {
 
   setTuned(tuned) {
     this.#tuned = tuned;
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getTuned() {
@@ -90,7 +91,7 @@ export class RadioSink extends AudioSink {
 
   setVolume(volume) {
     this.#volume = volume;
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getVolume() {

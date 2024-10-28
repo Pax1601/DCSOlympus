@@ -71,6 +71,7 @@ import {
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { Carrier } from "../mission/carrier";
+import { ContactsUpdatedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, UnitDeadEvent, UnitDeselectedEvent, UnitSelectedEvent } from "../events";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -356,29 +357,20 @@ export abstract class Unit extends CustomMarker {
     this.on("mouseup", (e) => this.#onMouseUp(e));
     this.on("dblclick", (e) => this.#onDoubleClick(e));
     this.on("mouseover", () => {
-      if (this.belongsToCommandedCoalition()) {
+      if (this.belongsToCommandedCoalition()) 
         this.setHighlighted(true);
-        document.dispatchEvent(new CustomEvent("unitMouseover", { detail: this }));
-      }
     });
-    this.on("mouseout", () => {
-      this.setHighlighted(false);
-      document.dispatchEvent(new CustomEvent("unitMouseout", { detail: this }));
-    });
-    getApp()
-      .getMap()
-      .on("zoomend", (e: any) => {
-        this.#onZoom(e);
-      });
+    this.on("mouseout", () => this.setHighlighted(false));
+    getApp().getMap().on("zoomend", (e: any) => this.#onZoom(e));
 
     /* Deselect units if they are hidden */
-    document.addEventListener("hiddenTypesChanged", (ev: CustomEventInit) => {
+    HiddenTypesChangedEvent.on((hiddenTypes) => {
       this.#updateMarker();
       this.setSelected(this.getSelected() && !this.getHidden());
     });
 
     /* Update the marker when the options change */
-    document.addEventListener("mapOptionChanged", (ev: CustomEventInit) => {
+    MapOptionsChangedEvent.on(() => {
       this.#updateMarker();
 
       /* Circles don't like to be updated when the map is zooming */
@@ -559,7 +551,7 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.contacts:
           this.#contacts = dataExtractor.extractContacts();
-          document.dispatchEvent(new CustomEvent("contactsUpdated", { detail: this }));
+          ContactsUpdatedEvent.dispatch();
           break;
         case DataIndexes.activePath:
           this.#activePath = dataExtractor.extractActivePath();
@@ -599,9 +591,6 @@ export abstract class Unit extends CustomMarker {
         this.setSelected(true);
       }
     }
-
-    /* If the unit is selected or if the view is centered on this unit, sent the update signal so that other elements like the UnitControlPanel can be updated. */
-    if (this.getSelected() || getApp().getMap().getCenteredOnUnit() === this) document.dispatchEvent(new CustomEvent("unitUpdated", { detail: this }));
   }
 
   /** Get unit data collated into an object
@@ -672,7 +661,7 @@ export abstract class Unit extends CustomMarker {
    * @param newAlive (boolean) true = alive, false = dead
    */
   setAlive(newAlive: boolean) {
-    if (newAlive != this.#alive) document.dispatchEvent(new CustomEvent("unitDeath", { detail: this }));
+    if (newAlive != this.#alive) UnitDeadEvent.dispatch(this)
     this.#alive = newAlive;
   }
 
@@ -709,11 +698,7 @@ export abstract class Unit extends CustomMarker {
       this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
 
       /* Trigger events after all (de-)selecting has been done */
-      if (selected) {
-        document.dispatchEvent(new CustomEvent("unitSelection", { detail: this }));
-      } else {
-        document.dispatchEvent(new CustomEvent("unitDeselection", { detail: this }));
-      }
+      selected? UnitSelectedEvent.dispatch(this): UnitDeselectedEvent.dispatch(this);
     }
   }
 

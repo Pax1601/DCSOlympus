@@ -3,6 +3,7 @@ import { Weapon } from "./weapon";
 import { DataIndexes } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Contact } from "../interfaces";
+import { CommandModeOptionsChangedEvent } from "../events";
 
 /** The WeaponsManager handles the creation and update of weapons. Data is strictly updated by the server ONLY. */
 export class WeaponsManager {
@@ -11,7 +12,7 @@ export class WeaponsManager {
   constructor() {
     this.#weapons = {};
 
-    document.addEventListener("commandModeOptionsChanged", () => {
+    CommandModeOptionsChangedEvent.on(() => {
       Object.values(this.#weapons).forEach((weapon: Weapon) => weapon.updateVisibility());
     });
   }

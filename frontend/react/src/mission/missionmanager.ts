@@ -14,6 +14,7 @@ import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionDa
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
 import { NavyUnit } from "../unit/unit";
+import { CommandModeOptionsChangedEvent } from "../events";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -42,17 +43,7 @@ export class MissionManager {
   //#commandModeErasDropdown: Dropdown;
   #coalitions: { red: string[]; blue: string[] } = { red: [], blue: [] };
 
-  constructor() {
-    document.addEventListener("applycommandModeOptions", () => this.#applycommandModeOptions());
-    document.addEventListener("showCommandModeDialog", () => this.showCommandModeDialog());
-    document.addEventListener("toggleSpawnRestrictions", (ev: CustomEventInit) => {
-      this.#toggleSpawnRestrictions(ev.detail._element.checked);
-    });
-
-    /* command-mode settings dialog */
-    //this.#commandModeDialog = document.querySelector("#command-mode-settings-dialog") as HTMLElement;
-    //this.#commandModeErasDropdown = new Dropdown("command-mode-era-options", () => {});
-  }
+  constructor() {}
 
   /** Update location of bullseyes
    *
@@ -303,13 +294,7 @@ export class MissionManager {
     this.refreshSpawnPoints();
 
     if (commandModeOptionsChanged) {
-      document.dispatchEvent(new CustomEvent("commandModeOptionsChanged", { detail: this }));
-      document.getElementById("command-mode-toolbar")?.classList.remove("hide");
-      const el = document.getElementById("command-mode");
-      if (el) {
-        el.dataset.mode = commandModeOptions.commandMode;
-        el.textContent = commandModeOptions.commandMode.toUpperCase();
-      }
+      CommandModeOptionsChangedEvent.dispatch();
     }
 
     document

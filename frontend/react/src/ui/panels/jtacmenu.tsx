@@ -10,6 +10,7 @@ import { FaMousePointer } from "react-icons/fa";
 import { OlLocation } from "../components/ollocation";
 import { FaBullseye } from "react-icons/fa6";
 import { JTACSubState, OlympusState } from "../../constants/constants";
+import { AppStateChangedEvent } from "../../events";
 
 export function JTACMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [referenceSystem, setReferenceSystem] = useState("LatLngDec");
@@ -23,24 +24,8 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
   const [type, setType] = useState("Type 1");
 
   useEffect(() => {
-    document.addEventListener("selectJTACTarget", (ev: CustomEventInit) => {
-      setTargetLocation(null);
-      setTargetUnit(null);
-
-      if (ev.detail.location) setTargetLocation(ev.detail.location);
-      if (ev.detail.unit) setTargetUnit(ev.detail.unit);
-    });
-
-    document.addEventListener("selectJTACECHO", (ev: CustomEventInit) => {
-      setECHO(ev.detail);
-    });
-
-    document.addEventListener("selectJTACIP", (ev: CustomEventInit) => {
-      setIP(ev.detail);
-    });
-
-    document.addEventListener("appStateChanged", (ev: CustomEventInit) => {
-      if (ev.detail.subState === JTACSubState.SELECT_TARGET) {
+    AppStateChangedEvent.on((state, subState) => {
+      if (subState === JTACSubState.SELECT_TARGET) {
         setTargetLocation(null);
         setTargetUnit(null);
       }

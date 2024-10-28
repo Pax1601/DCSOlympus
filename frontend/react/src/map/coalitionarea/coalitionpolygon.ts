@@ -5,6 +5,7 @@ import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
 import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import { polyCenter } from "../../other/utils";
+import { CoalitionAreaSelectedEvent } from "../../events";
 
 let totalAreas = 0;
 
@@ -70,13 +71,7 @@ export class CoalitionPolygon extends Polygon {
       this.setEditing(false);
     }
 
-    if (selected) {
-      document.dispatchEvent(
-        new CustomEvent("coalitionAreaSelected", {
-          detail: this,
-        })
-      );
-    }
+    if (selected) CoalitionAreaSelectedEvent.dispatch(this);
 
     //@ts-ignore draggable option added by leaflet-path-drag
     selected ? this.dragging.enable() : this.dragging.disable();

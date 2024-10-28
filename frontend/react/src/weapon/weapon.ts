@@ -6,6 +6,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { DLINK, DataIndexes, GAME_MASTER, IRST, OPTIC, RADAR, VISUAL } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { ObjectIconOptions } from "../interfaces";
+import { MapOptionsChangedEvent } from "../events";
 
 export class Weapon extends CustomMarker {
   ID: number;
@@ -50,9 +51,7 @@ export class Weapon extends CustomMarker {
     this.ID = ID;
 
     /* Update the marker when the options change */
-    document.addEventListener("mapOptionsChanged", (ev: CustomEventInit) => {
-      this.#updateMarker();
-    });
+    MapOptionsChangedEvent.on(() => this.#updateMarker());
   }
 
   getCategory() {

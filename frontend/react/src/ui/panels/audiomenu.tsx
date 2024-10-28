@@ -11,6 +11,7 @@ import { UnitSinkPanel } from "./components/unitsinkpanel";
 import { UnitSink } from "../../audio/unitsink";
 import { FaMinus, FaVolumeHigh } from "react-icons/fa6";
 import { getRandomColor } from "../../other/utils";
+import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent } from "../../events";
 
 let shortcutKeys = ["Z", "X", "C", "V", "B", "N", "M", "K", "L"];
 
@@ -36,7 +37,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
 
   useEffect(() => {
     /* Force a rerender */
-    document.addEventListener("audioSinksUpdated", () => {
+    AudioSinksChangedEvent.on(() => {
       setSinks(
         getApp()
           ?.getAudioManager()
@@ -47,7 +48,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
     });
 
     /* Force a rerender */
-    document.addEventListener("audioSourcesUpdated", () => {
+    AudioSourcesChangedEvent.on(() => {
       setSources(
         getApp()
           ?.getAudioManager()
@@ -56,7 +57,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
       );
     });
 
-    document.addEventListener("audioManagerStateChanged", () => {
+    AudioManagerStateChangedEvent.on(() => {
       setAudioManagerEnabled(getApp().getAudioManager().isRunning());
     });
   }, []);

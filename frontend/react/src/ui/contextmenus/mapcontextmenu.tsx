@@ -7,6 +7,7 @@ import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LatLng } from "leaflet";
+import { SelectionClearedEvent } from "../../events";
 
 export function MapContextMenu(props: {}) {
   const [open, setOpen] = useState(false);
@@ -71,7 +72,7 @@ export function MapContextMenu(props: {}) {
       setOpen(false);
     });
 
-    document.addEventListener("clearSelection", () => {
+    SelectionClearedEvent.on(() => {
       setOpen(false);
     });
   }, []);

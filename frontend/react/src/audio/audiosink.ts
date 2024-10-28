@@ -1,3 +1,4 @@
+import { AudioSinksChangedEvent } from "../events";
 import { getApp } from "../olympusapp";
 
 /* Base audio sink class */
@@ -19,7 +20,7 @@ export abstract class AudioSink {
 
   disconnect() {
     this.getInputNode().disconnect();
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getInputNode() {

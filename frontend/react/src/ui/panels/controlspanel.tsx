@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getApp } from "../../olympusapp";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AppStateChangedEvent } from "../../events";
 
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
@@ -19,7 +20,7 @@ export function ControlsPanel(props: {}) {
   });
 
   useEffect(() => {
-    document.addEventListener("appStateChanged", (ev) => {
+    AppStateChangedEvent.on(() => {
       setControls(getApp().getMap().getCurrentControls());
     });
   }, []);

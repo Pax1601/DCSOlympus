@@ -1,3 +1,4 @@
+import { AudioSourcesChangedEvent } from "../events";
 import { getApp } from "../olympusapp";
 import { AudioSink } from "./audiosink";
 import { WebAudioPeakMeter } from "web-audio-peak-meter";
@@ -21,7 +22,7 @@ export abstract class AudioSource {
     if (!this.#connectedTo.includes(sink)) {
       this.getOutputNode().connect(sink.getInputNode());
       this.#connectedTo.push(sink);
-      document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+      AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
     }
   }
 
@@ -33,7 +34,7 @@ export abstract class AudioSource {
       this.getOutputNode().disconnect();
     }
 
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 
   setName(name) {
@@ -51,7 +52,7 @@ export abstract class AudioSource {
   setVolume(volume) {
     this.#volume = volume;
     this.#gainNode.gain.exponentialRampToValueAtTime(volume, getApp().getAudioManager().getAudioContext().currentTime + 0.02);
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 
   getVolume() {

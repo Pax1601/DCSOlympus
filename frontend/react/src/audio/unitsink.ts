@@ -2,6 +2,7 @@ import { AudioSink } from "./audiosink";
 import { getApp } from "../olympusapp";
 import { Unit } from "../unit/unit";
 import { AudioUnitPipeline } from "./audiounitpipeline";
+import { AudioSinksChangedEvent, SRSClientsChangedEvent } from "../events";
 
 /* Unit sink to implement a "loudspeaker" external sound. Useful for stuff like 5MC calls, air sirens,
 scramble calls and so on. Ideally, one may want to move this code to the backend*/
@@ -17,7 +18,7 @@ export class UnitSink extends AudioSink {
     this.#unit = unit;
     this.setName(`${unit.getUnitName()} - ${unit.getName()}`);
 
-    document.addEventListener("SRSClientsUpdated", () => {
+    SRSClientsChangedEvent.on(() => {
       this.#updatePipelines();
     });
 
@@ -53,7 +54,7 @@ export class UnitSink extends AudioSink {
     Object.values(this.#unitPipelines).forEach((pipeline) => {
       pipeline.setPtt(ptt);
     })
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getPtt() {
@@ -65,7 +66,7 @@ export class UnitSink extends AudioSink {
     Object.values(this.#unitPipelines).forEach((pipeline) => {
       pipeline.setMaxDistance(maxDistance);
     })
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
   getMaxDistance() {

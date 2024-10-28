@@ -11,6 +11,7 @@ import { AudioSink } from "./audiosink";
 import { Unit } from "../unit/unit";
 import { UnitSink } from "./unitsink";
 import { AudioPacket, MessageType } from "./audiopacket";
+import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent, ConfigLoadedEvent, SRSClientsChangedEvent } from "../events";
 
 export class AudioManager {
   #audioContext: AudioContext;
@@ -35,7 +36,7 @@ export class AudioManager {
   #SRSClientUnitIDs: number[] = [];
 
   constructor() {
-    document.addEventListener("configLoaded", () => {
+    ConfigLoadedEvent.on(() => {
       let config = getApp().getConfig();
       if (config["WSPort"]) {
         this.setPort(config["WSPort"]);
@@ -95,7 +96,7 @@ export class AudioManager {
             });
           } else {
             this.#SRSClientUnitIDs = JSON.parse(new TextDecoder().decode(packetUint8Array.slice(1))).unitIDs;
-            document.dispatchEvent(new CustomEvent("SRSClientsUpdated"));
+            SRSClientsChangedEvent.dispatch();
           }
         }
       });
@@ -108,13 +109,13 @@ export class AudioManager {
         if (sink instanceof RadioSink) microphoneSource.connect(sink);
       });
       this.#sources.push(microphoneSource);
-      document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+      AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
 
       /* Add two default radios */
       this.addRadio();
       this.addRadio();
     });
-    document.dispatchEvent(new CustomEvent("audioManagerStateChanged"));
+    AudioManagerStateChangedEvent.dispatch(this.#running);
   }
 
   stop() {
@@ -128,9 +129,9 @@ export class AudioManager {
     this.#sources = [];
     this.#sinks = [];
 
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
-    document.dispatchEvent(new CustomEvent("audioManagerStateChanged"));
+    AudioSourcesChangedEvent.dispatch(this.#sources);
+    AudioSinksChangedEvent.dispatch(this.#sinks);
+    AudioManagerStateChangedEvent.dispatch(this.#running);
   }
 
   setAddress(address) {
@@ -153,7 +154,7 @@ export class AudioManager {
     }
     const newSource = new FileSource(file);
     this.#sources.push(newSource);
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 
   getSources() {
@@ -168,7 +169,7 @@ export class AudioManager {
     }
     source.disconnect();
     this.#sources = this.#sources.filter((v) => v != source);
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(this.#sources);
   }
 
   addUnitSink(unit: Unit) {
@@ -178,7 +179,7 @@ export class AudioManager {
       return;
     }
     this.#sinks.push(new UnitSink(unit));
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(this.#sinks);
   }
 
   addRadio() {
@@ -191,7 +192,7 @@ export class AudioManager {
     this.#sinks.push(newRadio);
     newRadio.setName(`Radio ${this.#sinks.length}`);
     this.#sources[0].connect(newRadio);
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(this.#sinks);
   }
 
   getSinks() {
@@ -210,7 +211,7 @@ export class AudioManager {
     this.#sinks.forEach((sink) => {
       if (sink instanceof RadioSink) sink.setName(`Radio ${idx++}`);
     });
-    document.dispatchEvent(new CustomEvent("audioSinksUpdated"));
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
     this.#sources.forEach((source) => {
       if (source.getConnectedTo().includes(sink))
         source.disconnect(sink)

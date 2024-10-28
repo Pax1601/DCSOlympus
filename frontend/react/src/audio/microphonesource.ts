@@ -1,3 +1,4 @@
+import { AudioSourcesChangedEvent } from "../events";
 import { getApp } from "../olympusapp";
 import { AudioSource } from "./audiosource";
 
@@ -20,6 +21,6 @@ export class MicrophoneSource extends AudioSource {
   }
 
   play() {
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 }

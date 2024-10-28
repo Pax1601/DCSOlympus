@@ -27,11 +27,11 @@ import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
 import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
 import { Coalition, Context } from "./types/types";
 import { Unit } from "./unit/unit";
+import { AppStateChangedEvent, ConfigLoadedEvent, SelectedUnitsChangedEvent } from "./events";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
 export var connectedToServer = true; // TODO Temporary
-
 
 export class OlympusApp {
   /* Global data */
@@ -42,7 +42,7 @@ export class OlympusApp {
 
   #events = {
     [OlympusEvent.STATE_CHANGED]: [] as ((state: OlympusState, subState: OlympusSubState) => void)[],
-    [OlympusEvent.UNITS_SELECTED]: [] as ((units: Unit[]) => void)[]
+    [OlympusEvent.UNITS_SELECTED]: [] as ((units: Unit[]) => void)[],
   };
 
   /* Main leaflet map, extended by custom methods */
@@ -60,7 +60,12 @@ export class OlympusApp {
   /* Current context */
   #context: Context = DEFAULT_CONTEXT;
 
-  constructor() {}
+  constructor() {
+    SelectedUnitsChangedEvent.on((selectedUnits) => {
+      if (selectedUnits.length > 0) this.setState(OlympusState.UNIT_CONTROL);
+      else this.getState() === OlympusState.UNIT_CONTROL && this.setState(OlympusState.IDLE)
+    });
+  }
 
   getCurrentContext() {
     return this.#context;
@@ -178,10 +183,9 @@ export class OlympusApp {
       })
       .then((res) => {
         this.#config = res;
-        document.dispatchEvent(new CustomEvent("configLoaded"));
+        ConfigLoadedEvent.dispatch(); // TODO actually dispatch the config
         this.setState(OlympusState.LOGIN);
       });
-      
   }
 
   getConfig() {
@@ -192,8 +196,8 @@ export class OlympusApp {
     this.#state = state;
     this.#subState = subState;
 
-    console.log(`App state set to ${state}, substate ${subState}`)
-    this.dispatchEvent(OlympusEvent.STATE_CHANGED, state, subState)
+    console.log(`App state set to ${state}, substate ${subState}`);
+    AppStateChangedEvent.dispatch(state, subState);
   }
 
   getState() {
@@ -202,16 +206,5 @@ export class OlympusApp {
 
   getSubState() {
     return this.#subState;
-  }
-
-  registerEventCallback(event: OlympusEvent, callback: any) {
-    this.#events[event].push(callback)
-  }
-
-  dispatchEvent(event: OlympusEvent, ...args) {
-    console.log(`Dispatching event ${event}. Arguments: ${args}`)
-    this.#events[event].forEach((event) => {
-      event(args);
-    })
   }
 }

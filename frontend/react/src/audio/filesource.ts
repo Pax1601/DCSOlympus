@@ -1,5 +1,6 @@
 import { AudioSource } from "./audiosource";
 import { getApp } from "../olympusapp";
+import { AudioSourcesChangedEvent } from "../events";
 
 export class FileSource extends AudioSource {
   #file: File;
@@ -50,7 +51,7 @@ export class FileSource extends AudioSource {
     const now = Date.now() / 1000;
     this.#lastUpdateTime = now;
 
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
 
     this.#updateInterval = setInterval(() => {
       /* Update the current position value every second */
@@ -63,7 +64,7 @@ export class FileSource extends AudioSource {
         if (!this.#looping) this.pause();
       }
 
-      document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+      AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
     }, 1000);
   }
 
@@ -77,7 +78,7 @@ export class FileSource extends AudioSource {
     this.#currentPosition += now - this.#lastUpdateTime;
     clearInterval(this.#updateInterval);
 
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 
   getPlaying() {
@@ -110,7 +111,7 @@ export class FileSource extends AudioSource {
   setLooping(looping) {
     this.#looping = looping;
     if (this.#source) this.#source.loop = looping;
-    document.dispatchEvent(new CustomEvent("audioSourcesUpdated"));
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 
   getLooping() {

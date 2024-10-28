@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useContext, useEffect, useRef, useState } from "react";
 import { Menu } from "./components/menu";
 import { Unit } from "../../unit/unit";
 import { OlLabelToggle } from "../components/ollabeltoggle";
@@ -50,9 +50,11 @@ import { Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
+import { StateContext } from "../../statecontext";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
-  const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
+  const appState = useContext(StateContext);
+
   const [selectedUnitsData, setSelectedUnitsData] = useState({
     desiredAltitude: undefined as undefined | number,
     desiredAltitudeType: undefined as undefined | string,
@@ -105,7 +107,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [filterString, setFilterString] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
-  const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
 
   var searchBarRef = useRef(null);
 
@@ -116,82 +117,25 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   });
 
   useEffect(() => {
-    /* When a unit is selected, update the data */
-    document.addEventListener("unitsSelection", (ev: CustomEventInit) => {
-      setSelectedUnits(ev.detail as Unit[]);
-      updateData();
-    });
-
-    /* When a unit is deselected, refresh the view */
-    document.addEventListener("unitDeselection", (ev: CustomEventInit) => {
-      window.setTimeout(() => updateData(), 200);
-    });
-
-    /* When all units are deselected clean the view */
-    document.addEventListener("clearSelection", () => {
-      setSelectedUnits([]);
-    });
-
-    document.addEventListener("audioManagerStateChanged", () => {
-      setAudioManagerEnabled(getApp().getAudioManager().isRunning());
-    });
-  }, []);
-
-  useEffect(() => {
     setShowAdvancedSettings(false);
-  }, [selectedUnits])
 
-  /* Update the current values of the shown data */
-  function updateData() {
     const getters = {
-      desiredAltitude: (unit: Unit) => {
-        return Math.round(mToFt(unit.getDesiredAltitude()));
-      },
-      desiredAltitudeType: (unit: Unit) => {
-        return unit.getDesiredAltitudeType();
-      },
-      desiredSpeed: (unit: Unit) => {
-        return Math.round(msToKnots(unit.getDesiredSpeed()));
-      },
-      desiredSpeedType: (unit: Unit) => {
-        return unit.getDesiredSpeedType();
-      },
-      ROE: (unit: Unit) => {
-        return unit.getROE();
-      },
-      reactionToThreat: (unit: Unit) => {
-        return unit.getReactionToThreat();
-      },
-      emissionsCountermeasures: (unit: Unit) => {
-        return unit.getEmissionsCountermeasures();
-      },
-      scenicAAA: (unit: Unit) => {
-        return unit.getState() === "scenic-aaa";
-      },
-      missOnPurpose: (unit: Unit) => {
-        return unit.getState() === "miss-on-purpose";
-      },
-      shotsScatter: (unit: Unit) => {
-        return unit.getShotsScatter();
-      },
-      shotsIntensity: (unit: Unit) => {
-        return unit.getShotsIntensity();
-      },
-      operateAs: (unit: Unit) => {
-        return unit.getOperateAs();
-      },
-      followRoads: (unit: Unit) => {
-        return unit.getFollowRoads();
-      },
-      isActiveAWACS: (unit: Unit) => {
-        return unit.getIsActiveAWACS();
-      },
-      isActiveTanker: (unit: Unit) => {
-        return unit.getIsActiveTanker();
-      },
-      onOff: (unit: Unit) => {
-        return unit.getOnOff();
-      },
+      desiredAltitude: (unit: Unit) => Math.round(mToFt(unit.getDesiredAltitude())),
+      desiredAltitudeType: (unit: Unit) => unit.getDesiredAltitudeType(),
+      desiredSpeed: (unit: Unit) => Math.round(msToKnots(unit.getDesiredSpeed())),
+      desiredSpeedType: (unit: Unit) => unit.getDesiredSpeedType(),
+      ROE: (unit: Unit) => unit.getROE(),
+      reactionToThreat: (unit: Unit) => unit.getReactionToThreat(),
+      emissionsCountermeasures: (unit: Unit) => unit.getEmissionsCountermeasures(),
+      scenicAAA: (unit: Unit) => unit.getState() === "scenic-aaa",
+      missOnPurpose: (unit: Unit) => unit.getState() === "miss-on-purpose",
+      shotsScatter: (unit: Unit) => unit.getShotsScatter(),
+      shotsIntensity: (unit: Unit) => unit.getShotsIntensity(),
+      operateAs: (unit: Unit) => unit.getOperateAs(),
+      followRoads: (unit: Unit) => unit.getFollowRoads(),
+      isActiveAWACS: (unit: Unit) => unit.getIsActiveAWACS(),
+      isActiveTanker: (unit: Unit) => unit.getIsActiveTanker(),
+      onOff: (unit: Unit) => unit.getOnOff(),
       isAudioSink: (unit: Unit) => {
         return (
           getApp()
@@ -215,7 +159,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       updatedData[key] = getApp()?.getUnitsManager()?.getSelectedUnitsVariable(getter);
     });
     setSelectedUnitsData(updatedData);
-  }
+  }, [appState.selectedUnits]);
 
   /* Count how many units are selected of each type, divided by coalition */
   var unitOccurences: {
@@ -228,7 +172,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     neutral: {},
   };
 
-  selectedUnits.forEach((unit) => {
+  appState.selectedUnits.forEach((unit) => {
     if (!(unit.getName() in unitOccurences[unit.getCoalition()]))
       unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label };
     else unitOccurences[unit.getCoalition()][unit.getName()].occurences++;
@@ -236,7 +180,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
   const selectedCategories = getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
-  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = [{}, {}, {}, {}, {}] // TODOgetUnitsByLabel(filterString);
+  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = [{}, {}, {}, {}, {}]; // TODOgetUnitsByLabel(filterString);
 
   const mergedFilteredUnits = Object.assign({}, filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits) as {
     [key: string]: UnitBlueprint;
@@ -276,13 +220,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   return (
     <Menu
       open={props.open}
-      title={selectedUnits.length > 0 ? `Units selected (x${selectedUnits.length})` : `No units selected`}
+      title={appState.selectedUnits.length > 0 ? `Units selected (x${appState.selectedUnits.length})` : `No units selected`}
       onClose={props.onClose}
       canBeHidden={true}
     >
       <>
         {/* ============== Selection tool START ============== */}
-        {selectedUnits.length == 0 && (
+        {appState.selectedUnits.length == 0 && (
           <div className="flex flex-col gap-4 p-4">
             <div className="text-lg text-bold text-gray-200">Selection tool</div>
             <div className="text-sm text-gray-400">
@@ -485,7 +429,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       {/* */}
       <>
         {/* ============== Unit control menu START ============== */}
-        {selectedUnits.length > 0 && (
+        {appState.selectedUnits.length > 0 && (
           <>
             {/* ============== Units list START ============== */}
             <div
@@ -578,7 +522,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           leftLabel={"AGL"}
                           rightLabel={"ASL"}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
+                            appState.selectedUnits.forEach((unit) => {
                               unit.setAltitudeType(selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL");
                               setSelectedUnitsData({
                                 ...selectedUnitsData,
@@ -590,7 +534,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       </div>
                       <OlRangeSlider
                         onChange={(ev) => {
-                          selectedUnits.forEach((unit) => {
+                          appState.selectedUnits.forEach((unit) => {
                             unit.setAltitude(ftToM(Number(ev.target.value)));
                             setSelectedUnitsData({
                               ...selectedUnitsData,
@@ -640,7 +584,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           leftLabel={"GS"}
                           rightLabel={"CAS"}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
+                            appState.selectedUnits.forEach((unit) => {
                               unit.setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS");
                               setSelectedUnitsData({
                                 ...selectedUnitsData,
@@ -653,7 +597,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     </div>
                     <OlRangeSlider
                       onChange={(ev) => {
-                        selectedUnits.forEach((unit) => {
+                        appState.selectedUnits.forEach((unit) => {
                           unit.setSpeed(knotsToMs(Number(ev.target.value)));
                           setSelectedUnitsData({
                             ...selectedUnitsData,
@@ -669,38 +613,39 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   </div>
                   {/* ============== Airspeed selector END ============== */}
                   {/* ============== Rules of Engagement START ============== */}
-                  {!(selectedUnits.length === 1 && selectedUnits[0].isTanker()) && !(selectedUnits.length === 1 && selectedUnits[0].isAWACS()) && (
-                    <div className="flex flex-col gap-2">
-                      <span
-                        className={`
-                          my-auto font-normal
-                          dark:text-white
-                        `}
-                      >
-                        Rules of engagement
-                      </span>
-                      <OlButtonGroup>
-                        {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated, olButtonsRoeFree].map((icon, idx) => {
-                          return (
-                            <OlButtonGroupItem
-                              key={idx}
-                              onClick={() => {
-                                selectedUnits.forEach((unit) => {
-                                  unit.setROE(ROEs[idx]);
-                                  setSelectedUnitsData({
-                                    ...selectedUnitsData,
-                                    ROE: ROEs[idx],
+                  {!(appState.selectedUnits.length === 1 && appState.selectedUnits[0].isTanker()) &&
+                    !(appState.selectedUnits.length === 1 && appState.selectedUnits[0].isAWACS()) && (
+                      <div className="flex flex-col gap-2">
+                        <span
+                          className={`
+                            my-auto font-normal
+                            dark:text-white
+                          `}
+                        >
+                          Rules of engagement
+                        </span>
+                        <OlButtonGroup>
+                          {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated, olButtonsRoeFree].map((icon, idx) => {
+                            return (
+                              <OlButtonGroupItem
+                                key={idx}
+                                onClick={() => {
+                                  appState.selectedUnits.forEach((unit) => {
+                                    unit.setROE(ROEs[idx]);
+                                    setSelectedUnitsData({
+                                      ...selectedUnitsData,
+                                      ROE: ROEs[idx],
+                                    });
                                   });
-                                });
-                              }}
-                              active={selectedUnitsData.ROE === ROEs[idx]}
-                              icon={icon}
-                            />
-                          );
-                        })}
-                      </OlButtonGroup>
-                    </div>
-                  )}
+                                }}
+                                active={selectedUnitsData.ROE === ROEs[idx]}
+                                icon={icon}
+                              />
+                            );
+                          })}
+                        </OlButtonGroup>
+                      </div>
+                    )}
                   {/* ============== Rules of Engagement END ============== */}
 
                   {selectedCategories.every((category) => {
@@ -723,7 +668,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <OlButtonGroupItem
                                 key={idx}
                                 onClick={() => {
-                                  selectedUnits.forEach((unit) => {
+                                  appState.selectedUnits.forEach((unit) => {
                                     unit.setReactionToThreat(reactionsToThreat[idx]);
                                     setSelectedUnitsData({
                                       ...selectedUnitsData,
@@ -755,7 +700,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <OlButtonGroupItem
                                 key={idx}
                                 onClick={() => {
-                                  selectedUnits.forEach((unit) => {
+                                  appState.selectedUnits.forEach((unit) => {
                                     unit.setEmissionsCountermeasures(emissionsCountermeasures[idx]);
                                     setSelectedUnitsData({
                                       ...selectedUnitsData,
@@ -791,7 +736,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <OlToggle
                         toggled={selectedUnitsData.isActiveTanker}
                         onClick={() => {
-                          selectedUnits.forEach((unit) => {
+                          appState.selectedUnits.forEach((unit) => {
                             unit.setAdvancedOptions(
                               !selectedUnitsData.isActiveTanker,
                               unit.getIsActiveAWACS(),
@@ -825,7 +770,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <OlToggle
                         toggled={selectedUnitsData.isActiveAWACS}
                         onClick={() => {
-                          selectedUnits.forEach((unit) => {
+                          appState.selectedUnits.forEach((unit) => {
                             unit.setAdvancedOptions(
                               unit.getIsActiveTanker(),
                               !selectedUnitsData.isActiveAWACS,
@@ -844,7 +789,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   )}
                   {/* ============== Tanker and AWACS available button END ============== */}
                   {/* ============== Advanced settings buttons START ============== */}
-                  {selectedUnits.length === 1 && (selectedUnits[0].isTanker() || selectedUnits[0].isAWACS()) && (
+                  {appState.selectedUnits.length === 1 && (appState.selectedUnits[0].isTanker() || appState.selectedUnits[0].isAWACS()) && (
                     <div className="flex content-center justify-between">
                       <button
                         className={`
@@ -855,13 +800,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         `}
                         onClick={() => {
                           setActiveAdvancedSettings({
-                            radio: JSON.parse(JSON.stringify(selectedUnits[0].getRadio())),
-                            TACAN: JSON.parse(JSON.stringify(selectedUnits[0].getTACAN())),
+                            radio: JSON.parse(JSON.stringify(appState.selectedUnits[0].getRadio())),
+                            TACAN: JSON.parse(JSON.stringify(appState.selectedUnits[0].getTACAN())),
                           });
                           setShowAdvancedSettings(true);
                         }}
                       >
-                        <FaCog className="my-auto" /> {selectedUnits[0].isTanker() ? "Configure tanker settings" : "Configure AWACS settings"}
+                        <FaCog className="my-auto" /> {appState.selectedUnits[0].isTanker() ? "Configure tanker settings" : "Configure AWACS settings"}
                       </button>
                     </div>
                   )}
@@ -889,7 +834,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <OlToggle
                             toggled={selectedUnitsData.scenicAAA}
                             onClick={() => {
-                              selectedUnits.forEach((unit) => {
+                              appState.selectedUnits.forEach((unit) => {
                                 selectedUnitsData.scenicAAA ? unit.changeSpeed("stop") : unit.scenicAAA();
                                 setSelectedUnitsData({
                                   ...selectedUnitsData,
@@ -914,7 +859,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <OlToggle
                             toggled={selectedUnitsData.missOnPurpose}
                             onClick={() => {
-                              selectedUnits.forEach((unit) => {
+                              appState.selectedUnits.forEach((unit) => {
                                 selectedUnitsData.missOnPurpose ? unit.changeSpeed("stop") : unit.missOnPurpose();
                                 setSelectedUnitsData({
                                   ...selectedUnitsData,
@@ -943,7 +888,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <OlButtonGroupItem
                                     key={idx}
                                     onClick={() => {
-                                      selectedUnits.forEach((unit) => {
+                                      appState.selectedUnits.forEach((unit) => {
                                         unit.setShotsScatter(idx + 1);
                                         setSelectedUnitsData({
                                           ...selectedUnitsData,
@@ -975,7 +920,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <OlButtonGroupItem
                                     key={idx}
                                     onClick={() => {
-                                      selectedUnits.forEach((unit) => {
+                                      appState.selectedUnits.forEach((unit) => {
                                         unit.setShotsIntensity(idx + 1);
                                         setSelectedUnitsData({
                                           ...selectedUnitsData,
@@ -1005,7 +950,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <OlCoalitionToggle
                             coalition={selectedUnitsData.operateAs as Coalition}
                             onClick={() => {
-                              selectedUnits.forEach((unit) => {
+                              appState.selectedUnits.forEach((unit) => {
                                 unit.setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue");
                                 setSelectedUnitsData({
                                   ...selectedUnitsData,
@@ -1030,7 +975,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <OlToggle
                           toggled={selectedUnitsData.followRoads}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
+                            appState.selectedUnits.forEach((unit) => {
                               unit.setFollowRoads(!selectedUnitsData.followRoads);
                               setSelectedUnitsData({
                                 ...selectedUnitsData,
@@ -1054,7 +999,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <OlToggle
                           toggled={selectedUnitsData.onOff}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
+                            appState.selectedUnits.forEach((unit) => {
                               unit.setOnOff(!selectedUnitsData.onOff);
                               setSelectedUnitsData({
                                 ...selectedUnitsData,
@@ -1077,11 +1022,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     >
                       Loudspeakers
                     </span>
-                    {audioManagerEnabled ? (
+                    {appState.audioManagerState ? (
                       <OlToggle
                         toggled={selectedUnitsData.isAudioSink}
                         onClick={() => {
-                          selectedUnits.forEach((unit) => {
+                          appState.selectedUnits.forEach((unit) => {
                             if (!selectedUnitsData.isAudioSink) {
                               getApp()?.getAudioManager().addUnitSink(unit);
                               setSelectedUnitsData({
@@ -1115,7 +1060,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           `}
                         >
                           <FaVolumeHigh />
-                        </span>{" "}first
+                        </span>{" "}
+                        first
                       </div>
                     )}
                   </div>
@@ -1131,14 +1077,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   <div className="flex content-center gap-2">
                     <OlDropdown
                       label={
-                        selectedUnits[0].isAWACS()
+                        appState.selectedUnits[0].isAWACS()
                           ? ["Overlord", "Magic", "Wizard", "Focus", "Darkstar"][activeAdvancedSettings ? activeAdvancedSettings.radio.callsign - 1 : 0]
                           : ["Texaco", "Arco", "Shell"][activeAdvancedSettings ? activeAdvancedSettings.radio.callsign - 1 : 0]
                       }
                       className="my-auto w-full"
                     >
                       <>
-                        {selectedUnits[0].isAWACS() && (
+                        {appState.selectedUnits[0].isAWACS() && (
                           <>
                             {["Overlord", "Magic", "Wizard", "Focus", "Darkstar"].map((name, idx) => {
                               return (
@@ -1157,7 +1103,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         )}
                       </>
                       <>
-                        {selectedUnits[0].isTanker() && (
+                        {appState.selectedUnits[0].isTanker() && (
                           <>
                             {["Texaco", "Arco", "Shell"].map((name, idx) => {
                               return (
@@ -1220,9 +1166,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
-                      my-auto w-20
-                    `}>
+                    <OlDropdown
+                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
+                      className={`my-auto w-20`}
+                    >
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1291,12 +1238,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       `}
                       onClick={() => {
                         if (activeAdvancedSettings)
-                          selectedUnits[0].setAdvancedOptions(
-                            selectedUnits[0].getIsActiveTanker(),
-                            selectedUnits[0].getIsActiveAWACS(),
+                          appState.selectedUnits[0].setAdvancedOptions(
+                            appState.selectedUnits[0].getIsActiveTanker(),
+                            appState.selectedUnits[0].getIsActiveAWACS(),
                             activeAdvancedSettings.TACAN,
                             activeAdvancedSettings.radio,
-                            selectedUnits[0].getGeneralSettings()
+                            appState.selectedUnits[0].getGeneralSettings()
                           );
                         setActiveAdvancedSettings(null);
                         setShowAdvancedSettings(false);
@@ -1329,7 +1276,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             {/* ============== Unit basic options END ============== */}
             <>
               {/* ============== Fuel/payload/radio section START ============== */}
-              {selectedUnits.length === 1 && (
+              {appState.selectedUnits.length === 1 && (
                 <div
                   className={`
                     flex flex-col gap-4 border-l-4 border-l-olympus-100
@@ -1340,21 +1287,27 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     <div
                       className={`
                         flex content-center gap-2 rounded-full
-                        ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
-                          bg-yellow-700
+                        ${appState.selectedUnits[0].getFuel() > 40 && `
+                          bg-green-700
                         `}
-                        ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
+                        ${
+                          appState.selectedUnits[0].getFuel() > 10 &&
+                          appState.selectedUnits[0].getFuel() <= 40 &&
+                          `bg-yellow-700`
+                        }
+                        ${appState.selectedUnits[0].getFuel() <= 10 && `
+                          bg-red-700
+                        `}
                         px-2 py-1 text-sm font-bold text-white
                       `}
                     >
                       <FaGasPump className="my-auto" />
-                      {selectedUnits[0].getFuel()}%
+                      {appState.selectedUnits[0].getFuel()}%
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    {selectedUnits[0].isControlledByOlympus() && (selectedUnits[0].isTanker() || selectedUnits[0].isAWACS()) && (
+                    {appState.selectedUnits[0].isControlledByOlympus() && (appState.selectedUnits[0].isTanker() || appState.selectedUnits[0].isAWACS()) && (
                       <>
                         {/* ============== Radio section START ============== */}
                         <div className="flex content-center justify-between">
@@ -1376,7 +1329,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 dark:text-gray-300
                               `}
                             >
-                              {`${selectedUnits[0].isTanker() ? ["Texaco", "Arco", "Shell"][selectedUnits[0].getRadio().callsign - 1] : ["Overlord", "Magic", "Wizard", "Focus", "Darkstar"][selectedUnits[0].getRadio().callsign - 1]}-${selectedUnits[0].getRadio().callsignNumber}`}
+                              {`${appState.selectedUnits[0].isTanker() ? ["Texaco", "Arco", "Shell"][appState.selectedUnits[0].getRadio().callsign - 1] : ["Overlord", "Magic", "Wizard", "Focus", "Darkstar"][appState.selectedUnits[0].getRadio().callsign - 1]}-${appState.selectedUnits[0].getRadio().callsignNumber}`}
                             </div>
                           </div>
                         </div>
@@ -1399,7 +1352,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 dark:text-gray-300
                               `}
                             >
-                              {`${(selectedUnits[0].getRadio().frequency / 1000000).toFixed(3)} MHz`}
+                              {`${(appState.selectedUnits[0].getRadio().frequency / 1000000).toFixed(3)} MHz`}
                             </div>
                           </div>
                         </div>
@@ -1423,8 +1376,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 dark:text-gray-300
                               `}
                             >
-                              {selectedUnits[0].getTACAN().isOn
-                                ? `${selectedUnits[0].getTACAN().channel}${selectedUnits[0].getTACAN().XY} ${selectedUnits[0].getTACAN().callsign}`
+                              {appState.selectedUnits[0].getTACAN().isOn
+                                ? `${appState.selectedUnits[0].getTACAN().channel}${appState.selectedUnits[0].getTACAN().XY} ${appState.selectedUnits[0].getTACAN().callsign}`
                                 : "TACAN OFF"}
                             </div>
                           </div>
@@ -1433,9 +1386,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       </>
                     )}
                     {/* ============== Payload section START ============== */}
-                    {!selectedUnits[0].isTanker() &&
-                      !selectedUnits[0].isAWACS() &&
-                      selectedUnits[0].getAmmo().map((ammo, idx) => {
+                    {!appState.selectedUnits[0].isTanker() &&
+                      !appState.selectedUnits[0].isAWACS() &&
+                      appState.selectedUnits[0].getAmmo().map((ammo, idx) => {
                         return (
                           <div className="flex content-center gap-2" key={idx}>
                             <div

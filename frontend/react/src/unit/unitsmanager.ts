@@ -35,6 +35,14 @@ import { UnitDataFileExport } from "./importexport/unitdatafileexport";
 import { UnitDataFileImport } from "./importexport/unitdatafileimport";
 import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
 import { ContextActionSet } from "./contextactionset";
+import {
+  CommandModeOptionsChangedEvent,
+  ContactsUpdatedEvent,
+  SelectedUnitsChangedEvent,
+  SelectionClearedEvent,
+  UnitDeselectedEvent,
+  UnitSelectedEvent,
+} from "../events";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -55,17 +63,18 @@ export class UnitsManager {
     this.#copiedUnits = [];
     this.#units = {};
 
-    document.addEventListener("commandModeOptionsChanged", () => {
+    CommandModeOptionsChangedEvent.on(() => {
       Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility());
     });
-    document.addEventListener("contactsUpdated", (e) => {
+    ContactsUpdatedEvent.on(() => {
       this.#requestDetectionUpdate = true;
     });
+    UnitSelectedEvent.on((unit) => this.#onUnitDeselection(unit));
+    UnitDeselectedEvent.on((unit) => this.#onUnitSelection(unit));
+
     document.addEventListener("copy", () => this.copy());
     document.addEventListener("keyup", (event) => this.#onKeyUp(event));
     document.addEventListener("paste", () => this.paste());
-    document.addEventListener("unitDeselection", (e) => this.#onUnitDeselection((e as CustomEvent).detail));
-    document.addEventListener("unitSelection", (e) => this.#onUnitSelection((e as CustomEvent).detail));
 
     //this.#slowDeleteDialog = new Dialog("slow-delete-dialog");
   }
@@ -1416,18 +1425,6 @@ export class UnitsManager {
     if (spawnPoints <= getApp().getMissionManager().getAvailableSpawnPoints()) {
       getApp().getMissionManager().setSpentSpawnPoints(spawnPoints);
       spawnFunction();
-      document.dispatchEvent(
-        new CustomEvent("unitSpawned", {
-          detail: {
-            airbase: airbase,
-            category: category,
-            coalition: coalition,
-            country: country,
-            immediate: immediate,
-            unitSpawnTable: units,
-          },
-        })
-      );
       return true;
     } else {
       //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
@@ -1453,16 +1450,13 @@ export class UnitsManager {
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
       if (!this.#selectionEventDisabled) {
         window.setTimeout(() => {
-          document.dispatchEvent(
-            new CustomEvent("unitsSelection", {
-              detail: this.getSelectedUnits(),
-            })
-          );
+          SelectedUnitsChangedEvent.dispatch(this.getSelectedUnits());
 
           let newContextActionSet = new ContextActionSet();
           this.getSelectedUnits().forEach((unit) => unit.appendContextActions(newContextActionSet));
+
           getApp().getMap().setContextAction(null);
-          getApp().getMap().setDefaultContextAction(newContextActionSet.getDefaultContextAction());
+          getApp().getMap().setContextActionSet(newContextActionSet);
           getApp().setState(OlympusState.UNIT_CONTROL);
 
           this.#selectionEventDisabled = false;
@@ -1472,24 +1466,19 @@ export class UnitsManager {
       }
     } else {
       getApp().setState(OlympusState.IDLE);
-      document.dispatchEvent(new CustomEvent("clearSelection"));
+      SelectionClearedEvent.dispatch();
     }
   }
 
   #onUnitDeselection(unit: Unit) {
     if (this.getSelectedUnits().length == 0) {
-      if (getApp().getState() === OlympusState.UNIT_CONTROL)
-        getApp().setState(OlympusState.IDLE);
-      document.dispatchEvent(new CustomEvent("clearSelection"));
+      if (getApp().getState() === OlympusState.UNIT_CONTROL) getApp().setState(OlympusState.IDLE);
+      SelectionClearedEvent.dispatch();
     } else {
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */
       if (!this.#deselectionEventDisabled) {
         window.setTimeout(() => {
-          document.dispatchEvent(
-            new CustomEvent("unitsDeselection", {
-              detail: this.getSelectedUnits(),
-            })
-          );
+          SelectedUnitsChangedEvent.dispatch(this.getSelectedUnits());
           this.#deselectionEventDisabled = false;
         }, 100);
         this.#deselectionEventDisabled = true;

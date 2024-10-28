@@ -4,6 +4,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { AirbaseChartData, AirbaseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
 import { OlympusState } from "../constants/constants";
+import { AirbaseSelectedEvent } from "../events";
 
 export class Airbase extends CustomMarker {
   #name: string = "";
@@ -27,7 +28,7 @@ export class Airbase extends CustomMarker {
     this.addEventListener("click", (ev) => {
       if (getApp().getState() === OlympusState.IDLE) {
         getApp().setState(OlympusState.AIRBASE)
-        // TODO: document.dispatchEvent(new CustomEvent("airbaseClick", { detail: ev.target }));
+        AirbaseSelectedEvent.dispatch(this)
       }
     });
   }
@@ -48,12 +49,6 @@ export class Airbase extends CustomMarker {
     this.#img.onload = () => SVGInjector(this.#img);
     el.appendChild(this.#img);
     this.getElement()?.appendChild(el);
-    el.addEventListener("mouseover", (ev) => {
-      document.dispatchEvent(new CustomEvent("airbasemouseover", { detail: this }));
-    });
-    el.addEventListener("mouseout", (ev) => {
-      document.dispatchEvent(new CustomEvent("airbasemouseout", { detail: this }));
-    });
     el.dataset.coalition = this.#coalition;
   }
 

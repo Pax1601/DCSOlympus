@@ -4,6 +4,7 @@ import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import * as turf from "@turf/turf";
+import { CoalitionAreaSelectedEvent } from "../../events";
 
 let totalAreas = 0;
 
@@ -59,13 +60,7 @@ export class CoalitionCircle extends Circle {
     this.#drawLabel();
     this.setOpacity(selected ? 1 : 0.5);
 
-    if (selected) {
-      document.dispatchEvent(
-        new CustomEvent("coalitionAreaSelected", {
-          detail: this,
-        })
-      );
-    }
+    if (selected) CoalitionAreaSelectedEvent.dispatch(this);
 
     //@ts-ignore draggable option added by leaflet-path-drag
     selected ? this.dragging.enable() : this.dragging.disable();

@@ -1,3 +1,4 @@
+import { UnitDeadEvent } from "../events";
 import { Unit } from "./unit";
 
 export class Group {
@@ -7,8 +8,8 @@ export class Group {
   constructor(name: string) {
     this.#name = name;
 
-    document.addEventListener("unitDeath", (e: any) => {
-      if (this.#members.includes(e.detail)) this.getLeader()?.onGroupChanged(e.detail);
+    UnitDeadEvent.on((unit) => {
+      if (this.#members.includes(unit)) this.getLeader()?.onGroupChanged(unit);
     });
   }
 

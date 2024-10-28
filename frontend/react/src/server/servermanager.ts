@@ -14,6 +14,7 @@ import {
   reactionsToThreat,
 } from "../constants/constants";
 import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
+import { ServerStatusUpdatedEvent } from "../events";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -142,7 +143,7 @@ export class ServerManager {
 
   setAddress(address: string) {
     this.#REST_ADDRESS = `${address.replace("vite/", "").replace("vite", "")}olympus`;
-    
+
     console.log(`Setting REST address to ${this.#REST_ADDRESS}`);
   }
 
@@ -610,18 +611,14 @@ export class ServerManager {
         this.#serverIsPaused = elapsedMissionTime === this.#previousMissionElapsedTime;
         this.#previousMissionElapsedTime = elapsedMissionTime;
 
-        document.dispatchEvent(
-          new CustomEvent("serverStatusUpdated", {
-            detail: {
-              frameRate: getApp().getMissionManager().getFrameRate(),
-              load: getApp().getMissionManager().getLoad(),
-              elapsedTime: getApp().getMissionManager().getDateAndTime().elapsedTime,
-              missionTime: getApp().getMissionManager().getDateAndTime().time,
-              connected: this.getConnected(),
-              paused: this.getPaused(),
-            } as ServerStatus,
-          })
-        );
+        ServerStatusUpdatedEvent.dispatch({
+          frameRate: getApp().getMissionManager().getFrameRate(),
+          load: getApp().getMissionManager().getLoad(),
+          elapsedTime: getApp().getMissionManager().getDateAndTime().elapsedTime,
+          missionTime: getApp().getMissionManager().getDateAndTime().time,
+          connected: this.getConnected(),
+          paused: this.getPaused(),
+        } as ServerStatus);
       }, 1000)
     );
 

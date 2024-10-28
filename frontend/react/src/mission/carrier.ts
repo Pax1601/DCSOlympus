@@ -18,12 +18,6 @@ export class Carrier extends Airbase {
     this.getImg().style.width = `0px`; // Make the image immediately small to avoid giant carriers
     el.appendChild(this.getImg());
     this.getElement()?.appendChild(el);
-    el.addEventListener("mouseover", (ev) => {
-      document.dispatchEvent(new CustomEvent("airbasemouseover", { detail: this }));
-    });
-    el.addEventListener("mouseout", (ev) => {
-      document.dispatchEvent(new CustomEvent("airbasemouseout", { detail: this }));
-    });
     el.dataset.coalition = this.getCoalition();
   }
 

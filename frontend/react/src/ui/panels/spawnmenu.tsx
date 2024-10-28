@@ -22,6 +22,7 @@ import { navyUnitDatabase } from "../../unit/databases/navyunitdatabase";
 import { filterBlueprintsByLabel } from "../../other/utils";
 import { helicopterDatabase } from "../../unit/databases/helicopterdatabase";
 import { groundUnitDatabase } from "../../unit/databases/groundunitdatabase";
+import { AppStateChangedEvent } from "../../events";
 
 enum Accordion {
   NONE,
@@ -67,8 +68,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
   });
 
   useEffect(() => {
-    document.addEventListener("appStateChanged", (ev: CustomEventInit) => {
-      if (ev.detail.subState === NO_SUBSTATE) {
+    AppStateChangedEvent.on((state, subState) => {
+      if (subState === NO_SUBSTATE) {
         setBlueprint(null);
         setEffect(null);
       }
