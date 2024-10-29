@@ -48,8 +48,8 @@ export class AppStateChangedEvent {
   static dispatch(state: OlympusState, subState: OlympusSubState) {
     const detail = { state, subState };
     document.dispatchEvent(new CustomEvent(this.name, { detail }));
-    console.log(`Event ${this.name} dispatched with detail:`);
-    console.log(detail);
+    console.log(`Event ${this.name} dispatched`);
+    console.log(`State: ${state} Substate: ${subState}`);
   }
 }
 
@@ -160,26 +160,26 @@ export class ContactsUpdatedEvent {
 }
 
 export class ContextActionSetChangedEvent {
-  static on(callback: (contextActionSet: ContextActionSet) => void) {
+  static on(callback: (contextActionSet: ContextActionSet | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.contextActionSet);
     });
   }
 
-  static dispatch(contextActionSet: ContextActionSet) {
+  static dispatch(contextActionSet: ContextActionSet | null) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {contextActionSet}}));
     console.log(`Event ${this.name} dispatched`);
   }
 }
 
 export class ContextActionChangedEvent {
-  static on(callback: (contextAction: ContextAction) => void) {
+  static on(callback: (contextAction: ContextAction | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback(ev.detail.contextActionSet);
+      callback(ev.detail.contextAction);
     });
   }
 
-  static dispatch(contextAction: ContextAction) {
+  static dispatch(contextAction: ContextAction | null) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {contextAction}}));
     console.log(`Event ${this.name} dispatched`);
   }

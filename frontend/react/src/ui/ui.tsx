@@ -83,8 +83,8 @@ export function UI() {
   const [audioSinks, setAudioSinks] = useState([] as AudioSink[]);
   const [audioManagerState, setAudioManagerState] = useState(false);
   const [serverStatus, setServerStatus] = useState({} as ServerStatus);
-  const [contextActionSet, setContextActionsSet] = useState(null as ContextActionSet | null);
-  const [contextAction, setContextActions] = useState(null as ContextAction | null);
+  const [contextActionSet, setContextActionSet] = useState(null as ContextActionSet | null);
+  const [contextAction, setContextAction] = useState(null as ContextAction | null);
 
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
@@ -94,9 +94,6 @@ export function UI() {
 
   const [formationLeader, setFormationLeader] = useState(null as null | Unit);
   const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
-  const [protectionPromptVisible, setProtectionPromptVisible] = useState(false);
-  const [protectionCallback, setProtectionCallback] = useState(null as any);
-  const [protectionUnits, setProtectionUnits] = useState([] as Unit[]);
 
   const [unitExplosionUnits, setUnitExplosionUnits] = useState([] as Unit[]);
 
@@ -119,16 +116,8 @@ export function UI() {
     AudioSinksChangedEvent.on((sinks) => setAudioSinks(sinks));
     AudioManagerStateChangedEvent.on((state) => setAudioManagerState(state));
     ServerStatusUpdatedEvent.on((status) => setServerStatus(status));
-    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionsSet(contextActionSet));
-    ContextActionChangedEvent.on((contextAction) => setContextActions(contextAction));
-
-    document.addEventListener("showProtectionPrompt", (ev: CustomEventInit) => {
-      setProtectionPromptVisible(true);
-      setProtectionCallback(() => {
-        return ev.detail.callback;
-      });
-      setProtectionUnits(ev.detail.units);
-    });
+    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionSet(contextActionSet));
+    ContextActionChangedEvent.on((contextAction) => setContextAction(contextAction));
   }, []);
 
   function checkPassword(password: string) {
@@ -210,7 +199,7 @@ export function UI() {
               />
             </>
           )}
-          {protectionPromptVisible && (
+          {appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION && (
             <>
               <div
                 className={`
@@ -218,14 +207,12 @@ export function UI() {
                 `}
               ></div>
               <ProtectionPrompt
-                onContinue={(units) => {
-                  protectionCallback(units);
-                  setProtectionPromptVisible(false);
+                onContinue={() => {
+                  getApp().getUnitsManager().executeProtectionCallback()
                 }}
                 onBack={() => {
-                  setProtectionPromptVisible(false);
+                  getApp().setState(OlympusState.UNIT_CONTROL)
                 }}
-                units={protectionUnits}
               />
             </>
           )}

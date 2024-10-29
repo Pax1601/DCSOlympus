@@ -8,13 +8,11 @@ import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { OlympusState } from "../../constants/constants";
-import { AppStateChangedEvent } from "../../events";
 import { StateContext } from "../../statecontext";
 
 export function UnitMouseControlBar(props: {}) {
   const appState = useContext(StateContext);
 
-  const [open, setOpen] = useState(false);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
 
@@ -23,12 +21,6 @@ export function UnitMouseControlBar(props: {}) {
   useEffect(() => {
     if (scrollRef.current) onScroll(scrollRef.current);
   });
-
-  useEffect(() => {
-    AppStateChangedEvent.on((state, subState) => {
-      setOpen(state === OlympusState.UNIT_CONTROL);
-    });
-  }, []);
 
   function onScroll(el) {
     const sl = el.scrollLeft;
@@ -53,7 +45,7 @@ export function UnitMouseControlBar(props: {}) {
 
   return (
     <>
-      {open && appState.contextActionSet && Object.keys(appState.contextActionSet.getContextActions()).length > 0 && (
+      {appState.appState === OlympusState.UNIT_CONTROL && appState.contextActionSet && Object.keys(appState.contextActionSet.getContextActions()).length > 0 && (
         <>
           <div
             className={`

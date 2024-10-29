@@ -19,6 +19,7 @@ import {
   SpawnSubState,
   DrawSubState,
   JTACSubState,
+  UnitControlSubState,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -37,7 +38,16 @@ import { faDrawPolygon, faHandPointer, faJetFighter, faMap } from "@fortawesome/
 import { ExplosionMarker } from "./markers/explosionmarker";
 import { TextMarker } from "./markers/textmarker";
 import { TargetMarker } from "./markers/targetmarker";
-import { AppStateChangedEvent, CoalitionAreaSelectedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../events";
+import {
+  AppStateChangedEvent,
+  CoalitionAreaSelectedEvent,
+  ConfigLoadedEvent,
+  ContextActionChangedEvent,
+  ContextActionSetChangedEvent,
+  HiddenTypesChangedEvent,
+  MapOptionsChangedEvent,
+  MapSourceChangedEvent,
+} from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
 
 /* Register the handler for the box selection */
@@ -349,10 +359,12 @@ export class Map extends L.Map {
 
   setContextActionSet(contextActionSet: ContextActionSet | null) {
     this.#contextActionSet = contextActionSet;
+    ContextActionSetChangedEvent.dispatch(contextActionSet);
   }
 
   setContextAction(contextAction: ContextAction | null) {
     this.#contextAction = contextAction;
+    ContextActionChangedEvent.dispatch(contextAction);
   }
 
   #onStateChanged(state: OlympusState, subState: OlympusSubState) {
@@ -614,8 +626,10 @@ export class Map extends L.Map {
   }
 
   deselectAllCoalitionAreas() {
-    CoalitionAreaSelectedEvent.dispatch(null);
-    this.#coalitionAreas.forEach((coalitionArea: CoalitionPolygon | CoalitionCircle) => coalitionArea.setSelected(false));
+    if (this.getSelectedCoalitionArea() !== null) {
+      CoalitionAreaSelectedEvent.dispatch(null);
+      this.#coalitionAreas.forEach((coalitionArea: CoalitionPolygon | CoalitionCircle) => coalitionArea.setSelected(false));
+    }
   }
 
   deleteCoalitionArea(coalitionArea: CoalitionPolygon | CoalitionCircle) {
@@ -916,9 +930,6 @@ export class Map extends L.Map {
 
     console.log(`Short press at ${pressLocation}`);
 
-    document.dispatchEvent(new CustomEvent("hideMapContextMenu"));
-    document.dispatchEvent(new CustomEvent("hideUnitContextMenu"));
-
     /* Execute the short click action */
     if (getApp().getState() === OlympusState.IDLE) {
       /* Do nothing */
@@ -1041,7 +1052,7 @@ export class Map extends L.Map {
         else document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent }));
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
-          document.dispatchEvent(new CustomEvent("showMapContextMenu", { detail: e }));
+          getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
         } else {
           if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e }));
           else document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent }));

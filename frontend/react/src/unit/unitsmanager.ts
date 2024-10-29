@@ -19,7 +19,7 @@ import {
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { groundUnitDatabase } from "./databases/groundunitdatabase";
-import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState } from "../constants/constants";
+import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
 import { aircraftDatabase } from "./databases/aircraftdatabase";
@@ -58,6 +58,7 @@ export class UnitsManager {
   #groups: { [groupName: string]: Group } = {};
   #unitDataExport!: UnitDataFileExport;
   #unitDataImport!: UnitDataFileImport;
+  #protectionCallback: (units: Unit[]) => void = (units) => {};
 
   constructor() {
     this.#copiedUnits = [];
@@ -69,8 +70,8 @@ export class UnitsManager {
     ContactsUpdatedEvent.on(() => {
       this.#requestDetectionUpdate = true;
     });
-    UnitSelectedEvent.on((unit) => this.#onUnitDeselection(unit));
-    UnitDeselectedEvent.on((unit) => this.#onUnitSelection(unit));
+    UnitSelectedEvent.on((unit) => this.#onUnitSelection(unit));
+    UnitDeselectedEvent.on((unit) => this.#onUnitDeselection(unit));
 
     document.addEventListener("copy", () => this.copy());
     document.addEventListener("keyup", (event) => this.#onKeyUp(event));
@@ -367,9 +368,10 @@ export class UnitsManager {
       this.#showActionMessage(units, " new destination added");
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
 
   /** Clear the destinations of all the selected units
@@ -392,9 +394,10 @@ export class UnitsManager {
       }
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
 
   /** Instruct all the selected units to land at a specific location
@@ -414,9 +417,10 @@ export class UnitsManager {
       this.#showActionMessage(units, " landing");
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct all the selected units to change their speed
    *
@@ -433,9 +437,10 @@ export class UnitsManager {
       units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct all the selected units to change their altitude
    *
@@ -452,9 +457,10 @@ export class UnitsManager {
       units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific speed to all the selected units
    *
@@ -472,9 +478,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific speed type to all the selected units
    *
@@ -492,9 +499,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `setting speed type to ${speedType}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific altitude to all the selected units
    *
@@ -512,9 +520,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific altitude type to all the selected units
    *
@@ -532,9 +541,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `setting altitude type to ${altitudeType}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific ROE to all the selected units
    *
@@ -552,9 +562,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `ROE set to ${ROE}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific reaction to threat to all the selected units
    *
@@ -572,9 +583,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `reaction to threat set to ${reactionToThreat}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific emissions & countermeasures to all the selected units
    *
@@ -592,9 +604,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `emissions & countermeasures set to ${emissionCountermeasure}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Turn selected units on or off, only works on ground and navy units
    *
@@ -612,9 +625,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit active set to ${onOff}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct the selected units to follow roads, only works on ground units
    *
@@ -632,9 +646,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `follow roads set to ${followRoads}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct selected units to operate as a certain coalition
    *
@@ -653,9 +668,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `operate as set to ${operateAs}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct units to attack a specific unit
    *
@@ -673,9 +689,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct units to refuel at the nearest tanker, if possible. Else units will RTB
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
@@ -692,9 +709,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `sent to nearest tanker`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct the selected units to follow another unit in a formation. Only works for aircrafts and helicopters.
    *
@@ -740,9 +758,10 @@ export class UnitsManager {
         } else offset = undefined;
       }
 
-      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-        document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-      else callback(units);
+      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+        this.#protectionCallback = callback;
+      } else callback(units);
     };
     var count = 1;
     var xr = 0;
@@ -803,9 +822,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit bombing point`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct the selected units to perform carpet bombing of specific coordinates
    *
@@ -823,9 +843,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit carpet bombing point`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct the selected units to fire at specific coordinates
    *
@@ -843,9 +864,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit firing at area`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct the selected units to simulate a fire fight at specific coordinates
    *
@@ -888,9 +910,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit set to perform scenic AAA`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct units to enter into dynamic accuracy/miss on purpose mode. Units will aim to the nearest enemy unit but not precisely.
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
@@ -906,9 +929,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit set to perform miss-on-purpose AAA`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Instruct units to land at specific point
    *
@@ -926,9 +950,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `unit landing at point`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific shots scatter to all the selected units
    *
@@ -946,9 +971,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `shots scatter set to ${shotsScatter}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /** Set a specific shots intensity to all the selected units
    *
@@ -966,9 +992,10 @@ export class UnitsManager {
       this.#showActionMessage(units, `shots intensity set to ${shotsIntensity}`);
     };
 
-    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
   /*********************** Control operations on selected units ************************/
   /**  See getUnitsCategories for more info
@@ -1007,9 +1034,10 @@ export class UnitsManager {
         //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
       }
 
-      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus()))
-        document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-      else callback(units);
+      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+        this.#protectionCallback = callback;
+      } else callback(units);
     };
   }
 
@@ -1050,9 +1078,10 @@ export class UnitsManager {
       this.#showActionMessage(units as Unit[], `deleted`);
     };
 
-    if ((getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) || units.find((unit) => unit.getHuman()))
-      document.dispatchEvent(new CustomEvent("showProtectionPrompt", { detail: { callback: callback, units: units } }));
-    else callback(units);
+    if ((getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) || units.find((unit) => unit.getHuman())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
 
   /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
@@ -1430,6 +1459,10 @@ export class UnitsManager {
       //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
       return false;
     }
+  }
+
+  executeProtectionCallback() {
+    this.#protectionCallback(this.getSelectedUnits());
   }
 
   /***********************************************/

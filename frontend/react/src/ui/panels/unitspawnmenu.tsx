@@ -58,7 +58,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
         if (getApp().getState() === OlympusState.SPAWN) getApp().setState(OlympusState.IDLE);
       }
     }
-  });
+  }, [spawnAltitude, spawnAltitudeType, spawnLoadoutName, spawnCoalition]);
 
   function spawnAtAirbase() {
     getApp()
