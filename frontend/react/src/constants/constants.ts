@@ -253,6 +253,10 @@ export const NO_SUBSTATE = "No substate";
 export enum UnitControlSubState {
   NO_SUBSTATE = "No substate",
   FORMATION = "Formation",
+  PROTECTION = "Protection",
+  MAP_CONTEXT_MENU = "Map context menu",
+  UNIT_CONTEXT_MENU = "Unit context menu",
+  UNIT_EXPLOSION_MENU = "Unit explosion menu"
 }
 
 export enum DrawSubState {

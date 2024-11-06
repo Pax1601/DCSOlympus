@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Unit } from "../../unit/unit";
 import { FaLock } from "react-icons/fa6";
+import { getApp } from "../../olympusapp";
+import { OlympusState } from "../../constants/constants";
 
-export function ProtectionPrompt(props: {onContinue: () => void, onBack: () => void }) {
+export function ProtectionPrompt(props: { }) {
   return (
     <Modal
       className={`
@@ -56,7 +58,7 @@ export function ProtectionPrompt(props: {onContinue: () => void, onBack: () => v
         <div className="flex">
           <button
             type="button"
-            onClick={() => {props.onContinue()}}
+            onClick={() => getApp().getUnitsManager().executeProtectionCallback()}
             className={`
               mb-2 me-2 ml-auto flex content-center items-center gap-2
               rounded-sm bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
@@ -70,7 +72,7 @@ export function ProtectionPrompt(props: {onContinue: () => void, onBack: () => v
           </button>
           <button
             type="button"
-            onClick={props.onBack}
+            onClick={() => getApp().setState(OlympusState.UNIT_CONTROL)}
             className={`
               mb-2 me-2 flex content-center items-center gap-2 rounded-sm
               border-[1px] bg-blue-700 px-5 py-2.5 text-sm font-medium

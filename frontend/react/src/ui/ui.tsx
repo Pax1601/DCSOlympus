@@ -34,10 +34,7 @@ import { Unit } from "../unit/unit";
 import { ProtectionPrompt } from "./modals/protectionprompt";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { JTACMenu } from "./panels/jtacmenu";
-import {
-  AppStateChangedEvent,
-  MapOptionsChangedEvent
-} from "../events";
+import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -64,9 +61,6 @@ export function UI() {
 
   const [formationLeader, setFormationLeader] = useState(null as null | Unit);
   const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
-  const [protectionPromptVisible, setProtectionPromptVisible] = useState(false);
-  const [protectionCallback, setProtectionCallback] = useState(null as any);
-  const [protectionUnits, setProtectionUnits] = useState([] as Unit[]);
 
   const [unitExplosionUnits, setUnitExplosionUnits] = useState([] as Unit[]);
 
@@ -76,14 +70,6 @@ export function UI() {
       setAppSubState(subState);
     });
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
-
-    document.addEventListener("showProtectionPrompt", (ev: CustomEventInit) => {
-      setProtectionPromptVisible(true);
-      setProtectionCallback(() => {
-        return ev.detail.callback;
-      });
-      setProtectionUnits(ev.detail.units);
-    });
   }, []);
 
   function checkPassword(password: string) {
@@ -127,9 +113,9 @@ export function UI() {
       <div className="flex h-full w-full flex-row-reverse">
         {appState === OlympusState.LOGIN && (
           <>
-            <div
-              className={`fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95`}
-            ></div>
+            <div className={`
+              fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
+            `}></div>
             <LoginModal
               onLogin={(password) => {
                 checkPassword(password);
@@ -146,27 +132,18 @@ export function UI() {
             />
           </>
         )}
-        {protectionPromptVisible && (
+        {appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION && (
           <>
-            <div
-              className={`fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95`}
-            ></div>
-            <ProtectionPrompt
-              onContinue={(units) => {
-                protectionCallback(units);
-                setProtectionPromptVisible(false);
-              }}
-              onBack={() => {
-                setProtectionPromptVisible(false);
-              }}
-              units={protectionUnits}
-            />
+            <div className={`
+              fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
+            `}></div>
+            <ProtectionPrompt />
           </>
         )}
         <div id="map-container" className="z-0 h-full w-screen" />
         <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} options={mapOptions} /* TODO remove *//>
+        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} options={mapOptions} /* TODO remove */ />
 
         <UnitControlMenu
           open={appState === OlympusState.UNIT_CONTROL && appSubState !== UnitControlSubState.FORMATION}
