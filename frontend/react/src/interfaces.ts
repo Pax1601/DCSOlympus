@@ -1,8 +1,27 @@
 import { LatLng } from "leaflet";
-import { Coalition, Context } from "./types/types";
-import { AudioSink } from "./audio/audiosink";
 
-class Airbase {}
+export interface OlympusConfig {
+  port: number;
+  elevationProvider: {
+    provider: string;
+    username: string | null;
+    password: string | null;
+  };
+  mapLayers: {
+    [key: string]: {
+      urlTemplate: string;
+      minZoom: number;
+      maxZoom: number;
+      attribution?: string;
+    };
+  };
+  mapMirrors: {
+    [key: string]: string;
+  };
+  SRSPort: number;
+  WSPort?: number;
+  WSEndpoint?: string;
+}
 
 export interface ContextMenuOption {
   tooltip: string;
@@ -204,11 +223,13 @@ export interface LoadoutBlueprint {
 
 export interface UnitBlueprint {
   name: string;
+  category: string;
   enabled: boolean;
   coalition: string;
   era: string;
   label: string;
   shortLabel: string;
+  roles?: string[];
   type?: string;
   loadouts?: LoadoutBlueprint[];
   filename?: string;
@@ -260,15 +281,9 @@ export interface AirbaseChartRunwayData {
   length: string;
 }
 
-export interface Listener {
-  callback: CallableFunction;
-  name?: string;
-}
-
 export interface ShortcutOptions {
   altKey?: boolean;
   callback: CallableFunction;
-  context?: Context;
   ctrlKey?: boolean;
   name?: string;
   shiftKey?: boolean;
@@ -296,6 +311,3 @@ export interface ServerStatus {
   connected: boolean;
   paused: boolean;
 }
-
-
-

@@ -53,4 +53,3 @@ export type MGRS = {
 
 export type Coalition = "blue" | "neutral" | "red" | "all";
 
-export type Context = string;

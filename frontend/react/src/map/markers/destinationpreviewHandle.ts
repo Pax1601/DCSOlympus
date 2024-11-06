@@ -1,5 +1,5 @@
 import { DivIcon, LatLng } from "leaflet";
-import { CustomMarker } from "../markers/custommarker";
+import { CustomMarker } from "./custommarker";
 
 export class DestinationPreviewHandle extends CustomMarker {
   constructor(latlng: LatLng) {

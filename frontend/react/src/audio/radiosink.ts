@@ -3,6 +3,7 @@ import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
 import { AudioSinksChangedEvent } from "../events";
 
+// TODO should this be shared or radio specific?
 let packetID = 0;
 
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */

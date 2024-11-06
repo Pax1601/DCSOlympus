@@ -6,7 +6,6 @@ import {
   bearingAndDistanceToLatLng,
   deg2rad,
   getGroundElevation,
-  getUnitDatabaseByCategory,
   keyEventWasInInput,
   latLngToMercator,
   mToFt,
@@ -18,13 +17,9 @@ import {
   randomUnitBlueprint,
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
-import { groundUnitDatabase } from "./databases/groundunitdatabase";
 import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
-import { aircraftDatabase } from "./databases/aircraftdatabase";
-import { helicopterDatabase } from "./databases/helicopterdatabase";
-import { navyUnitDatabase } from "./databases/navyunitdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
 //import { Popup } from "../popups/popup";
 //import { HotgroupPanel } from "../panels/hotgrouppanel";
@@ -40,28 +35,34 @@ import {
   ContactsUpdatedEvent,
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
+  UnitDatabaseLoadedEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
 } from "../events";
+import { UnitDatabase } from "./databases/unitdatabase";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
  * to avoid client/server and client/client inconsistencies.
  */
 export class UnitsManager {
-  #copiedUnits: UnitData[];
+  #copiedUnits: UnitData[] = [];
   #deselectionEventDisabled: boolean = false;
   #requestDetectionUpdate: boolean = false;
   #selectionEventDisabled: boolean = false;
   //#slowDeleteDialog!: Dialog;
-  #units: { [ID: number]: Unit };
+  #units: { [ID: number]: Unit } = {};
   #groups: { [groupName: string]: Group } = {};
   #unitDataExport!: UnitDataFileExport;
   #unitDataImport!: UnitDataFileImport;
+  #unitDatabase: UnitDatabase;
 
   constructor() {
-    this.#copiedUnits = [];
-    this.#units = {};
+    this.#unitDatabase = new UnitDatabase();
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/aircraftdatabase");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/helicopterdatabase");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/groundunitdatabase");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/navyunitdatabase");
 
     CommandModeOptionsChangedEvent.on(() => {
       Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility());
@@ -69,8 +70,8 @@ export class UnitsManager {
     ContactsUpdatedEvent.on(() => {
       this.#requestDetectionUpdate = true;
     });
-    UnitSelectedEvent.on((unit) => this.#onUnitDeselection(unit));
-    UnitDeselectedEvent.on((unit) => this.#onUnitSelection(unit));
+    UnitSelectedEvent.on((unit) => this.#onUnitSelection(unit));
+    UnitDeselectedEvent.on((unit) => this.#onUnitDeselection(unit));
 
     document.addEventListener("copy", () => this.copy());
     document.addEventListener("keyup", (event) => this.#onKeyUp(event));
@@ -1384,40 +1385,44 @@ export class UnitsManager {
       getApp().getMissionManager().getRemainingSetupTime() < 0 &&
       getApp().getMissionManager().getCommandModeOptions().commandMode !== GAME_MASTER;
 
-    if (category === "Aircraft") {
+    if (category === "aircraft") {
       if (airbase == "" && spawnsRestricted) {
         //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Aircrafts can be air spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + aircraftDatabase.getSpawnPointsByName(unit.unitType);
+        return 0;
+        // TODO return points + this.#unitIndexedDB.selectBlueprints({from:"Units", where: {name: unit.unitType}});
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
-    } else if (category === "Helicopter") {
+    } else if (category === "helicopter") {
       if (airbase == "" && spawnsRestricted) {
         //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Helicopters can be air spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + helicopterDatabase.getSpawnPointsByName(unit.unitType);
+        return 0;
+        //TODO return points + helicopterDatabase.getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
-    } else if (category === "GroundUnit") {
+    } else if (category === "groundunit") {
       if (spawnsRestricted) {
         //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Ground units can be spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + groundUnitDatabase.getSpawnPointsByName(unit.unitType);
+        return 0;
+        //TODOreturn points + groundUnitDatabase.getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
-    } else if (category === "NavyUnit") {
+    } else if (category === "navyunit") {
       if (spawnsRestricted) {
         //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Navy units can be spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + navyUnitDatabase.getSpawnPointsByName(unit.unitType);
+        return 0;
+        //TODOreturn points + navyUnitDatabase.getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
     }
@@ -1430,6 +1435,10 @@ export class UnitsManager {
       //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
       return false;
     }
+  }
+
+  getDatabase() {
+    return this.#unitDatabase;
   }
 
   /***********************************************/

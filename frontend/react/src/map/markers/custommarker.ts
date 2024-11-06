@@ -1,6 +1,4 @@
-import { DivIcon, Map, Marker } from "leaflet";
-import { MarkerOptions } from "leaflet";
-import { LatLngExpression } from "leaflet";
+import { DivIcon, Map, Marker, MarkerOptions, LatLngExpression } from "leaflet";
 
 export class CustomMarker extends Marker {
   constructor(latlng: LatLngExpression, options?: MarkerOptions) {

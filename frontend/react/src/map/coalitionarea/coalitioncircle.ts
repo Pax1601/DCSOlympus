@@ -6,7 +6,7 @@ import { Coalition } from "../../types/types";
 import * as turf from "@turf/turf";
 import { CoalitionAreaSelectedEvent } from "../../events";
 
-let totalAreas = 0;
+let totalCircles = 0;
 
 export class CoalitionCircle extends Circle {
   #coalition: Coalition = "blue";
@@ -19,7 +19,7 @@ export class CoalitionCircle extends Circle {
   constructor(latlng: LatLngExpression, options: CircleOptions) {
     if (options === undefined) options = { radius: 0 };
 
-    totalAreas++;
+    totalCircles++;
 
     options.bubblingMouseEvents = false;
     options.interactive = false;
@@ -29,7 +29,7 @@ export class CoalitionCircle extends Circle {
     super(latlng, options);
     this.#setColors();
 
-    this.#labelText = `Circle ${totalAreas}`;
+    this.#labelText = `Circle ${totalCircles}`;
 
     if ([BLUE_COMMANDER, RED_COMMANDER].includes(getApp().getMissionManager().getCommandModeOptions().commandMode))
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());

@@ -7,7 +7,7 @@ export function ErrorCallout(props: { title?: string; description?: string }) {
   return (
     <div
       className={`
-        flex w-fit w-full flex-row gap-2 rounded-md border-[1px] border-red-800
+        flex w-full flex-row gap-2 rounded-md border-[1px] border-red-800
         bg-gray-300 p-4 text-red-700
         dark:bg-gray-800 dark:text-red-500
       `}
@@ -19,13 +19,9 @@ export function ErrorCallout(props: { title?: string; description?: string }) {
         `}
       >
         {props.title}
-        <div
-          className={`
-													flex whitespace-pre-line text-xs font-medium text-red-500
-												`}
-        >
-          {props.description}
-        </div>
+        <div className={`
+          flex whitespace-pre-line text-xs font-medium text-red-500
+        `}>{props.description}</div>
       </div>
     </div>
   );
@@ -36,7 +32,7 @@ export function InfoCallout(props: { title?: string; description?: string }) {
   return (
     <div
       className={`
-        flex w-fit w-full flex-row gap-2 rounded-md border-[1px] border-blue-800
+        flex w-full flex-row gap-2 rounded-md border-[1px] border-blue-800
         bg-gray-300 p-4 text-blue-400
         dark:bg-gray-800 dark:text-blue-400
       `}
@@ -48,15 +44,9 @@ export function InfoCallout(props: { title?: string; description?: string }) {
         `}
       >
         {props.title}
-        {props.description && (
-          <div
-            className={`
-													flex whitespace-pre-line text-xs font-medium
-												`}
-          >
-            {props.description}
-          </div>
-        )}
+        {props.description && <div className={`
+          flex whitespace-pre-line text-xs font-medium
+        `}>{props.description}</div>}
       </div>
     </div>
   );
@@ -67,7 +57,7 @@ export function CommandCallout(props: { coalition?: string }) {
   return (
     <div
       className={`
-        flex w-fit w-full flex-row gap-2 rounded-md border-[1px] border-gray-700
+        flex w-full flex-row gap-2 rounded-md border-[1px] border-gray-700
         bg-gray-300 p-4 text-gray-400
         dark:bg-gray-800 dark:text-gray-400
       `}

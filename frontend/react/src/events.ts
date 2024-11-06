@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { ServerStatus } from "./interfaces";
+import { OlympusConfig, ServerStatus } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -54,16 +54,16 @@ export class AppStateChangedEvent {
 }
 
 export class ConfigLoadedEvent {
-  /* TODO add config */
-  static on(callback: () => void) {
+  static on(callback: (config: OlympusConfig) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback();
+      callback(ev.detail);
     });
   }
 
-  static dispatch() {
-    document.dispatchEvent(new CustomEvent(this.name));
+  static dispatch(config: OlympusConfig) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: config}));
     console.log(`Event ${this.name} dispatched`);
+    console.log(config)
   }
 }
 
@@ -77,6 +77,19 @@ export class ServerStatusUpdatedEvent {
   static dispatch(serverStatus: ServerStatus) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { serverStatus } }));
     // Logging disabled since periodic
+  }
+}
+
+export class UnitDatabaseLoadedEvent {
+  static on(callback: () => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback();
+    });
+  }
+
+  static dispatch() {
+    document.dispatchEvent(new CustomEvent(this.name));
+    console.log(`Event ${this.name} dispatched`);
   }
 }
 
@@ -160,26 +173,26 @@ export class ContactsUpdatedEvent {
 }
 
 export class ContextActionSetChangedEvent {
-  static on(callback: (contextActionSet: ContextActionSet) => void) {
+  static on(callback: (contextActionSet: ContextActionSet | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.contextActionSet);
     });
   }
 
-  static dispatch(contextActionSet: ContextActionSet) {
+  static dispatch(contextActionSet: ContextActionSet | null) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {contextActionSet}}));
     console.log(`Event ${this.name} dispatched`);
   }
 }
 
 export class ContextActionChangedEvent {
-  static on(callback: (contextAction: ContextAction) => void) {
+  static on(callback: (contextAction: ContextAction | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback(ev.detail.contextActionSet);
+      callback(ev.detail.contextAction);
     });
   }
 
-  static dispatch(contextAction: ContextAction) {
+  static dispatch(contextAction: ContextAction | null) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {contextAction}}));
     console.log(`Event ${this.name} dispatched`);
   }
@@ -221,7 +234,7 @@ export class CommandModeOptionsChangedEvent {
 }
 
 /************** Audio backend events ***************/
-/* TODO: split into two events for signgle source changed */
+/* TODO: split into two events for single source changed */
 export class AudioSourcesChangedEvent {
   /* TODO add audio sources */
   static on(callback: (audioSources: AudioSource[]) => void) {
@@ -237,7 +250,7 @@ export class AudioSourcesChangedEvent {
   }
 }
 
-/* TODO: split into two events for signgle sink changed */
+/* TODO: split into two events for single sink changed */
 export class AudioSinksChangedEvent {
   static on(callback: (audioSinks: AudioSink[]) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {

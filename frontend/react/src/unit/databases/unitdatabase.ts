@@ -1,37 +1,32 @@
-import { LatLng } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { GAME_MASTER } from "../../constants/constants";
-import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
+import { UnitBlueprint } from "../../interfaces";
+import { UnitDatabaseLoadedEvent } from "../../events";
 
-export abstract class UnitDatabase {
+export class UnitDatabase {
   blueprints: { [key: string]: UnitBlueprint } = {};
-  #url: string;
 
-  constructor(url: string = "") {
-    this.#url = url;
-    this.load(() => {});
-  }
+  constructor() {}
 
-  load(callback: CallableFunction) {
-    if (this.#url !== "") {
+  load(url: string) {
+    if (url !== "") {
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", this.#url, true);
+      xhr.open("GET", url, true);
       xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
       xhr.responseType = "json";
       xhr.onload = () => {
         var status = xhr.status;
         if (status === 200) {
-          this.blueprints = xhr.response;
-          callback();
+          const newBlueprints = xhr.response as { [key: string]: UnitBlueprint };
+          this.blueprints = { ...this.blueprints, ...newBlueprints };
+          UnitDatabaseLoadedEvent.dispatch();
         } else {
-          console.error(`Error retrieving database from ${this.#url}`);
+          console.error(`Error retrieving database from ${url}`);
         }
       };
       xhr.send();
     }
   }
-
-  abstract getCategory(): string;
 
   /* Gets a specific blueprint by name */
   getByName(name: string) {
@@ -48,8 +43,8 @@ export abstract class UnitDatabase {
   }
 
   getBlueprints(includeDisabled: boolean = false) {
-    if (!getApp()) return {};
-    
+    if (!getApp()) return [];
+
     if (
       getApp().getMissionManager().getCommandModeOptions().commandMode == GAME_MASTER ||
       !getApp().getMissionManager().getCommandModeOptions().restrictSpawns
@@ -59,7 +54,7 @@ export abstract class UnitDatabase {
         const blueprint = this.blueprints[unit];
         if (blueprint.enabled || includeDisabled) filteredBlueprints[unit] = blueprint;
       }
-      return filteredBlueprints;
+      return Object.values(filteredBlueprints);
     } else {
       var filteredBlueprints: { [key: string]: UnitBlueprint } = {};
       for (let unit in this.blueprints) {
@@ -75,16 +70,17 @@ export abstract class UnitDatabase {
           filteredBlueprints[unit] = blueprint;
         }
       }
-      return filteredBlueprints;
+      return Object.values(filteredBlueprints);
     }
   }
 
   /* Returns a list of all possible roles in a database */
-  getRoles() {
+  getRoles(unitFilter?: (unit: UnitBlueprint) => boolean) {
     var roles: string[] = [];
     var filteredBlueprints = this.getBlueprints();
-    for (let unit in filteredBlueprints) {
-      var loadouts = filteredBlueprints[unit].loadouts;
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      var loadouts = unit.loadouts;
       if (loadouts) {
         for (let loadout of loadouts) {
           for (let role of loadout.roles) {
@@ -97,30 +93,31 @@ export abstract class UnitDatabase {
   }
 
   /* Returns a list of all possible types in a database */
-  getTypes(unitFilter?: CallableFunction) {
+  getTypes(unitFilter?: (unit: UnitBlueprint) => boolean) {
     var filteredBlueprints = this.getBlueprints();
     var types: string[] = [];
-    for (let unit in filteredBlueprints) {
-      if (typeof unitFilter === "function" && !unitFilter(filteredBlueprints[unit])) continue;
-      var type = filteredBlueprints[unit].type;
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      var type = unit.type;
       if (type && type !== "" && !types.includes(type)) types.push(type);
     }
     return types;
   }
 
   /* Returns a list of all possible eras in a database */
-  getEras() {
+  getEras(unitFilter?: (unit: UnitBlueprint) => boolean) {
     var filteredBlueprints = this.getBlueprints();
     var eras: string[] = [];
-    for (let unit in filteredBlueprints) {
-      var era = filteredBlueprints[unit].era;
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      var era = unit.era;
       if (era && era !== "" && !eras.includes(era)) eras.push(era);
     }
     return eras;
   }
 
   /* Get all blueprints by range */
-  getByRange(range: string) {
+  getByRange(range: string, unitFilter?: (unit: UnitBlueprint) => boolean) {
     var filteredBlueprints = this.getBlueprints();
     var unitswithrange: UnitBlueprint[] = [];
     var minRange = 0;
@@ -137,11 +134,12 @@ export abstract class UnitDatabase {
       maxRange = 999999;
     }
 
-    for (let unit in filteredBlueprints) {
-      var engagementRange = filteredBlueprints[unit].engagementRange;
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      var engagementRange = unit.engagementRange;
       if (engagementRange !== undefined) {
         if (engagementRange >= minRange && engagementRange < maxRange) {
-          unitswithrange.push(filteredBlueprints[unit]);
+          unitswithrange.push(unit);
         }
       }
     }
@@ -149,27 +147,29 @@ export abstract class UnitDatabase {
   }
 
   /* Get all blueprints by type */
-  getByType(type: string) {
+  getByType(type: string, unitFilter?: (unit: UnitBlueprint) => boolean) {
     var filteredBlueprints = this.getBlueprints();
     var units: UnitBlueprint[] = [];
-    for (let unit in filteredBlueprints) {
-      if (filteredBlueprints[unit].type === type) {
-        units.push(filteredBlueprints[unit]);
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      if (unit.type === type) {
+        units.push(unit);
       }
     }
     return units;
   }
 
   /* Get all blueprints by role */
-  getByRole(role: string) {
+  getByRole(role: string, unitFilter?: (unit: UnitBlueprint) => boolean) {
     var filteredBlueprints = this.getBlueprints();
     var units: UnitBlueprint[] = [];
-    for (let unit in filteredBlueprints) {
-      var loadouts = filteredBlueprints[unit].loadouts;
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      var loadouts = unit.loadouts;
       if (loadouts) {
         for (let loadout of loadouts) {
           if (loadout.roles.includes(role) || loadout.roles.includes(role.toLowerCase())) {
-            units.push(filteredBlueprints[unit]);
+            units.push(unit);
             break;
           }
         }
@@ -224,6 +224,7 @@ export abstract class UnitDatabase {
   getUnkownUnit(name: string): UnitBlueprint {
     return {
       name: name,
+      category: "aircraft",
       enabled: true,
       coalition: "neutral",
       era: "N/A",

@@ -14,6 +14,7 @@ export function LoginModal(props: {
   onContinue: (username: string) => void;
   onBack: () => void;
 }) {
+  // TODO: add warning if not in secure context and some features are disabled
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("Game Master");
 

@@ -22,6 +22,7 @@
     "@types/turf": "^3.5.32",
     "buffer": "^6.0.3",
     "js-sha256": "^0.11.0",
+    "jsstore": "^4.8.2",
     "leaflet": "^1.9.4",
     "leaflet-control-mini-map": "^0.4.0",
     "leaflet-path-drag": "^1.9.5",
@@ -54,6 +55,8 @@
     "tailwindcss": "^3.4.3",
     "typescript-eslint": "^7.14.1",
     "vite": "^5.2.0",
+    "vite-plugin-externals": "^0.6.2",
+    "vite-plugin-file": "^1.0.5",
     "web-audio-peak-meter": "^3.1.0"
   }
 }

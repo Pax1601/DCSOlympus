@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ui.css";
 
-import { StateProvider } from "../statecontext";
-
 import { Header } from "./panels/header";
 import { SpawnMenu } from "./panels/spawnmenu";
 import { UnitControlMenu } from "./panels/unitcontrolmenu";
@@ -13,10 +11,8 @@ import { MapHiddenTypes, MapOptions } from "../types/types";
 import {
   BLUE_COMMANDER,
   GAME_MASTER,
-  MAP_HIDDEN_TYPES_DEFAULTS,
   MAP_OPTIONS_DEFAULTS,
   NO_SUBSTATE,
-  OlympusEvent,
   OlympusState,
   OlympusSubState,
   RED_COMMANDER,
@@ -26,7 +22,7 @@ import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/login";
 import { sha256 } from "js-sha256";
 import { MiniMapPanel } from "./panels/minimappanel";
-import { UnitMouseControlBar } from "./panels/unitmousecontrolbar";
+import { UnitControlBar } from "./panels/unitcontrolbar";
 import { DrawingMenu } from "./panels/drawingmenu";
 import { ControlsPanel } from "./panels/controlspanel";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
@@ -40,24 +36,8 @@ import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { JTACMenu } from "./panels/jtacmenu";
 import {
   AppStateChangedEvent,
-  AudioManagerStateChangedEvent,
-  AudioSinksChangedEvent,
-  AudioSourcesChangedEvent,
-  ConfigLoadedEvent,
-  ContextActionChangedEvent,
-  ContextActionSetChangedEvent,
-  HiddenTypesChangedEvent,
-  MapOptionsChangedEvent,
-  MapSourceChangedEvent,
-  SelectedUnitsChangedEvent,
-  ServerStatusUpdatedEvent,
-  UnitSelectedEvent,
+  MapOptionsChangedEvent
 } from "../events";
-import { ServerStatus } from "../interfaces";
-import { AudioSource } from "../audio/audiosource";
-import { AudioSink } from "../audio/audiosink";
-import { ContextAction } from "../unit/contextaction";
-import { ContextActionSet } from "../unit/contextactionset";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -74,17 +54,7 @@ export type OlympusUIState = {
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
-  const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
-  const [mapSources, setMapSources] = useState([] as string[]);
-  const [activeMapSource, setActiveMapSource] = useState("");
-  const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
-  const [audioSources, setAudioSources] = useState([] as AudioSource[]);
-  const [audioSinks, setAudioSinks] = useState([] as AudioSink[]);
-  const [audioManagerState, setAudioManagerState] = useState(false);
-  const [serverStatus, setServerStatus] = useState({} as ServerStatus);
-  const [contextActionSet, setContextActionsSet] = useState(null as ContextActionSet | null);
-  const [contextAction, setContextActions] = useState(null as ContextAction | null);
 
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
@@ -105,22 +75,7 @@ export function UI() {
       setAppState(state);
       setAppSubState(subState);
     });
-    ConfigLoadedEvent.on(() => {
-      let config = getApp().getConfig();
-      var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
-      setMapSources(sources);
-      setActiveMapSource(sources[0]);
-    });
-    HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
-    MapSourceChangedEvent.on((source) => setActiveMapSource(source));
-    SelectedUnitsChangedEvent.on((units) => setSelectedUnits(units));
-    AudioSourcesChangedEvent.on((sources) => setAudioSources(sources));
-    AudioSinksChangedEvent.on((sinks) => setAudioSinks(sinks));
-    AudioManagerStateChangedEvent.on((state) => setAudioManagerState(state));
-    ServerStatusUpdatedEvent.on((status) => setServerStatus(status));
-    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionsSet(contextActionSet));
-    ContextActionChangedEvent.on((contextAction) => setContextActions(contextAction));
 
     document.addEventListener("showProtectionPrompt", (ev: CustomEventInit) => {
       setProtectionPromptVisible(true);
@@ -168,97 +123,75 @@ export function UI() {
       `}
       onLoad={setupApp}
     >
-      <StateProvider
-        value={{
-          appState,
-          appSubState,
-          mapOptions,
-          mapHiddenTypes,
-          mapSources,
-          activeMapSource,
-          selectedUnits,
-          audioSources,
-          audioSinks,
-          audioManagerState,
-          serverStatus,
-          contextActionSet,
-          contextAction,
-        }}
-      >
-        <Header />
-        <div className="flex h-full w-full flex-row-reverse">
-          {appState === OlympusState.LOGIN && (
-            <>
-              <div
-                className={`
-                  fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
-                `}
-              ></div>
-              <LoginModal
-                onLogin={(password) => {
-                  checkPassword(password);
-                }}
-                onContinue={(username) => {
-                  connect(username);
-                }}
-                onBack={() => {
-                  setCommandMode(null);
-                }}
-                checkingPassword={checkingPassword}
-                loginError={loginError}
-                commandMode={commandMode}
-              />
-            </>
-          )}
-          {protectionPromptVisible && (
-            <>
-              <div
-                className={`
-                  fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
-                `}
-              ></div>
-              <ProtectionPrompt
-                onContinue={(units) => {
-                  protectionCallback(units);
-                  setProtectionPromptVisible(false);
-                }}
-                onBack={() => {
-                  setProtectionPromptVisible(false);
-                }}
-                units={protectionUnits}
-              />
-            </>
-          )}
-          <div id="map-container" className="z-0 h-full w-screen" />
-          <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
-          <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
-          <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} options={mapOptions} />
+      <Header />
+      <div className="flex h-full w-full flex-row-reverse">
+        {appState === OlympusState.LOGIN && (
+          <>
+            <div
+              className={`fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95`}
+            ></div>
+            <LoginModal
+              onLogin={(password) => {
+                checkPassword(password);
+              }}
+              onContinue={(username) => {
+                connect(username);
+              }}
+              onBack={() => {
+                setCommandMode(null);
+              }}
+              checkingPassword={checkingPassword}
+              loginError={loginError}
+              commandMode={commandMode}
+            />
+          </>
+        )}
+        {protectionPromptVisible && (
+          <>
+            <div
+              className={`fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95`}
+            ></div>
+            <ProtectionPrompt
+              onContinue={(units) => {
+                protectionCallback(units);
+                setProtectionPromptVisible(false);
+              }}
+              onBack={() => {
+                setProtectionPromptVisible(false);
+              }}
+              units={protectionUnits}
+            />
+          </>
+        )}
+        <div id="map-container" className="z-0 h-full w-screen" />
+        <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} options={mapOptions} /* TODO remove *//>
 
-          <UnitControlMenu
-            open={appState === OlympusState.UNIT_CONTROL && appSubState !== UnitControlSubState.FORMATION}
-            onClose={() => getApp().setState(OlympusState.IDLE)}
-          />
-          <FormationMenu
-            open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION}
-            leader={formationLeader}
-            wingmen={formationWingmen}
-            onClose={() => getApp().setState(OlympusState.IDLE)}
-          />
+        <UnitControlMenu
+          open={appState === OlympusState.UNIT_CONTROL && appSubState !== UnitControlSubState.FORMATION}
+          onClose={() => getApp().setState(OlympusState.IDLE)}
+        />
+        <FormationMenu
+          open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION}
+          leader={formationLeader}
+          wingmen={formationWingmen}
+          onClose={() => getApp().setState(OlympusState.IDLE)}
+        />
 
-          <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
-          <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} airbase={airbase} />
-          <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} airbase={airbase} /* TODO remove */ />
+        <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
-          {/* TODO} <UnitExplosionMenu open={appState === OlympusState.MAIN_MENU} units={unitExplosionUnits} onClose={() => getApp().setState(OlympusState.IDLE)} /> {*/}
-          <JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        {/* TODO} <UnitExplosionMenu open={appState === OlympusState.MAIN_MENU} units={unitExplosionUnits} onClose={() => getApp().setState(OlympusState.IDLE)} /> {*/}
+        <JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
-          <MiniMapPanel />
-          <ControlsPanel />
-          <UnitMouseControlBar />
-          <MapContextMenu />
-          <SideBar />
-        </div>
-      </StateProvider>
+        <MiniMapPanel />
+        <ControlsPanel />
+        <UnitControlBar />
+        <MapContextMenu />
+        <SideBar />
+      </div>
     </div>
   );
 }

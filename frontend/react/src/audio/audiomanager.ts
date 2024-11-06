@@ -12,6 +12,7 @@ import { Unit } from "../unit/unit";
 import { UnitSink } from "./unitsink";
 import { AudioPacket, MessageType } from "./audiopacket";
 import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent, ConfigLoadedEvent, SRSClientsChangedEvent } from "../events";
+import { OlympusConfig } from "../interfaces";
 
 export class AudioManager {
   #audioContext: AudioContext;
@@ -29,21 +30,15 @@ export class AudioManager {
   Otherwise, no playback will be performed. */
   #running: boolean = false;
   #address: string = "localhost";
-  #port: number = 4000;
-  #endpoint: string = "audio";
+  #port: number;
+  #endpoint: string;
   #socket: WebSocket | null = null;
   #guid: string = makeID(22);
   #SRSClientUnitIDs: number[] = [];
 
   constructor() {
-    ConfigLoadedEvent.on(() => {
-      let config = getApp().getConfig();
-      if (config["WSPort"]) {
-        this.setPort(config["WSPort"]);
-      }
-      if (config["WSAddress"]) {
-        this.setEndpoint(config["WSEndpoint"]);
-      }
+    ConfigLoadedEvent.on((config: OlympusConfig) => {
+      config.WSPort ? this.setPort(config.WSPort) : this.setEndpoint(config.WSEndpoint);
     });
 
     setInterval(() => {
@@ -61,8 +56,9 @@ export class AudioManager {
     if (res === null) res = this.#address.match(/(?:http|https):\/\/(.+)/);
 
     let wsAddress = res ? res[1] : this.#address;
-    if (this.#address.includes("https")) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
-    else this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
+    if (this.#endpoint) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
+    else if (this.#port) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
+    else console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
 
     this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`); // TODO: remove, used for testing!
 
@@ -119,13 +115,10 @@ export class AudioManager {
   }
 
   stop() {
+    /* Stop everything and send update event */
     this.#running = false;
-    this.#sources.forEach((source) => {
-      source.disconnect();
-    });
-    this.#sinks.forEach((sink) => {
-      sink.disconnect();
-    });
+    this.#sources.forEach((source) => source.disconnect());
+    this.#sinks.forEach((sink) => sink.disconnect());
     this.#sources = [];
     this.#sinks = [];
 
@@ -190,6 +183,7 @@ export class AudioManager {
     }
     const newRadio = new RadioSink();
     this.#sinks.push(newRadio);
+    /* Set radio name by default to be incremental number */
     newRadio.setName(`Radio ${this.#sinks.length}`);
     this.#sources[0].connect(newRadio);
     AudioSinksChangedEvent.dispatch(this.#sinks);
@@ -208,14 +202,16 @@ export class AudioManager {
     sink.disconnect();
     this.#sinks = this.#sinks.filter((v) => v != sink);
     let idx = 1;
+    /* If a radio was removed, rename all the remainin radios to align the names */
     this.#sinks.forEach((sink) => {
       if (sink instanceof RadioSink) sink.setName(`Radio ${idx++}`);
     });
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+
+    /* Disconnect all the sources that where connected to this sink */
     this.#sources.forEach((source) => {
-      if (source.getConnectedTo().includes(sink))
-        source.disconnect(sink)
-    })
+      if (source.getConnectedTo().includes(sink)) source.disconnect(sink);
+    });
   }
 
   getGuid() {
@@ -239,6 +235,7 @@ export class AudioManager {
   }
 
   #syncRadioSettings() {
+    /* Send the radio settings of each radio to the SRS backend */
     let message = {
       type: "Settings update",
       guid: this.#guid,

@@ -85,9 +85,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
           </div>
           <div className="flex">
             <span
-              className={`
-                my-auto h-full min-w-10 text-nowrap p-2 text-center
-              `}
+              className={`my-auto h-full min-w-10 text-nowrap p-2 text-center`}
             >
               BP
             </span>
@@ -122,9 +120,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
           </div>
           <div className="flex">
             <span
-              className={`
-              my-auto h-full min-w-10 text-nowrap p-2 text-center
-            `}
+              className={`my-auto h-full min-w-10 text-nowrap p-2 text-center`}
             >
               IP
             </span>
@@ -159,9 +155,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
           </div>
           <div className="flex">
             <span
-              className={`
-              my-auto h-full min-w-10 text-nowrap p-3 text-center
-            `}
+              className={`my-auto h-full min-w-10 text-nowrap p-3 text-center`}
             >
               <FaBullseye />
             </span>

@@ -12,7 +12,6 @@ import { SelectionClearedEvent } from "../../events";
 export function MapContextMenu(props: {}) {
   const [open, setOpen] = useState(false);
   const [contextActionsSet, setContextActionsSet] = useState(new ContextActionSet());
-  const [activeContextAction, setActiveContextAction] = useState(null as null | ContextAction);
   const [xPosition, setXPosition] = useState(0);
   const [yPosition, setYPosition] = useState(0);
   const [latLng, setLatLng] = useState(null as null | LatLng);
@@ -107,9 +106,7 @@ export function MapContextMenu(props: {}) {
         <>
           <div
             ref={contentRef}
-            className={`
-              absolute flex min-w-80 gap-2 rounded-md bg-olympus-600
-            `}
+            className={`absolute flex min-w-80 gap-2 rounded-md bg-olympus-600`}
           >
             <div
               className={`

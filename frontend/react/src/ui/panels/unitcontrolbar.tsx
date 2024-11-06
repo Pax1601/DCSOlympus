@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Unit } from "../../unit/unit";
+import React, { useEffect, useRef, useState } from "react";
 import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
@@ -8,13 +7,12 @@ import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { OlympusState } from "../../constants/constants";
-import { AppStateChangedEvent } from "../../events";
-import { StateContext } from "../../statecontext";
+import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent } from "../../events";
 
-export function UnitMouseControlBar(props: {}) {
-  const appState = useContext(StateContext);
-
-  const [open, setOpen] = useState(false);
+export function UnitControlBar(props: {}) {
+  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
+  const [contextActionSet, setContextActionsSet] = useState(null as ContextActionSet | null);
+  const [contextAction, setContextAction] = useState(null as ContextAction | null);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
 
@@ -25,9 +23,9 @@ export function UnitMouseControlBar(props: {}) {
   });
 
   useEffect(() => {
-    AppStateChangedEvent.on((state, subState) => {
-      setOpen(state === OlympusState.UNIT_CONTROL);
-    });
+    AppStateChangedEvent.on((state, subState) => setAppState(state));
+    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionsSet(contextActionSet));
+    ContextActionChangedEvent.on((contextAction) => setContextAction(contextAction));
   }, []);
 
   function onScroll(el) {
@@ -43,8 +41,8 @@ export function UnitMouseControlBar(props: {}) {
 
   let reorderedActions: ContextAction[] = [];
   CONTEXT_ACTION_COLORS.forEach((color) => {
-    if (appState.contextActionSet) {
-      Object.values(appState.contextActionSet.getContextActions()).forEach((contextAction: ContextAction) => {
+    if (contextActionSet) {
+      Object.values(contextActionSet.getContextActions()).forEach((contextAction: ContextAction) => {
         if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
         else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
       });
@@ -53,7 +51,7 @@ export function UnitMouseControlBar(props: {}) {
 
   return (
     <>
-      {open && appState.contextActionSet && Object.keys(appState.contextActionSet.getContextActions()).length > 0 && (
+      {appState === OlympusState.UNIT_CONTROL && contextActionSet && Object.keys(contextActionSet.getContextActions()).length > 0 && (
         <>
           <div
             className={`
@@ -72,26 +70,26 @@ export function UnitMouseControlBar(props: {}) {
               />
             )}
             <div className="flex gap-2 overflow-x-auto no-scrollbar p-2" onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
-              {reorderedActions.map((contextAction: ContextAction) => {
+              {reorderedActions.map((contextActionIt: ContextAction) => {
                 return (
                   <OlStateButton
-                    key={contextAction.getId()}
-                    checked={contextAction === appState.contextAction}
-                    icon={contextAction.getIcon()}
-                    tooltip={contextAction.getLabel()}
+                    key={contextActionIt.getId()}
+                    checked={contextActionIt === contextAction}
+                    icon={contextActionIt.getIcon()}
+                    tooltip={contextActionIt.getLabel()}
                     className={
-                      contextAction.getOptions().buttonColor
+                      contextActionIt.getOptions().buttonColor
                         ? `
                           border-2
-                          border-${contextAction.getOptions().buttonColor}-500
+                          border-${contextActionIt.getOptions().buttonColor}-500
                         `
                         : ""
                     }
                     onClick={() => {
-                      if (contextAction.getOptions().executeImmediately) {
-                        contextAction.executeCallback(null, null);
+                      if (contextActionIt.getOptions().executeImmediately) {
+                        contextActionIt.executeCallback(null, null);
                       } else {
-                        appState.contextAction !== contextAction ? getApp().getMap().setContextAction(contextAction) : getApp().getMap().setContextAction(null);
+                        contextActionIt !== contextAction ? getApp().getMap().setContextAction(contextActionIt) : getApp().getMap().setContextAction(null);
                       }
                     }}
                   />
@@ -108,7 +106,7 @@ export function UnitMouseControlBar(props: {}) {
               />
             )}
           </div>
-          {appState.contextAction && (
+          {contextAction && (
             <div
               className={`
                 absolute left-[50%] top-32 flex min-w-[300px]
@@ -130,7 +128,7 @@ export function UnitMouseControlBar(props: {}) {
                   md:border-l-[1px] md:px-5
                 `}
               >
-                {appState.contextAction.getDescription()}
+                {contextAction.getDescription()}
               </div>
             </div>
           )}

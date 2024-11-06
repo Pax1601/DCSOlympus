@@ -2,11 +2,10 @@ import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, Leaf
 import { getApp } from "../olympusapp";
 import {
   enumToCoalition,
-  enumToEmissioNCountermeasure,
+  enumToEmissionCountermeasure,
   enumToROE,
   enumToReactionToThreat,
   enumToState,
-  getUnitDatabaseByCategory,
   mToFt,
   msToKnots,
   rad2deg,
@@ -43,10 +42,8 @@ import {
   JTACSubState,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
-import { groundUnitDatabase } from "./databases/groundunitdatabase";
-import { navyUnitDatabase } from "./databases/navyunitdatabase";
 import { Weapon } from "../weapon/weapon";
-import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitData } from "../interfaces";
+import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from "./group";
 import { ContextActionSet } from "./contextactionset";
@@ -151,6 +148,9 @@ export abstract class Unit extends CustomMarker {
   #health: number = 100;
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
+  #blueprint: UnitBlueprint | null = null;
+  #unitWhenGrouped: string | null = null;
+  #blueprintWhenGrouped: UnitBlueprint | null = null;
   #group: Group | null = null;
   #selected: boolean = false;
   #hidden: boolean = false;
@@ -357,11 +357,12 @@ export abstract class Unit extends CustomMarker {
     this.on("mouseup", (e) => this.#onMouseUp(e));
     this.on("dblclick", (e) => this.#onDoubleClick(e));
     this.on("mouseover", () => {
-      if (this.belongsToCommandedCoalition()) 
-        this.setHighlighted(true);
+      if (this.belongsToCommandedCoalition()) this.setHighlighted(true);
     });
     this.on("mouseout", () => this.setHighlighted(false));
-    getApp().getMap().on("zoomend", (e: any) => this.#onZoom(e));
+    getApp()
+      .getMap()
+      .on("zoomend", (e: any) => this.#onZoom(e));
 
     /* Deselect units if they are hidden */
     HiddenTypesChangedEvent.on((hiddenTypes) => {
@@ -535,7 +536,7 @@ export abstract class Unit extends CustomMarker {
           this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8());
           break;
         case DataIndexes.emissionsCountermeasures:
-          this.#emissionsCountermeasures = enumToEmissioNCountermeasure(dataExtractor.extractUInt8());
+          this.#emissionsCountermeasures = enumToEmissionCountermeasure(dataExtractor.extractUInt8());
           break;
         case DataIndexes.TACAN:
           this.#TACAN = dataExtractor.extractTACAN();
@@ -589,6 +590,32 @@ export abstract class Unit extends CustomMarker {
       if (this.getSelected()) {
         this.setSelected(false);
         this.setSelected(true);
+      }
+    }
+
+    /* If not done already, update the unit blueprint */
+    if (!this.#blueprint && this.#name !== "") {
+      const blueprint = getApp().getUnitsManager().getDatabase().getByName(this.#name);
+      this.#blueprint = blueprint ?? null;
+      /* Refresh the marker */
+      this.remove();
+      this.addTo(getApp().getMap());
+    }
+
+    /* Update the blueprint to use when the unit is grouped */
+    if (this.#name !== "") {
+      let unitWhenGrouped: string | null = this.getBlueprint()?.unitWhenGrouped ?? null;
+      let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
+        if (unit.getBlueprint()?.unitWhenGrouped != undefined) return unit;
+        return prev;
+      }, null);
+      unitWhenGrouped = member !== null ? (member?.getBlueprint()?.unitWhenGrouped ?? null) : unitWhenGrouped;
+      if (unitWhenGrouped !== this.#unitWhenGrouped) {
+        this.#unitWhenGrouped = unitWhenGrouped;
+        if (unitWhenGrouped) {
+          const blueprint = getApp().getUnitsManager().getDatabase().getByName(unitWhenGrouped);
+          this.#blueprintWhenGrouped = blueprint ?? null;
+        }
       }
     }
   }
@@ -648,20 +675,12 @@ export abstract class Unit extends CustomMarker {
     };
   }
 
-  /** Get a database of information also in this unit's category
-   *
-   * @returns UnitDatabase
-   */
-  getDatabase(): UnitDatabase | null {
-    return getUnitDatabaseByCategory(this.getMarkerCategory());
-  }
-
   /** Set the unit as alive or dead
    *
    * @param newAlive (boolean) true = alive, false = dead
    */
   setAlive(newAlive: boolean) {
-    if (newAlive != this.#alive) UnitDeadEvent.dispatch(this)
+    if (newAlive != this.#alive) UnitDeadEvent.dispatch(this);
     this.#alive = newAlive;
   }
 
@@ -698,7 +717,7 @@ export abstract class Unit extends CustomMarker {
       this.getElement()?.querySelector(`.unit`)?.toggleAttribute("data-is-selected", selected);
 
       /* Trigger events after all (de-)selecting has been done */
-      selected? UnitSelectedEvent.dispatch(this): UnitDeselectedEvent.dispatch(this);
+      selected ? UnitSelectedEvent.dispatch(this) : UnitDeselectedEvent.dispatch(this);
     }
   }
 
@@ -783,12 +802,16 @@ export abstract class Unit extends CustomMarker {
     return "";
   }
 
-  getSpawnPoints() {
-    return this.getDatabase()?.getSpawnPointsByName(this.getName());
-  }
-
   getBlueprint() {
-    return this.getDatabase()?.getByName(this.#name) ?? this.getDatabase()?.getUnkownUnit(this.getName());
+    if (
+      !this.getSelected() &&
+      this.getIsLeader() &&
+      getApp().getMap().getOptions().hideGroupMembers &&
+      getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION &&
+      this.#blueprintWhenGrouped
+    )
+      return this.#blueprintWhenGrouped;
+    else return this.#blueprint;
   }
 
   getGroup() {
@@ -892,7 +915,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   /********************** Icon *************************/
-  createIcon(): void {
+  async createIcon() {
     /* Set the icon */
     var icon = new DivIcon({
       className: "leaflet-unit-icon",
@@ -1639,13 +1662,13 @@ export abstract class Unit extends CustomMarker {
 
     /* Get the acquisition and engagement ranges of the entire group, not for each unit */
     if (this.getIsLeader()) {
-      var engagementRange = this.getDatabase()?.getByName(this.getName())?.engagementRange ?? 0;
-      var acquisitionRange = this.getDatabase()?.getByName(this.getName())?.acquisitionRange ?? 0;
+      var engagementRange = this.getBlueprint()?.engagementRange ?? 0;
+      var acquisitionRange = this.getBlueprint()?.acquisitionRange ?? 0;
 
       this.getGroupMembers().forEach((unit: Unit) => {
         if (unit.getAlive()) {
-          let unitEngagementRange = unit.getDatabase()?.getByName(unit.getName())?.engagementRange ?? 0;
-          let unitAcquisitionRange = unit.getDatabase()?.getByName(unit.getName())?.acquisitionRange ?? 0;
+          let unitEngagementRange = unit.getBlueprint()?.engagementRange ?? 0;
+          let unitAcquisitionRange = unit.getBlueprint()?.acquisitionRange ?? 0;
 
           if (unitEngagementRange > engagementRange) engagementRange = unitEngagementRange;
 
@@ -2062,28 +2085,7 @@ export class GroundUnit extends Unit {
   }
 
   getType() {
-    var blueprint = groundUnitDatabase.getByName(this.getName());
-    return blueprint?.type ? blueprint.type : "";
-  }
-
-  /* When a unit is a leader of a group, the map is zoomed out and grouping when zoomed out is enabled, check if the unit should be shown as a specific group. This is used to show a SAM battery instead of the group leader */
-  getBlueprint() {
-    let unitWhenGrouped: string | undefined | null = null;
-    if (
-      !this.getSelected() &&
-      this.getIsLeader() &&
-      getApp().getMap().getOptions().hideGroupMembers &&
-      getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION
-    ) {
-      unitWhenGrouped = this.getDatabase()?.getByName(this.getName())?.unitWhenGrouped ?? null;
-      let member = this.getGroupMembers().reduce((prev: Unit | null, unit: Unit, index: number) => {
-        if (unit.getBlueprint()?.unitWhenGrouped != undefined) return unit;
-        return prev;
-      }, null);
-      unitWhenGrouped = member !== null ? member?.getBlueprint()?.unitWhenGrouped : unitWhenGrouped;
-    }
-    if (unitWhenGrouped) return this.getDatabase()?.getByName(unitWhenGrouped) ?? this.getDatabase()?.getUnkownUnit(this.getName());
-    else return this.getDatabase()?.getByName(this.getName()) ?? this.getDatabase()?.getUnkownUnit(this.getName());
+    return this.getBlueprint()?.type ?? "";
   }
 
   /* When we zoom past the grouping limit, grouping is enabled and the unit is a leader, we redraw the unit to apply any possible grouped marker */
@@ -2193,8 +2195,7 @@ export class NavyUnit extends Unit {
   }
 
   getType() {
-    var blueprint = navyUnitDatabase.getByName(this.getName());
-    return blueprint?.type ? blueprint.type : "";
+    return this.getBlueprint()?.type ?? "";
   }
 
   getMarkerCategory() {

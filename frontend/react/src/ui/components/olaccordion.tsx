@@ -41,7 +41,7 @@ export function OlAccordion(props: { title: string; open: boolean, onClick: () =
         >
           <span className="font-normal">{props.title}</span>
           <svg
-            data-open={open}
+            data-open={props.open}
             className={`
               h-3 w-3 shrink-0 -rotate-180 transition-transform
               dark:text-olympus-50

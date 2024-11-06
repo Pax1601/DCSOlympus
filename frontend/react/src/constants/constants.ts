@@ -1,12 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { Context, MapOptions } from "../types/types";
-
-export const DEFAULT_CONTEXT: Context = "default context";
-
-export enum OlympusEvent {
-  STATE_CHANGED = "State changed",
-  UNITS_SELECTED = "Unit selected"
-}
+import { MapOptions } from "../types/types";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -252,34 +245,34 @@ export enum OlympusState {
   JTAC = "JTAC",
   OPTIONS = "Options",
   AUDIO = "Audio",
-  AIRBASE = "Airbase"
+  AIRBASE = "Airbase",
 }
 
 export const NO_SUBSTATE = "No substate";
 
 export enum UnitControlSubState {
   NO_SUBSTATE = "No substate",
-  FORMATION = "Formation"
+  FORMATION = "Formation",
 }
 
 export enum DrawSubState {
   NO_SUBSTATE = "No substate",
   DRAW_POLYGON = "Polygon",
   DRAW_CIRCLE = "Circle",
-  EDIT = "Edit"
+  EDIT = "Edit",
 }
 
 export enum JTACSubState {
   NO_SUBSTATE = "No substate",
   SELECT_ECHO_POINT = "ECHO",
   SELECT_IP = "IP",
-  SELECT_TARGET = "Target"
+  SELECT_TARGET = "Target",
 }
 
 export enum SpawnSubState {
   NO_SUBSTATE = "No substate",
   SPAWN_UNIT = "Unit",
-  SPAWN_EFFECT = "Effect"
+  SPAWN_EFFECT = "Effect",
 }
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | string;
@@ -292,17 +285,6 @@ export const IADSDensities: { [key: string]: number } = {
 };
 export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
 
-export const MAP_OPTIONS_TOOLTIPS = {
-  hideGroupMembers: "Hide group members when zoomed out",
-  hideUnitsShortRangeRings: "Hide short range units threat range rings (R)",
-  showUnitContacts: "Show selected units contact lines",
-  showUnitPaths: "Show selected unit paths",
-  showUnitTargets: "Show selected unit targets",
-  showUnitLabels: "Show unit labels (L)",
-  showUnitsEngagementRings: "Show units threat range rings (Q)",
-  showUnitsAcquisitionRings: "Show units detection range rings (E)",
-};
-
 export const MAP_OPTIONS_DEFAULTS = {
   hideGroupMembers: true,
   hideUnitsShortRangeRings: true,
@@ -314,7 +296,7 @@ export const MAP_OPTIONS_DEFAULTS = {
   showUnitsAcquisitionRings: true,
   fillSelectedRing: false,
   showMinimap: false,
-  protectDCSUnits: true
+  protectDCSUnits: true,
 } as MapOptions;
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -383,12 +365,6 @@ export enum DataIndexes {
   endOfData = 255,
 }
 
-export const MGRS_PRECISION_10KM = 2;
-export const MGRS_PRECISION_1KM = 3;
-export const MGRS_PRECISION_100M = 4;
-export const MGRS_PRECISION_10M = 5;
-export const MGRS_PRECISION_1M = 6;
-
 export const DELETE_CYCLE_TIME = 0.05;
 export const DELETE_SLOW_THRESHOLD = 50;
 
@@ -410,5 +386,5 @@ export enum ContextActionColors {
   OTHER,
   ADMIN,
   ENGAGE,
-  DELETE
+  DELETE,
 }

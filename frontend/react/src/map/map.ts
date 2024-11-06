@@ -22,22 +22,30 @@ import {
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import { EffectRequestTable, SpawnRequestTable } from "../interfaces";
+import { EffectRequestTable, OlympusConfig, SpawnRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 
 /* Stylesheets */
 import "./markers/stylesheets/airbase.css";
 import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
-import "./map.css";
+import "./stylesheets/map.css";
 import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
-import { faDrawPolygon, faHandPointer, faJetFighter, faMap } from "@fortawesome/free-solid-svg-icons";
 import { ExplosionMarker } from "./markers/explosionmarker";
 import { TextMarker } from "./markers/textmarker";
 import { TargetMarker } from "./markers/targetmarker";
-import { AppStateChangedEvent, CoalitionAreaSelectedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../events";
+import {
+  AppStateChangedEvent,
+  CoalitionAreaSelectedEvent,
+  ConfigLoadedEvent,
+  ContextActionChangedEvent,
+  ContextActionSetChangedEvent,
+  HiddenTypesChangedEvent,
+  MapOptionsChangedEvent,
+  MapSourceChangedEvent,
+} from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
 
 /* Register the handler for the box selection */
@@ -167,9 +175,7 @@ export class Map extends L.Map {
     this.on("dblclick", (e: any) => this.#onDoubleClick(e));
     this.on("mouseup", (e: any) => this.#onMouseUp(e));
     this.on("mousedown", (e: any) => this.#onMouseDown(e));
-    this.on("contextmenu", (e: any) => {
-      e.originalEvent.preventDefault();
-    });
+    this.on("contextmenu", (e: any) => e.originalEvent.preventDefault());
 
     this.on("mousemove", (e: any) => this.#onMouseMove(e));
 
@@ -213,8 +219,7 @@ export class Map extends L.Map {
       this.updateMinimap();
     });
 
-    ConfigLoadedEvent.on(() => {
-      let config = getApp().getConfig();
+    ConfigLoadedEvent.on((config: OlympusConfig) => {
       let layerSet = false;
 
       /* First load the map mirrors */
@@ -349,66 +354,18 @@ export class Map extends L.Map {
 
   setContextActionSet(contextActionSet: ContextActionSet | null) {
     this.#contextActionSet = contextActionSet;
+    ContextActionSetChangedEvent.dispatch(this.#contextActionSet)
   }
 
   setContextAction(contextAction: ContextAction | null) {
     this.#contextAction = contextAction;
-  }
-
-  #onStateChanged(state: OlympusState, subState: OlympusSubState) {
-    /* Operations to perform when leaving a state */
-    this.getSelectedCoalitionArea()?.setEditing(false);
-    this.#currentSpawnMarker?.removeFrom(this);
-    this.#currentSpawnMarker = null;
-
-    if (state !== OlympusState.UNIT_CONTROL) {
-      getApp().getUnitsManager().deselectAllUnits();
-    }
-
-    if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) {
-      this.deselectAllCoalitionAreas();
-    }
-
-    /* Operations to perform when entering a state */
-    if (state === OlympusState.IDLE) {
-      getApp().getUnitsManager()?.deselectAllUnits();
-    } else if (state === OlympusState.SPAWN) {
-      if (subState === SpawnSubState.SPAWN_UNIT) {
-        console.log(`Spawn request table:`);
-        console.log(this.#spawnRequestTable);
-        this.#currentSpawnMarker = new TemporaryUnitMarker(
-          new L.LatLng(0, 0),
-          this.#spawnRequestTable?.unit.unitType ?? "",
-          this.#spawnRequestTable?.coalition ?? "neutral"
-        );
-        this.#currentSpawnMarker.addTo(this);
-      } else if (subState === SpawnSubState.SPAWN_EFFECT) {
-        console.log(`Effect request table:`);
-        console.log(this.#effectRequestTable);
-        // TODO
-        //this.#currentEffectMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
-        //this.#currentEffectMarker.addTo(this);
-      }
-    } else if (state === OlympusState.UNIT_CONTROL) {
-      console.log(`Context action:`);
-      console.log(this.#contextAction);
-    } else if (state === OlympusState.DRAW) {
-      if (subState == DrawSubState.DRAW_POLYGON) {
-        this.#coalitionAreas.push(new CoalitionPolygon([]));
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
-      } else if (subState === DrawSubState.DRAW_CIRCLE) {
-        this.#coalitionAreas.push(new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 }));
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
-      }
-    }
+    ContextActionChangedEvent.dispatch(this.#contextAction)
   }
 
   getCurrentControls() {
     const touch = matchMedia("(hover: none)").matches;
     return [];
-    // TODO
+    // TODO, is this a good idea? I never look at the thing
     //if (getApp().getState() === IDLE) {
     //  return [
     //    {
@@ -624,6 +581,14 @@ export class Map extends L.Map {
     if (this.hasLayer(coalitionArea)) this.removeLayer(coalitionArea);
   }
 
+  getSelectedCoalitionArea() {
+    const coalitionArea = this.#coalitionAreas.find((coalitionArea: CoalitionPolygon | CoalitionCircle) => {
+      return coalitionArea.getSelected();
+    });
+
+    return coalitionArea ?? null;
+  }
+
   setHiddenType(key: string, value: boolean) {
     this.#hiddenTypes[key] = value;
     HiddenTypesChangedEvent.dispatch(this.#hiddenTypes);
@@ -668,12 +633,9 @@ export class Map extends L.Map {
     }
 
     this.setView(bounds.getCenter(), 8);
-
     this.updateMinimap();
-
     const boundaries = this.#getMinimapBoundaries();
     this.#miniMapPolyline.setLatLngs(boundaries[theatre as keyof typeof boundaries]);
-
     this.setLayerName(this.#layerName);
   }
 
@@ -763,14 +725,6 @@ export class Map extends L.Map {
     return marker;
   }
 
-  getSelectedCoalitionArea() {
-    const coalitionArea = this.#coalitionAreas.find((coalitionArea: CoalitionPolygon | CoalitionCircle) => {
-      return coalitionArea.getSelected();
-    });
-
-    return coalitionArea ?? null;
-  }
-
   setOption(key, value) {
     this.#options[key] = value;
     MapOptionsChangedEvent.dispatch(this.#options);
@@ -851,6 +805,50 @@ export class Map extends L.Map {
   }
 
   /* Event handlers */
+  #onStateChanged(state: OlympusState, subState: OlympusSubState) {
+    /* Operations to perform when leaving a state */
+    this.getSelectedCoalitionArea()?.setEditing(false);
+    this.#currentSpawnMarker?.removeFrom(this);
+    this.#currentSpawnMarker = null;
+    if (state !== OlympusState.UNIT_CONTROL) getApp().getUnitsManager().deselectAllUnits();
+    if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) this.deselectAllCoalitionAreas();
+
+    /* Operations to perform when entering a state */
+    if (state === OlympusState.IDLE) {
+      getApp().getUnitsManager()?.deselectAllUnits();
+    } else if (state === OlympusState.SPAWN) {
+      if (subState === SpawnSubState.SPAWN_UNIT) {
+        console.log(`Spawn request table:`);
+        console.log(this.#spawnRequestTable);
+        this.#currentSpawnMarker = new TemporaryUnitMarker(
+          new L.LatLng(0, 0),
+          this.#spawnRequestTable?.unit.unitType ?? "",
+          this.#spawnRequestTable?.coalition ?? "neutral"
+        );
+        this.#currentSpawnMarker.addTo(this);
+      } else if (subState === SpawnSubState.SPAWN_EFFECT) {
+        console.log(`Effect request table:`);
+        console.log(this.#effectRequestTable);
+        // TODO add temporary effect marker
+        //this.#currentEffectMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
+        //this.#currentEffectMarker.addTo(this);
+      }
+    } else if (state === OlympusState.UNIT_CONTROL) {
+      console.log(`Context action:`);
+      console.log(this.#contextAction);
+    } else if (state === OlympusState.DRAW) {
+      if (subState == DrawSubState.DRAW_POLYGON) {
+        this.#coalitionAreas.push(new CoalitionPolygon([]));
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
+      } else if (subState === DrawSubState.DRAW_CIRCLE) {
+        this.#coalitionAreas.push(new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 }));
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
+        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
+      }
+    }
+  }
+
   #onDragStart(e: any) {
     this.#isDragging = true;
   }
@@ -1037,14 +1035,14 @@ export class Map extends L.Map {
     if (!this.#isDragging && !this.#isZooming) {
       this.deselectAllCoalitionAreas();
       if (getApp().getState() === OlympusState.IDLE) {
-        if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e }));
-        else document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent }));
+        if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
+        else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
-          document.dispatchEvent(new CustomEvent("showMapContextMenu", { detail: e }));
+          document.dispatchEvent(new CustomEvent("showMapContextMenu", { detail: e })); // TODP
         } else {
-          if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e }));
-          else document.dispatchEvent(new CustomEvent("mapForceBoxSelect", { detail: e.originalEvent }));
+          if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
+          else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
         }
       }
     }

@@ -2,14 +2,7 @@ import { LatLng } from "leaflet";
 import { getApp } from "../olympusapp";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
-import { BLUE_COMMANDER, ERAS, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
-//import { Dropdown } from "../controls/dropdown";
-import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
-//import { createCheckboxOption, getCheckboxOptions } from "../other/utils";
-import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
-import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
-import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
-//import { Popup } from "../popups/popup";
+import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
@@ -39,8 +32,6 @@ export class MissionManager {
   };
   #remainingSetupTime: number = 0;
   #spentSpawnPoint: number = 0;
-  //#commandModeDialog: HTMLElement;
-  //#commandModeErasDropdown: Dropdown;
   #coalitions: { red: string[]; blue: string[] } = { red: [], blue: [] };
 
   constructor() {}
@@ -116,17 +107,6 @@ export class MissionManager {
       /* Set the command mode options */
       this.#setcommandModeOptions(data.mission.commandModeOptions);
       this.#remainingSetupTime = this.getCommandModeOptions().setupTime - this.getDateAndTime().elapsedTime;
-      var commandModePhaseEl = document.querySelector("#command-mode-phase") as HTMLElement;
-      if (commandModePhaseEl) {
-        if (this.#remainingSetupTime > 0) {
-          var remainingTime = `-${new Date(this.#remainingSetupTime * 1000).toISOString().substring(14, 19)}`;
-          commandModePhaseEl.dataset.remainingTime = remainingTime;
-        }
-
-        commandModePhaseEl.classList.toggle("setup-phase", this.#remainingSetupTime > 0 && this.getCommandModeOptions().restrictSpawns);
-        //commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
-        //commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
-      }
     }
   }
 
@@ -227,50 +207,6 @@ export class MissionManager {
     return this.#frameRate;
   }
 
-  showCommandModeDialog() {
-    //const options = this.getCommandModeOptions()
-    //const { restrictSpawns, restrictToCoalition, setupTime } = options;
-    //this.#toggleSpawnRestrictions(restrictSpawns);
-    //
-    ///* Create the checkboxes to select the unit eras */
-    //this.#commandModeErasDropdown.setOptionsElements(
-    //    ERAS.sort((eraA, eraB) => {
-    //        return ( eraA.chronologicalOrder > eraB.chronologicalOrder ) ? 1 : -1;
-    //    }).map((era) => {
-    //        return createCheckboxOption(era.name, `Enable ${era} units spawns`, this.getCommandModeOptions().eras.includes(era.name));
-    //    })
-    //);
-    //
-    //this.#commandModeDialog.classList.remove("hide");
-    //
-    //const restrictSpawnsCheckbox = this.#commandModeDialog.querySelector("#restrict-spawns")?.querySelector("input") as HTMLInputElement;
-    //const restrictToCoalitionCheckbox = this.#commandModeDialog.querySelector("#restrict-to-coalition")?.querySelector("input") as HTMLInputElement;
-    //const blueSpawnPointsInput = this.#commandModeDialog.querySelector("#blue-spawn-points")?.querySelector("input") as HTMLInputElement;
-    //const redSpawnPointsInput = this.#commandModeDialog.querySelector("#red-spawn-points")?.querySelector("input") as HTMLInputElement;
-    //const setupTimeInput = this.#commandModeDialog.querySelector("#setup-time")?.querySelector("input") as HTMLInputElement;
-    //
-    //restrictSpawnsCheckbox.checked = restrictSpawns;
-    //restrictToCoalitionCheckbox.checked = restrictToCoalition;
-    //blueSpawnPointsInput.value = String(options.spawnPoints.blue);
-    //redSpawnPointsInput.value = String(options.spawnPoints.red);
-    //setupTimeInput.value = String(Math.floor(setupTime / 60.0));
-  }
-
-  #applycommandModeOptions() {
-    //this.#commandModeDialog.classList.add("hide");
-    //
-    //const restrictSpawnsCheckbox = this.#commandModeDialog.querySelector("#restrict-spawns")?.querySelector("input") as HTMLInputElement;
-    //const restrictToCoalitionCheckbox = this.#commandModeDialog.querySelector("#restrict-to-coalition")?.querySelector("input") as HTMLInputElement;
-    //const blueSpawnPointsInput = this.#commandModeDialog.querySelector("#blue-spawn-points")?.querySelector("input") as HTMLInputElement;
-    //const redSpawnPointsInput = this.#commandModeDialog.querySelector("#red-spawn-points")?.querySelector("input") as HTMLInputElement;
-    //const setupTimeInput = this.#commandModeDialog.querySelector("#setup-time")?.querySelector("input") as HTMLInputElement;
-    //
-    //var eras: string[] = [];
-    //const enabledEras = getCheckboxOptions(this.#commandModeErasDropdown);
-    //Object.keys(enabledEras).forEach((key: string) => {if (enabledEras[key]) eras.push(key)});
-    //getApp().getServerManager().setCommandModeOptions(restrictSpawnsCheckbox.checked, restrictToCoalitionCheckbox.checked, {blue: parseInt(blueSpawnPointsInput.value), red: parseInt(redSpawnPointsInput.value)}, eras, parseInt(setupTimeInput.value) * 60);
-  }
-
   #setcommandModeOptions(commandModeOptions: CommandModeOptions) {
     /* Refresh all the data if we have exited the NONE state */
     var requestRefresh = false;
@@ -323,11 +259,5 @@ export class MissionManager {
       }
     };
     xhr.send();
-  }
-
-  #toggleSpawnRestrictions(restrictionsEnabled: boolean) {
-    //this.#commandModeDialog.querySelectorAll("input, label, .ol-select").forEach( el => {
-    //    if (!el.closest("#restrict-spawns")) el.toggleAttribute("disabled", !restrictionsEnabled);
-    //});
   }
 }

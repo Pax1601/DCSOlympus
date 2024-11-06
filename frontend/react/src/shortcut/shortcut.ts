@@ -20,10 +20,6 @@ export class ShortcutKeyboard extends Shortcut {
     super(config);
 
     document.addEventListener(config.event, (ev: any) => {
-      if (typeof config.context === "string" && getApp().getCurrentContext() !== config.context) {
-        return;
-      }
-
       if (ev instanceof KeyboardEvent === false || keyEventWasInInput(ev)) {
         return;
       }

@@ -1,17 +1,11 @@
 import { Circle, LatLng, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { UnitDatabase } from "../unit/databases/unitdatabase";
-import { aircraftDatabase } from "../unit/databases/aircraftdatabase";
-import { helicopterDatabase } from "../unit/databases/helicopterdatabase";
-import { groundUnitDatabase } from "../unit/databases/groundunitdatabase";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
-import { navyUnitDatabase } from "../unit/databases/navyunitdatabase";
 import { DateAndTime, UnitBlueprint } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
-import { getApp } from "../olympusapp";
 import { featureCollection } from "turf";
-import { randomUUID } from "crypto";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -61,20 +55,6 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
   else return zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
 }
 
-export function dataPointMap(container: HTMLElement, data: any) {
-  Object.keys(data).forEach((key) => {
-    const val = "" + data[key]; //  Ensure a string
-    container.querySelectorAll(`[data-point="${key}"]`).forEach((el) => {
-      //  We could probably have options here
-      if (el instanceof HTMLInputElement) {
-        el.value = val;
-      } else if (el instanceof HTMLElement) {
-        el.innerText = val;
-      }
-    });
-  });
-}
-
 export function deg2rad(deg: number) {
   var pi = Math.PI;
   return deg * (pi / 180);
@@ -85,31 +65,11 @@ export function rad2deg(rad: number) {
   return rad / (pi / 180);
 }
 
-export function generateUUIDv4() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
 export function keyEventWasInInput(event: KeyboardEvent) {
   const target = event.target;
   return target instanceof HTMLElement && ["INPUT", "TEXTAREA"].includes(target.nodeName);
 }
 
-export function reciprocalHeading(heading: number): number {
-  return heading > 180 ? heading - 180 : heading + 180;
-}
-
-/**
- * Prepend numbers to the start of a string
- *
- * @param num <number> subject number
- * @param places <number> places to pad
- * @param decimal <boolean> whether this is a decimal number or not
- *
- * */
 export const zeroAppend = function (num: number, places: number, decimal: boolean = false, decimalPlaces: number = 2) {
   var string = decimal ? num.toFixed(decimalPlaces) : String(num);
   while (string.length < places) {
@@ -125,43 +85,6 @@ export const zeroPad = function (num: number, places: number) {
   }
   return string;
 };
-
-export function similarity(s1: string, s2: string) {
-  var longer = s1;
-  var shorter = s2;
-  if (s1.length < s2.length) {
-    longer = s2;
-    shorter = s1;
-  }
-  var longerLength = longer.length;
-  if (longerLength == 0) {
-    return 1.0;
-  }
-  return (longerLength - editDistance(longer, shorter)) / longerLength;
-}
-
-export function editDistance(s1: string, s2: string) {
-  s1 = s1.toLowerCase();
-  s2 = s2.toLowerCase();
-
-  var costs = new Array();
-  for (var i = 0; i <= s1.length; i++) {
-    var lastValue = i;
-    for (var j = 0; j <= s2.length; j++) {
-      if (i == 0) costs[j] = j;
-      else {
-        if (j > 0) {
-          var newValue = costs[j - 1];
-          if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
-          costs[j - 1] = lastValue;
-          lastValue = newValue;
-        }
-      }
-    }
-    if (i > 0) costs[s2.length] = lastValue;
-  }
-  return costs[s2.length];
-}
 
 export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | false {
   if (precision < 0 || precision > 6) {
@@ -315,7 +238,7 @@ export function randomUnitBlueprint(
   }
 ) {
   /* Start from all the unit blueprints in the database */
-  var unitBlueprints = Object.values(unitDatabase.getBlueprints());
+  var unitBlueprints = unitDatabase.getBlueprints();
 
   /* If a specific type or role is provided, use only the blueprints of that type or role */
   if (options.type && options.role) {
@@ -361,37 +284,6 @@ export function randomUnitBlueprint(
   return unitBlueprints[index];
 }
 
-export function getMarkerCategoryByName(name: string) {
-  if (aircraftDatabase.getByName(name) != null) return "aircraft";
-  else if (helicopterDatabase.getByName(name) != null) return "helicopter";
-  else if (groundUnitDatabase.getByName(name) != null) {
-    var type = groundUnitDatabase.getByName(name)?.type ?? "";
-    if (/\bAAA|SAM\b/.test(type) || /\bmanpad|stinger\b/i.test(type)) return "groundunit-sam";
-    else return "groundunit-other";
-  } else if (navyUnitDatabase.getByName(name) != null) return "navyunit";
-  else return "aircraft"; // TODO add other unit types
-}
-
-export function getUnitDatabaseByCategory(category: string) {
-  if (category.toLowerCase() == "aircraft") return aircraftDatabase;
-  else if (category.toLowerCase() == "helicopter") return helicopterDatabase;
-  else if (category.toLowerCase().includes("groundunit")) return groundUnitDatabase;
-  else if (category.toLowerCase().includes("navyunit")) return navyUnitDatabase;
-  else return null;
-}
-
-export function getUnitCategoryByBlueprint(blueprint: UnitBlueprint) {
-  for (let database of [
-    getApp()?.getAircraftDatabase(),
-    getApp()?.getHelicopterDatabase(),
-    getApp()?.getGroundUnitDatabase(),
-    getApp()?.getNavyUnitDatabase(),
-  ]) {
-    if (blueprint.name in database.blueprints) return database.getCategory();
-  }
-  return "unknown";
-}
-
 export function enumToState(state: number) {
   if (state < states.length) return states[state];
   else return states[0];
@@ -407,7 +299,7 @@ export function enumToReactionToThreat(reactionToThreat: number) {
   else return reactionsToThreat[0];
 }
 
-export function enumToEmissioNCountermeasure(emissionCountermeasure: number) {
+export function enumToEmissionCountermeasure(emissionCountermeasure: number) {
   if (emissionCountermeasure < emissionsCountermeasures.length) return emissionsCountermeasures[emissionCountermeasure];
   else return emissionsCountermeasures[0];
 }
@@ -440,9 +332,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
   const date = dateAndTime.date;
   const time = dateAndTime.time;
 
-  if (!date) {
-    return new Date();
-  }
+  if (!date) return new Date();
 
   let year = date.Year;
   let month = date.Month - 1;
@@ -457,6 +347,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
 
 export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
   /* Get the ground elevation from the server endpoint */
+  /* TODO */
   const xhr = new XMLHttpRequest();
   xhr.open("GET", `api/elevation/${latlng.lat}/${latlng.lng}`, true);
   xhr.timeout = 500; // ms
@@ -470,49 +361,9 @@ export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
   xhr.send();
 }
 
-export function getWikipediaEntry(search: string, callback: CallableFunction) {
-  /* Get the ground elevation from the server endpoint */
-  const xhr = new XMLHttpRequest();
-  xhr.open(
-    "GET",
-    `https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&generator=search&gsrsearch=intitle:${search}&gsrlimit=1&redirects=1&origin=*`,
-    true
-  );
-  xhr.timeout = 500; // ms
-  xhr.responseType = "json";
-  xhr.onload = () => {
-    var status = xhr?.status;
-    if (status === 200) {
-      callback(xhr.response);
-    }
-  };
-  xhr.send();
-}
-
-export function getFunctionArguments(func) {
-  var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
-  var ARGUMENT_NAMES = /([^\s,]+)/g;
-
-  var fnStr = func.toString().replace(STRIP_COMMENTS, "");
-  var result = fnStr.slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")")).match(ARGUMENT_NAMES);
-  if (result === null) result = [];
-  return result;
-}
-
-export function filterBlueprintsByLabel(blueprints: UnitBlueprint[], filterString: string) {
-  var filteredBlueprints: UnitBlueprint[] = [];
-  if (blueprints) {
-    blueprints.forEach((blueprint) => {
-      if (blueprint.enabled && (filterString === "" || blueprint.label.toLowerCase().includes(filterString.toLowerCase()))) filteredBlueprints.push(blueprint);
-    });
-  }
-  return filteredBlueprints;
-}
-
 export function makeID(length) {
   let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
@@ -558,8 +409,14 @@ export function rand(min, max) {
 }
 
 export function getRandomColor(seed) {
-  var h = (seed * Math.PI * 100) % 360 + 1;
+  var h = ((seed * Math.PI * 100) % 360) + 1;
   var s = 50;
   var l = 50;
-  return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+  return "hsl(" + h + "," + s + "%," + l + "%)";
+}
+
+export function wait(time) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
 }

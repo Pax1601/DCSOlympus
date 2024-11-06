@@ -1,8 +1,8 @@
-import { RadioSink } from "../audio/radiosink";
-import { DEFAULT_CONTEXT } from "../constants/constants";
 import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
 import { ShortcutKeyboard, ShortcutMouse } from "./shortcut";
+
+const DEFAULT_CONTEXT = "Default context"; // TODO remove context
 
 export class ShortcutManager {
   #items: { [key: string]: any } = {};
@@ -29,7 +29,6 @@ export class ShortcutManager {
         getApp().getServerManager().setPaused(!getApp().getServerManager().getPaused());
       },
       code: "Space",
-      context: DEFAULT_CONTEXT,
       ctrlKey: false,
     })
       .addKeyboardShortcut("deselectAll", {
@@ -37,7 +36,6 @@ export class ShortcutManager {
           getApp().getUnitsManager().deselectAllUnits();
         },
         code: "Escape",
-        context: DEFAULT_CONTEXT,
       })
       .addKeyboardShortcut("toggleUnitLabels", {
         altKey: false,
@@ -45,7 +43,6 @@ export class ShortcutManager {
           getApp().getMap().setOption("showUnitLabels", !getApp().getMap().getOptions().showUnitLabels);
         },
         code: "KeyL",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -55,7 +52,6 @@ export class ShortcutManager {
           getApp().getMap().setOption("showUnitsAcquisitionRings", !getApp().getMap().getOptions().showUnitsAcquisitionRings);
         },
         code: "KeyE",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -65,7 +61,6 @@ export class ShortcutManager {
           getApp().getMap().setOption("showUnitsEngagementRings", !getApp().getMap().getOptions().showUnitsEngagementRings);
         },
         code: "KeyQ",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -75,7 +70,6 @@ export class ShortcutManager {
           getApp().getMap().setOption("hideUnitsShortRangeRings", !getApp().getMap().getOptions().hideUnitsShortRangeRings);
         },
         code: "KeyR",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -85,7 +79,6 @@ export class ShortcutManager {
           getApp().getMap().setOption("showUnitTargets", !getApp().getMap().getOptions().showUnitTargets);
         },
         code: "KeyF",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -95,7 +88,6 @@ export class ShortcutManager {
           getApp().getMap().setOption("hideGroupMembers", !getApp().getMap().getOptions().hideGroupMembers);
         },
         code: "KeyG",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -105,7 +97,6 @@ export class ShortcutManager {
           //getApp().getMap().increaseCameraZoom();
         },
         code: "Equal",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       })
@@ -115,7 +106,6 @@ export class ShortcutManager {
           //getApp().getMap().decreaseCameraZoom();
         },
         code: "Minus",
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
       });
@@ -125,26 +115,18 @@ export class ShortcutManager {
       this.addKeyboardShortcut(`PTT${idx}Active`, {
         altKey: false,
         callback: () => {
-          getApp()
-            .getAudioManager()
-            .getSinks()
-            [idx]?.setPtt(true);
+          getApp().getAudioManager().getSinks()[idx]?.setPtt(true);
         },
         code: key,
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
         event: "keydown",
       }).addKeyboardShortcut(`PTT${idx}Active`, {
         altKey: false,
         callback: () => {
-          getApp()
-            .getAudioManager()
-            .getSinks()
-            [idx]?.setPtt(false);
+          getApp().getAudioManager().getSinks()[idx]?.setPtt(false);
         },
         code: key,
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         shiftKey: false,
         event: "keyup",
@@ -159,7 +141,6 @@ export class ShortcutManager {
           //getApp().getMap().handleMapPanning(ev);
         },
         code: code,
-        context: DEFAULT_CONTEXT,
         ctrlKey: false,
         event: "keydown",
       });
@@ -169,7 +150,6 @@ export class ShortcutManager {
           //getApp().getMap().handleMapPanning(ev);
         },
         code: code,
-        context: DEFAULT_CONTEXT,
       });
     });
 

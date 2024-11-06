@@ -6,11 +6,13 @@ import { AppStateChangedEvent } from "../../events";
 
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
-    null as {
-      actions: (string | number | IconDefinition)[];
-      target: IconDefinition;
-      text: string;
-    }[] | null
+    null as
+      | {
+          actions: (string | number | IconDefinition)[];
+          target: IconDefinition;
+          text: string;
+        }[]
+      | null
   );
 
   useEffect(() => {
@@ -20,9 +22,7 @@ export function ControlsPanel(props: {}) {
   });
 
   useEffect(() => {
-    AppStateChangedEvent.on(() => {
-      setControls(getApp().getMap().getCurrentControls());
-    });
+    AppStateChangedEvent.on(() => setControls(getApp().getMap().getCurrentControls()));
   }, []);
 
   return (
@@ -53,9 +53,14 @@ export function ControlsPanel(props: {}) {
                 return (
                   <div key={idx} className="flex gap-1">
                     <div>
-                      {typeof action === "string" || typeof action === "number" ? action : <FontAwesomeIcon icon={action} className={`
-                        my-auto ml-auto
-                      `} />}
+                      {typeof action === "string" || typeof action === "number" ? (
+                        action
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={action}
+                          className={`my-auto ml-auto`}
+                        />
+                      )}
                     </div>
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "string" && <div>+</div>}
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "number" && <div>x</div>}

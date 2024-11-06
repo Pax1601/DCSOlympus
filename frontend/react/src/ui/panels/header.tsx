@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
 import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { StateConsumer } from "../../statecontext";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { getApp, IP, connectedToServer } from "../../olympusapp";
@@ -18,11 +17,28 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../../events";
+import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
+import { OlympusConfig } from "../../interfaces";
 
 export function Header() {
+  const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
+  const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
+  const [mapSource, setMapSource] = useState("");
+  const [mapSources, setMapSources] = useState([] as string[]);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
+
+  useEffect(() => {
+    HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
+    MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
+    MapSourceChangedEvent.on((source) => setMapSource(source));
+    ConfigLoadedEvent.on((config: OlympusConfig) => {
+      var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
+      setMapSources(sources);
+    });
+  }, []);
 
   /* Initialize the "scroll" position of the element */
   var scrollRef = useRef(null);
@@ -42,8 +58,6 @@ export function Header() {
   }
 
   return (
-    <StateConsumer>
-      {(appState) => (
         <nav
           className={`
             z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3
@@ -107,14 +121,12 @@ export function Header() {
               </div>
             </div>
             <div
-              className={`
-                    flex h-fit flex-row items-center justify-start gap-1
-                  `}
+              className={`flex h-fit flex-row items-center justify-start gap-1`}
             >
               <OlLockStateButton
-                checked={!appState.mapOptions.protectDCSUnits}
+                checked={!mapOptions.protectDCSUnits}
                 onClick={() => {
-                  getApp().getMap().setOption("protectDCSUnits", !appState.mapOptions.protectDCSUnits);
+                  getApp().getMap().setOption("protectDCSUnits", !mapOptions.protectDCSUnits);
                 }}
                 tooltip="Lock/unlock protected units (from scripted mission)"
               />
@@ -130,9 +142,7 @@ export function Header() {
             </div>
             <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
             <div
-              className={`
-                    flex h-fit flex-row items-center justify-start gap-1
-                  `}
+              className={`flex h-fit flex-row items-center justify-start gap-1`}
             >
               {Object.entries({
                 human: olButtonsVisibilityHuman,
@@ -143,9 +153,9 @@ export function Header() {
                   <OlRoundStateButton
                     key={entry[0]}
                     onClick={() => {
-                      getApp().getMap().setHiddenType(entry[0], !appState.mapHiddenTypes[entry[0]]);
+                      getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
                     }}
-                    checked={!appState.mapHiddenTypes[entry[0]]}
+                    checked={!mapHiddenTypes[entry[0]]}
                     icon={entry[1]}
                     tooltip={"Hide/show " + entry[0] + " units"}
                   />
@@ -154,27 +164,25 @@ export function Header() {
             </div>
             <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
             <div
-              className={`
-                    flex h-fit flex-row items-center justify-start gap-1
-                  `}
+              className={`flex h-fit flex-row items-center justify-start gap-1`}
             >
               <OlRoundStateButton
-                onClick={() => getApp().getMap().setHiddenType("blue", !appState.mapHiddenTypes["blue"])}
-                checked={!appState.mapHiddenTypes["blue"]}
+                onClick={() => getApp().getMap().setHiddenType("blue", !mapHiddenTypes["blue"])}
+                checked={!mapHiddenTypes["blue"]}
                 icon={faFlag}
                 className={"!text-blue-500"}
                 tooltip={"Hide/show blue units"}
               />
               <OlRoundStateButton
-                onClick={() => getApp().getMap().setHiddenType("red", !appState.mapHiddenTypes["red"])}
-                checked={!appState.mapHiddenTypes["red"]}
+                onClick={() => getApp().getMap().setHiddenType("red", !mapHiddenTypes["red"])}
+                checked={!mapHiddenTypes["red"]}
                 icon={faFlag}
                 className={"!text-red-500"}
                 tooltip={"Hide/show red units"}
               />
               <OlRoundStateButton
-                onClick={() => getApp().getMap().setHiddenType("neutral", !appState.mapHiddenTypes["neutral"])}
-                checked={!appState.mapHiddenTypes["neutral"]}
+                onClick={() => getApp().getMap().setHiddenType("neutral", !mapHiddenTypes["neutral"])}
+                checked={!mapHiddenTypes["neutral"]}
                 icon={faFlag}
                 className={"!text-gray-500"}
                 tooltip={"Hide/show neutral units"}
@@ -182,9 +190,7 @@ export function Header() {
             </div>
             <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
             <div
-              className={`
-                    flex h-fit flex-row items-center justify-start gap-1
-                  `}
+              className={`flex h-fit flex-row items-center justify-start gap-1`}
             >
               {Object.entries({
                 aircraft: olButtonsVisibilityAircraft,
@@ -199,9 +205,9 @@ export function Header() {
                   <OlRoundStateButton
                     key={entry[0]}
                     onClick={() => {
-                      getApp().getMap().setHiddenType(entry[0], !appState.mapHiddenTypes[entry[0]]);
+                      getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
                     }}
-                    checked={!appState.mapHiddenTypes[entry[0]]}
+                    checked={!mapHiddenTypes[entry[0]]}
                     icon={entry[1]}
                     tooltip={"Hide/show " + entry[0] + " units"}
                   />
@@ -211,8 +217,8 @@ export function Header() {
 
             <OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
             <OlStateButton checked={false} icon={faCamera} onClick={() => {}} tooltip="Activate/deactivate camera plugin" />
-            <OlDropdown label={appState.activeMapSource} className="w-60">
-              {appState.mapSources.map((source) => {
+            <OlDropdown label={mapSource} className="w-60">
+              {mapSources.map((source) => {
                 return (
                   <OlDropdownItem key={source} onClick={() => getApp().getMap().setLayerName(source)}>
                     <div className="truncate">{source}</div>
@@ -230,7 +236,5 @@ export function Header() {
             />
           )}
         </nav>
-      )}
-    </StateConsumer>
   );
 }

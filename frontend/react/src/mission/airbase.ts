@@ -6,6 +6,7 @@ import { getApp } from "../olympusapp";
 import { OlympusState } from "../constants/constants";
 import { AirbaseSelectedEvent } from "../events";
 
+// TODO add ability to select the marker
 export class Airbase extends CustomMarker {
   #name: string = "";
   #chartData: AirbaseChartData = {
@@ -54,7 +55,7 @@ export class Airbase extends CustomMarker {
 
   setCoalition(coalition: string) {
     this.#coalition = coalition;
-    (<HTMLElement>this.getElement()?.querySelector(".airbase-icon")).dataset.coalition = this.#coalition;
+    (this.getElement()?.querySelector(".airbase-icon") as HTMLElement).dataset.coalition = this.#coalition;
   }
 
   getChartData() {

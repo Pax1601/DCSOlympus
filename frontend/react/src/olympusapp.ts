@@ -20,14 +20,9 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
-import { DEFAULT_CONTEXT, NO_SUBSTATE, OlympusEvent, OlympusState, OlympusSubState } from "./constants/constants";
-import { aircraftDatabase } from "./unit/databases/aircraftdatabase";
-import { helicopterDatabase } from "./unit/databases/helicopterdatabase";
-import { groundUnitDatabase } from "./unit/databases/groundunitdatabase";
-import { navyUnitDatabase } from "./unit/databases/navyunitdatabase";
-import { Coalition, Context } from "./types/types";
-import { Unit } from "./unit/unit";
+import { NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
 import { AppStateChangedEvent, ConfigLoadedEvent, SelectedUnitsChangedEvent } from "./events";
+import { OlympusConfig } from "./interfaces";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -36,14 +31,9 @@ export var connectedToServer = true; // TODO Temporary
 export class OlympusApp {
   /* Global data */
   #latestVersion: string | undefined = undefined;
-  #config: any = {};
+  #config: OlympusConfig | null = null;
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
-
-  #events = {
-    [OlympusEvent.STATE_CHANGED]: [] as ((state: OlympusState, subState: OlympusSubState) => void)[],
-    [OlympusEvent.UNITS_SELECTED]: [] as ((units: Unit[]) => void)[],
-  };
 
   /* Main leaflet map, extended by custom methods */
   #map: Map | null = null;
@@ -57,18 +47,11 @@ export class OlympusApp {
   #audioManager: AudioManager | null = null;
   //#pluginsManager: // TODO
 
-  /* Current context */
-  #context: Context = DEFAULT_CONTEXT;
-
   constructor() {
     SelectedUnitsChangedEvent.on((selectedUnits) => {
       if (selectedUnits.length > 0) this.setState(OlympusState.UNIT_CONTROL);
       else this.getState() === OlympusState.UNIT_CONTROL && this.setState(OlympusState.IDLE)
     });
-  }
-
-  getCurrentContext() {
-    return this.#context;
   }
 
   getMap() {
@@ -104,38 +87,6 @@ export class OlympusApp {
         return null //  this.#pluginsManager as PluginsManager;
     }
     */
-
-  /**
-   *
-   * @returns The aircraft database
-   */
-  getAircraftDatabase() {
-    return aircraftDatabase;
-  }
-
-  /**
-   *
-   * @returns The helicopter database
-   */
-  getHelicopterDatabase() {
-    return helicopterDatabase;
-  }
-
-  /**
-   *
-   * @returns The ground unit database
-   */
-  getGroundUnitDatabase() {
-    return groundUnitDatabase;
-  }
-
-  /**
-   *
-   * @returns The navy unit database
-   */
-  getNavyUnitDatabase() {
-    return navyUnitDatabase;
-  }
 
   start() {
     /* Initialize base functionalitites */
@@ -183,7 +134,7 @@ export class OlympusApp {
       })
       .then((res) => {
         this.#config = res;
-        ConfigLoadedEvent.dispatch(); // TODO actually dispatch the config
+        ConfigLoadedEvent.dispatch(this.#config as OlympusConfig);
         this.setState(OlympusState.LOGIN);
       });
   }

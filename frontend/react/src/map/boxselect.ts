@@ -14,7 +14,7 @@ export var BoxSelect = Handler.extend({
     this._forceBoxSelect = false;
     map.on("unload", this._destroy, this);
 
-    document.addEventListener("mapForceBoxSelect", (e) => {
+    document.addEventListener("forceboxselect", (e) => {
       this._forceBoxSelect = true;
       const originalEvent = (e as CustomEvent).detail;
       this._onMouseDown(originalEvent);
@@ -23,12 +23,12 @@ export var BoxSelect = Handler.extend({
 
   addHooks: function () {
     DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.on(this._container, "mapForceBoxSelect", this._onMouseDown, this);
+    DomEvent.on(this._container, "forceboxselect", this._onMouseDown, this);
   },
 
   removeHooks: function () {
     DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.off(this._container, "mapForceBoxSelect", this._onMouseDown, this);
+    DomEvent.off(this._container, "forceboxselect", this._onMouseDown, this);
   },
 
   moved: function () {

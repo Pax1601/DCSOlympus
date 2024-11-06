@@ -8,7 +8,7 @@ import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
 import { getApp } from "../../olympusapp";
-import { ftToM, getUnitCategoryByBlueprint } from "../../other/utils";
+import { ftToM } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
 import { OlympusState, SpawnSubState } from "../../constants/constants";
@@ -39,7 +39,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
         getApp()
           ?.getMap()
           ?.setSpawnRequestTable({
-            category: getUnitCategoryByBlueprint(props.blueprint),
+            category: props.blueprint.category,
             unit: {
               unitType: props.blueprint.name,
               location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
@@ -58,13 +58,13 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
         if (getApp().getState() === OlympusState.SPAWN) getApp().setState(OlympusState.IDLE);
       }
     }
-  });
+  }, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition]);
 
   function spawnAtAirbase() {
     getApp()
       .getUnitsManager()
       .spawnUnits(
-        getUnitCategoryByBlueprint(props.blueprint),
+        props.blueprint.category,
         [
           {
             unitType: props.blueprint.name,

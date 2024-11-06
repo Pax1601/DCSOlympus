@@ -7,7 +7,7 @@ import { Coalition } from "../../types/types";
 import { polyCenter } from "../../other/utils";
 import { CoalitionAreaSelectedEvent } from "../../events";
 
-let totalAreas = 0;
+let totalPolygons = 0;
 
 export class CoalitionPolygon extends Polygon {
   #coalition: Coalition = "blue";
@@ -22,7 +22,7 @@ export class CoalitionPolygon extends Polygon {
   constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolylineOptions) {
     if (options === undefined) options = {};
 
-    totalAreas++;
+    totalPolygons++;
 
     options.bubblingMouseEvents = false;
     options.interactive = false;
@@ -32,7 +32,7 @@ export class CoalitionPolygon extends Polygon {
     super(latlngs, options);
     this.#setColors();
 
-    this.#labelText = `Polygon ${totalAreas}`;
+    this.#labelText = `Polygon ${totalPolygons}`;
 
     if ([BLUE_COMMANDER, RED_COMMANDER].includes(getApp().getMissionManager().getCommandModeOptions().commandMode))
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());

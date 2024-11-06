@@ -1,6 +1,7 @@
-import { DivIcon, LatLng, Map } from "leaflet";
+import { DivIcon, Map } from "leaflet";
 import { Airbase } from "./airbase";
 
+// TODO add more carrier types, currently works only for the Nimitz class
 export class Carrier extends Airbase {
   createIcon() {
     var icon = new DivIcon({
