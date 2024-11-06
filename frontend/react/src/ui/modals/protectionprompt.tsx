@@ -5,7 +5,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Unit } from "../../unit/unit";
 import { FaLock } from "react-icons/fa6";
 
-export function ProtectionPrompt(props: {onContinue: (units: Unit[]) => void, onBack: () => void, units: Unit[] }) {
+export function ProtectionPrompt(props: {onContinue: () => void, onBack: () => void }) {
   return (
     <Modal
       className={`
@@ -56,7 +56,7 @@ export function ProtectionPrompt(props: {onContinue: (units: Unit[]) => void, on
         <div className="flex">
           <button
             type="button"
-            onClick={() => {props.onContinue(props.units);}}
+            onClick={() => {props.onContinue()}}
             className={`
               mb-2 me-2 ml-auto flex content-center items-center gap-2
               rounded-sm bg-blue-700 px-5 py-2.5 text-sm font-medium text-white

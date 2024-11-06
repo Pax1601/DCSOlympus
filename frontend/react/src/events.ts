@@ -48,8 +48,8 @@ export class AppStateChangedEvent {
   static dispatch(state: OlympusState, subState: OlympusSubState) {
     const detail = { state, subState };
     document.dispatchEvent(new CustomEvent(this.name, { detail }));
-    console.log(`Event ${this.name} dispatched with detail:`);
-    console.log(detail);
+    console.log(`Event ${this.name} dispatched`);
+    console.log(`State: ${state} Substate: ${subState}`);
   }
 }
 

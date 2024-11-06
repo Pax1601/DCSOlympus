@@ -40,6 +40,7 @@ import {
   CONTEXT_ACTION_COLORS,
   OlympusState,
   JTACSubState,
+  UnitControlSubState,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -877,7 +878,7 @@ export abstract class Unit extends CustomMarker {
       faExplosion,
       null,
       (units: Unit[], _1, _2) => {
-        document.dispatchEvent(new CustomEvent("showUnitExplosionMenu", { detail: { units: units } }));
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_EXPLOSION_MENU)
       },
       {
         executeImmediately: true,
@@ -1401,7 +1402,7 @@ export abstract class Unit extends CustomMarker {
         this.setSelected(!this.getSelected());
       }
     } else if (getApp().getState() === OlympusState.JTAC && getApp().getSubState() === JTACSubState.SELECT_TARGET) {
-      document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { unit: this } }));
+      // TODO document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { unit: this } }));
       getApp().setState(OlympusState.IDLE);
     }
   }
@@ -1410,7 +1411,7 @@ export abstract class Unit extends CustomMarker {
     console.log(`Long press on ${this.getUnitName()}`);
 
     if (e.originalEvent.button === 2) {
-      document.dispatchEvent(new CustomEvent("showUnitContextMenu", { detail: e }));
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU)
     }
   }
 
