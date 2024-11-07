@@ -45,6 +45,7 @@ import {
   HiddenTypesChangedEvent,
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
+  UnitUpdatedEvent,
 } from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
 
@@ -72,7 +73,6 @@ export class Map extends L.Map {
   #selecting: boolean = false;
 
   /* Camera keyboard panning control */
-  // TODO add back
   defaultPanDelta: number = 100;
   #panInterval: number | null = null;
   #panLeft: boolean = false;
@@ -199,10 +199,10 @@ export class Map extends L.Map {
       });
     });
 
-    //document.addEventListener("unitUpdated", (ev: CustomEvent) => {
-    //    if (this.#centerUnit != null && ev.detail == this.#centerUnit)
-    //        this.#panToUnit(this.#centerUnit);
-    //});
+    UnitUpdatedEvent.on((unit) => {
+      if (this.#centeredUnit != null && unit == this.#centeredUnit)
+        this.#panToUnit(this.#centeredUnit);
+    })
 
     MapOptionsChangedEvent.on((options) => {
       this.getContainer().toggleAttribute("data-hide-labels", !options.showUnitLabels);
@@ -610,6 +610,7 @@ export class Map extends L.Map {
     if (unit !== null) {
       this.options.scrollWheelZoom = "center";
       this.#centeredUnit = unit;
+      this.#panToUnit(unit);
     } else {
       this.options.scrollWheelZoom = undefined;
       this.#centeredUnit = null;

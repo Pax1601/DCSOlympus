@@ -26,7 +26,6 @@ import { OlympusConfig } from "./interfaces";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
-export var connectedToServer = true; // TODO Temporary
 
 export class OlympusApp {
   /* Global data */

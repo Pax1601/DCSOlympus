@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { OlympusConfig, ServerStatus } from "./interfaces";
+import { CommandModeOptions, OlympusConfig, ServerStatus } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -220,23 +220,20 @@ export class SelectedUnitsChangedEvent {
 
 /************** Command mode events ***************/
 export class CommandModeOptionsChangedEvent {
-  /* TODO: add command mode options */
-  static on(callback: () => void) {
+  static on(callback: (options: CommandModeOptions) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback();
+      callback(ev.detail);
     });
   }
 
-  static dispatch() {
-    document.dispatchEvent(new CustomEvent(this.name));
+  static dispatch(options: CommandModeOptions) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: options}));
     console.log(`Event ${this.name} dispatched`);
   }
 }
 
 /************** Audio backend events ***************/
-/* TODO: split into two events for single source changed */
 export class AudioSourcesChangedEvent {
-  /* TODO add audio sources */
   static on(callback: (audioSources: AudioSource[]) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail);
@@ -250,7 +247,6 @@ export class AudioSourcesChangedEvent {
   }
 }
 
-/* TODO: split into two events for single sink changed */
 export class AudioSinksChangedEvent {
   static on(callback: (audioSinks: AudioSink[]) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
@@ -266,7 +262,6 @@ export class AudioSinksChangedEvent {
 }
 
 export class SRSClientsChangedEvent {
-  /* TODO add clients */
   static on(callback: () => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback();

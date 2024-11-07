@@ -4,7 +4,7 @@ import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars, faVolumeHigh } fro
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
-import { getApp, IP, connectedToServer } from "../../olympusapp";
+import { getApp, IP } from "../../olympusapp";
 import {
   olButtonsVisibilityAirbase,
   olButtonsVisibilityAircraft,
@@ -108,15 +108,6 @@ export function Header() {
                   `}
                 >
                   {IP}
-                  <FontAwesomeIcon
-                    icon={connectedToServer ? faLink : faUnlink}
-                    data-connected={connectedToServer}
-                    className={`
-                      py-auto text-green-400
-                      dark:text-red-500
-                      data-[connected='true']:dark:text-green-400
-                    `}
-                  />
                 </div>
               </div>
             </div>

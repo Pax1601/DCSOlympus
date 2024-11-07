@@ -11,15 +11,15 @@ import { getApp } from "../../olympusapp";
 import { ftToM } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
-import { OlympusState, SpawnSubState } from "../../constants/constants";
+import { altitudeIncrements, groupUnitCount, maxAltitudeValues, minAltitudeValues, OlympusState, SpawnSubState } from "../../constants/constants";
 
 export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation: boolean; airbase?: Airbase | null; coalition?: Coalition }) {
   /* Compute the min and max values depending on the unit type */
   const minNumber = 1;
-  const maxNumber = 4;
-  const minAltitude = 0;
-  const maxAltitude = 30000;
-  const altitudeStep = 500;
+  const maxNumber = groupUnitCount[props.blueprint.category];
+  const minAltitude = minAltitudeValues[props.blueprint.category];
+  const maxAltitude = maxAltitudeValues[props.blueprint.category];
+  const altitudeStep = altitudeIncrements[props.blueprint.category];
 
   /* State initialization */
   const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
@@ -53,7 +53,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
             },
             coalition: spawnCoalition,
           });
-          getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT)
+        getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT);
       } else {
         if (getApp().getState() === OlympusState.SPAWN) getApp().setState(OlympusState.IDLE);
       }
@@ -141,98 +141,102 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
             }}
           />
         </div>
-        <div>
-          <div
-            className={`
-              flex flex-row content-center items-center justify-between
-            `}
-          >
-            <div className="flex flex-col">
-              <span
+        {["aircraft", "helicopter"].includes(props.blueprint.category) && (
+          <>
+            <div>
+              <div
                 className={`
-                  font-normal
-                  dark:text-white
+                  flex flex-row content-center items-center justify-between
                 `}
               >
-                Altitude
-              </span>
-              <span
-                className={`
-                  font-bold
-                  dark:text-blue-500
-                `}
-              >{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>
-            </div>
-            <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
-          </div>
-          <OlRangeSlider
-            onChange={(ev) => setSpawnAltitude(Number(ev.target.value))}
-            value={spawnAltitude}
-            min={minAltitude}
-            max={maxAltitude}
-            step={altitudeStep}
-          />
-        </div>
-        <div>
-          <div className="flex flex-row content-center justify-between">
-            <span
-              className={`
-                h-8 font-normal
-                dark:text-white
-              `}
-            >
-              Role
-            </span>
-          </div>
-          <OlDropdown label={spawnRole} className="w-full">
-            {roles.map((role) => {
-              return (
-                <OlDropdownItem
-                  onClick={() => {
-                    setSpawnRole(role);
-                    setSpawnLoadout("");
-                  }}
-                  className={`w-full`}
-                >
-                  {role}
-                </OlDropdownItem>
-              );
-            })}
-          </OlDropdown>
-        </div>
-        <div>
-          <div className="flex flex-row content-center justify-between">
-            <span
-              className={`
-                h-8 font-normal
-                dark:text-white
-              `}
-            >
-              Weapons
-            </span>
-          </div>
-          <OlDropdown label={spawnLoadoutName} className={`w-full w-max-full`}>
-            {loadouts.map((loadout) => {
-              return (
-                <OlDropdownItem
-                  onClick={() => {
-                    setSpawnLoadout(loadout.name);
-                  }}
-                  className={`w-full`}
-                >
+                <div className="flex flex-col">
                   <span
                     className={`
-                      w-full overflow-hidden text-ellipsis text-nowrap text-left
-                      w-max-full
+                      font-normal
+                      dark:text-white
                     `}
                   >
-                    {loadout.name}
+                    Altitude
                   </span>
-                </OlDropdownItem>
-              );
-            })}
-          </OlDropdown>
-        </div>
+                  <span
+                    className={`
+                      font-bold
+                      dark:text-blue-500
+                    `}
+                  >{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>
+                </div>
+                <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
+              </div>
+              <OlRangeSlider
+                onChange={(ev) => setSpawnAltitude(Number(ev.target.value))}
+                value={spawnAltitude}
+                min={minAltitude}
+                max={maxAltitude}
+                step={altitudeStep}
+              />
+            </div>
+            <div>
+              <div className="flex flex-row content-center justify-between">
+                <span
+                  className={`
+                    h-8 font-normal
+                    dark:text-white
+                  `}
+                >
+                  Role
+                </span>
+              </div>
+              <OlDropdown label={spawnRole} className="w-full">
+                {roles.map((role) => {
+                  return (
+                    <OlDropdownItem
+                      onClick={() => {
+                        setSpawnRole(role);
+                        setSpawnLoadout("");
+                      }}
+                      className={`w-full`}
+                    >
+                      {role}
+                    </OlDropdownItem>
+                  );
+                })}
+              </OlDropdown>
+            </div>
+            <div>
+              <div className="flex flex-row content-center justify-between">
+                <span
+                  className={`
+                    h-8 font-normal
+                    dark:text-white
+                  `}
+                >
+                  Weapons
+                </span>
+              </div>
+              <OlDropdown label={spawnLoadoutName} className={`w-full w-max-full`}>
+                {loadouts.map((loadout) => {
+                  return (
+                    <OlDropdownItem
+                      onClick={() => {
+                        setSpawnLoadout(loadout.name);
+                      }}
+                      className={`w-full`}
+                    >
+                      <span
+                        className={`
+                          w-full overflow-hidden text-ellipsis text-nowrap
+                          text-left w-max-full
+                        `}
+                      >
+                        {loadout.name}
+                      </span>
+                    </OlDropdownItem>
+                  );
+                })}
+              </OlDropdown>
+            </div>
+          </>
+        )}
       </div>
       {spawnLoadout && spawnLoadout.items.length > 0 && (
         <div

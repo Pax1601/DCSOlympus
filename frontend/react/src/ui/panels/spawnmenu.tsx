@@ -42,24 +42,33 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
   const [types, setTypes] = useState({ groundunit: [] as string[], navyunit: [] as string[] });
 
   useEffect(() => {
-    if (selectedRole) 
-      setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
-    else if (selectedType)
-      setBlueprints(getApp()?.getUnitsManager().getDatabase().getByType(selectedType));
-    else
-      setBlueprints(getApp()?.getUnitsManager().getDatabase().getBlueprints())
+    if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
+    else if (selectedType) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByType(selectedType));
+    else setBlueprints(getApp()?.getUnitsManager().getDatabase().getBlueprints());
   }, [selectedRole, selectedType, openAccordion]);
 
   useEffect(() => {
     UnitDatabaseLoadedEvent.on(() => {
       setRoles({
-        aircraft: getApp()?.getUnitsManager().getDatabase().getRoles((unit) => unit.category === "aircraft"),
-        helicopter: getApp()?.getUnitsManager().getDatabase().getRoles((unit) => unit.category === "helicopter"),
+        aircraft: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getRoles((unit) => unit.category === "aircraft"),
+        helicopter: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getRoles((unit) => unit.category === "helicopter"),
       });
 
       setTypes({
-        groundunit: getApp()?.getUnitsManager().getDatabase().getTypes((unit) => unit.category === "groundunit"),
-        navyunit: getApp()?.getUnitsManager().getDatabase().getTypes((unit) => unit.category === "navyunit")
+        groundunit: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getTypes((unit) => unit.category === "groundunit"),
+        navyunit: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getTypes((unit) => unit.category === "navyunit"),
       });
     });
   }, []);
@@ -193,7 +202,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               </div>
             </OlAccordion>
             <OlAccordion
-              title={`Surfact to Air Missiles (SAM sites)`}
+              title={`Surface to Air Missiles (SAM sites)`}
               open={openAccordion == CategoryAccordion.SAM}
               onClick={() => {
                 setOpenAccordion(openAccordion === CategoryAccordion.SAM ? CategoryAccordion.NONE : CategoryAccordion.SAM);
@@ -208,7 +217,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                 `}
               >
                 {filteredBlueprints
-                  .filter((blueprint) => blueprint.category === "groundunit")
+                  .filter((blueprint) => blueprint.category === "groundunit" && blueprint.type === "SAM Site")
                   .map((entry) => {
                     return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityGroundunitSam} blueprint={entry} onClick={() => setBlueprint(entry)} />;
                   })}
@@ -230,7 +239,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                 `}
               >
                 {filteredBlueprints
-                  .filter((blueprint) => blueprint.category === "groundunit")
+                  .filter((blueprint) => blueprint.canAAA)
                   .map((entry) => {
                     return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityGroundunitSam} blueprint={entry} onClick={() => setBlueprint(entry)} />;
                   })}
@@ -248,9 +257,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               <div className="mb-2 flex flex-wrap gap-1">
                 {types.groundunit
                   .sort()
-                  .filter((type) => {
-                    return type !== "AAA" && type !== "SAM Site";
-                  })
+                  .filter((type) => type !== "SAM Site")
                   .map((type) => {
                     return (
                       <div
@@ -278,7 +285,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                 `}
               >
                 {filteredBlueprints
-                  .filter((blueprint) => blueprint.category === "groundunit")
+                  .filter((blueprint) => blueprint.category === "groundunit" && blueprint.type !== "SAM Site")
                   .map((entry) => {
                     return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityGroundunit} blueprint={entry} onClick={() => setBlueprint(entry)} />;
                   })}

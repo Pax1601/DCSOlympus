@@ -599,8 +599,7 @@ export abstract class Unit extends CustomMarker {
       const blueprint = getApp().getUnitsManager().getDatabase().getByName(this.#name);
       this.#blueprint = blueprint ?? null;
       /* Refresh the marker */
-      this.remove();
-      this.addTo(getApp().getMap());
+      this.#redrawMarker();
     }
 
     /* Update the blueprint to use when the unit is grouped */

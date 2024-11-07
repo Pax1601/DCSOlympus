@@ -4,7 +4,6 @@
     "coalition": "blue",
     "era": "Late Cold War",
     "category": "aircraft",
-    "category": "aircraft",
     "label": "A-10C Warthog 2",
     "shortLabel": "A10",
     "loadouts": [
@@ -2427,7 +2426,6 @@
     "name": "A-20G",
     "coalition": "blue",
     "category": "aircraft",
-    "category": "aircraft",
     "label": "A-20G Havoc",
     "era": "WW2",
     "shortLabel": "A20",
@@ -2486,7 +2484,6 @@
   "A-50": {
     "name": "A-50",
     "coalition": "red",
-    "category": "aircraft",
     "category": "aircraft",
     "label": "A-50 Mainstay",
     "era": "Late Cold War",

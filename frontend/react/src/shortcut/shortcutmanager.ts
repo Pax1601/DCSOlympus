@@ -2,8 +2,6 @@ import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
 import { ShortcutKeyboard, ShortcutMouse } from "./shortcut";
 
-const DEFAULT_CONTEXT = "Default context"; // TODO remove context
-
 export class ShortcutManager {
   #items: { [key: string]: any } = {};
   #keysBeingHeld: string[] = [];
@@ -138,7 +136,7 @@ export class ShortcutManager {
       this.addKeyboardShortcut(`pan${code}keydown`, {
         altKey: false,
         callback: (ev: KeyboardEvent) => {
-          //getApp().getMap().handleMapPanning(ev);
+          getApp().getMap().handleMapPanning(ev);
         },
         code: code,
         ctrlKey: false,
@@ -147,7 +145,7 @@ export class ShortcutManager {
 
       this.addKeyboardShortcut(`pan${code}keyup`, {
         callback: (ev: KeyboardEvent) => {
-          //getApp().getMap().handleMapPanning(ev);
+          getApp().getMap().handleMapPanning(ev);
         },
         code: code,
       });

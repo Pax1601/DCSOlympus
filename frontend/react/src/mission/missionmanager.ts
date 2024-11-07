@@ -230,7 +230,7 @@ export class MissionManager {
     this.refreshSpawnPoints();
 
     if (commandModeOptionsChanged) {
-      CommandModeOptionsChangedEvent.dispatch();
+      CommandModeOptionsChangedEvent.dispatch(this.#commandModeOptions);
     }
 
     document

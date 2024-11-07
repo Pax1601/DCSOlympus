@@ -102,35 +102,41 @@ export const shotsIntensityDescriptions: string[] = [
 ];
 
 export const minSpeedValues: { [key: string]: number } = {
-  Aircraft: 100,
-  Helicopter: 0,
-  NavyUnit: 0,
-  GroundUnit: 0,
+  aircraft: 100,
+  helicopter: 0,
+  navyunit: 0,
+  groundunit: 0,
 };
 export const maxSpeedValues: { [key: string]: number } = {
-  Aircraft: 800,
-  Helicopter: 300,
-  NavyUnit: 60,
-  GroundUnit: 60,
+  aircraft: 800,
+  helicopter: 300,
+  navyunit: 60,
+  groundunit: 60,
 };
 export const speedIncrements: { [key: string]: number } = {
-  Aircraft: 25,
-  Helicopter: 10,
-  NavyUnit: 5,
-  GroundUnit: 5,
+  aircraft: 25,
+  helicopter: 10,
+  navyunit: 5,
+  groundunit: 5,
 };
 export const minAltitudeValues: { [key: string]: number } = {
-  Aircraft: 0,
-  Helicopter: 0,
+  aircraft: 0,
+  helicopter: 0,
 };
 export const maxAltitudeValues: { [key: string]: number } = {
-  Aircraft: 50000,
-  Helicopter: 10000,
+  aircraft: 50000,
+  helicopter: 10000,
 };
 export const altitudeIncrements: { [key: string]: number } = {
-  Aircraft: 500,
-  Helicopter: 100,
+  aircraft: 500,
+  helicopter: 100,
 };
+export const groupUnitCount: { [key: string]: number } = {
+  aircraft: 4,
+  helicopter: 4,
+  navyunit: 20,
+  groundunit: 20,
+}
 
 export const minimapBoundaries = {
   Nevada: [
@@ -283,7 +289,6 @@ export const IADSDensities: { [key: string]: number } = {
   "SAM Site": 0.1,
   "Radar (EWR)": 0.05,
 };
-export const GROUND_UNIT_AIR_DEFENCE_REGEX: RegExp = /(\b(AAA|SAM|MANPADS?|[mM]anpads?)|[sS]tinger\b)/;
 
 export const MAP_OPTIONS_DEFAULTS = {
   hideGroupMembers: true,
