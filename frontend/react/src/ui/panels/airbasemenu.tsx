@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu } from "./components/menu";
 import { Coalition } from "../../types/types";
 import { Airbase } from "../../mission/airbase";
@@ -9,15 +9,59 @@ import { OlAccordion } from "../components/olaccordion";
 import { OlUnitListEntry } from "../components/olunitlistentry";
 import { olButtonsVisibilityAircraft, olButtonsVisibilityHelicopter } from "../components/olicons";
 import { UnitSpawnMenu } from "./unitspawnmenu";
+import { AirbaseSelectedEvent, UnitDatabaseLoadedEvent } from "../../events";
+import { getApp } from "../../olympusapp";
 
-export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase: Airbase | null; children?: JSX.Element | JSX.Element[] }) {
+enum CategoryAccordion {
+  NONE,
+  AIRCRAFT,
+  HELICOPTER,
+}
+
+export function AirbaseMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
+  const [airbase, setAirbase] = useState(null as null | Airbase);
   const [blueprint, setBlueprint] = useState(null as null | UnitBlueprint);
   const [filterString, setFilterString] = useState("");
+  const [selectedRole, setSelectedRole] = useState(null as null | string);
+  const [runwaysAccordionOpen, setRunwaysAccordionOpen] = useState(false);
+  const [blueprints, setBlueprints] = useState([] as UnitBlueprint[]);
+  const [roles, setRoles] = useState({ aircraft: [] as string[], helicopter: [] as string[] });
+  const [openAccordion, setOpenAccordion] = useState(CategoryAccordion.NONE);
 
-  const [filteredAircraft, filteredHelicopters] = [{}, {}] // TODOgetUnitsByLabel(filterString);
+  useEffect(() => {
+    AirbaseSelectedEvent.on((airbase) => {
+      setAirbase(airbase);
+    });
+
+    UnitDatabaseLoadedEvent.on(() => {
+      setRoles({
+        aircraft: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getRoles((unit) => unit.category === "aircraft"),
+        helicopter: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getRoles((unit) => unit.category === "helicopter"),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
+    else setBlueprints(getApp()?.getUnitsManager().getDatabase().getBlueprints());
+  }, [selectedRole, openAccordion]);
+
+  /* Filter the blueprints according to the label */
+  const filteredBlueprints: UnitBlueprint[] = [];
+  if (blueprints) {
+    blueprints.forEach((blueprint) => {
+      if (blueprint.enabled && (filterString === "" || blueprint.label.toLowerCase().includes(filterString.toLowerCase()))) filteredBlueprints.push(blueprint);
+    });
+  }
 
   return (
-    <Menu title={props.airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
+    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
       <div
         className={`
           flex flex-col gap-2 font-normal text-gray-800
@@ -25,7 +69,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
         `}
       >
         <div
-          data-coalition={props.airbase?.getCoalition()}
+          data-coalition={airbase?.getCoalition()}
           className={`
             flex flex-col content-center justify-between gap-2 border-l-4
             bg-olympus-200/30 py-3 pl-4 pr-5
@@ -36,29 +80,35 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
         >
           <div className="flex w-full justify-between">
             <span className="text-gray-400">ICAO name</span>
-            <span>{props.airbase?.getChartData().ICAO !== "" ? props.airbase?.getChartData().ICAO : "N/A"}</span>
+            <span>{airbase?.getChartData().ICAO !== "" ? airbase?.getChartData().ICAO : "N/A"}</span>
           </div>
           <div className="flex w-full justify-between">
             <span className="text-gray-400">TACAN</span>
-            <span>{props.airbase?.getChartData().TACAN !== "" ? props.airbase?.getChartData().TACAN : "None"}</span>
+            <span>{airbase?.getChartData().TACAN !== "" ? airbase?.getChartData().TACAN : "None"}</span>
           </div>
           <div className="flex w-full justify-between">
             <span className="text-gray-400">Elevation</span>
-            <span>{props.airbase?.getChartData().elevation !== "" ? props.airbase?.getChartData().elevation : "N/A"}ft</span>
+            <span>{airbase?.getChartData().elevation !== "" ? airbase?.getChartData().elevation : "N/A"}ft</span>
           </div>
           {
-          // TODO 
+            // TODO I can't remember what tho
           }
-          <OlAccordion title={`Runways`} className="!p-0 !text-gray-400">
+          <OlAccordion
+            title={`Runways`}
+            className="!p-0 !text-gray-400"
+            onClick={() => setRunwaysAccordionOpen(!runwaysAccordionOpen)}
+            open={runwaysAccordionOpen}
+          >
             <div className="flex flex-col gap-2">
-              {props.airbase?.getChartData().runways.map((runway, idx) => {
+              {airbase?.getChartData().runways.map((runway, idx) => {
                 return (
                   <>
                     {Object.keys(runway.headings[0]).map((runwayName) => {
                       return (
-                        <div key={`${idx}-${runwayName}`} className={`
-                          flex w-full justify-between
-                        `}>
+                        <div
+                          key={`${idx}-${runwayName}`}
+                          className={`flex w-full justify-between`}
+                        >
                           <span>
                             {" "}
                             <span className="text-gray-400">RWY</span> {runwayName}
@@ -82,7 +132,6 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
             </div>
           </OlAccordion>
         </div>
-
         <div className="mt-5 flex gap-2 px-5 text-white bold">
           {blueprint && (
             <FaArrowLeft
@@ -95,42 +144,98 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; airbase
           )}
           <span className="my-auto">Spawn units at airbase</span>
         </div>
+        {blueprint === null && (
+          <div className="p-5">
+            <OlSearchBar onChange={(value) => setFilterString(value)} text={filterString} />
+            <OlAccordion
+              title={`Aircraft`}
+              open={openAccordion == CategoryAccordion.AIRCRAFT}
+              onClick={() => {
+                setOpenAccordion(openAccordion === CategoryAccordion.AIRCRAFT ? CategoryAccordion.NONE : CategoryAccordion.AIRCRAFT);
+                setSelectedRole(null);
+              }}
+            >
+              <div className="mb-2 flex flex-wrap gap-1">
+                {roles.aircraft.sort().map((role) => {
+                  return (
+                    <div
+                      key={role}
+                      data-selected={selectedRole === role}
+                      className={`
+                        cursor-pointer rounded-full bg-olympus-800 px-2 py-0.5
+                        text-xs font-bold text-olympus-50
+                        data-[selected='true']:bg-blue-500
+                        data-[selected='true']:text-gray-200
+                      `}
+                      onClick={() => {
+                        selectedRole === role ? setSelectedRole(null) : setSelectedRole(role);
+                      }}
+                    >
+                      {role}
+                    </div>
+                  );
+                })}
+              </div>
+              <div
+                className={`
+                  flex max-h-[450px] flex-col gap-1 overflow-y-scroll
+                  no-scrollbar
+                `}
+              >
+                {filteredBlueprints
+                  .filter((blueprint) => blueprint.category === "aircraft")
+                  .map((entry) => {
+                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityAircraft} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  })}
+              </div>
+            </OlAccordion>
+            <OlAccordion
+              title={`Helicopters`}
+              open={openAccordion == CategoryAccordion.HELICOPTER}
+              onClick={() => {
+                setOpenAccordion(openAccordion === CategoryAccordion.HELICOPTER ? CategoryAccordion.NONE : CategoryAccordion.HELICOPTER);
+                setSelectedRole(null);
+              }}
+            >
+              <div className="mb-2 flex flex-wrap gap-1">
+                {roles.helicopter.sort().map((role) => {
+                  return (
+                    <div
+                      key={role}
+                      data-selected={selectedRole === role}
+                      className={`
+                        cursor-pointer rounded-full bg-olympus-800 px-2 py-0.5
+                        text-xs font-bold text-olympus-50
+                        data-[selected='true']:bg-blue-500
+                        data-[selected='true']:text-gray-200
+                      `}
+                      onClick={() => {
+                        selectedRole === role ? setSelectedRole(null) : setSelectedRole(role);
+                      }}
+                    >
+                      {role}
+                    </div>
+                  );
+                })}
+              </div>
+              <div
+                className={`
+                  flex max-h-[450px] flex-col gap-1 overflow-y-scroll
+                  no-scrollbar
+                `}
+              >
+                {filteredBlueprints
+                  .filter((blueprint) => blueprint.category === "helicopter")
+                  .map((entry) => {
+                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityHelicopter} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  })}
+              </div>
+            </OlAccordion>
+          </div>
+        )}
         <>
-          {blueprint === null && (
-            <div className="p-5">
-              <OlSearchBar onChange={(value) => setFilterString(value)} text={filterString} />
-              <OlAccordion title={`Aircraft`}>
-                <div
-                  className={`
-                    flex max-h-80 flex-col gap-1 overflow-y-scroll no-scrollbar
-                  `}
-                >
-                  {Object.entries(filteredAircraft).map((entry) => {
-                    return <OlUnitListEntry key={entry[0]} icon={olButtonsVisibilityAircraft} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
-                  })}
-                </div>
-              </OlAccordion>
-              <OlAccordion title={`Helicopters`}>
-                <div
-                  className={`
-                    flex max-h-80 flex-col gap-1 overflow-y-scroll no-scrollbar
-                  `}
-                >
-                  {Object.entries(filteredHelicopters).map((entry) => {
-                    return <OlUnitListEntry key={entry[0]} icon={olButtonsVisibilityHelicopter} blueprint={entry[1]} onClick={() => setBlueprint(entry[1])} />;
-                  })}
-                </div>
-              </OlAccordion>
-            </div>
-          )}
-
           {!(blueprint === null) && (
-            <UnitSpawnMenu
-              blueprint={blueprint}
-              spawnAtLocation={false}
-              airbase={props.airbase}
-              coalition={(props.airbase?.getCoalition() ?? "blue") as Coalition}
-            />
+            <UnitSpawnMenu blueprint={blueprint} spawnAtLocation={false} airbase={airbase} coalition={(airbase?.getCoalition() ?? "blue") as Coalition} />
           )}
         </>
       </div>

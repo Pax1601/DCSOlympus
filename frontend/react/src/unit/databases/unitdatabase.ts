@@ -211,14 +211,8 @@ export class UnitDatabase {
     return null;
   }
 
-  getSpawnPointsByLabel(label: string) {
-    var blueprint = this.getByLabel(label);
-    if (blueprint) return this.getSpawnPointsByName(blueprint.name);
-    else return Infinity;
-  }
-
   getSpawnPointsByName(name: string) {
-    return Infinity;
+    return this.getByLabel(name)?.cost ?? 10;
   }
 
   getUnkownUnit(name: string): UnitBlueprint {

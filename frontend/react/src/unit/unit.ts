@@ -69,7 +69,7 @@ import {
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { Carrier } from "../mission/carrier";
-import { ContactsUpdatedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, UnitDeadEvent, UnitDeselectedEvent, UnitSelectedEvent } from "../events";
+import { ContactsUpdatedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, UnitDeadEvent, UnitDeselectedEvent, UnitSelectedEvent, UnitUpdatedEvent } from "../events";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -618,6 +618,8 @@ export abstract class Unit extends CustomMarker {
         }
       }
     }
+
+    UnitUpdatedEvent.dispatch(this);
   }
 
   /** Get unit data collated into an object

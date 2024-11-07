@@ -92,6 +92,8 @@ export interface SpawnRequestTable {
 
 export interface EffectRequestTable {
   type: string;
+  explosionType?: string;
+  smokeColor?: string;
 }
 
 export interface UnitSpawnTable {

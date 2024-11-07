@@ -2,18 +2,17 @@ import React, { useEffect, useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
 import {
   faGamepad,
-  faRuler,
   faPencil,
   faEllipsisV,
   faCog,
   faQuestionCircle,
   faPlusSquare,
-  faMagnifyingGlass,
   faVolumeHigh,
   faJ,
+  faCrown,
 } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../olympusapp";
-import { NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
+import { OlympusState } from "../../constants/constants";
 import { AppStateChangedEvent } from "../../events";
 
 export function SideBar() {
@@ -79,6 +78,14 @@ export function SideBar() {
             checked={appState === OlympusState.JTAC}
             icon={faJ}
             tooltip="Hide/show JTAC menu"
+          ></OlStateButton>
+          <OlStateButton
+            onClick={() => {
+              getApp().setState(appState !== OlympusState.GAME_MASTER ? OlympusState.GAME_MASTER : OlympusState.IDLE);
+            }}
+            checked={appState === OlympusState.GAME_MASTER}
+            icon={faCrown}
+            tooltip="Hide/show Game Master menu"
           ></OlStateButton>
         </div>
       </div>

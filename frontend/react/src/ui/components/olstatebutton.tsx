@@ -6,6 +6,7 @@ import { OlTooltip } from "./oltooltip";
 
 export function OlStateButton(props: {
   className?: string;
+  borderColor?: string | null;
   checked: boolean;
   icon: IconProp;
   tooltip: string;
@@ -35,6 +36,9 @@ export function OlStateButton(props: {
         data-checked={props.checked}
         type="button"
         className={className}
+        style={{
+          border: props.borderColor ? "2px solid " + props.borderColor : "0px solid transparent"
+        }}
         onMouseEnter={() => {
           setHover(true);
         }}

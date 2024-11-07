@@ -1,5 +1,6 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { MapOptions } from "../types/types";
+import { CommandModeOptions } from "../interfaces";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -136,7 +137,7 @@ export const groupUnitCount: { [key: string]: number } = {
   helicopter: 4,
   navyunit: 20,
   groundunit: 20,
-}
+};
 
 export const minimapBoundaries = {
   Nevada: [
@@ -252,6 +253,7 @@ export enum OlympusState {
   OPTIONS = "Options",
   AUDIO = "Audio",
   AIRBASE = "Airbase",
+  GAME_MASTER = "Game master",
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -262,7 +264,7 @@ export enum UnitControlSubState {
   PROTECTION = "Protection",
   MAP_CONTEXT_MENU = "Map context menu",
   UNIT_CONTEXT_MENU = "Unit context menu",
-  UNIT_EXPLOSION_MENU = "Unit explosion menu"
+  UNIT_EXPLOSION_MENU = "Unit explosion menu",
 }
 
 export enum DrawSubState {
@@ -322,6 +324,15 @@ export const MAP_HIDDEN_TYPES_DEFAULTS = {
   blue: false,
   red: false,
   neutral: false,
+};
+
+export const COMMAND_MODE_OPTIONS_DEFAULTS: CommandModeOptions = {
+  commandMode: GAME_MASTER,
+  eras: [] as string[],
+  restrictSpawns: false,
+  restrictToCoalition: false,
+  setupTime: 0,
+  spawnPoints: { blue: 0, red: 0 },
 };
 
 export enum DataIndexes {

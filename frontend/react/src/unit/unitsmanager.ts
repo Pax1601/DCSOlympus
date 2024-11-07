@@ -1422,8 +1422,7 @@ export class UnitsManager {
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return 0;
-        // TODO return points + this.#unitIndexedDB.selectBlueprints({from:"Units", where: {name: unit.unitType}});
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
     } else if (category === "helicopter") {
@@ -1432,8 +1431,7 @@ export class UnitsManager {
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return 0;
-        //TODO return points + helicopterDatabase.getSpawnPointsByName(unit.unitType);
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
     } else if (category === "groundunit") {
@@ -1442,8 +1440,7 @@ export class UnitsManager {
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return 0;
-        //TODOreturn points + groundUnitDatabase.getSpawnPointsByName(unit.unitType);
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
     } else if (category === "navyunit") {
@@ -1452,8 +1449,7 @@ export class UnitsManager {
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return 0;
-        //TODOreturn points + navyUnitDatabase.getSpawnPointsByName(unit.unitType);
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
     }

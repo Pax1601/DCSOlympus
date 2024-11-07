@@ -145,3 +145,35 @@
   border: 2px solid black;
   font-size: 14px;
 }
+
+.ol-smoke-icon {
+  opacity: 75%;
+}
+
+[data-color="white"].ol-smoke-icon {
+  fill: white;
+}
+
+[data-color="blue"].ol-smoke-icon {
+  fill: blue;
+}
+
+[data-color="red"].ol-smoke-icon {
+  fill: red;
+}
+
+[data-color="green"].ol-smoke-icon {
+  fill: green;
+}
+
+[data-color="orange"].ol-smoke-icon {
+  fill: orange;
+}
+
+.ol-explosion-icon * { 
+  opacity: 75%;
+}
+
+.ol-explosion-icon {
+  fill: red;
+}

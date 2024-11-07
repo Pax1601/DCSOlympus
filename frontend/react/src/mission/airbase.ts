@@ -19,6 +19,7 @@ export class Airbase extends CustomMarker {
   #properties: string[] = [];
   #parkings: string[] = [];
   #img: HTMLImageElement;
+  #selected: boolean = false;
 
   constructor(options: AirbaseOptions) {
     super(options.position, { riseOnHover: true });
@@ -26,8 +27,14 @@ export class Airbase extends CustomMarker {
     this.#name = options.name;
     this.#img = document.createElement("img");
 
+    AirbaseSelectedEvent.on((airbase) => {
+      this.#selected = airbase == this;
+      if (this.getElement()?.querySelector(".airbase-icon"))
+        (this.getElement()?.querySelector(".airbase-icon") as HTMLElement).dataset.selected = `${this.#selected}`;
+    })
+
     this.addEventListener("click", (ev) => {
-      if (getApp().getState() === OlympusState.IDLE) {
+      if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.AIRBASE) {
         getApp().setState(OlympusState.AIRBASE)
         AirbaseSelectedEvent.dispatch(this)
       }

@@ -16,8 +16,8 @@ import {
 import { faExplosion, faSmog } from "@fortawesome/free-solid-svg-icons";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
 import { EffectSpawnMenu } from "./effectspawnmenu";
-import { NO_SUBSTATE, OlympusState } from "../../constants/constants";
-import { AppStateChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState } from "../../constants/constants";
+import { AppStateChangedEvent, CommandModeOptionsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
 
 enum CategoryAccordion {
   NONE,
@@ -40,6 +40,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
   const [blueprints, setBlueprints] = useState([] as UnitBlueprint[]);
   const [roles, setRoles] = useState({ aircraft: [] as string[], helicopter: [] as string[] });
   const [types, setTypes] = useState({ groundunit: [] as string[], navyunit: [] as string[] });
+  const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
+  const [showCost, setShowCost] = useState(false);
 
   useEffect(() => {
     if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
@@ -71,6 +73,19 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
           .getTypes((unit) => unit.category === "navyunit"),
       });
     });
+
+    AppStateChangedEvent.on((state, subState) => {
+      if (subState === NO_SUBSTATE) {
+        setBlueprint(null);
+        setEffect(null);
+      }
+    });
+
+    CommandModeOptionsChangedEvent.on((commandModeOptions) => {
+      setCommandModeOptions(commandModeOptions);
+      setShowCost(!(commandModeOptions.commandMode == GAME_MASTER || !commandModeOptions.restrictSpawns));
+      setOpenAccordion(CategoryAccordion.NONE);
+    });
   }, []);
 
   /* Filter the blueprints according to the label */
@@ -89,15 +104,6 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       if (openAccordion !== CategoryAccordion.NONE) setOpenAccordion(CategoryAccordion.NONE);
     }
   });
-
-  useEffect(() => {
-    AppStateChangedEvent.on((state, subState) => {
-      if (subState === NO_SUBSTATE) {
-        setBlueprint(null);
-        setEffect(null);
-      }
-    });
-  }, []);
 
   return (
     <Menu
@@ -153,8 +159,17 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               >
                 {filteredBlueprints
                   .filter((blueprint) => blueprint.category === "aircraft")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityAircraft} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  .map((blueprint) => {
+                    return (
+                      <OlUnitListEntry
+                        key={blueprint.name}
+                        icon={olButtonsVisibilityAircraft}
+                        blueprint={blueprint}
+                        onClick={() => setBlueprint(blueprint)}
+                        showCost={showCost}
+                        cost={blueprint.cost ?? 10}
+                      />
+                    );
                   })}
               </div>
             </OlAccordion>
@@ -196,8 +211,17 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               >
                 {filteredBlueprints
                   .filter((blueprint) => blueprint.category === "helicopter")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityHelicopter} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  .map((blueprint) => {
+                    return (
+                      <OlUnitListEntry
+                        key={blueprint.name}
+                        icon={olButtonsVisibilityHelicopter}
+                        blueprint={blueprint}
+                        onClick={() => setBlueprint(blueprint)}
+                        showCost={showCost}
+                        cost={blueprint.cost ?? 10}
+                      />
+                    );
                   })}
               </div>
             </OlAccordion>
@@ -218,8 +242,17 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               >
                 {filteredBlueprints
                   .filter((blueprint) => blueprint.category === "groundunit" && blueprint.type === "SAM Site")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityGroundunitSam} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  .map((blueprint) => {
+                    return (
+                      <OlUnitListEntry
+                        key={blueprint.name}
+                        icon={olButtonsVisibilityGroundunitSam}
+                        blueprint={blueprint}
+                        onClick={() => setBlueprint(blueprint)}
+                        showCost={showCost}
+                        cost={blueprint.cost ?? 10}
+                      />
+                    );
                   })}
               </div>
             </OlAccordion>
@@ -240,8 +273,17 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               >
                 {filteredBlueprints
                   .filter((blueprint) => blueprint.canAAA)
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityGroundunitSam} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  .map((blueprint) => {
+                    return (
+                      <OlUnitListEntry
+                        key={blueprint.name}
+                        icon={olButtonsVisibilityGroundunitSam}
+                        blueprint={blueprint}
+                        onClick={() => setBlueprint(blueprint)}
+                        showCost={showCost}
+                        cost={blueprint.cost ?? 10}
+                      />
+                    );
                   })}
               </div>
             </OlAccordion>
@@ -286,8 +328,17 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               >
                 {filteredBlueprints
                   .filter((blueprint) => blueprint.category === "groundunit" && blueprint.type !== "SAM Site")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityGroundunit} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  .map((blueprint) => {
+                    return (
+                      <OlUnitListEntry
+                        key={blueprint.name}
+                        icon={olButtonsVisibilityGroundunit}
+                        blueprint={blueprint}
+                        onClick={() => setBlueprint(blueprint)}
+                        showCost={showCost}
+                        cost={blueprint.cost ?? 10}
+                      />
+                    );
                   })}
               </div>
             </OlAccordion>
@@ -329,8 +380,17 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
               >
                 {filteredBlueprints
                   .filter((blueprint) => blueprint.category === "navyunit")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityNavyunit} blueprint={entry} onClick={() => setBlueprint(entry)} />;
+                  .map((blueprint) => {
+                    return (
+                      <OlUnitListEntry
+                        key={blueprint.name}
+                        icon={olButtonsVisibilityNavyunit}
+                        blueprint={blueprint}
+                        onClick={() => setBlueprint(blueprint)}
+                        showCost={showCost}
+                        cost={blueprint.cost ?? 10}
+                      />
+                    );
                   })}
               </div>
             </OlAccordion>
@@ -370,7 +430,13 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
           </div>
         )}
 
-        {!(blueprint === null) && <UnitSpawnMenu blueprint={blueprint} spawnAtLocation={true} />}
+        {!(blueprint === null) && (
+          <UnitSpawnMenu
+            blueprint={blueprint}
+            spawnAtLocation={true}
+            coalition={commandModeOptions.commandMode !== GAME_MASTER ? (commandModeOptions.commandMode === BLUE_COMMANDER ? "blue" : "red") : undefined}
+          />
+        )}
         {!(effect === null) && <EffectSpawnMenu effect={effect} />}
       </>
     </Menu>

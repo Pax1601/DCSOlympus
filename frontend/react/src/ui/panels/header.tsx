@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
 import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { getApp, IP } from "../../olympusapp";
@@ -17,9 +16,9 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../../events";
-import { MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
-import { OlympusConfig } from "../../interfaces";
+import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../../events";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
+import { CommandModeOptions, OlympusConfig } from "../../interfaces";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -29,6 +28,7 @@ export function Header() {
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
+  const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
@@ -37,6 +37,9 @@ export function Header() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
       setMapSources(sources);
+    });
+    CommandModeOptionsChangedEvent.on((commandModeOptions) => {
+      setCommandModeOptions(commandModeOptions);
     });
   }, []);
 
@@ -111,6 +114,9 @@ export function Header() {
                 </div>
               </div>
             </div>
+            {commandModeOptions.commandMode === BLUE_COMMANDER && <div className={`
+              flex h-full rounded-md bg-blue-600 px-4 text-white
+            `}><span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span></div>}
             <div
               className={`flex h-fit flex-row items-center justify-start gap-1`}
             >

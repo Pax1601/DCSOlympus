@@ -38,6 +38,7 @@ import { ExplosionMarker } from "./markers/explosionmarker";
 import { TextMarker } from "./markers/textmarker";
 import { TargetMarker } from "./markers/targetmarker";
 import {
+  AirbaseSelectedEvent,
   AppStateChangedEvent,
   CoalitionAreaSelectedEvent,
   ConfigLoadedEvent,
@@ -49,6 +50,7 @@ import {
   UnitUpdatedEvent,
 } from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
+import { SmokeMarker } from "./markers/smokemarker";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -85,7 +87,6 @@ export class Map extends L.Map {
   #isShiftKeyDown: boolean = false;
 
   /* Center on unit target */
-  // TODO add back
   #centeredUnit: Unit | null = null;
 
   /* Minimap */
@@ -124,6 +125,7 @@ export class Map extends L.Map {
   #effectRequestTable: EffectRequestTable | null = null;
   #temporaryMarkers: TemporaryUnitMarker[] = [];
   #currentSpawnMarker: TemporaryUnitMarker | null = null;
+  #currentEffectMarker: ExplosionMarker | SmokeMarker | null = null;
 
   /* JTAC tools */
   #ECHOPoint: TextMarker | null = null;
@@ -201,9 +203,8 @@ export class Map extends L.Map {
     });
 
     UnitUpdatedEvent.on((unit) => {
-      if (this.#centeredUnit != null && unit == this.#centeredUnit)
-        this.#panToUnit(this.#centeredUnit);
-    })
+      if (this.#centeredUnit != null && unit == this.#centeredUnit) this.#panToUnit(this.#centeredUnit);
+    });
 
     MapOptionsChangedEvent.on((options) => {
       this.getContainer().toggleAttribute("data-hide-labels", !options.showUnitLabels);
@@ -723,12 +724,6 @@ export class Map extends L.Map {
     return marker;
   }
 
-  addExplosionMarker(latlng: L.LatLng, timeout: number = 30) {
-    var marker = new ExplosionMarker(latlng, timeout);
-    marker.addTo(this);
-    return marker;
-  }
-
   setOption(key, value) {
     this.#options[key] = value;
     MapOptionsChangedEvent.dispatch(this.#options);
@@ -814,8 +809,11 @@ export class Map extends L.Map {
     this.getSelectedCoalitionArea()?.setEditing(false);
     this.#currentSpawnMarker?.removeFrom(this);
     this.#currentSpawnMarker = null;
+    this.#currentEffectMarker?.removeFrom(this);
+    this.#currentEffectMarker = null;
     if (state !== OlympusState.UNIT_CONTROL) getApp().getUnitsManager().deselectAllUnits();
     if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) this.deselectAllCoalitionAreas();
+    AirbaseSelectedEvent.dispatch(null);
 
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {
@@ -833,9 +831,11 @@ export class Map extends L.Map {
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
         console.log(`Effect request table:`);
         console.log(this.#effectRequestTable);
-        // TODO add temporary effect marker
-        //this.#currentEffectMarker = new TemporaryUnitMarker(new L.LatLng(0, 0), this.#spawnRequestTable?.unit.unitType ?? "", this.#spawnRequestTable?.coalition ?? "neutral")
-        //this.#currentEffectMarker.addTo(this);
+        if (this.#effectRequestTable?.type === 'explosion')
+          this.#currentEffectMarker = new ExplosionMarker(new L.LatLng(0, 0))
+        else if (this.#effectRequestTable?.type === 'smoke')
+          this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white")
+        this.#currentEffectMarker?.addTo(this);
       }
     } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
@@ -941,7 +941,21 @@ export class Map extends L.Map {
         }
       } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
         if (e.originalEvent.button != 2 && this.#effectRequestTable !== null) {
-          getApp().getServerManager().spawnExplosion(50, "normal", pressLocation);
+          if (this.#effectRequestTable.type === "explosion") {
+            if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", pressLocation);
+            else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", pressLocation);
+            else if (this.#effectRequestTable.explosionType === "White phosphorous")
+              getApp().getServerManager().spawnExplosion(50, "phosphorous", pressLocation);
+
+            const explosionMarker = new ExplosionMarker(pressLocation, 5);
+            explosionMarker.addTo(this);
+          } else if (this.#effectRequestTable.type === "smoke") {
+            getApp()
+              .getServerManager()
+              .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", pressLocation);
+            const smokeMarker = new SmokeMarker(pressLocation, this.#effectRequestTable.smokeColor ?? "white");
+            smokeMarker.addTo(this);
+          }
         }
       }
     } else if (getApp().getState() === OlympusState.DRAW) {
@@ -1056,9 +1070,10 @@ export class Map extends L.Map {
     this.#lastMousePosition.y = e.originalEvent.y;
     this.#lastMouseCoordinates = e.latlng;
 
-    if (this.#currentSpawnMarker) {
+    if (this.#currentSpawnMarker) 
       this.#currentSpawnMarker.setLatLng(e.latlng);
-    }
+    if (this.#currentEffectMarker)
+      this.#currentEffectMarker.setLatLng(e.latlng);
   }
 
   #onMapMove(e: any) {

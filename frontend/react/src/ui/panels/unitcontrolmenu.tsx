@@ -6,7 +6,7 @@ import { OlRangeSlider } from "../components/olrangeslider";
 import { getApp } from "../../olympusapp";
 import { OlButtonGroup, OlButtonGroupItem } from "../components/olbuttongroup";
 import { OlCheckbox } from "../components/olcheckbox";
-import { ROEs, altitudeIncrements, emissionsCountermeasures, maxAltitudeValues, minAltitudeValues, reactionsToThreat, speedIncrements } from "../../constants/constants";
+import { ROEs, altitudeIncrements, emissionsCountermeasures, maxAltitudeValues, maxSpeedValues, minAltitudeValues, reactionsToThreat, speedIncrements } from "../../constants/constants";
 import { OlToggle } from "../components/oltoggle";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import {
@@ -207,22 +207,22 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const minSpeed = 0;
 
   let maxAltitude = maxAltitudeValues.aircraft;
-  let maxSpeed = minAltitudeValues.aircraft;
+  let maxSpeed = maxSpeedValues.aircraft;
   let speedStep = speedIncrements.aircraft;
   let altitudeStep = altitudeIncrements.aircraft;
 
   if (everyUnitIsHelicopter) {
     maxAltitude = maxAltitudeValues.helicopter;
-    maxSpeed = minAltitudeValues.helicopter;
+    maxSpeed = maxSpeedValues.helicopter;
     speedStep = speedIncrements.helicopter;
     altitudeStep = altitudeIncrements.helicopter;
   }
   else if (everyUnitIsGround) {
-    maxSpeed = minAltitudeValues.groundunit;
+    maxSpeed = maxSpeedValues.groundunit;
     speedStep = speedIncrements.groundunit;
   }
   else if (everyUnitIsNavy) {
-    maxSpeed = minAltitudeValues.navyunit;
+    maxSpeed = maxSpeedValues.navyunit;
     speedStep = speedIncrements.navyunit;
   }
 

@@ -147,13 +147,13 @@ export class CoalitionAreaSelectedEvent {
 }
 
 export class AirbaseSelectedEvent {
-  static on(callback: (airbase: Airbase) => void) {
+  static on(callback: (airbase: Airbase | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.airbase);
     });
   }
 
-  static dispatch(airbase: Airbase) {
+  static dispatch(airbase: Airbase | null) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { airbase } }));
     console.log(`Event ${this.name} dispatched`);
   }
@@ -168,7 +168,7 @@ export class ContactsUpdatedEvent {
 
   static dispatch() {
     document.dispatchEvent(new CustomEvent(this.name));
-    console.log(`Event ${this.name} dispatched`);
+    // Logging disabled since periodic
   }
 }
 
@@ -198,7 +198,12 @@ export class ContextActionChangedEvent {
   }
 }
 
-export class UnitUpdatedEvent extends BaseUnitEvent {};
+export class UnitUpdatedEvent extends BaseUnitEvent {
+  static dispatch(unit: Unit) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { unit } }));
+    // Logging disabled since periodic
+  }
+};
 export class UnitSelectedEvent extends BaseUnitEvent {};
 export class UnitDeselectedEvent extends BaseUnitEvent {};
 export class UnitDeadEvent extends BaseUnitEvent {};

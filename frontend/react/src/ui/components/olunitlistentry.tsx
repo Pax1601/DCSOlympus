@@ -4,8 +4,10 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { UnitBlueprint } from "../../interfaces";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons/faArrowRight";
 
-export function OlUnitListEntry(props: { icon: IconProp; blueprint: UnitBlueprint; onClick: () => void }) {
-  const pillString = !["aircraft", "helicopter"].includes(props.blueprint.category) ? props.blueprint.type : props.blueprint.abilities;
+export function OlUnitListEntry(props: { icon: IconProp; blueprint: UnitBlueprint; showCost: boolean; cost: number; onClick: () => void }) {
+  let pillString = "" as string | undefined
+  if (props.showCost) pillString = `${props.cost} points`
+  else pillString = !["aircraft", "helicopter"].includes(props.blueprint.category) ? props.blueprint.type : props.blueprint.abilities
   return (
     <div
       onClick={props.onClick}
@@ -24,7 +26,7 @@ export function OlUnitListEntry(props: { icon: IconProp; blueprint: UnitBlueprin
             dark:text-olympus-50
           `}
         >
-          {!["aircraft", "helicopter"].includes(props.blueprint.category) ? props.blueprint.type : props.blueprint.abilities}
+          {pillString}
         </div>
       )}
       <FontAwesomeIcon

@@ -35,6 +35,7 @@ import { ProtectionPrompt } from "./modals/protectionprompt";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { JTACMenu } from "./panels/jtacmenu";
 import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
+import { GameMasterMenu } from "./panels/gamemastermenu";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -56,8 +57,6 @@ export function UI() {
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [commandMode, setCommandMode] = useState(null as null | string);
-
-  const [airbase, setAirbase] = useState(null as null | Airbase);
 
   const [formationLeader, setFormationLeader] = useState(null as null | Unit);
   const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
@@ -157,8 +156,9 @@ export function UI() {
         />
 
         <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} airbase={airbase} /* TODO remove */ />
+        <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)}/>
         <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
         {/* TODO} <UnitExplosionMenu open={appState === OlympusState.MAIN_MENU} units={unitExplosionUnits} onClose={() => getApp().setState(OlympusState.IDLE)} /> {*/}
         <JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />

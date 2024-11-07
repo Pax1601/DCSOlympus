@@ -13,7 +13,7 @@ import {
   emissionsCountermeasures,
   reactionsToThreat,
 } from "../constants/constants";
-import { AirbasesData, BullseyesData, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
+import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
 import { ServerStatusUpdatedEvent } from "../events";
 
 export class ServerManager {
@@ -489,22 +489,10 @@ export class ServerManager {
   }
 
   setCommandModeOptions(
-    restrictSpawns: boolean,
-    restrictToCoalition: boolean,
-    spawnPoints: { blue: number; red: number },
-    eras: string[],
-    setupTime: number,
+    commandModeOptions: CommandModeOptions,
     callback: CallableFunction = () => {}
   ) {
-    var command = {
-      restrictSpawns: restrictSpawns,
-      restrictToCoalition: restrictToCoalition,
-      spawnPoints: spawnPoints,
-      eras: eras,
-      setupTime: setupTime,
-    };
-
-    var data = { setCommandModeOptions: command };
+    var data = { setCommandModeOptions: commandModeOptions };
     this.PUT(data, callback);
   }
 

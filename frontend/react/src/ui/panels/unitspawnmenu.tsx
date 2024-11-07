@@ -143,38 +143,40 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
         </div>
         {["aircraft", "helicopter"].includes(props.blueprint.category) && (
           <>
-            <div>
-              <div
-                className={`
-                  flex flex-row content-center items-center justify-between
-                `}
-              >
-                <div className="flex flex-col">
-                  <span
-                    className={`
-                      font-normal
-                      dark:text-white
-                    `}
-                  >
-                    Altitude
-                  </span>
-                  <span
-                    className={`
-                      font-bold
-                      dark:text-blue-500
-                    `}
-                  >{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>
+            {!props.airbase && (
+              <div>
+                <div
+                  className={`
+                    flex flex-row content-center items-center justify-between
+                  `}
+                >
+                  <div className="flex flex-col">
+                    <span
+                      className={`
+                        font-normal
+                        dark:text-white
+                      `}
+                    >
+                      Altitude
+                    </span>
+                    <span
+                      className={`
+                        font-bold
+                        dark:text-blue-500
+                      `}
+                    >{`${Intl.NumberFormat("en-US").format(spawnAltitude)} FT`}</span>
+                  </div>
+                  <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
                 </div>
-                <OlLabelToggle toggled={spawnAltitudeType} leftLabel={"AGL"} rightLabel={"ASL"} onClick={() => setSpawnAltitudeType(!spawnAltitudeType)} />
+                <OlRangeSlider
+                  onChange={(ev) => setSpawnAltitude(Number(ev.target.value))}
+                  value={spawnAltitude}
+                  min={minAltitude}
+                  max={maxAltitude}
+                  step={altitudeStep}
+                />
               </div>
-              <OlRangeSlider
-                onChange={(ev) => setSpawnAltitude(Number(ev.target.value))}
-                value={spawnAltitude}
-                min={minAltitude}
-                max={maxAltitude}
-                step={altitudeStep}
-              />
-            </div>
+            )}
             <div>
               <div className="flex flex-row content-center justify-between">
                 <span

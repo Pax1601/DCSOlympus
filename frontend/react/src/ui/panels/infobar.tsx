@@ -9,7 +9,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { OlympusState } from "../../constants/constants";
 import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent } from "../../events";
 
-export function UnitControlBar(props: {}) {
+export function InfoBar(props: {}) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [contextActionSet, setContextActionsSet] = useState(null as ContextActionSet | null);
   const [contextAction, setContextAction] = useState(null as ContextAction | null);

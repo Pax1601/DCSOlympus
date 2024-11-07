@@ -223,7 +223,8 @@ export class MissionManager {
       commandModeOptions.spawnPoints.red !== this.getCommandModeOptions().spawnPoints.red ||
       commandModeOptions.spawnPoints.blue !== this.getCommandModeOptions().spawnPoints.blue ||
       commandModeOptions.restrictSpawns !== this.getCommandModeOptions().restrictSpawns ||
-      commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition;
+      commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition || 
+      commandModeOptions.setupTime !== this.getCommandModeOptions().setupTime;
 
     this.#commandModeOptions = commandModeOptions;
     this.setSpentSpawnPoints(0);
