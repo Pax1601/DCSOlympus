@@ -19,6 +19,7 @@ import {
   SpawnSubState,
   DrawSubState,
   JTACSubState,
+  UnitControlSubState,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -354,12 +355,12 @@ export class Map extends L.Map {
 
   setContextActionSet(contextActionSet: ContextActionSet | null) {
     this.#contextActionSet = contextActionSet;
-    ContextActionSetChangedEvent.dispatch(this.#contextActionSet)
+    ContextActionSetChangedEvent.dispatch(this.#contextActionSet);
   }
 
   setContextAction(contextAction: ContextAction | null) {
     this.#contextAction = contextAction;
-    ContextActionChangedEvent.dispatch(this.#contextAction)
+    ContextActionChangedEvent.dispatch(this.#contextAction);
   }
 
   getCurrentControls() {
@@ -571,8 +572,10 @@ export class Map extends L.Map {
   }
 
   deselectAllCoalitionAreas() {
-    CoalitionAreaSelectedEvent.dispatch(null);
-    this.#coalitionAreas.forEach((coalitionArea: CoalitionPolygon | CoalitionCircle) => coalitionArea.setSelected(false));
+    if (this.getSelectedCoalitionArea() !== null) {
+      CoalitionAreaSelectedEvent.dispatch(null);
+      this.#coalitionAreas.forEach((coalitionArea: CoalitionPolygon | CoalitionCircle) => coalitionArea.setSelected(false));
+    }
   }
 
   deleteCoalitionArea(coalitionArea: CoalitionPolygon | CoalitionCircle) {
@@ -915,9 +918,6 @@ export class Map extends L.Map {
 
     console.log(`Short press at ${pressLocation}`);
 
-    document.dispatchEvent(new CustomEvent("hideMapContextMenu"));
-    document.dispatchEvent(new CustomEvent("hideUnitContextMenu"));
-
     /* Execute the short click action */
     if (getApp().getState() === OlympusState.IDLE) {
       /* Do nothing */
@@ -1040,7 +1040,7 @@ export class Map extends L.Map {
         else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
-          document.dispatchEvent(new CustomEvent("showMapContextMenu", { detail: e })); // TODP
+          getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
         } else {
           if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
           else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));

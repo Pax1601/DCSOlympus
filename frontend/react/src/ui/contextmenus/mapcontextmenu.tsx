@@ -1,23 +1,33 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Unit } from "../../unit/unit";
-import { ContextActionSet } from "../../unit/contextactionset";
-import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
+import { CONTEXT_ACTION_COLORS, NO_SUBSTATE, OlympusState, OlympusSubState, UnitControlSubState } from "../../constants/constants";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LatLng } from "leaflet";
-import { SelectionClearedEvent } from "../../events";
+import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent, SelectionClearedEvent } from "../../events";
+import { ContextActionSet } from "../../unit/contextactionset";
 
 export function MapContextMenu(props: {}) {
-  const [open, setOpen] = useState(false);
-  const [contextActionsSet, setContextActionsSet] = useState(new ContextActionSet());
+  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
+  const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
+  const [contextActionSet, setContextActionsSet] = useState(null as ContextActionSet | null);
   const [xPosition, setXPosition] = useState(0);
   const [yPosition, setYPosition] = useState(0);
   const [latLng, setLatLng] = useState(null as null | LatLng);
   const [unit, setUnit] = useState(null as null | Unit);
 
   var contentRef = useRef(null);
+
+  // TODO show at correct position
+
+  useEffect(() => {
+    AppStateChangedEvent.on((state, subState) => {
+      setAppState(state);
+      setAppSubState(subState);
+    });
+    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionsSet(contextActionSet));
+  }, []);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -40,69 +50,18 @@ export function MapContextMenu(props: {}) {
     }
   });
 
-  useEffect(() => {
-    document.addEventListener("showMapContextMenu", (ev: CustomEventInit) => {
-      setOpen(true);
-
-      updateData();
-
-      setXPosition(ev.detail.originalEvent.clientX);
-      setYPosition(ev.detail.originalEvent.clientY);
-      setLatLng(ev.detail.latlng);
-      setUnit(null);
-    });
-
-    document.addEventListener("showUnitContextMenu", (ev: CustomEventInit) => {
-      setOpen(true);
-
-      updateData();
-
-      setXPosition(ev.detail.originalEvent.clientX);
-      setYPosition(ev.detail.originalEvent.clientY);
-      setLatLng(null);
-      setUnit(ev.detail.sourceTarget);
-    });
-
-    document.addEventListener("hideMapContextMenu", (ev: CustomEventInit) => {
-      setOpen(false);
-    });
-
-    document.addEventListener("hideUnitContextMenu", (ev: CustomEventInit) => {
-      setOpen(false);
-    });
-
-    SelectionClearedEvent.on(() => {
-      setOpen(false);
-    });
-  }, []);
-
-  /* Update the current values of the shown data */
-  function updateData() {
-    var newContextActionSet = new ContextActionSet();
-
-    getApp()
-      .getUnitsManager()
-      .getSelectedUnits()
-      .filter((unit) => !unit.getHuman())
-      .forEach((unit: Unit) => {
-        unit.appendContextActions(newContextActionSet);
-      });
-
-    setContextActionsSet(newContextActionSet);
-    return newContextActionSet;
-  }
-
   let reorderedActions: ContextAction[] = [];
   CONTEXT_ACTION_COLORS.forEach((color) => {
-    Object.values(contextActionsSet.getContextActions()).forEach((contextAction: ContextAction) => {
-      if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
-      else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
-    });
+    if (contextActionSet)
+      Object.values(contextActionSet.getContextActions()).forEach((contextAction: ContextAction) => {
+        if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
+        else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
+      });
   });
 
   return (
     <>
-      {open && (
+      {appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_CONTEXT_MENU && (
         <>
           <div
             ref={contentRef}
@@ -113,13 +72,14 @@ export function MapContextMenu(props: {}) {
                 flex w-full flex-col gap-2 overflow-x-auto no-scrollbar p-2
               `}
             >
-              {Object.values(contextActionsSet.getContextActions(latLng ? "position" : "unit")).map((contextAction) => {
-                const colorString = contextAction.getOptions().buttonColor
-                  ? `
+              {contextActionSet &&
+                Object.values(contextActionSet.getContextActions(latLng ? "position" : "unit")).map((contextActionIt) => {
+                  const colorString = contextActionIt.getOptions().buttonColor
+                    ? `
                   border-2
-                  border-${contextAction.getOptions().buttonColor}-500
+                  border-${contextActionIt.getOptions().buttonColor}-500
                 `
-                  : "";
+                : "";
                 return (
                   <OlDropdownItem
                     className={`
@@ -127,24 +87,23 @@ export function MapContextMenu(props: {}) {
                       ${colorString}
                     `}
                     onClick={() => {
-                      if (contextAction.getOptions().executeImmediately) {
-                        contextAction.executeCallback(null, null);
+                      if (contextActionIt.getOptions().executeImmediately) {
+                        contextActionIt.executeCallback(null, null);
                       } else {
                         if (latLng !== null) {
-                          contextAction.executeCallback(null, latLng);
-                          setOpen(false);
+                          contextActionIt.executeCallback(null, latLng);
                         } else if (unit !== null) {
-                          contextAction.executeCallback(unit, null);
-                          setOpen(false);
+                          contextActionIt.executeCallback(unit, null);
                         }
                       }
+                        
                     }}
-                  >
-                    <FontAwesomeIcon className="my-auto" icon={contextAction.getIcon()} />
-                    <div>{contextAction.getLabel()}</div>
-                  </OlDropdownItem>
-                );
-              })}
+                    >
+                      <FontAwesomeIcon className="my-auto" icon={contextActionIt.getIcon()} />
+                      <div>{contextActionIt.getLabel()}</div>
+                    </OlDropdownItem>
+                  );
+                })}
             </div>
           </div>
         </>
