@@ -57,10 +57,10 @@ export class UnitsManager {
 
   constructor() {
     this.#unitDatabase = new UnitDatabase();
-    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/aircraftdatabase");
-    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/helicopterdatabase");
-    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/groundunitdatabase");
-    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/navyunitdatabase");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/aircraftdatabase", "aircraft");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/helicopterdatabase", "helicopter");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/groundunitdatabase", "groundunit");
+    this.#unitDatabase.load(window.location.href.split("?")[0].replace("vite/", "") + "api/databases/units/navyunitdatabase", "navyunit");
 
     CommandModeOptionsChangedEvent.on(() => {
       Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility());
