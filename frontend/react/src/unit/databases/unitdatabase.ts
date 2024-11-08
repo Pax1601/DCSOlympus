@@ -8,7 +8,7 @@ export class UnitDatabase {
 
   constructor() {}
 
-  load(url: string) {
+  load(url: string, category?: string) {
     if (url !== "") {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", url, true);
@@ -18,6 +18,12 @@ export class UnitDatabase {
         var status = xhr.status;
         if (status === 200) {
           const newBlueprints = xhr.response as { [key: string]: UnitBlueprint };
+          for (let unit in newBlueprints) {
+            if (!newBlueprints[unit].category) {
+              if (category)  newBlueprints[unit].category = category
+              else console.warn(`No category provided for ${unit}`)
+            } 
+          }
           this.blueprints = { ...this.blueprints, ...newBlueprints };
           UnitDatabaseLoadedEvent.dispatch();
         } else {
