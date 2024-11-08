@@ -36,6 +36,7 @@ import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { JTACMenu } from "./panels/jtacmenu";
 import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
+import { InfoBar } from "./panels/infobar";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -52,23 +53,16 @@ export type OlympusUIState = {
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
-  const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
-
+ 
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [commandMode, setCommandMode] = useState(null as null | string);
-
-  const [formationLeader, setFormationLeader] = useState(null as null | Unit);
-  const [formationWingmen, setFormationWingmen] = useState(null as null | Unit[]);
-
-  const [unitExplosionUnits, setUnitExplosionUnits] = useState([] as Unit[]);
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
       setAppState(state);
       setAppSubState(subState);
     });
-    MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
   }, []);
 
   function checkPassword(password: string) {
@@ -142,16 +136,14 @@ export function UI() {
         <div id="map-container" className="z-0 h-full w-screen" />
         <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} options={mapOptions} /* TODO remove */ />
+        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)}/>
 
         <UnitControlMenu
-          open={appState === OlympusState.UNIT_CONTROL && appSubState !== UnitControlSubState.FORMATION}
+          open={appState === OlympusState.UNIT_CONTROL && ![UnitControlSubState.FORMATION, UnitControlSubState.UNIT_EXPLOSION_MENU].includes(appSubState as UnitControlSubState)}
           onClose={() => getApp().setState(OlympusState.IDLE)}
         />
         <FormationMenu
           open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION}
-          leader={formationLeader}
-          wingmen={formationWingmen}
           onClose={() => getApp().setState(OlympusState.IDLE)}
         />
 
@@ -160,7 +152,7 @@ export function UI() {
         <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
-        {/* TODO} <UnitExplosionMenu open={appState === OlympusState.MAIN_MENU} units={unitExplosionUnits} onClose={() => getApp().setState(OlympusState.IDLE)} /> {*/}
+        <UnitExplosionMenu open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
         <MiniMapPanel />
@@ -168,6 +160,7 @@ export function UI() {
         <UnitControlBar />
         <MapContextMenu />
         <SideBar />
+        <InfoBar />
       </div>
     </div>
   );

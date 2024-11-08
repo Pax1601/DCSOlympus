@@ -1,13 +1,14 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Unit } from "./unit";
 import { LatLng } from "leaflet";
+import { ContextActionType } from "../constants/constants";
 
 export interface ContextActionOptions {
   executeImmediately?: boolean;
-  buttonColor?: string | null;
+  type: ContextActionType;
 }
 
-export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null) => void;
+export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null, originalEvent?: MouseEvent) => void;
 
 export class ContextAction {
   #id: string = "";
@@ -64,7 +65,7 @@ export class ContextAction {
     return this.#target;
   }
 
-  executeCallback(targetUnit: Unit | null, targetPosition: LatLng | null) {
-    if (this.#callback) this.#callback(this.#units, targetUnit, targetPosition);
+  executeCallback(targetUnit: Unit | null, targetPosition: LatLng | null, originalEvent?: MouseEvent) {
+    if (this.#callback) this.#callback(this.#units, targetUnit, targetPosition, originalEvent);
   }
 }

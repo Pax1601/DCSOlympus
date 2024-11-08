@@ -227,63 +227,6 @@ export function polygonArea(polygon: Polygon) {
   return turf.area(poly);
 }
 
-export function randomUnitBlueprint(
-  unitDatabase: UnitDatabase,
-  options: {
-    type?: string;
-    role?: string;
-    ranges?: string[];
-    eras?: string[];
-    coalition?: string;
-  }
-) {
-  /* Start from all the unit blueprints in the database */
-  var unitBlueprints = unitDatabase.getBlueprints();
-
-  /* If a specific type or role is provided, use only the blueprints of that type or role */
-  if (options.type && options.role) {
-    console.error("Can't create random unit if both type and role are provided. Either create by type or by role.");
-    return null;
-  }
-
-  if (options.type) {
-    unitBlueprints = unitDatabase.getByType(options.type);
-  } else if (options.role) {
-    unitBlueprints = unitDatabase.getByType(options.role);
-  }
-
-  /* Keep only the units that have a range included in the requested values */
-  if (options.ranges) {
-    unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
-      var rangeType = "";
-      var range = unitBlueprint.acquisitionRange;
-      if (range !== undefined) {
-        if (range >= 0 && range < 10000) rangeType = "Short range";
-        else if (range >= 10000 && range < 100000) rangeType = "Medium range";
-        else if (range >= 100000 && range < 999999) rangeType = "Long range";
-      }
-      return options.ranges?.includes(rangeType);
-    });
-  }
-
-  /* Keep only the units that have an era included in the requested values */
-  if (options.eras) {
-    unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
-      return unitBlueprint.era ? options.eras?.includes(unitBlueprint.era) : true;
-    });
-  }
-
-  /* Keep only the units that have the correct coalition, if selected */
-  if (options.coalition) {
-    unitBlueprints = unitBlueprints.filter((unitBlueprint: UnitBlueprint) => {
-      return unitBlueprint.coalition && unitBlueprint.coalition !== "" ? options.coalition === unitBlueprint.coalition : true;
-    });
-  }
-
-  var index = Math.floor(Math.random() * unitBlueprints.length);
-  return unitBlueprints[index];
-}
-
 export function enumToState(state: number) {
   if (state < states.length) return states[state];
   else return states[0];
@@ -347,9 +290,8 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
 
 export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
   /* Get the ground elevation from the server endpoint */
-  /* TODO */
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", `api/elevation/${latlng.lat}/${latlng.lng}`, true);
+  xhr.open("GET", window.location.href.split("?")[0].replace("vite/", "") + `api/elevation/${latlng.lat}/${latlng.lng}`, true);
   xhr.timeout = 500; // ms
   xhr.responseType = "json";
   xhr.onload = () => {

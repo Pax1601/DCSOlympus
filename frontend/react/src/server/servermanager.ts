@@ -14,7 +14,7 @@ import {
   reactionsToThreat,
 } from "../constants/constants";
 import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
-import { ServerStatusUpdatedEvent } from "../events";
+import { InfoPopupEvent, ServerStatusUpdatedEvent } from "../events";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -350,12 +350,6 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  showFormationMenu(ID: number, isLeader: boolean, wingmenIDs: number[], callback: CallableFunction = () => {}) {
-    var command = { ID: ID, wingmenIDs: wingmenIDs, isLeader: isLeader };
-    var data = { setLeader: command };
-    this.PUT(data, callback);
-  }
-
   setROE(ID: number, ROE: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, ROE: ROEs.indexOf(ROE) };
     var data = { setROE: command };
@@ -660,7 +654,7 @@ export class ServerManager {
 
   setConnected(newConnected: boolean) {
     if (this.#connected != newConnected) {
-      //newConnected ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Connected to DCS Olympus server") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("Disconnected from DCS Olympus server");
+      newConnected ? getApp().addInfoMessage("Connected to DCS Olympus server") : getApp().addInfoMessage("Disconnected from DCS Olympus server");
       if (newConnected) {
         document.getElementById("splash-screen")?.classList.add("hide");
         document.getElementById("gray-out")?.classList.add("hide");
@@ -676,7 +670,7 @@ export class ServerManager {
 
   setPaused(newPaused: boolean) {
     this.#paused = newPaused;
-    //this.#paused ? (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View paused") : (getApp().getPopupsManager().get("infoPopup") as Popup).setText("View unpaused");
+    this.#paused ? getApp().addInfoMessage("View paused") : getApp().addInfoMessage("View unpaused");
   }
 
   getPaused() {

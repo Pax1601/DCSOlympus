@@ -11,10 +11,6 @@ import {
   mToFt,
   mercatorToLatLng,
   msToKnots,
-  polyContains,
-  polygonArea,
-  randomPointInPoly,
-  randomUnitBlueprint,
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState } from "../constants/constants";
@@ -33,6 +29,7 @@ import { ContextActionSet } from "./contextactionset";
 import {
   CommandModeOptionsChangedEvent,
   ContactsUpdatedEvent,
+  InfoPopupEvent,
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
   UnitDatabaseLoadedEvent,
@@ -343,9 +340,7 @@ export class UnitsManager {
   addDestination(latlng: L.LatLng, mantainRelativePosition: boolean, rotation: number, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
 
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
@@ -380,11 +375,9 @@ export class UnitsManager {
    */
   clearDestinations(units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       for (let idx in units) {
         const unit = units[idx];
         if (unit.getState() === "follow") {
@@ -408,9 +401,7 @@ export class UnitsManager {
    */
   landAt(latlng: LatLng, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.landAt(latlng));
@@ -430,9 +421,7 @@ export class UnitsManager {
    */
   changeSpeed(speedChange: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
@@ -450,9 +439,7 @@ export class UnitsManager {
    */
   changeAltitude(altitudeChange: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
@@ -470,9 +457,7 @@ export class UnitsManager {
    */
   setSpeed(speed: number, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setSpeed(speed));
@@ -491,9 +476,7 @@ export class UnitsManager {
    */
   setSpeedType(speedType: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setSpeedType(speedType));
@@ -512,9 +495,7 @@ export class UnitsManager {
    */
   setAltitude(altitude: number, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setAltitude(altitude));
@@ -533,9 +514,7 @@ export class UnitsManager {
    */
   setAltitudeType(altitudeType: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setAltitudeType(altitudeType));
@@ -554,9 +533,7 @@ export class UnitsManager {
    */
   setROE(ROE: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setROE(ROE));
@@ -575,9 +552,7 @@ export class UnitsManager {
    */
   setReactionToThreat(reactionToThreat: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setReactionToThreat(reactionToThreat));
@@ -596,9 +571,7 @@ export class UnitsManager {
    */
   setEmissionsCountermeasures(emissionCountermeasure: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setEmissionsCountermeasures(emissionCountermeasure));
@@ -617,9 +590,7 @@ export class UnitsManager {
    */
   setOnOff(onOff: boolean, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setOnOff(onOff));
@@ -638,9 +609,7 @@ export class UnitsManager {
    */
   setFollowRoads(followRoads: boolean, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setFollowRoads(followRoads));
@@ -660,9 +629,7 @@ export class UnitsManager {
   setOperateAs(operateAsBool: boolean, units: Unit[] | null = null) {
     var operateAs = operateAsBool ? "blue" : "red";
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setOperateAs(operateAs));
@@ -681,9 +648,7 @@ export class UnitsManager {
    */
   attackUnit(ID: number, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.attackUnit(ID));
@@ -701,9 +666,7 @@ export class UnitsManager {
   refuel(units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
 
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.refuel());
@@ -724,9 +687,7 @@ export class UnitsManager {
    */
   followUnit(ID: number, offset?: { x: number; y: number; z: number }, formation?: string, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       if (offset == undefined) {
@@ -759,11 +720,10 @@ export class UnitsManager {
         } else offset = undefined;
       }
 
-      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())){
+      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
         getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
         this.#protectionCallback = callback;
-      }
-      else callback(units);
+      } else callback(units);
     };
     var count = 1;
     var xr = 0;
@@ -813,14 +773,19 @@ export class UnitsManager {
    * @param latlng Location to bomb
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
-  bombPoint(latlng: LatLng, units: Unit[] | null = null) {
+  bombPoint(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
-      units.forEach((unit: Unit) => unit.bombPoint(latlng));
+      /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+      var unitTargets: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitTargets[unit.ID] = latlng;
+        });
+      units.forEach((unit: Unit) => unit.bombPoint(unitTargets[unit.ID]));
       this.#showActionMessage(units, `unit bombing point`);
     };
 
@@ -834,14 +799,19 @@ export class UnitsManager {
    * @param latlng Location to bomb
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
-  carpetBomb(latlng: LatLng, units: Unit[] | null = null) {
+  carpetBomb(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
-      units.forEach((unit: Unit) => unit.carpetBomb(latlng));
+      /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+      var unitTargets: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitTargets[unit.ID] = latlng;
+        });
+      units.forEach((unit: Unit) => unit.carpetBomb(unitTargets[unit.ID]));
       this.#showActionMessage(units, `unit carpet bombing point`);
     };
 
@@ -855,14 +825,19 @@ export class UnitsManager {
    * @param latlng Location to fire at
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
-  fireAtArea(latlng: LatLng, units: Unit[] | null = null) {
+  fireAtArea(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
-      units.forEach((unit: Unit) => unit.fireAtArea(latlng));
+      /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+      var unitTargets: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitTargets[unit.ID] = latlng;
+        });
+      units.forEach((unit: Unit) => unit.fireAtArea(unitTargets[unit.ID]));
       this.#showActionMessage(units, `unit firing at area`);
     };
 
@@ -876,26 +851,34 @@ export class UnitsManager {
    * @param latlng Location to fire at
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
-  simulateFireFight(latlng: LatLng, units: Unit[] | null = null) {
-    // TODO
-    //    if (units === null)
-    //      units = this.getSelectedUnits();
-    //    units = units.filter((unit => {!unit.getHuman()}));
-    //
-    //    let callback = (units) => {
-    //
-    //    getGroundElevation(latlng, (response: string) => {
-    //      var groundElevation: number | null = null;
-    //      try {
-    //        groundElevation = parseFloat(response);
-    //      } catch {
-    //        console.warn("Simulate fire fight: could not retrieve ground elevation");
-    //      }
-    //
-    //if (getApp().getMap().getOptions().protectDCSUnits && !units.every(unit => unit.isControlledByOlympus()))
-    //      this.showProtectedUnitsPopup(units.filter(unit => unit.isControlledByDCS()).length, callback);}      units?.forEach((unit: Unit) => unit.simulateFireFight(latlng, groundElevation));
-    //    });
-    //    this.#showActionMessage(units, `unit simulating fire fight`);
+  simulateFireFight(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units) => {
+      getGroundElevation(latlng, (response: string) => {
+        var groundElevation: number | null = null;
+        try {
+          groundElevation = parseFloat(response);
+          /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+          var unitTargets: { [key: number]: LatLng } = {};
+          if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+          else
+            units.forEach((unit: Unit) => {
+              unitTargets[unit.ID] = latlng;
+            });
+          units.forEach((unit: Unit) => unit.simulateFireFight(unitTargets[unit.ID], groundElevation));
+          this.#showActionMessage(units, `simulating fire fight`);
+        } catch {
+          console.warn("Simulate fire fight: could not retrieve ground elevation");
+        }
+      });
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
 
   /** Instruct units to enter into scenic AAA mode. Units will shoot in the air without aiming
@@ -903,9 +886,7 @@ export class UnitsManager {
    */
   scenicAAA(units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.scenicAAA());
@@ -922,9 +903,7 @@ export class UnitsManager {
    */
   missOnPurpose(units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.missOnPurpose());
@@ -941,14 +920,19 @@ export class UnitsManager {
    * @param latlng Point where to land
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
-  landAtPoint(latlng: LatLng, units: Unit[] | null = null) {
+  landAtPoint(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
-      units.forEach((unit: Unit) => unit.landAtPoint(latlng));
+      /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+      var unitTargets: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitTargets[unit.ID] = latlng;
+        });
+      units.forEach((unit: Unit) => unit.landAtPoint(unitTargets[unit.ID]));
       this.#showActionMessage(units, `unit landing at point`);
     };
 
@@ -964,9 +948,7 @@ export class UnitsManager {
    */
   setShotsScatter(shotsScatter: number, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setShotsScatter(shotsScatter));
@@ -985,9 +967,7 @@ export class UnitsManager {
    */
   setShotsIntensity(shotsIntensity: number, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       units.forEach((unit: Unit) => unit.setShotsIntensity(shotsIntensity));
@@ -1022,9 +1002,7 @@ export class UnitsManager {
    */
   createGroup(units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
       if (this.getUnitsCategories(units).length == 1) {
@@ -1033,14 +1011,14 @@ export class UnitsManager {
         getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */);
         this.#showActionMessage(units, `created a group`);
       } else {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Groups can only be created from units of the same category`);
+        getApp().addInfoMessage(`Groups can only be created from units of the same category`);
       }
-
-      if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
-        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
-        this.#protectionCallback = callback;
-      } else callback(units);
     };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
   }
 
   /** Set the hotgroup for the selected units. It will be the only hotgroup of the unit
@@ -1080,11 +1058,10 @@ export class UnitsManager {
       this.#showActionMessage(units as Unit[], `deleted`);
     };
 
-    if ((getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) || units.find((unit) => unit.getHuman())){
+    if ((getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) || units.find((unit) => unit.getHuman())) {
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
       this.#protectionCallback = callback;
-    }
-    else callback(units);
+    } else callback(units);
   }
 
   /** Compute the destinations of every unit in the selected units. This function preserves the relative positions of the units, and rotates the whole formation by rotation.
@@ -1098,9 +1075,7 @@ export class UnitsManager {
     // TODO handle protected units
     if (units === null) units = this.getSelectedUnits();
 
-    units = units.filter((unit) => {
-      return !unit.getHuman();
-    });
+    units = units.filter((unit) => !unit.getHuman());
 
     if (units.length === 0) return {};
 
@@ -1159,7 +1134,7 @@ export class UnitsManager {
         })
       )
     ); /* Can be applied to humans too */
-    //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${this.#copiedUnits.length} units copied`);
+    getApp().addInfoMessage(`${this.#copiedUnits.length} units copied`);
   }
 
   /*********************** Unit manipulation functions  ************************/
@@ -1173,17 +1148,17 @@ export class UnitsManager {
     /* If spawns are restricted, check that the user has the necessary spawn points */
     if (getApp().getMissionManager().getCommandModeOptions().commandMode != GAME_MASTER) {
       if (getApp().getMissionManager().getCommandModeOptions().restrictSpawns && getApp().getMissionManager().getRemainingSetupTime() < 0) {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Units can be pasted only during SETUP phase`);
+        getApp().addInfoMessage(`Units can be pasted only during SETUP phase`);
         return false;
       }
 
       this.#copiedUnits.forEach((unit: UnitData) => {
-        let unitSpawnPoints = getUnitDatabaseByCategory(unit.category)?.getSpawnPointsByName(unit.name);
+        let unitSpawnPoints = this.#unitDatabase.getSpawnPointsByName(unit.name);
         if (unitSpawnPoints !== undefined) spawnPoints += unitSpawnPoints;
       });
 
       if (spawnPoints > getApp().getMissionManager().getAvailableSpawnPoints()) {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
+        getApp().addInfoMessage("Not enough spawn points available!");
         return false;
       }
     }
@@ -1229,9 +1204,9 @@ export class UnitsManager {
             }
           });
       }
-      //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${this.#copiedUnits.length} units pasted`);
+      getApp().addInfoMessage(`${this.#copiedUnits.length} units pasted`);
     } else {
-      //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("No units copied!");
+      getApp().addInfoMessage("No units copied!");
     }
   }
 
@@ -1284,14 +1259,14 @@ export class UnitsManager {
               /* Get a random blueprint depending on the selected parameters and spawn the unit */
               let unitBlueprint: UnitBlueprint | null;
               if (forceCoalition)
-                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {
+                unitBlueprint = this.#unitDatabase.getRandomUnit({
                   type: type,
                   eras: activeEras,
                   ranges: activeRanges,
                   coalition: coalitionArea.getCoalition(),
                 });
               else
-                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {
+                unitBlueprint = this.#unitDatabase.getRandomUnit({
                   type: type,
                   eras: activeEras,
                   ranges: activeRanges,
@@ -1337,14 +1312,14 @@ export class UnitsManager {
               /* Get a random blueprint depending on the selected parameters and spawn the unit */
               let unitBlueprint: UnitBlueprint | null;
               if (forceCoalition)
-                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {
+                unitBlueprint = this.#unitDatabase.getRandomUnit({
                   type: type,
                   eras: activeEras,
                   ranges: activeRanges,
                   coalition: coalitionArea.getCoalition(),
                 });
               else
-                unitBlueprint = randomUnitBlueprint(groundUnitDatabase, {
+                unitBlueprint = this.#unitDatabase.getRandomUnit({
                   type: type,
                   eras: activeEras,
                   ranges: activeRanges,
@@ -1418,38 +1393,38 @@ export class UnitsManager {
 
     if (category === "aircraft") {
       if (airbase == "" && spawnsRestricted) {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Aircrafts can be air spawned during the SETUP phase only");
+        getApp().addInfoMessage("Aircrafts can be air spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
     } else if (category === "helicopter") {
       if (airbase == "" && spawnsRestricted) {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Helicopters can be air spawned during the SETUP phase only");
+        getApp().addInfoMessage("Helicopters can be air spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
     } else if (category === "groundunit") {
       if (spawnsRestricted) {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Ground units can be spawned during the SETUP phase only");
+        getApp().addInfoMessage("Ground units can be spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
     } else if (category === "navyunit") {
       if (spawnsRestricted) {
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Navy units can be spawned during the SETUP phase only");
+        getApp().addInfoMessage("Navy units can be spawned during the SETUP phase only");
         return false;
       }
       spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType)
+        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
     }
@@ -1459,7 +1434,7 @@ export class UnitsManager {
       spawnFunction();
       return true;
     } else {
-      //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Not enough spawn points available!");
+      getApp().addInfoMessage("Not enough spawn points available!");
       return false;
     }
   }
@@ -1527,10 +1502,8 @@ export class UnitsManager {
   }
 
   #showActionMessage(units: Unit[], message: string) {
-    //if (units.length == 1)
-    //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} ${message}`);
-    //else if (units.length > 1)
-    //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
+    if (units.length == 1) getApp().addInfoMessage(`${units[0].getUnitName()} ${message}`);
+    else if (units.length > 1) getApp().addInfoMessage(`${units[0].getUnitName()} and ${units.length - 1} other units ${message}`);
   }
 
   #showSlowDeleteDialog(units: Unit[]) {
@@ -1562,15 +1535,15 @@ export class UnitsManager {
   }
 
   #showNumberOfSelectedProtectedUnits() {
-    const map = getApp().getMap();
     const units = this.getSelectedUnits();
     const numSelectedUnits = units.length;
-    //const numProtectedUnits = units.filter((unit: Unit) => map.getIsUnitProtected(unit)).length;
+    const numProtectedUnits = units.filter((unit: Unit) => !unit.isControlledByOlympus() && !unit.getHuman()).length;
+    const numHumanUnits = units.filter((unit: Unit) => unit.getHuman()).length;
 
-    //if (numProtectedUnits === 1 && numSelectedUnits === numProtectedUnits)
-    //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: unit is protected`);
-
-    //if (numProtectedUnits > 1)
-    //(getApp().getPopupsManager().get("infoPopup") as Popup).setText(`Notice: selection contains ${numProtectedUnits} protected units.`);
+    if (getApp().getMap().getOptions().protectDCSUnits && numProtectedUnits === 1 && numSelectedUnits === numProtectedUnits)
+      getApp().addInfoMessage(`Notice: unit is protected`);
+    if (getApp().getMap().getOptions().protectDCSUnits && numProtectedUnits > 1)
+      getApp().addInfoMessage(`Notice: selection contains ${numProtectedUnits} protected units.`);
+    if (numHumanUnits) getApp().addInfoMessage(`Notice: selection contains ${numHumanUnits} human units.`);
   }
 }

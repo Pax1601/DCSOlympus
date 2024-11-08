@@ -45,8 +45,11 @@ import {
   ContextActionChangedEvent,
   ContextActionSetChangedEvent,
   HiddenTypesChangedEvent,
+  MapContextMenuRequestEvent,
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
+  SelectionClearedEvent,
+  UnitSelectedEvent,
   UnitUpdatedEvent,
 } from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
@@ -115,6 +118,10 @@ export class Map extends L.Map {
 
   /* Coalition areas drawing */
   #coalitionAreas: (CoalitionPolygon | CoalitionCircle)[] = [];
+
+  /* Units movement */
+  #destinationPreviewMarkers: { [key: number]: TemporaryUnitMarker | TargetMarker } = {};
+  #destinationRotation: number = 0;
 
   /* Unit context actions */
   #contextActionSet: null | ContextActionSet = null;
@@ -190,6 +197,7 @@ export class Map extends L.Map {
     /* Custom touch events for touchscreen support */
     L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
     L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
+    L.DomEvent.on(this.getContainer(), "wheel", this.#onWheel, this);
 
     /* Event listeners */
     AppStateChangedEvent.on((state, subState) => this.#onStateChanged(state, subState));
@@ -204,6 +212,7 @@ export class Map extends L.Map {
 
     UnitUpdatedEvent.on((unit) => {
       if (this.#centeredUnit != null && unit == this.#centeredUnit) this.#panToUnit(this.#centeredUnit);
+      if (unit.getSelected()) this.#moveDestinationPreviewMarkers();
     });
 
     MapOptionsChangedEvent.on((options) => {
@@ -254,6 +263,11 @@ export class Map extends L.Map {
         this.setLayerName(Object.keys(this.#mapLayers)[0]);
       }
     });
+
+    UnitSelectedEvent.on((unit) => this.#updateDestinationPreviewMarkers());
+    SelectionClearedEvent.on(() => this.#updateDestinationPreviewMarkers());
+    ContextActionChangedEvent.on((contextAction) => this.#updateDestinationPreviewMarkers());
+    MapOptionsChangedEvent.on((mapOptions) => this.#moveDestinationPreviewMarkers());
 
     /* Pan interval */
     this.#panInterval = window.setInterval(() => {
@@ -724,6 +738,18 @@ export class Map extends L.Map {
     return marker;
   }
 
+  addExplosionMarker(latlng: L.LatLng) {
+    const explosionMarker = new ExplosionMarker(latlng, 5);
+    explosionMarker.addTo(this);
+    return explosionMarker;
+  }
+
+  addSmokeMarker(latlng: L.LatLng, color: string) {
+    const smokeMarker = new SmokeMarker(latlng, color);
+    smokeMarker.addTo(this);
+    return smokeMarker;
+  }
+
   setOption(key, value) {
     this.#options[key] = value;
     MapOptionsChangedEvent.dispatch(this.#options);
@@ -781,8 +807,8 @@ export class Map extends L.Map {
     //}
   }
 
-  executeContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null) {
-    this.#contextAction?.executeCallback(targetUnit, targetPosition);
+  executeContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null, originalEvent?: MouseEvent) {
+    this.#contextAction?.executeCallback(targetUnit, targetPosition, originalEvent);
   }
 
   getContextActionSet() {
@@ -793,8 +819,8 @@ export class Map extends L.Map {
     return this.#contextAction;
   }
 
-  executeDefaultContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null) {
-    this.#contextActionSet?.getDefaultContextAction()?.executeCallback(targetUnit, targetPosition);
+  executeDefaultContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null, originalEvent?: MouseEvent) {
+    this.#contextActionSet?.getDefaultContextAction()?.executeCallback(targetUnit, targetPosition, originalEvent);
   }
 
   preventClicks() {
@@ -831,10 +857,9 @@ export class Map extends L.Map {
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
         console.log(`Effect request table:`);
         console.log(this.#effectRequestTable);
-        if (this.#effectRequestTable?.type === 'explosion')
-          this.#currentEffectMarker = new ExplosionMarker(new L.LatLng(0, 0))
-        else if (this.#effectRequestTable?.type === 'smoke')
-          this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white")
+        if (this.#effectRequestTable?.type === "explosion") this.#currentEffectMarker = new ExplosionMarker(new L.LatLng(0, 0));
+        else if (this.#effectRequestTable?.type === "smoke")
+          this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white");
         this.#currentEffectMarker?.addTo(this);
       }
     } else if (state === OlympusState.UNIT_CONTROL) {
@@ -874,6 +899,8 @@ export class Map extends L.Map {
     this.#isMouseDown = false;
     window.clearTimeout(this.#longPressTimer);
 
+    this.scrollWheelZoom.enable();
+
     this.#isMouseOnCooldown = true;
     this.#mouseCooldownTimer = window.setTimeout(() => {
       this.#isMouseOnCooldown = false;
@@ -887,6 +914,8 @@ export class Map extends L.Map {
       return;
     }
 
+    this.scrollWheelZoom.disable();
+
     this.#shortPressTimer = window.setTimeout(() => {
       /* If the mouse is no longer being pressed, execute the short press action */
       if (!this.#isMouseDown) this.#onShortPress(e);
@@ -896,6 +925,11 @@ export class Map extends L.Map {
       /* If the mouse is still being pressed, execute the long press action */
       if (this.#isMouseDown && !this.#isDragging && !this.#isZooming) this.#onLongPress(e);
     }, 350);
+  }
+
+  #onWheel(e: any) {
+    //this.#destinationRotation += e.deltaY / 25;
+    //this.#moveDestinationPreviewMarkers();
   }
 
   #onDoubleClick(e: any) {
@@ -947,14 +981,12 @@ export class Map extends L.Map {
             else if (this.#effectRequestTable.explosionType === "White phosphorous")
               getApp().getServerManager().spawnExplosion(50, "phosphorous", pressLocation);
 
-            const explosionMarker = new ExplosionMarker(pressLocation, 5);
-            explosionMarker.addTo(this);
+            this.addExplosionMarker(pressLocation);
           } else if (this.#effectRequestTable.type === "smoke") {
             getApp()
               .getServerManager()
               .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", pressLocation);
-            const smokeMarker = new SmokeMarker(pressLocation, this.#effectRequestTable.smokeColor ?? "white");
-            smokeMarker.addTo(this);
+            this.addSmokeMarker(pressLocation, this.#effectRequestTable.smokeColor ?? "white");
           }
         }
       }
@@ -982,10 +1014,10 @@ export class Map extends L.Map {
       }
     } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
       if (e.type === "touchstart" || e.originalEvent.buttons === 1) {
-        if (this.#contextAction !== null) this.executeContextAction(null, pressLocation);
+        if (this.#contextAction !== null) this.executeContextAction(null, pressLocation, e.originalEvent);
         else getApp().setState(OlympusState.IDLE);
       } else if (e.originalEvent.buttons === 2) {
-        this.executeDefaultContextAction(null, pressLocation);
+        this.executeDefaultContextAction(null, pressLocation, e.originalEvent);
       }
     } else if (getApp().getState() === OlympusState.JTAC) {
       if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
@@ -1055,6 +1087,7 @@ export class Map extends L.Map {
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
           getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
+          MapContextMenuRequestEvent.dispatch(pressLocation);
         } else {
           if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
           else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
@@ -1070,10 +1103,10 @@ export class Map extends L.Map {
     this.#lastMousePosition.y = e.originalEvent.y;
     this.#lastMouseCoordinates = e.latlng;
 
-    if (this.#currentSpawnMarker) 
-      this.#currentSpawnMarker.setLatLng(e.latlng);
-    if (this.#currentEffectMarker)
-      this.#currentEffectMarker.setLatLng(e.latlng);
+    if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
+    if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
+
+    this.#moveDestinationPreviewMarkers();
   }
 
   #onMapMove(e: any) {
@@ -1188,6 +1221,39 @@ export class Map extends L.Map {
         this.#IPToTargetLine = new L.Polygon([this.#targetPoint.getLatLng(), this.#IPPoint.getLatLng()]);
         this.#IPToTargetLine.addTo(this);
       } else this.#IPToTargetLine.setLatLngs([this.#targetPoint.getLatLng(), this.#IPPoint.getLatLng()]);
+    }
+  }
+
+  #updateDestinationPreviewMarkers() {
+    const selectedUnits = getApp()
+      .getUnitsManager()
+      .getSelectedUnits()
+      .filter((unit) => !unit.getHuman());
+
+    Object.keys(this.#destinationPreviewMarkers).forEach((ID) => {
+      this.#destinationPreviewMarkers[ID].removeFrom(this);
+      delete this.#destinationPreviewMarkers[ID];
+    });
+
+    selectedUnits.forEach((unit) => {
+      if (["move", "path", "land-at-point"].includes(this.#contextAction?.getId() ?? "")) {
+        this.#destinationPreviewMarkers[unit.ID] = new TemporaryUnitMarker(new L.LatLng(0, 0), unit.getName(), unit.getCoalition());
+      } else if (this.#contextAction?.getTarget() === "position" && this.#contextAction?.getId() !== "land") {
+        this.#destinationPreviewMarkers[unit.ID] = new TargetMarker(new L.LatLng(0, 0));
+      }
+      this.#destinationPreviewMarkers[unit.ID]?.addTo(this);
+    });
+  }
+
+  #moveDestinationPreviewMarkers() {
+    if (this.#options.keepRelativePositions) {
+      Object.entries(getApp().getUnitsManager().computeGroupDestination(this.#lastMouseCoordinates, this.#destinationRotation)).forEach(([ID, latlng]) => {
+        this.#destinationPreviewMarkers[ID]?.setLatLng(latlng);
+      });
+    } else {
+      Object.values(this.#destinationPreviewMarkers).forEach((marker) => {
+        marker.setLatLng(this.#lastMouseCoordinates);
+      });
     }
   }
 }

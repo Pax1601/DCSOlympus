@@ -167,7 +167,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
-                        cost={blueprint.cost ?? 10}
+                        cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
                       />
                     );
                   })}
@@ -219,7 +219,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
-                        cost={blueprint.cost ?? 10}
+                        cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
                       />
                     );
                   })}
@@ -250,7 +250,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
-                        cost={blueprint.cost ?? 10}
+                        cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
                       />
                     );
                   })}
@@ -281,7 +281,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
-                        cost={blueprint.cost ?? 10}
+                        cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
                       />
                     );
                   })}
@@ -336,7 +336,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
-                        cost={blueprint.cost ?? 10}
+                        cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
                       />
                     );
                   })}
@@ -388,7 +388,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
-                        cost={blueprint.cost ?? 10}
+                        cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
                       />
                     );
                   })}

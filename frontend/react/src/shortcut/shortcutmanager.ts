@@ -89,6 +89,15 @@ export class ShortcutManager {
         ctrlKey: false,
         shiftKey: false,
       })
+      .addKeyboardShortcut("toggleRelativePositions", {
+        altKey: false,
+        callback: () => {
+          getApp().getMap().setOption("keepRelativePositions", !getApp().getMap().getOptions().keepRelativePositions);
+        },
+        code: "KeyP",
+        ctrlKey: false,
+        shiftKey: false,
+      })
       .addKeyboardShortcut("increaseCameraZoom", {
         altKey: true,
         callback: () => {

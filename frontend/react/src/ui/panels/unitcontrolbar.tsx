@@ -11,7 +11,7 @@ import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChange
 
 export function UnitControlBar(props: {}) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
-  const [contextActionSet, setContextActionsSet] = useState(null as ContextActionSet | null);
+  const [contextActionSet, setcontextActionSet] = useState(null as ContextActionSet | null);
   const [contextAction, setContextAction] = useState(null as ContextAction | null);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
@@ -24,7 +24,7 @@ export function UnitControlBar(props: {}) {
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => setAppState(state));
-    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionsSet(contextActionSet));
+    ContextActionSetChangedEvent.on((contextActionSet) => setcontextActionSet(contextActionSet));
     ContextActionChangedEvent.on((contextAction) => setContextAction(contextAction));
   }, []);
 
@@ -39,15 +39,9 @@ export function UnitControlBar(props: {}) {
     sr > 1 && scrolledRight && setScrolledRight(false);
   }
 
-  let reorderedActions: ContextAction[] = [];
-  CONTEXT_ACTION_COLORS.forEach((color) => {
-    if (contextActionSet) {
-      Object.values(contextActionSet.getContextActions()).forEach((contextAction: ContextAction) => {
-        if (color === null && contextAction.getOptions().buttonColor === undefined) reorderedActions.push(contextAction);
-        else if (color === contextAction.getOptions().buttonColor) reorderedActions.push(contextAction);
-      });
-    }
-  });
+  let reorderedActions: ContextAction[] = contextActionSet
+    ? Object.values(contextActionSet.getContextActions()).sort((a: ContextAction, b: ContextAction) => (a.getOptions().type < b.getOptions().type ? -1 : 1))
+    : [];
 
   return (
     <>
@@ -77,7 +71,7 @@ export function UnitControlBar(props: {}) {
                     checked={contextActionIt === contextAction}
                     icon={contextActionIt.getIcon()}
                     tooltip={contextActionIt.getLabel()}
-                    borderColor={contextActionIt.getOptions().buttonColor}
+                    buttonColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type ?? 0]}
                     onClick={() => {
                       if (contextActionIt.getOptions().executeImmediately) {
                         contextActionIt.executeCallback(null, null);
@@ -99,6 +93,7 @@ export function UnitControlBar(props: {}) {
               />
             )}
           </div>
+          {/*}
           {contextAction && (
             <div
               className={`
@@ -125,6 +120,7 @@ export function UnitControlBar(props: {}) {
               </div>
             </div>
           )}
+          {*/}
         </>
       )}
     </>

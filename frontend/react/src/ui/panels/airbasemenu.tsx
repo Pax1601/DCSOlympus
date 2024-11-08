@@ -9,8 +9,9 @@ import { OlAccordion } from "../components/olaccordion";
 import { OlUnitListEntry } from "../components/olunitlistentry";
 import { olButtonsVisibilityAircraft, olButtonsVisibilityHelicopter } from "../components/olicons";
 import { UnitSpawnMenu } from "./unitspawnmenu";
-import { AirbaseSelectedEvent, UnitDatabaseLoadedEvent } from "../../events";
+import { AirbaseSelectedEvent, CommandModeOptionsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
 import { getApp } from "../../olympusapp";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
 
 enum CategoryAccordion {
   NONE,
@@ -27,6 +28,8 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
   const [blueprints, setBlueprints] = useState([] as UnitBlueprint[]);
   const [roles, setRoles] = useState({ aircraft: [] as string[], helicopter: [] as string[] });
   const [openAccordion, setOpenAccordion] = useState(CategoryAccordion.NONE);
+  const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
+  const [showCost, setShowCost] = useState(false);
 
   useEffect(() => {
     AirbaseSelectedEvent.on((airbase) => {
@@ -44,6 +47,12 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
           .getDatabase()
           .getRoles((unit) => unit.category === "helicopter"),
       });
+    });
+
+    CommandModeOptionsChangedEvent.on((commandModeOptions) => {
+      setCommandModeOptions(commandModeOptions);
+      setShowCost(!(commandModeOptions.commandMode === GAME_MASTER || !commandModeOptions.restrictSpawns));
+      setOpenAccordion(CategoryAccordion.NONE);
     });
   }, []);
 
@@ -132,112 +141,137 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
             </div>
           </OlAccordion>
         </div>
-        <div className="mt-5 flex gap-2 px-5 text-white bold">
-          {blueprint && (
-            <FaArrowLeft
-              className={`
-                my-auto h-8 w-8 cursor-pointer rounded-md p-2
-                dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
-              `}
-              onClick={() => setBlueprint(null)}
-            />
-          )}
-          <span className="my-auto">Spawn units at airbase</span>
-        </div>
-        {blueprint === null && (
-          <div className="p-5">
-            <OlSearchBar onChange={(value) => setFilterString(value)} text={filterString} />
-            <OlAccordion
-              title={`Aircraft`}
-              open={openAccordion == CategoryAccordion.AIRCRAFT}
-              onClick={() => {
-                setOpenAccordion(openAccordion === CategoryAccordion.AIRCRAFT ? CategoryAccordion.NONE : CategoryAccordion.AIRCRAFT);
-                setSelectedRole(null);
-              }}
-            >
-              <div className="mb-2 flex flex-wrap gap-1">
-                {roles.aircraft.sort().map((role) => {
-                  return (
-                    <div
-                      key={role}
-                      data-selected={selectedRole === role}
-                      className={`
-                        cursor-pointer rounded-full bg-olympus-800 px-2 py-0.5
-                        text-xs font-bold text-olympus-50
-                        data-[selected='true']:bg-blue-500
-                        data-[selected='true']:text-gray-200
-                      `}
-                      onClick={() => {
-                        selectedRole === role ? setSelectedRole(null) : setSelectedRole(role);
-                      }}
-                    >
-                      {role}
-                    </div>
-                  );
-                })}
+        {(commandModeOptions.commandMode === GAME_MASTER ||
+          (commandModeOptions.commandMode === BLUE_COMMANDER && airbase?.getCoalition() === "blue") ||
+          (commandModeOptions.commandMode === RED_COMMANDER && airbase?.getCoalition() === "red")) && (
+          <>
+            <div className="mt-5 flex gap-2 px-5 text-white bold">
+              {blueprint && (
+                <FaArrowLeft
+                  className={`
+                    my-auto h-8 w-8 cursor-pointer rounded-md p-2
+                    dark:text-gray-500 dark:hover:bg-gray-700
+                    dark:hover:text-white
+                  `}
+                  onClick={() => setBlueprint(null)}
+                />
+              )}
+              <span className="my-auto">Spawn units at airbase</span>
+            </div>
+            {blueprint === null && (
+              <div className="p-5">
+                <OlSearchBar onChange={(value) => setFilterString(value)} text={filterString} />
+                <OlAccordion
+                  title={`Aircraft`}
+                  open={openAccordion == CategoryAccordion.AIRCRAFT}
+                  onClick={() => {
+                    setOpenAccordion(openAccordion === CategoryAccordion.AIRCRAFT ? CategoryAccordion.NONE : CategoryAccordion.AIRCRAFT);
+                    setSelectedRole(null);
+                  }}
+                >
+                  <div className="mb-2 flex flex-wrap gap-1">
+                    {roles.aircraft.sort().map((role) => {
+                      return (
+                        <div
+                          key={role}
+                          data-selected={selectedRole === role}
+                          className={`
+                            cursor-pointer rounded-full bg-olympus-800 px-2
+                            py-0.5 text-xs font-bold text-olympus-50
+                            data-[selected='true']:bg-blue-500
+                            data-[selected='true']:text-gray-200
+                          `}
+                          onClick={() => {
+                            selectedRole === role ? setSelectedRole(null) : setSelectedRole(role);
+                          }}
+                        >
+                          {role}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div
+                    className={`
+                      flex max-h-[450px] flex-col gap-1 overflow-y-scroll
+                      no-scrollbar
+                    `}
+                  >
+                    {filteredBlueprints
+                      .filter((blueprint) => blueprint.category === "aircraft")
+                      .map((blueprint) => {
+                        return (
+                          <OlUnitListEntry
+                            key={blueprint.name}
+                            icon={olButtonsVisibilityAircraft}
+                            blueprint={blueprint}
+                            onClick={() => setBlueprint(blueprint)}
+                            showCost={showCost}
+                            cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
+                          />
+                        );
+                      })}
+                  </div>
+                </OlAccordion>
+                <OlAccordion
+                  title={`Helicopters`}
+                  open={openAccordion == CategoryAccordion.HELICOPTER}
+                  onClick={() => {
+                    setOpenAccordion(openAccordion === CategoryAccordion.HELICOPTER ? CategoryAccordion.NONE : CategoryAccordion.HELICOPTER);
+                    setSelectedRole(null);
+                  }}
+                >
+                  <div className="mb-2 flex flex-wrap gap-1">
+                    {roles.helicopter.sort().map((role) => {
+                      return (
+                        <div
+                          key={role}
+                          data-selected={selectedRole === role}
+                          className={`
+                            cursor-pointer rounded-full bg-olympus-800 px-2
+                            py-0.5 text-xs font-bold text-olympus-50
+                            data-[selected='true']:bg-blue-500
+                            data-[selected='true']:text-gray-200
+                          `}
+                          onClick={() => {
+                            selectedRole === role ? setSelectedRole(null) : setSelectedRole(role);
+                          }}
+                        >
+                          {role}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div
+                    className={`
+                      flex max-h-[450px] flex-col gap-1 overflow-y-scroll
+                      no-scrollbar
+                    `}
+                  >
+                    {filteredBlueprints
+                      .filter((blueprint) => blueprint.category === "helicopter")
+                      .map((blueprint) => {
+                        return (
+                          <OlUnitListEntry
+                            key={blueprint.name}
+                            icon={olButtonsVisibilityHelicopter}
+                            blueprint={blueprint}
+                            onClick={() => setBlueprint(blueprint)}
+                            showCost={showCost}
+                            cost={getApp().getUnitsManager().getDatabase().getSpawnPointsByName(blueprint.name)}
+                          />
+                        );
+                      })}
+                  </div>
+                </OlAccordion>
               </div>
-              <div
-                className={`
-                  flex max-h-[450px] flex-col gap-1 overflow-y-scroll
-                  no-scrollbar
-                `}
-              >
-                {filteredBlueprints
-                  .filter((blueprint) => blueprint.category === "aircraft")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityAircraft} blueprint={entry} onClick={() => setBlueprint(entry)} />;
-                  })}
-              </div>
-            </OlAccordion>
-            <OlAccordion
-              title={`Helicopters`}
-              open={openAccordion == CategoryAccordion.HELICOPTER}
-              onClick={() => {
-                setOpenAccordion(openAccordion === CategoryAccordion.HELICOPTER ? CategoryAccordion.NONE : CategoryAccordion.HELICOPTER);
-                setSelectedRole(null);
-              }}
-            >
-              <div className="mb-2 flex flex-wrap gap-1">
-                {roles.helicopter.sort().map((role) => {
-                  return (
-                    <div
-                      key={role}
-                      data-selected={selectedRole === role}
-                      className={`
-                        cursor-pointer rounded-full bg-olympus-800 px-2 py-0.5
-                        text-xs font-bold text-olympus-50
-                        data-[selected='true']:bg-blue-500
-                        data-[selected='true']:text-gray-200
-                      `}
-                      onClick={() => {
-                        selectedRole === role ? setSelectedRole(null) : setSelectedRole(role);
-                      }}
-                    >
-                      {role}
-                    </div>
-                  );
-                })}
-              </div>
-              <div
-                className={`
-                  flex max-h-[450px] flex-col gap-1 overflow-y-scroll
-                  no-scrollbar
-                `}
-              >
-                {filteredBlueprints
-                  .filter((blueprint) => blueprint.category === "helicopter")
-                  .map((entry) => {
-                    return <OlUnitListEntry key={entry.name} icon={olButtonsVisibilityHelicopter} blueprint={entry} onClick={() => setBlueprint(entry)} />;
-                  })}
-              </div>
-            </OlAccordion>
-          </div>
+            )}
+            <>
+              {!(blueprint === null) && (
+                <UnitSpawnMenu blueprint={blueprint} spawnAtLocation={false} airbase={airbase} coalition={(airbase?.getCoalition() ?? "blue") as Coalition} />
+              )}
+            </>
+          </>
         )}
-        <>
-          {!(blueprint === null) && (
-            <UnitSpawnMenu blueprint={blueprint} spawnAtLocation={false} airbase={airbase} coalition={(airbase?.getCoalition() ?? "blue") as Coalition} />
-          )}
-        </>
       </div>
     </Menu>
   );

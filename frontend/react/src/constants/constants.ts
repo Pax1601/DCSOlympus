@@ -308,6 +308,7 @@ export const MAP_OPTIONS_DEFAULTS = {
   fillSelectedRing: false,
   showMinimap: false,
   protectDCSUnits: true,
+  keepRelativePositions: true
 } as MapOptions;
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -399,8 +400,7 @@ export enum AudioMessageType {
   settings,
 }
 
-export const CONTEXT_ACTION_COLORS = [null, "white", "green", "purple", "blue", "red"];
-export enum ContextActionColors {
+export enum ContextActionType {
   NO_COLOR,
   MOVE,
   OTHER,
@@ -408,3 +408,6 @@ export enum ContextActionColors {
   ENGAGE,
   DELETE,
 }
+export const CONTEXT_ACTION_COLORS = [null, "white", "green", "purple", "blue", "red"];
+
+

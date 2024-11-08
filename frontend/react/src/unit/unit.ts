@@ -18,7 +18,6 @@ import {
 } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
-import { UnitDatabase } from "./databases/unitdatabase";
 import { TargetMarker } from "../map/markers/targetmarker";
 import {
   DLINK,
@@ -36,11 +35,10 @@ import {
   GROUPING_ZOOM_TRANSITION,
   MAX_SHOTS_SCATTER,
   SHOTS_SCATTER_DEGREES,
-  ContextActionColors,
-  CONTEXT_ACTION_COLORS,
   OlympusState,
   JTACSubState,
   UnitControlSubState,
+  ContextActionType,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -58,6 +56,7 @@ import {
 } from "../ui/components/olicons";
 import {
   faExplosion,
+  faHand,
   faLocationCrosshairs,
   faLocationDot,
   faMapLocation,
@@ -69,7 +68,7 @@ import {
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { Carrier } from "../mission/carrier";
-import { ContactsUpdatedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, UnitDeadEvent, UnitDeselectedEvent, UnitSelectedEvent, UnitUpdatedEvent } from "../events";
+import { ContactsUpdatedEvent, FormationCreationRequestEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, UnitContextMenuRequestEvent, UnitDeadEvent, UnitDeselectedEvent, UnitExplosionRequestEvent, UnitSelectedEvent, UnitUpdatedEvent } from "../events";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -830,16 +829,32 @@ export abstract class Unit extends CustomMarker {
   appendContextActions(contextActionSet: ContextActionSet) {
     contextActionSet.addContextAction(
       this,
+      "stop",
+      "Stop unit",
+      "Stops the unit",
+      faHand,
+      null,
+      (units: Unit[], _1, _2) => {
+        getApp().getUnitsManager().clearDestinations(units);
+      },
+      {
+        executeImmediately: true,
+        type: ContextActionType.MOVE,
+      }
+    );
+
+    contextActionSet.addContextAction(
+      this,
       "move",
       "Set destination",
       "Click on the map to move the units there",
       faLocationDot,
       "position",
-      (units: Unit[], _, targetPosition) => {
-        getApp().getUnitsManager().clearDestinations(units);
-        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
+      (units: Unit[], _, targetPosition, originalEvent) => {
+        if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
+        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.MOVE] }
+      { type: ContextActionType.MOVE }
     );
 
     contextActionSet.addContextAction(
@@ -850,9 +865,9 @@ export abstract class Unit extends CustomMarker {
       faRoute,
       "position",
       (units: Unit[], _, targetPosition) => {
-        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
+        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.MOVE] }
+      { type: ContextActionType.MOVE }
     );
 
     contextActionSet.addContextAction(
@@ -867,7 +882,7 @@ export abstract class Unit extends CustomMarker {
       },
       {
         executeImmediately: true,
-        buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.DELETE],
+        type: ContextActionType.DELETE,
       }
     );
 
@@ -880,16 +895,17 @@ export abstract class Unit extends CustomMarker {
       null,
       (units: Unit[], _1, _2) => {
         getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_EXPLOSION_MENU)
+        UnitExplosionRequestEvent.dispatch(units)
       },
       {
         executeImmediately: true,
-        buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.DELETE],
+        type: ContextActionType.DELETE,
       }
     );
 
-    contextActionSet.addDefaultContextAction(this, "default", "Set destination", "", faRoute, null, (units: Unit[], targetUnit, targetPosition) => {
+    contextActionSet.addDefaultContextAction(this, "default", "Set destination", "", faRoute, null, (units: Unit[], targetUnit, targetPosition, originalEvent) => {
       if (targetPosition) {
-        getApp().getUnitsManager().clearDestinations(units);
+        if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
         getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
       }
     });
@@ -1175,6 +1191,7 @@ export abstract class Unit extends CustomMarker {
 
   clearDestinations() {
     if (!this.#human) this.#activePath = [];
+    getApp().getServerManager().addDestination(this.ID, []);
   }
 
   updatePathFromMarkers() {
@@ -1393,11 +1410,11 @@ export abstract class Unit extends CustomMarker {
   #onShortPress(e: LeafletMouseEvent) {
     console.log(`Short press on ${this.getUnitName()}`);
 
-    if (getApp().getState() === OlympusState.IDLE || e.originalEvent.ctrlKey) {
+    if (getApp().getState() !== OlympusState.UNIT_CONTROL || e.originalEvent.ctrlKey) {
       if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
       this.setSelected(!this.getSelected());
     } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-      if (getApp().getMap().getContextAction()) getApp().getMap().executeContextAction(this, null);
+      if (getApp().getMap().getContextAction()) getApp().getMap().executeContextAction(this, null, e.originalEvent);
       else {
         getApp().getUnitsManager().deselectAllUnits();
         this.setSelected(!this.getSelected());
@@ -1413,6 +1430,7 @@ export abstract class Unit extends CustomMarker {
 
     if (e.originalEvent.button === 2) {
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU)
+      UnitContextMenuRequestEvent.dispatch(this);
     }
   }
 
@@ -1837,7 +1855,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[]) => {
         getApp().getUnitsManager().refuel(units);
       },
-      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
+      { executeImmediately: true, type: ContextActionType.ADMIN }
     );
     contextActionSet.addContextAction(
       this,
@@ -1849,7 +1867,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
-      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
+      { executeImmediately: true, type: ContextActionType.OTHER }
     );
 
     /* Context actions that require a target unit */
@@ -1863,7 +1881,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+      { type: ContextActionType.ENGAGE }
     );
 
     contextActionSet.addContextAction(
@@ -1875,17 +1893,11 @@ export abstract class AirUnit extends Unit {
       "unit",
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) {
-          document.dispatchEvent(
-            new CustomEvent("showFormationMenu", {
-              detail: {
-                leader: targetUnit,
-                wingmen: units.filter((unit) => unit !== targetUnit),
-              },
-            })
-          );
+          getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.FORMATION);
+          FormationCreationRequestEvent.dispatch(targetUnit, units.filter((unit) => unit !== targetUnit))
         }
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
+      { type: ContextActionType.ADMIN }
     );
 
     if (this.canTargetPoint()) {
@@ -1898,9 +1910,9 @@ export abstract class AirUnit extends Unit {
         faLocationCrosshairs,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, units);
+          if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
         },
-        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+        { type: ContextActionType.ENGAGE }
       );
 
       contextActionSet.addContextAction(
@@ -1911,9 +1923,9 @@ export abstract class AirUnit extends Unit {
         faXmarksLines,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, units);
+          if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
         },
-        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+        { type: ContextActionType.ENGAGE }
       );
     }
 
@@ -1927,7 +1939,7 @@ export abstract class AirUnit extends Unit {
       (units: Unit[], _, targetPosition: LatLng | null) => {
         if (targetPosition) getApp().getUnitsManager().landAt(targetPosition, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
+      { type: ContextActionType.ADMIN }
     );
   }
 }
@@ -1973,9 +1985,9 @@ export class Helicopter extends AirUnit {
       olButtonsContextLandAtPoint,
       "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().landAtPoint(targetPosition, units);
+        if (targetPosition) getApp().getUnitsManager().landAtPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
+      { type: ContextActionType.ADMIN }
     );
   }
 
@@ -2024,7 +2036,7 @@ export class GroundUnit extends Unit {
       (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
-      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
+      { executeImmediately: true, type: ContextActionType.OTHER }
     );
     contextActionSet.addContextAction(
       this,
@@ -2036,7 +2048,7 @@ export class GroundUnit extends Unit {
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
-      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
+      { executeImmediately: true, type: ContextActionType.OTHER }
     );
 
     /* Context actions that require a target unit */
@@ -2050,7 +2062,7 @@ export class GroundUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+      { type: ContextActionType.ENGAGE }
     );
 
     /* Context actions that require a target position */
@@ -2063,9 +2075,9 @@ export class GroundUnit extends Unit {
         faLocationCrosshairs,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
+          if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
         },
-        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+        { type: ContextActionType.ENGAGE }
       );
       contextActionSet.addContextAction(
         this,
@@ -2075,9 +2087,9 @@ export class GroundUnit extends Unit {
         olButtonsContextSimulateFireFight,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().simulateFireFight(targetPosition, units);
+          if (targetPosition) getApp().getUnitsManager().simulateFireFight(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
         },
-        { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ADMIN] }
+        { type: ContextActionType.ADMIN }
       );
     }
   }
@@ -2148,7 +2160,7 @@ export class NavyUnit extends Unit {
       (units: Unit[], _1, _2) => {
         getApp().getUnitsManager().createGroup(units);
       },
-      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
+      { executeImmediately: true, type: ContextActionType.OTHER }
     );
     contextActionSet.addContextAction(
       this,
@@ -2160,7 +2172,7 @@ export class NavyUnit extends Unit {
       (units: Unit[]) => {
         getApp().getMap().centerOnUnit(units[0]);
       },
-      { executeImmediately: true, buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.OTHER] }
+      { executeImmediately: true, type: ContextActionType.OTHER }
     );
 
     /* Context actions that require a target unit */
@@ -2174,7 +2186,7 @@ export class NavyUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+      { type: ContextActionType.ENGAGE }
     );
 
     /* Context actions that require a target position */
@@ -2186,9 +2198,9 @@ export class NavyUnit extends Unit {
       faLocationCrosshairs,
       "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, units);
+        if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
       },
-      { buttonColor: CONTEXT_ACTION_COLORS[ContextActionColors.ENGAGE] }
+      { type: ContextActionType.ENGAGE }
     );
   }
 

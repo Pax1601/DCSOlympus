@@ -4,19 +4,21 @@ import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { useDrag } from "../libs/useDrag";
 import { Unit } from "../../unit/unit";
 import { OlRangeSlider } from "../components/olrangeslider";
+import { FormationCreationRequestEvent } from "../../events";
 
 export function FormationMenu(props: {
   open: boolean;
   onClose: () => void;
-  leader: Unit | null;
-  wingmen: Unit[] | null;
   children?: JSX.Element | JSX.Element[];
 }) {
+  const [leader, setLeader] = useState(null as Unit | null)
+  const [wingmen, setWingmen] = useState(null as Unit[] | null)
+
   /* The useDrag custom hook used to handle the dragging of the units requires that the number of hooks remains unchanged.
   The units array is therefore initialized to 128 units maximum. */
   let units = Array(128).fill(null) as (Unit | null)[];
-  units[0] = props.leader;
-  props.wingmen?.forEach((unit, idx) => {
+  units[0] = leader;
+  wingmen?.forEach((unit, idx) => {
     if (idx < units.length) units[idx + 1] = unit;
   });
 
@@ -52,6 +54,13 @@ export function FormationMenu(props: {
       count: count,
     });
   });
+
+  useEffect(() => {
+    FormationCreationRequestEvent.on((leader, wingmen) => {
+      setLeader(leader);
+      setWingmen(wingmen);
+    })
+  })
 
   /* When the formation type is changed, reset the position to the center and the position of the silhouettes depending on the aircraft */
   useEffect(() => {

@@ -6,7 +6,7 @@ import { OlTooltip } from "./oltooltip";
 
 export function OlStateButton(props: {
   className?: string;
-  borderColor?: string | null;
+  buttonColor?: string | null;
   checked: boolean;
   icon: IconProp;
   tooltip: string;
@@ -21,9 +21,12 @@ export function OlStateButton(props: {
     `
       h-[40px] w-[40px] flex-none rounded-md text-lg font-medium
       dark:bg-olympus-600 dark:text-gray-300 dark:hover:bg-olympus-300
-      dark:data-[checked='true']:bg-blue-500
-      dark:data-[checked='true']:text-white
     `;
+
+  let textColor = "white";
+  if (props.checked && props.buttonColor == "white") {
+    textColor = "#243141" 
+  }
 
   return (
     <>
@@ -37,7 +40,8 @@ export function OlStateButton(props: {
         type="button"
         className={className}
         style={{
-          border: props.borderColor ? "2px solid " + props.borderColor : "0px solid transparent"
+          border: props.buttonColor ? "2px solid " + props.buttonColor : "0px solid transparent",
+          background: props.checked ? (props.buttonColor? props.buttonColor: "#3b82f6"): "#243141",
         }}
         onMouseEnter={() => {
           setHover(true);
@@ -47,7 +51,7 @@ export function OlStateButton(props: {
         }}
       >
         <div className="m-auto flex w-fit content-center justify-center gap-2">
-          <FontAwesomeIcon icon={props.icon} className="m-auto" />
+          <FontAwesomeIcon icon={props.icon} className="m-auto" style={{color: textColor}} />
           {props.children}
         </div>
       </button>

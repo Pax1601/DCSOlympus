@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { Unit } from "../../unit/unit";
 import { getApp } from "../../olympusapp";
+import { UnitExplosionRequestEvent } from "../../events";
 
-export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; units: Unit[] | null; children?: JSX.Element | JSX.Element[] }) {
+export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
+  const [units, setUnits] = useState(null as null | Unit[])
   const [explosionType, setExplosionType] = useState("High explosive");
+
+  useEffect(() => {
+    UnitExplosionRequestEvent.on((units) => setUnits(units))
+  }, [])
 
   return (
     <Menu title="Unit explosion menu" open={props.open} showBackButton={false} onClose={props.onClose}>
@@ -26,16 +32,16 @@ export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; u
             );
           })}
         </OlDropdown>
-        {props.units !== null && (
+        {units !== null && (
           <button
             type="button"
             onClick={() => {
               if (explosionType === "High explosive") {
-                getApp()?.getUnitsManager().delete(true, "normal", props.units);
+                getApp()?.getUnitsManager().delete(true, "normal", units);
               } else if (explosionType === "Napalm") {
-                getApp()?.getUnitsManager().delete(true, "napalm", props.units);
+                getApp()?.getUnitsManager().delete(true, "napalm", units);
               } else if (explosionType === "White phosphorous") {
-                getApp()?.getUnitsManager().delete(true, "phosphorous", props.units);
+                getApp()?.getUnitsManager().delete(true, "phosphorous", units);
               }
               props.onClose();
             }}

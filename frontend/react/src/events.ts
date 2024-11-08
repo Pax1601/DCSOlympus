@@ -80,15 +80,17 @@ export class ServerStatusUpdatedEvent {
   }
 }
 
-export class UnitDatabaseLoadedEvent {
-  static on(callback: () => void) {
+export class UnitDatabaseLoadedEvent extends BaseOlympusEvent {}
+
+export class InfoPopupEvent {
+  static on(callback: (messages: string[]) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback();
+      callback(ev.detail.messages);
     });
   }
 
-  static dispatch() {
-    document.dispatchEvent(new CustomEvent(this.name));
+  static dispatch(messages: string[]) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {messages}}));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -220,6 +222,58 @@ export class SelectedUnitsChangedEvent {
     document.dispatchEvent(new CustomEvent(this.name, {detail: selectedUnits}));
     console.log(`Event ${this.name} dispatched`);
     console.log(selectedUnits)
+  }
+}
+
+export class UnitExplosionRequestEvent {
+  static on(callback: (units: Unit[]) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.units);
+    });
+  }
+
+  static dispatch(units: Unit[]) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {units}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class FormationCreationRequestEvent {
+  static on(callback: (leader: Unit, wingmen: Unit[]) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.leader, ev.detail.wingmen);
+    });
+  }
+
+  static dispatch(leader: Unit, wingmen: Unit[]) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {leader, wingmen}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class MapContextMenuRequestEvent {
+  static on(callback: (latlng: L.LatLng) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.latlng);
+    });
+  }
+
+  static dispatch(latlng: L.LatLng) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {latlng}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class UnitContextMenuRequestEvent {
+  static on(callback: (unit: Unit) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.unit);
+    });
+  }
+
+  static dispatch(unit: Unit) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {unit}}));
+    console.log(`Event ${this.name} dispatched`);
   }
 }
 

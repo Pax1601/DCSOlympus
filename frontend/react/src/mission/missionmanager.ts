@@ -7,7 +7,7 @@ import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionDa
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
 import { NavyUnit } from "../unit/unit";
-import { CommandModeOptionsChangedEvent } from "../events";
+import { CommandModeOptionsChangedEvent, InfoPopupEvent } from "../events";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -94,7 +94,7 @@ export class MissionManager {
       if (data.mission.theatre != this.#theatre) {
         this.#theatre = data.mission.theatre;
         getApp().getMap().setTheatre(this.#theatre);
-        //(getApp().getPopupsManager().get("infoPopup") as Popup).setText("Map set to " + this.#theatre);
+        getApp().addInfoMessage("Map set to " + this.#theatre);
       }
 
       /* Set the date and time data */

@@ -21,7 +21,7 @@ import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
 import { NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
-import { AppStateChangedEvent, ConfigLoadedEvent, SelectedUnitsChangedEvent } from "./events";
+import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, SelectedUnitsChangedEvent } from "./events";
 import { OlympusConfig } from "./interfaces";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
@@ -33,6 +33,7 @@ export class OlympusApp {
   #config: OlympusConfig | null = null;
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
+  #infoMessages: string[] = [];
 
   /* Main leaflet map, extended by custom methods */
   #map: Map | null = null;
@@ -156,5 +157,14 @@ export class OlympusApp {
 
   getSubState() {
     return this.#subState;
+  }
+
+  addInfoMessage(message: string) {
+    this.#infoMessages.push(message);
+    InfoPopupEvent.dispatch(this.#infoMessages);
+    setTimeout(() => {
+      this.#infoMessages.shift();
+      InfoPopupEvent.dispatch(this.#infoMessages);
+    }, 5000)
   }
 }
