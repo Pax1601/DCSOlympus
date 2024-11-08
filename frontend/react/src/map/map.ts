@@ -49,6 +49,7 @@ import {
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
   SelectionClearedEvent,
+  UnitDeselectedEvent,
   UnitSelectedEvent,
   UnitUpdatedEvent,
 } from "../events";
@@ -122,6 +123,7 @@ export class Map extends L.Map {
   /* Units movement */
   #destinationPreviewMarkers: { [key: number]: TemporaryUnitMarker | TargetMarker } = {};
   #destinationRotation: number = 0;
+  #isRotatingDestination: boolean = false;
 
   /* Unit context actions */
   #contextActionSet: null | ContextActionSet = null;
@@ -197,7 +199,6 @@ export class Map extends L.Map {
     /* Custom touch events for touchscreen support */
     L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
     L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
-    L.DomEvent.on(this.getContainer(), "wheel", this.#onWheel, this);
 
     /* Event listeners */
     AppStateChangedEvent.on((state, subState) => this.#onStateChanged(state, subState));
@@ -264,8 +265,18 @@ export class Map extends L.Map {
       }
     });
 
-    UnitSelectedEvent.on((unit) => this.#updateDestinationPreviewMarkers());
-    SelectionClearedEvent.on(() => this.#updateDestinationPreviewMarkers());
+    UnitSelectedEvent.on((unit) => {
+      this.#updateDestinationPreviewMarkers();
+      this.#destinationRotation = 0;
+    });
+    UnitDeselectedEvent.on(() => {
+      this.#updateDestinationPreviewMarkers();
+      this.#destinationRotation = 0;
+    });
+    SelectionClearedEvent.on(() => {
+      this.#updateDestinationPreviewMarkers();
+      this.#destinationRotation = 0;
+    });
     ContextActionChangedEvent.on((contextAction) => this.#updateDestinationPreviewMarkers());
     MapOptionsChangedEvent.on((mapOptions) => this.#moveDestinationPreviewMarkers());
 
@@ -624,6 +635,10 @@ export class Map extends L.Map {
     return this.#lastMouseCoordinates;
   }
 
+  getDestinationRotation() {
+    return this.#destinationRotation;
+  }
+
   centerOnUnit(unit: Unit | null) {
     if (unit !== null) {
       this.options.scrollWheelZoom = "center";
@@ -900,7 +915,9 @@ export class Map extends L.Map {
     window.clearTimeout(this.#longPressTimer);
 
     this.scrollWheelZoom.enable();
+    this.dragging.enable();
 
+    this.#isRotatingDestination = false;
     this.#isMouseOnCooldown = true;
     this.#mouseCooldownTimer = window.setTimeout(() => {
       this.#isMouseOnCooldown = false;
@@ -914,6 +931,7 @@ export class Map extends L.Map {
       return;
     }
 
+    if (e.originalEvent.button === 2) this.#isRotatingDestination = true;
     this.scrollWheelZoom.disable();
 
     this.#shortPressTimer = window.setTimeout(() => {
@@ -925,11 +943,6 @@ export class Map extends L.Map {
       /* If the mouse is still being pressed, execute the long press action */
       if (this.#isMouseDown && !this.#isDragging && !this.#isZooming) this.#onLongPress(e);
     }, 350);
-  }
-
-  #onWheel(e: any) {
-    //this.#destinationRotation += e.deltaY / 25;
-    //this.#moveDestinationPreviewMarkers();
   }
 
   #onDoubleClick(e: any) {
@@ -1020,6 +1033,7 @@ export class Map extends L.Map {
         this.executeDefaultContextAction(null, pressLocation, e.originalEvent);
       }
     } else if (getApp().getState() === OlympusState.JTAC) {
+      // TODO less redundant way to do this
       if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
         if (!this.#targetPoint) {
           this.#targetPoint = new TextMarker(pressLocation, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
@@ -1089,8 +1103,13 @@ export class Map extends L.Map {
           getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
           MapContextMenuRequestEvent.dispatch(pressLocation);
         } else {
-          if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
-          else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
+          if (this.#contextAction?.getTarget() === "position") {
+            this.dragging.disable();
+            this.#isRotatingDestination = true;
+          } else {
+            if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
+            else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
+          }
         }
       }
     }
@@ -1099,12 +1118,16 @@ export class Map extends L.Map {
   #onMouseMove(e: any) {
     window.clearTimeout(this.#longPressTimer);
 
-    this.#lastMousePosition.x = e.originalEvent.x;
-    this.#lastMousePosition.y = e.originalEvent.y;
-    this.#lastMouseCoordinates = e.latlng;
+    if (!this.#isRotatingDestination) {
+      this.#lastMousePosition.x = e.originalEvent.x;
+      this.#lastMousePosition.y = e.originalEvent.y;
+      this.#lastMouseCoordinates = e.latlng;
 
-    if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
-    if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
+      if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
+      if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
+    } else {
+      this.#destinationRotation -= e.originalEvent.movementX;
+    }
 
     this.#moveDestinationPreviewMarkers();
   }

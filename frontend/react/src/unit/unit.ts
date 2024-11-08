@@ -68,7 +68,18 @@ import {
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { Carrier } from "../mission/carrier";
-import { ContactsUpdatedEvent, FormationCreationRequestEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, UnitContextMenuRequestEvent, UnitDeadEvent, UnitDeselectedEvent, UnitExplosionRequestEvent, UnitSelectedEvent, UnitUpdatedEvent } from "../events";
+import {
+  ContactsUpdatedEvent,
+  FormationCreationRequestEvent,
+  HiddenTypesChangedEvent,
+  MapOptionsChangedEvent,
+  UnitContextMenuRequestEvent,
+  UnitDeadEvent,
+  UnitDeselectedEvent,
+  UnitExplosionRequestEvent,
+  UnitSelectedEvent,
+  UnitUpdatedEvent,
+} from "../events";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -835,7 +846,7 @@ export abstract class Unit extends CustomMarker {
       faHand,
       null,
       (units: Unit[], _1, _2) => {
-        getApp().getUnitsManager().clearDestinations(units);
+        getApp().getUnitsManager().stop(units);
       },
       {
         executeImmediately: true,
@@ -852,7 +863,10 @@ export abstract class Unit extends CustomMarker {
       "position",
       (units: Unit[], _, targetPosition, originalEvent) => {
         if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
-        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+        if (targetPosition)
+          getApp()
+            .getUnitsManager()
+            .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
       },
       { type: ContextActionType.MOVE }
     );
@@ -865,7 +879,10 @@ export abstract class Unit extends CustomMarker {
       faRoute,
       "position",
       (units: Unit[], _, targetPosition) => {
-        if (targetPosition) getApp().getUnitsManager().addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+        if (targetPosition)
+          getApp()
+            .getUnitsManager()
+            .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
       },
       { type: ContextActionType.MOVE }
     );
@@ -894,8 +911,8 @@ export abstract class Unit extends CustomMarker {
       faExplosion,
       null,
       (units: Unit[], _1, _2) => {
-        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_EXPLOSION_MENU)
-        UnitExplosionRequestEvent.dispatch(units)
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_EXPLOSION_MENU);
+        UnitExplosionRequestEvent.dispatch(units);
       },
       {
         executeImmediately: true,
@@ -903,12 +920,20 @@ export abstract class Unit extends CustomMarker {
       }
     );
 
-    contextActionSet.addDefaultContextAction(this, "default", "Set destination", "", faRoute, null, (units: Unit[], targetUnit, targetPosition, originalEvent) => {
-      if (targetPosition) {
-        if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
-        getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
+    contextActionSet.addDefaultContextAction(
+      this,
+      "default",
+      "Set destination",
+      "",
+      faRoute,
+      null,
+      (units: Unit[], targetUnit, targetPosition, originalEvent) => {
+        if (targetPosition) {
+          if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
+          getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
+        }
       }
-    });
+    );
   }
 
   drawLines() {
@@ -1191,7 +1216,6 @@ export abstract class Unit extends CustomMarker {
 
   clearDestinations() {
     if (!this.#human) this.#activePath = [];
-    getApp().getServerManager().addDestination(this.ID, []);
   }
 
   updatePathFromMarkers() {
@@ -1429,7 +1453,7 @@ export abstract class Unit extends CustomMarker {
     console.log(`Long press on ${this.getUnitName()}`);
 
     if (e.originalEvent.button === 2) {
-      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU)
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU);
       UnitContextMenuRequestEvent.dispatch(this);
     }
   }
@@ -1894,7 +1918,10 @@ export abstract class AirUnit extends Unit {
       (units: Unit[], targetUnit: Unit | null, _) => {
         if (targetUnit) {
           getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.FORMATION);
-          FormationCreationRequestEvent.dispatch(targetUnit, units.filter((unit) => unit !== targetUnit))
+          FormationCreationRequestEvent.dispatch(
+            targetUnit,
+            units.filter((unit) => unit !== targetUnit)
+          );
         }
       },
       { type: ContextActionType.ADMIN }
@@ -1910,7 +1937,10 @@ export abstract class AirUnit extends Unit {
         faLocationCrosshairs,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().bombPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+          if (targetPosition)
+            getApp()
+              .getUnitsManager()
+              .bombPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
         },
         { type: ContextActionType.ENGAGE }
       );
@@ -1923,7 +1953,10 @@ export abstract class AirUnit extends Unit {
         faXmarksLines,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().carpetBomb(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+          if (targetPosition)
+            getApp()
+              .getUnitsManager()
+              .carpetBomb(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
         },
         { type: ContextActionType.ENGAGE }
       );
@@ -1985,7 +2018,10 @@ export class Helicopter extends AirUnit {
       olButtonsContextLandAtPoint,
       "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().landAtPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+        if (targetPosition)
+          getApp()
+            .getUnitsManager()
+            .landAtPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
       },
       { type: ContextActionType.ADMIN }
     );
@@ -2075,7 +2111,10 @@ export class GroundUnit extends Unit {
         faLocationCrosshairs,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+          if (targetPosition)
+            getApp()
+              .getUnitsManager()
+              .fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
         },
         { type: ContextActionType.ENGAGE }
       );
@@ -2087,7 +2126,10 @@ export class GroundUnit extends Unit {
         olButtonsContextSimulateFireFight,
         "position",
         (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition) getApp().getUnitsManager().simulateFireFight(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+          if (targetPosition)
+            getApp()
+              .getUnitsManager()
+              .simulateFireFight(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
         },
         { type: ContextActionType.ADMIN }
       );
@@ -2198,7 +2240,10 @@ export class NavyUnit extends Unit {
       faLocationCrosshairs,
       "position",
       (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, 0, units);
+        if (targetPosition)
+          getApp()
+            .getUnitsManager()
+            .fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
       },
       { type: ContextActionType.ENGAGE }
     );

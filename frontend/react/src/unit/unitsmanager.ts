@@ -394,6 +394,23 @@ export class UnitsManager {
     } else callback(units);
   }
 
+  stop(units: Unit[] | null = null) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units: Unit[]) => {
+      for (let idx in units) {
+        getApp().getServerManager().addDestination(units[idx].ID, []);
+      }
+      this.#showActionMessage(units, " stopped");
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
   /** Instruct all the selected units to land at a specific location
    *
    * @param latlng Location where to land at

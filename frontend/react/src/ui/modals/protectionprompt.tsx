@@ -7,7 +7,7 @@ import { FaLock } from "react-icons/fa6";
 import { getApp } from "../../olympusapp";
 import { OlympusState } from "../../constants/constants";
 
-export function ProtectionPrompt(props: { }) {
+export function ProtectionPrompt(props: {}) {
   return (
     <Modal
       className={`
@@ -49,16 +49,25 @@ export function ProtectionPrompt(props: { }) {
               dark:text-gray-500
             `}
           >
-            To disable this warning, press on the <span className={`
-              inline-block translate-y-3 rounded-full border-[1px]
-              border-gray-900 bg-red-500 p-2 text-olympus-900
-            `}><FaLock/></span> button
+            To disable this warning, press on the{" "}
+            <span
+              className={`
+                inline-block translate-y-3 rounded-full border-[1px]
+                border-gray-900 bg-red-500 p-2 text-olympus-900
+              `}
+            >
+              <FaLock />
+            </span>{" "}
+            button
           </span>
         </div>
         <div className="flex">
           <button
             type="button"
-            onClick={() => getApp().getUnitsManager().executeProtectionCallback()}
+            onClick={() => {
+              getApp().getUnitsManager().executeProtectionCallback();
+              getApp().setState(OlympusState.UNIT_CONTROL);
+            }}
             className={`
               mb-2 me-2 ml-auto flex content-center items-center gap-2
               rounded-sm bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
