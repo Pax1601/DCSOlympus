@@ -39,6 +39,7 @@ import {
   JTACSubState,
   UnitControlSubState,
   ContextActionType,
+  ContextActions,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -80,6 +81,7 @@ import {
   UnitSelectedEvent,
   UnitUpdatedEvent,
 } from "../events";
+import { ContextAction } from "./contextaction";
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -838,102 +840,13 @@ export abstract class Unit extends CustomMarker {
    *
    */
   appendContextActions(contextActionSet: ContextActionSet) {
-    contextActionSet.addContextAction(
-      this,
-      "stop",
-      "Stop unit",
-      "Stops the unit",
-      faHand,
-      null,
-      (units: Unit[], _1, _2) => {
-        getApp().getUnitsManager().stop(units);
-      },
-      {
-        executeImmediately: true,
-        type: ContextActionType.MOVE,
-      }
-    );
+    contextActionSet.addContextAction(this, ContextActions.STOP);
+    contextActionSet.addContextAction(this, ContextActions.MOVE);
+    contextActionSet.addContextAction(this, ContextActions.PATH);
+    contextActionSet.addContextAction(this, ContextActions.DELETE);
+    contextActionSet.addContextAction(this, ContextActions.EXPLODE);
 
-    contextActionSet.addContextAction(
-      this,
-      "move",
-      "Set destination",
-      "Click on the map to move the units there",
-      faLocationDot,
-      "position",
-      (units: Unit[], _, targetPosition, originalEvent) => {
-        if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
-        if (targetPosition)
-          getApp()
-            .getUnitsManager()
-            .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-      },
-      { type: ContextActionType.MOVE }
-    );
-
-    contextActionSet.addContextAction(
-      this,
-      "path",
-      "Create route",
-      "Click on the map to add a destination to the path",
-      faRoute,
-      "position",
-      (units: Unit[], _, targetPosition) => {
-        if (targetPosition)
-          getApp()
-            .getUnitsManager()
-            .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-      },
-      { type: ContextActionType.MOVE }
-    );
-
-    contextActionSet.addContextAction(
-      this,
-      "delete",
-      "Delete unit",
-      "Deletes the unit",
-      faTrash,
-      null,
-      (units: Unit[], _1, _2) => {
-        getApp().getUnitsManager().delete(false);
-      },
-      {
-        executeImmediately: true,
-        type: ContextActionType.DELETE,
-      }
-    );
-
-    contextActionSet.addContextAction(
-      this,
-      "explode",
-      "Explode unit",
-      "Explodes the unit",
-      faExplosion,
-      null,
-      (units: Unit[], _1, _2) => {
-        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_EXPLOSION_MENU);
-        UnitExplosionRequestEvent.dispatch(units);
-      },
-      {
-        executeImmediately: true,
-        type: ContextActionType.DELETE,
-      }
-    );
-
-    contextActionSet.addDefaultContextAction(
-      this,
-      "default",
-      "Set destination",
-      "",
-      faRoute,
-      null,
-      (units: Unit[], targetUnit, targetPosition, originalEvent) => {
-        if (targetPosition) {
-          if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
-          getApp().getUnitsManager().addDestination(targetPosition, false, 0, units);
-        }
-      }
-    );
+    contextActionSet.addDefaultContextAction(this, ContextActions.MOVE);
   }
 
   drawLines() {
@@ -1452,7 +1365,7 @@ export abstract class Unit extends CustomMarker {
   #onLongPress(e: any) {
     console.log(`Long press on ${this.getUnitName()}`);
 
-    if (e.originalEvent.button === 2) {
+    if (e.originalEvent.button === 2 && !getApp().getMap().getContextAction()) {
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU);
       UnitContextMenuRequestEvent.dispatch(this);
     }
@@ -1869,111 +1782,20 @@ export abstract class AirUnit extends Unit {
     super.appendContextActions(contextActionSet);
 
     /* Context actions to be executed immediately */
-    contextActionSet.addContextAction(
-      this,
-      "refuel",
-      "Refuel at tanker",
-      "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
-      olButtonsContextRefuel,
-      null,
-      (units: Unit[]) => {
-        getApp().getUnitsManager().refuel(units);
-      },
-      { executeImmediately: true, type: ContextActionType.ADMIN }
-    );
-    contextActionSet.addContextAction(
-      this,
-      "center-map",
-      "Center map",
-      "Center the map on the unit and follow it",
-      faMapLocation,
-      null,
-      (units: Unit[]) => {
-        getApp().getMap().centerOnUnit(units[0]);
-      },
-      { executeImmediately: true, type: ContextActionType.OTHER }
-    );
+    contextActionSet.addContextAction(this, ContextActions.REFUEL);
+    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
 
     /* Context actions that require a target unit */
-    contextActionSet.addContextAction(
-      this,
-      "attack",
-      "Attack unit",
-      "Click on a unit to attack it using A/A or A/G weapons",
-      olButtonsContextAttack,
-      "unit",
-      (units: Unit[], targetUnit: Unit | null, _) => {
-        if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
-      },
-      { type: ContextActionType.ENGAGE }
-    );
-
-    contextActionSet.addContextAction(
-      this,
-      "follow",
-      "Follow unit",
-      "Click on a unit to follow it in formation",
-      olButtonsContextFollow,
-      "unit",
-      (units: Unit[], targetUnit: Unit | null, _) => {
-        if (targetUnit) {
-          getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.FORMATION);
-          FormationCreationRequestEvent.dispatch(
-            targetUnit,
-            units.filter((unit) => unit !== targetUnit)
-          );
-        }
-      },
-      { type: ContextActionType.ADMIN }
-    );
+    contextActionSet.addContextAction(this, ContextActions.ATTACK);
+    contextActionSet.addContextAction(this, ContextActions.FOLLOW);
 
     if (this.canTargetPoint()) {
       /* Context actions that require a target position */
-      contextActionSet.addContextAction(
-        this,
-        "bomb",
-        "Precision bomb location",
-        "Click on a point to execute a precision bombing attack",
-        faLocationCrosshairs,
-        "position",
-        (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition)
-            getApp()
-              .getUnitsManager()
-              .bombPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-        },
-        { type: ContextActionType.ENGAGE }
-      );
-
-      contextActionSet.addContextAction(
-        this,
-        "carpet-bomb",
-        "Carpet bomb location",
-        "Click on a point to execute a carpet bombing attack",
-        faXmarksLines,
-        "position",
-        (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition)
-            getApp()
-              .getUnitsManager()
-              .carpetBomb(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-        },
-        { type: ContextActionType.ENGAGE }
-      );
+      contextActionSet.addContextAction(this, ContextActions.BOMB);
+      contextActionSet.addContextAction(this, ContextActions.CARPET_BOMB);
     }
 
-    contextActionSet.addContextAction(
-      this,
-      "land",
-      "Land",
-      "Click on a point to land at the nearest airbase",
-      faPlaneArrival,
-      "position",
-      (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition) getApp().getUnitsManager().landAt(targetPosition, units);
-      },
-      { type: ContextActionType.ADMIN }
-    );
+    contextActionSet.addContextAction(this, ContextActions.LAND);
   }
 }
 
@@ -2010,21 +1832,7 @@ export class Helicopter extends AirUnit {
 
   appendContextActions(contextActionSet: ContextActionSet) {
     super.appendContextActions(contextActionSet);
-    contextActionSet.addContextAction(
-      this,
-      "land-at-point",
-      "Land at location",
-      "Click on a point to land there",
-      olButtonsContextLandAtPoint,
-      "position",
-      (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition)
-          getApp()
-            .getUnitsManager()
-            .landAtPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-      },
-      { type: ContextActionType.ADMIN }
-    );
+    contextActionSet.addContextAction(this, ContextActions.LAND_AT_POINT);
   }
 
   getMarkerCategory() {
@@ -2062,77 +1870,16 @@ export class GroundUnit extends Unit {
     super.appendContextActions(contextActionSet);
 
     /* Context actions to be executed immediately */
-    contextActionSet.addContextAction(
-      this,
-      "group-ground",
-      "Group ground units",
-      "Create a group of ground units",
-      faPeopleGroup,
-      null,
-      (units: Unit[], _1, _2) => {
-        getApp().getUnitsManager().createGroup(units);
-      },
-      { executeImmediately: true, type: ContextActionType.OTHER }
-    );
-    contextActionSet.addContextAction(
-      this,
-      "center-map",
-      "Center map",
-      "Center the map on the unit and follow it",
-      faMapLocation,
-      null,
-      (units: Unit[]) => {
-        getApp().getMap().centerOnUnit(units[0]);
-      },
-      { executeImmediately: true, type: ContextActionType.OTHER }
-    );
+    contextActionSet.addContextAction(this, ContextActions.GROUP);
+    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
 
     /* Context actions that require a target unit */
-    contextActionSet.addContextAction(
-      this,
-      "attack",
-      "Attack unit",
-      "Click on a unit to attack it",
-      olButtonsContextAttack,
-      "unit",
-      (units: Unit[], targetUnit: Unit | null, _) => {
-        if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
-      },
-      { type: ContextActionType.ENGAGE }
-    );
+    contextActionSet.addContextAction(this, ContextActions.ATTACK);
 
     /* Context actions that require a target position */
     if (this.canTargetPoint()) {
-      contextActionSet.addContextAction(
-        this,
-        "fire-at-area",
-        "Fire at area",
-        "Click on a point to precisely fire at it (if possible)",
-        faLocationCrosshairs,
-        "position",
-        (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition)
-            getApp()
-              .getUnitsManager()
-              .fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-        },
-        { type: ContextActionType.ENGAGE }
-      );
-      contextActionSet.addContextAction(
-        this,
-        "simulate-fire-fight",
-        "Simulate fire fight",
-        "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim",
-        olButtonsContextSimulateFireFight,
-        "position",
-        (units: Unit[], _, targetPosition: LatLng | null) => {
-          if (targetPosition)
-            getApp()
-              .getUnitsManager()
-              .simulateFireFight(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-        },
-        { type: ContextActionType.ADMIN }
-      );
+      contextActionSet.addContextAction(this, ContextActions.FIRE_AT_AREA);
+      contextActionSet.addContextAction(this, ContextActions.SIMULATE_FIRE_FIGHT);
     }
   }
 
@@ -2192,61 +1939,14 @@ export class NavyUnit extends Unit {
     super.appendContextActions(contextActionSet);
 
     /* Context actions to be executed immediately */
-    contextActionSet.addContextAction(
-      this,
-      "group-navy",
-      "Group navy units",
-      "Create a group of navy units",
-      faQuestionCircle,
-      null,
-      (units: Unit[], _1, _2) => {
-        getApp().getUnitsManager().createGroup(units);
-      },
-      { executeImmediately: true, type: ContextActionType.OTHER }
-    );
-    contextActionSet.addContextAction(
-      this,
-      "center-map",
-      "Center map",
-      "Center the map on the unit and follow it",
-      faMapLocation,
-      null,
-      (units: Unit[]) => {
-        getApp().getMap().centerOnUnit(units[0]);
-      },
-      { executeImmediately: true, type: ContextActionType.OTHER }
-    );
+    contextActionSet.addContextAction(this, ContextActions.GROUP);
+    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
 
     /* Context actions that require a target unit */
-    contextActionSet.addContextAction(
-      this,
-      "attack",
-      "Attack unit",
-      "Click on a unit to attack it",
-      olButtonsContextAttack,
-      "unit",
-      (units: Unit[], targetUnit: Unit | null, _) => {
-        if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
-      },
-      { type: ContextActionType.ENGAGE }
-    );
+    contextActionSet.addContextAction(this, ContextActions.ATTACK);
 
     /* Context actions that require a target position */
-    contextActionSet.addContextAction(
-      this,
-      "fire-at-area",
-      "Fire at area",
-      "Click on a point to precisely fire at it (if possible)",
-      faLocationCrosshairs,
-      "position",
-      (units: Unit[], _, targetPosition: LatLng | null) => {
-        if (targetPosition)
-          getApp()
-            .getUnitsManager()
-            .fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
-      },
-      { type: ContextActionType.ENGAGE }
-    );
+    contextActionSet.addContextAction(this, ContextActions.FIRE_AT_AREA);
   }
 
   getCategory() {

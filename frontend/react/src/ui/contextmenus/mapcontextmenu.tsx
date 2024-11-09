@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Unit } from "../../unit/unit";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION_COLORS, NO_SUBSTATE, OlympusState, OlympusSubState, UnitControlSubState } from "../../constants/constants";
+import { CONTEXT_ACTION_COLORS, ContextActionTarget, NO_SUBSTATE, OlympusState, OlympusSubState, UnitControlSubState } from "../../constants/constants";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LatLng } from "leaflet";
@@ -69,9 +69,9 @@ export function MapContextMenu(props: {}) {
   });
 
   let reorderedActions: ContextAction[] = contextActionSet
-    ? Object.values(contextActionSet.getContextActions(appSubState === UnitControlSubState.MAP_CONTEXT_MENU ? "position" : "unit")).sort(
-        (a: ContextAction, b: ContextAction) => (a.getOptions().type < b.getOptions().type ? -1 : 1)
-      )
+    ? Object.values(
+        contextActionSet.getContextActions(appSubState === UnitControlSubState.MAP_CONTEXT_MENU ? ContextActionTarget.POINT : ContextActionTarget.UNIT)
+      ).sort((a: ContextAction, b: ContextAction) => (a.getOptions().type < b.getOptions().type ? -1 : 1))
     : [];
 
   return (
@@ -107,13 +107,13 @@ export function MapContextMenu(props: {}) {
                           if (contextActionIt.getOptions().executeImmediately) {
                             contextActionIt.executeCallback(null, null);
                           } else {
-                            if (appSubState === UnitControlSubState.MAP_CONTEXT_MENU ) {
+                            if (appSubState === UnitControlSubState.MAP_CONTEXT_MENU) {
                               contextActionIt.executeCallback(null, latLng);
                             } else if (unit !== null) {
                               contextActionIt.executeCallback(unit, null);
                             }
                           }
-                          getApp().setState(OlympusState.UNIT_CONTROL)
+                          getApp().setState(OlympusState.UNIT_CONTROL);
                         }}
                       >
                         <FontAwesomeIcon className="my-auto" icon={contextActionIt.getIcon()} />

@@ -1,30 +1,26 @@
+import { ContextActionTarget } from "../constants/constants";
 import { ContextAction, ContextActionCallback, ContextActionOptions } from "./contextaction";
 import { Unit } from "./unit";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 export class ContextActionSet {
   #contextActions: { [key: string]: ContextAction } = {};
   #defaultContextAction: ContextAction | null = null;
+  #units: { [key: string]: Unit[] } = {};
 
   addContextAction(
     unit: Unit,
-    id: string,
-    label: string,
-    description: string,
-    icon: IconDefinition,
-    target: "unit" | "position" | null,
-    callback: ContextActionCallback,
-    options?: ContextActionOptions
+    contextAction: ContextAction
   ) {
-    options = options || {};
-
-    if (!(id in this.#contextActions)) {
-      this.#contextActions[id] = new ContextAction(id, label, description, icon, target, callback, options);
+    this.#contextActions[contextAction.getId()] = contextAction;
+    if (!(contextAction.getId() in this.#units)) {
+      this.#units[contextAction.getId()] = []
+      this.#contextActions[contextAction.getId()].setUnits(this.#units[contextAction.getId()]);
     }
-    this.#contextActions[id].addUnit(unit);
+
+    this.#units[contextAction.getId()].push(unit)
   }
 
-  getContextActions(targetFilter?: string) {
+  getContextActions(targetFilter?: ContextActionTarget) {
     if (targetFilter) {
       var filteredContextActionSet = new ContextActionSet();
       Object.keys(this.#contextActions).forEach((key) => {
@@ -36,17 +32,10 @@ export class ContextActionSet {
 
   addDefaultContextAction(
     unit: Unit,
-    id: string,
-    label: string,
-    description: string,
-    icon: IconDefinition,
-    target: "unit" | "position" | null,
-    callback: ContextActionCallback,
-    options?: ContextActionOptions
+    contextAction: ContextAction
   ) {
-    options = options || {};
-    if (this.#defaultContextAction === null) this.#defaultContextAction = new ContextAction(id, label, description, icon, target, callback, options);
-    this.#defaultContextAction.addUnit(unit);
+    if (this.#defaultContextAction === null) this.#defaultContextAction = contextAction;
+    //this.#defaultContextAction.addUnit(unit);
   }
 
   getDefaultContextAction() {

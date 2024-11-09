@@ -20,6 +20,8 @@ import {
   DrawSubState,
   JTACSubState,
   UnitControlSubState,
+  ContextActionTarget,
+  ContextActionType,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -931,7 +933,7 @@ export class Map extends L.Map {
       return;
     }
 
-    if (e.originalEvent.button === 2) this.#isRotatingDestination = true;
+    if (this.#contextAction?.getTarget() === ContextActionTarget.POINT && e.originalEvent.button === 2) this.#isRotatingDestination = true;
     this.scrollWheelZoom.disable();
 
     this.#shortPressTimer = window.setTimeout(() => {
@@ -1100,10 +1102,12 @@ export class Map extends L.Map {
         else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
-          getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
-          MapContextMenuRequestEvent.dispatch(pressLocation);
+          if (!getApp().getMap().getContextAction()) {
+            getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
+            MapContextMenuRequestEvent.dispatch(pressLocation);
+          }
         } else {
-          if (this.#contextAction?.getTarget() === "position") {
+          if (this.#contextAction?.getTarget() === ContextActionTarget.POINT) {
             this.dragging.disable();
             this.#isRotatingDestination = true;
           } else {
@@ -1259,9 +1263,9 @@ export class Map extends L.Map {
     });
 
     selectedUnits.forEach((unit) => {
-      if (["move", "path", "land-at-point"].includes(this.#contextAction?.getId() ?? "")) {
+      if (this.#contextAction?.getOptions().type === ContextActionType.MOVE) {
         this.#destinationPreviewMarkers[unit.ID] = new TemporaryUnitMarker(new L.LatLng(0, 0), unit.getName(), unit.getCoalition());
-      } else if (this.#contextAction?.getTarget() === "position" && this.#contextAction?.getId() !== "land") {
+      } else if (this.#contextAction?.getTarget() === ContextActionTarget.POINT) {
         this.#destinationPreviewMarkers[unit.ID] = new TargetMarker(new L.LatLng(0, 0));
       }
       this.#destinationPreviewMarkers[unit.ID]?.addTo(this);

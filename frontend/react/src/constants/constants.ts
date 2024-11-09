@@ -1,6 +1,29 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { MapOptions } from "../types/types";
 import { CommandModeOptions } from "../interfaces";
+import { ContextAction } from "../unit/contextaction";
+import {
+  faExplosion,
+  faHand,
+  faLocationCrosshairs,
+  faLocationDot,
+  faMapLocation,
+  faPeopleGroup,
+  faPlaneArrival,
+  faRoute,
+  faTrash,
+  faXmarksLines,
+} from "@fortawesome/free-solid-svg-icons";
+import { Unit } from "../unit/unit";
+import { getApp } from "../olympusapp";
+import {
+  olButtonsContextAttack,
+  olButtonsContextFollow,
+  olButtonsContextLandAtPoint,
+  olButtonsContextRefuel,
+  olButtonsContextSimulateFireFight,
+} from "../ui/components/olicons";
+import { FormationCreationRequestEvent, UnitExplosionRequestEvent } from "../events";
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -308,7 +331,7 @@ export const MAP_OPTIONS_DEFAULTS = {
   fillSelectedRing: false,
   showMinimap: false,
   protectDCSUnits: true,
-  keepRelativePositions: true
+  keepRelativePositions: true,
 } as MapOptions;
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -400,6 +423,12 @@ export enum AudioMessageType {
   settings,
 }
 
+export enum ContextActionTarget {
+  NONE,
+  UNIT,
+  POINT,
+}
+
 export enum ContextActionType {
   NO_COLOR,
   MOVE,
@@ -408,6 +437,238 @@ export enum ContextActionType {
   ENGAGE,
   DELETE,
 }
+
 export const CONTEXT_ACTION_COLORS = [null, "white", "green", "purple", "blue", "red"];
 
+export namespace ContextActions {
+  export const STOP = new ContextAction(
+    "stop",
+    "Stop unit",
+    "Stops the unit",
+    faHand,
+    ContextActionTarget.NONE,
+    (units: Unit[], _1, _2) => {
+      getApp().getUnitsManager().stop(units);
+    },
+    {
+      executeImmediately: true,
+      type: ContextActionType.MOVE,
+      hotkey: "KeyZ",
+    }
+  );
 
+  export const MOVE = new ContextAction(
+    "move",
+    "Set destination",
+    "Click on the map to move the units there",
+    faLocationDot,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition, originalEvent) => {
+      if (!originalEvent?.ctrlKey) getApp().getUnitsManager().clearDestinations(units);
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.MOVE, hotkey: "KeyX" }
+  );
+
+  export const PATH = new ContextAction(
+    "path",
+    "Create route",
+    "Click on the map to add a destination to the path",
+    faRoute,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition) => {
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.MOVE, hotkey: "KeyC" }
+  );
+
+  export const DELETE = new ContextAction(
+    "delete",
+    "Delete unit",
+    "Deletes the unit",
+    faTrash,
+    ContextActionTarget.NONE,
+    (units: Unit[], _1, _2) => {
+      getApp().getUnitsManager().delete(false);
+    },
+    {
+      executeImmediately: true,
+      type: ContextActionType.DELETE,
+    }
+  );
+
+  export const EXPLODE = new ContextAction(
+    "explode",
+    "Explode unit",
+    "Explodes the unit",
+    faExplosion,
+    ContextActionTarget.NONE,
+    (units: Unit[], _1, _2) => {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_EXPLOSION_MENU);
+      UnitExplosionRequestEvent.dispatch(units);
+    },
+    {
+      executeImmediately: true,
+      type: ContextActionType.DELETE,
+    }
+  );
+
+  export const CENTER_MAP = new ContextAction(
+    "center-map",
+    "Center map",
+    "Center the map on the unit and follow it",
+    faMapLocation,
+    ContextActionTarget.NONE,
+    (units: Unit[]) => {
+      getApp().getMap().centerOnUnit(units[0]);
+    },
+    { executeImmediately: true, type: ContextActionType.OTHER }
+  );
+
+  export const REFUEL = new ContextAction(
+    "refuel",
+    "Refuel at tanker",
+    "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
+    olButtonsContextRefuel,
+    ContextActionTarget.NONE,
+    (units: Unit[]) => {
+      getApp().getUnitsManager().refuel(units);
+    },
+    { executeImmediately: true, type: ContextActionType.ADMIN }
+  );
+
+  export const FOLLOW = new ContextAction(
+    "follow",
+    "Follow unit",
+    "Click on a unit to follow it in formation",
+    olButtonsContextFollow,
+    ContextActionTarget.UNIT,
+    (units: Unit[], targetUnit: Unit | null, _) => {
+      if (targetUnit) {
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.FORMATION);
+        FormationCreationRequestEvent.dispatch(
+          targetUnit,
+          units.filter((unit) => unit !== targetUnit)
+        );
+      }
+    },
+    { type: ContextActionType.ADMIN }
+  );
+
+  export const BOMB = new ContextAction(
+    "bomb",
+    "Precision bomb location",
+    "Click on a point to execute a precision bombing attack",
+    faLocationCrosshairs,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .bombPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ENGAGE }
+  );
+
+  export const CARPET_BOMB = new ContextAction(
+    "carpet-bomb",
+    "Carpet bomb location",
+    "Click on a point to execute a carpet bombing attack",
+    faXmarksLines,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .carpetBomb(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ENGAGE }
+  );
+
+  export const LAND = new ContextAction(
+    "land",
+    "Land",
+    "Click on a point to land at the nearest airbase",
+    faPlaneArrival,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition) getApp().getUnitsManager().landAt(targetPosition, units);
+    },
+    { type: ContextActionType.ADMIN }
+  );
+
+  export const LAND_AT_POINT = new ContextAction(
+    "land-at-point",
+    "Land at location",
+    "Click on a point to land there",
+    olButtonsContextLandAtPoint,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .landAtPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ADMIN }
+  );
+
+  export const GROUP = new ContextAction(
+    "group-ground",
+    "Group ground units",
+    "Create a group of ground units",
+    faPeopleGroup,
+    ContextActionTarget.NONE,
+    (units: Unit[], _1, _2) => {
+      getApp().getUnitsManager().createGroup(units);
+    },
+    { executeImmediately: true, type: ContextActionType.OTHER }
+  );
+
+  export const ATTACK = new ContextAction(
+    "attack",
+    "Attack unit",
+    "Click on a unit to attack it",
+    olButtonsContextAttack,
+    ContextActionTarget.UNIT,
+    (units: Unit[], targetUnit: Unit | null, _) => {
+      if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
+    },
+    { type: ContextActionType.ENGAGE }
+  );
+
+  export const FIRE_AT_AREA = new ContextAction(
+    "fire-at-area",
+    "Fire at area",
+    "Click on a point to precisely fire at it (if possible)",
+    faLocationCrosshairs,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ENGAGE }
+  );
+
+  export const SIMULATE_FIRE_FIGHT = new ContextAction(
+    "simulate-fire-fight",
+    "Simulate fire fight",
+    "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim",
+    olButtonsContextSimulateFireFight,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp()
+          .getUnitsManager()
+          .simulateFireFight(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ADMIN }
+  );
+}

@@ -66,20 +66,30 @@ export function UnitControlBar(props: {}) {
             <div className="flex gap-2 overflow-x-auto no-scrollbar p-2" onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
               {reorderedActions.map((contextActionIt: ContextAction) => {
                 return (
-                  <OlStateButton
-                    key={contextActionIt.getId()}
-                    checked={contextActionIt === contextAction}
-                    icon={contextActionIt.getIcon()}
-                    tooltip={contextActionIt.getLabel()}
-                    buttonColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type ?? 0]}
-                    onClick={() => {
-                      if (contextActionIt.getOptions().executeImmediately) {
-                        contextActionIt.executeCallback(null, null);
-                      } else {
-                        contextActionIt !== contextAction ? getApp().getMap().setContextAction(contextActionIt) : getApp().getMap().setContextAction(null);
-                      }
-                    }}
-                  />
+                  <div className="flex flex-col gap-1">
+                    <OlStateButton
+                      key={contextActionIt.getId()}
+                      checked={contextActionIt === contextAction}
+                      icon={contextActionIt.getIcon()}
+                      tooltip={contextActionIt.getLabel()}
+                      buttonColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type ?? 0]}
+                      onClick={() => {
+                        if (contextActionIt.getOptions().executeImmediately) {
+                          contextActionIt.executeCallback(null, null);
+                        } else {
+                          contextActionIt !== contextAction ? getApp().getMap().setContextAction(contextActionIt) : getApp().getMap().setContextAction(null);
+                        }
+                      }}
+                    />
+                    <div
+                      className={`
+                        rounded-sm bg-gray-400 text-center text-xs font-bold
+                        text-olympus-800
+                      `}
+                    >
+                      {(contextActionIt.getOptions().hotkey ?? "").replace("Key", "")}
+                    </div>
+                  </div>
                 );
               })}
             </div>
@@ -120,7 +130,7 @@ export function UnitControlBar(props: {}) {
               </div>
             </div>
           )}
-          {*/}
+            {*/}
         </>
       )}
     </>

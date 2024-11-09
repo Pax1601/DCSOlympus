@@ -1,3 +1,4 @@
+import { ContextActions, OlympusState } from "../constants/constants";
 import { ShortcutKeyboardOptions, ShortcutMouseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
 import { ShortcutKeyboard, ShortcutMouse } from "./shortcut";
@@ -116,6 +117,26 @@ export class ShortcutManager {
         ctrlKey: false,
         shiftKey: false,
       });
+
+    for (let contextActionName in ContextActions) {
+      if (ContextActions[contextActionName].getOptions().hotkey) {
+        this.addKeyboardShortcut(`${contextActionName}Hotkey`, {
+          code: ContextActions[contextActionName].getOptions().hotkey,
+          shiftKey: true,
+          callback: () => {
+            const contextActionSet = getApp().getMap().getContextActionSet();
+            if (
+              getApp().getState() === OlympusState.UNIT_CONTROL &&
+              contextActionSet &&
+              ContextActions[contextActionName].getId() in contextActionSet.getContextActions()
+            ) {
+              if (ContextActions[contextActionName].getOptions().executeImmediately) ContextActions[contextActionName].executeCallback();
+              else getApp().getMap().setContextAction(ContextActions[contextActionName]);
+            }
+          },
+        });
+      }
+    }
 
     let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyK", "KeyL"];
     PTTKeys.forEach((key, idx) => {

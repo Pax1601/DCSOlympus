@@ -1,11 +1,12 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Unit } from "./unit";
 import { LatLng } from "leaflet";
-import { ContextActionType } from "../constants/constants";
+import { ContextActionTarget, ContextActionType } from "../constants/constants";
 
 export interface ContextActionOptions {
   executeImmediately?: boolean;
   type: ContextActionType;
+  hotkey?: string;
 }
 
 export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null, originalEvent?: MouseEvent) => void;
@@ -18,9 +19,9 @@ export class ContextAction {
   #units: Unit[] = [];
   #icon: IconDefinition;
   #options: ContextActionOptions;
-  #target: "unit" | "position" | null = null;
+  #target: ContextActionTarget;
 
-  constructor(id: string, label: string, description: string, icon: IconDefinition, target: "unit" | "position" | null, callback: ContextActionCallback, options: ContextActionOptions) {
+  constructor(id: string, label: string, description: string, icon: IconDefinition, target: ContextActionTarget, callback: ContextActionCallback, options: ContextActionOptions) {
     this.#id = id;
     this.#label = label;
     this.#description = description;
@@ -33,8 +34,8 @@ export class ContextAction {
     };
   }
 
-  addUnit(unit: Unit) {
-    this.#units.push(unit);
+  setUnits(units: Unit[]) {
+    this.#units = units;
   }
 
   getId() {
