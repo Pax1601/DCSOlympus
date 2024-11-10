@@ -7,7 +7,7 @@ import { CONTEXT_ACTION_COLORS } from "../../constants/constants";
 import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { OlympusState } from "../../constants/constants";
-import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent } from "../../events";
+import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent, HideMenuEvent } from "../../events";
 
 export function UnitControlBar(props: {}) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -15,6 +15,7 @@ export function UnitControlBar(props: {}) {
   const [contextAction, setContextAction] = useState(null as ContextAction | null);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
+  const [menuHidden, setMenuHidden] = useState(false);
 
   /* Initialize the "scroll" position of the element */
   var scrollRef = useRef(null);
@@ -26,6 +27,7 @@ export function UnitControlBar(props: {}) {
     AppStateChangedEvent.on((state, subState) => setAppState(state));
     ContextActionSetChangedEvent.on((contextActionSet) => setcontextActionSet(contextActionSet));
     ContextActionChangedEvent.on((contextAction) => setContextAction(contextAction));
+    HideMenuEvent.on((hidden) => setMenuHidden(hidden));
   }, []);
 
   function onScroll(el) {
@@ -48,10 +50,13 @@ export function UnitControlBar(props: {}) {
       {appState === OlympusState.UNIT_CONTROL && contextActionSet && Object.keys(contextActionSet.getContextActions()).length > 0 && (
         <>
           <div
+            data-menuhidden={menuHidden}
             className={`
-              absolute left-[50%] top-16 flex max-w-[80%]
-              translate-x-[calc(-50%+2rem)] gap-2 rounded-md bg-gray-200
+              absolute left-[50%] top-16 flex max-w-[80%] gap-2 rounded-md
+              bg-gray-200
               dark:bg-olympus-900
+              data-[menuhidden='false']:translate-x-[calc(200px-50%+2rem)]
+              data-[menuhidden='true']:translate-x-[calc(-50%+2rem)]
             `}
           >
             {!scrolledLeft && (

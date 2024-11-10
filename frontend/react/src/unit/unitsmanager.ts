@@ -29,6 +29,7 @@ import { ContextActionSet } from "./contextactionset";
 import {
   CommandModeOptionsChangedEvent,
   ContactsUpdatedEvent,
+  HotgroupsChangedEvent,
   InfoPopupEvent,
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
@@ -1057,7 +1058,22 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units.forEach((unit: Unit) => unit.setHotgroup(hotgroup));
     this.#showActionMessage(units, `added to hotgroup ${hotgroup}`);
-    //(getApp().getPanelsManager().get("hotgroup") as HotgroupPanel).refreshHotgroups();
+
+    let hotgroups: {[key: number]: number} = {};
+    for (let ID in this.#units) {
+      const unit = this.#units[ID]
+      if (unit.getAlive() && !unit.getHuman()) {
+        const hotgroup = unit.getHotgroup()
+        if (hotgroup) {
+          if (!(hotgroup in hotgroups)) {
+            hotgroups[hotgroup] = 1;
+          }
+          else
+            hotgroups[hotgroup] += 1;
+        }
+      }
+    }
+    HotgroupsChangedEvent.dispatch(hotgroups)
   }
 
   /** Delete the selected units

@@ -37,6 +37,7 @@ import { JTACMenu } from "./panels/jtacmenu";
 import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
+import { HotGroupBar } from "./panels/hotgroupsbar";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -161,6 +162,7 @@ export function UI() {
         <MapContextMenu />
         <SideBar />
         <InfoBar />
+        <HotGroupBar />
       </div>
     </div>
   );

@@ -22,6 +22,10 @@ export type MapOptions = {
   showMinimap: boolean;
   protectDCSUnits: boolean;
   keepRelativePositions: boolean;
+  cameraPluginPort: number;
+  cameraPluginRatio: number;
+  cameraPluginEnabled: boolean;
+  cameraPluginMode: string;
 };
 
 export type MapHiddenTypes = {

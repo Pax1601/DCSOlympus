@@ -8,7 +8,7 @@ export function OlStateButton(props: {
   className?: string;
   buttonColor?: string | null;
   checked: boolean;
-  icon: IconProp;
+  icon?: IconProp;
   tooltip: string;
   onClick: () => void;
   children?: JSX.Element | JSX.Element[];
@@ -20,13 +20,15 @@ export function OlStateButton(props: {
     (props.className ?? "") +
     `
       h-[40px] w-[40px] flex-none rounded-md text-lg font-medium
-      dark:bg-olympus-600 dark:text-gray-300 dark:hover:bg-olympus-300
+      dark:bg-olympus-600 dark:text-gray-300
     `;
 
   let textColor = "white";
-  if (props.checked && props.buttonColor == "white") {
-    textColor = "#243141" 
+  if ((props.checked || hover) && props.buttonColor == "white") {
+    textColor = "#243141";
   }
+
+  const opacity = (hover && !props.checked) ? "AA" : "FF";
 
   return (
     <>
@@ -41,7 +43,7 @@ export function OlStateButton(props: {
         className={className}
         style={{
           border: props.buttonColor ? "2px solid " + props.buttonColor : "0px solid transparent",
-          background: props.checked ? (props.buttonColor? props.buttonColor: "#3b82f6"): "#243141",
+          background: props.checked || hover ? (props.buttonColor ? props.buttonColor : "#3b82f6" + opacity) : "#243141" + opacity,
         }}
         onMouseEnter={() => {
           setHover(true);
@@ -51,7 +53,7 @@ export function OlStateButton(props: {
         }}
       >
         <div className="m-auto flex w-fit content-center justify-center gap-2">
-          <FontAwesomeIcon icon={props.icon} className="m-auto" style={{color: textColor}} />
+          {props.icon && <FontAwesomeIcon icon={props.icon} className="m-auto" style={{ color: textColor }} />}
           {props.children}
         </div>
       </button>

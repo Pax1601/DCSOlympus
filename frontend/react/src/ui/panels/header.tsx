@@ -61,177 +61,187 @@ export function Header() {
   }
 
   return (
-        <nav
+    <nav
+      className={`
+        z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3 drop-shadow-md
+        align-center
+        dark:border-gray-800 dark:bg-olympus-900
+      `}
+    >
+      <img src="images/icon.png" className={`my-auto h-10 w-10 rounded-md p-0`}></img>
+      {!scrolledLeft && (
+        <FaChevronLeft
           className={`
-            z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3
-            drop-shadow-md align-center
-            dark:border-gray-800 dark:bg-olympus-900
+            absolute left-14 h-full w-6 rounded-lg px-2 py-3.5 text-gray-200
+            dark:bg-olympus-900
+          `}
+        />
+      )}
+      <div
+        className={`
+          my-2 flex w-full items-center gap-3 overflow-x-scroll no-scrollbar
+        `}
+        onScroll={(ev) => onScroll(ev.target)}
+        ref={scrollRef}
+      >
+        <div
+          className={`
+            mr-auto hidden flex-none flex-row items-center justify-start gap-6
+            lg:flex
           `}
         >
-          <img
-            src="images/icon.png"
-            className={`my-auto h-10 w-10 rounded-md p-0`}
-          ></img>
-          {!scrolledLeft && (
-            <FaChevronLeft
+          <div className="flex flex-col items-start">
+            <div
               className={`
-                absolute left-14 h-full w-6 rounded-lg px-2 py-3.5 text-gray-200
-                dark:bg-olympus-900
+                pt-1 text-xs text-gray-800
+                dark:text-gray-400
               `}
-            />
-          )}
+            >
+              Connected to
+            </div>
+            <div
+              className={`
+                flex items-center justify-center gap-2 text-sm font-extrabold
+                text-gray-800
+                dark:text-gray-200
+              `}
+            >
+              {IP}
+            </div>
+          </div>
+        </div>
+        {commandModeOptions.commandMode === BLUE_COMMANDER && (
           <div
             className={`
-              my-2 flex w-full items-center gap-3 overflow-x-scroll no-scrollbar
-            `}
-            onScroll={(ev) => onScroll(ev.target)}
-            ref={scrollRef}
-          >
-            <div
-              className={`
-                mr-auto hidden flex-none flex-row items-center justify-start
-                gap-6
-                lg:flex
-              `}
-            >
-              <div className="flex flex-col items-start">
-                <div
-                  className={`
-                    pt-1 text-xs text-gray-800
-                    dark:text-gray-400
-                  `}
-                >
-                  Connected to
-                </div>
-                <div
-                  className={`
-                    flex items-center justify-center gap-2 text-sm
-                    font-extrabold text-gray-800
-                    dark:text-gray-200
-                  `}
-                >
-                  {IP}
-                </div>
-              </div>
-            </div>
-            {commandModeOptions.commandMode === BLUE_COMMANDER && <div className={`
               flex h-full rounded-md bg-blue-600 px-4 text-white
-            `}><span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span></div>}
-            <div
-              className={`flex h-fit flex-row items-center justify-start gap-1`}
-            >
-              <OlLockStateButton
-                checked={!mapOptions.protectDCSUnits}
-                onClick={() => {
-                  getApp().getMap().setOption("protectDCSUnits", !mapOptions.protectDCSUnits);
-                }}
-                tooltip="Lock/unlock protected units (from scripted mission)"
-              />
-              <OlRoundStateButton
-                checked={audioEnabled}
-                onClick={() => {
-                  audioEnabled ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
-                  setAudioEnabled(!audioEnabled);
-                }}
-                tooltip="Enable/disable audio and radio backend"
-                icon={faVolumeHigh}
-              />
-            </div>
-            <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
-            <div
-              className={`flex h-fit flex-row items-center justify-start gap-1`}
-            >
-              {Object.entries({
-                human: olButtonsVisibilityHuman,
-                olympus: olButtonsVisibilityOlympus,
-                dcs: olButtonsVisibilityDcs,
-              }).map((entry) => {
-                return (
-                  <OlRoundStateButton
-                    key={entry[0]}
-                    onClick={() => {
-                      getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
-                    }}
-                    checked={!mapHiddenTypes[entry[0]]}
-                    icon={entry[1]}
-                    tooltip={"Hide/show " + entry[0] + " units"}
-                  />
-                );
-              })}
-            </div>
-            <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
-            <div
-              className={`flex h-fit flex-row items-center justify-start gap-1`}
-            >
-              <OlRoundStateButton
-                onClick={() => getApp().getMap().setHiddenType("blue", !mapHiddenTypes["blue"])}
-                checked={!mapHiddenTypes["blue"]}
-                icon={faFlag}
-                className={"!text-blue-500"}
-                tooltip={"Hide/show blue units"}
-              />
-              <OlRoundStateButton
-                onClick={() => getApp().getMap().setHiddenType("red", !mapHiddenTypes["red"])}
-                checked={!mapHiddenTypes["red"]}
-                icon={faFlag}
-                className={"!text-red-500"}
-                tooltip={"Hide/show red units"}
-              />
-              <OlRoundStateButton
-                onClick={() => getApp().getMap().setHiddenType("neutral", !mapHiddenTypes["neutral"])}
-                checked={!mapHiddenTypes["neutral"]}
-                icon={faFlag}
-                className={"!text-gray-500"}
-                tooltip={"Hide/show neutral units"}
-              />
-            </div>
-            <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
-            <div
-              className={`flex h-fit flex-row items-center justify-start gap-1`}
-            >
-              {Object.entries({
-                aircraft: olButtonsVisibilityAircraft,
-                helicopter: olButtonsVisibilityHelicopter,
-                "groundunit-sam": olButtonsVisibilityGroundunitSam,
-                groundunit: olButtonsVisibilityGroundunit,
-                navyunit: olButtonsVisibilityNavyunit,
-                airbase: olButtonsVisibilityAirbase,
-                dead: faSkull,
-              }).map((entry) => {
-                return (
-                  <OlRoundStateButton
-                    key={entry[0]}
-                    onClick={() => {
-                      getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
-                    }}
-                    checked={!mapHiddenTypes[entry[0]]}
-                    icon={entry[1]}
-                    tooltip={"Hide/show " + entry[0] + " units"}
-                  />
-                );
-              })}
-            </div>
-
-            <OlLabelToggle toggled={false} leftLabel={"Live"} rightLabel={"Map"} onClick={() => {}}></OlLabelToggle>
-            <OlStateButton checked={false} icon={faCamera} onClick={() => {}} tooltip="Activate/deactivate camera plugin" />
-            <OlDropdown label={mapSource} className="w-60">
-              {mapSources.map((source) => {
-                return (
-                  <OlDropdownItem key={source} onClick={() => getApp().getMap().setLayerName(source)}>
-                    <div className="truncate">{source}</div>
-                  </OlDropdownItem>
-                );
-              })}
-            </OlDropdown>
+            `}
+          >
+            <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
           </div>
-          {!scrolledRight && (
-            <FaChevronRight
-              className={`
-                absolute right-0 h-full w-6 rounded-lg px-2 py-3.5 text-gray-200
-                dark:bg-olympus-900
-              `}
-            />
-          )}
-        </nav>
+        )}
+        <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
+          <OlLockStateButton
+            checked={!mapOptions.protectDCSUnits}
+            onClick={() => {
+              getApp().getMap().setOption("protectDCSUnits", !mapOptions.protectDCSUnits);
+            }}
+            tooltip="Lock/unlock protected units (from scripted mission)"
+          />
+          <OlRoundStateButton
+            checked={audioEnabled}
+            onClick={() => {
+              audioEnabled ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
+              setAudioEnabled(!audioEnabled);
+            }}
+            tooltip="Enable/disable audio and radio backend"
+            icon={faVolumeHigh}
+          />
+        </div>
+        <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
+        <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
+          {Object.entries({
+            human: olButtonsVisibilityHuman,
+            olympus: olButtonsVisibilityOlympus,
+            dcs: olButtonsVisibilityDcs,
+          }).map((entry) => {
+            return (
+              <OlRoundStateButton
+                key={entry[0]}
+                onClick={() => {
+                  getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
+                }}
+                checked={!mapHiddenTypes[entry[0]]}
+                icon={entry[1]}
+                tooltip={"Hide/show " + entry[0] + " units"}
+              />
+            );
+          })}
+        </div>
+        <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
+        <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
+          <OlRoundStateButton
+            onClick={() => getApp().getMap().setHiddenType("blue", !mapHiddenTypes["blue"])}
+            checked={!mapHiddenTypes["blue"]}
+            icon={faFlag}
+            className={"!text-blue-500"}
+            tooltip={"Hide/show blue units"}
+          />
+          <OlRoundStateButton
+            onClick={() => getApp().getMap().setHiddenType("red", !mapHiddenTypes["red"])}
+            checked={!mapHiddenTypes["red"]}
+            icon={faFlag}
+            className={"!text-red-500"}
+            tooltip={"Hide/show red units"}
+          />
+          <OlRoundStateButton
+            onClick={() => getApp().getMap().setHiddenType("neutral", !mapHiddenTypes["neutral"])}
+            checked={!mapHiddenTypes["neutral"]}
+            icon={faFlag}
+            className={"!text-gray-500"}
+            tooltip={"Hide/show neutral units"}
+          />
+        </div>
+        <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
+        <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
+          {Object.entries({
+            aircraft: olButtonsVisibilityAircraft,
+            helicopter: olButtonsVisibilityHelicopter,
+            "groundunit-sam": olButtonsVisibilityGroundunitSam,
+            groundunit: olButtonsVisibilityGroundunit,
+            navyunit: olButtonsVisibilityNavyunit,
+            airbase: olButtonsVisibilityAirbase,
+            dead: faSkull,
+          }).map((entry) => {
+            return (
+              <OlRoundStateButton
+                key={entry[0]}
+                onClick={() => {
+                  getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
+                }}
+                checked={!mapHiddenTypes[entry[0]]}
+                icon={entry[1]}
+                tooltip={"Hide/show " + entry[0] + " units"}
+              />
+            );
+          })}
+        </div>
+
+        <OlLabelToggle
+          toggled={mapOptions.cameraPluginMode === "live"}
+          leftLabel={"Live"}
+          rightLabel={"Map"}
+          onClick={() => {
+            getApp()
+              .getMap()
+              .setOption("cameraPluginMode", mapOptions.cameraPluginMode === "live" ? "map" : "live");
+          }}
+        ></OlLabelToggle>
+        <OlStateButton
+          checked={mapOptions.cameraPluginEnabled}
+          icon={faCamera}
+          onClick={() => {
+            getApp().getMap().setOption("cameraPluginEnabled", !mapOptions.cameraPluginEnabled);
+          }}
+          tooltip="Activate/deactivate camera plugin"
+        />
+        <OlDropdown label={mapSource} className="w-60">
+          {mapSources.map((source) => {
+            return (
+              <OlDropdownItem key={source} onClick={() => getApp().getMap().setLayerName(source)}>
+                <div className="truncate">{source}</div>
+              </OlDropdownItem>
+            );
+          })}
+        </OlDropdown>
+      </div>
+      {!scrolledRight && (
+        <FaChevronRight
+          className={`
+            absolute right-0 h-full w-6 rounded-lg px-2 py-3.5 text-gray-200
+            dark:bg-olympus-900
+          `}
+        />
+      )}
+    </nav>
   );
 }

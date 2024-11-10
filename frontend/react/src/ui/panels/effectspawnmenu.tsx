@@ -62,7 +62,7 @@ export function EffectSpawnMenu(props: { effect: string }) {
                     setSmokeColor(optionSmokeColor);
                   }}
                   tooltip=""
-                  borderColor={optionSmokeColor}
+                  buttonColor={optionSmokeColor}
                 />
               );
             })}

@@ -95,6 +95,19 @@ export class InfoPopupEvent {
   }
 }
 
+export class HideMenuEvent {
+  static on(callback: (hidden: boolean) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.hidden);
+    });
+  }
+
+  static dispatch(hidden: boolean) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {hidden}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 /************** Map events ***************/
 export class HiddenTypesChangedEvent {
   static on(callback: (hiddenTypes: MapHiddenTypes) => void) {
@@ -273,6 +286,19 @@ export class UnitContextMenuRequestEvent {
 
   static dispatch(unit: Unit) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {unit}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class HotgroupsChangedEvent {
+  static on(callback: (hotgroups: {[key: number]: number}) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.hotgroups);
+    });
+  }
+
+  static dispatch(hotgroups: {[key: number]: number}) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {hotgroups}}));
     console.log(`Event ${this.name} dispatched`);
   }
 }

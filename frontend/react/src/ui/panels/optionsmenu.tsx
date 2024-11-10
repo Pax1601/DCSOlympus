@@ -199,35 +199,49 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           </kbd>
         </div>
 
-        {/*
-            <hr className="w-auto m-2 my-1 bg-gray-700 border-[1px] dark:border-olympus-500"></hr>
-            <div className="flex flex-col content-center items-start justify-between p-2 gap-2">
+        
+            <hr className={`
+              m-2 my-1 w-auto border-[1px] bg-gray-700
+              dark:border-olympus-500
+            `}></hr>
+            <div className={`
+              flex flex-col content-center items-start justify-between gap-2 p-2
+            `}>
                 <div className="flex flex-col">
-                    <span className="font-normal dark:text-white">DCS Camera Zoom Scaling</span>
-                    <span className="dark:text-blue-500 font-bold"> x5
-                    </span>
+                    <span className={`
+                      font-normal
+                      dark:text-white
+                    `}>DCS Camera Zoom Scaling</span>
+                    
                 </div>
                 <OlRangeSlider
-                    onChange={() => { }}
-                    value={5}
-                    min={1}
-                    max={10}
-                    step={2}
+                    onChange={(ev) => { 
+                      getApp().getMap().setOption("cameraPluginRatio", parseInt(ev.target.value))
+                    }}
+                    value={mapOptions.cameraPluginRatio}
+                    min={0}
+                    max={100}
+                    step={1}
                 />
             </div>
-            <div className="flex flex-col content-center items-start justify-between p-2 gap-2">
-                <span className="font-normal dark:text-white">DCS Camera Port</span>
+            <div className={`
+              flex flex-col content-center items-start justify-between gap-2 p-2
+            `}>
+                <span className={`
+                  font-normal
+                  dark:text-white
+                `}>DCS Camera Port</span>
                 <div className="flex">
                     <OlNumberInput
-                        value={3004}
+                        value={mapOptions.cameraPluginPort}
                         min={0}
                         max={9999}
-                        onDecrease={() => { }}
-                        onIncrease={() => { }}
-                        onChange={(ev) => { }}
+                        onDecrease={() => { getApp().getMap().setOption("cameraPluginPort", mapOptions.cameraPluginPort - 1) }}
+                        onIncrease={() => { getApp().getMap().setOption("cameraPluginPort", mapOptions.cameraPluginPort + 1) }}
+                        onChange={(ev) => { getApp().getMap().setOption("cameraPluginPort", ev.target.value)}}
                     />
                 </div>
-            </div> */}
+            </div> 
       </div>
     </Menu>
   );

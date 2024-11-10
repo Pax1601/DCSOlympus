@@ -50,7 +50,7 @@ export class OlympusApp {
   constructor() {
     SelectedUnitsChangedEvent.on((selectedUnits) => {
       if (selectedUnits.length > 0) this.setState(OlympusState.UNIT_CONTROL);
-      else this.getState() === OlympusState.UNIT_CONTROL && this.setState(OlympusState.IDLE)
+      else this.getState() === OlympusState.UNIT_CONTROL && this.setState(OlympusState.IDLE);
     });
   }
 
@@ -144,11 +144,13 @@ export class OlympusApp {
   }
 
   setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {
-    this.#state = state;
-    this.#subState = subState;
+    if (state !== this.#state || subState !== this.#subState) {
+      this.#state = state;
+      this.#subState = subState;
 
-    console.log(`App state set to ${state}, substate ${subState}`);
-    AppStateChangedEvent.dispatch(state, subState);
+      console.log(`App state set to ${state}, substate ${subState}`);
+      AppStateChangedEvent.dispatch(state, subState);
+    }
   }
 
   getState() {
@@ -165,6 +167,6 @@ export class OlympusApp {
     setTimeout(() => {
       this.#infoMessages.shift();
       InfoPopupEvent.dispatch(this.#infoMessages);
-    }, 5000)
+    }, 5000);
   }
 }

@@ -319,7 +319,7 @@ export const IADSDensities: { [key: string]: number } = {
   "Radar (EWR)": 0.05,
 };
 
-export const MAP_OPTIONS_DEFAULTS = {
+export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   hideGroupMembers: true,
   hideUnitsShortRangeRings: true,
   showUnitContacts: true,
@@ -332,7 +332,11 @@ export const MAP_OPTIONS_DEFAULTS = {
   showMinimap: false,
   protectDCSUnits: true,
   keepRelativePositions: true,
-} as MapOptions;
+  cameraPluginPort: 3003,
+  cameraPluginRatio: 1,
+  cameraPluginEnabled: false,
+  cameraPluginMode: 'map'
+};
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
   human: false,

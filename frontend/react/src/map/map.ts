@@ -218,10 +218,12 @@ export class Map extends L.Map {
       if (unit.getSelected()) this.#moveDestinationPreviewMarkers();
     });
 
-    MapOptionsChangedEvent.on((options) => {
+    MapOptionsChangedEvent.on((options: MapOptions) => {
       this.getContainer().toggleAttribute("data-hide-labels", !options.showUnitLabels);
-      //this.#cameraControlPort = options[DCS_LINK_PORT] as number;
-      //this.#cameraZoomRatio = 50 / (20 + (options[DCS_LINK_RATIO] as number));
+      this.#cameraControlPort = options.cameraPluginPort;
+      this.#cameraZoomRatio = 50 / (20 + options.cameraPluginRatio);
+      this.#slaveDCSCamera = options.cameraPluginEnabled;
+      this.#cameraControlMode = options.cameraPluginMode;
 
       if (this.#slaveDCSCamera) {
         this.#broadcastPosition();
@@ -379,6 +381,13 @@ export class Map extends L.Map {
 
   setEffectRequestTable(effectRequestTable: EffectRequestTable) {
     this.#effectRequestTable = effectRequestTable;
+    if (getApp().getState() === OlympusState.SPAWN && getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
+      this.#currentEffectMarker?.removeFrom(this);
+      this.#currentEffectMarker = null;
+      if (this.#effectRequestTable?.type === "smoke")
+        this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white");
+      this.#currentEffectMarker?.addTo(this);
+    }
   }
 
   setContextActionSet(contextActionSet: ContextActionSet | null) {
@@ -782,28 +791,6 @@ export class Map extends L.Map {
 
   getPreviousZoom() {
     return this.#previousZoom;
-  }
-
-  setSlaveDCSCamera(newSlaveDCSCamera: boolean) {
-    this.#slaveDCSCamera = newSlaveDCSCamera;
-    let button = document.getElementById("camera-link-control");
-    button?.classList.toggle("off", !newSlaveDCSCamera);
-    if (this.#slaveDCSCamera) {
-      this.#broadcastPosition();
-      window.setTimeout(() => {
-        this.#broadcastPosition();
-      }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
-    }
-  }
-
-  setCameraControlMode(newCameraControlMode: string) {
-    this.#cameraControlMode = newCameraControlMode;
-    if (this.#slaveDCSCamera) {
-      this.#broadcastPosition();
-      window.setTimeout(() => {
-        this.#broadcastPosition();
-      }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
-    }
   }
 
   increaseCameraZoom() {
