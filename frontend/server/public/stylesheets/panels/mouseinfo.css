@@ -108,3 +108,22 @@
 #coordinates-tool[data-location-system="UTM"] [data-location-system="UTM"] {
 	display:flex;
 }
+
+/*  Unit Coordinates  */
+#unit-coordinates .elevation::after {
+	content: attr(data-value)
+}
+
+#unit-coordinates[data-location-system] [data-location-system] {
+	display:none;
+}
+
+#unit-coordinates[data-location-system="LatLng"] [data-location-system="LatLng"],
+#unit-coordinates[data-location-system="MGRS"] [data-location-system="MGRS"],
+#unit-coordinates[data-location-system="UTM"] [data-location-system="UTM"] {
+	display:flex;
+}
+
+#unit-coordinates-title {
+	font-size: 10px;
+}

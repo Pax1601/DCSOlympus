@@ -5,9 +5,11 @@ import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import formatcoords from "formatcoords";
 import { MGRS_PRECISION_100M, MGRS_PRECISION_10KM, MGRS_PRECISION_10M, MGRS_PRECISION_1KM, MGRS_PRECISION_1M } from "../constants/constants";
+import { log } from "console";
 
 export class MouseInfoPanel extends Panel {
     #coordinatesElement:HTMLElement;
+    #unitCoordinatesElement:HTMLElement;
     #locationSystems = [ "LatLng", "MGRS", "UTM" ];
     #measureMarker: Marker;
     #measurePoint: LatLng | null = null;
@@ -18,6 +20,9 @@ export class MouseInfoPanel extends Panel {
     #selectedMGRSPrecisionIndex = 3;
     #selectedLocationSystemIndex = 0;
     #elevationRequest: XMLHttpRequest | null = null;
+    #unitElevationRequest: XMLHttpRequest | null = null;
+    #unitElevation: any = null;
+    
 
     constructor(ID: string) {
         super( ID );
@@ -38,6 +43,7 @@ export class MouseInfoPanel extends Panel {
         document.addEventListener('clearSelection', () => this.#update());
 
         this.#coordinatesElement = <HTMLElement>this.getElement().querySelector( '#coordinates-tool' );
+        this.#unitCoordinatesElement = <HTMLElement>this.getElement().querySelector( '#unit-coordinates' );
 
         this.#coordinatesElement.addEventListener( "click", ( ev:MouseEvent ) => {
             this.#changeLocationSystem();
@@ -79,9 +85,18 @@ export class MouseInfoPanel extends Panel {
         const mousePosition = getApp().getMap().getMouseCoordinates();
 
         var selectedUnitPosition = null;
+        
         var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
-        if (selectedUnits && selectedUnits.length == 1)
+        if (selectedUnits && selectedUnits.length == 1) {
+            this.getElement().querySelector(`#unit-coordinates`)?.classList.remove('hide');
+            this.getElement().querySelector(`#unit-coordinates-title`)?.classList.remove('hide');
             selectedUnitPosition = new LatLng(selectedUnits[0].getPosition().lat, selectedUnits[0].getPosition().lng);
+        } else {
+            selectedUnitPosition = null;
+            this.#unitElevation = null;
+            this.getElement().querySelector(`#unit-coordinates`)?.classList.add('hide');
+            this.getElement().querySelector(`#unit-coordinates-title`)?.classList.add('hide');
+        }
 
         /* Draw measures from selected unit, from pin location, and from bullseyes */
         this.#drawMeasure("ref-measure-position", "measure-position", this.#measurePoint, mousePosition);
@@ -110,6 +125,24 @@ export class MouseInfoPanel extends Panel {
             this.#drawCoordinates("ref-mouse-position-longitude", "mouse-position-longitude", coordString.split(" ")[1]);
         }
 
+        /* Draw selected unit coordinates */
+        if (selectedUnitPosition) {
+            var unitCoords = formatcoords(selectedUnitPosition.lat, selectedUnitPosition.lng);
+            var unitCoordString = unitCoords.format('XDDMMss', {decimalPlaces: 4});
+
+            if ( this.#getLocationSystem() === "MGRS" ) {
+                const mgrs = <MGRS>latLngToMGRS( selectedUnitPosition.lat, selectedUnitPosition.lng, this.#MGRSPrecisions[ this.#selectedMGRSPrecisionIndex ] );
+                this.#drawCoordinates("ref-unit-position-mgrs", "unit-position-mgrs", "M"+mgrs.groups.join(" ") );
+            } else if ( this.#getLocationSystem() === "UTM" ) {
+                const utm = latLngToUTM( selectedUnitPosition.lat, selectedUnitPosition.lng );
+                this.#drawCoordinates("ref-unit-position-utm-northing", "unit-position-utm-northing", "N"+utm.northing);
+                this.#drawCoordinates("ref-unit-position-utm-easting", "unit-position-utm-easting", "E"+utm.easting);
+            } else {
+                this.#drawCoordinates("ref-unit-position-latitude", "unit-position-latitude", unitCoordString.split(" ")[0]);
+                this.#drawCoordinates("ref-unit-position-longitude", "unit-position-longitude", unitCoordString.split(" ")[1]);
+            }
+        }
+
         /* Get the ground elevation from the server endpoint */
         if (this.#elevationRequest == null) {
             this.#elevationRequest = new XMLHttpRequest();
@@ -132,6 +165,35 @@ export class MouseInfoPanel extends Panel {
             this.#elevationRequest.onerror = () => {this.#elevationRequest = null;}
             this.#elevationRequest.onabort = () => {this.#elevationRequest = null;}
             this.#elevationRequest.send();
+        }
+
+        /* Get the ground elevation from the server endpoint for the unit */
+        if (this.#unitElevationRequest == null && this.#unitElevation == null && selectedUnitPosition !== null) {
+            
+            this.#unitElevationRequest = new XMLHttpRequest();
+            this.#unitElevationRequest.open('GET', `api/elevation/${selectedUnitPosition.lat}/${selectedUnitPosition.lng}`, true);
+            this.#unitElevationRequest.timeout = 500; // ms
+            this.#unitElevationRequest.responseType = 'json';
+            this.#unitElevationRequest.onload = () => {
+                var status = this.#unitElevationRequest?.status;
+                if (status === 200) {
+                    this.#unitElevation = this.#unitElevationRequest?.response;
+                    
+                    const el = this.getElement().querySelector(`#unit-position-elevation`) as HTMLElement;
+                    try {
+                        el.dataset.value = `${Math.floor(mToFt(parseFloat(this.#unitElevation)))} ft`;
+                    } catch {
+                        el.dataset.value = `N/A`;
+                    }
+                } else {
+                    this.#unitElevation = null;
+                }
+                this.#unitElevationRequest = null;
+            };
+            this.#unitElevationRequest.ontimeout = () => {this.#unitElevationRequest = null;}
+            this.#unitElevationRequest.onerror = () => {this.#unitElevationRequest = null;}
+            this.#unitElevationRequest.onabort = () => {this.#unitElevationRequest = null;}
+            this.#unitElevationRequest.send();
         }
     }
 
@@ -273,9 +335,9 @@ export class MouseInfoPanel extends Panel {
         }
 
         this.#coordinatesElement.setAttribute( "data-location-system", this.#getLocationSystem() );
+        this.#unitCoordinatesElement.setAttribute( "data-location-system", this.#getLocationSystem() );
         this.#update();
     }
-
 
     #getLocationSystem() {
         const x = this.#locationSystems;
