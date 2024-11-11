@@ -90,6 +90,7 @@ export interface ObjectIconOptions {
     showAmmo: boolean,
     showSummary: boolean,
     showCallsign: boolean,
+    showOriginalCallsign?: boolean,
     rotateToHeading: boolean
 }
 
@@ -144,6 +145,7 @@ export interface UnitData {
     country: number;
     name: string;
     unitName: string;
+    callsign: string;
     groupName: string;
     state: string;
     task: string;

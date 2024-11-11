@@ -1074,6 +1074,8 @@ function Olympus.setUnitsData(arg, time)
 							else
 								table["unitName"] = unit:getName()
 							end
+							-- In case of AI units the callSign and the unitName will be the same
+							table["callsign"] = unit:getName()
 							table["groupName"] = group:getName()
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()
