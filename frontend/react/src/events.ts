@@ -5,6 +5,7 @@ import { CommandModeOptions, OlympusConfig, ServerStatus } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
+import { Shortcut } from "./shortcut/shortcut";
 import { MapHiddenTypes, MapOptions } from "./types/types";
 import { ContextAction } from "./unit/contextaction";
 import { ContextActionSet } from "./unit/contextactionset";
@@ -104,6 +105,45 @@ export class HideMenuEvent {
 
   static dispatch(hidden: boolean) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {hidden}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class ShortcutsChangedEvent {
+  static on(callback: (shortcuts: {[key: string]: Shortcut}) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.shortcuts);
+    });
+  }
+
+  static dispatch(shortcuts: {[key: string]: Shortcut}) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {shortcuts}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class ShortcutChangedEvent {
+  static on(callback: (shortcut: Shortcut) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.shortcut);
+    });
+  }
+
+  static dispatch(shortcut: Shortcut) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {shortcut}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class BindShortcutRequestEvent {
+  static on(callback: (shortcut: Shortcut) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.shortcut);
+    });
+  }
+
+  static dispatch(shortcut: Shortcut) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {shortcut}}));
     console.log(`Event ${this.name} dispatched`);
   }
 }

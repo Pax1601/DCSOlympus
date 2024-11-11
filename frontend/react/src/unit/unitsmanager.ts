@@ -30,10 +30,8 @@ import {
   CommandModeOptionsChangedEvent,
   ContactsUpdatedEvent,
   HotgroupsChangedEvent,
-  InfoPopupEvent,
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
-  UnitDatabaseLoadedEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
 } from "../events";
@@ -72,9 +70,63 @@ export class UnitsManager {
     UnitSelectedEvent.on((unit) => this.#onUnitSelection(unit));
     UnitDeselectedEvent.on((unit) => this.#onUnitDeselection(unit));
 
-    document.addEventListener("copy", () => this.copy());
-    document.addEventListener("keyup", (event) => this.#onKeyUp(event));
-    document.addEventListener("paste", () => this.paste());
+    getApp()
+      .getShortcutManager()
+      .addShortcut("deselectAll", {
+        label: "Deselect all units",
+        keyUpCallback: (ev: KeyboardEvent) => {
+          getApp().getUnitsManager().deselectAllUnits();
+        },
+        code: "Escape",
+      })
+      .addShortcut("delete", {
+        label: "Delete selected units",
+        keyUpCallback: () => this.delete(),
+        code: "Delete",
+      })
+      .addShortcut("selectAll", {
+        label: "Select all units",
+        keyUpCallback: () => {
+          Object.values(this.getUnits())
+            .filter((unit: Unit) => {
+              return !unit.getHidden();
+            })
+            .forEach((unit: Unit) => unit.setSelected(true));
+        },
+        code: "KeyA",
+        ctrlKey: true,
+      })
+      .addShortcut("copyUnits", {
+        label: "Copy units",
+        keyUpCallback: () => this.copy(),
+        code: "KeyC",
+        ctrlKey: true,
+      })
+      .addShortcut("pasteUnits", {
+        label: "Paste units",
+        keyUpCallback: () => this.paste(),
+        code: "KeyV",
+        ctrlKey: true,
+      });
+
+    const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
+    digits.forEach((code, idx) => {
+      getApp()
+        .getShortcutManager()
+        .addShortcut(`hotgroup${idx}`, {
+          label: `Hotgroup ${idx} management`,
+          keyUpCallback: (ev: KeyboardEvent) => {
+            if (ev.ctrlKey && ev.shiftKey) this.selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
+            //  "Select hotgroup X in addition to any units already selected"
+            else if (ev.ctrlKey && !ev.shiftKey) this.setHotgroup(parseInt(ev.code.substring(5)));
+            //  "These selected units are hotgroup X (forget any previous membership)"
+            else if (!ev.ctrlKey && ev.shiftKey) this.addToHotgroup(parseInt(ev.code.substring(5)));
+            //  "Add (append) these units to hotgroup X (in addition to any existing members)"
+            else this.selectUnitsByHotgroup(parseInt(ev.code.substring(5))); //  "Select hotgroup X, deselect any units not in it."
+          },
+          code: code,
+        });
+    });
 
     //this.#slowDeleteDialog = new Dialog("slow-delete-dialog");
   }
@@ -1059,21 +1111,19 @@ export class UnitsManager {
     units.forEach((unit: Unit) => unit.setHotgroup(hotgroup));
     this.#showActionMessage(units, `added to hotgroup ${hotgroup}`);
 
-    let hotgroups: {[key: number]: number} = {};
+    let hotgroups: { [key: number]: number } = {};
     for (let ID in this.#units) {
-      const unit = this.#units[ID]
+      const unit = this.#units[ID];
       if (unit.getAlive() && !unit.getHuman()) {
-        const hotgroup = unit.getHotgroup()
+        const hotgroup = unit.getHotgroup();
         if (hotgroup) {
           if (!(hotgroup in hotgroups)) {
             hotgroups[hotgroup] = 1;
-          }
-          else
-            hotgroups[hotgroup] += 1;
+          } else hotgroups[hotgroup] += 1;
         }
       }
     }
-    HotgroupsChangedEvent.dispatch(hotgroups)
+    HotgroupsChangedEvent.dispatch(hotgroups);
   }
 
   /** Delete the selected units
@@ -1481,18 +1531,6 @@ export class UnitsManager {
   }
 
   /***********************************************/
-  #onKeyUp(event: KeyboardEvent) {
-    if (!keyEventWasInInput(event)) {
-      if (event.key === "Delete") this.delete();
-      else if (event.key === "a" && event.ctrlKey)
-        Object.values(this.getUnits())
-          .filter((unit: Unit) => {
-            return !unit.getHidden();
-          })
-          .forEach((unit: Unit) => unit.setSelected(true));
-    }
-  }
-
   #onUnitSelection(unit: Unit) {
     if (this.getSelectedUnits().length > 0) {
       /* Disable the firing of the selection event for a certain amount of time. This avoids firing many events if many units are selected */

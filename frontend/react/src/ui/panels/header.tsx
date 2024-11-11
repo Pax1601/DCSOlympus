@@ -35,7 +35,7 @@ export function Header() {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
     MapSourceChangedEvent.on((source) => setMapSource(source));
     ConfigLoadedEvent.on((config: OlympusConfig) => {
-      var sources = Object.keys(config.mapMirrors).concat(Object.keys(config.mapLayers));
+      var sources = Object.keys(config.frontend.mapMirrors).concat(Object.keys(config.frontend.mapLayers));
       setMapSources(sources);
     });
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {
@@ -112,9 +112,7 @@ export function Header() {
         </div>
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
           <div
-            className={`
-              flex h-full rounded-md bg-blue-600 px-4 text-white
-            `}
+            className={`flex h-full rounded-md bg-blue-600 px-4 text-white`}
           >
             <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
           </div>

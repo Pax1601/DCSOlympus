@@ -22,6 +22,7 @@ import {
   UnitControlSubState,
   ContextActionTarget,
   ContextActionType,
+  ContextActions,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -88,9 +89,7 @@ export class Map extends L.Map {
   #panRight: boolean = false;
   #panUp: boolean = false;
   #panDown: boolean = false;
-
-  /* Keyboard state */
-  #isShiftKeyDown: boolean = false;
+  #panFast: boolean = false;
 
   /* Center on unit target */
   #centeredUnit: Unit | null = null;
@@ -193,9 +192,6 @@ export class Map extends L.Map {
 
     this.on("mousemove", (e: any) => this.#onMouseMove(e));
 
-    this.on("keydown", (e: any) => this.#onKeyDown(e));
-    this.on("keyup", (e: any) => this.#onKeyUp(e));
-
     this.on("move", (e: any) => this.#onMapMove(e));
 
     /* Custom touch events for touchscreen support */
@@ -239,8 +235,8 @@ export class Map extends L.Map {
       let layerSet = false;
 
       /* First load the map mirrors */
-      if (config.mapMirrors) {
-        let mapMirrors = config.mapMirrors;
+      if (config.frontend.mapMirrors) {
+        let mapMirrors = config.frontend.mapMirrors;
         this.#mapMirrors = {
           ...this.#mapMirrors,
           ...mapMirrors,
@@ -255,8 +251,8 @@ export class Map extends L.Map {
       }
 
       /* Then load the map layers */
-      if (config.mapLayers) {
-        let mapLayers = config.mapLayers;
+      if (config.frontend.mapLayers) {
+        let mapLayers = config.frontend.mapLayers;
         this.#mapLayers = {
           ...this.#mapLayers,
           ...mapLayers,
@@ -289,11 +285,117 @@ export class Map extends L.Map {
       if (this.#panUp || this.#panDown || this.#panRight || this.#panLeft)
         this.panBy(
           new L.Point(
-            ((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.defaultPanDelta * (this.#isShiftKeyDown ? 3 : 1),
-            ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.defaultPanDelta * (this.#isShiftKeyDown ? 3 : 1)
+            ((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.defaultPanDelta * (this.#panFast ? 3 : 1),
+            ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.defaultPanDelta * (this.#panFast ? 3 : 1)
           )
         );
     }, 20);
+
+    getApp()
+      .getShortcutManager()
+      .addShortcut("toggleUnitLabels", {
+        label: "Hide/show labels",
+        keyUpCallback: () => this.setOption("showUnitLabels", !this.getOptions().showUnitLabels),
+        code: "KeyL",
+      })
+      .addShortcut("toggleAcquisitionRings", {
+        label: "Hide/show acquisition rings",
+        keyUpCallback: () => this.setOption("showUnitsAcquisitionRings", !this.getOptions().showUnitsAcquisitionRings),
+        code: "KeyE",
+      })
+      .addShortcut("toggleEngagementRings", {
+        label: "Hide/show engagement rings",
+        keyUpCallback: () => this.setOption("showUnitsEngagementRings", !this.getOptions().showUnitsEngagementRings),
+        code: "KeyQ",
+      })
+      .addShortcut("toggleHideShortEngagementRings", {
+        label: "Hide/show short range rings",
+        keyUpCallback: () => this.setOption("hideUnitsShortRangeRings", !this.getOptions().hideUnitsShortRangeRings),
+        code: "KeyR",
+      })
+      .addShortcut("toggleDetectionLines", {
+        label: "Hide/show detection lines",
+        keyUpCallback: () => this.setOption("showUnitTargets", !this.getOptions().showUnitTargets),
+        code: "KeyF",
+      })
+      .addShortcut("toggleGroupMembers", {
+        label: "Hide/show group members",
+        keyUpCallback: () => this.setOption("hideGroupMembers", !this.getOptions().hideGroupMembers),
+        code: "KeyG",
+      })
+      .addShortcut("toggleRelativePositions", {
+        label: "Toggle group movement mode",
+        keyUpCallback: () => this.setOption("keepRelativePositions", !this.getOptions().keepRelativePositions),
+        code: "KeyP",
+      })
+      .addShortcut("increaseCameraZoom", {
+        label: "Increase camera zoom",
+        altKey: true,
+        keyUpCallback: () => this.increaseCameraZoom(),
+        code: "Equal",
+      })
+      .addShortcut("decreaseCameraZoom", {
+        label: "Decrease camera zoom",
+        altKey: true,
+        keyUpCallback: () => this.decreaseCameraZoom(),
+        code: "Minus",
+      });
+
+    for (let contextActionName in ContextActions) {
+      if (ContextActions[contextActionName].getOptions().hotkey) {
+        getApp()
+          .getShortcutManager()
+          .addShortcut(`${contextActionName}Hotkey`, {
+            label: ContextActions[contextActionName].getLabel(),
+            code: ContextActions[contextActionName].getOptions().hotkey,
+            shiftKey: true,
+            keyUpCallback: () => {
+              const contextActionSet = this.getContextActionSet();
+              if (
+                getApp().getState() === OlympusState.UNIT_CONTROL &&
+                contextActionSet &&
+                ContextActions[contextActionName].getId() in contextActionSet.getContextActions()
+              ) {
+                if (ContextActions[contextActionName].getOptions().executeImmediately) ContextActions[contextActionName].executeCallback();
+                else this.setContextAction(ContextActions[contextActionName]);
+              }
+            },
+          });
+      }
+    }
+
+    /* Map panning shortcuts */
+    getApp()
+      .getShortcutManager()
+      .addShortcut(`panUp`, {
+        label: "Pan map up",
+        keyUpCallback: (ev: KeyboardEvent) => this.#panUp = false,
+        keyDownCallback: (ev: KeyboardEvent) => this.#panUp = true,
+        code: "KeyW",
+      })
+      .addShortcut(`panDown`, {
+        label: "Pan map down",
+        keyUpCallback: (ev: KeyboardEvent) => this.#panDown = false,
+        keyDownCallback: (ev: KeyboardEvent) => this.#panDown = true,
+        code: "KeyS",
+      })
+      .addShortcut(`panLeft`, {
+        label: "Pan map left",
+        keyUpCallback: (ev: KeyboardEvent) => this.#panLeft = false,
+        keyDownCallback: (ev: KeyboardEvent) => this.#panLeft = true,
+        code: "KeyA",
+      })
+      .addShortcut(`panRight`, {
+        label: "Pan map right",
+        keyUpCallback: (ev: KeyboardEvent) => this.#panRight = false,
+        keyDownCallback: (ev: KeyboardEvent) => this.#panRight = true,
+        code: "KeyD",
+      }).addShortcut(`panFast`, {
+        label: "Pan map fast",
+        keyUpCallback: (ev: KeyboardEvent) => this.#panFast = false,
+        keyDownCallback: (ev: KeyboardEvent) => this.#panFast = true,
+        code: "ShiftLeft",
+      });
 
     /* Periodically check if the camera control endpoint is available */
     this.#cameraControlTimer = window.setInterval(() => {
@@ -715,48 +817,6 @@ export class Map extends L.Map {
     return this.#miniMapLayerGroup;
   }
 
-  handleMapPanning(e: any) {
-    if (e.type === "keyup") {
-      switch (e.code) {
-        case "KeyA":
-        case "ArrowLeft":
-          this.#panLeft = false;
-          break;
-        case "KeyD":
-        case "ArrowRight":
-          this.#panRight = false;
-          break;
-        case "KeyW":
-        case "ArrowUp":
-          this.#panUp = false;
-          break;
-        case "KeyS":
-        case "ArrowDown":
-          this.#panDown = false;
-          break;
-      }
-    } else {
-      switch (e.code) {
-        case "KeyA":
-        case "ArrowLeft":
-          this.#panLeft = true;
-          break;
-        case "KeyD":
-        case "ArrowRight":
-          this.#panRight = true;
-          break;
-        case "KeyW":
-        case "ArrowUp":
-          this.#panUp = true;
-          break;
-        case "KeyS":
-        case "ArrowDown":
-          this.#panDown = true;
-          break;
-      }
-    }
-  }
-
   addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string) {
     var marker = new TemporaryUnitMarker(latlng, name, coalition, commandHash);
     marker.addTo(this);
@@ -778,6 +838,11 @@ export class Map extends L.Map {
 
   setOption(key, value) {
     this.#options[key] = value;
+    MapOptionsChangedEvent.dispatch(this.#options);
+  }
+
+  setOptions(options) {
+    this.#options = { ...options };
     MapOptionsChangedEvent.dispatch(this.#options);
   }
 
@@ -1089,7 +1154,7 @@ export class Map extends L.Map {
         else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
         if (e.originalEvent.button === 2) {
-          if (!getApp().getMap().getContextAction()) {
+          if (!this.getContextAction()) {
             getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
             MapContextMenuRequestEvent.dispatch(pressLocation);
           }
@@ -1125,14 +1190,6 @@ export class Map extends L.Map {
 
   #onMapMove(e: any) {
     if (this.#slaveDCSCamera) this.#broadcastPosition();
-  }
-
-  #onKeyDown(e: any) {
-    this.#isShiftKeyDown = e.originalEvent.shiftKey;
-  }
-
-  #onKeyUp(e: any) {
-    this.#isShiftKeyDown = e.originalEvent.shiftKey;
   }
 
   #onZoomStart(e: any) {

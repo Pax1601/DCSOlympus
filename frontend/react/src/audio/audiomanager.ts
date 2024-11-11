@@ -38,12 +38,24 @@ export class AudioManager {
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
-      config.WSPort ? this.setPort(config.WSPort) : this.setEndpoint(config.WSEndpoint);
+      config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
     });
 
     setInterval(() => {
       this.#syncRadioSettings();
     }, 1000);
+
+    let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyK", "KeyL"];
+    PTTKeys.forEach((key, idx) => {
+      getApp()
+        .getShortcutManager()
+        .addShortcut(`PTT${idx}Active`, {
+          label: `PTT ${idx} active`,
+          keyDownCallback: () => this.getSinks()[idx]?.setPtt(true),
+          keyUpCallback: () => this.getSinks()[idx]?.setPtt(false),
+          code: key
+        });
+    });
   }
 
   start() {

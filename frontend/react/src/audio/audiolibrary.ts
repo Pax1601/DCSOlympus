@@ -11,13 +11,13 @@ if (!window.AudioBuffer.prototype.copyFromChannel) {
 
 export class Effect {
   name: string;
-  context: AudioContext;
+  context: AudioContext | OfflineAudioContext;
   input: GainNode;
   effect: GainNode | BiquadFilterNode | null;
   bypassed: boolean;
   output: GainNode;
 
-  constructor(context: AudioContext) {
+  constructor(context: AudioContext | OfflineAudioContext) {
     this.name = "effect";
     this.context = context;
     this.input = this.context.createGain();
@@ -45,14 +45,14 @@ export class Effect {
 }
 
 export class Sample {
-  context: AudioContext;
+  context: AudioContext | OfflineAudioContext;
   buffer: AudioBufferSourceNode;
   sampleBuffer: AudioBuffer | null;
   rawBuffer: ArrayBuffer | null;
   loaded: boolean;
   output: GainNode;
 
-  constructor(context: AudioContext) {
+  constructor(context: AudioContext | OfflineAudioContext) {
     this.context = context;
     this.buffer = this.context.createBufferSource();
     this.buffer.start();
@@ -94,7 +94,7 @@ export class Sample {
 }
 
 export class AmpEnvelope {
-  context: AudioContext;
+  context: AudioContext | OfflineAudioContext;
   output: GainNode;
   partials: any[];
   velocity: number;
@@ -104,7 +104,7 @@ export class AmpEnvelope {
   #sustain: number;
   #release: number;
 
-  constructor(context: AudioContext, gain: number = 1) {
+  constructor(context: AudioContext | OfflineAudioContext, gain: number = 1) {
     this.context = context;
     this.output = this.context.createGain();
     this.output.gain.value = gain;
@@ -179,7 +179,7 @@ export class AmpEnvelope {
 }
 
 export class Voice {
-  context: AudioContext;
+  context: AudioContext | OfflineAudioContext;
   type: string;
   value: number;
   gain: number;
@@ -187,7 +187,7 @@ export class Voice {
   partials: any[];
   ampEnvelope: AmpEnvelope;
 
-  constructor(context: AudioContext, gain: number = 0.1, type: string = "sawtooth") {
+  constructor(context: AudioContext | OfflineAudioContext, gain: number = 0.1, type: string = "sawtooth") {
     this.context = context;
     this.type = type;
     this.value = -1;
@@ -266,7 +266,7 @@ export class Voice {
 export class Noise extends Voice {
   #length: number;
 
-  constructor(context: AudioContext, gain: number) {
+  constructor(context: AudioContext | OfflineAudioContext, gain: number) {
     super(context, gain);
     this.#length = 2;
   }
@@ -307,7 +307,7 @@ export class Noise extends Voice {
 }
 
 export class Filter extends Effect {
-  constructor(context: AudioContext, type: string = "lowpass", cutoff: number = 1000, resonance: number = 0.9) {
+  constructor(context: AudioContext | OfflineAudioContext, type: string = "lowpass", cutoff: number = 1000, resonance: number = 0.9) {
     super(context);
     this.name = "filter";
     if (this.effect instanceof BiquadFilterNode) {

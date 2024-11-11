@@ -4,19 +4,54 @@ import { Card } from "./components/card";
 import { ErrorCallout } from "../../ui/components/olcallout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
-import { VERSION } from "../../olympusapp";
+import { getApp, VERSION } from "../../olympusapp";
+import { sha256 } from "js-sha256";
+import { BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../../constants/constants";
 
-export function LoginModal(props: {
-  checkingPassword: boolean;
-  loginError: boolean;
-  commandMode: string | null;
-  onLogin: (password: string) => void;
-  onContinue: (username: string) => void;
-  onBack: () => void;
-}) {
+export function LoginModal(props: {}) {
   // TODO: add warning if not in secure context and some features are disabled
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("Game Master");
+  const [profileName, setProfileName] = useState("Game Master");
+  const [checkingPassword, setCheckingPassword] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+  const [commandMode, setCommandMode] = useState(null as null | string);
+
+  function checkPassword(password: string) {
+    setCheckingPassword(true);
+    var hash = sha256.create();
+    getApp().getServerManager().setPassword(hash.update(password).hex());
+    getApp()
+      .getServerManager()
+      .getMission(
+        (response) => {
+          const commandMode = response.mission.commandModeOptions.commandMode;
+          try {
+            [GAME_MASTER, BLUE_COMMANDER, RED_COMMANDER].includes(commandMode) ? setCommandMode(commandMode) : setLoginError(true);
+          } catch {
+            setLoginError(true);
+          }
+          setCheckingPassword(false);
+        },
+        () => {
+          setLoginError(true);
+          setCheckingPassword(false);
+        }
+      );
+  }
+
+  function connect() {
+    getApp().getServerManager().setUsername(profileName);
+    getApp().getServerManager().startUpdate();
+    getApp().setState(OlympusState.IDLE);
+
+    /* Set the profile name */
+    getApp().setProfile(profileName);
+    /* If no profile exists already with that name, create it from scratch from the defaults */
+    if (getApp().getProfile() === null) 
+      getApp().saveProfile();
+    /* Load the profile */
+    getApp().loadProfile();
+  }
 
   return (
     <Modal
@@ -62,7 +97,7 @@ export function LoginModal(props: {
               max-lg:w-[100%]
             `}
           >
-            {!props.checkingPassword ? (
+            {!checkingPassword ? (
               <>
                 <div className="flex flex-col items-start">
                   <div
@@ -115,9 +150,9 @@ export function LoginModal(props: {
                     </div>
                   </div>
                 </div>
-                {!props.loginError ? (
+                {!loginError ? (
                   <>
-                    {props.commandMode === null ? (
+                    {commandMode === null ? (
                       <>
                         <div className={`flex flex-col items-start gap-2`}>
                           <label
@@ -148,7 +183,7 @@ export function LoginModal(props: {
                         <div className="flex">
                           <button
                             type="button"
-                            onClick={() => props.onLogin(password)}
+                            onClick={() => checkPassword(password)}
                             className={`
                               mb-2 me-2 flex content-center items-center gap-2
                               rounded-sm bg-blue-700 px-5 py-2.5 text-sm
@@ -172,24 +207,19 @@ export function LoginModal(props: {
                       </>
                     ) : (
                       <>
-                        <div
-                          className={`
-														flex flex-col items-start
-														gap-2
-													`}
-                        >
+                        <div className={`flex flex-col items-start gap-2`}>
                           <label
                             className={`
                               text-gray-800 text-md
                               dark:text-white
                             `}
                           >
-                            Set display name
+                            Set profile name
                           </label>
                           <input
                             type="text"
                             autoComplete="username"
-                            onChange={(ev) => setDisplayName(ev.currentTarget.value)}
+                            onChange={(ev) => setProfileName(ev.currentTarget.value)}
                             className={`
                               block w-full max-w-80 rounded-lg border
                               border-gray-300 bg-gray-50 p-2.5 text-sm
@@ -201,14 +231,17 @@ export function LoginModal(props: {
                               focus:border-blue-500 focus:ring-blue-500
                             `}
                             placeholder="Enter display name"
-                            value={displayName}
+                            value={profileName}
                             required
                           />
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          The profile name you choose determines what keybinds/groups/options get loaded and edited. Be careful!
                         </div>
                         <div className="flex">
                           <button
                             type="button"
-                            onClick={() => props.onContinue(displayName)}
+                            onClick={() => connect()}
                             className={`
                               mb-2 me-2 flex content-center items-center gap-2
                               rounded-sm bg-blue-700 px-5 py-2.5 text-sm
@@ -249,11 +282,7 @@ export function LoginModal(props: {
                       title="Server could not be reached"
                       description="The Olympus Server at this address could not be reached. Check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used."
                     ></ErrorCallout>
-                    <div
-                      className={`
-												text-sm font-medium text-gray-200
-											`}
-                    >
+                    <div className={`text-sm font-medium text-gray-200`}>
                       Still having issues? See our
                       <a
                         href=""

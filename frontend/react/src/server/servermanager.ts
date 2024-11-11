@@ -14,7 +14,7 @@ import {
   reactionsToThreat,
 } from "../constants/constants";
 import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
-import { InfoPopupEvent, ServerStatusUpdatedEvent } from "../events";
+import { ServerStatusUpdatedEvent } from "../events";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -36,6 +36,14 @@ export class ServerManager {
     this.#lastUpdateTimes[AIRBASES_URI] = Date.now();
     this.#lastUpdateTimes[BULLSEYE_URI] = Date.now();
     this.#lastUpdateTimes[MISSION_URI] = Date.now();
+
+    getApp().getShortcutManager().addShortcut("togglePause", {
+      label: "Pause data update",
+      callback: () => {
+        this.setPaused(!this.getPaused());
+      },
+      code: "Space"
+    })
   }
 
   setUsername(newUsername: string) {

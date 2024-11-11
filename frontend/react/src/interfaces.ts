@@ -1,26 +1,37 @@
 import { LatLng } from "leaflet";
+import { MapOptions } from "./types/types";
 
 export interface OlympusConfig {
-  port: number;
-  elevationProvider: {
-    provider: string;
-    username: string | null;
-    password: string | null;
-  };
-  mapLayers: {
-    [key: string]: {
-      urlTemplate: string;
-      minZoom: number;
-      maxZoom: number;
-      attribution?: string;
+  frontend: {
+    port: number;
+    elevationProvider: {
+      provider: string;
+      username: string | null;
+      password: string | null;
+    };
+    mapLayers: {
+      [key: string]: {
+        urlTemplate: string;
+        minZoom: number;
+        maxZoom: number;
+        attribution?: string;
+      };
+    };
+    mapMirrors: {
+      [key: string]: string;
     };
   };
-  mapMirrors: {
-    [key: string]: string;
+  audio: {
+    SRSPort: number;
+    WSPort?: number;
+    WSEndpoint?: string;
   };
-  SRSPort: number;
-  WSPort?: number;
-  WSEndpoint?: string;
+  profiles?: ProfileOptions;
+}
+
+export interface ProfileOptions {
+  mapOptions: MapOptions,
+  shortcuts: {[key: string]: ShortcutOptions}
 }
 
 export interface ContextMenuOption {
@@ -284,25 +295,13 @@ export interface AirbaseChartRunwayData {
 }
 
 export interface ShortcutOptions {
-  altKey?: boolean;
-  callback: CallableFunction;
-  ctrlKey?: boolean;
-  name?: string;
-  shiftKey?: boolean;
-}
-
-export interface ShortcutKeyboardOptions extends ShortcutOptions {
+  label: string;
+  keyUpCallback: (e: KeyboardEvent) => void;
+  keyDownCallback?: (e: KeyboardEvent) => void;
   code: string;
-  event?: "keydown" | "keyup";
-}
-
-export interface ShortcutMouseOptions extends ShortcutOptions {
-  button: number;
-  event: "mousedown" | "mouseup";
-}
-
-export interface Manager {
-  add: CallableFunction;
+  altKey?: boolean;
+  ctrlKey?: boolean;
+  shiftKey?: boolean;
 }
 
 export interface ServerStatus {

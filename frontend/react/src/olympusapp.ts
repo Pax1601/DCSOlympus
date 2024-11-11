@@ -21,8 +21,8 @@ import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
 import { NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
-import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, SelectedUnitsChangedEvent } from "./events";
-import { OlympusConfig } from "./interfaces";
+import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
+import { OlympusConfig, ProfileOptions } from "./interfaces";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -34,6 +34,7 @@ export class OlympusApp {
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
   #infoMessages: string[] = [];
+  #profileName: string | null = null;
 
   /* Main leaflet map, extended by custom methods */
   #map: Map | null = null;
@@ -52,6 +53,9 @@ export class OlympusApp {
       if (selectedUnits.length > 0) this.setState(OlympusState.UNIT_CONTROL);
       else this.getState() === OlympusState.UNIT_CONTROL && this.setState(OlympusState.IDLE);
     });
+
+    MapOptionsChangedEvent.on((options) => getApp().saveProfile());
+    ShortcutsChangedEvent.on((options) => getApp().saveProfile());
   }
 
   getMap() {
@@ -90,11 +94,12 @@ export class OlympusApp {
 
   start() {
     /* Initialize base functionalitites */
+    this.#shortcutManager = new ShortcutManager(); /* Keep first */
+
     this.#map = new Map("map-container");
 
     this.#missionManager = new MissionManager();
     this.#serverManager = new ServerManager();
-    this.#shortcutManager = new ShortcutManager();
     this.#unitsManager = new UnitsManager();
     this.#weaponsManager = new WeaponsManager();
     this.#audioManager = new AudioManager();
@@ -141,6 +146,54 @@ export class OlympusApp {
 
   getConfig() {
     return this.#config;
+  }
+
+  setProfile(profileName: string) {
+    this.#profileName = profileName;
+  }
+
+  saveProfile() {
+    if (this.#profileName !== null) {
+      let profile = {};
+      profile["mapOptions"] = this.#map?.getOptions();
+      profile["shortcuts"] = this.#shortcutManager?.getShortcutsOptions();
+
+      const requestOptions = {
+        method: "PUT", // Specify the request method
+        headers: { "Content-Type": "application/json" }, // Specify the content type
+        body: JSON.stringify(profile), // Send the data in JSON format
+      };
+
+      fetch(window.location.href.split("?")[0].replace("vite/", "") + `resources/profile/${this.#profileName}`, requestOptions)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(`Profile ${this.#profileName} saved correctly`);
+          } else {
+            this.addInfoMessage("Error saving profile");
+            throw new Error("Error saving profile file");
+          }
+        }) // Parse the response as JSON
+        .catch((error) => console.error(error)); // Handle errors
+    }
+  }
+
+  getProfile() {
+    if (this.#profileName && this.#config?.profiles && this.#config?.profiles[this.#profileName])
+      return this.#config?.profiles[this.#profileName] as ProfileOptions;
+    else return null;
+  }
+
+  loadProfile() {
+    const profile = this.getProfile();
+    if (profile) {
+      this.#map?.setOptions(profile.mapOptions);
+      this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
+      this.addInfoMessage("Profile loaded correctly");
+      console.log(`Profile ${this.#profileName} saved correctly`);
+    } else {
+      this.addInfoMessage("Error loading profile");
+      console.log(`Error loading profile`);
+    }
   }
 
   setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {

@@ -276,7 +276,7 @@ export enum OlympusState {
   OPTIONS = "Options",
   AUDIO = "Audio",
   AIRBASE = "Airbase",
-  GAME_MASTER = "Game master",
+  GAME_MASTER = "Game master"
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -310,7 +310,12 @@ export enum SpawnSubState {
   SPAWN_EFFECT = "Effect",
 }
 
-export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | string;
+export enum OptionsSubstate {
+  NO_SUBSTATE = "No substate",
+  KEYBIND = "Keybind"
+}
+
+export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = {
