@@ -136,7 +136,7 @@ export class OlympusApp {
       });
 
     /* Load the config file from the server */
-    const configRequest = new Request(this.getExpressAddress() + "resources/config");
+    const configRequest = new Request(this.getExpressAddress() + "/resources/config");
     fetch(configRequest)
       .then((response) => {
         if (response.status === 200) {
@@ -172,7 +172,7 @@ export class OlympusApp {
         body: JSON.stringify(profile), // Send the data in JSON format
       };
 
-      fetch(this.getExpressAddress() + `resources/profile/${this.#profileName}`, requestOptions)
+      fetch(this.getExpressAddress() + `/resources/profile/${this.#profileName}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
             console.log(`Profile ${this.#profileName} saved correctly`);

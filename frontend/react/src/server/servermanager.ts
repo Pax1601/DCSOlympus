@@ -138,7 +138,7 @@ export class ServerManager {
 
   getConfig(callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", getApp().getExpressAddress() + "config", true);
+    xmlHttp.open("GET", getApp().getExpressAddress() + "/config", true);
     xmlHttp.onload = function (e) {
       var data = JSON.parse(xmlHttp.responseText);
       callback(data);
@@ -150,7 +150,7 @@ export class ServerManager {
   }
 
   setAddress(address: string) {
-    this.#REST_ADDRESS = `${address.replace("vite/", "").replace("vite", "")}olympus`;
+    this.#REST_ADDRESS = address;
 
     console.log(`Setting REST address to ${this.#REST_ADDRESS}`);
   }

@@ -6,6 +6,7 @@ import { DateAndTime, UnitBlueprint } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { featureCollection } from "turf";
+import { getApp } from "../olympusapp";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -291,7 +292,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
 export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
   /* Get the ground elevation from the server endpoint */
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", getApp().getExpressAddress() + `api/elevation/${latlng.lat}/${latlng.lng}`, true);
+  xhr.open("GET", getApp().getExpressAddress() + `/api/elevation/${latlng.lat}/${latlng.lng}`, true);
   xhr.timeout = 500; // ms
   xhr.responseType = "json";
   xhr.onload = () => {
