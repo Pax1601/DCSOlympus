@@ -34,9 +34,9 @@ export function KeybindModal(props: { open: boolean }) {
   for (let id in shortcuts) {
     if (
       code === shortcuts[id].getOptions().code &&
-      shiftKey == shortcuts[id].getOptions().shiftKey &&
-      altKey == shortcuts[id].getOptions().altKey &&
-      ctrlKey == shortcuts[id].getOptions().shiftKey
+      shiftKey === (shortcuts[id].getOptions().shiftKey ?? false) &&
+      altKey === (shortcuts[id].getOptions().altKey ?? false) &&
+      ctrlKey === (shortcuts[id].getOptions().shiftKey ?? false)
     ) {
       available = false;
       inUseShortcut = shortcuts[id];
@@ -101,12 +101,12 @@ export function KeybindModal(props: { open: boolean }) {
                     type="button"
                     onClick={() => {
                       if (shortcut && code) {
-                        let options = shortcut.getOptions()
+                        let options = shortcut.getOptions();
                         options.code = code;
                         options.altKey = altKey;
                         options.shiftKey = shiftKey;
                         options.ctrlKey = ctrlKey;
-                        getApp().getShortcutManager().setShortcutOption(shortcut.getId(), options)
+                        getApp().getShortcutManager().setShortcutOption(shortcut.getId(), options);
 
                         getApp().setState(OlympusState.OPTIONS);
                       }

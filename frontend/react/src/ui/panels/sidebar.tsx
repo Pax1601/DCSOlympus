@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import {
-  faGamepad,
-  faPencil,
-  faEllipsisV,
-  faCog,
-  faQuestionCircle,
-  faPlusSquare,
-  faVolumeHigh,
-  faJ,
-  faCrown,
-} from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../olympusapp";
-import { OlympusState } from "../../constants/constants";
+import { NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
 import { AppStateChangedEvent } from "../../events";
 
 export function SideBar() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
+  const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
 
   useEffect(() => {
-    AppStateChangedEvent.on((state, subState) => setAppState(state));
+    AppStateChangedEvent.on((state, subState) => {
+      setAppState(state);
+      setAppSubState(subState);
+    });
   }, []);
 
   return (
@@ -43,7 +37,7 @@ export function SideBar() {
             onClick={() => {
               getApp().setState(appState !== OlympusState.SPAWN ? OlympusState.SPAWN : OlympusState.IDLE);
             }}
-            checked={appState === OlympusState.SPAWN}
+            checked={appState === OlympusState.SPAWN && appSubState === SpawnSubState.NO_SUBSTATE}
             icon={faPlusSquare}
             tooltip="Hide/show unit spawn menu"
           ></OlStateButton>

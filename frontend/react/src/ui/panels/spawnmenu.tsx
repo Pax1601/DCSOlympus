@@ -5,7 +5,7 @@ import { OlAccordion } from "../components/olaccordion";
 import { getApp } from "../../olympusapp";
 import { OlUnitListEntry } from "../components/olunitlistentry";
 import { UnitSpawnMenu } from "./unitspawnmenu";
-import { UnitBlueprint } from "../../interfaces";
+import { SpawnRequestTable, UnitBlueprint } from "../../interfaces";
 import {
   olButtonsVisibilityAircraft,
   olButtonsVisibilityGroundunit,
@@ -17,7 +17,7 @@ import { faExplosion, faSmog } from "@fortawesome/free-solid-svg-icons";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
 import { EffectSpawnMenu } from "./effectspawnmenu";
 import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState } from "../../constants/constants";
-import { AppStateChangedEvent, CommandModeOptionsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
+import { AppStateChangedEvent, CommandModeOptionsChangedEvent, StarredSpawnsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
 
 enum CategoryAccordion {
   NONE,
@@ -42,6 +42,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
   const [types, setTypes] = useState({ groundunit: [] as string[], navyunit: [] as string[] });
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
   const [showCost, setShowCost] = useState(false);
+  const [starredSpawns, setStarredSpawns] = useState({} as { [key: string]: SpawnRequestTable });
 
   useEffect(() => {
     if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
@@ -86,6 +87,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       setShowCost(!(commandModeOptions.commandMode == GAME_MASTER || !commandModeOptions.restrictSpawns));
       setOpenAccordion(CategoryAccordion.NONE);
     });
+
+    StarredSpawnsChangedEvent.on((starredSpawns) => setStarredSpawns({ ...starredSpawns }));
   }, []);
 
   /* Filter the blueprints according to the label */
@@ -434,6 +437,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
           <UnitSpawnMenu
             blueprint={blueprint}
             spawnAtLocation={true}
+            starredSpawns={starredSpawns}
             coalition={commandModeOptions.commandMode !== GAME_MASTER ? (commandModeOptions.commandMode === BLUE_COMMANDER ? "blue" : "red") : undefined}
           />
         )}

@@ -271,6 +271,7 @@ export enum OlympusState {
   MAIN_MENU = "Main menu",
   UNIT_CONTROL = "Unit control",
   SPAWN = "Spawn",
+  STARRED_SPAWN = "Starred spawn",
   DRAW = "Draw",
   JTAC = "JTAC",
   OPTIONS = "Options",
@@ -307,7 +308,7 @@ export enum JTACSubState {
 export enum SpawnSubState {
   NO_SUBSTATE = "No substate",
   SPAWN_UNIT = "Unit",
-  SPAWN_EFFECT = "Effect",
+  SPAWN_EFFECT = "Effect"
 }
 
 export enum OptionsSubstate {

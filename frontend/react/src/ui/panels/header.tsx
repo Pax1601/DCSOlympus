@@ -18,7 +18,7 @@ import {
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../../events";
 import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
-import { CommandModeOptions, OlympusConfig } from "../../interfaces";
+import { OlympusConfig } from "../../interfaces";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);

@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { OlUnitSummary } from "../components/olunitsummary";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { OlNumberInput } from "../components/olnumberinput";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
-import { LoadoutBlueprint, UnitBlueprint } from "../../interfaces";
+import { LoadoutBlueprint, SpawnRequestTable, UnitBlueprint } from "../../interfaces";
+import { OlStateButton } from "../components/olstatebutton";
 import { Coalition } from "../../types/types";
 import { getApp } from "../../olympusapp";
-import { ftToM } from "../../other/utils";
+import { ftToM, hash } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
 import { altitudeIncrements, groupUnitCount, maxAltitudeValues, minAltitudeValues, OlympusState, SpawnSubState } from "../../constants/constants";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { OlStringInput } from "../components/olstringinput";
 
-export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation: boolean; airbase?: Airbase | null; coalition?: Coalition }) {
+export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequestTable }, blueprint: UnitBlueprint; spawnAtLocation: boolean; airbase?: Airbase | null; coalition?: Coalition }) {
   /* Compute the min and max values depending on the unit type */
   const minNumber = 1;
   const maxNumber = groupUnitCount[props.blueprint.category];
@@ -28,61 +31,62 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
   const [spawnLoadoutName, setSpawnLoadout] = useState("");
   const [spawnAltitude, setSpawnAltitude] = useState((maxAltitude - minAltitude) / 2);
   const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
+  
+  const [quickAccessName, setQuickAccessName] = useState("No name");
+  const [key, setKey] = useState("");
+  const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
 
   /* When the menu is opened show the unit preview on the map as a cursor */
   useEffect(() => {
-    if (props.coalition && props.coalition !== spawnCoalition) {
-      setSpawnCoalition(props.coalition);
+    if (props.spawnAtLocation && spawnRequestTable) {
+      /* Refresh the unique key identified */
+      const newKey = hash(JSON.stringify(spawnRequestTable));
+      setKey(newKey);
+
+      getApp()?.getMap()?.setSpawnRequestTable(spawnRequestTable);
+      getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT);
     }
+  }, [spawnRequestTable]);
+
+  /* Callback and effect to update the quick access name of the starredSpawn */
+  const updateStarredSpawnQuickAccessNameS = useCallback(() => {
+    if (key in props.starredSpawns) props.starredSpawns[key].quickAccessName = quickAccessName;
+  }, [props.starredSpawns, key, quickAccessName]);
+  useEffect(updateStarredSpawnQuickAccessNameS, [quickAccessName]);
+
+  /* Callback and effect to update the quick access name in the input field */
+  const updateQuickAccessName = useCallback(() => {
     if (props.spawnAtLocation) {
-      if (props.blueprint !== null) {
-        getApp()
-          ?.getMap()
-          ?.setSpawnRequestTable({
-            category: props.blueprint.category,
-            unit: {
-              unitType: props.blueprint.name,
-              location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
-              skill: "High",
-              liveryID: "",
-              altitude: ftToM(spawnAltitude),
-              loadout:
-                props.blueprint.loadouts?.find((loadout) => {
-                  return loadout.name === spawnLoadoutName;
-                })?.code ?? "",
-            },
-            coalition: spawnCoalition,
-          });
-        getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT);
-      } else {
-        if (getApp().getState() === OlympusState.SPAWN) getApp().setState(OlympusState.IDLE);
-      }
+      /* If the spawn is starred, set the quick access name */
+      if (key in props.starredSpawns && props.starredSpawns[key].quickAccessName) setQuickAccessName(props.starredSpawns[key].quickAccessName);
+      else setQuickAccessName("No name");
+    }
+  }, [props.starredSpawns, key])
+  useEffect(updateQuickAccessName, [key])
+
+  /* Callback and effect to update the spawn request table */
+  const updateSpawnRequestTable = useCallback(() => {
+    if (props.blueprint !== null) {
+      setSpawnRequestTable({
+        category: props.blueprint.category,
+        unit: {
+          unitType: props.blueprint.name,
+          location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+          skill: "High",
+          liveryID: "",
+          altitude: ftToM(spawnAltitude),
+          loadout: props.blueprint.loadouts?.find((loadout) => loadout.name === spawnLoadoutName)?.code ?? "",
+        },
+        coalition: spawnCoalition,
+      });
     }
   }, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition]);
+  useEffect(updateSpawnRequestTable, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition]);
 
-  function spawnAtAirbase() {
-    getApp()
-      .getUnitsManager()
-      .spawnUnits(
-        props.blueprint.category,
-        [
-          {
-            unitType: props.blueprint.name,
-            location: new LatLng(0, 0), // Not relevant spawning at airbase
-            skill: "High",
-            liveryID: "",
-            altitude: 0,
-            loadout:
-              props.blueprint.loadouts?.find((loadout) => {
-                return loadout.name === spawnLoadoutName;
-              })?.code ?? "",
-          },
-        ],
-        props.coalition,
-        false,
-        props.airbase?.getName()
-      );
-  }
+  /* Effect to update the coalition if it is force externally */
+  useEffect(() => {
+    if (props.coalition) setSpawnCoalition(props.coalition);
+  }, [props.coalition]);
 
   /* Get a list of all the roles */
   const roles: string[] = [];
@@ -113,8 +117,8 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
       <div className="flex h-fit flex-col gap-5 px-5 pb-8 pt-6">
         <div
           className={`
-          inline-flex w-full flex-row content-center justify-between
-        `}
+            inline-flex w-full flex-row content-center justify-between gap-2
+          `}
         >
           {!props.coalition && (
             <OlCoalitionToggle
@@ -127,6 +131,7 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
             />
           )}
           <OlNumberInput
+            className={"ml-auto"}
             value={spawnNumber}
             min={minNumber}
             max={maxNumber}
@@ -140,6 +145,43 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
               !isNaN(Number(ev.target.value)) && setSpawnNumber(Math.max(minNumber, Math.min(maxNumber, Number(ev.target.value))));
             }}
           />
+        </div>
+        <div
+          className={`
+            inline-flex w-full flex-row content-center justify-between gap-2
+          `}
+        >
+          <div className="my-auto text-sm text-white">Quick access: </div>
+          <OlStringInput
+            onChange={(e) => {
+              setQuickAccessName(e.target.value);
+            }}
+            value={quickAccessName}
+          />
+          <OlStateButton
+            onClick={() => {
+              key in props.starredSpawns
+                ? getApp().getMap().removeStarredSpawnRequestTable(key)
+                : getApp()
+                    .getMap()
+                    .addStarredSpawnRequestTable(key, {
+                      category: props.blueprint.category,
+                      unit: {
+                        unitType: props.blueprint.name,
+                        location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+                        skill: "High",
+                        liveryID: "",
+                        altitude: ftToM(spawnAltitude),
+                        loadout: props.blueprint.loadouts?.find((loadout) => loadout.name === spawnLoadoutName)?.code ?? "",
+                      },
+                      coalition: spawnCoalition,
+                      quickAccessName: quickAccessName,
+                    });
+            }}
+            tooltip="Save this spawn for quick access"
+            checked={key in props.starredSpawns}
+            icon={faStar}
+          ></OlStateButton>
         </div>
         {["aircraft", "helicopter"].includes(props.blueprint.category) && (
           <>
@@ -283,7 +325,10 @@ export function UnitSpawnMenu(props: { blueprint: UnitBlueprint; spawnAtLocation
             hover:bg-blue-800
           `}
           onClick={() => {
-            spawnAtAirbase();
+            if (spawnRequestTable)
+              getApp()
+                .getUnitsManager()
+                .spawnUnits(spawnRequestTable.category, [spawnRequestTable.unit], spawnRequestTable.coalition, false, props.airbase?.getName());
           }}
         >
           Spawn

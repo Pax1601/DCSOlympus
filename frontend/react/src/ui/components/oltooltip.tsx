@@ -70,8 +70,8 @@ export function OlTooltip(props: { content: string; buttonRef: React.MutableRefO
       <div
         ref={contentRef}
         className={`
-          absolute whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm
-          font-medium text-white shadow-sm
+          absolute z-50 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2
+          text-sm font-medium text-white shadow-sm
           dark:bg-gray-700
         `}
       >

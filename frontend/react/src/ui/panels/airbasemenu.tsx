@@ -3,13 +3,13 @@ import { Menu } from "./components/menu";
 import { Coalition } from "../../types/types";
 import { Airbase } from "../../mission/airbase";
 import { FaArrowLeft, FaCompass } from "react-icons/fa6";
-import { UnitBlueprint } from "../../interfaces";
+import { SpawnRequestTable, UnitBlueprint } from "../../interfaces";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlAccordion } from "../components/olaccordion";
 import { OlUnitListEntry } from "../components/olunitlistentry";
 import { olButtonsVisibilityAircraft, olButtonsVisibilityHelicopter } from "../components/olicons";
 import { UnitSpawnMenu } from "./unitspawnmenu";
-import { AirbaseSelectedEvent, CommandModeOptionsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
+import { AirbaseSelectedEvent, CommandModeOptionsChangedEvent, StarredSpawnsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
 import { getApp } from "../../olympusapp";
 import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
 
@@ -30,6 +30,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
   const [openAccordion, setOpenAccordion] = useState(CategoryAccordion.NONE);
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
   const [showCost, setShowCost] = useState(false);
+  const [starredSpawns, setStarredSpawns] = useState({} as { [key: string]: SpawnRequestTable });
 
   useEffect(() => {
     AirbaseSelectedEvent.on((airbase) => {
@@ -54,6 +55,8 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
       setShowCost(!(commandModeOptions.commandMode === GAME_MASTER || !commandModeOptions.restrictSpawns));
       setOpenAccordion(CategoryAccordion.NONE);
     });
+
+    StarredSpawnsChangedEvent.on((starredSpawns) => setStarredSpawns({ ...starredSpawns }));
   }, []);
 
   useEffect(() => {
@@ -114,10 +117,9 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                   <>
                     {Object.keys(runway.headings[0]).map((runwayName) => {
                       return (
-                        <div
-                          key={`${idx}-${runwayName}`}
-                          className={`flex w-full justify-between`}
-                        >
+                        <div key={`${idx}-${runwayName}`} className={`
+                          flex w-full justify-between
+                        `}>
                           <span>
                             {" "}
                             <span className="text-gray-400">RWY</span> {runwayName}
@@ -267,7 +269,13 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
             )}
             <>
               {!(blueprint === null) && (
-                <UnitSpawnMenu blueprint={blueprint} spawnAtLocation={false} airbase={airbase} coalition={(airbase?.getCoalition() ?? "blue") as Coalition} />
+                <UnitSpawnMenu
+                  blueprint={blueprint}
+                  starredSpawns={starredSpawns}
+                  spawnAtLocation={false}
+                  airbase={airbase}
+                  coalition={(airbase?.getCoalition() ?? "blue") as Coalition}
+                />
               )}
             </>
           </>

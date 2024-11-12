@@ -99,6 +99,7 @@ export interface SpawnRequestTable {
   category: string;
   coalition: string;
   unit: UnitSpawnTable;
+  quickAccessName?: string
 }
 
 export interface EffectRequestTable {

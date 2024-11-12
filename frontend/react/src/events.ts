@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { CommandModeOptions, OlympusConfig, ServerStatus } from "./interfaces";
+import { CommandModeOptions, OlympusConfig, ServerStatus, SpawnRequestTable } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -330,6 +330,19 @@ export class UnitContextMenuRequestEvent {
   }
 }
 
+export class StarredSpawnContextMenuRequestEvent {
+  static on(callback: (latlng: L.LatLng) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.latlng);
+    });
+  }
+
+  static dispatch(latlng: L.LatLng) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {latlng}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 export class HotgroupsChangedEvent {
   static on(callback: (hotgroups: {[key: number]: number}) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
@@ -339,6 +352,19 @@ export class HotgroupsChangedEvent {
 
   static dispatch(hotgroups: {[key: number]: number}) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: {hotgroups}}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class StarredSpawnsChangedEvent {
+  static on(callback: (starredSpawns: {[key: number]: SpawnRequestTable}) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.starredSpawns);
+    });
+  }
+
+  static dispatch(starredSpawns: {[key: number]: SpawnRequestTable}) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: {starredSpawns}}));
     console.log(`Event ${this.name} dispatched`);
   }
 }

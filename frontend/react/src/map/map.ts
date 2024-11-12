@@ -52,6 +52,8 @@ import {
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
   SelectionClearedEvent,
+  StarredSpawnContextMenuRequestEvent,
+  StarredSpawnsChangedEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
   UnitUpdatedEvent,
@@ -132,6 +134,7 @@ export class Map extends L.Map {
 
   /* Unit spawning */
   #spawnRequestTable: SpawnRequestTable | null = null;
+  #starredSpawnRequestTables: { [key: string]: SpawnRequestTable } = {};
   #effectRequestTable: EffectRequestTable | null = null;
   #temporaryMarkers: TemporaryUnitMarker[] = [];
   #currentSpawnMarker: TemporaryUnitMarker | null = null;
@@ -369,31 +372,32 @@ export class Map extends L.Map {
       .getShortcutManager()
       .addShortcut(`panUp`, {
         label: "Pan map up",
-        keyUpCallback: (ev: KeyboardEvent) => this.#panUp = false,
-        keyDownCallback: (ev: KeyboardEvent) => this.#panUp = true,
+        keyUpCallback: (ev: KeyboardEvent) => (this.#panUp = false),
+        keyDownCallback: (ev: KeyboardEvent) => (this.#panUp = true),
         code: "KeyW",
       })
       .addShortcut(`panDown`, {
         label: "Pan map down",
-        keyUpCallback: (ev: KeyboardEvent) => this.#panDown = false,
-        keyDownCallback: (ev: KeyboardEvent) => this.#panDown = true,
+        keyUpCallback: (ev: KeyboardEvent) => (this.#panDown = false),
+        keyDownCallback: (ev: KeyboardEvent) => (this.#panDown = true),
         code: "KeyS",
       })
       .addShortcut(`panLeft`, {
         label: "Pan map left",
-        keyUpCallback: (ev: KeyboardEvent) => this.#panLeft = false,
-        keyDownCallback: (ev: KeyboardEvent) => this.#panLeft = true,
+        keyUpCallback: (ev: KeyboardEvent) => (this.#panLeft = false),
+        keyDownCallback: (ev: KeyboardEvent) => (this.#panLeft = true),
         code: "KeyA",
       })
       .addShortcut(`panRight`, {
         label: "Pan map right",
-        keyUpCallback: (ev: KeyboardEvent) => this.#panRight = false,
-        keyDownCallback: (ev: KeyboardEvent) => this.#panRight = true,
+        keyUpCallback: (ev: KeyboardEvent) => (this.#panRight = false),
+        keyDownCallback: (ev: KeyboardEvent) => (this.#panRight = true),
         code: "KeyD",
-      }).addShortcut(`panFast`, {
+      })
+      .addShortcut(`panFast`, {
         label: "Pan map fast",
-        keyUpCallback: (ev: KeyboardEvent) => this.#panFast = false,
-        keyDownCallback: (ev: KeyboardEvent) => this.#panFast = true,
+        keyUpCallback: (ev: KeyboardEvent) => (this.#panFast = false),
+        keyDownCallback: (ev: KeyboardEvent) => (this.#panFast = true),
         code: "ShiftLeft",
       });
 
@@ -479,6 +483,16 @@ export class Map extends L.Map {
 
   setSpawnRequestTable(spawnRequestTable: SpawnRequestTable) {
     this.#spawnRequestTable = spawnRequestTable;
+  }
+
+  addStarredSpawnRequestTable(key, spawnRequestTable: SpawnRequestTable) {
+    this.#starredSpawnRequestTables[key] = spawnRequestTable;
+    StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
+  }
+
+  removeStarredSpawnRequestTable(key) {
+    if (key in this.#starredSpawnRequestTables) delete this.#starredSpawnRequestTables[key];
+    StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
   }
 
   setEffectRequestTable(effectRequestTable: EffectRequestTable) {
@@ -1005,10 +1019,15 @@ export class Map extends L.Map {
     window.clearTimeout(this.#shortPressTimer);
     window.clearTimeout(this.#longPressTimer);
 
-    if (getApp().getSubState() !== NO_SUBSTATE) {
-      getApp().setState(getApp().getState(), NO_SUBSTATE);
+    if (getApp().getState() === OlympusState.IDLE) {
+      StarredSpawnContextMenuRequestEvent.dispatch(e.latlng);
+      getApp().setState(OlympusState.STARRED_SPAWN);
     } else {
-      getApp().setState(OlympusState.IDLE);
+      if (getApp().getSubState() !== NO_SUBSTATE) {
+        getApp().setState(getApp().getState(), NO_SUBSTATE);
+      } else {
+        getApp().setState(OlympusState.IDLE);
+      }
     }
   }
 

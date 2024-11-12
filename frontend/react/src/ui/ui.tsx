@@ -8,13 +8,7 @@ import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { OptionsMenu } from "./panels/optionsmenu";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import {
-  NO_SUBSTATE,
-  OlympusState,
-  OlympusSubState,
-  OptionsSubstate,
-  UnitControlSubState,
-} from "../constants/constants";
+import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/login";
 
@@ -34,6 +28,7 @@ import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
+import { StarredSpawnContextMenu } from "./contextmenus/starredspawncontextmenu";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -58,8 +53,6 @@ export function UI() {
     });
   }, []);
 
-  
-
   return (
     <div
       className={`
@@ -72,13 +65,12 @@ export function UI() {
       <div className="flex h-full w-full flex-row-reverse">
         {appState === OlympusState.LOGIN && (
           <>
-            <div className={`
+            <div
+              className={`
               fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
-            `}></div>
-            <LoginModal
-              
-
-            />
+            `}
+            ></div>
+            <LoginModal />
           </>
         )}
 
@@ -87,7 +79,10 @@ export function UI() {
 
         <div id="map-container" className="z-0 h-full w-screen" />
         <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <SpawnMenu
+          open={appState === OlympusState.SPAWN && [SpawnSubState.NO_SUBSTATE, SpawnSubState.SPAWN_UNIT].includes(appSubState as SpawnSubState)}
+          onClose={() => getApp().setState(OlympusState.IDLE)}
+        />
         <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
         <UnitControlMenu
@@ -117,6 +112,7 @@ export function UI() {
         <ControlsPanel />
         <UnitControlBar />
         <MapContextMenu />
+        <StarredSpawnContextMenu />
         <SideBar />
         <InfoBar />
         <HotGroupBar />

@@ -8,7 +8,7 @@ export function OlStringInput(props: { value: string; className?: string; onChan
         min-w-32
       `}
     >
-      <div className="relative flex max-w-[8rem] items-center">
+      <div className="relative flex items-center">
         <input
           type="text"
           onChange={props.onChange}
