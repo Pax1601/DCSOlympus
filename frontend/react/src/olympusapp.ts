@@ -92,6 +92,14 @@ export class OlympusApp {
     }
     */
 
+  getExpressAddress() {
+    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}express`
+  }
+
+  getBackendAddress() {
+    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}olympus`
+  }
+
   start() {
     /* Initialize base functionalitites */
     this.#shortcutManager = new ShortcutManager(); /* Keep first */
@@ -105,8 +113,8 @@ export class OlympusApp {
     this.#audioManager = new AudioManager();
 
     /* Set the address of the server */
-    this.getServerManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
-    this.getAudioManager().setAddress(window.location.href.split("?")[0].replace("vite/", ""));
+    this.getServerManager().setAddress(this.getBackendAddress());
+    this.getAudioManager().setAddress(this.getExpressAddress());
 
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
@@ -128,7 +136,7 @@ export class OlympusApp {
       });
 
     /* Load the config file from the server */
-    const configRequest = new Request(window.location.href.split("?")[0].replace("vite/", "") + "resources/config");
+    const configRequest = new Request(this.getExpressAddress() + "resources/config");
     fetch(configRequest)
       .then((response) => {
         if (response.status === 200) {
@@ -164,7 +172,7 @@ export class OlympusApp {
         body: JSON.stringify(profile), // Send the data in JSON format
       };
 
-      fetch(window.location.href.split("?")[0].replace("vite/", "") + `resources/profile/${this.#profileName}`, requestOptions)
+      fetch(this.getExpressAddress() + `resources/profile/${this.#profileName}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
             console.log(`Profile ${this.#profileName} saved correctly`);

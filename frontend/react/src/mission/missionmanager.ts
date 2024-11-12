@@ -248,7 +248,7 @@ export class MissionManager {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", window.location.href.split("?")[0].replace("vite/", "") + `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
+    xhr.open("GET", getApp().getExpressAddress() + `api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
     xhr.responseType = "json";
     xhr.onload = () => {
       var status = xhr.status;

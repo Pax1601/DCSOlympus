@@ -39,7 +39,7 @@ export class ServerManager {
 
     getApp().getShortcutManager().addShortcut("togglePause", {
       label: "Pause data update",
-      callback: () => {
+      keyUpCallback: () => {
         this.setPaused(!this.getPaused());
       },
       code: "Space"
@@ -138,7 +138,7 @@ export class ServerManager {
 
   getConfig(callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", window.location.href.split("?")[0].replace("vite/", "") + "config", true);
+    xmlHttp.open("GET", getApp().getExpressAddress() + "config", true);
     xmlHttp.onload = function (e) {
       var data = JSON.parse(xmlHttp.responseText);
       callback(data);
