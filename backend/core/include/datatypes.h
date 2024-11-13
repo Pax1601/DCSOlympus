@@ -13,6 +13,7 @@ namespace DataIndex {
 		country,
 		name,
 		unitName,
+		callsign,
 		groupName,
 		state,
 		task,

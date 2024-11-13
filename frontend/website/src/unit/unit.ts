@@ -5,7 +5,7 @@ import { CustomMarker } from '../map/markers/custommarker';
 import { SVGInjector } from '@tanem/svg-injector';
 import { UnitDatabase } from './databases/unitdatabase';
 import { TargetMarker } from '../map/markers/targetmarker';
-import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX } from '../constants/constants';
+import { DLINK, DataIndexes, GAME_MASTER, HIDE_GROUP_MEMBERS, IDLE, IRST, MOVE_UNIT, OPTIC, RADAR, ROEs, RWR, SHOW_UNIT_CONTACTS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, VISUAL, emissionsCountermeasures, reactionsToThreat, states, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, GROUPING_ZOOM_TRANSITION, MAX_SHOTS_SCATTER, SHOTS_SCATTER_DEGREES, GROUND_UNIT_AIR_DEFENCE_REGEX, SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN } from '../constants/constants';
 import { DataExtractor } from '../server/dataextractor';
 import { groundUnitDatabase } from './databases/groundunitdatabase';
 import { navyUnitDatabase } from './databases/navyunitdatabase';
@@ -36,6 +36,7 @@ export abstract class Unit extends CustomMarker {
     #country: number = 0;
     #name: string = "";
     #unitName: string = "";
+    #callsign: string = "";
     #groupName: string = "";
     #state: string = states[0];
     #task: string = ""
@@ -119,6 +120,7 @@ export abstract class Unit extends CustomMarker {
     getCountry() { return this.#country };
     getName() { return this.#name };
     getUnitName() { return this.#unitName };
+    getCallsign() { return this.#callsign };
     getGroupName() { return this.#groupName };
     getState() { return this.#state };
     getTask() { return this.#task };
@@ -279,6 +281,7 @@ export abstract class Unit extends CustomMarker {
                 case DataIndexes.country: this.#country = dataExtractor.extractUInt8(); break;
                 case DataIndexes.name: this.#name = dataExtractor.extractString(); break;
                 case DataIndexes.unitName: this.#unitName = dataExtractor.extractString(); break;
+                case DataIndexes.callsign: this.#callsign = dataExtractor.extractString(); break;
                 case DataIndexes.groupName: this.#groupName = dataExtractor.extractString(); updateMarker = true; break;
                 case DataIndexes.state: this.#state = enumToState(dataExtractor.extractUInt8()); updateMarker = true; break;
                 case DataIndexes.task: this.#task = dataExtractor.extractString(); break;
@@ -358,6 +361,7 @@ export abstract class Unit extends CustomMarker {
             country: this.#country,
             name: this.#name,
             unitName: this.#unitName,
+            callsign: this.#callsign,
             groupName: this.#groupName,
             state: this.#state,
             task: this.#task,
@@ -423,7 +427,7 @@ export abstract class Unit extends CustomMarker {
     setSelected(selected: boolean) {
         /* Only alive units can be selected that belong to the commanded coalition can be selected */
         if ((this.#alive || !selected) && this.belongsToCommandedCoalition() && this.getSelected() != selected) {
-            this.#selected = selected;
+            this.#selected = selected;  
 
             /* If selected, update the marker to show the selected effects, else clear all the drawings that are only shown for selected units. */
             if (selected) {
@@ -678,13 +682,20 @@ export abstract class Unit extends CustomMarker {
         if (iconOptions.showSummary) {
             var summary = document.createElement("div");
             summary.classList.add("unit-summary");
+
+            var originalCallsign = document.createElement("div");
+            originalCallsign.classList.add("unit-original-callsign");
+            originalCallsign.innerText = this.#callsign;
+
             var callsign = document.createElement("div");
             callsign.classList.add("unit-callsign");
             callsign.innerText = this.#unitName;
+
             var altitude = document.createElement("div");
             altitude.classList.add("unit-altitude");
             var speed = document.createElement("div");
             speed.classList.add("unit-speed");
+            if (this.#human) summary.appendChild(originalCallsign);
             if (iconOptions.showCallsign) summary.appendChild(callsign);
             summary.appendChild(altitude);
             summary.appendChild(speed);
@@ -1485,6 +1496,7 @@ export abstract class Unit extends CustomMarker {
 export abstract class AirUnit extends Unit {
     getIconOptions() {
         var belongsToCommandedCoalition = this.belongsToCommandedCoalition();
+        var showHumanControlledUnitGroup = getApp().getMap().getVisibilityOptions()[SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN] as boolean;
         return {
             showState: belongsToCommandedCoalition,
             showVvi: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
@@ -1496,6 +1508,7 @@ export abstract class AirUnit extends Unit {
             showAmmo: belongsToCommandedCoalition,
             showSummary: (belongsToCommandedCoalition || this.getDetectionMethods().some(value => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value))),
             showCallsign: belongsToCommandedCoalition,
+            showOriginalCallsign: showHumanControlledUnitGroup,
             rotateToHeading: false
         };
     }

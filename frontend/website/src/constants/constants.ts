@@ -251,6 +251,7 @@ export const SHOW_UNIT_PATHS = "Show selected unit paths";
 export const SHOW_UNIT_TARGETS = "Show selected unit targets";
 export const DCS_LINK_PORT = "DCS Camera link port";
 export const DCS_LINK_RATIO = "DCS Camera zoom";
+export const SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN = "Show human controlled unit original callsign";
 
 export enum DataIndexes {
     startOfData = 0,
@@ -262,6 +263,7 @@ export enum DataIndexes {
     country,
     name,
     unitName,
+    callsign,
     groupName,
     state,
     task,

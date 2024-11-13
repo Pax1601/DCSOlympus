@@ -160,6 +160,8 @@
     column-gap: 6px;
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-end;
     font-size: 11px;
     font-weight: bold;
     justify-content: right;
@@ -173,10 +175,14 @@
         -1px 1px 0 #000,
         1px 1px 0 #000;
     right: 100%;
-    width: fit-content;
+    width: max-content;
 }
 
 [data-hide-labels] [data-object|="unit"] .unit-summary {
+    display: none;
+}
+
+[data-hide-original-callsign] [data-object|="unit"] .unit-original-callsign {
     display: none;
 }
 
@@ -184,7 +190,7 @@
     padding: 1px;
 }
 
-[data-object|="unit"] .unit-summary .unit-callsign {
+[data-object|="unit"] .unit-summary .unit-callsign .unit-group {
     color: white;
     overflow: hidden;
     text-align: right;

@@ -71,6 +71,7 @@ public:
 	virtual void setCountry(unsigned char newValue) { updateValue(country, newValue, DataIndex::country); }
 	virtual void setName(string newValue) { updateValue(name, newValue, DataIndex::name); }
 	virtual void setUnitName(string newValue) { updateValue(unitName, newValue, DataIndex::unitName); }
+	virtual void setCallsign(string newValue) { updateValue(callsign, newValue, DataIndex::callsign); }
 	virtual void setGroupName(string newValue) { updateValue(groupName, newValue, DataIndex::groupName); }
 	virtual void setState(unsigned char newValue) { updateValue(state, newValue, DataIndex::state); };
 	virtual void setTask(string newValue) { updateValue(task, newValue, DataIndex::task); }
@@ -117,6 +118,7 @@ public:
 	virtual unsigned char getCoalition() { return coalition; }
 	virtual unsigned char getCountry() { return country; }
 	virtual string getName() { return name; }
+	virtual string getCallsign() { return callsign; }
 	virtual string getUnitName() { return unitName; }
 	virtual string getGroupName() { return groupName; }
 	virtual unsigned char getState() { return state; }
@@ -167,6 +169,7 @@ protected:
 	unsigned char country = NULL;
 	string name = "";
 	string unitName = "";
+	string callsign = "";
 	string groupName = "";
 	unsigned char state = State::NONE;
 	string task = "";
