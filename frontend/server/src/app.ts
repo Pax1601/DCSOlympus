@@ -76,6 +76,10 @@ module.exports = function (configLocation, viteProxy) {
   app.use("/api/elevation", elevationRouter);
   app.use("/api/databases", databasesRouter);
   app.use("/resources", resourcesRouter);
+  app.use("/express/api/airbases", airbasesRouter);
+  app.use("/express/api/elevation", elevationRouter);
+  app.use("/express/api/databases", databasesRouter);
+  app.use("/express/resources", resourcesRouter);
 
   /* Set default index */
   if (!viteProxy) {

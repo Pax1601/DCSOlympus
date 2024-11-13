@@ -35,15 +35,12 @@ export class AudioManager {
   #socket: WebSocket | null = null;
   #guid: string = makeID(22);
   #SRSClientUnitIDs: number[] = [];
+  #syncInterval: number;
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
     });
-
-    setInterval(() => {
-      this.#syncRadioSettings();
-    }, 1000);
 
     let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyK", "KeyL"];
     PTTKeys.forEach((key, idx) => {
@@ -59,6 +56,10 @@ export class AudioManager {
   }
 
   start() {
+    this.#syncInterval = window.setInterval(() => {
+      this.#syncRadioSettings();
+    }, 1000);
+
     this.#running = true;
     this.#audioContext = new AudioContext({ sampleRate: 16000 });
     this.#playbackPipeline = new PlaybackPipeline();
@@ -72,7 +73,9 @@ export class AudioManager {
     else if (this.#port) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
     else console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
 
-    this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`); // TODO: remove, used for testing!
+    if (!this.#socket) return;
+
+    //this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`); // TODO: remove, used for testing!
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {
@@ -98,7 +101,8 @@ export class AudioManager {
 
             /* Extract the frequency value and play it on the speakers if we are listening to it*/
             audioPacket.getFrequencies().forEach((frequencyInfo) => {
-              if (sink.getFrequency() === frequencyInfo.frequency && sink.getModulation() === frequencyInfo.modulation) {
+              if (sink.getFrequency() === frequencyInfo.frequency && sink.getModulation() === frequencyInfo.modulation && sink.getTuned()) {
+                sink.setReceiving(true);
                 this.#playbackPipeline.playBuffer(audioPacket.getAudioData().buffer);
               }
             });
@@ -133,6 +137,9 @@ export class AudioManager {
     this.#sinks.forEach((sink) => sink.disconnect());
     this.#sources = [];
     this.#sinks = [];
+    this.#socket?.close();
+    
+    window.clearInterval(this.#syncInterval);
 
     AudioSourcesChangedEvent.dispatch(this.#sources);
     AudioSinksChangedEvent.dispatch(this.#sinks);

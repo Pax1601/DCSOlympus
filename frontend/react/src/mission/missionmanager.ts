@@ -7,7 +7,7 @@ import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionDa
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
 import { NavyUnit } from "../unit/unit";
-import { CommandModeOptionsChangedEvent, InfoPopupEvent } from "../events";
+import { BullseyesDataChanged, CommandModeOptionsChangedEvent, InfoPopupEvent } from "../events";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -56,6 +56,8 @@ export class MissionManager {
         this.#bullseyes[idx].setLatLng(new LatLng(bullseye.latitude, bullseye.longitude));
         this.#bullseyes[idx].setCoalition(bullseye.coalition);
       }
+
+      BullseyesDataChanged.dispatch(this.#bullseyes)
     }
   }
 

@@ -29,6 +29,7 @@ import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
 import { StarredSpawnContextMenu } from "./contextmenus/starredspawncontextmenu";
+import { CoordinatesPanel } from "./panels/coordinatespanel";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -65,11 +66,9 @@ export function UI() {
       <div className="flex h-full w-full flex-row-reverse">
         {appState === OlympusState.LOGIN && (
           <>
-            <div
-              className={`
+            <div className={`
               fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
-            `}
-            ></div>
+            `}></div>
             <LoginModal />
           </>
         )}
@@ -78,13 +77,10 @@ export function UI() {
         <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
 
         <div id="map-container" className="z-0 h-full w-screen" />
-        <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <SpawnMenu
-          open={appState === OlympusState.SPAWN && [SpawnSubState.NO_SUBSTATE, SpawnSubState.SPAWN_UNIT].includes(appSubState as SpawnSubState)}
-          onClose={() => getApp().setState(OlympusState.IDLE)}
-        />
-        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
+        <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <UnitControlMenu
           open={
             appState === OlympusState.UNIT_CONTROL &&
@@ -96,12 +92,10 @@ export function UI() {
           open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION}
           onClose={() => getApp().setState(OlympusState.IDLE)}
         />
-
         <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
-
         <UnitExplosionMenu
           open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
           onClose={() => getApp().setState(OlympusState.IDLE)}
@@ -110,12 +104,15 @@ export function UI() {
 
         <MiniMapPanel />
         <ControlsPanel />
+        <CoordinatesPanel />
+
         <UnitControlBar />
-        <MapContextMenu />
-        <StarredSpawnContextMenu />
         <SideBar />
         <InfoBar />
         <HotGroupBar />
+
+        <MapContextMenu />
+        <StarredSpawnContextMenu />
       </div>
     </div>
   );

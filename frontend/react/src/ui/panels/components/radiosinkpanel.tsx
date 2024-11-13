@@ -12,13 +12,15 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
 
   useEffect(() => {
     if (props.onExpanded) props.onExpanded();
-  }, [expanded])
+  }, [expanded]);
 
   return (
     <div
+      data-receiving={props.radio.getReceiving()}
       className={`
-        flex flex-col content-center justify-between gap-2 rounded-md
-        bg-olympus-200/30 px-4 py-3
+        box-border flex flex-col content-center justify-between gap-2 rounded-md
+        border-2 border-transparent bg-olympus-200/30 px-4 py-3
+        data-[receiving='true']:border-white
       `}
       ref={ref}
     >
@@ -37,19 +39,22 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
             data-expanded={expanded}
           />
         </div>
-        {props.shortcutKey && (<>
-          <kbd
-            className={`
-              my-auto ml-auto rounded-lg border border-gray-200 bg-gray-100 px-2
-              py-1.5 text-xs font-semibold text-gray-800
-              dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
-            `}
-          >
-            {props.shortcutKey}
-          </kbd>
+        {props.shortcutKey && (
+          <>
+            <kbd
+              className={`
+                my-auto ml-auto rounded-lg border border-gray-200 bg-gray-100
+                px-2 py-1.5 text-xs font-semibold text-gray-800
+                dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+              `}
+            >
+              {props.shortcutKey}
+            </kbd>
           </>
         )}
-        <span className="my-auto w-full">{props.radio.getName()} {!expanded && `: ${props.radio.getFrequency()/1e6} MHz ${props.radio.getModulation()? "FM": "AM"}`}  {} </span>
+        <span className="my-auto w-full">
+          {props.radio.getName()} {!expanded && `: ${props.radio.getFrequency() / 1e6} MHz ${props.radio.getModulation() ? "FM" : "AM"}`} {}{" "}
+        </span>
         <div
           className={`
             mb-auto ml-auto aspect-square cursor-pointer rounded-md p-2

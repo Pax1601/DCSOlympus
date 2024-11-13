@@ -51,6 +51,7 @@ import {
   MapContextMenuRequestEvent,
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
+  MouseMovedEvent,
   SelectionClearedEvent,
   StarredSpawnContextMenuRequestEvent,
   StarredSpawnsChangedEvent,
@@ -517,9 +518,7 @@ export class Map extends L.Map {
   }
 
   getCurrentControls() {
-    const touch = matchMedia("(hover: none)").matches;
-    return [];
-    // TODO, is this a good idea? I never look at the thing
+    //const touch = matchMedia("(hover: none)").matches;
     //if (getApp().getState() === IDLE) {
     //  return [
     //    {
@@ -544,7 +543,7 @@ export class Map extends L.Map {
     //      text: "Move map location",
     //    },
     //  ];
-    //} else if (getApp().getState() === SPAWN_UNIT) {
+    //} else if (getApp().getState() === OlympusState.SPAWN_UNIT) {
     //  return [
     //    {
     //      actions: [touch ? faHandPointer : "LMB"],
@@ -812,7 +811,7 @@ export class Map extends L.Map {
       }
 
       this.#miniMap = new ClickableMiniMap(this.#miniMapLayerGroup, {
-        position: "topright",
+        position: "bottomright",
         width: 192 * 1.5,
         height: 108 * 1.5,
         //@ts-ignore Needed because some of the inputs are wrong in the original module interface
@@ -999,7 +998,7 @@ export class Map extends L.Map {
       return;
     }
 
-    if (this.#contextAction?.getTarget() === ContextActionTarget.POINT && e.originalEvent.button === 2) this.#isRotatingDestination = true;
+    if (this.#contextAction?.getTarget() === ContextActionTarget.POINT && e.originalEvent?.button === 2) this.#isRotatingDestination = true;
     this.scrollWheelZoom.disable();
 
     this.#shortPressTimer = window.setTimeout(() => {
@@ -1043,7 +1042,7 @@ export class Map extends L.Map {
       /* Do nothing */
     } else if (getApp().getState() === OlympusState.SPAWN) {
       if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
-        if (e.originalEvent.button != 2 && this.#spawnRequestTable !== null) {
+        if (e.originalEvent?.button != 2 && this.#spawnRequestTable !== null) {
           this.#spawnRequestTable.unit.location = pressLocation;
           getApp()
             .getUnitsManager()
@@ -1060,7 +1059,7 @@ export class Map extends L.Map {
             );
         }
       } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
-        if (e.originalEvent.button != 2 && this.#effectRequestTable !== null) {
+        if (e.originalEvent?.button != 2 && this.#effectRequestTable !== null) {
           if (this.#effectRequestTable.type === "explosion") {
             if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", pressLocation);
             else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", pressLocation);
@@ -1099,10 +1098,10 @@ export class Map extends L.Map {
         }
       }
     } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-      if (e.type === "touchstart" || e.originalEvent.buttons === 1) {
+      if (e.type === "touchstart" || e.originalEvent?.buttons === 1) {
         if (this.#contextAction !== null) this.executeContextAction(null, pressLocation, e.originalEvent);
         else getApp().setState(OlympusState.IDLE);
-      } else if (e.originalEvent.buttons === 2) {
+      } else if (e.originalEvent?.buttons === 2) {
         this.executeDefaultContextAction(null, pressLocation, e.originalEvent);
       }
     } else if (getApp().getState() === OlympusState.JTAC) {
@@ -1172,7 +1171,7 @@ export class Map extends L.Map {
         if (e.type === "touchstart") document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e }));
         else document.dispatchEvent(new CustomEvent("forceboxselect", { detail: e.originalEvent }));
       } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-        if (e.originalEvent.button === 2) {
+        if (e.originalEvent?.button === 2) {
           if (!this.getContextAction()) {
             getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
             MapContextMenuRequestEvent.dispatch(pressLocation);
@@ -1198,6 +1197,11 @@ export class Map extends L.Map {
       this.#lastMousePosition.y = e.originalEvent.y;
       this.#lastMouseCoordinates = e.latlng;
 
+      MouseMovedEvent.dispatch(e.latlng);
+      getGroundElevation(e.latlng, (elevation) => {
+        MouseMovedEvent.dispatch(e.latlng, elevation);
+      })
+      
       if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
       if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
     } else {
@@ -1269,17 +1273,6 @@ export class Map extends L.Map {
 
   #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {
     this.#slaveDCSCameraAvailable = newSlaveDCSCameraAvailable;
-    let linkButton = document.getElementById("camera-link-control");
-    if (linkButton) {
-      if (!newSlaveDCSCameraAvailable) {
-        //this.setSlaveDCSCamera(false); // Commented to experiment with usability
-        linkButton.classList.add("red");
-        linkButton.title = "Camera link to DCS is not available";
-      } else {
-        linkButton.classList.remove("red");
-        linkButton.title = "Link/Unlink DCS camera with Olympus position";
-      }
-    }
   }
 
   /* Check if the camera control plugin is available. Right now this will only change the color of the button, no changes in functionality */

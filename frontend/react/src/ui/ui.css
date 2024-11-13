@@ -1,3 +1,7 @@
+* {
+  user-select: none; /* Standard syntax */
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

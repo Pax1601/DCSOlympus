@@ -5,11 +5,13 @@ import { CommandModeOptions, OlympusConfig, ServerStatus, SpawnRequestTable } fr
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
+import { Bullseye } from "./mission/bullseye";
 import { Shortcut } from "./shortcut/shortcut";
 import { MapHiddenTypes, MapOptions } from "./types/types";
 import { ContextAction } from "./unit/contextaction";
 import { ContextActionSet } from "./unit/contextactionset";
 import { Unit } from "./unit/unit";
+import { LatLng } from "leaflet";
 
 export class BaseOlympusEvent {
   static on(callback: () => void) {
@@ -34,7 +36,7 @@ export class BaseUnitEvent {
   static dispatch(unit: Unit) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { unit } }));
     console.log(`Event ${this.name} dispatched`);
-    console.log(unit)
+    console.log(unit);
   }
 }
 
@@ -62,9 +64,9 @@ export class ConfigLoadedEvent {
   }
 
   static dispatch(config: OlympusConfig) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: config}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: config }));
     console.log(`Event ${this.name} dispatched`);
-    console.log(config)
+    console.log(config);
   }
 }
 
@@ -91,7 +93,7 @@ export class InfoPopupEvent {
   }
 
   static dispatch(messages: string[]) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {messages}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { messages } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -104,20 +106,20 @@ export class HideMenuEvent {
   }
 
   static dispatch(hidden: boolean) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {hidden}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { hidden } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
 
 export class ShortcutsChangedEvent {
-  static on(callback: (shortcuts: {[key: string]: Shortcut}) => void) {
+  static on(callback: (shortcuts: { [key: string]: Shortcut }) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.shortcuts);
     });
   }
 
-  static dispatch(shortcuts: {[key: string]: Shortcut}) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {shortcuts}}));
+  static dispatch(shortcuts: { [key: string]: Shortcut }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { shortcuts } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -130,7 +132,7 @@ export class ShortcutChangedEvent {
   }
 
   static dispatch(shortcut: Shortcut) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {shortcut}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { shortcut } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -143,7 +145,7 @@ export class BindShortcutRequestEvent {
   }
 
   static dispatch(shortcut: Shortcut) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {shortcut}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { shortcut } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -157,7 +159,7 @@ export class HiddenTypesChangedEvent {
   }
 
   static dispatch(hiddenTypes: MapHiddenTypes) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {hiddenTypes}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { hiddenTypes } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -170,7 +172,7 @@ export class MapOptionsChangedEvent {
   }
 
   static dispatch(mapOptions: MapOptions) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {mapOptions}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { mapOptions } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -183,7 +185,7 @@ export class MapSourceChangedEvent {
   }
 
   static dispatch(source: string) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {source}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { source } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -235,7 +237,7 @@ export class ContextActionSetChangedEvent {
   }
 
   static dispatch(contextActionSet: ContextActionSet | null) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {contextActionSet}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { contextActionSet } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -248,7 +250,7 @@ export class ContextActionChangedEvent {
   }
 
   static dispatch(contextAction: ContextAction | null) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {contextAction}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { contextAction } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -258,11 +260,11 @@ export class UnitUpdatedEvent extends BaseUnitEvent {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { unit } }));
     // Logging disabled since periodic
   }
-};
-export class UnitSelectedEvent extends BaseUnitEvent {};
-export class UnitDeselectedEvent extends BaseUnitEvent {};
-export class UnitDeadEvent extends BaseUnitEvent {};
-export class SelectionClearedEvent extends BaseOlympusEvent {};
+}
+export class UnitSelectedEvent extends BaseUnitEvent {}
+export class UnitDeselectedEvent extends BaseUnitEvent {}
+export class UnitDeadEvent extends BaseUnitEvent {}
+export class SelectionClearedEvent extends BaseOlympusEvent {}
 
 export class SelectedUnitsChangedEvent {
   static on(callback: (selectedUnits: Unit[]) => void) {
@@ -272,9 +274,9 @@ export class SelectedUnitsChangedEvent {
   }
 
   static dispatch(selectedUnits: Unit[]) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: selectedUnits}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: selectedUnits }));
     console.log(`Event ${this.name} dispatched`);
-    console.log(selectedUnits)
+    console.log(selectedUnits);
   }
 }
 
@@ -286,7 +288,7 @@ export class UnitExplosionRequestEvent {
   }
 
   static dispatch(units: Unit[]) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {units}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { units } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -299,7 +301,7 @@ export class FormationCreationRequestEvent {
   }
 
   static dispatch(leader: Unit, wingmen: Unit[]) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {leader, wingmen}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { leader, wingmen } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -312,7 +314,7 @@ export class MapContextMenuRequestEvent {
   }
 
   static dispatch(latlng: L.LatLng) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {latlng}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { latlng } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -325,7 +327,7 @@ export class UnitContextMenuRequestEvent {
   }
 
   static dispatch(unit: Unit) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {unit}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { unit } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -338,33 +340,46 @@ export class StarredSpawnContextMenuRequestEvent {
   }
 
   static dispatch(latlng: L.LatLng) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {latlng}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { latlng } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
 
 export class HotgroupsChangedEvent {
-  static on(callback: (hotgroups: {[key: number]: number}) => void) {
+  static on(callback: (hotgroups: { [key: number]: number }) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.hotgroups);
     });
   }
 
-  static dispatch(hotgroups: {[key: number]: number}) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {hotgroups}}));
+  static dispatch(hotgroups: { [key: number]: number }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { hotgroups } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
 
 export class StarredSpawnsChangedEvent {
-  static on(callback: (starredSpawns: {[key: number]: SpawnRequestTable}) => void) {
+  static on(callback: (starredSpawns: { [key: number]: SpawnRequestTable }) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.starredSpawns);
     });
   }
 
-  static dispatch(starredSpawns: {[key: number]: SpawnRequestTable}) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {starredSpawns}}));
+  static dispatch(starredSpawns: { [key: number]: SpawnRequestTable }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { starredSpawns } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class MouseMovedEvent {
+  static on(callback: (latlng: LatLng, elevation: number) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.latlng, ev.detail.elevation);
+    });
+  }
+
+  static dispatch(latlng: LatLng, elevation?: number) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { latlng, elevation } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -378,7 +393,7 @@ export class CommandModeOptionsChangedEvent {
   }
 
   static dispatch(options: CommandModeOptions) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: options}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: options }));
     console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -392,9 +407,9 @@ export class AudioSourcesChangedEvent {
   }
 
   static dispatch(audioSources: AudioSource[]) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {audioSources}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { audioSources } }));
     console.log(`Event ${this.name} dispatched`);
-    console.log(audioSources)
+    console.log(audioSources);
   }
 }
 
@@ -406,9 +421,9 @@ export class AudioSinksChangedEvent {
   }
 
   static dispatch(audioSinks: AudioSink[]) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {audioSinks}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { audioSinks } }));
     console.log(`Event ${this.name} dispatched`);
-    console.log(audioSinks)
+    console.log(audioSinks);
   }
 }
 
@@ -433,7 +448,21 @@ export class AudioManagerStateChangedEvent {
   }
 
   static dispatch(state: boolean) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: {state}}));
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { state } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+/************** Mission data events ***************/
+export class BullseyesDataChanged {
+  static on(callback: (bullseyes: { [name: string]: Bullseye }) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.bullseyes);
+    });
+  }
+
+  static dispatch(bullseyes: { [name: string]: Bullseye } ) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { bullseyes } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }

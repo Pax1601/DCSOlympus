@@ -56,10 +56,11 @@ export function MiniMapPanel(props: {}) {
       onClick={() => setShowMissionTime(!showMissionTime)}
       className={`
         absolute right-[10px]
-        ${mapOptions.showMinimap ? `top-[232px]` : `top-[70px]`}
+        ${mapOptions.showMinimap ? `bottom-[188px]` : `bottom-[20px]`}
         flex w-[288px] items-center justify-between
-        ${mapOptions.showMinimap ? `rounded-b-lg` : `rounded-lg`}
-        bg-gray-200 p-3 text-sm backdrop-blur-lg backdrop-grayscale
+        ${mapOptions.showMinimap ? `rounded-t-lg` : `rounded-lg`}
+        cursor-pointer bg-gray-200 p-3 text-sm backdrop-blur-lg
+        backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
       `}
     >
@@ -94,17 +95,9 @@ export function MiniMapPanel(props: {}) {
         </>
       )}
       {mapOptions.showMinimap ? (
-        <FaChevronUp
-          onClick={() => {
-            getApp().getMap().setOption("showMinimap", false);
-          }}
-        ></FaChevronUp>
+        <FaChevronDown onClick={() => getApp().getMap().setOption("showMinimap", false)} />
       ) : (
-        <FaChevronDown
-          onClick={() => {
-            getApp().getMap().setOption("showMinimap", true);
-          }}
-        ></FaChevronDown>
+        <FaChevronUp onClick={() => getApp().getMap().setOption("showMinimap", true)} />
       )}
     </div>
   );

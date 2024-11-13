@@ -16,6 +16,8 @@ export class RadioSink extends AudioSink {
   #ptt = false;
   #tuned = false;
   #volume = 0.5;
+  #receiving = false;
+  #clearReceivingTimeout: number;
 
   constructor() {
     super();
@@ -97,6 +99,20 @@ export class RadioSink extends AudioSink {
 
   getVolume() {
     return this.#volume;
+  }
+
+  setReceiving(receiving) {
+    // Only do it if actually changed
+    if (receiving !== this.#receiving) AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+    if (receiving) {
+      window.clearTimeout(this.#clearReceivingTimeout);
+      this.#clearReceivingTimeout = window.setTimeout(() => this.setReceiving(false), 500);
+    }
+    this.#receiving = receiving;
+  }
+
+  getReceiving() {
+    return this.#receiving;
   }
 
   handleEncodedData(encodedAudioChunk: EncodedAudioChunk) {

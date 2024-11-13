@@ -29,6 +29,12 @@ export class SRSHandler {
       this.decodeData(data);
     });
     this.ws.on("close", () => {
+      let CLIENT_DISCONNECT = {
+        Client: this.data,
+        MsgType: 5,
+        Version: SRS_VERSION,
+      };
+      this.tcp.write(`${JSON.stringify(CLIENT_DISCONNECT)}\n`);
       this.tcp.end();
     });
 
@@ -113,6 +119,13 @@ export class SRSHandler {
           this.data.RadioInfo.radios[idx].freq = setting.frequency;
           this.data.RadioInfo.radios[idx].modulation = setting.modulation;
         });
+
+        let RADIO_UPDATE = {
+          Client: this.data,
+          MsgType: 3,
+          Version: SRS_VERSION,
+        };
+        this.tcp.write(`${JSON.stringify(RADIO_UPDATE)}\n`);
         break;
       default:
         break;

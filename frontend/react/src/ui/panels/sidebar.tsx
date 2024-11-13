@@ -37,7 +37,7 @@ export function SideBar() {
             onClick={() => {
               getApp().setState(appState !== OlympusState.SPAWN ? OlympusState.SPAWN : OlympusState.IDLE);
             }}
-            checked={appState === OlympusState.SPAWN && appSubState === SpawnSubState.NO_SUBSTATE}
+            checked={appState === OlympusState.SPAWN}
             icon={faPlusSquare}
             tooltip="Hide/show unit spawn menu"
           ></OlStateButton>
