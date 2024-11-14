@@ -6,7 +6,6 @@ import {
   bearingAndDistanceToLatLng,
   deg2rad,
   getGroundElevation,
-  keyEventWasInInput,
   latLngToMercator,
   mToFt,
   mercatorToLatLng,
@@ -17,10 +16,7 @@ import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IAD
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
-//import { Popup } from "../popups/popup";
-//import { HotgroupPanel } from "../panels/hotgrouppanel";
 import { Contact, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
-//import { Dialog } from "../dialog/dialog";
 import { Group } from "./group";
 import { UnitDataFileExport } from "./importexport/unitdatafileexport";
 import { UnitDataFileImport } from "./importexport/unitdatafileimport";
@@ -1357,7 +1353,7 @@ export class UnitsManager {
 
               if (unitBlueprint)
                 this.spawnUnits(
-                  "GroundUnit",
+                  unitBlueprint.category,
                   [
                     {
                       unitType: unitBlueprint.name,
@@ -1410,7 +1406,7 @@ export class UnitsManager {
 
               if (unitBlueprint)
                 this.spawnUnits(
-                  "GroundUnit",
+                  unitBlueprint.category,
                   [
                     {
                       unitType: unitBlueprint.name,

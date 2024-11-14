@@ -380,7 +380,7 @@ export class MouseMovedEvent {
 
   static dispatch(latlng: LatLng, elevation?: number) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { latlng, elevation } }));
-    console.log(`Event ${this.name} dispatched`);
+    // Logging disabled since periodic
   }
 }
 
@@ -463,6 +463,6 @@ export class BullseyesDataChanged {
 
   static dispatch(bullseyes: { [name: string]: Bullseye } ) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { bullseyes } }));
-    console.log(`Event ${this.name} dispatched`);
+    // Logging disabled since periodic
   }
 }

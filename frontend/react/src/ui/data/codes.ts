@@ -1,4 +1,4 @@
-{
+export const countryCodes = {
   "AGGRESSORS": {
     "flagCode": "RED",
     "liveryCodes": ["RSO"]
@@ -250,7 +250,7 @@
   "SOUTH_AFRICA": {
     "displayName": "South Africa",
     "flagCode": "ZA",
-    "liveryCodes": []
+    "liveryCodes": null
   },
   "SPAIN": {
     "flagCode": "ES",
@@ -323,7 +323,7 @@
   "SOUTH_OSETIA": {
     "displayName": "South Ossetia",
     "flagCode": "UNK",
-    "liveryCodes": []
+    "liveryCodes": null
   },
   "NORTH_KOREA": {
     "displayName": "Democratic People's Republic of Korea",
@@ -347,7 +347,7 @@
   "USSR": {
     "displayName": "USSR",
     "flagCode": "USSR",
-    "liveryCodes": []
+    "liveryCodes": null
   },
   "ECUADOR": {
     "flagCode": "EC",
@@ -373,6 +373,6 @@
   "THIRDREICH": {
     "displayName": "Third Reich",
     "flagCode": "THIRD",
-    "liveryCodes": []
+    "liveryCodes": null
   }
 }

@@ -12,7 +12,7 @@ import { OlCheckbox } from "../components/olcheckbox";
 import { Coalition } from "../../types/types";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
-import { DrawSubState, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
+import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
 import { AppStateChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
 import { UnitBlueprint } from "../../interfaces";
 
@@ -37,20 +37,8 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   }, []);
 
   /* Get all the unique types and eras for groundunits */
-  /* TODO move in effect */
-  const blueprints = getApp()?.getUnitsManager().getDatabase().getBlueprints();
-  let types: string[] = [];
-  let eras: string[] = [];
-  if (blueprints) {
-    types = blueprints
-      .filter((blueprint) => blueprint.category === "groundunit")
-      .map((blueprint) => blueprint.type)
-      .filter((type) => type !== undefined);
-    eras = blueprints
-      .filter((blueprint) => blueprint.category === "groundunit")
-      .map((blueprint) => blueprint.era)
-      .filter((era) => era !== undefined);
-  }
+  let types = IADSTypes;
+  let eras = getApp()?.getUnitsManager().getDatabase().getEras().sort((era1, era2) => ERAS_ORDER[era1] > ERAS_ORDER[era2] ? 1: -1 );
 
   useEffect(() => {
     if (getApp()) {
@@ -105,7 +93,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               tooltip={"Add a new circle"}
               checked={appSubState === DrawSubState.DRAW_CIRCLE}
               onClick={() => {
-                if (appSubState === DrawSubState.DRAW_CIRCLE) getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+                if (appSubState === DrawSubState.DRAW_CIRCLE) getApp().setState(OlympusState.DRAW);
                 else getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_CIRCLE);
               }}
             >

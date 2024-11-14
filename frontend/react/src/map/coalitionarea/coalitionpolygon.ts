@@ -44,7 +44,7 @@ export class CoalitionPolygon extends Polygon {
     });
 
     this.on("remove", () => {
-      this.#label.removeFrom(this._map);
+      this.#label?.removeFrom(this._map);
     });
   }
 

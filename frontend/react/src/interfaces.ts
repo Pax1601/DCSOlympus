@@ -99,6 +99,7 @@ export interface SpawnRequestTable {
   category: string;
   coalition: string;
   unit: UnitSpawnTable;
+  amount: number;
   quickAccessName?: string
 }
 

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { OlCheckbox } from "../components/olcheckbox";
-import { OlRangeSlider } from "../components/olrangeslider";
 import { OlNumberInput } from "../components/olnumberinput";
-import { MapOptions } from "../../types/types";
 import { getApp } from "../../olympusapp";
-import { CommandModeOptions, ServerStatus } from "../../interfaces";
+import { ServerStatus } from "../../interfaces";
 import { CommandModeOptionsChangedEvent, ServerStatusUpdatedEvent } from "../../events";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ERAS, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ERAS_ORDER, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
 
 export function GameMasterMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
@@ -40,12 +38,20 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
             GAME MASTER
           </div>
         )}
-        {commandModeOptions.commandMode === BLUE_COMMANDER && <div className={`
-          w-full rounded-md bg-blue-600 p-2 text-center font-bold
-        `}>BLUE COMMANDER</div>}
-        {commandModeOptions.commandMode === RED_COMMANDER && <div className={`
-          w-full rounded-md bg-red-700 p-2 text-center font-bold
-        `}>RED COMMANDER</div>}
+        {commandModeOptions.commandMode === BLUE_COMMANDER && (
+          <div
+            className={`w-full rounded-md bg-blue-600 p-2 text-center font-bold`}
+          >
+            BLUE COMMANDER
+          </div>
+        )}
+        {commandModeOptions.commandMode === RED_COMMANDER && (
+          <div
+            className={`w-full rounded-md bg-red-700 p-2 text-center font-bold`}
+          >
+            RED COMMANDER
+          </div>
+        )}
         {serverStatus.elapsedTime > currentSetupTime && (
           <div
             className={`
@@ -112,36 +118,40 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
               Restrict spawns to coalition
             </span>
           </div>
-          {ERAS.sort((a, b) => (a.chronologicalOrder > b.chronologicalOrder ? 1 : -1)).map((era) => {
-            return (
-              <div
-                className={`
-                  group flex flex-row rounded-md justify-content cursor-pointer
-                  gap-4 p-2
-                  dark:hover:bg-olympus-400
-                `}
-                onClick={() => {
-                  if (!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER) return;
-                  const newCommandModeOptions = { ...commandModeOptions };
-                  if (commandModeOptions.eras.includes(era.name)) newCommandModeOptions.eras.splice(newCommandModeOptions.eras.indexOf(era.name));
-                  else newCommandModeOptions.eras.push(era.name);
-                  setCommandModeOptions(newCommandModeOptions);
-                }}
-              >
-                <OlCheckbox
-                  checked={commandModeOptions.eras.includes(era.name)}
-                  onChange={() => {}}
-                  disabled={!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER}
-                />
-                <span
-                  data-disabled={!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER}
-                  className={`data-[disabled='true']:text-gray-400`}
+          {Object.keys(ERAS_ORDER)
+            .filter((item) => {
+              return isNaN(Number(item));
+            })
+            .map((era) => {
+              return (
+                <div
+                  className={`
+                    group flex flex-row rounded-md justify-content
+                    cursor-pointer gap-4 p-2
+                    dark:hover:bg-olympus-400
+                  `}
+                  onClick={() => {
+                    if (!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER) return;
+                    const newCommandModeOptions = { ...commandModeOptions };
+                    if (commandModeOptions.eras.includes(era)) newCommandModeOptions.eras.splice(newCommandModeOptions.eras.indexOf(era));
+                    else newCommandModeOptions.eras.push(era);
+                    setCommandModeOptions(newCommandModeOptions);
+                  }}
                 >
-                  Allow {era.name} units
-                </span>
-              </div>
-            );
-          })}
+                  <OlCheckbox
+                    checked={commandModeOptions.eras.includes(era)}
+                    onChange={() => {}}
+                    disabled={!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER}
+                  />
+                  <span
+                    data-disabled={!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER}
+                    className={`data-[disabled='true']:text-gray-400`}
+                  >
+                    Allow {era} units
+                  </span>
+                </div>
+              );
+            })}
 
           <div
             className={`
@@ -264,12 +274,9 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
               group flex flex-row rounded-md justify-content gap-4 px-4 py-2
             `}
           >
-            <span className="mr-auto">Elapsed time (seconds)</span>{" "}
-            <span
-              className={`w-32 text-center`}
-            >
-              {serverStatus.elapsedTime?.toFixed()}
-            </span>
+            <span className="mr-auto">Elapsed time (seconds)</span> <span className={`
+              w-32 text-center
+            `}>{serverStatus.elapsedTime?.toFixed()}</span>
           </div>
           {commandModeOptions.commandMode === GAME_MASTER && (
             <button

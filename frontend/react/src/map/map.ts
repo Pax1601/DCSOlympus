@@ -1048,7 +1048,7 @@ export class Map extends L.Map {
             .getUnitsManager()
             .spawnUnits(
               this.#spawnRequestTable.category,
-              [this.#spawnRequestTable.unit],
+              Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit),
               this.#spawnRequestTable.coalition,
               false,
               undefined,

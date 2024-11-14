@@ -53,14 +53,12 @@ export function MiniMapPanel(props: {}) {
 
   return (
     <div
-      onClick={() => setShowMissionTime(!showMissionTime)}
       className={`
         absolute right-[10px]
         ${mapOptions.showMinimap ? `bottom-[188px]` : `bottom-[20px]`}
         flex w-[288px] items-center justify-between
         ${mapOptions.showMinimap ? `rounded-t-lg` : `rounded-lg`}
-        cursor-pointer bg-gray-200 p-3 text-sm backdrop-blur-lg
-        backdrop-grayscale
+        bg-gray-200 p-3 text-sm backdrop-blur-lg backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
       `}
     >
@@ -88,16 +86,16 @@ export function MiniMapPanel(props: {}) {
               {serverStatus.load}
             </span>
           </div>
-          <div className="flex gap-2 font-semibold">
+          <div className="flex cursor-pointer gap-2 font-semibold" onClick={() => setShowMissionTime(!showMissionTime)}>
             {showMissionTime ? "MT" : "ET"}: {timeString}
           </div>
           <div className={`relative h-4 w-4 rounded-full bg-[#8BFF63]`}></div>
         </>
       )}
       {mapOptions.showMinimap ? (
-        <FaChevronDown onClick={() => getApp().getMap().setOption("showMinimap", false)} />
+        <FaChevronDown className="cursor-pointer" onClick={() => getApp().getMap().setOption("showMinimap", false)} />
       ) : (
-        <FaChevronUp onClick={() => getApp().getMap().setOption("showMinimap", true)} />
+        <FaChevronUp className="cursor-pointer" onClick={() => getApp().getMap().setOption("showMinimap", true)} />
       )}
     </div>
   );

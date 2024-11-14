@@ -15,8 +15,16 @@ import { Airbase } from "../../mission/airbase";
 import { altitudeIncrements, groupUnitCount, maxAltitudeValues, minAltitudeValues, OlympusState, SpawnSubState } from "../../constants/constants";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlStringInput } from "../components/olstringinput";
+import { countryCodes } from "../data/codes";
+import { OlAccordion } from "../components/olaccordion";
 
-export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequestTable }, blueprint: UnitBlueprint; spawnAtLocation: boolean; airbase?: Airbase | null; coalition?: Coalition }) {
+export function UnitSpawnMenu(props: {
+  starredSpawns: { [key: string]: SpawnRequestTable };
+  blueprint: UnitBlueprint;
+  spawnAtLocation: boolean;
+  airbase?: Airbase | null;
+  coalition?: Coalition;
+}) {
   /* Compute the min and max values depending on the unit type */
   const minNumber = 1;
   const maxNumber = groupUnitCount[props.blueprint.category];
@@ -31,7 +39,10 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
   const [spawnLoadoutName, setSpawnLoadout] = useState("");
   const [spawnAltitude, setSpawnAltitude] = useState((maxAltitude - minAltitude) / 2);
   const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
-  
+  const [spawnLiveryID, setSpawnLiveryID] = useState("");
+  const [spawnSkill, setSpawnSkill] = useState("High");
+  const [showLoadout, setShowLoadout] = useState(false);
+
   const [quickAccessName, setQuickAccessName] = useState("No name");
   const [key, setKey] = useState("");
   const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
@@ -61,8 +72,8 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
       if (key in props.starredSpawns && props.starredSpawns[key].quickAccessName) setQuickAccessName(props.starredSpawns[key].quickAccessName);
       else setQuickAccessName("No name");
     }
-  }, [props.starredSpawns, key])
-  useEffect(updateQuickAccessName, [key])
+  }, [props.starredSpawns, key]);
+  useEffect(updateQuickAccessName, [key]);
 
   /* Callback and effect to update the spawn request table */
   const updateSpawnRequestTable = useCallback(() => {
@@ -72,16 +83,17 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
         unit: {
           unitType: props.blueprint.name,
           location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
-          skill: "High",
-          liveryID: "",
+          skill: spawnSkill,
+          liveryID: spawnLiveryID,
           altitude: ftToM(spawnAltitude),
           loadout: props.blueprint.loadouts?.find((loadout) => loadout.name === spawnLoadoutName)?.code ?? "",
         },
+        amount: spawnNumber,
         coalition: spawnCoalition,
       });
     }
-  }, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition]);
-  useEffect(updateSpawnRequestTable, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition]);
+  }, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition, spawnNumber, spawnLiveryID, spawnSkill]);
+  useEffect(updateSpawnRequestTable, [props.blueprint, spawnAltitude, spawnLoadoutName, spawnCoalition, spawnNumber, spawnLiveryID, spawnSkill]);
 
   /* Effect to update the coalition if it is force externally */
   useEffect(() => {
@@ -120,6 +132,30 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
             inline-flex w-full flex-row content-center justify-between gap-2
           `}
         >
+          <div className="my-auto text-sm text-white">Quick access: </div>
+          <OlStringInput
+            onChange={(e) => {
+              setQuickAccessName(e.target.value);
+            }}
+            value={quickAccessName}
+          />
+          <OlStateButton
+            onClick={() => {
+              if (spawnRequestTable)
+                key in props.starredSpawns
+                  ? getApp().getMap().removeStarredSpawnRequestTable(key)
+                  : getApp().getMap().addStarredSpawnRequestTable(key, spawnRequestTable);
+            }}
+            tooltip="Save this spawn for quick access"
+            checked={key in props.starredSpawns}
+            icon={faStar}
+          ></OlStateButton>
+        </div>
+        <div
+          className={`
+            inline-flex w-full flex-row content-center justify-between gap-2
+          `}
+        >
           {!props.coalition && (
             <OlCoalitionToggle
               coalition={spawnCoalition}
@@ -146,43 +182,7 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
             }}
           />
         </div>
-        <div
-          className={`
-            inline-flex w-full flex-row content-center justify-between gap-2
-          `}
-        >
-          <div className="my-auto text-sm text-white">Quick access: </div>
-          <OlStringInput
-            onChange={(e) => {
-              setQuickAccessName(e.target.value);
-            }}
-            value={quickAccessName}
-          />
-          <OlStateButton
-            onClick={() => {
-              key in props.starredSpawns
-                ? getApp().getMap().removeStarredSpawnRequestTable(key)
-                : getApp()
-                    .getMap()
-                    .addStarredSpawnRequestTable(key, {
-                      category: props.blueprint.category,
-                      unit: {
-                        unitType: props.blueprint.name,
-                        location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
-                        skill: "High",
-                        liveryID: "",
-                        altitude: ftToM(spawnAltitude),
-                        loadout: props.blueprint.loadouts?.find((loadout) => loadout.name === spawnLoadoutName)?.code ?? "",
-                      },
-                      coalition: spawnCoalition,
-                      quickAccessName: quickAccessName,
-                    });
-            }}
-            tooltip="Save this spawn for quick access"
-            checked={key in props.starredSpawns}
-            icon={faStar}
-          ></OlStateButton>
-        </div>
+
         {["aircraft", "helicopter"].includes(props.blueprint.category) && (
           <>
             {!props.airbase && (
@@ -219,18 +219,16 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
                 />
               </div>
             )}
-            <div>
-              <div className="flex flex-row content-center justify-between">
-                <span
-                  className={`
-                    h-8 font-normal
-                    dark:text-white
-                  `}
-                >
-                  Role
-                </span>
-              </div>
-              <OlDropdown label={spawnRole} className="w-full">
+            <div className="flex content-center justify-between gap-2">
+              <span
+                className={`
+                  my-auto font-normal
+                  dark:text-white
+                `}
+              >
+                Role
+              </span>
+              <OlDropdown label={spawnRole} className="w-64">
                 {roles.map((role) => {
                   return (
                     <OlDropdownItem
@@ -246,18 +244,16 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
                 })}
               </OlDropdown>
             </div>
-            <div>
-              <div className="flex flex-row content-center justify-between">
-                <span
-                  className={`
-                    h-8 font-normal
-                    dark:text-white
-                  `}
-                >
-                  Weapons
-                </span>
-              </div>
-              <OlDropdown label={spawnLoadoutName} className={`w-full w-max-full`}>
+            <div className="flex content-center justify-between gap-2">
+              <span
+                className={`
+                  my-auto font-normal
+                  dark:text-white
+                `}
+              >
+                Weapons
+              </span>
+              <OlDropdown label={spawnLoadoutName} className={`w-64`}>
                 {loadouts.map((loadout) => {
                   return (
                     <OlDropdownItem
@@ -281,37 +277,135 @@ export function UnitSpawnMenu(props: { starredSpawns: { [key: string]: SpawnRequ
             </div>
           </>
         )}
+        <div className="flex content-center justify-between gap-2">
+          <span
+            className={`
+              my-auto font-normal
+              dark:text-white
+            `}
+          >
+            Livery
+          </span>
+          <OlDropdown
+            label={props.blueprint.liveries ? (props.blueprint.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"}
+            className={`w-64`}
+          >
+            {props.blueprint.liveries &&
+              Object.keys(props.blueprint.liveries)
+                .sort((ida, idb) => {
+                  if (props.blueprint.liveries) {
+                    if (props.blueprint.liveries[ida].countries.length > 1) return 1;
+                    return props.blueprint.liveries[ida].countries[0] > props.blueprint.liveries[idb].countries[0] ? 1 : -1;
+                  } else return -1;
+                })
+                .map((id) => {
+                  let country = Object.values(countryCodes).find((countryCode) => {
+                    if (props.blueprint.liveries && countryCode.liveryCodes?.includes(props.blueprint.liveries[id].countries[0])) return true;
+                  });
+                  return (
+                    <OlDropdownItem
+                      onClick={() => {
+                        setSpawnLiveryID(id);
+                      }}
+                      className={`w-full`}
+                    >
+                      <span
+                        className={`
+                          w-full content-center overflow-hidden text-ellipsis
+                          text-nowrap text-left w-max-full flex gap-2
+                        `}
+                      >
+                        {props.blueprint.liveries && props.blueprint.liveries[id].countries.length == 1 && (
+                          <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
+                            h-6
+                          `} />
+                        )}
+
+                        <div className="my-auto truncate">
+                          <span
+                            className={`
+                              w-full overflow-hidden text-left w-max-full
+                            `}
+                          >
+                            {props.blueprint.liveries ? props.blueprint.liveries[id].name : ""}
+                          </span>
+                        </div>
+                      </span>
+                    </OlDropdownItem>
+                  );
+                })}
+          </OlDropdown>
+        </div>
+        <div className="flex content-center justify-between gap-2">
+          <span
+            className={`
+              my-auto font-normal
+              dark:text-white
+            `}
+          >
+            Skill
+          </span>
+          <OlDropdown label={spawnSkill} className={`w-64`}>
+            {["Average", "Good", "High", "Excellent"].map((skill) => {
+              return (
+                <OlDropdownItem
+                  onClick={() => {
+                    setSpawnSkill(skill);
+                  }}
+                  className={`w-full`}
+                >
+                  <span
+                    className={`
+                      w-full content-center overflow-hidden text-ellipsis
+                      text-nowrap text-left w-max-full flex gap-2
+                    `}
+                  >
+                    <div className="my-auto">{skill}</div>
+                  </span>
+                </OlDropdownItem>
+              );
+            })}
+          </OlDropdown>
+        </div>
       </div>
       {spawnLoadout && spawnLoadout.items.length > 0 && (
         <div
           className={`
-            flex h-fit flex-col gap-1 p-4
+            flex h-fit flex-col gap-1 px-4 py-2
             dark:bg-olympus-200/30
           `}
         >
-          {spawnLoadout.items.map((item) => {
-            return (
-              <div className="flex content-center gap-2">
-                <div
-                  className={`
-                    my-auto w-6 min-w-6 rounded-full py-0.5 text-center text-sm
-                    font-bold text-gray-500
-                    dark:bg-[#17212D]
-                  `}
-                >
-                  {item.quantity}
+          <OlAccordion
+            onClick={() => {
+              setShowLoadout(!showLoadout);
+            }}
+            open={showLoadout}
+            title="Loadout"
+          >
+            {spawnLoadout.items.map((item) => {
+              return (
+                <div className="flex content-center gap-2">
+                  <div
+                    className={`
+                      my-auto w-6 min-w-6 rounded-full py-0.5 text-center
+                      text-sm font-bold text-gray-500
+                      dark:bg-[#17212D]
+                    `}
+                  >
+                    {item.quantity}
+                  </div>
+                  <div
+                    className={`
+                      my-auto overflow-hidden text-ellipsis text-nowrap text-sm
+                      dark:text-gray-300
+                    `}
+                  >
+                    {item.name}
+                  </div>
                 </div>
-                <div
-                  className={`
-                    my-auto overflow-hidden text-ellipsis text-nowrap text-sm
-                    dark:text-gray-300
-                  `}
-                >
-                  {item.name}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </OlAccordion>
         </div>
       )}
       {!props.spawnAtLocation && (

@@ -68,28 +68,13 @@ export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
-export const ERAS = [
-  {
-    name: "Early Cold War",
-    chronologicalOrder: 2,
-  },
-  {
-    name: "Late Cold War",
-    chronologicalOrder: 4,
-  },
-  {
-    name: "Mid Cold War",
-    chronologicalOrder: 3,
-  },
-  {
-    name: "Modern",
-    chronologicalOrder: 5,
-  },
-  {
-    name: "WW2",
-    chronologicalOrder: 1,
-  },
-];
+export enum ERAS_ORDER {
+  "WW2",
+  "Early Cold War",
+  "Mid Cold War",
+  "Late Cold War",
+  "Modern"
+};
 
 export const ROEDescriptions: string[] = [
   "Free (Attack anyone)",
@@ -227,6 +212,14 @@ export const minimapBoundaries = {
     new LatLng(34.312222, 36.897778),
     new LatLng(34.312222, 28.523333),
   ],
+  Afghanistan: [
+    // Sinai
+    new LatLng(36.22, 61.21),
+    new LatLng(30.42, 61.21),
+    new LatLng(30.42, 68.05),
+    new LatLng(36.22, 68.05),
+    new LatLng(36.22, 61.21),
+  ],
 };
 
 export const mapBounds = {
@@ -259,6 +252,7 @@ export const mapBounds = {
     bounds: new LatLngBounds([34.312222, 28.523333], [25.946944, 36.897778]),
     zoom: 4,
   },
+  Afghanistan: { bounds: new LatLngBounds([36.22, 61.21], [30.42, 68.05]), zoom: 5 },
 };
 
 export const defaultMapMirrors = {};
@@ -277,7 +271,7 @@ export enum OlympusState {
   OPTIONS = "Options",
   AUDIO = "Audio",
   AIRBASE = "Airbase",
-  GAME_MASTER = "Game master"
+  GAME_MASTER = "Game master",
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -308,12 +302,12 @@ export enum JTACSubState {
 export enum SpawnSubState {
   NO_SUBSTATE = "No substate",
   SPAWN_UNIT = "Unit",
-  SPAWN_EFFECT = "Effect"
+  SPAWN_EFFECT = "Effect",
 }
 
 export enum OptionsSubstate {
   NO_SUBSTATE = "No substate",
-  KEYBIND = "Keybind"
+  KEYBIND = "Keybind",
 }
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
@@ -341,7 +335,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   cameraPluginPort: 3003,
   cameraPluginRatio: 1,
   cameraPluginEnabled: false,
-  cameraPluginMode: 'map'
+  cameraPluginMode: "map",
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
