@@ -2,9 +2,8 @@ import { AudioSink } from "./audiosink";
 import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
 import { AudioSinksChangedEvent } from "../events";
-
-// TODO should this be shared or radio specific?
-let packetID = 0;
+import { timeStamp } from "console";
+import { makeID } from "../other/utils";
 
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
@@ -18,6 +17,8 @@ export class RadioSink extends AudioSink {
   #volume = 0.5;
   #receiving = false;
   #clearReceivingTimeout: number;
+  #packetID = 0;
+  #guid = makeID(22);
 
   constructor() {
     super();
@@ -122,14 +123,14 @@ export class RadioSink extends AudioSink {
     if (this.#ptt) {
       let audioPacket = new AudioPacket();
       audioPacket.setAudioData(new Uint8Array(arrayBuffer));
-      audioPacket.setPacketID(packetID++);
+      audioPacket.setPacketID(this.#packetID++);
       audioPacket.setFrequencies([{
           frequency: this.#frequency,
           modulation: this.#modulation,
           encryption: 0
       }])
       audioPacket.setClientGUID(getApp().getAudioManager().getGuid());
-      audioPacket.setTransmissionGUID(getApp().getAudioManager().getGuid());
+      audioPacket.setTransmissionGUID(this.#guid);
       getApp().getAudioManager().send(audioPacket.toByteArray());
     }
   }
