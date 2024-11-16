@@ -6994,7 +6994,7 @@
 		"era": "",
 		"category": "helicopter",
 		"label": "OH58D",
-		"shortLabel": "OH58D",
+		"shortLabel": "OH58",
 		"type": "OH58D",
 		"enabled": false,
 		"liveries": {
@@ -7541,7 +7541,7 @@
 		"coalition": "",
 		"era": "",
 		"label": "CH-47F",
-		"shortLabel": "CH-47F",
+		"shortLabel": "47F",
 		"type": "CH_47Fbl1",
 		"enabled": false,
 		"liveries": {
