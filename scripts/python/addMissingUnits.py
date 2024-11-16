@@ -40,7 +40,8 @@ if len(sys.argv) > 1:
                 "shortLabel": unit.livery_name if hasattr(unit, "livery_name") else unit.name,
                 "type": unit.__qualname__.split(".")[0],
                 "enabled": False,
-                "liveries": {}
+                "liveries": {},
+                "category": sys.argv[1] 
             }
             print("Added missing unit " + unit.id)
 
