@@ -22,6 +22,7 @@ export class MouseInfoPanel extends Panel {
     #elevationRequest: XMLHttpRequest | null = null;
     #unitElevationRequest: XMLHttpRequest | null = null;
     #unitElevation: any = null;
+    #updateInterval: any = null; 
     
 
     constructor(ID: string) {
@@ -43,7 +44,6 @@ export class MouseInfoPanel extends Panel {
         document.addEventListener('clearSelection', () => this.#update());
 
         this.#coordinatesElement = <HTMLElement>this.getElement().querySelector( '#coordinates-tool' );
-        this.#unitCoordinatesElement = <HTMLElement>this.getElement().querySelector( '#unit-coordinates' );
 
         this.#coordinatesElement.addEventListener( "click", ( ev:MouseEvent ) => {
             this.#changeLocationSystem();
@@ -79,6 +79,63 @@ export class MouseInfoPanel extends Panel {
             },
             "code": "Period"
         });
+
+        /* Selected unit coordinates panel interaction */
+        this.#unitCoordinatesElement = <HTMLElement>this.getElement().querySelector( '#unit-coordinates' );
+
+        const unitCoordsToggleEl = <HTMLElement>this.getElement().querySelector('#unit-coordinates-toggle');
+        const unitCoordsContainer = <HTMLElement>this.getElement().querySelector('#unit-coordinates-container');
+        unitCoordsToggleEl.addEventListener("click", (ev: MouseEvent) => {
+            if (unitCoordsContainer.getAttribute('data-open') === 'true') {
+                unitCoordsContainer.setAttribute('data-open', 'false');
+            } else {
+                unitCoordsContainer.setAttribute('data-open', 'true');
+            }
+        });
+
+        /* Let's update selected unit coordinates every second, useful for moving units */
+        this.#updateInterval = setInterval(() => {
+            var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
+            if (selectedUnits && selectedUnits.length == 1) {
+                this.#update()
+            } else {
+            }
+        }, 1000);
+
+        /* Let's make coordinates copy-able */
+        this.#listenForCopyableElements();
+    }
+
+    #listenForCopyableElements() {
+        const copyableElements = document.getElementsByClassName('copyable');
+
+        for (const element of copyableElements) {
+            element.addEventListener('click', (ev) => {
+                if (!ev.target) return;
+
+                const el = ev.target as HTMLElement;
+
+                let text = null;
+
+                if (el.innerText !== "") {
+                    text = el.innerText;
+                }
+
+                if (el.getAttribute('data-value')) {
+                    text = el.getAttribute('data-value');
+                }
+
+                if (!text) return;
+
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        console.log('Testo copiato negli appunti!');
+                    })
+                    .catch(err => {
+                        console.error('Errore nel copiare:', err);
+                    });
+            });
+        }
     }
 
     #update() {
@@ -88,14 +145,12 @@ export class MouseInfoPanel extends Panel {
         
         var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
         if (selectedUnits && selectedUnits.length == 1) {
-            this.getElement().querySelector(`#unit-coordinates`)?.classList.remove('hide');
-            this.getElement().querySelector(`#unit-coordinates-title`)?.classList.remove('hide');
+            this.getElement().querySelector(`#unit-coordinates-container`)?.classList.remove('hide');
             selectedUnitPosition = new LatLng(selectedUnits[0].getPosition().lat, selectedUnits[0].getPosition().lng);
         } else {
             selectedUnitPosition = null;
             this.#unitElevation = null;
-            this.getElement().querySelector(`#unit-coordinates`)?.classList.add('hide');
-            this.getElement().querySelector(`#unit-coordinates-title`)?.classList.add('hide');
+            this.getElement().querySelector(`#unit-coordinates-container`)?.classList.add('hide');
         }
 
         /* Draw measures from selected unit, from pin location, and from bullseyes */
