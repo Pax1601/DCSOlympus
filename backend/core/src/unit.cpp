@@ -57,6 +57,21 @@ void Unit::initialize(json::value json)
 
 void Unit::update(json::value json, double dt)
 {
+	if (json.has_string_field(L"name"))
+		setName(to_string(json[L"name"]));
+
+	if (json.has_string_field(L"unitName"))
+		setUnitName(to_string(json[L"unitName"]));
+
+	if (json.has_string_field(L"groupName"))
+		setGroupName(to_string(json[L"groupName"]));
+
+	if (json.has_string_field(L"callsign"))
+		setCallsign(to_string(json[L"callsign"]));
+
+	if (json.has_number_field(L"coalitionID"))
+		setCoalition(json[L"coalitionID"].as_number().to_int32());
+
 	if (json.has_object_field(L"position"))
 	{
 		setPosition({
