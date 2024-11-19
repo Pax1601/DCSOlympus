@@ -2,7 +2,6 @@ import { faArrowLeft, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { HideMenuEvent } from "../../../events";
 
 export function Menu(props: {
   title: string;
@@ -16,11 +15,7 @@ export function Menu(props: {
   const [hide, setHide] = useState(true);
 
   if (!props.open && hide) setHide(false);
-  
-  useEffect(() => {
-    HideMenuEvent.dispatch(hide)
-  }, [hide])
-  
+   
   return (
     <div
       data-open={props.open}

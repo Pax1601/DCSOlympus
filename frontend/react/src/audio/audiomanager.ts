@@ -42,7 +42,7 @@ export class AudioManager {
       config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
     });
 
-    let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyK", "KeyL"];
+    let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyComma", "KeyDot"];
     PTTKeys.forEach((key, idx) => {
       getApp()
         .getShortcutManager()
@@ -50,7 +50,8 @@ export class AudioManager {
           label: `PTT ${idx} active`,
           keyDownCallback: () => this.getSinks()[idx]?.setPtt(true),
           keyUpCallback: () => this.getSinks()[idx]?.setPtt(false),
-          code: key
+          code: key,
+          shiftKey: true
         });
     });
   }

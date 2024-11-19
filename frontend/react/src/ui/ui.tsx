@@ -28,7 +28,7 @@ import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
-import { StarredSpawnContextMenu } from "./contextmenus/starredspawncontextmenu";
+import { SpawnContextMenu } from "./contextmenus/SpawnContextmenu";
 import { CoordinatesPanel } from "./panels/coordinatespanel";
 
 export type OlympusUIState = {
@@ -112,7 +112,7 @@ export function UI() {
         <HotGroupBar />
 
         <MapContextMenu />
-        <StarredSpawnContextMenu />
+        <SpawnContextMenu />
       </div>
     </div>
   );

@@ -113,7 +113,6 @@ export function MapContextMenu(props: {}) {
                               contextActionIt.executeCallback(unit, null);
                             }
                           }
-                          getApp().setState(OlympusState.UNIT_CONTROL);
                         }}
                       >
                         <FontAwesomeIcon className="my-auto" icon={contextActionIt.getIcon()} />

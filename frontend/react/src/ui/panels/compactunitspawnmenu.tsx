@@ -13,14 +13,17 @@ import { ftToM, hash } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
 import { altitudeIncrements, groupUnitCount, maxAltitudeValues, minAltitudeValues, OlympusState, SpawnSubState } from "../../constants/constants";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlStringInput } from "../components/olstringinput";
 import { countryCodes } from "../data/codes";
 import { OlAccordion } from "../components/olaccordion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function UnitSpawnMenu(props: {
+export function CompactUnitSpawnMenu(props: {
   starredSpawns: { [key: string]: SpawnRequestTable };
   blueprint: UnitBlueprint;
+  onBack: () => void;
+  latlng?: LatLng | null;
   airbase?: Airbase | null;
   coalition?: Coalition;
 }) {
@@ -40,7 +43,10 @@ export function UnitSpawnMenu(props: {
   const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
   const [spawnLiveryID, setSpawnLiveryID] = useState("");
   const [spawnSkill, setSpawnSkill] = useState("High");
+
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [showLoadout, setShowLoadout] = useState(false);
+  const [showUnitSummary, setShowUnitSummary] = useState(false);
 
   const [quickAccessName, setQuickAccessName] = useState("No name");
   const [key, setKey] = useState("");
@@ -48,7 +54,7 @@ export function UnitSpawnMenu(props: {
 
   /* When the menu is opened show the unit preview on the map as a cursor */
   useEffect(() => {
-    if (!props.airbase && spawnRequestTable) {
+    if (!props.airbase && !props.latlng && spawnRequestTable) {
       /* Refresh the unique key identified */
       const newKey = hash(JSON.stringify(spawnRequestTable));
       setKey(newKey);
@@ -66,11 +72,9 @@ export function UnitSpawnMenu(props: {
 
   /* Callback and effect to update the quick access name in the input field */
   const updateQuickAccessName = useCallback(() => {
-    if (!props.airbase) {
-      /* If the spawn is starred, set the quick access name */
-      if (key in props.starredSpawns && props.starredSpawns[key].quickAccessName) setQuickAccessName(props.starredSpawns[key].quickAccessName);
-      else setQuickAccessName("No name");
-    }
+    /* If the spawn is starred, set the quick access name */
+    if (key in props.starredSpawns && props.starredSpawns[key].quickAccessName) setQuickAccessName(props.starredSpawns[key].quickAccessName);
+    else setQuickAccessName("No name");
   }, [props.starredSpawns, key]);
   useEffect(updateQuickAccessName, [key]);
 
@@ -81,7 +85,7 @@ export function UnitSpawnMenu(props: {
         category: props.blueprint.category,
         unit: {
           unitType: props.blueprint.name,
-          location: new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+          location: props.latlng ?? new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
           skill: spawnSkill,
           liveryID: spawnLiveryID,
           altitude: ftToM(spawnAltitude),
@@ -124,8 +128,33 @@ export function UnitSpawnMenu(props: {
 
   return (
     <div className="flex flex-col">
-      <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} />
-      <div className="flex h-fit flex-col gap-5 px-5 pb-8 pt-6">
+      <div className="flex h-fit flex-col gap-3">
+        <div className="flex">
+          <FontAwesomeIcon
+            onClick={props.onBack}
+            icon={faArrowLeft}
+            className={`
+              my-auto mr-1 h-4 cursor-pointer rounded-md p-2
+              dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
+            `}
+          />
+          <h5 className="my-auto text-gray-200">{props.blueprint.label}</h5>
+          <OlNumberInput
+            className={"ml-auto"}
+            value={spawnNumber}
+            min={minNumber}
+            max={maxNumber}
+            onDecrease={() => {
+              setSpawnNumber(Math.max(minNumber, spawnNumber - 1));
+            }}
+            onIncrease={() => {
+              setSpawnNumber(Math.min(maxNumber, spawnNumber + 1));
+            }}
+            onChange={(ev) => {
+              !isNaN(Number(ev.target.value)) && setSpawnNumber(Math.max(minNumber, Math.min(maxNumber, Number(ev.target.value))));
+            }}
+          />
+        </div>
         <div
           className={`
             inline-flex w-full flex-row content-center justify-between gap-2
@@ -150,38 +179,6 @@ export function UnitSpawnMenu(props: {
             icon={faStar}
           ></OlStateButton>
         </div>
-        <div
-          className={`
-            inline-flex w-full flex-row content-center justify-between gap-2
-          `}
-        >
-          {!props.coalition && (
-            <OlCoalitionToggle
-              coalition={spawnCoalition}
-              onClick={() => {
-                spawnCoalition === "blue" && setSpawnCoalition("neutral");
-                spawnCoalition === "neutral" && setSpawnCoalition("red");
-                spawnCoalition === "red" && setSpawnCoalition("blue");
-              }}
-            />
-          )}
-          <OlNumberInput
-            className={"ml-auto"}
-            value={spawnNumber}
-            min={minNumber}
-            max={maxNumber}
-            onDecrease={() => {
-              setSpawnNumber(Math.max(minNumber, spawnNumber - 1));
-            }}
-            onIncrease={() => {
-              setSpawnNumber(Math.min(maxNumber, spawnNumber + 1));
-            }}
-            onChange={(ev) => {
-              !isNaN(Number(ev.target.value)) && setSpawnNumber(Math.max(minNumber, Math.min(maxNumber, Number(ev.target.value))));
-            }}
-          />
-        </div>
-
         {["aircraft", "helicopter"].includes(props.blueprint.category) && (
           <>
             {!props.airbase && (
@@ -276,35 +273,89 @@ export function UnitSpawnMenu(props: {
             </div>
           </>
         )}
-        <div className="flex content-center justify-between gap-2">
-          <span
-            className={`
-              my-auto font-normal
-              dark:text-white
-            `}
-          >
-            Livery
-          </span>
-          <OlDropdown
-            label={props.blueprint.liveries ? (props.blueprint.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"}
-            className={`w-64`}
-          >
-            {props.blueprint.liveries &&
-              Object.keys(props.blueprint.liveries)
-                .sort((ida, idb) => {
-                  if (props.blueprint.liveries) {
-                    if (props.blueprint.liveries[ida].countries.length > 1) return 1;
-                    return props.blueprint.liveries[ida].countries[0] > props.blueprint.liveries[idb].countries[0] ? 1 : -1;
-                  } else return -1;
-                })
-                .map((id) => {
-                  let country = Object.values(countryCodes).find((countryCode) => {
-                    if (props.blueprint.liveries && countryCode.liveryCodes?.includes(props.blueprint.liveries[id].countries[0])) return true;
-                  });
+        <OlAccordion
+          onClick={() => {
+            setShowAdvancedOptions(!showAdvancedOptions);
+          }}
+          open={showAdvancedOptions}
+          title="Advanced options"
+        >
+          <div className="flex flex-col gap-2">
+            <div className="flex content-center justify-between gap-2">
+              <span
+                className={`
+                  my-auto font-normal
+                  dark:text-white
+                `}
+              >
+                Livery
+              </span>
+              <OlDropdown
+                label={props.blueprint.liveries ? (props.blueprint.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"}
+                className={`w-64`}
+              >
+                {props.blueprint.liveries &&
+                  Object.keys(props.blueprint.liveries)
+                    .sort((ida, idb) => {
+                      if (props.blueprint.liveries) {
+                        if (props.blueprint.liveries[ida].countries.length > 1) return 1;
+                        return props.blueprint.liveries[ida].countries[0] > props.blueprint.liveries[idb].countries[0] ? 1 : -1;
+                      } else return -1;
+                    })
+                    .map((id) => {
+                      let country = Object.values(countryCodes).find((countryCode) => {
+                        if (props.blueprint.liveries && countryCode.liveryCodes?.includes(props.blueprint.liveries[id].countries[0])) return true;
+                      });
+                      return (
+                        <OlDropdownItem
+                          onClick={() => {
+                            setSpawnLiveryID(id);
+                          }}
+                          className={`w-full`}
+                        >
+                          <span
+                            className={`
+                              w-full content-center overflow-hidden
+                              text-ellipsis text-nowrap text-left w-max-full
+                              flex gap-2
+                            `}
+                          >
+                            {props.blueprint.liveries && props.blueprint.liveries[id].countries.length == 1 && (
+                              <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
+                                h-6
+                              `} />
+                            )}
+
+                            <div className="my-auto truncate">
+                              <span
+                                className={`
+                                  w-full overflow-hidden text-left w-max-full
+                                `}
+                              >
+                                {props.blueprint.liveries ? props.blueprint.liveries[id].name : ""}
+                              </span>
+                            </div>
+                          </span>
+                        </OlDropdownItem>
+                      );
+                    })}
+              </OlDropdown>
+            </div>
+            <div className="flex content-center justify-between gap-2">
+              <span
+                className={`
+                  my-auto font-normal
+                  dark:text-white
+                `}
+              >
+                Skill
+              </span>
+              <OlDropdown label={spawnSkill} className={`w-64`}>
+                {["Average", "Good", "High", "Excellent"].map((skill) => {
                   return (
                     <OlDropdownItem
                       onClick={() => {
-                        setSpawnLiveryID(id);
+                        setSpawnSkill(skill);
                       }}
                       className={`w-full`}
                     >
@@ -314,114 +365,76 @@ export function UnitSpawnMenu(props: {
                           text-nowrap text-left w-max-full flex gap-2
                         `}
                       >
-                        {props.blueprint.liveries && props.blueprint.liveries[id].countries.length == 1 && (
-                          <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
-                            h-6
-                          `} />
-                        )}
-
-                        <div className="my-auto truncate">
-                          <span
-                            className={`
-                              w-full overflow-hidden text-left w-max-full
-                            `}
-                          >
-                            {props.blueprint.liveries ? props.blueprint.liveries[id].name : ""}
-                          </span>
-                        </div>
+                        <div className="my-auto">{skill}</div>
                       </span>
                     </OlDropdownItem>
                   );
                 })}
-          </OlDropdown>
-        </div>
-        <div className="flex content-center justify-between gap-2">
-          <span
-            className={`
-              my-auto font-normal
-              dark:text-white
-            `}
-          >
-            Skill
-          </span>
-          <OlDropdown label={spawnSkill} className={`w-64`}>
-            {["Average", "Good", "High", "Excellent"].map((skill) => {
-              return (
-                <OlDropdownItem
-                  onClick={() => {
-                    setSpawnSkill(skill);
-                  }}
-                  className={`w-full`}
-                >
-                  <span
-                    className={`
-                      w-full content-center overflow-hidden text-ellipsis
-                      text-nowrap text-left w-max-full flex gap-2
-                    `}
-                  >
-                    <div className="my-auto">{skill}</div>
-                  </span>
-                </OlDropdownItem>
-              );
-            })}
-          </OlDropdown>
-        </div>
+              </OlDropdown>
+            </div>
+          </div>
+        </OlAccordion>
       </div>
+      <OlAccordion
+        onClick={() => {
+          setShowUnitSummary(!showUnitSummary);
+        }}
+        open={showUnitSummary}
+        title="Unit summary"
+      >
+        <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} />
+      </OlAccordion>
       {spawnLoadout && spawnLoadout.items.length > 0 && (
-        <div
-          className={`
-            flex h-fit flex-col gap-1 px-4 py-2
-            dark:bg-olympus-200/30
-          `}
+        <OlAccordion
+          onClick={() => {
+            setShowLoadout(!showLoadout);
+          }}
+          open={showLoadout}
+          title="Loadout"
         >
-          <OlAccordion
-            onClick={() => {
-              setShowLoadout(!showLoadout);
-            }}
-            open={showLoadout}
-            title="Loadout"
-          >
-            {spawnLoadout.items.map((item) => {
-              return (
-                <div className="flex content-center gap-2">
-                  <div
-                    className={`
-                      my-auto w-6 min-w-6 rounded-full py-0.5 text-center
-                      text-sm font-bold text-gray-500
-                      dark:bg-[#17212D]
-                    `}
-                  >
-                    {item.quantity}
-                  </div>
-                  <div
-                    className={`
-                      my-auto overflow-hidden text-ellipsis text-nowrap text-sm
-                      dark:text-gray-300
-                    `}
-                  >
-                    {item.name}
-                  </div>
+          {spawnLoadout.items.map((item) => {
+            return (
+              <div className="flex content-center gap-2">
+                <div
+                  className={`
+                    my-auto w-6 min-w-6 rounded-full py-0.5 text-center text-sm
+                    font-bold text-gray-500
+                    dark:bg-[#17212D]
+                  `}
+                >
+                  {item.quantity}
                 </div>
-              );
-            })}
-          </OlAccordion>
-        </div>
+                <div
+                  className={`
+                    my-auto overflow-hidden text-ellipsis text-nowrap text-sm
+                    dark:text-gray-300
+                  `}
+                >
+                  {item.name}
+                </div>
+              </div>
+            );
+          })}
+        </OlAccordion>
       )}
-      {props.airbase && (
+      {(props.latlng || props.airbase) && (
         <button
           type="button"
+          data-coalition={props.coalition ?? "blue"}
           className={`
-            m-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium
-            text-white
-            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
-            focus:outline-none focus:ring-4 focus:ring-blue-300
-            hover:bg-blue-800
+            m-2 rounded-lg px-5 py-2.5 text-sm font-medium text-white
+            data-[coalition='blue']:bg-blue-600
+            data-[coalition='neutral']:bg-gray-400
+            data-[coalition='red']:bg-red-500
+            focus:outline-none focus:ring-4
           `}
           onClick={() => {
             if (spawnRequestTable)
               getApp()
                 .getUnitsManager()
-                .spawnUnits(spawnRequestTable.category, Array(spawnRequestTable.amount).fill(spawnRequestTable.unit), spawnRequestTable.coalition, false, props.airbase?.getName());
+                .spawnUnits(spawnRequestTable.category, Array(spawnRequestTable.amount).fill(spawnRequestTable.unit), spawnRequestTable.coalition, false, props.airbase?.getName() ?? undefined);
+            
+            getApp().setState(OlympusState.IDLE)
           }}
         >
           Spawn

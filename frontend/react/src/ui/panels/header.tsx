@@ -15,7 +15,7 @@ import {
   olButtonsVisibilityNavyunit,
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaComputer, FaTabletScreenButton } from "react-icons/fa6";
 import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../../events";
 import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
@@ -111,12 +111,18 @@ export function Header() {
           </div>
         </div>
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
-          <div
-            className={`flex h-full rounded-md bg-blue-600 px-4 text-white`}
-          >
+          <div className={`flex h-full rounded-md bg-blue-600 px-4 text-white`}>
             <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
           </div>
         )}
+        <div
+        className="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white"
+          onClick={() => {
+            getApp().getMap().setOption("tabletMode", !mapOptions.tabletMode);
+          }}
+        >
+          {mapOptions.tabletMode ? <FaTabletScreenButton /> : <FaComputer />}
+        </div>
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
           <OlLockStateButton
             checked={!mapOptions.protectDCSUnits}
@@ -213,7 +219,7 @@ export function Header() {
               .getMap()
               .setOption("cameraPluginMode", mapOptions.cameraPluginMode === "live" ? "map" : "live");
           }}
-        ></OlLabelToggle>
+        />
         <OlStateButton
           checked={mapOptions.cameraPluginEnabled}
           icon={faCamera}

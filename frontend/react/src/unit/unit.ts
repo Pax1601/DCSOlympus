@@ -159,7 +159,6 @@ export abstract class Unit extends CustomMarker {
   /* Inputs timers */
   #mouseCooldownTimer: number = 0;
   #shortPressTimer: number = 0;
-  #longPressTimer: number = 0;
   #isMouseOnCooldown: boolean = false;
   #isMouseDown: boolean = false;
 
@@ -345,10 +344,11 @@ export abstract class Unit extends CustomMarker {
     /* Leaflet events listeners */
     this.on("mousedown", (e) => this.#onMouseDown(e));
     this.on("mouseup", (e) => this.#onMouseUp(e));
+    this.on("contextmenu", (e) => this.#onRightClick(e));
     this.on("dblclick", (e) => this.#onDoubleClick(e));
+
     this.on("mouseover", () => {
-      if (this.belongsToCommandedCoalition() && (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.UNIT_CONTROL))
-        this.setHighlighted(true);
+      if (this.belongsToCommandedCoalition()) this.setHighlighted(true);
     });
     this.on("mouseout", () => this.setHighlighted(false));
     getApp()
@@ -1281,96 +1281,83 @@ export abstract class Unit extends CustomMarker {
   }
 
   /***********************************************/
-  #onMouseUp(e: any) {
-    if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.UNIT_CONTROL) {
-      this.#isMouseDown = false;
-
-      if (getApp().getMap().isSelecting()) return;
-
-      DomEvent.stop(e);
-      DomEvent.preventDefault(e);
-      e.originalEvent.stopImmediatePropagation();
-
-      e.originalEvent.stopPropagation();
-
-      window.clearTimeout(this.#longPressTimer);
-
-      this.#isMouseOnCooldown = true;
-      this.#mouseCooldownTimer = window.setTimeout(() => {
-        this.#isMouseOnCooldown = false;
-      }, 200);
-    }
-  }
-
   #onMouseDown(e: any) {
-    if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.UNIT_CONTROL) {
-      this.#isMouseDown = true;
+    if (e.originalEvent.button === 2) return;
 
-      DomEvent.stop(e);
-      DomEvent.preventDefault(e);
-      e.originalEvent.stopImmediatePropagation();
+    this.#isMouseDown = true;
 
-      if (this.#isMouseOnCooldown) {
-        return;
-      }
+    DomEvent.stop(e);
+    DomEvent.preventDefault(e);
+    e.originalEvent.stopImmediatePropagation();
 
-      this.#shortPressTimer = window.setTimeout(() => {
-        /* If the mouse is no longer being pressed, execute the short press action */
-        if (!this.#isMouseDown) this.#onShortPress(e);
-      }, 200);
+    if (this.#isMouseOnCooldown) return;
 
-      this.#longPressTimer = window.setTimeout(() => {
-        /* If the mouse is still being pressed, execute the long press action */
-        if (this.#isMouseDown) this.#onLongPress(e);
-      }, 350);
-    }
+    this.#shortPressTimer = window.setTimeout(() => {
+      /* If the mouse is no longer being pressed, execute the short press action */
+      if (!this.#isMouseDown) this.#onLeftClick(e);
+    }, 200);
   }
 
-  #onShortPress(e: LeafletMouseEvent) {
-    console.log(`Short press on ${this.getUnitName()}`);
+  #onMouseUp(e: any) {
+    if (e.originalEvent.button === 2) return;
 
-    if (getApp().getState() === OlympusState.IDLE) {
+    this.#isMouseDown = false;
+
+    if (getApp().getMap().isSelecting()) return;
+
+    DomEvent.stop(e);
+    DomEvent.preventDefault(e);
+    e.originalEvent.stopImmediatePropagation();
+
+    this.#isMouseOnCooldown = true;
+    this.#mouseCooldownTimer = window.setTimeout(() => {
+      this.#isMouseOnCooldown = false;
+    }, 200);
+  }
+
+  #onLeftClick(e: any) {
+    console.log(`Left click on ${this.getUnitName()}`);
+
+    if (getApp().getMap().getContextAction() === null) {
       if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
       this.setSelected(!this.getSelected());
     } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-      if (getApp().getMap().getContextAction() && getApp().getMap().getContextAction()?.getTarget() === ContextActionTarget.UNIT) {
+      if (getApp().getMap().getContextAction()?.getTarget() === ContextActionTarget.UNIT) {
         getApp().getMap().executeContextAction(this, null, e.originalEvent);
       } else {
         if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
         this.setSelected(!this.getSelected());
       }
-    } else if (getApp().getState() === OlympusState.JTAC && getApp().getSubState() === JTACSubState.SELECT_TARGET) {
-      // TODO document.dispatchEvent(new CustomEvent("selectJTACTarget", { detail: { unit: this } }));
-      getApp().setState(OlympusState.IDLE);
     }
   }
 
-  #onLongPress(e: any) {
-    console.log(`Long press on ${this.getUnitName()}`);
+  #onRightClick(e: any) {
+    console.log(`Right click on ${this.getUnitName()}`);
 
-    if (getApp().getState() === OlympusState.UNIT_CONTROL && e.originalEvent.button === 2 && !getApp().getMap().getContextAction()) {
+    if (getApp().getState() === OlympusState.UNIT_CONTROL && !getApp().getMap().getContextAction()) {
+      DomEvent.stop(e);
+      DomEvent.preventDefault(e);
+      e.originalEvent.stopImmediatePropagation();
+
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU);
       UnitContextMenuRequestEvent.dispatch(this);
     }
   }
 
   #onDoubleClick(e: any) {
+    DomEvent.stop(e);
+    DomEvent.preventDefault(e);
+
+    console.log(`Double click on ${this.getUnitName()}`);
+
+    window.clearTimeout(this.#shortPressTimer);
+
+    /* Select all matching units in the viewport */
     if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.UNIT_CONTROL) {
-      DomEvent.stop(e);
-      DomEvent.preventDefault(e);
-
-      console.log(`Double click on ${this.getUnitName()}`);
-
-      window.clearTimeout(this.#shortPressTimer);
-      window.clearTimeout(this.#longPressTimer);
-
-      /* Select all matching units in the viewport */
-      if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.UNIT_CONTROL) {
-        const unitsManager = getApp().getUnitsManager();
-        Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
-          if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport()) unitsManager.selectUnit(unit.ID, false);
-        });
-      }
+      const unitsManager = getApp().getUnitsManager();
+      Object.values(unitsManager.getUnits()).forEach((unit: Unit) => {
+        if (unit.getAlive() === true && unit.getName() === this.getName() && unit.isInViewport()) unitsManager.selectUnit(unit.ID, false);
+      });
     }
   }
 

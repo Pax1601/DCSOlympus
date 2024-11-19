@@ -8,6 +8,7 @@ export class SmokeMarker extends CustomMarker {
 
   constructor(latlng: LatLngExpression, color: string, options?: MarkerOptions) {
     super(latlng, options);
+    this.options.interactive = false;
     this.setZIndexOffset(9999);
     this.#color = color;
     window.setTimeout(() => {

@@ -39,4 +39,24 @@ export class ShortcutManager {
     this.#shortcuts[id].setOptions(shortcutOptions);
     ShortcutsChangedEvent.dispatch(this.#shortcuts);
   }
+
+  checkShortcuts() {
+    for (let id in this.#shortcuts) {
+      const shortcut = this.#shortcuts[id];
+      for (let otherid in this.#shortcuts) {
+        if (id != otherid) {
+          const otherShortcut = this.#shortcuts[otherid];
+          if (shortcut.getOptions().code === otherShortcut.getOptions().code) {
+            if (
+              (shortcut.getOptions().altKey ?? false) === (otherShortcut.getOptions().altKey ?? false) &&
+              (shortcut.getOptions().ctrlKey ?? false) === (otherShortcut.getOptions().ctrlKey ?? false) &&
+              (shortcut.getOptions().shiftKey ?? false) === (otherShortcut.getOptions().shiftKey ?? false) 
+            ) {
+              console.error("Duplicate shortcut: " + shortcut.getOptions().label + " and " + otherShortcut.getOptions().label)
+            }
+          }
+        }
+      }
+    }
+  }
 }

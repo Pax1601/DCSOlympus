@@ -68,18 +68,6 @@ export class UnitsManager {
 
     getApp()
       .getShortcutManager()
-      .addShortcut("deselectAll", {
-        label: "Deselect all units",
-        keyUpCallback: (ev: KeyboardEvent) => {
-          getApp().getUnitsManager().deselectAllUnits();
-        },
-        code: "Escape",
-      })
-      .addShortcut("delete", {
-        label: "Delete selected units",
-        keyUpCallback: () => this.delete(),
-        code: "Delete",
-      })
       .addShortcut("selectAll", {
         label: "Select all units",
         keyUpCallback: () => {

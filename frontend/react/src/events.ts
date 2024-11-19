@@ -98,19 +98,6 @@ export class InfoPopupEvent {
   }
 }
 
-export class HideMenuEvent {
-  static on(callback: (hidden: boolean) => void) {
-    document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback(ev.detail.hidden);
-    });
-  }
-
-  static dispatch(hidden: boolean) {
-    document.dispatchEvent(new CustomEvent(this.name, { detail: { hidden } }));
-    console.log(`Event ${this.name} dispatched`);
-  }
-}
-
 export class ShortcutsChangedEvent {
   static on(callback: (shortcuts: { [key: string]: Shortcut }) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
@@ -332,7 +319,7 @@ export class UnitContextMenuRequestEvent {
   }
 }
 
-export class StarredSpawnContextMenuRequestEvent {
+export class SpawnContextMenuRequestEvent {
   static on(callback: (latlng: L.LatLng) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.latlng);

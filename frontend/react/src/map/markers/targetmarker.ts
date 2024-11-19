@@ -4,6 +4,7 @@ import { CustomMarker } from "./custommarker";
 export class TargetMarker extends CustomMarker {
   constructor(latlng: LatLngExpression, options?: MarkerOptions) {
     super(latlng, options);
+    this.options.interactive = false;
     this.setZIndexOffset(9999);
   }
 

@@ -177,3 +177,7 @@
 .ol-explosion-icon {
   fill: red;
 }
+
+path.leaflet-interactive:focus {
+  outline: none;
+}

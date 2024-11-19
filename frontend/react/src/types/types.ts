@@ -26,6 +26,7 @@ export type MapOptions = {
   cameraPluginRatio: number;
   cameraPluginEnabled: boolean;
   cameraPluginMode: string;
+  tabletMode: boolean;
 };
 
 export type MapHiddenTypes = {

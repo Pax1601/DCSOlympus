@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppStateChangedEvent, ContextActionChangedEvent, HideMenuEvent, HotgroupsChangedEvent, InfoPopupEvent } from "../../events";
+import { AppStateChangedEvent, ContextActionChangedEvent, HotgroupsChangedEvent, InfoPopupEvent } from "../../events";
 import { OlympusState } from "../../constants/constants";
 import { ContextAction } from "../../unit/contextaction";
 import { OlStateButton } from "../components/olstatebutton";
@@ -13,7 +13,6 @@ export function HotGroupBar(props: {}) {
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => setAppState(state));
-    HideMenuEvent.on((hidden) => setMenuHidden(hidden));
     HotgroupsChangedEvent.on((hotgroups) => setHotgroups({ ...hotgroups }));
   }, []);
 

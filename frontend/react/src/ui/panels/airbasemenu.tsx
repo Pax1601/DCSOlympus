@@ -272,7 +272,6 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                 <UnitSpawnMenu
                   blueprint={blueprint}
                   starredSpawns={starredSpawns}
-                  spawnAtLocation={false}
                   airbase={airbase}
                   coalition={(airbase?.getCoalition() ?? "blue") as Coalition}
                 />

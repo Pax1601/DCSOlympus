@@ -6,7 +6,10 @@ import { ContextActionTarget, ContextActionType } from "../constants/constants";
 export interface ContextActionOptions {
   executeImmediately?: boolean;
   type: ContextActionType;
-  hotkey?: string;
+  code: string | null;
+  shiftKey?: boolean;
+  altKey?: boolean;
+  ctrlKey?: boolean;
 }
 
 export type ContextActionCallback = (units: Unit[], targetUnit: Unit | null, targetPosition: LatLng | null, originalEvent?: MouseEvent) => void;

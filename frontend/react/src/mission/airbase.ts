@@ -4,7 +4,7 @@ import { SVGInjector } from "@tanem/svg-injector";
 import { AirbaseChartData, AirbaseOptions } from "../interfaces";
 import { getApp } from "../olympusapp";
 import { OlympusState } from "../constants/constants";
-import { AirbaseSelectedEvent } from "../events";
+import { AirbaseSelectedEvent, AppStateChangedEvent } from "../events";
 
 // TODO add ability to select the marker
 export class Airbase extends CustomMarker {
@@ -26,6 +26,12 @@ export class Airbase extends CustomMarker {
 
     this.#name = options.name;
     this.#img = document.createElement("img");
+
+    AppStateChangedEvent.on((state, subState) => {
+      const element = this.getElement();
+      if (element)
+        element.style.pointerEvents = (state === OlympusState.IDLE || state === OlympusState.AIRBASE)? "all": "none";
+    })
 
     AirbaseSelectedEvent.on((airbase) => {
       this.#selected = airbase == this;

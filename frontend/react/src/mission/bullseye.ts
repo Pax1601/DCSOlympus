@@ -1,9 +1,15 @@
-import { DivIcon } from "leaflet";
+import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 
 export class Bullseye extends CustomMarker {
   #coalition: string = "";
+
+  constructor(latlng: LatLngExpression, options?: MarkerOptions) {
+    super(latlng, options);
+    this.options.interactive = false;
+    this.setZIndexOffset(9999);
+  }
 
   createIcon() {
     var icon = new DivIcon({

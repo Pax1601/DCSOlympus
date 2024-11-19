@@ -93,11 +93,11 @@ export class OlympusApp {
     */
 
   getExpressAddress() {
-    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}express`
+    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}express`;
   }
 
   getBackendAddress() {
-    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}olympus`
+    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}olympus`;
   }
 
   start() {
@@ -150,6 +150,17 @@ export class OlympusApp {
         ConfigLoadedEvent.dispatch(this.#config as OlympusConfig);
         this.setState(OlympusState.LOGIN);
       });
+
+    this.#shortcutManager?.addShortcut("idle", {
+      label: "Deselect all",
+      keyUpCallback: (ev: KeyboardEvent) => {
+        this.setState(OlympusState.IDLE);
+      },
+      code: "Escape",
+    });
+
+    this.#shortcutManager.checkShortcuts();
+
   }
 
   getConfig() {

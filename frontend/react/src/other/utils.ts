@@ -87,29 +87,34 @@ export const zeroPad = function (num: number, places: number) {
   return string;
 };
 
-export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | false {
+export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | undefined {
   if (precision < 0 || precision > 6) {
     console.error("latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " + precision);
-    return false;
+    return undefined;
   }
+
   const mgrs = new Converter({}).LLtoMGRS(lat, lng, precision);
   const match = mgrs.match(new RegExp(`^(\\d{2})([A-Z])([A-Z])([A-Z])(\\d+)$`));
-  const easting = match[5].substr(0, match[5].length / 2);
-  const northing = match[5].substr(match[5].length / 2);
+  if (match) {
+    const easting = match[5].substr(0, match[5].length / 2);
+    const northing = match[5].substr(match[5].length / 2);
 
-  let output: MGRS = {
-    bandLetter: match[2],
-    columnLetter: match[3],
-    groups: [match[1] + match[2], match[3] + match[4], easting, northing],
-    easting: easting,
-    northing: northing,
-    precision: precision,
-    rowLetter: match[4],
-    string: match[0],
-    zoneNumber: match[1],
-  };
+    let output: MGRS = {
+      bandLetter: match[2],
+      columnLetter: match[3],
+      groups: [match[1] + match[2], match[3] + match[4], easting, northing],
+      easting: easting,
+      northing: northing,
+      precision: precision,
+      rowLetter: match[4],
+      string: match[0],
+      zoneNumber: match[1],
+    };
 
-  return output;
+    return output;
+  } else {
+    return undefined;
+  }
 }
 
 export function latLngToUTM(lat: number, lng: number) {
@@ -317,19 +322,20 @@ export function makeID(length) {
 }
 
 export function hash(str, seed = 0) {
-  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-  for(let i = 0, ch; i < str.length; i++) {
-      ch = str.charCodeAt(i);
-      h1 = Math.imul(h1 ^ ch, 2654435761);
-      h2 = Math.imul(h2 ^ ch, 1597334677);
+  let h1 = 0xdeadbeef ^ seed,
+    h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
   }
-  h1  = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
   h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-  h2  = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
   h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
 
   return `${4294967296 * (2097151 & h2) + (h1 >>> 0)}`;
-};
+}
 
 export function byteArrayToInteger(array) {
   let res = 0;

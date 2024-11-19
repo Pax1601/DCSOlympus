@@ -42,7 +42,7 @@ export class ServerManager {
       keyUpCallback: () => {
         this.setPaused(!this.getPaused());
       },
-      code: "Space"
+      code: "Enter"
     })
   }
 

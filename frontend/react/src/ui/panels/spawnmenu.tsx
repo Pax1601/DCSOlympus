@@ -436,7 +436,6 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
         {!(blueprint === null) && (
           <UnitSpawnMenu
             blueprint={blueprint}
-            spawnAtLocation={true}
             starredSpawns={starredSpawns}
             coalition={commandModeOptions.commandMode !== GAME_MASTER ? (commandModeOptions.commandMode === BLUE_COMMANDER ? "blue" : "red") : undefined}
           />
