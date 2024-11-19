@@ -19,12 +19,12 @@ public:
 	~Unit();
 
 	/********** Methods **********/
-	void initialize(json::value json);
+	virtual void initialize(json::value json) final;
 	virtual void setDefaults(bool force = false);
 
 	void runAILoop();
 
-	void update(json::value json, double dt);
+	virtual void update(json::value json, double dt) final;
 	void refreshLeaderData(unsigned long long time);
 
 	unsigned int getID() { return ID; }
