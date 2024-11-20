@@ -83,6 +83,12 @@ export class MouseInfoPanel extends Panel {
         /* Selected unit coordinates panel interaction */
         this.#unitCoordinatesElement = <HTMLElement>this.getElement().querySelector( '#unit-coordinates' );
 
+        this.#unitCoordinatesElement.addEventListener( "click", ( ev:MouseEvent ) => {
+            console.log('cliccato elemento unit coordinates');
+            
+            this.#changeLocationSystem();
+        });
+
         const unitCoordsToggleEl = <HTMLElement>this.getElement().querySelector('#unit-coordinates-toggle');
         const unitCoordsContainer = <HTMLElement>this.getElement().querySelector('#unit-coordinates-container');
         unitCoordsToggleEl.addEventListener("click", (ev: MouseEvent) => {
@@ -129,7 +135,7 @@ export class MouseInfoPanel extends Panel {
 
                 navigator.clipboard.writeText(text)
                     .then(() => {
-                        console.log('Testo copiato negli appunti!');
+                        //console.log('Testo copiato negli appunti!');
                     })
                     .catch(err => {
                         console.error('Errore nel copiare:', err);

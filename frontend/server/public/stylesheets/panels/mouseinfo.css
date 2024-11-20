@@ -115,6 +115,7 @@
 }
 
 #unit-coordinates[data-location-system] [data-location-system] {
+	cursor:pointer;
 	display:none;
 }
 
