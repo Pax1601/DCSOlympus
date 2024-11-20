@@ -110,7 +110,7 @@ export class MouseInfoPanel extends Panel {
         const copyableElements = document.getElementsByClassName('copyable');
 
         for (const element of copyableElements) {
-            element.addEventListener('click', (ev) => {
+            element.addEventListener('contextmenu', (ev) => {
                 if (!ev.target) return;
 
                 const el = ev.target as HTMLElement;
