@@ -104,6 +104,7 @@
 }
 
 #coordinates-tool[data-location-system="LatLng"] [data-location-system="LatLng"],
+#coordinates-tool[data-location-system="LatLngDec"] [data-location-system="LatLngDec"],
 #coordinates-tool[data-location-system="MGRS"] [data-location-system="MGRS"],
 #coordinates-tool[data-location-system="UTM"] [data-location-system="UTM"] {
 	display:flex;
@@ -120,6 +121,7 @@
 }
 
 #unit-coordinates[data-location-system="LatLng"] [data-location-system="LatLng"],
+#unit-coordinates[data-location-system="LatLngDec"] [data-location-system="LatLngDec"],
 #unit-coordinates[data-location-system="MGRS"] [data-location-system="MGRS"],
 #unit-coordinates[data-location-system="UTM"] [data-location-system="UTM"] {
 	display:flex;
