@@ -243,6 +243,15 @@ export function enumToROE(ROE: number) {
   else return ROEs[0];
 }
 
+export function convertROE(idx: number) {
+  let roe = 0;
+  if (idx === 0) roe = 4;
+  else if (idx === 1) roe = 3;
+  else if (idx === 2) roe = 1;
+  else roe = 0;
+  return roe;
+}
+
 export function enumToReactionToThreat(reactionToThreat: number) {
   if (reactionToThreat < reactionsToThreat.length) return reactionsToThreat[reactionToThreat];
   else return reactionsToThreat[0];

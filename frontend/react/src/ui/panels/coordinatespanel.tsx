@@ -48,9 +48,9 @@ export function CoordinatesPanel(props: {}) {
                     `}
                   >
                     <FaBullseye />
-                  </span>
-                  {(bullseyes[2].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} /{" "}
-                  {bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}°
+                  </span> {bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° / {" "}
+                  {(bullseyes[2].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} 
+                  
                 </div>
                 <div className="flex w-[50%] justify-start gap-2">
                   <span
@@ -61,8 +61,9 @@ export function CoordinatesPanel(props: {}) {
                   >
                     <FaBullseye />
                   </span>
-                  {(bullseyes[1].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} /{" "}
-                  {bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}°
+                  {bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° / {" "}
+                  {(bullseyes[1].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
+                  
                 </div>
               </div>
               {/*}<div className="flex justify-start gap-2">

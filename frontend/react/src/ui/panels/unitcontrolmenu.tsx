@@ -6,7 +6,16 @@ import { OlRangeSlider } from "../components/olrangeslider";
 import { getApp } from "../../olympusapp";
 import { OlButtonGroup, OlButtonGroupItem } from "../components/olbuttongroup";
 import { OlCheckbox } from "../components/olcheckbox";
-import { ROEs, altitudeIncrements, emissionsCountermeasures, maxAltitudeValues, maxSpeedValues, minAltitudeValues, reactionsToThreat, speedIncrements } from "../../constants/constants";
+import {
+  ROEs,
+  altitudeIncrements,
+  emissionsCountermeasures,
+  maxAltitudeValues,
+  maxSpeedValues,
+  minAltitudeValues,
+  reactionsToThreat,
+  speedIncrements,
+} from "../../constants/constants";
 import { OlToggle } from "../components/oltoggle";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import {
@@ -38,7 +47,7 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
-import { ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
+import { convertROE, ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -216,12 +225,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     maxSpeed = maxSpeedValues.helicopter;
     speedStep = speedIncrements.helicopter;
     altitudeStep = altitudeIncrements.helicopter;
-  }
-  else if (everyUnitIsGround) {
+  } else if (everyUnitIsGround) {
     maxSpeed = maxSpeedValues.groundunit;
     speedStep = speedIncrements.groundunit;
-  }
-  else if (everyUnitIsNavy) {
+  } else if (everyUnitIsNavy) {
     maxSpeed = maxSpeedValues.navyunit;
     speedStep = speedIncrements.navyunit;
   }
@@ -622,39 +629,39 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   </div>
                   {/* ============== Airspeed selector END ============== */}
                   {/* ============== Rules of Engagement START ============== */}
-                  {!(selectedUnits.length === 1 && selectedUnits[0].isTanker()) &&
-                    !(selectedUnits.length === 1 && selectedUnits[0].isAWACS()) && (
-                      <div className="flex flex-col gap-2">
-                        <span
-                          className={`
-                            my-auto font-normal
-                            dark:text-white
-                          `}
-                        >
-                          Rules of engagement
-                        </span>
-                        <OlButtonGroup>
-                          {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated, olButtonsRoeFree].map((icon, idx) => {
-                            return (
-                              <OlButtonGroupItem
-                                key={idx}
-                                onClick={() => {
-                                  selectedUnits.forEach((unit) => {
-                                    unit.setROE(ROEs[idx]);
-                                    setSelectedUnitsData({
-                                      ...selectedUnitsData,
-                                      ROE: ROEs[idx],
-                                    });
+                  {!(selectedUnits.length === 1 && selectedUnits[0].isTanker()) && !(selectedUnits.length === 1 && selectedUnits[0].isAWACS()) && (
+                    <div className="flex flex-col gap-2">
+                      <span
+                        className={`
+                          my-auto font-normal
+                          dark:text-white
+                        `}
+                      >
+                        Rules of engagement
+                      </span>
+                      <OlButtonGroup>
+                        {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated, olButtonsRoeFree].map((icon, idx) => {
+                          return (
+                            <OlButtonGroupItem
+                              key={idx}
+                              onClick={() => {
+                                
+                                selectedUnits.forEach((unit) => {
+                                  unit.setROE(ROEs[convertROE(idx)]);
+                                  setSelectedUnitsData({
+                                    ...selectedUnitsData,
+                                    ROE: ROEs[convertROE(idx)],
                                   });
-                                }}
-                                active={selectedUnitsData.ROE === ROEs[idx]}
-                                icon={icon}
-                              />
-                            );
-                          })}
-                        </OlButtonGroup>
-                      </div>
-                    )}
+                                });
+                              }}
+                              active={selectedUnitsData.ROE === ROEs[convertROE(idx)]}
+                              icon={icon}
+                            />
+                          );
+                        })}
+                      </OlButtonGroup>
+                    </div>
+                  )}
                   {/* ============== Rules of Engagement END ============== */}
                   {selectedCategories.every((category) => {
                     return ["Aircraft", "Helicopter"].includes(category);
@@ -1174,10 +1181,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown
-                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
-                      className={`my-auto w-20`}
-                    >
+                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
+                      my-auto w-20
+                    `}>
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1296,11 +1302,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${
-                          selectedUnits[0].getFuel() > 10 &&
-                          selectedUnits[0].getFuel() <= 40 &&
-                          `bg-yellow-700`
-                        }
+                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
+                          bg-yellow-700
+                        `}
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}

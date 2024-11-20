@@ -76,7 +76,7 @@ export class AudioManager {
 
     if (!this.#socket) return;
 
-    //this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`); // TODO: remove, used for testing!
+    this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`); // TODO: remove, used for testing!
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {

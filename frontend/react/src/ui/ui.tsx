@@ -28,7 +28,7 @@ import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
-import { SpawnContextMenu } from "./contextmenus/SpawnContextmenu";
+import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
 import { CoordinatesPanel } from "./panels/coordinatespanel";
 
 export type OlympusUIState = {
