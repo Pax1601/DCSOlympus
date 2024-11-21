@@ -10,7 +10,7 @@ export function RadiosSummaryPanel(props: {}) {
   const [audioSinks, setAudioSinks] = useState([] as AudioSink[]);
 
   useEffect(() => {
-    AudioSinksChangedEvent.on((audioSinks) => setAudioSinks(audioSinks));
+    AudioSinksChangedEvent.on((audioSinks) => setAudioSinks([...audioSinks]));
   }, []);
 
   return (
@@ -26,46 +26,57 @@ export function RadiosSummaryPanel(props: {}) {
         >
           <div className="flex w-full items-center justify-between gap-2">
             <FaRadio className="text-xl" />
-            {audioSinks
-              .filter((audioSinks) => audioSinks instanceof RadioSink)
-              .map((radioSink, idx) => {
-                return (
-                  <OlStateButton
-                    checked={radioSink.getReceiving()}
-                    onClick={() => {}}
-                    onMouseDown={() => {
-                      radioSink.setPtt(true);
-                    }}
-                    onMouseUp={() => {
-                      radioSink.setPtt(false);
-                    }}
-                    tooltip="Click to talk, lights up when receiving"
-                  >
-                    <span className={`font-bold text-gray-200`}>{idx + 1}</span>
-                  </OlStateButton>
-                );
-              })}
+            {audioSinks.filter((audioSinks) => audioSinks instanceof RadioSink).length > 0 &&
+              audioSinks
+                .filter((audioSinks) => audioSinks instanceof RadioSink)
+                .map((radioSink, idx) => {
+                  return (
+                    <OlStateButton
+                      checked={radioSink.getPtt()}
+                      onClick={() => {}}
+                      onMouseDown={() => {
+                        radioSink.setPtt(true);
+                      }}
+                      onMouseUp={() => {
+                        radioSink.setPtt(false);
+                      }}
+                      tooltip="Click to talk, lights up when receiving"
+                      buttonColor={
+                        radioSink.getReceiving()
+                          ? "white"
+                          : null
+                      }
+                    >
+                      <span className={`font-bold text-gray-200`}>{idx + 1}</span>
+                    </OlStateButton>
+                  );
+                })}
 
-            <FaJetFighter className="text-xl" />
-            {audioSinks
-              .filter((audioSinks) => audioSinks instanceof UnitSink)
-              .map((radioSink, idx) => {
-                return (
-                  <OlStateButton
-                    checked={false}
-                    onClick={() => {}}
-                    onMouseDown={() => {
-                      radioSink.setPtt(true);
-                    }}
-                    onMouseUp={() => {
-                      radioSink.setPtt(false);
-                    }}
-                    tooltip="Click to talk"
-                  >
-                    <span className={`font-bold text-gray-200`}>{idx + 1}</span>
-                  </OlStateButton>
-                );
-              })}
+            {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 && (
+              <FaJetFighter
+                className={`text-xl`}
+              />
+            )}
+            {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 &&
+              audioSinks
+                .filter((audioSinks) => audioSinks instanceof UnitSink)
+                .map((unitSink, idx) => {
+                  return (
+                    <OlStateButton
+                      checked={unitSink.getPtt()}
+                      onClick={() => {}}
+                      onMouseDown={() => {
+                        unitSink.setPtt(true);
+                      }}
+                      onMouseUp={() => {
+                        unitSink.setPtt(false);
+                      }}
+                      tooltip="Click to talk"
+                    >
+                      <span className={`font-bold text-gray-200`}>{idx + 1}</span>
+                    </OlStateButton>
+                  );
+                })}
           </div>
         </div>
       )}

@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { OlLocation } from "../components/ollocation";
 import { LatLng } from "leaflet";
 import { FaBullseye, FaChevronDown, FaChevronUp, FaJetFighter, FaMountain } from "react-icons/fa6";
-import { BullseyesDataChanged, MouseMovedEvent } from "../../events";
+import { BullseyesDataChanged, MouseMovedEvent, SelectedUnitsChangedEvent } from "../../events";
 import { bearing, mToFt } from "../../other/utils";
 import { Bullseye } from "../../mission/bullseye";
+import { Unit } from "../../unit/unit";
 
 export function CoordinatesPanel(props: {}) {
   const [open, setOpen] = useState(false);
   const [latlng, setLatlng] = useState(new LatLng(0, 0));
   const [elevation, setElevation] = useState(0);
   const [bullseyes, setBullseyes] = useState(null as null | { [name: string]: Bullseye });
+  const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
 
   useEffect(() => {
     MouseMovedEvent.on((latlng, elevation) => {
@@ -19,6 +21,8 @@ export function CoordinatesPanel(props: {}) {
     });
 
     BullseyesDataChanged.on((bullseyes) => setBullseyes(bullseyes));
+
+    SelectedUnitsChangedEvent.on((selectedUnits) => setSelectedUnits(selectedUnits));
   }, []);
 
   return (
@@ -48,9 +52,9 @@ export function CoordinatesPanel(props: {}) {
                     `}
                   >
                     <FaBullseye />
-                  </span> {bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° / {" "}
-                  {(bullseyes[2].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} 
-                  
+                  </span>{" "}
+                  {bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° /{" "}
+                  {(bullseyes[2].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
                 </div>
                 <div className="flex w-[50%] justify-start gap-2">
                   <span
@@ -61,26 +65,26 @@ export function CoordinatesPanel(props: {}) {
                   >
                     <FaBullseye />
                   </span>
-                  {bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° / {" "}
+                  {bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° /{" "}
                   {(bullseyes[1].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
-                  
                 </div>
               </div>
-              {/*}<div className="flex justify-start gap-2">
-                <span
-                  className={`
-                    rounded-sm bg-white px-1 py-1 text-center font-bold
-                    text-olympus-700
-                  `}
-                >
-                  <FaJetFighter />
-                </span>
-                <div>
-                  {(bullseyes[1].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} /{" "}
-                  {bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}°
+              {selectedUnits.length == 1 && (
+                <div className="flex justify-start gap-2">
+                  <span
+                    className={`
+                      rounded-sm bg-white px-1 py-1 text-center font-bold
+                      text-olympus-700
+                    `}
+                  >
+                    <FaJetFighter />
+                  </span>
+                  <div>
+                    {(selectedUnits[0].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} /{" "}
+                    {bearing(selectedUnits[0].getLatLng().lat, selectedUnits[0].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}°
+                  </div>
                 </div>
-              </div>
-              {*/}
+              )}
             </div>
           )}
         </>

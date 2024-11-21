@@ -52,7 +52,7 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
             </kbd>
           </>
         )}
-        <span className="my-auto w-full">{props.radio.getName()}</span>
+        <span className="my-auto w-full">{!expanded && `${props.radio.getFrequency() / 1e6} MHz ${props.radio.getModulation() ? "FM" : "AM"}`}</span>
         <div
           className={`
             mb-auto ml-auto aspect-square cursor-pointer rounded-md p-2
@@ -87,13 +87,7 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
               className="ml-auto"
               checked={props.radio.getPtt()}
               icon={faMicrophoneLines}
-              onClick={() => {}}
-              onMouseDown={() => {
-                props.radio.setPtt(true);
-              }}
-              onMouseUp={() => {
-                props.radio.setPtt(false);
-              }}
+              onClick={() => {props.radio.setPtt(!props.radio.getPtt())}}
               tooltip="Talk on frequency"
             ></OlStateButton>
 
