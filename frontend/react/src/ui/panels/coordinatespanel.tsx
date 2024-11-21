@@ -80,8 +80,9 @@ export function CoordinatesPanel(props: {}) {
                     <FaJetFighter />
                   </span>
                   <div>
-                    {(selectedUnits[0].getLatLng().distanceTo(latlng) / 1852).toFixed(0)} /{" "}
-                    {bearing(selectedUnits[0].getLatLng().lat, selectedUnits[0].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}°
+                    {" "}
+                    {bearing(selectedUnits[0].getLatLng().lat, selectedUnits[0].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° /
+                    {(selectedUnits[0].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
                   </div>
                 </div>
               )}
