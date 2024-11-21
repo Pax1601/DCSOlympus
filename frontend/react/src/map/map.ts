@@ -23,6 +23,8 @@ import {
   ContextActionTarget,
   ContextActionType,
   ContextActions,
+  SHORT_PRESS_MILLISECONDS,
+  DEBOUNCE_MILLISECONDS,
 } from "../constants/constants";
 import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
@@ -99,11 +101,19 @@ export class Map extends L.Map {
   /* Other state controls */
   #isZooming: boolean = false;
   #isDragging: boolean = false;
-  #isMouseDown: boolean = false;
+  #isSelecting: boolean = false;
+
+  #debounceTimeout: number | null = null;
+  #isLeftMouseDown: boolean = false;
+  #isRightMouseDown: boolean = false;
+  #leftMouseDownEpoch: number = 0;
+  #rightMouseDownEpoch: number = 0;
+  #leftMouseDownTimeout: number = 0;
+  #rightMouseDownTimeout: number = 0;
   #lastMousePosition: L.Point = new L.Point(0, 0);
   #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
   #previousZoom: number = 0;
-  #selecting: boolean = false;
+  #keepRelativePositions: boolean = false;
 
   /* Camera control plugin */
   #slaveDCSCamera: boolean = false;
@@ -122,6 +132,7 @@ export class Map extends L.Map {
   #destinationPreviewMarkers: { [key: number]: TemporaryUnitMarker | TargetMarker } = {};
   #destinationRotation: number = 0;
   #isRotatingDestination: boolean = false;
+  #destionationWasRotated: boolean = false;
 
   /* Unit context actions */
   #contextActionSet: null | ContextActionSet = null;
@@ -185,8 +196,9 @@ export class Map extends L.Map {
 
     this.on("mouseup", (e: any) => this.#onMouseUp(e));
     this.on("mousedown", (e: any) => this.#onMouseDown(e));
-    this.on("click", (e: any) => this.#onLeftClick(e));
-    this.on("contextmenu", (e: any) => this.#onRightClick(e));
+    this.on("dblclick", (e: any) => this.#onDoubleClick(e));
+    this.on("click", (e: any) => e.originalEvent.preventDefault());
+    this.on("contextmenu", (e: any) => e.originalEvent.preventDefault());
 
     this.on("mousemove", (e: any) => this.#onMouseMove(e));
 
@@ -195,6 +207,7 @@ export class Map extends L.Map {
     /* Custom touch events for touchscreen support */
     L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
     L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
+    L.DomEvent.on(this.getContainer(), 'wheel', this.#onMouseWheel, this);
 
     /* Event listeners */
     AppStateChangedEvent.on((state, subState) => this.#onStateChanged(state, subState));
@@ -295,55 +308,73 @@ export class Map extends L.Map {
         label: "Hide/show labels",
         keyUpCallback: () => this.setOption("showUnitLabels", !this.getOptions().showUnitLabels),
         code: "KeyL",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("toggleAcquisitionRings", {
         label: "Hide/show acquisition rings",
         keyUpCallback: () => this.setOption("showUnitsAcquisitionRings", !this.getOptions().showUnitsAcquisitionRings),
         code: "KeyE",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("toggleEngagementRings", {
         label: "Hide/show engagement rings",
         keyUpCallback: () => this.setOption("showUnitsEngagementRings", !this.getOptions().showUnitsEngagementRings),
         code: "KeyQ",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("toggleHideShortEngagementRings", {
         label: "Hide/show short range rings",
         keyUpCallback: () => this.setOption("hideUnitsShortRangeRings", !this.getOptions().hideUnitsShortRangeRings),
         code: "KeyR",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("toggleDetectionLines", {
         label: "Hide/show detection lines",
         keyUpCallback: () => this.setOption("showUnitTargets", !this.getOptions().showUnitTargets),
         code: "KeyF",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("toggleGroupMembers", {
         label: "Hide/show group members",
         keyUpCallback: () => this.setOption("hideGroupMembers", !this.getOptions().hideGroupMembers),
         code: "KeyG",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("toggleRelativePositions", {
         label: "Toggle group movement mode",
-        keyUpCallback: () => this.setOption("keepRelativePositions", !this.getOptions().keepRelativePositions),
-        code: "KeyP",
-        shiftKey: true
+        keyUpCallback: () => this.setKeepRelativePositions(false),
+        keyDownCallback: () => this.setKeepRelativePositions(true),
+        code: "AltLeft",
+        shiftKey: false,
+        ctrlKey: false,
       })
       .addShortcut("increaseCameraZoom", {
         label: "Increase camera zoom",
         keyUpCallback: () => this.increaseCameraZoom(),
         code: "Equal",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut("decreaseCameraZoom", {
         label: "Decrease camera zoom",
         keyUpCallback: () => this.decreaseCameraZoom(),
         code: "Minus",
-        shiftKey: true
+        shiftKey: true,
+        altKey: false,
+        ctrlKey: false,
       });
 
     for (let contextActionName in ContextActions) {
@@ -357,15 +388,14 @@ export class Map extends L.Map {
             shiftKey: contextAction.getOptions().shiftKey,
             altKey: contextAction.getOptions().altKey,
             ctrlKey: contextAction.getOptions().ctrlKey,
-            keyDownCallback: () => {
-              const contextActionSet = this.getContextActionSet();
-              if (getApp().getState() === OlympusState.UNIT_CONTROL && contextActionSet && contextAction.getId() in contextActionSet.getContextActions()) {
-                if (contextAction.getOptions().executeImmediately) contextAction.executeCallback(null, null);
-                else this.setContextAction(contextAction);
-              }
-            },
             keyUpCallback: () => {
-              if (getApp().getState() === OlympusState.UNIT_CONTROL && !contextAction.getOptions().executeImmediately) {
+              const contextActionSet = this.getContextActionSet();
+              if (this.getContextAction() === null || contextAction !== this.getContextAction()) {
+                if (getApp().getState() === OlympusState.UNIT_CONTROL && contextActionSet && contextAction.getId() in contextActionSet.getContextActions()) {
+                  if (contextAction.getOptions().executeImmediately) contextAction.executeCallback(null, null);
+                  else this.setContextAction(contextAction);
+                }
+              } else {
                 this.setContextAction(null);
               }
             },
@@ -381,30 +411,44 @@ export class Map extends L.Map {
         keyUpCallback: (ev: KeyboardEvent) => (this.#panUp = false),
         keyDownCallback: (ev: KeyboardEvent) => (this.#panUp = true),
         code: "KeyW",
+        shiftKey: false,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut(`panDown`, {
         label: "Pan map down",
         keyUpCallback: (ev: KeyboardEvent) => (this.#panDown = false),
         keyDownCallback: (ev: KeyboardEvent) => (this.#panDown = true),
         code: "KeyS",
+        shiftKey: false,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut(`panLeft`, {
         label: "Pan map left",
         keyUpCallback: (ev: KeyboardEvent) => (this.#panLeft = false),
         keyDownCallback: (ev: KeyboardEvent) => (this.#panLeft = true),
         code: "KeyA",
+        shiftKey: false,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut(`panRight`, {
         label: "Pan map right",
         keyUpCallback: (ev: KeyboardEvent) => (this.#panRight = false),
         keyDownCallback: (ev: KeyboardEvent) => (this.#panRight = true),
         code: "KeyD",
+        shiftKey: false,
+        altKey: false,
+        ctrlKey: false,
       })
       .addShortcut(`panFast`, {
         label: "Pan map fast",
         keyUpCallback: (ev: KeyboardEvent) => (this.#panFast = false),
         keyDownCallback: (ev: KeyboardEvent) => (this.#panFast = true),
         code: "ShiftLeft",
+        altKey: false,
+        ctrlKey: false,
       });
 
     /* Periodically check if the camera control endpoint is available */
@@ -580,7 +624,7 @@ export class Map extends L.Map {
   }
 
   isSelecting() {
-    return this.#selecting;
+    return this.#isSelecting;
   }
 
   setTheatre(theatre: string) {
@@ -668,6 +712,17 @@ export class Map extends L.Map {
 
   getPreviousZoom() {
     return this.#previousZoom;
+  }
+
+  setKeepRelativePositions(keepRelativePositions: boolean) {
+    this.#keepRelativePositions = keepRelativePositions;
+    this.#updateDestinationPreviewMarkers();
+    if (keepRelativePositions) this.scrollWheelZoom.disable();
+    else this.scrollWheelZoom.enable();
+  }
+
+  getKeepRelativePositions() {
+    return this.#keepRelativePositions;
   }
 
   increaseCameraZoom() {
@@ -762,166 +817,217 @@ export class Map extends L.Map {
   }
 
   #onSelectionStart(e: any) {
-    this.#selecting = true;
+    this.#isSelecting = true;
   }
 
   #onSelectionEnd(e: any) {
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
-    this.#selecting = false;
+
+    /* Delay the event so that any other event in the queue still sees the map in selection mode */
+    window.setTimeout(() => {
+      this.#isSelecting = false;
+    }, 300);
   }
 
   #onMouseUp(e: any) {
-    this.#isMouseDown = false;
-    this.#isRotatingDestination = false;
+    if (e.originalEvent?.button === 0) {
+      if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onLeftShortClick(e);
+      this.#isLeftMouseDown = false;
+    } else if (e.originalEvent?.button === 2) {
+      if (Date.now() - this.#rightMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onRightShortClick(e);
+      this.#isRightMouseDown = false;
+    }
   }
 
   #onMouseDown(e: any) {
-    this.#isMouseDown = true;
-    if (this.#contextAction?.getTarget() === ContextActionTarget.POINT && e.originalEvent?.button === 2) this.#isRotatingDestination = true;
+    if (e.originalEvent?.button === 0) {
+      this.#isLeftMouseDown = true;
+      this.#leftMouseDownEpoch = Date.now();
+    } else if (e.originalEvent?.button === 2) {
+      this.#isRightMouseDown = true;
+      this.#rightMouseDownEpoch = Date.now();
+      this.#rightMouseDownTimeout = window.setTimeout(() => {
+        this.#onRightLongClick(e);
+      }, SHORT_PRESS_MILLISECONDS);
+    }
   }
 
-  #onLeftClick(e: L.LeafletMouseEvent) {
-    console.log(`Left click at ${e.latlng}`);
+  #onMouseWheel(e: any) {
+    if (this.#keepRelativePositions) {
+      this.#destinationRotation += e.deltaY / 20;
+      this.#moveDestinationPreviewMarkers();
+    }
+  }
 
-    /* Execute the short click action */
-    if (getApp().getState() === OlympusState.IDLE) {
-      /* Do nothing */
-    } else if (getApp().getState() === OlympusState.SPAWN_CONTEXT) {
-      getApp().setState(OlympusState.IDLE);
-    } else if (getApp().getState() === OlympusState.SPAWN) {
-      if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
-        if (this.#spawnRequestTable !== null) {
-          this.#spawnRequestTable.unit.location = e.latlng;
-          getApp()
-            .getUnitsManager()
-            .spawnUnits(
-              this.#spawnRequestTable.category,
-              Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit),
-              this.#spawnRequestTable.coalition,
-              false,
-              undefined,
-              undefined,
-              (hash) => {
-                this.addTemporaryMarker(e.latlng, this.#spawnRequestTable?.unit.unitType ?? "unknown", this.#spawnRequestTable?.coalition ?? "blue", hash);
+  #onLeftShortClick(e: L.LeafletMouseEvent) {
+    if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
+
+    if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) {
+      this.#debounceTimeout = window.setTimeout(() => {
+        if (!this.#isSelecting) {
+          console.log(`Left short click at ${e.latlng}`);
+
+          /* Execute the short click action */
+          if (getApp().getState() === OlympusState.IDLE) {
+            /* Do nothing */
+          } else if (getApp().getState() === OlympusState.SPAWN) {
+            if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
+              if (this.#spawnRequestTable !== null) {
+                this.#spawnRequestTable.unit.location = e.latlng;
+                getApp()
+                  .getUnitsManager()
+                  .spawnUnits(
+                    this.#spawnRequestTable.category,
+                    Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit),
+                    this.#spawnRequestTable.coalition,
+                    false,
+                    undefined,
+                    undefined,
+                    (hash) => {
+                      this.addTemporaryMarker(
+                        e.latlng,
+                        this.#spawnRequestTable?.unit.unitType ?? "unknown",
+                        this.#spawnRequestTable?.coalition ?? "blue",
+                        hash
+                      );
+                    }
+                  );
               }
-            );
-        }
-      } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
-        if (this.#effectRequestTable !== null) {
-          if (this.#effectRequestTable.type === "explosion") {
-            if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", e.latlng);
-            else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", e.latlng);
-            else if (this.#effectRequestTable.explosionType === "White phosphorous") getApp().getServerManager().spawnExplosion(50, "phosphorous", e.latlng);
+            } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
+              if (this.#effectRequestTable !== null) {
+                if (this.#effectRequestTable.type === "explosion") {
+                  if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", e.latlng);
+                  else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", e.latlng);
+                  else if (this.#effectRequestTable.explosionType === "White phosphorous")
+                    getApp().getServerManager().spawnExplosion(50, "phosphorous", e.latlng);
 
-            this.addExplosionMarker(e.latlng);
-          } else if (this.#effectRequestTable.type === "smoke") {
-            getApp()
-              .getServerManager()
-              .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", e.latlng);
-            this.addSmokeMarker(e.latlng, this.#effectRequestTable.smokeColor ?? "white");
+                  this.addExplosionMarker(e.latlng);
+                } else if (this.#effectRequestTable.type === "smoke") {
+                  getApp()
+                    .getServerManager()
+                    .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", e.latlng);
+                  this.addSmokeMarker(e.latlng, this.#effectRequestTable.smokeColor ?? "white");
+                }
+              }
+            }
+          } else if (getApp().getState() === OlympusState.DRAW) {
+            if (getApp().getSubState() === DrawSubState.DRAW_POLYGON) {
+              const selectedArea = this.getSelectedCoalitionArea();
+              if (selectedArea && selectedArea instanceof CoalitionPolygon) {
+                selectedArea.addTemporaryLatLng(e.latlng);
+              }
+            } else if (getApp().getSubState() === DrawSubState.DRAW_CIRCLE) {
+              const selectedArea = this.getSelectedCoalitionArea();
+              if (selectedArea && selectedArea instanceof CoalitionCircle) {
+                if (selectedArea.getLatLng().lat == 0 && selectedArea.getLatLng().lng == 0) selectedArea.setLatLng(e.latlng);
+                getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+              }
+            } else if (getApp().getSubState() == DrawSubState.NO_SUBSTATE) {
+              this.deselectAllCoalitionAreas();
+              for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
+                if (areaContains(e.latlng, this.#coalitionAreas[idx])) {
+                  this.#coalitionAreas[idx].setSelected(true);
+                  getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+                  break;
+                }
+              }
+            }
+          } else if (getApp().getState() === OlympusState.JTAC) {
+            // TODO less redundant way to do this
+            if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
+              if (!this.#targetPoint) {
+                this.#targetPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+                this.#targetPoint.addTo(this);
+                this.#targetPoint.on("dragstart", (event) => {
+                  event.target.options["freeze"] = true;
+                });
+                this.#targetPoint.on("dragend", (event) => {
+                  getApp().setState(OlympusState.JTAC);
+                  event.target.options["freeze"] = false;
+                });
+                this.#targetPoint.on("click", (event) => {
+                  getApp().setState(OlympusState.JTAC);
+                });
+              } else this.#targetPoint.setLatLng(e.latlng);
+            } else if (getApp().getSubState() === JTACSubState.SELECT_ECHO_POINT) {
+              if (!this.#ECHOPoint) {
+                this.#ECHOPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+                this.#ECHOPoint.addTo(this);
+                this.#ECHOPoint.on("dragstart", (event) => {
+                  event.target.options["freeze"] = true;
+                });
+                this.#ECHOPoint.on("dragend", (event) => {
+                  getApp().setState(OlympusState.JTAC);
+                  event.target.options["freeze"] = false;
+                });
+                this.#ECHOPoint.on("click", (event) => {
+                  getApp().setState(OlympusState.JTAC);
+                });
+              } else this.#ECHOPoint.setLatLng(e.latlng);
+            } else if (getApp().getSubState() === JTACSubState.SELECT_IP) {
+              if (!this.#IPPoint) {
+                this.#IPPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+                this.#IPPoint.addTo(this);
+                this.#IPPoint.on("dragstart", (event) => {
+                  event.target.options["freeze"] = true;
+                });
+                this.#IPPoint.on("dragend", (event) => {
+                  getApp().setState(OlympusState.JTAC);
+                  event.target.options["freeze"] = false;
+                });
+                this.#IPPoint.on("click", (event) => {
+                  getApp().setState(OlympusState.JTAC);
+                });
+              } else this.#IPPoint.setLatLng(e.latlng);
+            }
+            getApp().setState(OlympusState.JTAC);
+            this.#drawIPToTargetLine();
+          } else {
+            if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
+            else getApp().setState(OlympusState.UNIT_CONTROL);
           }
         }
-      }
-    } else if (getApp().getState() === OlympusState.DRAW) {
-      if (getApp().getSubState() === DrawSubState.DRAW_POLYGON) {
-        const selectedArea = this.getSelectedCoalitionArea();
-        if (selectedArea && selectedArea instanceof CoalitionPolygon) {
-          selectedArea.addTemporaryLatLng(e.latlng);
-        }
-      } else if (getApp().getSubState() === DrawSubState.DRAW_CIRCLE) {
-        const selectedArea = this.getSelectedCoalitionArea();
-        if (selectedArea && selectedArea instanceof CoalitionCircle) {
-          if (selectedArea.getLatLng().lat == 0 && selectedArea.getLatLng().lng == 0) selectedArea.setLatLng(e.latlng);
-          getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
-        }
-      } else if (getApp().getSubState() == DrawSubState.NO_SUBSTATE) {
-        this.deselectAllCoalitionAreas();
-        for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
-          if (areaContains(e.latlng, this.#coalitionAreas[idx])) {
-            this.#coalitionAreas[idx].setSelected(true);
-            getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
-            break;
-          }
-        }
-      }
+      }, DEBOUNCE_MILLISECONDS);
+    }
+  }
+
+  #onRightShortClick(e: L.LeafletMouseEvent) {
+    console.log(`Right short click at ${e.latlng}`);
+
+    window.clearTimeout(this.#rightMouseDownTimeout);
+
+    if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.SPAWN_CONTEXT) {
+      SpawnContextMenuRequestEvent.dispatch(e.latlng);
+      getApp().setState(OlympusState.SPAWN_CONTEXT);
     } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
       if (this.#contextAction !== null) this.executeContextAction(null, e.latlng, e.originalEvent);
-      else getApp().setState(OlympusState.IDLE);
-    } else if (getApp().getState() === OlympusState.JTAC) {
-      // TODO less redundant way to do this
-      if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
-        if (!this.#targetPoint) {
-          this.#targetPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
-          this.#targetPoint.addTo(this);
-          this.#targetPoint.on("dragstart", (event) => {
-            event.target.options["freeze"] = true;
-          });
-          this.#targetPoint.on("dragend", (event) => {
-            getApp().setState(OlympusState.JTAC);
-            event.target.options["freeze"] = false;
-          });
-          this.#targetPoint.on("click", (event) => {
-            getApp().setState(OlympusState.JTAC);
-          });
-        } else this.#targetPoint.setLatLng(e.latlng);
-      } else if (getApp().getSubState() === JTACSubState.SELECT_ECHO_POINT) {
-        if (!this.#ECHOPoint) {
-          this.#ECHOPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
-          this.#ECHOPoint.addTo(this);
-          this.#ECHOPoint.on("dragstart", (event) => {
-            event.target.options["freeze"] = true;
-          });
-          this.#ECHOPoint.on("dragend", (event) => {
-            getApp().setState(OlympusState.JTAC);
-            event.target.options["freeze"] = false;
-          });
-          this.#ECHOPoint.on("click", (event) => {
-            getApp().setState(OlympusState.JTAC);
-          });
-        } else this.#ECHOPoint.setLatLng(e.latlng);
-      } else if (getApp().getSubState() === JTACSubState.SELECT_IP) {
-        if (!this.#IPPoint) {
-          this.#IPPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
-          this.#IPPoint.addTo(this);
-          this.#IPPoint.on("dragstart", (event) => {
-            event.target.options["freeze"] = true;
-          });
-          this.#IPPoint.on("dragend", (event) => {
-            getApp().setState(OlympusState.JTAC);
-            event.target.options["freeze"] = false;
-          });
-          this.#IPPoint.on("click", (event) => {
-            getApp().setState(OlympusState.JTAC);
-          });
-        } else this.#IPPoint.setLatLng(e.latlng);
-      }
-      getApp().setState(OlympusState.JTAC);
-      this.#drawIPToTargetLine();
-    } else {
+      else this.executeDefaultContextAction(null, e.latlng, e.originalEvent);
     }
   }
 
-  #onRightClick(e: L.LeafletMouseEvent) {
-    e.originalEvent.preventDefault();
+  #onRightLongClick(e: L.LeafletMouseEvent) {
+    console.log(`Right long click at ${e.latlng}`);
 
-    console.log(`Right click at ${e.latlng}`);
-
-    if (!this.#isDragging && !this.#isZooming) {
-      this.deselectAllCoalitionAreas();
-      if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.SPAWN_CONTEXT) {
-        SpawnContextMenuRequestEvent.dispatch(e.latlng);
-        getApp().setState(OlympusState.SPAWN_CONTEXT);
-      } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-        if (!this.getContextAction()) {
-          getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
-          MapContextMenuRequestEvent.dispatch(e.latlng);
-        }
+    if (getApp().getState() === OlympusState.UNIT_CONTROL) {
+      if (!this.getContextAction()) {
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
+        MapContextMenuRequestEvent.dispatch(e.latlng);
       }
     }
+  }
+
+  #onDoubleClick(e: L.LeafletMouseEvent) {
+    console.log(`Double click at ${e.latlng}`);
+
+    if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
+
+    if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
+    else getApp().setState(getApp().getState());
   }
 
   #onMouseMove(e: any) {
     if (!this.#isRotatingDestination) {
+      this.#destionationWasRotated = false;
       this.#lastMousePosition.x = e.originalEvent.x;
       this.#lastMousePosition.y = e.originalEvent.y;
       this.#lastMouseCoordinates = e.latlng;
@@ -934,6 +1040,7 @@ export class Map extends L.Map {
       if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
       if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
     } else {
+      this.#destionationWasRotated = true;
       this.#destinationRotation -= e.originalEvent.movementX;
     }
 
@@ -1047,18 +1154,20 @@ export class Map extends L.Map {
       delete this.#destinationPreviewMarkers[ID];
     });
 
-    selectedUnits.forEach((unit) => {
-      if (this.#contextAction?.getOptions().type === ContextActionType.MOVE) {
-        this.#destinationPreviewMarkers[unit.ID] = new TemporaryUnitMarker(new L.LatLng(0, 0), unit.getName(), unit.getCoalition());
-      } else if (this.#contextAction?.getTarget() === ContextActionTarget.POINT) {
-        this.#destinationPreviewMarkers[unit.ID] = new TargetMarker(new L.LatLng(0, 0));
-      }
-      this.#destinationPreviewMarkers[unit.ID]?.addTo(this);
-    });
+    if (this.#keepRelativePositions) {
+      selectedUnits.forEach((unit) => {
+        if (this.#contextAction?.getOptions().type === ContextActionType.MOVE || this.#contextAction === null) {
+          this.#destinationPreviewMarkers[unit.ID] = new TemporaryUnitMarker(new L.LatLng(0, 0), unit.getName(), unit.getCoalition());
+        } else if (this.#contextAction?.getTarget() === ContextActionTarget.POINT) {
+          this.#destinationPreviewMarkers[unit.ID] = new TargetMarker(new L.LatLng(0, 0));
+        }
+        this.#destinationPreviewMarkers[unit.ID]?.addTo(this);
+      });
+    }
   }
 
   #moveDestinationPreviewMarkers() {
-    if (this.#options.keepRelativePositions) {
+    if (this.#keepRelativePositions) {
       Object.entries(getApp().getUnitsManager().computeGroupDestination(this.#lastMouseCoordinates, this.#destinationRotation)).forEach(([ID, latlng]) => {
         this.#destinationPreviewMarkers[ID]?.setLatLng(latlng);
       });

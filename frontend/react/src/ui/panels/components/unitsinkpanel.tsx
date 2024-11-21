@@ -6,7 +6,7 @@ import { OlStateButton } from "../../components/olstatebutton";
 import { faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
 import { OlRangeSlider } from "../../components/olrangeslider";
 
-export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKey: string; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
+export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKeys: string[]; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -36,20 +36,21 @@ export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKey: s
             data-expanded={expanded}
           />
         </div>
-        {props.shortcutKey && (<>
-          <kbd
-            className={`
-              my-auto ml-auto rounded-lg border border-gray-200 bg-gray-100 px-2
-              py-1.5 text-xs font-semibold text-gray-800
-              dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
-            `}
-          >
-            {props.shortcutKey}
-          </kbd>
+        {props.shortcutKeys && (
+          <>
+            <kbd
+              className={`
+                my-auto ml-auto text-nowrap rounded-lg border border-gray-200
+                bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800
+                dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+              `}
+            >
+              {props.shortcutKeys.flatMap((key, idx, array) => [key, idx < array.length - 1 ? " + " : ""])}
+            </kbd>
           </>
         )}
         <div className="flex w-full overflow-hidden">
-          <span className="my-auto truncate">  {props.sink.getName()}</span>
+          <span className="my-auto truncate"> {props.sink.getName()}</span>
         </div>
         <div
           className={`
@@ -79,8 +80,12 @@ export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKey: s
           <OlStateButton
             checked={props.sink.getPtt()}
             icon={faMicrophoneLines}
-            onClick={() => {
-              props.sink.setPtt(!props.sink.getPtt());
+            onClick={() => {}}
+            onMouseDown={() => {
+              props.sink.setPtt(true);
+            }}
+            onMouseUp={() => {
+              props.sink.setPtt(false);
             }}
             tooltip="Talk on frequency"
           ></OlStateButton>

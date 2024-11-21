@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { faHandPointer, faJetFighter, faMap, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faFighterJet, faHandPointer, faJetFighter, faMap, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ContextActionTarget, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
-import { AppStateChangedEvent, MapOptionsChangedEvent } from "../../events";
-import { getApp } from "../../olympusapp";
+import { MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
+import { AppStateChangedEvent, ContextActionSetChangedEvent, MapOptionsChangedEvent, ShortcutsChangedEvent } from "../../events";
 import { ContextAction } from "../../unit/contextaction";
+import { ContextActionSet } from "../../unit/contextactionset";
 
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
     null as
       | {
           actions: (string | number | IconDefinition)[];
-          target: IconDefinition | null;
+          target?: IconDefinition;
           text: string;
         }[]
       | null
@@ -19,6 +19,8 @@ export function ControlsPanel(props: {}) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
+  const [shortcuts, setShortcuts] = useState({})
+  const [contextActionSet, setContextActionSet] = useState(null as null | ContextActionSet)
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -26,65 +28,61 @@ export function ControlsPanel(props: {}) {
       setAppSubState(subState);
     });
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
+    ShortcutsChangedEvent.on((shortcuts) => setShortcuts(shortcuts));
+    ContextActionSetChangedEvent.on((contextActionSet) => setContextActionSet(contextActionSet));
   }, []);
 
   const callback = useCallback(() => {
     const touch = matchMedia("(hover: none)").matches;
     let controls: {
       actions: (string | number | IconDefinition)[];
-      target: IconDefinition | null;
+      target?: IconDefinition;
       text: string;
     }[] = [];
 
+    const baseControls = [
+      {
+        actions: [touch ? faHandPointer : "LMB"],
+        text: "Select unit",
+      },
+      {
+        actions: [touch ? faHandPointer : "LMB", "Drag"],
+        text: "Box selection",
+      },
+      {
+        actions: [touch ? faHandPointer : "Wheel", "Drag"],
+        text: "Move map",
+      },
+    ];
+    if (!touch) {
+      controls.push({
+        actions: ["Shift", "LMB", "Drag"],
+
+        text: "Box selection",
+      });
+    }
+
     if (appState === OlympusState.IDLE) {
-      controls = [
-        {
-          actions: [touch ? faHandPointer : "LMB"],
-          target: faJetFighter,
-          text: "Select unit",
-        },
-        {
-          actions: touch ? [faHandPointer, "Hold"] : ["RMB"],
-          target: faMap,
-          text: "Quick spawn menu",
-        },
-        {
-          actions: touch ? [faHandPointer, "Drag"] : ["Shift", "LMB", "Drag"],
-          target: faMap,
-          text: "Box selection",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
+      controls = baseControls;
+      controls.push({
+        actions: touch ? [faHandPointer, "Hold"] : ["RMB"],
+        text: "Quick spawn menu",
+      });
     } else if (appState === OlympusState.SPAWN_CONTEXT) {
-      controls = [
+      controls = baseControls;
+      controls.push(
         {
           actions: [touch ? faHandPointer : "LMB"],
-          target: faJetFighter,
           text: "Close context menu",
         },
         {
           actions: touch ? [faHandPointer, "Hold"] : ["RMB"],
-          target: faMap,
           text: "Move context menu",
-        },
-        {
-          actions: touch ? [faHandPointer, "Drag"] : ["Shift", "LMB", "Drag"],
-          target: faMap,
-          text: "Box selection",
-        },
-        {
-          actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
-          text: "Move map location",
-        },
-      ];
+        }
+      );
     } else if (appState === OlympusState.UNIT_CONTROL) {
       if (!mapOptions.tabletMode) {
-        controls = Object.values(getApp().getMap().getContextActionSet()?.getContextActions() ?? {})
+        controls = Object.values(contextActionSet?.getContextActions() ?? {})
           .sort((a: ContextAction, b: ContextAction) => (a.getLabel() > b.getLabel() ? 1 : -1))
           .filter((contextAction: ContextAction) => contextAction.getOptions().code)
           .map((contextAction: ContextAction) => {
@@ -95,53 +93,73 @@ export function ControlsPanel(props: {}) {
             actions.push(
               (contextAction.getOptions().code as string)
                 .replace("Key", "")
-                .replace("ControlLeft", "Ctrl LH")
-                .replace("AltLeft", "Alt LH")
-                .replace("ShiftLeft", "Shift LH")
-                .replace("ControlRight", "Ctrl RH")
-                .replace("AltRight", "Alt RH")
-                .replace("ShiftRight", "Shift RH")
+                .replace("ControlLeft", "Left Ctrl")
+                .replace("AltLeft", "Left Alt")
+                .replace("ShiftLeft", "Left Shift")
+                .replace("ControlRight", "Right Ctrl")
+                .replace("AltRight", "Right Alt")
+                .replace("ShiftRight", "Right Shift")
             );
-            contextAction.getTarget() !== ContextActionTarget.NONE && actions.push(touch ? faHandPointer : "LMB");
             return {
               actions: actions,
-              target:
-                contextAction.getTarget() === ContextActionTarget.NONE ? null : contextAction.getTarget() === ContextActionTarget.POINT ? faMap : faJetFighter,
               text: contextAction.getLabel(),
             };
           });
+        controls.unshift({
+          actions: ["RMB"],
+          text: "Move",
+        });
+        controls.push({
+          actions: ["RMB", "Hold"],
+          target: faMap,
+          text: "Show point actions",
+        });
+        controls.push({
+          actions: ["RMB", "Hold"],
+          target: faFighterJet,
+          text: "Show unit actions",
+        });
+        controls.push({
+          actions: shortcuts["toggleRelativePositions"]?.toActions(),
+          text: "Activate group movement",
+        });
+        controls.push({
+          actions: [...shortcuts["toggleRelativePositions"]?.toActions(), "Wheel"],
+          text: "Rotate formation",
+        });
       }
     } else if (appState === OlympusState.SPAWN) {
       controls = [
         {
           actions: [touch ? faHandPointer : "LMB", 2],
-          target: faMap,
           text: appSubState === SpawnSubState.NO_SUBSTATE ? "Close spawn menu" : "Return to spawn menu",
         },
         {
           actions: touch ? [faHandPointer, "Drag"] : ["Shift", "LMB", "Drag"],
-          target: faMap,
           text: "Box selection",
         },
         {
           actions: [touch ? faHandPointer : "LMB", "Drag"],
-          target: faMap,
           text: "Move map location",
         },
       ];
       if (appSubState === SpawnSubState.SPAWN_UNIT) {
         controls.unshift({
           actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
           text: "Spawn unit",
         });
       } else if (appSubState === SpawnSubState.SPAWN_EFFECT) {
         controls.unshift({
           actions: [touch ? faHandPointer : "LMB"],
-          target: faMap,
           text: "Spawn effect",
         });
       }
+    } else {
+      controls = baseControls;
+      controls.push({
+        actions: ["LMB"],
+        text: "Return to idle state"
+      })
     }
 
     setControls(controls);
@@ -178,20 +196,23 @@ export function ControlsPanel(props: {}) {
                 return (
                   <div key={idx} className="flex gap-1">
                     <div>
-                      {typeof action === "string" || typeof action === "number" ? (
-                        action
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={action}
-                          className={`my-auto ml-auto`}
-                        />
-                      )}
+                      {typeof action === "string" || typeof action === "number" ? action : <FontAwesomeIcon icon={action} className={`
+                        my-auto ml-auto
+                      `} />}
                     </div>
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "string" && <div>+</div>}
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "number" && <div>x</div>}
                   </div>
                 );
               })}
+              {control.target && (
+                <>
+                  <div>+</div>
+                  <div>
+                    <FontAwesomeIcon icon={control.target} />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );

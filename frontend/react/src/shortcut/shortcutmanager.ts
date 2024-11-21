@@ -5,19 +5,20 @@ import { Shortcut } from "./shortcut";
 export class ShortcutManager {
   #shortcuts: { [key: string]: Shortcut } = {};
 
-  constructor() {
-    //  Stop ctrl+digits from sending the browser to another tab
-    document.addEventListener("keydown", (ev: KeyboardEvent) => {
-      if (ev.code.indexOf("Digit") >= 0 && ev.ctrlKey === true && ev.altKey === false && ev.shiftKey === false) {
-        ev.preventDefault();
-      }
-    });
-  }
+  constructor() {}
 
   addShortcut(id: string, shortcutOptions: ShortcutOptions) {
     this.#shortcuts[id] = new Shortcut(id, shortcutOptions);
     ShortcutsChangedEvent.dispatch(this.#shortcuts);
     return this;
+  }
+
+  getShortcut(id) {
+    return this.#shortcuts[id];
+  }
+
+  getShortcuts() {
+    return this.#shortcuts;
   }
 
   getShortcutsOptions() {
@@ -48,11 +49,18 @@ export class ShortcutManager {
           const otherShortcut = this.#shortcuts[otherid];
           if (shortcut.getOptions().code === otherShortcut.getOptions().code) {
             if (
-              (shortcut.getOptions().altKey ?? false) === (otherShortcut.getOptions().altKey ?? false) &&
-              (shortcut.getOptions().ctrlKey ?? false) === (otherShortcut.getOptions().ctrlKey ?? false) &&
-              (shortcut.getOptions().shiftKey ?? false) === (otherShortcut.getOptions().shiftKey ?? false) 
+              shortcut.getOptions().code === otherShortcut.getOptions().code &&
+              ((shortcut.getOptions().shiftKey === undefined && otherShortcut.getOptions().shiftKey !== undefined) ||
+                (shortcut.getOptions().shiftKey !== undefined && otherShortcut.getOptions().shiftKey === undefined) ||
+                shortcut.getOptions().shiftKey === otherShortcut.getOptions().shiftKey) &&
+              ((shortcut.getOptions().altKey === undefined && otherShortcut.getOptions().altKey !== undefined) ||
+                (shortcut.getOptions().altKey !== undefined && otherShortcut.getOptions().altKey === undefined) ||
+                shortcut.getOptions().altKey === otherShortcut.getOptions().altKey) &&
+              ((shortcut.getOptions().ctrlKey === undefined && otherShortcut.getOptions().ctrlKey !== undefined) ||
+                (shortcut.getOptions().ctrlKey !== undefined && otherShortcut.getOptions().ctrlKey === undefined) ||
+                shortcut.getOptions().ctrlKey === otherShortcut.getOptions().ctrlKey)
             ) {
-              console.error("Duplicate shortcut: " + shortcut.getOptions().label + " and " + otherShortcut.getOptions().label)
+              console.error("Duplicate shortcut: " + shortcut.getOptions().label + " and " + otherShortcut.getOptions().label);
             }
           }
         }

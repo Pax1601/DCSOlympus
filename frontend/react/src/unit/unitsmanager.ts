@@ -79,36 +79,66 @@ export class UnitsManager {
         },
         code: "KeyA",
         ctrlKey: true,
+        shiftKey: false,
+        altKey: false
       })
       .addShortcut("copyUnits", {
         label: "Copy units",
         keyUpCallback: () => this.copy(),
         code: "KeyC",
         ctrlKey: true,
+        shiftKey: false,
+        altKey: false
       })
       .addShortcut("pasteUnits", {
         label: "Paste units",
         keyUpCallback: () => this.paste(),
         code: "KeyV",
         ctrlKey: true,
+        shiftKey: false,
+        altKey: false
       });
 
     const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
     digits.forEach((code, idx) => {
       getApp()
         .getShortcutManager()
-        .addShortcut(`hotgroup${idx}`, {
-          label: `Hotgroup ${idx} management`,
+        .addShortcut(`hotgroup${idx + 1}only`, {
+          label: `Hotgroup ${idx + 1} (Select only)`,
           keyUpCallback: (ev: KeyboardEvent) => {
-            if (ev.ctrlKey && ev.shiftKey) this.selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
-            //  "Select hotgroup X in addition to any units already selected"
-            else if (ev.ctrlKey && !ev.shiftKey) this.setHotgroup(parseInt(ev.code.substring(5)));
-            //  "These selected units are hotgroup X (forget any previous membership)"
-            else if (!ev.ctrlKey && ev.shiftKey) this.addToHotgroup(parseInt(ev.code.substring(5)));
-            //  "Add (append) these units to hotgroup X (in addition to any existing members)"
-            else this.selectUnitsByHotgroup(parseInt(ev.code.substring(5))); //  "Select hotgroup X, deselect any units not in it."
+            this.selectUnitsByHotgroup(parseInt(ev.code.substring(5)));
           },
           code: code,
+          shiftKey: false,
+          altKey: false,
+          ctrlKey: false
+        }).addShortcut(`hotgroup${idx + 1}add`, {
+          label: `Hotgroup ${idx + 1} (Add to)`,
+          keyUpCallback: (ev: KeyboardEvent) => {
+            this.addToHotgroup(parseInt(ev.code.substring(5)));
+          },
+          code: code,
+          shiftKey: true,
+          altKey: false,
+          ctrlKey: false
+        }).addShortcut(`hotgroup${idx + 1}set`, {
+          label: `Hotgroup ${idx + 1} (Set)`,
+          keyUpCallback: (ev: KeyboardEvent) => {
+            this.setHotgroup(parseInt(ev.code.substring(5)));
+          },
+          code: code,
+          ctrlKey: true,
+          altKey: false,
+          shiftKey: false
+        }).addShortcut(`hotgroup${idx + 1}also`, {
+          label: `Hotgroup ${idx + 1} (Select also)`,
+          keyUpCallback: (ev: KeyboardEvent) => {
+            this.selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
+          },
+          code: code,
+          ctrlKey: true,
+          shiftKey: true,
+          altKey: false
         });
     });
 

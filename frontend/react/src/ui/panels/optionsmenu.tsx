@@ -9,6 +9,7 @@ import { BindShortcutRequestEvent, MapOptionsChangedEvent, ShortcutsChangedEvent
 import { OlAccordion } from "../components/olaccordion";
 import { Shortcut } from "../../shortcut/shortcut";
 import { OlSearchBar } from "../components/olsearchbar";
+import { FaTrash, FaXmark } from "react-icons/fa6";
 
 const enum Accordion {
   NONE,
@@ -32,14 +33,12 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
     <Menu title="User preferences" open={props.open} showBackButton={false} onClose={props.onClose}>
       <div
         className={`
-          flex flex-col gap-2 p-5 font-normal text-gray-800
+          flex h-full flex-col justify-end gap-2 p-5 font-normal text-gray-800
           dark:text-white
         `}
       >
         <OlAccordion
-          onClick={() => 
-            setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.BINDINGS: Accordion.NONE )
-          }
+          onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.BINDINGS : Accordion.NONE)}
           open={openAccordion === Accordion.BINDINGS}
           title="Key bindings"
         >
@@ -65,10 +64,40 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
                     }}
                   >
                     <span>{shortcut.getOptions().label}</span>
-                    <span>
-                      {shortcut.getOptions().altKey ? "Alt + " : ""}
-                      {shortcut.getOptions().ctrlKey ? "Ctrl + " : ""}
-                      {shortcut.getOptions().shiftKey ? "Shift + " : ""}
+                    <span className="flex gap-1">
+                      {shortcut.getOptions().altKey ? (
+                        <div className="flex gap-1">
+                          <div className={`text-green-500`}>Alt</div> +{" "}
+                        </div>
+                      ) : shortcut.getOptions().altKey === false ? (
+                        <div className={`flex gap-1`}>
+                          <div className={`text-red-500`}>Alt</div> +{" "}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {shortcut.getOptions().ctrlKey ? (
+                        <div className="flex gap-1">
+                          <div className={`text-green-500`}>Shift</div> +{" "}
+                        </div>
+                      ) : shortcut.getOptions().ctrlKey === false ? (
+                        <div className={`flex gap-1`}>
+                          <div className={`text-red-500`}>Shift</div> +{" "}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {shortcut.getOptions().shiftKey ? (
+                        <div className="flex gap-1">
+                          <div className={`text-green-500`}>Ctrl</div> +{" "}
+                        </div>
+                      ) : shortcut.getOptions().shiftKey === false ? (
+                        <div className={`flex gap-1`}>
+                          <div className={`text-red-500`}>Ctrl</div> +{" "}
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       {shortcut.getOptions().code}
                     </span>
                   </div>
@@ -77,7 +106,11 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           </div>
         </OlAccordion>
 
-        <OlAccordion onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.MAP_OPTIONS: Accordion.NONE )} open={openAccordion === Accordion.MAP_OPTIONS} title="Map options">
+        <OlAccordion
+          onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.MAP_OPTIONS : Accordion.NONE)}
+          open={openAccordion === Accordion.MAP_OPTIONS}
+          title="Map options"
+        >
           <div
             className={`
               group flex flex-row rounded-md justify-content cursor-pointer
@@ -133,17 +166,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             <OlCheckbox checked={mapOptions.hideUnitsShortRangeRings} onChange={() => {}}></OlCheckbox>
             <span>Hide Short range Rings</span>
           </div>
-          <div
-            className={`
-              group flex flex-row gap-4 rounded-md justify-content
-              cursor-pointer p-2 text-sm
-              dark:hover:bg-olympus-400
-            `}
-            onClick={() => getApp().getMap().setOption("keepRelativePositions", !mapOptions.keepRelativePositions)}
-          >
-            <OlCheckbox checked={mapOptions.keepRelativePositions} onChange={() => {}}></OlCheckbox>
-            <span>Keep units relative positions</span>
-          </div>
+          
           <div
             className={`
               group flex flex-row gap-4 rounded-md justify-content
@@ -168,7 +191,11 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           </div>
         </OlAccordion>
 
-        <OlAccordion onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.CAMERA_PLUGIN: Accordion.NONE )} open={openAccordion === Accordion.CAMERA_PLUGIN} title="Camera plugin options">
+        <OlAccordion
+          onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.CAMERA_PLUGIN : Accordion.NONE)}
+          open={openAccordion === Accordion.CAMERA_PLUGIN}
+          title="Camera plugin options"
+        >
           <hr
             className={`
               m-2 my-1 w-auto border-[1px] bg-gray-700
@@ -231,6 +258,41 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             </div>
           </div>
         </OlAccordion>
+
+        <div className="mt-auto flex">
+          <button
+            type="button"
+            onClick={() => getApp().resetProfile()}
+            className={`
+              mb-2 me-2 flex content-center items-center gap-2 rounded-sm
+              border-[1px] bg-blue-700 px-5 py-2.5 text-sm font-medium
+              text-white
+              dark:border-red-600 dark:bg-gray-800 dark:text-gray-400
+              dark:hover:bg-gray-700 dark:focus:ring-blue-800
+              focus:outline-none focus:ring-4 focus:ring-blue-300
+              hover:bg-blue-800
+            `}
+          >
+            Reset profile
+            <FaXmark />
+          </button>
+          <button
+            type="button"
+            onClick={() => getApp().resetAllProfiles()}
+            className={`
+              mb-2 me-2 flex content-center items-center gap-2 rounded-sm
+              border-[1px] bg-blue-700 px-5 py-2.5 text-sm font-medium
+              text-white
+              dark:border-red-600 dark:bg-red-800 dark:text-gray-400
+              dark:hover:bg-red-700 dark:focus:ring-blue-800
+              focus:outline-none focus:ring-4 focus:ring-blue-300
+              hover:bg-red-800
+            `}
+          >
+            Reset all profiles
+            <FaTrash />
+          </button>
+        </div>
       </div>
     </Menu>
   );

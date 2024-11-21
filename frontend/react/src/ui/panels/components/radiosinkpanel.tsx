@@ -7,7 +7,7 @@ import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icon
 import { RadioSink } from "../../../audio/radiosink";
 import { getApp } from "../../../olympusapp";
 
-export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey: string; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
+export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKeys: string[]; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -39,22 +39,20 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
             data-expanded={expanded}
           />
         </div>
-        {props.shortcutKey && (
+        {props.shortcutKeys && (
           <>
             <kbd
               className={`
-                my-auto ml-auto rounded-lg border border-gray-200 bg-gray-100
-                px-2 py-1.5 text-xs font-semibold text-gray-800
+                my-auto ml-auto text-nowrap rounded-lg border border-gray-200
+                bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800
                 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
               `}
             >
-              {props.shortcutKey}
+              {props.shortcutKeys.flatMap((key, idx, array) => [key, idx < array.length - 1 ? " + " : ""])}
             </kbd>
           </>
         )}
-        <span className="my-auto w-full">
-          {props.radio.getName()} {!expanded && `: ${props.radio.getFrequency() / 1e6} MHz ${props.radio.getModulation() ? "FM" : "AM"}`} {}{" "}
-        </span>
+        <span className="my-auto w-full">{props.radio.getName()}</span>
         <div
           className={`
             mb-auto ml-auto aspect-square cursor-pointer rounded-md p-2
@@ -89,8 +87,12 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
               className="ml-auto"
               checked={props.radio.getPtt()}
               icon={faMicrophoneLines}
-              onClick={() => {
-                props.radio.setPtt(!props.radio.getPtt());
+              onClick={() => {}}
+              onMouseDown={() => {
+                props.radio.setPtt(true);
+              }}
+              onMouseUp={() => {
+                props.radio.setPtt(false);
               }}
               tooltip="Talk on frequency"
             ></OlStateButton>

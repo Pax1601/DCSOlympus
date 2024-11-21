@@ -6,37 +6,48 @@ import { getApp } from "../../olympusapp";
 import { OlympusState } from "../../constants/constants";
 import { Shortcut } from "../../shortcut/shortcut";
 import { BindShortcutRequestEvent, ShortcutsChangedEvent } from "../../events";
+import { OlToggle } from "../components/oltoggle";
 
 export function KeybindModal(props: { open: boolean }) {
   const [shortcuts, setShortcuts] = useState({} as { [key: string]: Shortcut });
   const [shortcut, setShortcut] = useState(null as null | Shortcut);
   const [code, setCode] = useState(null as null | string);
-  const [shiftKey, setShiftKey] = useState(false);
-  const [ctrlKey, setCtrlKey] = useState(false);
-  const [altKey, setAltKey] = useState(false);
+  const [shiftKey, setShiftKey] = useState(false as boolean | undefined);
+  const [ctrlKey, setCtrlKey] = useState(false as boolean | undefined);
+  const [altKey, setAltKey] = useState(false as boolean | undefined);
 
   useEffect(() => {
     ShortcutsChangedEvent.on((shortcuts) => setShortcuts({ ...shortcuts }));
     BindShortcutRequestEvent.on((shortcut) => setShortcut(shortcut));
 
     document.addEventListener("keydown", (ev) => {
-      setCode(ev.code);
-      if (!(ev.code.indexOf("Shift") >= 0 || ev.code.indexOf("Alt") >= 0 || ev.code.indexOf("Control") >= 0)) {
-        setShiftKey(ev.shiftKey);
-        setAltKey(ev.altKey);
-        setCtrlKey(ev.ctrlKey);
+      if (ev.code) {
+        setCode(ev.code);
       }
     });
   }, []);
 
+  useEffect(() => {
+    setCode(shortcut?.getOptions().code ?? null)
+    setShiftKey(shortcut?.getOptions().shiftKey)
+    setAltKey(shortcut?.getOptions().altKey)
+    setCtrlKey(shortcut?.getOptions().ctrlKey)
+  }, [shortcut])
+
   let available: null | boolean = code ? true : null;
   let inUseShortcut: null | Shortcut = null;
   for (let id in shortcuts) {
-    if (
+    if (id !== shortcut?.getId() && 
       code === shortcuts[id].getOptions().code &&
-      shiftKey === (shortcuts[id].getOptions().shiftKey ?? false) &&
-      altKey === (shortcuts[id].getOptions().altKey ?? false) &&
-      ctrlKey === (shortcuts[id].getOptions().shiftKey ?? false)
+      ((shiftKey === undefined && shortcuts[id].getOptions().shiftKey !== undefined) ||
+        (shiftKey !== undefined && shortcuts[id].getOptions().shiftKey === undefined) ||
+        shiftKey === shortcuts[id].getOptions().shiftKey) && (
+        (altKey === undefined && shortcuts[id].getOptions().altKey !== undefined) ||
+        (altKey !== undefined && shortcuts[id].getOptions().altKey === undefined) ||
+        altKey === shortcuts[id].getOptions().altKey) && (
+        (ctrlKey === undefined && shortcuts[id].getOptions().ctrlKey !== undefined) ||
+        (ctrlKey !== undefined && shortcuts[id].getOptions().ctrlKey === undefined) ||
+        ctrlKey === shortcuts[id].getOptions().ctrlKey)
     ) {
       available = false;
       inUseShortcut = shortcuts[id];
@@ -75,26 +86,66 @@ export function KeybindModal(props: { open: boolean }) {
                   Press the key you want to bind to this event
                 </span>
               </div>
-              <div className="w-full text-center text-white">
-                {ctrlKey ? "Ctrl + " : ""}
-                {shiftKey ? "Shift + " : ""}
-                {altKey ? "Alt + " : ""}
-
-                {code}
+              <div className="w-full text-center text-white">{code}</div>
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <OlToggle
+                    onClick={() => {
+                      if (shiftKey === false) setShiftKey(undefined);
+                      else if (shiftKey === undefined) setShiftKey(true);
+                      else setShiftKey(false);
+                    }}
+                    toggled={shiftKey}
+                  ></OlToggle>
+                  <div className="text-white">
+                    {shiftKey === true && "Shift key must be pressed"}
+                    {shiftKey === undefined && "Shift key can be anything"}
+                    {shiftKey === false && "Shift key must NOT be pressed"}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <OlToggle
+                    onClick={() => {
+                      if (altKey === false) setAltKey(undefined);
+                      else if (altKey === undefined) setAltKey(true);
+                      else setAltKey(false);
+                    }}
+                    toggled={altKey}
+                  ></OlToggle>
+                  <div className="text-white">
+                    {altKey === true && "Alt key must be pressed"}
+                    {altKey === undefined && "Alt key can be anything"}
+                    {altKey === false && "Alt key must NOT be pressed"}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <OlToggle
+                    onClick={() => {
+                      if (ctrlKey === false) setCtrlKey(undefined);
+                      else if (ctrlKey === undefined) setCtrlKey(true);
+                      else setCtrlKey(false);
+                    }}
+                    toggled={ctrlKey}
+                  ></OlToggle>
+                  <div className="text-white">
+                    {ctrlKey === true && "Ctrl key must be pressed"}
+                    {ctrlKey === undefined && "Ctrl key can be anything"}
+                    {ctrlKey === false && "Ctrl key must NOT be pressed"}
+                  </div>
+                </div>
+                
               </div>
               <div className="text-white">
                 {available === true && <div className="text-green-600">Keybind is free!</div>}
                 {available === false && (
                   <div>
-                    Keybind is already in use:{" "}
-                    <span
-                      className={`font-bold text-red-600`}
-                    >
-                      {inUseShortcut?.getOptions().label}
-                    </span>
+                    Keybind is already in use: <span className={`
+                      font-bold text-red-600
+                    `}>{inUseShortcut?.getOptions().label}</span>
                   </div>
                 )}
               </div>
+
               <div className="flex justify-end">
                 {available && shortcut && (
                   <button

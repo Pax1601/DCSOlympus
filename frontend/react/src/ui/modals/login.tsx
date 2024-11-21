@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "./components/modal";
 import { Card } from "./components/card";
 import { ErrorCallout } from "../../ui/components/olcallout";
@@ -7,6 +7,7 @@ import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-s
 import { getApp, VERSION } from "../../olympusapp";
 import { sha256 } from "js-sha256";
 import { BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../../constants/constants";
+import { FaTrash, FaXmark } from "react-icons/fa6";
 
 export function LoginModal(props: {}) {
   // TODO: add warning if not in secure context and some features are disabled
@@ -15,6 +16,11 @@ export function LoginModal(props: {}) {
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [commandMode, setCommandMode] = useState(null as null | string);
+
+  useEffect(() => {
+    /* Set the profile name */
+    getApp().setProfile(profileName);
+  }, [profileName])
 
   function checkPassword(password: string) {
     setCheckingPassword(true);
@@ -44,8 +50,6 @@ export function LoginModal(props: {}) {
     getApp().getServerManager().startUpdate();
     getApp().setState(OlympusState.IDLE);
 
-    /* Set the profile name */
-    getApp().setProfile(profileName);
     /* If no profile exists already with that name, create it from scratch from the defaults */
     if (getApp().getProfile() === null) 
       getApp().saveProfile();
@@ -56,7 +60,7 @@ export function LoginModal(props: {}) {
   return (
     <Modal
       className={`
-        inline-flex h-[75%] max-h-[530px] w-[80%] max-w-[1100px] overflow-y-auto
+        inline-flex h-[75%] max-h-[570px] w-[80%] max-w-[1100px] overflow-y-auto
         scroll-smooth bg-white
         dark:bg-olympus-800
         max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
@@ -236,7 +240,7 @@ export function LoginModal(props: {}) {
                           />
                         </div>
                         <div className="text-xs text-gray-400">
-                          The profile name you choose determines what keybinds/groups/options get loaded and edited. Be careful!
+                        The profile name you choose determines the saved key binds, groups and options you see.
                         </div>
                         <div className="flex">
                           <button
@@ -279,8 +283,8 @@ export function LoginModal(props: {}) {
                 ) : (
                   <>
                     <ErrorCallout
-                      title="Server could not be reached"
-                      description="The Olympus Server at this address could not be reached. Check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used."
+                      title="Server could not be reached or password is incorrect"
+                      description="The Olympus Server at this address could not be reached or the password is incorrect. Check your password. If correct, check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used."
                     ></ErrorCallout>
                     <div className={`text-sm font-medium text-gray-200`}>
                       Still having issues? See our

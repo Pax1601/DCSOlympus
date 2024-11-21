@@ -389,7 +389,7 @@ export class CommandModeOptionsChangedEvent {
 export class AudioSourcesChangedEvent {
   static on(callback: (audioSources: AudioSource[]) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback(ev.detail);
+      callback(ev.detail.audioSources);
     });
   }
 
@@ -403,7 +403,7 @@ export class AudioSourcesChangedEvent {
 export class AudioSinksChangedEvent {
   static on(callback: (audioSinks: AudioSink[]) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback(ev.detail);
+      callback(ev.detail.audioSinks);
     });
   }
 

@@ -8,6 +8,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { FaChevronDown, FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
 import { OlympusState } from "../../constants/constants";
 import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent, MapOptionsChangedEvent } from "../../events";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function UnitControlBar(props: {}) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -111,24 +112,20 @@ export function UnitControlBar(props: {}) {
           {contextAction && (
             <div
               className={`
-                absolute left-[50%] top-16 flex min-w-[300px]
-                translate-x-[calc(-50%+2rem)] items-center gap-2 rounded-md
-                bg-gray-200 p-4
+                absolute left-[50%] top-16 flex translate-x-[calc(-50%+2rem)]
+                items-center gap-2 rounded-md bg-gray-200 p-4
                 dark:bg-olympus-800
               `}
             >
-              <FaInfoCircle
+              <FontAwesomeIcon
+                icon={contextAction.getIcon()}
                 className={`
-                  mr-2 hidden min-w-8 text-sm text-blue-500
+                  mr-2 hidden text-xl text-blue-500
                   md:block
                 `}
               />
               <div
-                className={`
-                  px-2
-                  dark:text-gray-400
-                  md:border-l-[1px] md:px-5
-                `}
+                className={`text-gray-200`}
               >
                 {contextAction.getDescription()}
               </div>

@@ -21,7 +21,6 @@ export type MapOptions = {
   fillSelectedRing: boolean;
   showMinimap: boolean;
   protectDCSUnits: boolean;
-  keepRelativePositions: boolean;
   cameraPluginPort: number;
   cameraPluginRatio: number;
   cameraPluginEnabled: boolean;

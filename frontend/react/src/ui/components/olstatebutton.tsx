@@ -11,6 +11,8 @@ export function OlStateButton(props: {
   icon?: IconProp;
   tooltip: string;
   onClick: () => void;
+  onMouseUp?: () => void;
+  onMouseDown?: () => void;
   children?: JSX.Element | JSX.Element[];
 }) {
   const [hover, setHover] = useState(false);
@@ -36,8 +38,10 @@ export function OlStateButton(props: {
         ref={buttonRef}
         onClick={() => {
           props.onClick();
-          setHover(false);
+          props.onClick ?? setHover(false);
         }}
+        onMouseUp={props.onMouseUp ?? (() => {})}
+        onMouseDown={props.onMouseDown ?? (() => {})}
         data-checked={props.checked}
         type="button"
         className={className}

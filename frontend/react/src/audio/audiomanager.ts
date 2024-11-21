@@ -51,7 +51,9 @@ export class AudioManager {
           keyDownCallback: () => this.getSinks()[idx]?.setPtt(true),
           keyUpCallback: () => this.getSinks()[idx]?.setPtt(false),
           code: key,
-          shiftKey: true
+          shiftKey: true,
+          ctrlKey: false,
+          altKey: false
         });
     });
   }

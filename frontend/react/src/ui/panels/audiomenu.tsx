@@ -11,9 +11,7 @@ import { UnitSinkPanel } from "./components/unitsinkpanel";
 import { UnitSink } from "../../audio/unitsink";
 import { FaMinus, FaVolumeHigh } from "react-icons/fa6";
 import { getRandomColor } from "../../other/utils";
-import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent } from "../../events";
-
-let shortcutKeys = ["Z", "X", "C", "V", "B", "N", "M", "K", "L"];
+import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent, ShortcutsChangedEvent } from "../../events";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [sinks, setSinks] = useState([] as AudioSink[]);
@@ -21,6 +19,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
   const [activeSource, setActiveSource] = useState(null as AudioSource | null);
   const [count, setCount] = useState(0);
+  const [shortcuts, setShortcuts] = useState({})
 
   /* Preallocate 128 references for the source and sink panels. If the number of references changes, React will give an error */
   const sourceRefs = Array(128)
@@ -60,6 +59,8 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
     AudioManagerStateChangedEvent.on(() => {
       setAudioManagerEnabled(getApp().getAudioManager().isRunning());
     });
+
+    ShortcutsChangedEvent.on((shortcuts) => setShortcuts(shortcuts));
   }, []);
 
   /* When the sinks or sources change, use the count state to force a rerender to update the connection lines */
@@ -180,7 +181,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
             if (sink instanceof RadioSink)
               return (
                 <RadioSinkPanel
-                  shortcutKey={shortcutKeys[idx]}
+                  shortcutKeys={shortcuts[`PTT${idx}Active`].toActions()}
                   key={sink.getName()}
                   radio={sink}
                   onExpanded={() => {
@@ -218,7 +219,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
             if (sink instanceof UnitSink)
               return (
                 <UnitSinkPanel
-                  shortcutKey={shortcutKeys[idx]}
+                  shortcutKeys={shortcuts[`PTT${idx}Active`].toActions()}
                   key={sink.getName()}
                   sink={sink}
                   ref={sinkRefs[idx]}

@@ -4,6 +4,7 @@ import { DomUtil } from "leaflet";
 import { DomEvent } from "leaflet";
 import { LatLngBounds } from "leaflet";
 import { Bounds } from "leaflet";
+import { SELECT_TOLERANCE_PX } from "../constants/constants";
 
 export var BoxSelect = Handler.extend({
   initialize: function (map) {
@@ -11,24 +12,15 @@ export var BoxSelect = Handler.extend({
     this._container = map.getContainer();
     this._pane = map.getPanes().overlayPane;
     this._resetStateTimeout = 0;
-    this._forceBoxSelect = false;
     map.on("unload", this._destroy, this);
-
-    document.addEventListener("forceboxselect", (e) => {
-      this._forceBoxSelect = true;
-      const originalEvent = (e as CustomEvent).detail;
-      this._onMouseDown(originalEvent);
-    });
   },
 
   addHooks: function () {
     DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.on(this._container, "forceboxselect", this._onMouseDown, this);
   },
 
   removeHooks: function () {
     DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.off(this._container, "forceboxselect", this._onMouseDown, this);
   },
 
   moved: function () {
@@ -53,8 +45,7 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseDown: function (e: any) {
-    if ((e.which == 1 && e.button == 0 && (e.shiftKey || this._forceBoxSelect)) || (e.type === "touchstart" && this._forceBoxSelect)) {
-      this._map.fire("selectionstart");
+    if (e.which == 1 && e.button == 0) {
       // Clear the deferred resetState if it hasn't executed yet, otherwise it
       // will interrupt the interaction and orphan a box element in the container.
       this._clearDeferredResetState();
@@ -87,14 +78,22 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseMove: function (e: any) {
+    if (e.type === "touchmove") this._point = this._map.mouseEventToContainerPoint(e.touches[0]);
+    else this._point = this._map.mouseEventToContainerPoint(e);
+
+    if (
+      Math.abs(this._startPoint.x - this._point.x) < SELECT_TOLERANCE_PX &&
+      Math.abs(this._startPoint.y - this._point.y) < SELECT_TOLERANCE_PX &&
+      !this._moved
+    )
+      return;
+
     if (!this._moved) {
+      this._map.fire("selectionstart");
       this._moved = true;
       this._box = DomUtil.create("div", "leaflet-zoom-box", this._container);
       DomUtil.addClass(this._container, "leaflet-crosshair");
     }
-
-    if (e.type === "touchmove") this._point = this._map.mouseEventToContainerPoint(e.touches[0]);
-    else this._point = this._map.mouseEventToContainerPoint(e);
 
     var bounds = new Bounds(this._point, this._startPoint),
       size = bounds.getSize();
@@ -114,7 +113,6 @@ export var BoxSelect = Handler.extend({
     DomUtil.enableTextSelection();
     DomUtil.enableImageDrag();
     this._map.dragging.enable();
-    this._forceBoxSelect = false;
 
     DomEvent.off(
       //@ts-ignore

@@ -160,7 +160,6 @@ export class OlympusApp {
     });
 
     this.#shortcutManager.checkShortcuts();
-
   }
 
   getConfig() {
@@ -189,11 +188,53 @@ export class OlympusApp {
             console.log(`Profile ${this.#profileName} saved correctly`);
           } else {
             this.addInfoMessage("Error saving profile");
-            throw new Error("Error saving profile file");
+            throw new Error("Error saving profile");
           }
         }) // Parse the response as JSON
         .catch((error) => console.error(error)); // Handle errors
     }
+  }
+
+  resetProfile() {
+    if (this.#profileName !== null) {
+      const requestOptions = {
+        method: "PUT", // Specify the request method
+        headers: { "Content-Type": "application/json" }, // Specify the content type
+        body: "", // Send the data in JSON format
+      };
+
+      fetch(this.getExpressAddress() + `/resources/profile/reset/${this.#profileName}`, requestOptions)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(`Profile ${this.#profileName} reset correctly`);
+            location.reload()
+          } else {
+            this.addInfoMessage("Error resetting profile");
+            throw new Error("Error resetting profile");
+          }
+        }) // Parse the response as JSON
+        .catch((error) => console.error(error)); // Handle errors
+    }
+  }
+
+  resetAllProfiles() {
+    const requestOptions = {
+      method: "PUT", // Specify the request method
+      headers: { "Content-Type": "application/json" }, // Specify the content type
+      body: "", // Send the data in JSON format
+    };
+
+    fetch(this.getExpressAddress() + `/resources/profile/resetall`, requestOptions)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(`All profiles reset correctly`);
+          location.reload()
+        } else {
+          this.addInfoMessage("Error resetting profiles");
+          throw new Error("Error resetting profiles");
+        }
+      }) // Parse the response as JSON
+      .catch((error) => console.error(error)); // Handle errors
   }
 
   getProfile() {
@@ -208,9 +249,9 @@ export class OlympusApp {
       this.#map?.setOptions(profile.mapOptions);
       this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
       this.addInfoMessage("Profile loaded correctly");
-      console.log(`Profile ${this.#profileName} saved correctly`);
+      console.log(`Profile ${this.#profileName} loaded correctly`);
     } else {
-      this.addInfoMessage("Error loading profile");
+      this.addInfoMessage("Profile not found, creating new profile");
       console.log(`Error loading profile`);
     }
   }

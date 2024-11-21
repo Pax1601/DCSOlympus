@@ -25,6 +25,10 @@ import {
 } from "../ui/components/olicons";
 import { FormationCreationRequestEvent, UnitExplosionRequestEvent } from "../events";
 
+export const SELECT_TOLERANCE_PX = 5;
+export const SHORT_PRESS_MILLISECONDS = 200;
+export const DEBOUNCE_MILLISECONDS = 200;
+
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
 export const LOGS_URI = "logs";
@@ -73,8 +77,8 @@ export enum ERAS_ORDER {
   "Early Cold War",
   "Mid Cold War",
   "Late Cold War",
-  "Modern"
-};
+  "Modern",
+}
 
 export const ROEDescriptions: string[] = [
   "Free (Attack anyone)",
@@ -331,12 +335,11 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   fillSelectedRing: false,
   showMinimap: false,
   protectDCSUnits: true,
-  keepRelativePositions: true,
   cameraPluginPort: 3003,
   cameraPluginRatio: 1,
   cameraPluginEnabled: false,
   cameraPluginMode: "map",
-  tabletMode: false
+  tabletMode: false,
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -473,7 +476,7 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .addDestination(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.MOVE, code: null }
   );
@@ -488,9 +491,9 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .addDestination(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .addDestination(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.MOVE, code: "ControlLeft" }
+    { type: ContextActionType.MOVE, code: "ControlLeft", shiftKey: false }
   );
 
   export const DELETE = new ContextAction(
@@ -505,7 +508,10 @@ export namespace ContextActions {
     {
       executeImmediately: true,
       type: ContextActionType.DELETE,
-      code: "Delete"
+      code: "Delete",
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
     }
   );
 
@@ -523,7 +529,9 @@ export namespace ContextActions {
       executeImmediately: true,
       type: ContextActionType.DELETE,
       code: "Delete",
-      ctrlKey: true
+      ctrlKey: true,
+      shiftKey: false,
+      altKey: false,
     }
   );
 
@@ -536,7 +544,7 @@ export namespace ContextActions {
     (units: Unit[]) => {
       getApp().getMap().centerOnUnit(units[0]);
     },
-    { executeImmediately: true, type: ContextActionType.OTHER, code: "KeyM", altKey: true }
+    { executeImmediately: true, type: ContextActionType.OTHER, code: "KeyM", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const REFUEL = new ContextAction(
@@ -548,7 +556,7 @@ export namespace ContextActions {
     (units: Unit[]) => {
       getApp().getUnitsManager().refuel(units);
     },
-    { executeImmediately: true, type: ContextActionType.ADMIN, code: "KeyV" }
+    { executeImmediately: true, type: ContextActionType.ADMIN, code: "KeyR", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const FOLLOW = new ContextAction(
@@ -566,7 +574,7 @@ export namespace ContextActions {
         );
       }
     },
-    { type: ContextActionType.ADMIN, code: "KeyF" }
+    { type: ContextActionType.ADMIN, code: "KeyF", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const BOMB = new ContextAction(
@@ -579,9 +587,9 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .bombPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .bombPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.ENGAGE, code: "KeyB" }
+    { type: ContextActionType.ENGAGE, code: "KeyB", ctrlKey: false, shiftKey: false }
   );
 
   export const CARPET_BOMB = new ContextAction(
@@ -594,9 +602,9 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .carpetBomb(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .carpetBomb(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.ENGAGE, code: "KeyB", altKey: true }
+    { type: ContextActionType.ENGAGE, code: "KeyC", ctrlKey: false, shiftKey: false }
   );
 
   export const LAND = new ContextAction(
@@ -608,7 +616,7 @@ export namespace ContextActions {
     (units: Unit[], _, targetPosition: LatLng | null) => {
       if (targetPosition) getApp().getUnitsManager().landAt(targetPosition, units);
     },
-    { type: ContextActionType.ADMIN, code: "KeyL" }
+    { type: ContextActionType.ADMIN, code: "KeyL", ctrlKey: false, shiftKey: false }
   );
 
   export const LAND_AT_POINT = new ContextAction(
@@ -621,9 +629,9 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .landAtPoint(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .landAtPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.ADMIN, code: "KeyL", altKey: true }
+    { type: ContextActionType.ADMIN, code: "KeyK", ctrlKey: false, shiftKey: false }
   );
 
   export const GROUP = new ContextAction(
@@ -635,7 +643,7 @@ export namespace ContextActions {
     (units: Unit[], _1, _2) => {
       getApp().getUnitsManager().createGroup(units);
     },
-    { executeImmediately: true, type: ContextActionType.OTHER, code: "KeyG" }
+    { executeImmediately: true, type: ContextActionType.OTHER, code: "KeyG", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const ATTACK = new ContextAction(
@@ -647,7 +655,7 @@ export namespace ContextActions {
     (units: Unit[], targetUnit: Unit | null, _) => {
       if (targetUnit) getApp().getUnitsManager().attackUnit(targetUnit.ID, units);
     },
-    { type: ContextActionType.ENGAGE, code: "KeyZ" }
+    { type: ContextActionType.ENGAGE, code: "KeyZ", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const FIRE_AT_AREA = new ContextAction(
@@ -660,9 +668,9 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .fireAtArea(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .fireAtArea(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.ENGAGE, code: "KeyZ", altKey: true }
+    { type: ContextActionType.ENGAGE, code: "KeyV", ctrlKey: false, shiftKey: false }
   );
 
   export const SIMULATE_FIRE_FIGHT = new ContextAction(
@@ -675,8 +683,8 @@ export namespace ContextActions {
       if (targetPosition)
         getApp()
           .getUnitsManager()
-          .simulateFireFight(targetPosition, getApp().getMap().getOptions().keepRelativePositions, getApp().getMap().getDestinationRotation(), units);
+          .simulateFireFight(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.ADMIN, code: "KeyX" }
+    { type: ContextActionType.ADMIN, code: "KeyX", ctrlKey: false, shiftKey: false }
   );
 }

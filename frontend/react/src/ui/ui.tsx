@@ -24,12 +24,13 @@ import { ProtectionPrompt } from "./modals/protectionprompt";
 import { KeybindModal } from "./modals/keybindmodal";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { JTACMenu } from "./panels/jtacmenu";
-import { AppStateChangedEvent, MapOptionsChangedEvent } from "../events";
+import { AppStateChangedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
 import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
 import { CoordinatesPanel } from "./panels/coordinatespanel";
+import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -105,6 +106,7 @@ export function UI() {
         <MiniMapPanel />
         <ControlsPanel />
         <CoordinatesPanel />
+        <RadiosSummaryPanel />
 
         <UnitControlBar />
         <SideBar />

@@ -112,6 +112,11 @@ export function MapContextMenu(props: {}) {
                             } else if (unit !== null) {
                               contextActionIt.executeCallback(unit, null);
                             }
+                            window.setTimeout(() => {
+                              if (getApp().getSubState() === UnitControlSubState.MAP_CONTEXT_MENU || getApp().getSubState() === UnitControlSubState.UNIT_CONTEXT_MENU) {
+                                getApp().setState(OlympusState.UNIT_CONTROL)
+                              }
+                            }, 200)
                           }
                         }}
                       >
