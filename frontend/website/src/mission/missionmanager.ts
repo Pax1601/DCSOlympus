@@ -121,6 +121,9 @@ export class MissionManager {
                 //commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
                 //commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
             }
+
+            console.log("----- mission data drawings: ", data);
+            
         }
     }
 

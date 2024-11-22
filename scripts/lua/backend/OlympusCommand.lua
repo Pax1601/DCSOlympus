@@ -1,4 +1,4 @@
-local version = "{{OLYMPUS_VERSION_NUMBER}}.{{OLYMPUS_COMMIT_HASH}}"
+local version = "v1.0.4.8b5df691"
 
 local debug = false				-- True enables debug printing using DCS messages
 
@@ -964,6 +964,12 @@ function getUnitDescription(unit)
 	return unit:getDescr()
 end
 
+function Olympus.getDrawings()
+	if mist.DBs.drawingByName ~= nil then
+		return mist.DBs.drawingByName
+	end
+end
+
 -- This function is periodically called to collect the data of all the existing units in the mission to be transmitted to the olympus.dll
 function Olympus.setUnitsData(arg, time)
 	-- Units data
@@ -1258,7 +1264,6 @@ function Olympus.setMissionData(arg, time)
 		bullseyes[i]["longitude"] = bullseyeLongitude
 		bullseyes[i]["coalition"] = Olympus.getCoalitionByCoalitionID(i) 
 	end
-
 	-- Airbases data
 	local base = world.getAirbases()
 	local airbases = {}
@@ -1294,6 +1299,8 @@ function Olympus.setMissionData(arg, time)
 		local coalitionName = Olympus.getCoalitionByCoalitionID(coalition.getCountryCoalition(countryId))
 		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
 	end
+
+	mission.drawings = Olympus.getDrawings()
 
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
