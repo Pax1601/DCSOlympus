@@ -116,6 +116,8 @@ export class MouseInfoPanel extends Panel {
     #listenForCopyableElements() {
         const copyableElements = document.getElementsByClassName('copyable');
 
+        // TODO: copy all the coordinates and elevation instead of copying only lat, lng or elevation.
+
         for (const element of copyableElements) {
             element.addEventListener('contextmenu', (ev) => {
                 if (!ev.target) return;
@@ -134,12 +136,14 @@ export class MouseInfoPanel extends Panel {
 
                 if (!text) return;
 
+                if(!navigator || !navigator.clipboard) return;
+
                 navigator.clipboard.writeText(text)
                     .then(() => {
-                        //console.log('Testo copiato negli appunti!');
+                        // Text copied to clipboard. TODO: add a toast or alert for this event.
                     })
                     .catch(err => {
-                        console.error('Errore nel copiare:', err);
+                        console.error('An error occurred while copying text to clipboard: ', err);
                     });
             });
         }
