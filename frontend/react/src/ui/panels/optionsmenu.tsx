@@ -38,7 +38,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
         `}
       >
         <OlAccordion
-          onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.BINDINGS : Accordion.NONE)}
+          onClick={() => setOpenAccordion(openAccordion !== Accordion.BINDINGS ? Accordion.BINDINGS : Accordion.NONE)}
           open={openAccordion === Accordion.BINDINGS}
           title="Key bindings"
         >
@@ -53,9 +53,10 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
               .map(([id, shortcut]) => {
                 return (
                   <div
+                    key={id}
                     className={`
                       group relative mr-2 flex cursor-pointer select-none
-                      items-center justify-between rounded-sm px-2 py-2 text-sm
+                      items-center justify-between rounded-sm px-2 py-2
                       dark:text-gray-300 dark:hover:bg-olympus-500
                     `}
                     onClick={() => {
@@ -65,39 +66,9 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
                   >
                     <span>{shortcut.getOptions().label}</span>
                     <span className="flex gap-1">
-                      {shortcut.getOptions().altKey ? (
-                        <div className="flex gap-1">
-                          <div className={`text-green-500`}>Alt</div> +{" "}
-                        </div>
-                      ) : shortcut.getOptions().altKey === false ? (
-                        <div className={`flex gap-1`}>
-                          <div className={`text-red-500`}>Alt</div> +{" "}
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      {shortcut.getOptions().ctrlKey ? (
-                        <div className="flex gap-1">
-                          <div className={`text-green-500`}>Shift</div> +{" "}
-                        </div>
-                      ) : shortcut.getOptions().ctrlKey === false ? (
-                        <div className={`flex gap-1`}>
-                          <div className={`text-red-500`}>Shift</div> +{" "}
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      {shortcut.getOptions().shiftKey ? (
-                        <div className="flex gap-1">
-                          <div className={`text-green-500`}>Ctrl</div> +{" "}
-                        </div>
-                      ) : shortcut.getOptions().shiftKey === false ? (
-                        <div className={`flex gap-1`}>
-                          <div className={`text-red-500`}>Ctrl</div> +{" "}
-                        </div>
-                      ) : (
-                        ""
-                      )}
+                      {shortcut.getOptions().ctrlKey && "Ctrl + "}
+                      {shortcut.getOptions().altKey && "Alt + "}
+                      {shortcut.getOptions().shiftKey && "Shift + "}
                       {shortcut.getOptions().code}
                     </span>
                   </div>
@@ -107,7 +78,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
         </OlAccordion>
 
         <OlAccordion
-          onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.MAP_OPTIONS : Accordion.NONE)}
+          onClick={() => setOpenAccordion(openAccordion !== Accordion.MAP_OPTIONS ? Accordion.MAP_OPTIONS : Accordion.NONE)}
           open={openAccordion === Accordion.MAP_OPTIONS}
           title="Map options"
         >
@@ -158,7 +129,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           <div
             className={`
               group flex flex-row gap-4 rounded-md justify-content
-              cursor-pointer p-2 text-sm
+              cursor-pointer p-2
               dark:hover:bg-olympus-400
             `}
             onClick={() => getApp().getMap().setOption("hideUnitsShortRangeRings", !mapOptions.hideUnitsShortRangeRings)}
@@ -166,11 +137,11 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             <OlCheckbox checked={mapOptions.hideUnitsShortRangeRings} onChange={() => {}}></OlCheckbox>
             <span>Hide Short range Rings</span>
           </div>
-          
+
           <div
             className={`
               group flex flex-row gap-4 rounded-md justify-content
-              cursor-pointer p-2 text-sm
+              cursor-pointer p-2
               dark:hover:bg-olympus-400
             `}
             onClick={() => getApp().getMap().setOption("hideGroupMembers", !mapOptions.hideGroupMembers)}
@@ -181,7 +152,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           <div
             className={`
               group flex flex-row gap-4 rounded-md justify-content
-              cursor-pointer p-2 text-sm
+              cursor-pointer p-2
               dark:hover:bg-olympus-400
             `}
             onClick={() => getApp().getMap().setOption("showMinimap", !mapOptions.showMinimap)}
@@ -192,7 +163,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
         </OlAccordion>
 
         <OlAccordion
-          onClick={() => setOpenAccordion(openAccordion === Accordion.NONE ? Accordion.CAMERA_PLUGIN : Accordion.NONE)}
+          onClick={() => setOpenAccordion(openAccordion !== Accordion.CAMERA_PLUGIN ? Accordion.CAMERA_PLUGIN : Accordion.NONE)}
           open={openAccordion === Accordion.CAMERA_PLUGIN}
           title="Camera plugin options"
         >

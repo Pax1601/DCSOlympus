@@ -6,8 +6,7 @@ import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/c
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
-import { NavyUnit } from "../unit/unit";
-import { BullseyesDataChanged, CommandModeOptionsChangedEvent, InfoPopupEvent } from "../events";
+import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChanged, CommandModeOptionsChangedEvent, InfoPopupEvent } from "../events";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -34,7 +33,12 @@ export class MissionManager {
   #spentSpawnPoint: number = 0;
   #coalitions: { red: string[]; blue: string[] } = { red: [], blue: [] };
 
-  constructor() {}
+  constructor() {
+    AppStateChangedEvent.on((state, subState) => {
+      if (this.getSelectedAirbase() !== null) AirbaseSelectedEvent.dispatch(null);
+    })
+
+  }
 
   /** Update location of bullseyes
    *
@@ -207,6 +211,14 @@ export class MissionManager {
 
   getFrameRate() {
     return this.#frameRate;
+  }
+
+  getSelectedAirbase() {
+    const airbase = Object.values(this.#airbases).find((airbase: Airbase | Carrier) => {
+      return airbase.getSelected();
+    });
+
+    return airbase ?? null;
   }
 
   #setcommandModeOptions(commandModeOptions: CommandModeOptions) {

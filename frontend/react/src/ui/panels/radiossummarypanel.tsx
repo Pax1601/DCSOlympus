@@ -32,6 +32,7 @@ export function RadiosSummaryPanel(props: {}) {
                 .map((radioSink, idx) => {
                   return (
                     <OlStateButton
+                      key={idx}
                       checked={radioSink.getPtt()}
                       onClick={() => {}}
                       onMouseDown={() => {
@@ -41,28 +42,23 @@ export function RadiosSummaryPanel(props: {}) {
                         radioSink.setPtt(false);
                       }}
                       tooltip="Click to talk, lights up when receiving"
-                      buttonColor={
-                        radioSink.getReceiving()
-                          ? "white"
-                          : null
-                      }
+                      buttonColor={radioSink.getReceiving() ? "white" : null}
                     >
                       <span className={`font-bold text-gray-200`}>{idx + 1}</span>
                     </OlStateButton>
                   );
                 })}
 
-            {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 && (
-              <FaJetFighter
-                className={`text-xl`}
-              />
-            )}
+            {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 && <FaJetFighter className={`
+              text-xl
+            `} />}
             {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 &&
               audioSinks
                 .filter((audioSinks) => audioSinks instanceof UnitSink)
                 .map((unitSink, idx) => {
                   return (
                     <OlStateButton
+                      key={idx}
                       checked={unitSink.getPtt()}
                       onClick={() => {}}
                       onMouseDown={() => {

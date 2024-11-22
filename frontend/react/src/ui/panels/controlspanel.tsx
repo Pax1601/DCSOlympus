@@ -46,21 +46,14 @@ export function ControlsPanel(props: {}) {
         text: "Select unit",
       },
       {
-        actions: [touch ? faHandPointer : "LMB", "Drag"],
+        actions: ["Shift", "LMB", "Drag"],
         text: "Box selection",
       },
       {
-        actions: [touch ? faHandPointer : "Wheel", "Drag"],
+        actions: [touch ? faHandPointer : "LMB", "Drag"],
         text: "Move map",
       },
     ];
-    if (!touch) {
-      controls.push({
-        actions: ["Shift", "LMB", "Drag"],
-
-        text: "Box selection",
-      });
-    }
 
     if (appState === OlympusState.IDLE) {
       controls = baseControls;

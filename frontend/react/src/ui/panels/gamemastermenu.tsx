@@ -38,20 +38,12 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
             GAME MASTER
           </div>
         )}
-        {commandModeOptions.commandMode === BLUE_COMMANDER && (
-          <div
-            className={`w-full rounded-md bg-blue-600 p-2 text-center font-bold`}
-          >
-            BLUE COMMANDER
-          </div>
-        )}
-        {commandModeOptions.commandMode === RED_COMMANDER && (
-          <div
-            className={`w-full rounded-md bg-red-700 p-2 text-center font-bold`}
-          >
-            RED COMMANDER
-          </div>
-        )}
+        {commandModeOptions.commandMode === BLUE_COMMANDER && <div className={`
+          w-full rounded-md bg-blue-600 p-2 text-center font-bold
+        `}>BLUE COMMANDER</div>}
+        {commandModeOptions.commandMode === RED_COMMANDER && <div className={`
+          w-full rounded-md bg-red-700 p-2 text-center font-bold
+        `}>RED COMMANDER</div>}
         {serverStatus.elapsedTime > currentSetupTime && (
           <div
             className={`
@@ -125,6 +117,7 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
             .map((era) => {
               return (
                 <div
+                  key={era}
                   className={`
                     group flex flex-row rounded-md justify-content
                     cursor-pointer gap-4 p-2
@@ -274,9 +267,12 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
               group flex flex-row rounded-md justify-content gap-4 px-4 py-2
             `}
           >
-            <span className="mr-auto">Elapsed time (seconds)</span> <span className={`
-              w-32 text-center
-            `}>{serverStatus.elapsedTime?.toFixed()}</span>
+            <span className="mr-auto">Elapsed time (seconds)</span>{" "}
+            <span
+              className={`w-32 text-center`}
+            >
+              {serverStatus.elapsedTime?.toFixed()}
+            </span>
           </div>
           {commandModeOptions.commandMode === GAME_MASTER && (
             <button

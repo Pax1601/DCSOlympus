@@ -529,8 +529,8 @@ export namespace ContextActions {
       executeImmediately: true,
       type: ContextActionType.DELETE,
       code: "Delete",
-      ctrlKey: true,
-      shiftKey: false,
+      ctrlKey: false,
+      shiftKey: true,
       altKey: false,
     }
   );
@@ -562,7 +562,7 @@ export namespace ContextActions {
   export const FOLLOW = new ContextAction(
     "follow",
     "Follow unit",
-    "Click on a unit to follow it in formation",
+    "Right-click on a unit to follow it in formation",
     olButtonsContextFollow,
     ContextActionTarget.UNIT,
     (units: Unit[], targetUnit: Unit | null, _) => {
@@ -580,7 +580,7 @@ export namespace ContextActions {
   export const BOMB = new ContextAction(
     "bomb",
     "Precision bomb location",
-    "Click on a point to execute a precision bombing attack",
+    "Right-click on a point to execute a precision bombing attack",
     faLocationCrosshairs,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -595,7 +595,7 @@ export namespace ContextActions {
   export const CARPET_BOMB = new ContextAction(
     "carpet-bomb",
     "Carpet bomb location",
-    "Click on a point to execute a carpet bombing attack",
+    "Right-click on a point to execute a carpet bombing attack",
     faXmarksLines,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -610,7 +610,7 @@ export namespace ContextActions {
   export const LAND = new ContextAction(
     "land",
     "Land",
-    "Click on a point to land at the nearest airbase",
+    "Right-click on a point to land at the nearest airbase",
     faPlaneArrival,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -622,7 +622,7 @@ export namespace ContextActions {
   export const LAND_AT_POINT = new ContextAction(
     "land-at-point",
     "Land at location",
-    "Click on a point to land there",
+    "Right-click on a point to land there",
     olButtonsContextLandAtPoint,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -649,7 +649,7 @@ export namespace ContextActions {
   export const ATTACK = new ContextAction(
     "attack",
     "Attack unit",
-    "Click on a unit to attack it",
+    "Right-click on a unit to attack it",
     olButtonsContextAttack,
     ContextActionTarget.UNIT,
     (units: Unit[], targetUnit: Unit | null, _) => {
@@ -661,7 +661,7 @@ export namespace ContextActions {
   export const FIRE_AT_AREA = new ContextAction(
     "fire-at-area",
     "Fire at area",
-    "Click on a point to precisely fire at it (if possible)",
+    "Right-click on a point to precisely fire at it (if possible)",
     faLocationCrosshairs,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {

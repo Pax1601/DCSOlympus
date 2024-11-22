@@ -1,4 +1,4 @@
-import { ShortcutChangedEvent, ShortcutsChangedEvent } from "../events";
+import { ShortcutsChangedEvent } from "../events";
 import { ShortcutOptions } from "../interfaces";
 import { Shortcut } from "./shortcut";
 

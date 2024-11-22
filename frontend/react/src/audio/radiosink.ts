@@ -13,7 +13,7 @@ export class RadioSink extends AudioSink {
   #frequency = 251000000;
   #modulation = 0;
   #ptt = false;
-  #tuned = false;
+  #tuned = true;
   #volume = 0.5;
   #receiving = false;
   #clearReceivingTimeout: number;

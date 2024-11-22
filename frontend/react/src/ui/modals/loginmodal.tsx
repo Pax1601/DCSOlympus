@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "./components/modal";
 import { Card } from "./components/card";
-import { ErrorCallout } from "../../ui/components/olcallout";
+import { ErrorCallout } from "../components/olcallout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { getApp, VERSION } from "../../olympusapp";
 import { sha256 } from "js-sha256";
 import { BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../../constants/constants";
-import { FaTrash, FaXmark } from "react-icons/fa6";
 
-export function LoginModal(props: {}) {
+export function LoginModal(props: { open: boolean }) {
   // TODO: add warning if not in secure context and some features are disabled
   const [password, setPassword] = useState("");
-  const [profileName, setProfileName] = useState("Game Master");
+  const [profileName, setProfileName] = useState("");
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [commandMode, setCommandMode] = useState(null as null | string);
 
   useEffect(() => {
     /* Set the profile name */
-    getApp().setProfile(profileName);
-  }, [profileName])
+    if (profileName !== "") getApp().setProfile(profileName);
+  }, [profileName]);
 
   function checkPassword(password: string) {
     setCheckingPassword(true);
@@ -51,14 +50,14 @@ export function LoginModal(props: {}) {
     getApp().setState(OlympusState.IDLE);
 
     /* If no profile exists already with that name, create it from scratch from the defaults */
-    if (getApp().getProfile() === null) 
-      getApp().saveProfile();
+    if (getApp().getProfile() === null) getApp().saveProfile();
     /* Load the profile */
     getApp().loadProfile();
   }
 
   return (
     <Modal
+      open={props.open}
       className={`
         inline-flex h-[75%] max-h-[570px] w-[80%] max-w-[1100px] overflow-y-auto
         scroll-smooth bg-white
@@ -239,9 +238,7 @@ export function LoginModal(props: {}) {
                             required
                           />
                         </div>
-                        <div className="text-xs text-gray-400">
-                        The profile name you choose determines the saved key binds, groups and options you see.
-                        </div>
+                        <div className="text-xs text-gray-400">The profile name you choose determines the saved key binds, groups and options you see.</div>
                         <div className="flex">
                           <button
                             type="button"

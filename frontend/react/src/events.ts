@@ -137,6 +137,19 @@ export class BindShortcutRequestEvent {
   }
 }
 
+export class ModalEvent {
+  static on(callback: (modal: boolean) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.modal);
+    });
+  }
+
+  static dispatch(modal: boolean) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { modal } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 /************** Map events ***************/
 export class HiddenTypesChangedEvent {
   static on(callback: (hiddenTypes: MapHiddenTypes) => void) {

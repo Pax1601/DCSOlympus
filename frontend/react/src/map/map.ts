@@ -43,7 +43,6 @@ import { ExplosionMarker } from "./markers/explosionmarker";
 import { TextMarker } from "./markers/textmarker";
 import { TargetMarker } from "./markers/targetmarker";
 import {
-  AirbaseSelectedEvent,
   AppStateChangedEvent,
   CoalitionAreaSelectedEvent,
   ConfigLoadedEvent,
@@ -114,6 +113,7 @@ export class Map extends L.Map {
   #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
   #previousZoom: number = 0;
   #keepRelativePositions: boolean = false;
+  #enableSelection: boolean = false;
 
   /* Camera control plugin */
   #slaveDCSCamera: boolean = false;
@@ -358,6 +358,14 @@ export class Map extends L.Map {
         keyDownCallback: () => this.setKeepRelativePositions(true),
         code: "AltLeft",
         shiftKey: false,
+        ctrlKey: false,
+      })
+      .addShortcut("toggleEnableSelection", {
+        label: "Toggle box selection",
+        keyUpCallback: () => this.setEnableSelection(false),
+        keyDownCallback: () => this.setEnableSelection(true),
+        code: "ShiftLeft",
+        altKey: false,
         ctrlKey: false,
       })
       .addShortcut("increaseCameraZoom", {
@@ -725,6 +733,14 @@ export class Map extends L.Map {
     return this.#keepRelativePositions;
   }
 
+  setEnableSelection(enableSelection: boolean) {
+    this.#enableSelection = enableSelection;
+  }
+
+  getEnableSelection() {
+    return this.#enableSelection;
+  }
+
   increaseCameraZoom() {
     //const slider = document.querySelector(`label[title="${DCS_LINK_RATIO}"] input`);
     //if (slider instanceof HTMLInputElement) {
@@ -769,7 +785,6 @@ export class Map extends L.Map {
     this.#currentEffectMarker = null;
     if (state !== OlympusState.UNIT_CONTROL) getApp().getUnitsManager().deselectAllUnits();
     if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) this.deselectAllCoalitionAreas();
-    AirbaseSelectedEvent.dispatch(null);
 
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {

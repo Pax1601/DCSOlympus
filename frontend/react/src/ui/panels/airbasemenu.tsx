@@ -114,7 +114,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
             <div className="flex flex-col gap-2">
               {airbase?.getChartData().runways.map((runway, idx) => {
                 return (
-                  <>
+                  <div key={idx}>
                     {Object.keys(runway.headings[0]).map((runwayName) => {
                       return (
                         <div key={`${idx}-${runwayName}`} className={`
@@ -137,7 +137,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                         </div>
                       );
                     })}
-                  </>
+                  </div>
                 );
               })}
             </div>

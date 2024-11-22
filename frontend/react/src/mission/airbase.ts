@@ -1,4 +1,4 @@
-import { DivIcon } from "leaflet";
+import { DivIcon, DomEvent } from "leaflet";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 import { AirbaseChartData, AirbaseOptions } from "../interfaces";
@@ -29,20 +29,28 @@ export class Airbase extends CustomMarker {
 
     AppStateChangedEvent.on((state, subState) => {
       const element = this.getElement();
-      if (element)
-        element.style.pointerEvents = (state === OlympusState.IDLE || state === OlympusState.AIRBASE)? "all": "none";
-    })
+      if (element) element.style.pointerEvents = state === OlympusState.IDLE || state === OlympusState.AIRBASE ? "all" : "none";
+    });
 
     AirbaseSelectedEvent.on((airbase) => {
-      this.#selected = airbase == this;
+      this.#selected = (airbase === this);
       if (this.getElement()?.querySelector(".airbase-icon"))
         (this.getElement()?.querySelector(".airbase-icon") as HTMLElement).dataset.selected = `${this.#selected}`;
-    })
+    });
 
-    this.addEventListener("click", (ev) => {
+    this.addEventListener("mousedown", (ev) => {
       if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.AIRBASE) {
-        getApp().setState(OlympusState.AIRBASE)
-        AirbaseSelectedEvent.dispatch(this)
+        DomEvent.stop(ev);
+        ev.originalEvent.stopImmediatePropagation();
+      }
+    });
+
+    this.addEventListener("mouseup", (ev) => {
+      if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.AIRBASE) {
+        DomEvent.stop(ev);
+        ev.originalEvent.stopImmediatePropagation();
+        getApp().setState(OlympusState.AIRBASE);
+        AirbaseSelectedEvent.dispatch(this);
       }
     });
   }
@@ -109,5 +117,9 @@ export class Airbase extends CustomMarker {
 
   getImg() {
     return this.#img;
+  }
+
+  getSelected() {
+    return this.#selected;
   }
 }

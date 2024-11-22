@@ -5,9 +5,10 @@ import { DomEvent } from "leaflet";
 import { LatLngBounds } from "leaflet";
 import { Bounds } from "leaflet";
 import { SELECT_TOLERANCE_PX } from "../constants/constants";
+import { Map } from "./map";
 
 export var BoxSelect = Handler.extend({
-  initialize: function (map) {
+  initialize: function (map: Map) {
     this._map = map;
     this._container = map.getContainer();
     this._pane = map.getPanes().overlayPane;
@@ -45,13 +46,12 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseDown: function (e: any) {
-    if (e.which == 1 && e.button == 0) {
+    if (this._map.getEnableSelection() && e.button == 0) {
       // Clear the deferred resetState if it hasn't executed yet, otherwise it
       // will interrupt the interaction and orphan a box element in the container.
       this._clearDeferredResetState();
       this._resetState();
 
-      DomUtil.disableTextSelection();
       DomUtil.disableImageDrag();
       this._map.dragging.disable();
 
@@ -65,16 +65,32 @@ export var BoxSelect = Handler.extend({
           contextmenu: DomEvent.stop,
           touchmove: this._onMouseMove,
           touchend: this._onMouseUp,
-          touchstart: this._onKeyDown,
           mousemove: this._onMouseMove,
-          mouseup: this._onMouseUp,
-          keydown: this._onKeyDown,
+          mouseup: this._onMouseUp
         },
         this
       );
     } else {
       return false;
     }
+  },
+
+  _onMouseUp: function (e: any) {
+    if (e.button !== 0) {
+      return;
+    }
+
+    this._finish();
+
+    if (!this._moved) {
+      return;
+    }
+    // Postpone to next JS tick so internal click event handling
+    // still see it as "moved".
+    window.setTimeout(Util.bind(this._resetState, this), 0);
+    var bounds = new LatLngBounds(this._map.containerPointToLatLng(this._startPoint), this._map.containerPointToLatLng(this._point));
+
+    this._map.fire("selectionend", { selectionBounds: bounds });
   },
 
   _onMouseMove: function (e: any) {
@@ -110,7 +126,6 @@ export var BoxSelect = Handler.extend({
       DomUtil.removeClass(this._container, "leaflet-crosshair");
     }
 
-    DomUtil.enableTextSelection();
     DomUtil.enableImageDrag();
     this._map.dragging.enable();
 
@@ -121,38 +136,10 @@ export var BoxSelect = Handler.extend({
         contextmenu: DomEvent.stop,
         touchmove: this._onMouseMove,
         touchend: this._onMouseUp,
-        touchstart: this._onKeyDown,
         mousemove: this._onMouseMove,
         mouseup: this._onMouseUp,
-        keydown: this._onKeyDown,
       },
       this
     );
-  },
-
-  _onMouseUp: function (e: any) {
-    if (e.which !== 1 && e.button !== 0 && e.type !== "touchend") {
-      return;
-    }
-
-    this._finish();
-
-    if (!this._moved) {
-      return;
-    }
-    // Postpone to next JS tick so internal click event handling
-    // still see it as "moved".
-    window.setTimeout(Util.bind(this._resetState, this), 0);
-    var bounds = new LatLngBounds(this._map.containerPointToLatLng(this._startPoint), this._map.containerPointToLatLng(this._point));
-
-    this._map.fire("selectionend", { selectionBounds: bounds });
-  },
-
-  _onKeyDown: function (e: any) {
-    if (e.keyCode === 27) {
-      this._finish();
-      this._clearDeferredResetState();
-      this._resetState();
-    }
   },
 });

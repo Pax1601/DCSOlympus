@@ -15,12 +15,11 @@ export function InfoBar(props: {}) {
   }, []);
 
   return (
-    <div
-      className={`absolute left-[50%] top-16`}
-    >
+    <div className={`absolute left-[50%] top-16`}>
       {messages.slice(Math.max(0, messages.length - 4), Math.max(0, messages.length)).map((message, idx) => {
         return (
           <div
+            key={idx}
             className={`
               absolute w-fit translate-x-[-50%] gap-2 text-nowrap rounded-full
               bg-olympus-800/90 px-4 py-2 text-center text-sm text-white

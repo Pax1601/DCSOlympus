@@ -17,6 +17,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlStringInput } from "../components/olstringinput";
 import { countryCodes } from "../data/codes";
 import { OlAccordion } from "../components/olaccordion";
+import { AppStateChangedEvent } from "../../events";
 
 export function UnitSpawnMenu(props: {
   starredSpawns: { [key: string]: SpawnRequestTable };
@@ -32,6 +33,7 @@ export function UnitSpawnMenu(props: {
   const altitudeStep = altitudeIncrements[props.blueprint.category];
 
   /* State initialization */
+  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
   const [spawnNumber, setSpawnNumber] = useState(1);
   const [spawnRole, setSpawnRole] = useState("");
@@ -46,9 +48,14 @@ export function UnitSpawnMenu(props: {
   const [key, setKey] = useState("");
   const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
 
-  /* When the menu is opened show the unit preview on the map as a cursor */
   useEffect(() => {
-    if (!props.airbase && spawnRequestTable) {
+    setAppState(getApp()?.getState())
+    AppStateChangedEvent.on((state, subState) => setAppState(state));
+  }, []);
+
+  /* When the menu is opened show the unit preview on the map as a cursor */
+  const setSpawnRequestTableCallback = useCallback(() => {
+    if (!props.airbase && spawnRequestTable && appState === OlympusState.SPAWN) {
       /* Refresh the unique key identified */
       const newKey = hash(JSON.stringify(spawnRequestTable));
       setKey(newKey);
@@ -56,7 +63,9 @@ export function UnitSpawnMenu(props: {
       getApp()?.getMap()?.setSpawnRequestTable(spawnRequestTable);
       getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT);
     }
-  }, [spawnRequestTable]);
+  }, [spawnRequestTable, appState]);
+
+  useEffect(setSpawnRequestTableCallback, [spawnRequestTable]);
 
   /* Callback and effect to update the quick access name of the starredSpawn */
   const updateStarredSpawnQuickAccessNameS = useCallback(() => {
@@ -231,6 +240,7 @@ export function UnitSpawnMenu(props: {
                 {roles.map((role) => {
                   return (
                     <OlDropdownItem
+                      key={role}
                       onClick={() => {
                         setSpawnRole(role);
                         setSpawnLoadout("");
@@ -256,6 +266,7 @@ export function UnitSpawnMenu(props: {
                 {loadouts.map((loadout) => {
                   return (
                     <OlDropdownItem
+                      key={loadout.name}
                       onClick={() => {
                         setSpawnLoadout(loadout.name);
                       }}
@@ -285,10 +296,9 @@ export function UnitSpawnMenu(props: {
           >
             Livery
           </span>
-          <OlDropdown
-            label={props.blueprint.liveries ? (props.blueprint.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"}
-            className={`w-64`}
-          >
+          <OlDropdown label={props.blueprint.liveries ? (props.blueprint.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"} className={`
+            w-64
+          `}>
             {props.blueprint.liveries &&
               Object.keys(props.blueprint.liveries)
                 .sort((ida, idb) => {
@@ -303,6 +313,7 @@ export function UnitSpawnMenu(props: {
                   });
                   return (
                     <OlDropdownItem
+                      key={id}
                       onClick={() => {
                         setSpawnLiveryID(id);
                       }}
@@ -315,9 +326,10 @@ export function UnitSpawnMenu(props: {
                         `}
                       >
                         {props.blueprint.liveries && props.blueprint.liveries[id].countries.length == 1 && (
-                          <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
-                            h-6
-                          `} />
+                          <img
+                            src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
+                            className={`h-6`}
+                          />
                         )}
 
                         <div className="my-auto truncate">
@@ -348,6 +360,7 @@ export function UnitSpawnMenu(props: {
             {["Average", "Good", "High", "Excellent"].map((skill) => {
               return (
                 <OlDropdownItem
+                  key={skill}
                   onClick={() => {
                     setSpawnSkill(skill);
                   }}
@@ -383,7 +396,7 @@ export function UnitSpawnMenu(props: {
           >
             {spawnLoadout.items.map((item) => {
               return (
-                <div className="flex content-center gap-2">
+                <div className="flex content-center gap-2" key={item.name}>
                   <div
                     className={`
                       my-auto w-6 min-w-6 rounded-full py-0.5 text-center
@@ -421,7 +434,13 @@ export function UnitSpawnMenu(props: {
             if (spawnRequestTable)
               getApp()
                 .getUnitsManager()
-                .spawnUnits(spawnRequestTable.category, Array(spawnRequestTable.amount).fill(spawnRequestTable.unit), spawnRequestTable.coalition, false, props.airbase?.getName());
+                .spawnUnits(
+                  spawnRequestTable.category,
+                  Array(spawnRequestTable.amount).fill(spawnRequestTable.unit),
+                  spawnRequestTable.coalition,
+                  false,
+                  props.airbase?.getName()
+                );
           }}
         >
           Spawn

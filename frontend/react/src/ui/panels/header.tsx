@@ -211,7 +211,7 @@ export function Header() {
         </div>
 
         <OlLabelToggle
-          toggled={mapOptions.cameraPluginMode === "live"}
+          toggled={mapOptions.cameraPluginMode === "map"}
           leftLabel={"Live"}
           rightLabel={"Map"}
           onClick={() => {

@@ -199,7 +199,7 @@ export class AudioManager {
 
   addRadio() {
     console.log("Adding new radio");
-    if (!this.#running) {
+    if (!this.#running || this.#sources[0] === undefined) {
       console.log("Audio manager not started, aborting...");
       return;
     }

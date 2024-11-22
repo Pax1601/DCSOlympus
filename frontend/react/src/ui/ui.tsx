@@ -10,7 +10,7 @@ import { OptionsMenu } from "./panels/optionsmenu";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
-import { LoginModal } from "./modals/login";
+import { LoginModal } from "./modals/loginmodal";
 
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitControlBar } from "./panels/unitcontrolbar";
@@ -20,7 +20,7 @@ import { MapContextMenu } from "./contextmenus/mapcontextmenu";
 import { AirbaseMenu } from "./panels/airbasemenu";
 import { AudioMenu } from "./panels/audiomenu";
 import { FormationMenu } from "./panels/formationmenu";
-import { ProtectionPrompt } from "./modals/protectionprompt";
+import { ProtectionPromptModal } from "./modals/protectionpromptmodal";
 import { KeybindModal } from "./modals/keybindmodal";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { JTACMenu } from "./panels/jtacmenu";
@@ -65,16 +65,8 @@ export function UI() {
     >
       <Header />
       <div className="flex h-full w-full flex-row-reverse">
-        {appState === OlympusState.LOGIN && (
-          <>
-            <div className={`
-              fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95
-            `}></div>
-            <LoginModal />
-          </>
-        )}
-
-        <ProtectionPrompt open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
+        <LoginModal open={appState === OlympusState.LOGIN} />
+        <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
         <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
 
         <div id="map-container" className="z-0 h-full w-screen" />

@@ -19,7 +19,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
   const [activeSource, setActiveSource] = useState(null as AudioSource | null);
   const [count, setCount] = useState(0);
-  const [shortcuts, setShortcuts] = useState({})
+  const [shortcuts, setShortcuts] = useState({});
 
   /* Preallocate 128 references for the source and sink panels. If the number of references changes, React will give an error */
   const sourceRefs = Array(128)
@@ -251,20 +251,19 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
                   right: (end as HTMLDivElement).offsetLeft + (end as HTMLDivElement).clientWidth,
                 };
                 return (
-                  <>
-                    <div
-                      className={`
-                        absolute rounded-br-md rounded-tr-md border-2 border-l-0
-                      `}
-                      style={{
-                        top: `${(startRect.bottom + startRect.top) / 2}px`,
-                        left: `${startRect.right}px`,
-                        height: `${endRect.top - startRect.top + (endRect.height - startRect.height) / 2}px`,
-                        width: `${(lineCounters[idx] - 1) * lineDistance + 30}px`,
-                        borderColor: lineColors[idx],
-                      }}
-                    ></div>
-                  </>
+                  <div
+                    key={idx}
+                    className={`
+                      absolute rounded-br-md rounded-tr-md border-2 border-l-0
+                    `}
+                    style={{
+                      top: `${(startRect.bottom + startRect.top) / 2}px`,
+                      left: `${startRect.right}px`,
+                      height: `${endRect.top - startRect.top + (endRect.height - startRect.height) / 2}px`,
+                      width: `${(lineCounters[idx] - 1) * lineDistance + 30}px`,
+                      borderColor: lineColors[idx],
+                    }}
+                  />
                 );
               }
             })
@@ -281,29 +280,26 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
                 right: (div as HTMLDivElement).offsetLeft + (div as HTMLDivElement).clientWidth,
               };
               return (
-                <>
-                  <div>
-                    <div
-                      data-active={activeSource === sources[idx]}
-                      className={`
-                        absolute translate-y-[-50%] cursor-pointer rounded-full
-                        bg-blue-600 p-1 text-xs text-white
-                        data-[active='true']:bg-white
-                        data-[active='true']:text-blue-600
-                        hover:bg-blue-800
-                      `}
-                      style={{
-                        top: `${(divRect.bottom + divRect.top) / 2}px`,
-                        left: `${divRect.right - 10}px`,
-                      }}
-                      onClick={() => {
-                        activeSource !== sources[idx] ? setActiveSource(sources[idx]) : setActiveSource(null);
-                      }}
-                    >
-                      <FaPlus></FaPlus>
-                    </div>
-                  </div>
-                </>
+                <div
+                  key={idx}
+                  data-active={activeSource === sources[idx]}
+                  className={`
+                    absolute translate-y-[-50%] cursor-pointer rounded-full
+                    bg-blue-600 p-1 text-xs text-white
+                    data-[active='true']:bg-white
+                    data-[active='true']:text-blue-600
+                    hover:bg-blue-800
+                  `}
+                  style={{
+                    top: `${(divRect.bottom + divRect.top) / 2}px`,
+                    left: `${divRect.right - 10}px`,
+                  }}
+                  onClick={() => {
+                    activeSource !== sources[idx] ? setActiveSource(sources[idx]) : setActiveSource(null);
+                  }}
+                >
+                  <FaPlus></FaPlus>
+                </div>
               );
             }
           })}
@@ -318,28 +314,25 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
                   right: (div as HTMLDivElement).offsetLeft + (div as HTMLDivElement).clientWidth,
                 };
                 return (
-                  <>
-                    <div>
-                      <div
-                        className={`
-                          absolute translate-y-[-50%] cursor-pointer
-                          rounded-full bg-blue-600 p-1 text-xs text-white
-                          hover:bg-blue-800
-                        `}
-                        style={{
-                          top: `${(divRect.bottom + divRect.top) / 2}px`,
-                          left: `${divRect.right - 10}px`,
-                        }}
-                        onClick={() => {
-                          if (activeSource.getConnectedTo().includes(sinks[idx])) activeSource.disconnect(sinks[idx]);
-                          else activeSource.connect(sinks[idx]);
-                        }}
-                      >
-                        {" "}
-                        {activeSource.getConnectedTo().includes(sinks[idx]) ? <FaMinus></FaMinus> : <FaPlus></FaPlus>}
-                      </div>
-                    </div>
-                  </>
+                  <div
+                    key={idx}
+                    className={`
+                      absolute translate-y-[-50%] cursor-pointer rounded-full
+                      bg-blue-600 p-1 text-xs text-white
+                      hover:bg-blue-800
+                    `}
+                    style={{
+                      top: `${(divRect.bottom + divRect.top) / 2}px`,
+                      left: `${divRect.right - 10}px`,
+                    }}
+                    onClick={() => {
+                      if (activeSource.getConnectedTo().includes(sinks[idx])) activeSource.disconnect(sinks[idx]);
+                      else activeSource.connect(sinks[idx]);
+                    }}
+                  >
+                    {" "}
+                    {activeSource.getConnectedTo().includes(sinks[idx]) ? <FaMinus></FaMinus> : <FaPlus></FaPlus>}
+                  </div>
                 );
               }
             })}
