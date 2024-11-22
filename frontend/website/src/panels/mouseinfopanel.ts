@@ -186,8 +186,8 @@ export class MouseInfoPanel extends Panel {
             this.#drawCoordinates("ref-mouse-position-utm-northing", "mouse-position-utm-northing", "N"+utm.northing);
             this.#drawCoordinates("ref-mouse-position-utm-easting", "mouse-position-utm-easting", "E"+utm.easting);
         } else if (this.#getLocationSystem() === "LatLngDec") {
-            this.#drawCoordinates("ref-mouse-position-latitude-dec", "mouse-position-latitude-dec", decCoordsString.split(" ")[0]);
-            this.#drawCoordinates("ref-mouse-position-longitude-dec", "mouse-position-longitude-dec", decCoordsString.split(" ")[1]);
+            this.#drawCoordinates("ref-mouse-position-latitude-dec", "mouse-position-latitude-dec", decCoordsString.split(" ")[0] + "'");
+            this.#drawCoordinates("ref-mouse-position-longitude-dec", "mouse-position-longitude-dec", decCoordsString.split(" ")[1] + "'");
         }
         else {
             this.#drawCoordinates("ref-mouse-position-latitude", "mouse-position-latitude", coordString.split(" ")[0]);
@@ -208,8 +208,8 @@ export class MouseInfoPanel extends Panel {
                 this.#drawCoordinates("ref-unit-position-utm-northing", "unit-position-utm-northing", "N" + utm.northing);
                 this.#drawCoordinates("ref-unit-position-utm-easting", "unit-position-utm-easting", "E" + utm.easting);
             } else if (this.#getLocationSystem() === "LatLngDec") {
-                this.#drawCoordinates("ref-unit-position-latitude-dec", "unit-position-latitude-dec", decCoordsString.split(" ")[0]);
-                this.#drawCoordinates("ref-unit-position-longitude-dec", "unit-position-longitude-dec", decCoordsString.split(" ")[1]);
+                this.#drawCoordinates("ref-unit-position-latitude-dec", "unit-position-latitude-dec", decCoordsString.split(" ")[0] + "'");
+                this.#drawCoordinates("ref-unit-position-longitude-dec", "unit-position-longitude-dec", decCoordsString.split(" ")[1] + "'");
             } else {
                 this.#drawCoordinates("ref-unit-position-latitude", "unit-position-latitude", unitCoordString.split(" ")[0]);
                 this.#drawCoordinates("ref-unit-position-longitude", "unit-position-longitude", unitCoordString.split(" ")[1]);
