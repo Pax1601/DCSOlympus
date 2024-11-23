@@ -100,6 +100,7 @@
   font-weight: var(--unit-font-weight);
   line-height: normal;
   position: absolute;
+  font-size: 12px;
 }
 
 [data-object|="unit-groundunit"] .unit-short-label {
@@ -397,4 +398,54 @@
 
 .ol-temporary-marker {
   opacity: 0.5;
+}
+
+/*** Unit summary ***/
+[data-object|="unit"] .unit-tactical {
+  color: white;
+  column-gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  font-weight: bold;
+  justify-content: left;
+  line-height: 12px;
+  pointer-events: none;
+  position: absolute;
+  row-gap: 1px;
+  
+  left: 100%;
+  width: fit-content;
+}
+
+[data-hide-bullseyes] [data-object|="unit"] .unit-bullseyes {
+  display: none;
+}
+
+[data-hide-BRAA] [data-object|="unit"] .unit-braa {
+  display: none;
+}
+
+[data-object|="unit"] .unit-blue-bullseye {
+  text-shadow:
+    -1px -1px 0 #00F,
+    1px -1px 0 #00F,
+    -1px 1px 0 #00F,
+    1px 1px 0 #00F;
+}
+
+[data-object|="unit"] .unit-red-bullseye {
+  text-shadow:
+    -1px -1px 0 #F00,
+    1px -1px 0 #F00,
+    -1px 1px 0 #F00,
+    1px 1px 0 #F00;
+}
+
+[data-object|="unit"] .unit-braa {
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
 }

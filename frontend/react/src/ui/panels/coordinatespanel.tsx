@@ -28,9 +28,9 @@ export function CoordinatesPanel(props: {}) {
   return (
     <div
       className={`
-        absolute bottom-[20px] right-[310px] flex w-[380px] flex-col
-        items-center justify-between gap-2 rounded-lg bg-gray-200 p-3 text-sm
-        backdrop-blur-lg backdrop-grayscale
+        absolute bottom-[20px] right-[310px] flex min-h-12 w-[380px] flex-col
+        items-center justify-between gap-2 rounded-lg bg-gray-200 px-3 py-3
+        text-sm backdrop-blur-lg backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
       `}
     >

@@ -12,6 +12,7 @@ import {
   faPlaneArrival,
   faRoute,
   faTrash,
+  faWifi,
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
 import { Unit } from "../unit/unit";
@@ -260,7 +261,14 @@ export const mapBounds = {
 };
 
 export const defaultMapMirrors = {};
-export const defaultMapLayers = {};
+export const defaultMapLayers = {
+  "AWACS": {
+				"urlTemplate": 'https://abcd.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+				"minZoom": 1,
+				"maxZoom": 19,
+				"attribution": `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'`
+			},
+};
 
 export enum OlympusState {
   NOT_INITIALIZED = "Not initialized",
@@ -272,6 +280,7 @@ export enum OlympusState {
   SPAWN_CONTEXT = "Spawn context",
   DRAW = "Draw",
   JTAC = "JTAC",
+  AWACS = "AWACS",
   OPTIONS = "Options",
   AUDIO = "Audio",
   AIRBASE = "Airbase",
@@ -340,6 +349,9 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   cameraPluginEnabled: false,
   cameraPluginMode: "map",
   tabletMode: false,
+  showUnitBullseyes: false,
+  showUnitBRAA: false,
+  AWACSMode: false
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -459,7 +471,6 @@ export namespace ContextActions {
       getApp().getUnitsManager().stop(units);
     },
     {
-      executeImmediately: true,
       type: ContextActionType.MOVE,
       code: "Space",
     }
@@ -506,7 +517,6 @@ export namespace ContextActions {
       getApp().getUnitsManager().delete(false);
     },
     {
-      executeImmediately: true,
       type: ContextActionType.DELETE,
       code: "Delete",
       ctrlKey: false,
@@ -526,7 +536,6 @@ export namespace ContextActions {
       UnitExplosionRequestEvent.dispatch(units);
     },
     {
-      executeImmediately: true,
       type: ContextActionType.DELETE,
       code: "Delete",
       ctrlKey: false,
@@ -544,7 +553,7 @@ export namespace ContextActions {
     (units: Unit[]) => {
       getApp().getMap().centerOnUnit(units[0]);
     },
-    { executeImmediately: true, type: ContextActionType.OTHER, code: "KeyM", ctrlKey: false, shiftKey: false, altKey: false }
+    { type: ContextActionType.OTHER, code: "KeyM", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const REFUEL = new ContextAction(
@@ -556,7 +565,7 @@ export namespace ContextActions {
     (units: Unit[]) => {
       getApp().getUnitsManager().refuel(units);
     },
-    { executeImmediately: true, type: ContextActionType.ADMIN, code: "KeyR", ctrlKey: false, shiftKey: false, altKey: false }
+    { type: ContextActionType.ADMIN, code: "KeyR", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const FOLLOW = new ContextAction(
@@ -643,7 +652,7 @@ export namespace ContextActions {
     (units: Unit[], _1, _2) => {
       getApp().getUnitsManager().createGroup(units);
     },
-    { executeImmediately: true, type: ContextActionType.OTHER, code: "KeyG", ctrlKey: false, shiftKey: false, altKey: false }
+    {  type: ContextActionType.OTHER, code: "KeyG", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const ATTACK = new ContextAction(
@@ -686,5 +695,17 @@ export namespace ContextActions {
           .simulateFireFight(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ADMIN, code: "KeyX", ctrlKey: false, shiftKey: false }
+  );
+
+  export const SET_AWACS_REFERENCE = new ContextAction(
+    "set-awacs-reference",
+    "Set AWACS reference",
+    "Set unit as AWACS reference",
+    faWifi,
+    ContextActionTarget.NONE,
+    (units: Unit[], _1, _2) => {
+      getApp().getUnitsManager().setAWACSReference(units[0].ID);
+    },
+    {  type: ContextActionType.ADMIN, code: "KeyU", ctrlKey: false, shiftKey: false, altKey: false }
   );
 }

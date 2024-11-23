@@ -21,7 +21,7 @@ export class ContextActionSet {
   }
 
   getContextActions(targetFilter?: ContextActionTarget) {
-    if (targetFilter) {
+    if (targetFilter !== undefined) {
       var filteredContextActionSet = new ContextActionSet();
       Object.keys(this.#contextActions).forEach((key) => {
         if (this.#contextActions[key].getTarget() === targetFilter) filteredContextActionSet[key] = this.#contextActions[key];

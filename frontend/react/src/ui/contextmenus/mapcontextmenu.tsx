@@ -10,6 +10,7 @@ import {
   ContextActionChangedEvent,
   ContextActionSetChangedEvent,
   MapContextMenuRequestEvent,
+  SelectedUnitsChangedEvent,
   SelectionClearedEvent,
   UnitContextMenuRequestEvent,
 } from "../../events";
@@ -24,6 +25,7 @@ export function MapContextMenu(props: {}) {
   const [yPosition, setYPosition] = useState(0);
   const [latLng, setLatLng] = useState(null as null | LatLng);
   const [unit, setUnit] = useState(null as null | Unit);
+  const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
 
   var contentRef = useRef(null);
 
@@ -45,6 +47,7 @@ export function MapContextMenu(props: {}) {
       setXPosition(getApp().getMap().getContainer().offsetLeft + containerPoint.x);
       setYPosition(getApp().getMap().getContainer().offsetTop + containerPoint.y);
     });
+    SelectedUnitsChangedEvent.on((selectedUnits) => setSelectedUnits([...selectedUnits]));
   }, []);
 
   useEffect(() => {
@@ -70,7 +73,13 @@ export function MapContextMenu(props: {}) {
 
   let reorderedActions: ContextAction[] = contextActionSet
     ? Object.values(
-        contextActionSet.getContextActions(appSubState === UnitControlSubState.MAP_CONTEXT_MENU ? ContextActionTarget.POINT : ContextActionTarget.UNIT)
+        contextActionSet.getContextActions(
+          selectedUnits.length === 1 && unit === selectedUnits[0]
+            ? ContextActionTarget.NONE
+            : appSubState === UnitControlSubState.MAP_CONTEXT_MENU
+              ? ContextActionTarget.POINT
+              : ContextActionTarget.UNIT
+        )
       ).sort((a: ContextAction, b: ContextAction) => (a.getOptions().type < b.getOptions().type ? -1 : 1))
     : [];
 
@@ -104,7 +113,7 @@ export function MapContextMenu(props: {}) {
                           ${colorString}
                         `}
                         onClick={() => {
-                          if (contextActionIt.getOptions().executeImmediately) {
+                          if (contextActionIt.getTarget() === ContextActionTarget.NONE) {
                             contextActionIt.executeCallback(null, null);
                           } else {
                             if (appSubState === UnitControlSubState.MAP_CONTEXT_MENU) {
@@ -113,10 +122,13 @@ export function MapContextMenu(props: {}) {
                               contextActionIt.executeCallback(unit, null);
                             }
                             window.setTimeout(() => {
-                              if (getApp().getSubState() === UnitControlSubState.MAP_CONTEXT_MENU || getApp().getSubState() === UnitControlSubState.UNIT_CONTEXT_MENU) {
-                                getApp().setState(OlympusState.UNIT_CONTROL)
+                              if (
+                                getApp().getSubState() === UnitControlSubState.MAP_CONTEXT_MENU ||
+                                getApp().getSubState() === UnitControlSubState.UNIT_CONTEXT_MENU
+                              ) {
+                                getApp().setState(OlympusState.UNIT_CONTROL);
                               }
-                            }, 200)
+                            }, 200);
                           }
                         }}
                       >

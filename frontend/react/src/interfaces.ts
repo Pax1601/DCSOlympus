@@ -130,6 +130,8 @@ export interface ObjectIconOptions {
   showSummary: boolean;
   showCallsign: boolean;
   rotateToHeading: boolean;
+  showBullseyes: boolean;
+  showBRAA: boolean;
 }
 
 export interface GeneralSettings {

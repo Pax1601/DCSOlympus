@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { AppStateChangedEvent, ContextActionChangedEvent, HotgroupsChangedEvent, InfoPopupEvent } from "../../events";
+import { AppStateChangedEvent, HotgroupsChangedEvent } from "../../events";
 import { OlympusState } from "../../constants/constants";
-import { ContextAction } from "../../unit/contextaction";
 import { OlStateButton } from "../components/olstatebutton";
-import { faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../olympusapp";
+import { Unit } from "../../unit/unit";
 
 export function HotGroupBar(props: {}) {
-  const [hotgroups, setHotgroups] = useState({} as { [key: number]: number });
+  const [hotgroups, setHotgroups] = useState({} as { [key: number]: Unit[] });
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
-  const [menuHidden, setMenuHidden] = useState(false);
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => setAppState(state));
@@ -18,14 +16,11 @@ export function HotGroupBar(props: {}) {
 
   return (
     <div
-      data-menuhidden={menuHidden || appState === OlympusState.IDLE}
       className={`
-        absolute bottom-16 left-[50%] flex gap-2
-        data-[menuhidden='false']:translate-x-[calc(200px-50%+2rem)]
-        data-[menuhidden='true']:translate-x-[calc(-50%+2rem)]
+        absolute bottom-24 left-[50%] flex translate-x-[calc(-50%+2rem)] gap-2
       `}
     >
-      {Object.entries(hotgroups).map(([hotgroup, counter]) => {
+      {Object.entries(hotgroups).map(([hotgroup, units]) => {
         return (
           <div className="flex flex-col content-center gap-2">
             <div
@@ -37,11 +32,13 @@ export function HotGroupBar(props: {}) {
               <div className="relative -rotate-45">{hotgroup}</div>
             </div>
 
-            <OlStateButton checked={false} onClick={() => {getApp().getUnitsManager().selectUnitsByHotgroup(parseInt(hotgroup))}} tooltip="">
+            <OlStateButton checked={false} onClick={() => {getApp().getUnitsManager().selectUnitsByHotgroup(parseInt(hotgroup))}} tooltip="Select units of this hotgroup" className={`
+              min-h-12 min-w-12
+            `}>
               <span
-                className={`text-sm text-white`}
+                className={`text-white`}
               >
-                {counter}
+                {units.length}
               </span>
             </OlStateButton>
           </div>

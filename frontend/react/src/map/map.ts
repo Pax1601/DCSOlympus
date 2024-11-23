@@ -207,7 +207,7 @@ export class Map extends L.Map {
     /* Custom touch events for touchscreen support */
     L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
     L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
-    L.DomEvent.on(this.getContainer(), 'wheel', this.#onMouseWheel, this);
+    L.DomEvent.on(this.getContainer(), "wheel", this.#onMouseWheel, this);
 
     /* Event listeners */
     AppStateChangedEvent.on((state, subState) => this.#onStateChanged(state, subState));
@@ -227,6 +227,8 @@ export class Map extends L.Map {
 
     MapOptionsChangedEvent.on((options: MapOptions) => {
       this.getContainer().toggleAttribute("data-hide-labels", !options.showUnitLabels);
+      this.getContainer().toggleAttribute("data-hide-bullseyes", !options.showUnitBullseyes);
+      this.getContainer().toggleAttribute("data-hide-BRAA", !options.showUnitBRAA);
       this.#cameraControlPort = options.cameraPluginPort;
       this.#cameraZoomRatio = 50 / (20 + options.cameraPluginRatio);
       this.#slaveDCSCamera = options.cameraPluginEnabled;
@@ -400,7 +402,7 @@ export class Map extends L.Map {
               const contextActionSet = this.getContextActionSet();
               if (this.getContextAction() === null || contextAction !== this.getContextAction()) {
                 if (getApp().getState() === OlympusState.UNIT_CONTROL && contextActionSet && contextAction.getId() in contextActionSet.getContextActions()) {
-                  if (contextAction.getOptions().executeImmediately) contextAction.executeCallback(null, null);
+                  if (contextAction.getTarget() === ContextActionTarget.NONE) contextAction.executeCallback(null, null);
                   else this.setContextAction(contextAction);
                 }
               } else {

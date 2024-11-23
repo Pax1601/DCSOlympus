@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown, faA } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../olympusapp";
 import { NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
 import { AppStateChangedEvent } from "../../events";
@@ -65,13 +65,21 @@ export function SideBar() {
             icon={faVolumeHigh}
             tooltip="Hide/show audio menu"
           ></OlStateButton>
-          <OlStateButton
+          {/*}<OlStateButton
             onClick={() => {
               getApp().setState(appState !== OlympusState.JTAC ? OlympusState.JTAC : OlympusState.IDLE);
             }}
             checked={appState === OlympusState.JTAC}
             icon={faJ}
             tooltip="Hide/show JTAC menu"
+          ></OlStateButton>{*/}
+          <OlStateButton
+            onClick={() => {
+              getApp().setState(appState !== OlympusState.AWACS ? OlympusState.AWACS : OlympusState.IDLE);
+            }}
+            checked={appState === OlympusState.AWACS}
+            icon={faA}
+            tooltip="Hide/show AWACS menu"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {

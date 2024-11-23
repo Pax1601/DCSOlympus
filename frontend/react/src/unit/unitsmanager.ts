@@ -23,6 +23,7 @@ import { UnitDataFileImport } from "./importexport/unitdatafileimport";
 import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
 import { ContextActionSet } from "./contextactionset";
 import {
+  AWACSReferenceChangedEvent,
   CommandModeOptionsChangedEvent,
   ContactsUpdatedEvent,
   HotgroupsChangedEvent,
@@ -49,6 +50,7 @@ export class UnitsManager {
   #unitDataImport!: UnitDataFileImport;
   #unitDatabase: UnitDatabase;
   #protectionCallback: (units: Unit[]) => void = (units) => {};
+  #AWACSReference: Unit | null = null;
 
   constructor() {
     this.#unitDatabase = new UnitDatabase();
@@ -1125,15 +1127,15 @@ export class UnitsManager {
     units.forEach((unit: Unit) => unit.setHotgroup(hotgroup));
     this.#showActionMessage(units, `added to hotgroup ${hotgroup}`);
 
-    let hotgroups: { [key: number]: number } = {};
+    let hotgroups: { [key: number]: Unit[] } = {};
     for (let ID in this.#units) {
       const unit = this.#units[ID];
       if (unit.getAlive() && !unit.getHuman()) {
         const hotgroup = unit.getHotgroup();
         if (hotgroup) {
           if (!(hotgroup in hotgroups)) {
-            hotgroups[hotgroup] = 1;
-          } else hotgroups[hotgroup] += 1;
+            hotgroups[hotgroup] = [unit];
+          } else hotgroups[hotgroup].push(unit);
         }
       }
     }
@@ -1542,6 +1544,15 @@ export class UnitsManager {
 
   executeProtectionCallback() {
     this.#protectionCallback(this.getSelectedUnits());
+  }
+
+  setAWACSReference(ID) {
+    this.#AWACSReference = this.#units[ID] ?? null;
+    AWACSReferenceChangedEvent.dispatch(this.#AWACSReference)
+  }
+
+  getAWACSReference() {
+    return this.#AWACSReference;
   }
 
   /***********************************************/

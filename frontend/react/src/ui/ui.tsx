@@ -31,6 +31,7 @@ import { HotGroupBar } from "./panels/hotgroupsbar";
 import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
 import { CoordinatesPanel } from "./panels/coordinatespanel";
 import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
+import { AWACSMenu } from "./panels/awacsmenu";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -93,7 +94,8 @@ export function UI() {
           open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
           onClose={() => getApp().setState(OlympusState.IDLE)}
         />
-        <JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />{*/}
+        <AWACSMenu open={appState === OlympusState.AWACS} onClose={() => getApp().setState(OlympusState.IDLE)} />
 
         <MiniMapPanel />
         <ControlsPanel />

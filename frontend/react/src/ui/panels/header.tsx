@@ -35,7 +35,8 @@ export function Header() {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
     MapSourceChangedEvent.on((source) => setMapSource(source));
     ConfigLoadedEvent.on((config: OlympusConfig) => {
-      var sources = Object.keys(config.frontend.mapMirrors).concat(Object.keys(config.frontend.mapLayers));
+      
+      var sources = Object.keys(config.frontend.mapMirrors).concat(Object.keys(config.frontend.mapLayers)).concat(getApp().getMap().getLayers());
       setMapSources(sources);
     });
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {

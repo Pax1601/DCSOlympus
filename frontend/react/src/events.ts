@@ -151,6 +151,19 @@ export class ModalEvent {
 }
 
 /************** Map events ***************/
+export class MouseMovedEvent {
+  static on(callback: (latlng: LatLng, elevation: number) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.latlng, ev.detail.elevation);
+    });
+  }
+
+  static dispatch(latlng: LatLng, elevation?: number) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { latlng, elevation } }));
+    // Logging disabled since periodic
+  }
+}
+
 export class HiddenTypesChangedEvent {
   static on(callback: (hiddenTypes: MapHiddenTypes) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
@@ -346,13 +359,13 @@ export class SpawnContextMenuRequestEvent {
 }
 
 export class HotgroupsChangedEvent {
-  static on(callback: (hotgroups: { [key: number]: number }) => void) {
+  static on(callback: (hotgroups: { [key: number]: Unit[] }) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.hotgroups);
     });
   }
 
-  static dispatch(hotgroups: { [key: number]: number }) {
+  static dispatch(hotgroups: { [key: number]: Unit[] }) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { hotgroups } }));
     console.log(`Event ${this.name} dispatched`);
   }
@@ -371,15 +384,15 @@ export class StarredSpawnsChangedEvent {
   }
 }
 
-export class MouseMovedEvent {
-  static on(callback: (latlng: LatLng, elevation: number) => void) {
+export class AWACSReferenceChangedEvent {
+  static on(callback: (unit: Unit | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
-      callback(ev.detail.latlng, ev.detail.elevation);
+      callback(ev.detail);
     });
   }
 
-  static dispatch(latlng: LatLng, elevation?: number) {
-    document.dispatchEvent(new CustomEvent(this.name, { detail: { latlng, elevation } }));
+  static dispatch(unit: Unit | null) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: unit }));
     // Logging disabled since periodic
   }
 }
@@ -461,7 +474,7 @@ export class BullseyesDataChanged {
     });
   }
 
-  static dispatch(bullseyes: { [name: string]: Bullseye } ) {
+  static dispatch(bullseyes: { [name: string]: Bullseye }) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { bullseyes } }));
     // Logging disabled since periodic
   }

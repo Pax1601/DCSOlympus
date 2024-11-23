@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AudioSinksChangedEvent } from "../../events";
 import { AudioSink } from "../../audio/audiosink";
 import { RadioSink } from "../../audio/radiosink";
-import { FaJetFighter, FaRadio } from "react-icons/fa6";
+import { FaJetFighter, FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlStateButton } from "../components/olstatebutton";
 import { UnitSink } from "../../audio/unitsink";
 
@@ -19,13 +19,12 @@ export function RadiosSummaryPanel(props: {}) {
         <div
           className={`
             absolute bottom-[20px] right-[700px] flex w-fit flex-col
-            items-center justify-between gap-2 rounded-lg bg-gray-200 p-3
-            text-sm backdrop-blur-lg backdrop-grayscale
-            dark:bg-olympus-800/90 dark:text-gray-200
+            items-center justify-between gap-2 rounded-lg bg-transparent text-sm
+            text-gray-200
           `}
         >
           <div className="flex w-full items-center justify-between gap-2">
-            <FaRadio className="text-xl" />
+            
             {audioSinks.filter((audioSinks) => audioSinks instanceof RadioSink).length > 0 &&
               audioSinks
                 .filter((audioSinks) => audioSinks instanceof RadioSink)
@@ -43,15 +42,14 @@ export function RadiosSummaryPanel(props: {}) {
                       }}
                       tooltip="Click to talk, lights up when receiving"
                       buttonColor={radioSink.getReceiving() ? "white" : null}
+                      className="min-h-12 min-w-12"
                     >
-                      <span className={`font-bold text-gray-200`}>{idx + 1}</span>
+                      <span className={`text-gray-200`}><FaRadio className={`
+                        -translate-x-2 translate-y-1
+                      `} /> <div className="translate-x-2 font-bold">{idx + 1}</div></span>
                     </OlStateButton>
                   );
                 })}
-
-            {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 && <FaJetFighter className={`
-              text-xl
-            `} />}
             {audioSinks.filter((audioSinks) => audioSinks instanceof UnitSink).length > 0 &&
               audioSinks
                 .filter((audioSinks) => audioSinks instanceof UnitSink)
@@ -68,8 +66,11 @@ export function RadiosSummaryPanel(props: {}) {
                         unitSink.setPtt(false);
                       }}
                       tooltip="Click to talk"
+                      className="min-h-12 min-w-12"
                     >
-                      <span className={`font-bold text-gray-200`}>{idx + 1}</span>
+                      <span className={`text-gray-200`}><FaVolumeHigh className={`
+                        -translate-x-2 translate-y-1
+                      `} /> <div className="translate-x-2 font-bold">{idx + 1}</div></span>
                     </OlStateButton>
                   );
                 })}

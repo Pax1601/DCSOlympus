@@ -4,7 +4,6 @@ import { LatLng } from "leaflet";
 import { ContextActionTarget, ContextActionType } from "../constants/constants";
 
 export interface ContextActionOptions {
-  executeImmediately?: boolean;
   type: ContextActionType;
   code: string | null;
   shiftKey?: boolean;
@@ -32,7 +31,6 @@ export class ContextAction {
     this.#callback = callback;
     this.#icon = icon;
     this.#options = {
-      executeImmediately: false,
       ...options,
     };
   }

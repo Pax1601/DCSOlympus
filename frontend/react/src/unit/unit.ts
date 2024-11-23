@@ -969,6 +969,27 @@ export abstract class Unit extends CustomMarker {
       el.appendChild(summary);
     }
 
+    var tactical = document.createElement("div");
+    tactical.classList.add("unit-tactical");
+    if (iconOptions.showBullseyes) {
+      var bullseyes = document.createElement("div");
+      bullseyes.classList.add("unit-bullseyes");
+      var blueBullseye = document.createElement("div");
+      blueBullseye.classList.add("unit-blue-bullseye");
+      var redBullseye = document.createElement("div");
+      redBullseye.classList.add("unit-red-bullseye");
+      bullseyes.appendChild(blueBullseye);
+      bullseyes.appendChild(redBullseye);
+      tactical.appendChild(bullseyes);
+    }
+
+    if (iconOptions.showBRAA) {
+      var BRAA = document.createElement("div");
+      BRAA.classList.add("unit-braa");
+      tactical.appendChild(BRAA);
+    }
+    el.appendChild(tactical)
+
     this.getElement()?.appendChild(el);
   }
 
@@ -1490,6 +1511,21 @@ export abstract class Unit extends CustomMarker {
           const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
           if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
         }
+
+        /* Set bullseyes positions */
+        const bullseyes = getApp().getMissionManager().getBullseyes();
+        const blueBullseye = `${bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, this.getLatLng().lat, this.getLatLng().lng).toFixed()}/${(bullseyes[2].getLatLng().distanceTo(this.getLatLng()) / 1852).toFixed(0)}`
+        const redBullseye = `${bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, this.getLatLng().lat, this.getLatLng().lng).toFixed()}/${(bullseyes[1].getLatLng().distanceTo(this.getLatLng()) / 1852).toFixed(0)}`
+        if (element.querySelector(".unit-blue-bullseye")) (<HTMLElement>element.querySelector(".unit-blue-bullseye")).innerText = `${blueBullseye}`;
+        if (element.querySelector(".unit-red-bullseye")) (<HTMLElement>element.querySelector(".unit-red-bullseye")).innerText = `${redBullseye}`;
+
+        /* Set BRAA */
+        const reference = getApp().getUnitsManager().getAWACSReference();
+        if (reference && reference !== this) {
+          const BRAA = `${bearing(reference.getLatLng().lat, reference.getLatLng().lng, this.getLatLng().lat, this.getLatLng().lng).toFixed()}/${(reference.getLatLng().distanceTo(this.getLatLng()) / 1852).toFixed(0)}`
+          if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = `${BRAA}`;
+        }
+        else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
       }
 
       /* Set vertical offset for altitude stacking */
@@ -1770,7 +1806,9 @@ export abstract class AirUnit extends Unit {
       showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showCallsign: belongsToCommandedCoalition,
       rotateToHeading: false,
-    };
+      showBullseyes: true,
+      showBRAA: true,
+    } as ObjectIconOptions;
   }
 
   appendContextActions(contextActionSet: ContextActionSet) {
@@ -1783,6 +1821,7 @@ export abstract class AirUnit extends Unit {
     /* Context actions that require a target unit */
     contextActionSet.addContextAction(this, ContextActions.ATTACK);
     contextActionSet.addContextAction(this, ContextActions.FOLLOW);
+    contextActionSet.addContextAction(this, ContextActions.SET_AWACS_REFERENCE)
 
     if (this.canTargetPoint()) {
       /* Context actions that require a target position */
@@ -1858,7 +1897,9 @@ export class GroundUnit extends Unit {
       showSummary: false,
       showCallsign: belongsToCommandedCoalition,
       rotateToHeading: false,
-    };
+      showBullseyes: false,
+      showBRAA: false,
+    } as ObjectIconOptions;
   }
 
   appendContextActions(contextActionSet: ContextActionSet) {
@@ -1927,7 +1968,9 @@ export class NavyUnit extends Unit {
       showSummary: false,
       showCallsign: belongsToCommandedCoalition,
       rotateToHeading: false,
-    };
+      showBullseyes: false,
+      showBRAA: false,
+    } as ObjectIconOptions;
   }
 
   appendContextActions(contextActionSet: ContextActionSet) {

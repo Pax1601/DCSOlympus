@@ -3,9 +3,8 @@ import { ContextActionSet } from "../../unit/contextactionset";
 import { OlStateButton } from "../components/olstatebutton";
 import { getApp } from "../../olympusapp";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION_COLORS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
-import { FaInfoCircle } from "react-icons/fa";
-import { FaChevronDown, FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
+import { CONTEXT_ACTION_COLORS, ContextActionTarget, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
+import { FaChevronDown,FaChevronUp } from "react-icons/fa6";
 import { OlympusState } from "../../constants/constants";
 import { AppStateChangedEvent, ContextActionChangedEvent, ContextActionSetChangedEvent, MapOptionsChangedEvent } from "../../events";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -83,7 +82,7 @@ export function UnitControlBar(props: {}) {
                           tooltip={contextActionIt.getLabel()}
                           buttonColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type ?? 0]}
                           onClick={() => {
-                            if (contextActionIt.getOptions().executeImmediately) {
+                            if (contextActionIt.getTarget() === ContextActionTarget.NONE) {
                               contextActionIt.executeCallback(null, null);
                             } else {
                               contextActionIt !== contextAction

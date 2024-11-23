@@ -58,7 +58,7 @@ export function MiniMapPanel(props: {}) {
         ${mapOptions.showMinimap ? `bottom-[188px]` : `bottom-[20px]`}
         flex w-[288px] items-center justify-between
         ${mapOptions.showMinimap ? `rounded-t-lg` : `rounded-lg`}
-        bg-gray-200 p-3 text-sm backdrop-blur-lg backdrop-grayscale
+        h-12 bg-gray-200 px-3 text-sm backdrop-blur-lg backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
       `}
     >

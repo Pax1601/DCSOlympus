@@ -12,7 +12,6 @@ import {
   emissionsCountermeasures,
   maxAltitudeValues,
   maxSpeedValues,
-  minAltitudeValues,
   reactionsToThreat,
   speedIncrements,
 } from "../../constants/constants";
