@@ -5,10 +5,12 @@ import { Unit } from "../unit/unit";
 import { Panel } from "./panel";
 import formatcoords from "formatcoords";
 import { MGRS_PRECISION_100M, MGRS_PRECISION_10KM, MGRS_PRECISION_10M, MGRS_PRECISION_1KM, MGRS_PRECISION_1M } from "../constants/constants";
+import { log } from "console";
 
 export class MouseInfoPanel extends Panel {
     #coordinatesElement:HTMLElement;
-    #locationSystems = [ "LatLng", "MGRS", "UTM" ];
+    #unitCoordinatesElement:HTMLElement;
+    #locationSystems = [ "LatLng", "MGRS", "UTM", "LatLngDec" ];
     #measureMarker: Marker;
     #measurePoint: LatLng | null = null;
     #measureIcon: Icon;
@@ -18,6 +20,8 @@ export class MouseInfoPanel extends Panel {
     #selectedMGRSPrecisionIndex = 3;
     #selectedLocationSystemIndex = 0;
     #elevationRequest: XMLHttpRequest | null = null;
+    #updateInterval: any = null; 
+    
 
     constructor(ID: string) {
         super( ID );
@@ -34,8 +38,20 @@ export class MouseInfoPanel extends Panel {
         getApp().getMap()?.on('mousemove', (e: any) => this.#onMouseMove(e));
         getApp().getMap()?.on('drag', (e: any) => this.#onMouseMove(e));
 
-        document.addEventListener('unitsSelection', (e: CustomEvent<Unit[]>) => this.#update());
-        document.addEventListener('clearSelection', () => this.#update());
+        document.addEventListener('unitsSelection', (e: CustomEvent<Unit[]>) => {
+            /* Let's update selected unit coordinates every second, useful for moving units */
+            this.#updateInterval = setInterval(() => {
+                var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
+                if (selectedUnits && selectedUnits.length == 1) {
+                    this.#update()
+                }
+            }, 1000);
+            this.#update()
+        });
+        document.addEventListener('clearSelection', () => {
+            clearInterval(this.#updateInterval)
+            this.#update()
+        });
 
         this.#coordinatesElement = <HTMLElement>this.getElement().querySelector( '#coordinates-tool' );
 
@@ -73,15 +89,82 @@ export class MouseInfoPanel extends Panel {
             },
             "code": "Period"
         });
+
+        /* Selected unit coordinates panel interaction */
+        this.#unitCoordinatesElement = <HTMLElement>this.getElement().querySelector( '#unit-coordinates' );
+
+        this.#unitCoordinatesElement.addEventListener( "click", ( ev:MouseEvent ) => {
+            this.#changeLocationSystem();
+        });
+
+        const unitCoordsToggleEl = <HTMLElement>this.getElement().querySelector('#unit-coordinates-toggle');
+        const unitCoordsContainer = <HTMLElement>this.getElement().querySelector('#unit-coordinates-container');
+        unitCoordsToggleEl.addEventListener("click", (ev: MouseEvent) => {
+            if (unitCoordsContainer.getAttribute('data-open') === 'true') {
+                unitCoordsContainer.setAttribute('data-open', 'false');
+            } else {
+                unitCoordsContainer.setAttribute('data-open', 'true');
+            }
+        });
+
+       
+
+        /* Let's make coordinates copy-able */
+        this.#listenForCopyableElements();
+    }
+
+    #listenForCopyableElements() {
+        const copyableElements = document.getElementsByClassName('copyable');
+
+        // TODO: copy all the coordinates and elevation instead of copying only lat, lng or elevation.
+
+        for (const element of copyableElements) {
+            element.addEventListener('contextmenu', (ev) => {
+                if (!ev.target) return;
+
+                const el = ev.target as HTMLElement;
+
+                let text = null;
+
+                if (el.innerText !== "") {
+                    text = el.innerText;
+                }
+
+                if (el.getAttribute('data-value')) {
+                    text = el.getAttribute('data-value');
+                }
+
+                if (!text) return;
+
+                if(!navigator || !navigator.clipboard) return;
+
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        // Text copied to clipboard. TODO: add a toast or alert for this event.
+                    })
+                    .catch(err => {
+                        console.error('An error occurred while copying text to clipboard: ', err);
+                    });
+            });
+        }
     }
 
     #update() {
         const mousePosition = getApp().getMap().getMouseCoordinates();
 
-        var selectedUnitPosition = null;
+        let selectedUnitPosition = null;
+        let selectedUnitElevation = null;
+        
         var selectedUnits = getApp().getUnitsManager().getSelectedUnits();
-        if (selectedUnits && selectedUnits.length == 1)
+        if (selectedUnits && selectedUnits.length == 1) {
+            this.getElement().querySelector(`#unit-coordinates-container`)?.classList.remove('hide');
             selectedUnitPosition = new LatLng(selectedUnits[0].getPosition().lat, selectedUnits[0].getPosition().lng);
+            selectedUnitElevation = selectedUnits[0].getPosition().alt;
+        } else {
+            selectedUnitPosition = null;
+            selectedUnitElevation = null;
+            this.getElement().querySelector(`#unit-coordinates-container`)?.classList.add('hide');
+        }
 
         /* Draw measures from selected unit, from pin location, and from bullseyes */
         this.#drawMeasure("ref-measure-position", "measure-position", this.#measurePoint, mousePosition);
@@ -97,6 +180,7 @@ export class MouseInfoPanel extends Panel {
         /* Draw coordinates */
         var coords = formatcoords(mousePosition.lat, mousePosition.lng);
         var coordString = coords.format('XDDMMss', {decimalPlaces: 4});
+        let decCoordsString = coords.format('XDDm', {decimalPlaces: 3});
 
         if ( this.#getLocationSystem() === "MGRS" ) {
             const mgrs = <MGRS>latLngToMGRS( mousePosition.lat, mousePosition.lng, this.#MGRSPrecisions[ this.#selectedMGRSPrecisionIndex ] );
@@ -105,9 +189,49 @@ export class MouseInfoPanel extends Panel {
             const utm = latLngToUTM( mousePosition.lat, mousePosition.lng );
             this.#drawCoordinates("ref-mouse-position-utm-northing", "mouse-position-utm-northing", "N"+utm.northing);
             this.#drawCoordinates("ref-mouse-position-utm-easting", "mouse-position-utm-easting", "E"+utm.easting);
-        } else {
+        } else if (this.#getLocationSystem() === "LatLngDec") {
+            this.#drawCoordinates("ref-mouse-position-latitude-dec", "mouse-position-latitude-dec", decCoordsString.split(" ")[0] + "'");
+            this.#drawCoordinates("ref-mouse-position-longitude-dec", "mouse-position-longitude-dec", decCoordsString.split(" ")[1] + "'");
+        }
+        else {
             this.#drawCoordinates("ref-mouse-position-latitude", "mouse-position-latitude", coordString.split(" ")[0]);
             this.#drawCoordinates("ref-mouse-position-longitude", "mouse-position-longitude", coordString.split(" ")[1]);
+        }
+
+        /* Draw selected unit coordinates */
+        if (selectedUnitPosition) {
+            var unitCoords = formatcoords(selectedUnitPosition.lat, selectedUnitPosition.lng);
+            var unitCoordString = unitCoords.format('XDDMMss', { decimalPlaces: 4 });
+            let decCoordsString = unitCoords.format('XDDm', { decimalPlaces: 3 });
+
+            if (this.#getLocationSystem() === "MGRS") {
+                const mgrs = <MGRS>latLngToMGRS(selectedUnitPosition.lat, selectedUnitPosition.lng, this.#MGRSPrecisions[this.#selectedMGRSPrecisionIndex]);
+                this.#drawCoordinates("ref-unit-position-mgrs", "unit-position-mgrs", "M" + mgrs.groups.join(" "));
+            } else if (this.#getLocationSystem() === "UTM") {
+                const utm = latLngToUTM(selectedUnitPosition.lat, selectedUnitPosition.lng);
+                this.#drawCoordinates("ref-unit-position-utm-northing", "unit-position-utm-northing", "N" + utm.northing);
+                this.#drawCoordinates("ref-unit-position-utm-easting", "unit-position-utm-easting", "E" + utm.easting);
+            } else if (this.#getLocationSystem() === "LatLngDec") {
+                this.#drawCoordinates("ref-unit-position-latitude-dec", "unit-position-latitude-dec", decCoordsString.split(" ")[0] + "'");
+                this.#drawCoordinates("ref-unit-position-longitude-dec", "unit-position-longitude-dec", decCoordsString.split(" ")[1] + "'");
+            } else {
+                this.#drawCoordinates("ref-unit-position-latitude", "unit-position-latitude", unitCoordString.split(" ")[0]);
+                this.#drawCoordinates("ref-unit-position-longitude", "unit-position-longitude", unitCoordString.split(" ")[1]);
+            }
+
+            const unitElevationElement = this.getElement().querySelector(`#unit-position-elevation`) as HTMLElement;
+            let displayedHeight = "0";
+
+            switch (selectedUnits[0].getCategory()) {
+                case 'Aircraft':
+                    displayedHeight = "FL" + zeroAppend(Math.floor(mToFt(selectedUnitElevation as number) / 100), 3);
+                    break;
+                default:
+                    displayedHeight = Math.floor(mToFt(selectedUnitElevation as number)) + " ft"
+                    break;
+            }
+
+            unitElevationElement.dataset.value = displayedHeight;
         }
 
         /* Get the ground elevation from the server endpoint */
@@ -273,9 +397,9 @@ export class MouseInfoPanel extends Panel {
         }
 
         this.#coordinatesElement.setAttribute( "data-location-system", this.#getLocationSystem() );
+        this.#unitCoordinatesElement.setAttribute( "data-location-system", this.#getLocationSystem() );
         this.#update();
     }
-
 
     #getLocationSystem() {
         const x = this.#locationSystems;

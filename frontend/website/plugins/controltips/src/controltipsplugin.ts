@@ -204,6 +204,16 @@ export class ControlTipsPlugin implements OlympusPlugin {
                         "key": `Period`,
                         "action": "Increase precision",
                         "mouseoverSelector": `#coordinates-tool[data-location-system="MGRS"], #coordinates-tool[data-location-system="MGRS"] *`
+                    },
+                    {
+                        "key": `Mouse1 or Z`,
+                        "action": "Change location system",
+                        "mouseoverSelector": "#unit-coordinates *"
+                    },
+                    {
+                        "key": `Mouse2`,
+                        "action": "Copy to clipboard",
+                        "mouseoverSelector": `#unit-coordinates-container > #unit-coordinates > .mouse-tool-item > .copyable`
                     }
                 ]
             },
