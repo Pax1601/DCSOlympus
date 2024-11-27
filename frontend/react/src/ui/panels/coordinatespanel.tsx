@@ -21,7 +21,6 @@ export function CoordinatesPanel(props: {}) {
     });
 
     BullseyesDataChanged.on((bullseyes) => setBullseyes(bullseyes));
-
     SelectedUnitsChangedEvent.on((selectedUnits) => setSelectedUnits(selectedUnits));
   }, []);
 
