@@ -91,6 +91,7 @@
   --unit-fuel-x: 0px;
   --unit-fuel-y: 22px;
   --unit-vvi-width: 4px;
+  --unit-vvi-width-awacs: 2px;
 }
 
 * {

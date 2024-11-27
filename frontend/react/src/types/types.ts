@@ -26,9 +26,9 @@ export type MapOptions = {
   cameraPluginEnabled: boolean;
   cameraPluginMode: string;
   tabletMode: boolean;
-  showUnitBullseyes: false;
-  showUnitBRAA: false;
-  AWACSMode: false;
+  showUnitBullseyes: boolean;
+  showUnitBRAA: boolean;
+  AWACSMode: boolean;
 };
 
 export type MapHiddenTypes = {

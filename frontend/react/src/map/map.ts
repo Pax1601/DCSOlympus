@@ -226,6 +226,7 @@ export class Map extends L.Map {
     });
 
     MapOptionsChangedEvent.on((options: MapOptions) => {
+      this.getContainer().toggleAttribute("data-awacs-mode", options.AWACSMode);
       this.getContainer().toggleAttribute("data-hide-labels", !options.showUnitLabels);
       this.getContainer().toggleAttribute("data-hide-bullseyes", !options.showUnitBullseyes);
       this.getContainer().toggleAttribute("data-hide-BRAA", !options.showUnitBRAA);

@@ -72,7 +72,7 @@ export function SideBar() {
             checked={appState === OlympusState.JTAC}
             icon={faJ}
             tooltip="Hide/show JTAC menu"
-          ></OlStateButton>
+          ></OlStateButton>{*/}
           <OlStateButton
             onClick={() => {
               getApp().setState(appState !== OlympusState.AWACS ? OlympusState.AWACS : OlympusState.IDLE);
@@ -80,7 +80,7 @@ export function SideBar() {
             checked={appState === OlympusState.AWACS}
             icon={faA}
             tooltip="Hide/show AWACS menu"
-          ></OlStateButton>{*/}
+          ></OlStateButton>
           <OlStateButton
             onClick={() => {
               getApp().setState(appState !== OlympusState.GAME_MASTER ? OlympusState.GAME_MASTER : OlympusState.IDLE);

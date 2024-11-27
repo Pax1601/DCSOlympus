@@ -69,6 +69,15 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
             />
           </div>
           <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+              <OlToggle
+                onClick={() => {
+                  getApp().getMap().setOption("AWACSMode", !mapOptions.AWACSMode);
+                }}
+                toggled={mapOptions.AWACSMode}
+              />{" "}
+              Enable AWACS map mode
+            </div>
             <div className="flex gap-2">
               <OlToggle
                 onClick={() => {

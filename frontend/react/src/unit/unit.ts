@@ -15,6 +15,7 @@ import {
   coalitionToEnum,
   nmToM,
   zeroAppend,
+  computeBearingRangeString,
 } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
@@ -368,7 +369,7 @@ export abstract class Unit extends CustomMarker {
 
     /* Update the marker when the options change */
     MapOptionsChangedEvent.on(() => {
-      this.#updateMarker();
+      this.#redrawMarker();
 
       /* Circles don't like to be updated when the map is zooming */
       if (!getApp().getMap().isZooming()) this.#drawRanges();
@@ -901,7 +902,7 @@ export abstract class Unit extends CustomMarker {
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `/vite/images/units/${marker}.svg`;
+      img.src = `/vite/images/units/map/${getApp().getMap().getOptions().AWACSMode? 'awacs': 'normal'}/${this.getCoalition()}/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
@@ -988,7 +989,7 @@ export abstract class Unit extends CustomMarker {
       BRAA.classList.add("unit-braa");
       tactical.appendChild(BRAA);
     }
-    el.appendChild(tactical)
+    el.appendChild(tactical);
 
     this.getElement()?.appendChild(el);
   }
@@ -1514,18 +1515,20 @@ export abstract class Unit extends CustomMarker {
 
         /* Set bullseyes positions */
         const bullseyes = getApp().getMissionManager().getBullseyes();
-        const blueBullseye = `${bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, this.getLatLng().lat, this.getLatLng().lng).toFixed()}/${(bullseyes[2].getLatLng().distanceTo(this.getLatLng()) / 1852).toFixed(0)}`
-        const redBullseye = `${bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, this.getLatLng().lat, this.getLatLng().lng).toFixed()}/${(bullseyes[1].getLatLng().distanceTo(this.getLatLng()) / 1852).toFixed(0)}`
-        if (element.querySelector(".unit-blue-bullseye")) (<HTMLElement>element.querySelector(".unit-blue-bullseye")).innerText = `${blueBullseye}`;
-        if (element.querySelector(".unit-red-bullseye")) (<HTMLElement>element.querySelector(".unit-red-bullseye")).innerText = `${redBullseye}`;
+        if (Object.keys(bullseyes).length > 0) {
+          computeBearingRangeString
+          const blueBullseye = `${computeBearingRangeString(bullseyes[2].getLatLng(), this.getPosition())}`;
+          const redBullseye = `${computeBearingRangeString(bullseyes[1].getLatLng(), this.getPosition())}`;
+          if (element.querySelector(".unit-blue-bullseye")) (<HTMLElement>element.querySelector(".unit-blue-bullseye")).innerText = `${blueBullseye}`;
+          if (element.querySelector(".unit-red-bullseye")) (<HTMLElement>element.querySelector(".unit-red-bullseye")).innerText = `${redBullseye}`;
+        }
 
         /* Set BRAA */
         const reference = getApp().getUnitsManager().getAWACSReference();
         if (reference && reference !== this) {
-          const BRAA = `${bearing(reference.getLatLng().lat, reference.getLatLng().lng, this.getLatLng().lat, this.getLatLng().lng).toFixed()}/${(reference.getLatLng().distanceTo(this.getLatLng()) / 1852).toFixed(0)}`
+          const BRAA = `${computeBearingRangeString(reference.getPosition(), this.getPosition())}`;
           if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = `${BRAA}`;
-        }
-        else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
+        } else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
       }
 
       /* Set vertical offset for altitude stacking */
@@ -1821,7 +1824,7 @@ export abstract class AirUnit extends Unit {
     /* Context actions that require a target unit */
     contextActionSet.addContextAction(this, ContextActions.ATTACK);
     contextActionSet.addContextAction(this, ContextActions.FOLLOW);
-    contextActionSet.addContextAction(this, ContextActions.SET_AWACS_REFERENCE)
+    contextActionSet.addContextAction(this, ContextActions.SET_AWACS_REFERENCE);
 
     if (this.canTargetPoint()) {
       /* Context actions that require a target position */
