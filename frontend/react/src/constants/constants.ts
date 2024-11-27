@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { MapOptions } from "../types/types";
+import { Coalition, MapOptions } from "../types/types";
 import { CommandModeOptions } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 import {
@@ -29,6 +29,8 @@ import { FormationCreationRequestEvent, UnitExplosionRequestEvent } from "../eve
 export const SELECT_TOLERANCE_PX = 5;
 export const SHORT_PRESS_MILLISECONDS = 200;
 export const DEBOUNCE_MILLISECONDS = 200;
+
+export const TRAIL_LENGTH = 10;
 
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
@@ -349,9 +351,8 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   cameraPluginEnabled: false,
   cameraPluginMode: "map",
   tabletMode: false,
-  showUnitBullseyes: false,
-  showUnitBRAA: false,
-  AWACSMode: false
+  AWACSMode: false,
+  AWACSCoalition: "blue"
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {

@@ -42,6 +42,7 @@ import {
   ContextActions,
   ContextActionTarget,
   SHORT_PRESS_MILLISECONDS,
+  TRAIL_LENGTH,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -61,6 +62,8 @@ import {
   UnitSelectedEvent,
   UnitUpdatedEvent,
 } from "../events";
+
+const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
 var pathIcon = new Icon({
   iconUrl: "/vite/images/markers/marker-icon.png",
@@ -157,6 +160,8 @@ export abstract class Unit extends CustomMarker {
   #targetPositionPolyline: Polyline;
   #hotgroup: number | null = null;
   #detectionMethods: number[] = [];
+  #trailPositions: LatLng[] = [];
+  #trailPolylines: Polyline[] = [];
 
   /* Inputs timers */
   #debounceTimeout: number | null = null;
@@ -466,6 +471,8 @@ export abstract class Unit extends CustomMarker {
           this.#hasTask = dataExtractor.extractBool();
           break;
         case DataIndexes.position:
+          this.#trailPositions.unshift(this.#position);
+          this.#trailPositions.splice(TRAIL_LENGTH);
           this.#position = dataExtractor.extractLatLng();
           updateMarker = true;
           break;
@@ -902,7 +909,7 @@ export abstract class Unit extends CustomMarker {
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `/vite/images/units/map/${getApp().getMap().getOptions().AWACSMode? 'awacs': 'normal'}/${this.getCoalition()}/${marker}.svg`;
+      img.src = `/vite/images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
@@ -968,28 +975,15 @@ export abstract class Unit extends CustomMarker {
       summary.appendChild(altitude);
       summary.appendChild(speed);
       el.appendChild(summary);
-    }
 
-    var tactical = document.createElement("div");
-    tactical.classList.add("unit-tactical");
-    if (iconOptions.showBullseyes) {
-      var bullseyes = document.createElement("div");
-      bullseyes.classList.add("unit-bullseyes");
-      var blueBullseye = document.createElement("div");
-      blueBullseye.classList.add("unit-blue-bullseye");
-      var redBullseye = document.createElement("div");
-      redBullseye.classList.add("unit-red-bullseye");
-      bullseyes.appendChild(blueBullseye);
-      bullseyes.appendChild(redBullseye);
-      tactical.appendChild(bullseyes);
-    }
+      var bullseye = document.createElement("div");
+      bullseye.classList.add("unit-bullseye");
+      summary.appendChild(bullseye);
 
-    if (iconOptions.showBRAA) {
       var BRAA = document.createElement("div");
       BRAA.classList.add("unit-braa");
-      tactical.appendChild(BRAA);
+      summary.appendChild(BRAA);
     }
-    el.appendChild(tactical);
 
     this.getElement()?.appendChild(el);
   }
@@ -1337,7 +1331,10 @@ export abstract class Unit extends CustomMarker {
       this.#isLeftMouseDown = true;
       this.#leftMouseDownEpoch = Date.now();
     } else if (e.originalEvent?.button === 2) {
-      if (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getMap().getContextAction()?.getTarget() !== ContextActionTarget.POINT) {
+      if (
+        getApp().getState() === OlympusState.IDLE ||
+        (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getMap().getContextAction()?.getTarget() !== ContextActionTarget.POINT)
+      ) {
         DomEvent.stop(e);
         DomEvent.preventDefault(e);
         e.originalEvent.stopImmediatePropagation();
@@ -1375,6 +1372,19 @@ export abstract class Unit extends CustomMarker {
   #onRightLongClick(e: any) {
     console.log(`Right long click on ${this.getUnitName()}`);
 
+    if (getApp().getState() === OlympusState.IDLE) {
+      this.setSelected(!this.getSelected());
+
+      DomEvent.stop(e);
+      DomEvent.preventDefault(e);
+      e.originalEvent.stopImmediatePropagation();
+
+      window.setTimeout(() => {
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU);
+        UnitContextMenuRequestEvent.dispatch(this);
+      }, 200);
+    }
+
     if (getApp().getState() === OlympusState.UNIT_CONTROL && !getApp().getMap().getContextAction()) {
       DomEvent.stop(e);
       DomEvent.preventDefault(e);
@@ -1402,6 +1412,10 @@ export abstract class Unit extends CustomMarker {
   }
 
   #updateMarker() {
+    /* Delete existing trails */
+    this.#trailPolylines.forEach((polyline) => polyline.removeFrom(getApp().getMap()));
+    this.#trailPolylines = [];
+
     this.updateVisibility();
 
     /* Draw the minimap marker */
@@ -1516,11 +1530,8 @@ export abstract class Unit extends CustomMarker {
         /* Set bullseyes positions */
         const bullseyes = getApp().getMissionManager().getBullseyes();
         if (Object.keys(bullseyes).length > 0) {
-          computeBearingRangeString
-          const blueBullseye = `${computeBearingRangeString(bullseyes[2].getLatLng(), this.getPosition())}`;
-          const redBullseye = `${computeBearingRangeString(bullseyes[1].getLatLng(), this.getPosition())}`;
-          if (element.querySelector(".unit-blue-bullseye")) (<HTMLElement>element.querySelector(".unit-blue-bullseye")).innerText = `${blueBullseye}`;
-          if (element.querySelector(".unit-red-bullseye")) (<HTMLElement>element.querySelector(".unit-red-bullseye")).innerText = `${redBullseye}`;
+          const bullseye = `${computeBearingRangeString(bullseyes[coalitionToEnum(getApp().getMap().getOptions().AWACSCoalition)].getLatLng(), this.getPosition())}`;
+          if (element.querySelector(".unit-bullseye")) (<HTMLElement>element.querySelector(".unit-bullseye")).innerText = `${bullseye}`;
         }
 
         /* Set BRAA */
@@ -1534,6 +1545,35 @@ export abstract class Unit extends CustomMarker {
       /* Set vertical offset for altitude stacking */
       var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
       this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
+
+      /* Get the cluster this unit is in to position the label correctly */
+      let cluster = Object.values(getApp().getUnitsManager().getClusters()).find((cluster) => cluster.includes(this));
+      if (cluster && cluster.length > 1) {
+        let clusterMean = turf.centroid(turf.featureCollection(cluster.map((unit) => turf.point([unit.getPosition().lng, unit.getPosition().lat]))));
+        let bearingFromCluster = bearing(
+          clusterMean.geometry.coordinates[1],
+          clusterMean.geometry.coordinates[0],
+          this.getPosition().lat,
+          this.getPosition().lng
+        );
+
+        if (bearingFromCluster < 0) bearingFromCluster += 360;
+        let trackIndex = Math.round(bearingFromCluster / 45);
+
+        for (let idx = 0; idx < bearingStrings.length; idx++) element?.querySelector(".unit-summary")?.classList.remove("cluster-" + bearingStrings[idx]);
+        element?.querySelector(".unit-summary")?.classList.add("cluster-" + bearingStrings[trackIndex]);
+      } else {
+        for (let idx = 0; idx < bearingStrings.length; idx++) element?.querySelector(".unit-summary")?.classList.remove("cluster-" + bearingStrings[idx]);
+        element?.querySelector(".unit-summary")?.classList.add("cluster-north-east");
+      }
+
+      /* Draw the contact trail */
+      if (getApp().getMap().getOptions().AWACSMode) {
+        this.#trailPolylines = this.#trailPositions.map(
+          (latlng, idx) => new Polyline([latlng, latlng], { color: "#FFFFFF", opacity: 1 - (idx + 1) / TRAIL_LENGTH })
+        );
+        this.#trailPolylines.forEach((polyline) => polyline.addTo(getApp().getMap()));
+      }
     }
   }
 
@@ -1807,10 +1847,8 @@ export abstract class AirUnit extends Unit {
       showFuel: belongsToCommandedCoalition,
       showAmmo: belongsToCommandedCoalition,
       showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
-      showCallsign: belongsToCommandedCoalition,
-      rotateToHeading: false,
-      showBullseyes: true,
-      showBRAA: true,
+      showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
+      rotateToHeading: false
     } as ObjectIconOptions;
   }
 
@@ -1898,10 +1936,8 @@ export class GroundUnit extends Unit {
       showFuel: false,
       showAmmo: false,
       showSummary: false,
-      showCallsign: belongsToCommandedCoalition,
+      showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
       rotateToHeading: false,
-      showBullseyes: false,
-      showBRAA: false,
     } as ObjectIconOptions;
   }
 
@@ -1969,10 +2005,8 @@ export class NavyUnit extends Unit {
       showFuel: false,
       showAmmo: false,
       showSummary: false,
-      showCallsign: belongsToCommandedCoalition,
+      showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
       rotateToHeading: false,
-      showBullseyes: false,
-      showBRAA: false,
     } as ObjectIconOptions;
   }
 

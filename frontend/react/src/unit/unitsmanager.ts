@@ -1,16 +1,7 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "../olympusapp";
-import { Unit } from "./unit";
-import {
-  areaContains,
-  bearingAndDistanceToLatLng,
-  deg2rad,
-  getGroundElevation,
-  latLngToMercator,
-  mToFt,
-  mercatorToLatLng,
-  msToKnots,
-} from "../other/utils";
+import { AirUnit, Unit } from "./unit";
+import { areaContains, bearingAndDistanceToLatLng, deg2rad, getGroundElevation, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
@@ -33,6 +24,8 @@ import {
   UnitSelectedEvent,
 } from "../events";
 import { UnitDatabase } from "./databases/unitdatabase";
+import * as turf from "@turf/turf";
+import * as turfC from "@turf/clusters";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -51,6 +44,7 @@ export class UnitsManager {
   #unitDatabase: UnitDatabase;
   #protectionCallback: (units: Unit[]) => void = (units) => {};
   #AWACSReference: Unit | null = null;
+  #clusters: {[key: number]: Unit[]} = {};
 
   constructor() {
     this.#unitDatabase = new UnitDatabase();
@@ -82,7 +76,7 @@ export class UnitsManager {
         code: "KeyA",
         ctrlKey: true,
         shiftKey: false,
-        altKey: false
+        altKey: false,
       })
       .addShortcut("copyUnits", {
         label: "Copy units",
@@ -90,7 +84,7 @@ export class UnitsManager {
         code: "KeyC",
         ctrlKey: true,
         shiftKey: false,
-        altKey: false
+        altKey: false,
       })
       .addShortcut("pasteUnits", {
         label: "Paste units",
@@ -98,7 +92,7 @@ export class UnitsManager {
         code: "KeyV",
         ctrlKey: true,
         shiftKey: false,
-        altKey: false
+        altKey: false,
       });
 
     const digits = ["Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9"];
@@ -113,8 +107,9 @@ export class UnitsManager {
           code: code,
           shiftKey: false,
           altKey: false,
-          ctrlKey: false
-        }).addShortcut(`hotgroup${idx + 1}add`, {
+          ctrlKey: false,
+        })
+        .addShortcut(`hotgroup${idx + 1}add`, {
           label: `Hotgroup ${idx + 1} (Add to)`,
           keyUpCallback: (ev: KeyboardEvent) => {
             this.addToHotgroup(parseInt(ev.code.substring(5)));
@@ -122,8 +117,9 @@ export class UnitsManager {
           code: code,
           shiftKey: true,
           altKey: false,
-          ctrlKey: false
-        }).addShortcut(`hotgroup${idx + 1}set`, {
+          ctrlKey: false,
+        })
+        .addShortcut(`hotgroup${idx + 1}set`, {
           label: `Hotgroup ${idx + 1} (Set)`,
           keyUpCallback: (ev: KeyboardEvent) => {
             this.setHotgroup(parseInt(ev.code.substring(5)));
@@ -131,8 +127,9 @@ export class UnitsManager {
           code: code,
           ctrlKey: true,
           altKey: false,
-          shiftKey: false
-        }).addShortcut(`hotgroup${idx + 1}also`, {
+          shiftKey: false,
+        })
+        .addShortcut(`hotgroup${idx + 1}also`, {
           label: `Hotgroup ${idx + 1} (Select also)`,
           keyUpCallback: (ev: KeyboardEvent) => {
             this.selectUnitsByHotgroup(parseInt(ev.code.substring(5)), false);
@@ -140,7 +137,7 @@ export class UnitsManager {
           code: code,
           ctrlKey: true,
           shiftKey: true,
-          altKey: false
+          altKey: false,
         });
     });
 
@@ -279,6 +276,9 @@ export class UnitsManager {
     for (let ID in this.#units) {
       if (this.#units[ID].getSelected()) this.#units[ID].drawLines();
     }
+
+    /* Compute the base clusters */
+    this.#clusters = this.computeClusters();
 
     return updateTime;
   }
@@ -1548,11 +1548,35 @@ export class UnitsManager {
 
   setAWACSReference(ID) {
     this.#AWACSReference = this.#units[ID] ?? null;
-    AWACSReferenceChangedEvent.dispatch(this.#AWACSReference)
+    AWACSReferenceChangedEvent.dispatch(this.#AWACSReference);
   }
 
   getAWACSReference() {
     return this.#AWACSReference;
+  }
+
+  computeClusters(filter: (unit: Unit) => boolean = (unit) => true, distance: number = 5 /* km */) {
+    let units = Object.values(this.#units)
+      .filter((unit) => unit.getAlive() && unit instanceof AirUnit)
+      .filter(filter);
+
+    var geojson = turf.featureCollection(units.map((unit) => turf.point([unit.getPosition().lng, unit.getPosition().lat])));
+
+    //@ts-ignore
+    var clustered = turf.clustersDbscan(geojson, distance, { minPoints: 1 });
+
+    let clusters: {[key: number]: Unit[]} = {};
+    clustered.features.forEach((feature, idx) => {
+      if (clusters[feature.properties.cluster] === undefined)
+        clusters[feature.properties.cluster] = [] as Unit[];
+      clusters[feature.properties.cluster].push(units[idx]);
+    })
+
+    return clusters;
+  }
+
+  getClusters() {
+    return this.#clusters;
   }
 
   /***********************************************/

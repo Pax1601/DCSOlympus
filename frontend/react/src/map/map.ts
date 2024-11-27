@@ -228,8 +228,6 @@ export class Map extends L.Map {
     MapOptionsChangedEvent.on((options: MapOptions) => {
       this.getContainer().toggleAttribute("data-awacs-mode", options.AWACSMode);
       this.getContainer().toggleAttribute("data-hide-labels", !options.showUnitLabels);
-      this.getContainer().toggleAttribute("data-hide-bullseyes", !options.showUnitBullseyes);
-      this.getContainer().toggleAttribute("data-hide-BRAA", !options.showUnitBRAA);
       this.#cameraControlPort = options.cameraPluginPort;
       this.#cameraZoomRatio = 50 / (20 + options.cameraPluginRatio);
       this.#slaveDCSCamera = options.cameraPluginEnabled;
@@ -241,6 +239,8 @@ export class Map extends L.Map {
           this.#broadcastPosition();
         }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
       }
+
+      if (options.AWACSMode && this.#layerName !== "AWACS") this.setLayerName("AWACS");
 
       this.updateMinimap();
     });

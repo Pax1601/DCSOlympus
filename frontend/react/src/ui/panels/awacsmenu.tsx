@@ -7,43 +7,67 @@ import {
   BullseyesDataChanged,
   HotgroupsChangedEvent,
   MapOptionsChangedEvent,
+  UnitUpdatedEvent,
 } from "../../events";
 import { getApp } from "../../olympusapp";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
-import { Coalition } from "../../types/types";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Unit } from "../../unit/unit";
 import { Bullseye } from "../../mission/bullseye";
-import { coalitionToEnum, computeBearingRangeString, mToFt, rad2deg } from "../../other/utils";
+import { bearing, coalitionToEnum, computeBearingRangeString, mToFt, rad2deg } from "../../other/utils";
 
-const trackStrings = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"]
+const trackStrings = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "North"]
+const relTrackStrings = ["hot", "flank right", "beam right", "cold", "cold", "cold", "beam left", "flank left", "hot"]
 
 export function AWACSMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [callsign, setCallsign] = useState("Magic");
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
-  const [coalition, setCoalition] = useState("blue" as Coalition);
   const [hotgroups, setHotgroups] = useState({} as { [key: number]: Unit[] });
   const [referenceUnit, setReferenceUnit] = useState(null as Unit | null);
   const [bullseyes, setBullseyes] = useState(null as null | { [name: string]: Bullseye });
+  const [refreshTime, setRefreshTime] = useState(0);
 
   useEffect(() => {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
     HotgroupsChangedEvent.on((hotgroups) => setHotgroups({ ...hotgroups }));
-    AWACSReferenceUnitChangedEvent.on((unit) => setReferenceUnit(unit));
+    AWACSReferenceUnitChangedEvent.on((unit) => setReferenceUnit(unit)); 
     BullseyesDataChanged.on((bullseyes) => setBullseyes(bullseyes));
+    UnitUpdatedEvent.on((unit) => setRefreshTime(Date.now()));
   }, []);
 
-  const activeGroups = Object.values(hotgroups).filter((hotgroup) => {
-    return hotgroup.every((unit) => unit.getCoalition() !== coalition);
-  });
+  const activeGroups = Object.values(getApp()?.getUnitsManager().computeClusters((unit) => unit.getCoalition() !== mapOptions.AWACSCoalition, 6) ?? {});
+  
+  /*Object.values(hotgroups).filter((hotgroup) => {
+    return hotgroup.every((unit) => unit.getCoalition() !== mapOptions.AWACSCoalition);
+  });*/
 
   let readout: string[] = [];
 
   if (bullseyes) {
     if (referenceUnit) {
-      readout.push(`$`);
+      readout.push(`${callsign}, ${activeGroups.length} group${activeGroups.length > 1 ? "s": ""}`);
+      readout.push(
+        ...activeGroups.map((group, idx) => {
+          let order = "th";
+          if (idx == 0) order = "st";
+          else if (idx == 1) order = "nd";
+          else if (idx == 2) order = "rd";
+
+          let trackDegs = bearing(group[0].getPosition().lat, group[0].getPosition().lng, referenceUnit.getPosition().lat, referenceUnit.getPosition().lng) - rad2deg(group[0].getTrack())
+          if (trackDegs < 0) trackDegs += 360
+          if (trackDegs > 360) trackDegs -= 360
+          let trackIndex = Math.round(trackDegs / 45)
+          
+          let groupLine = `${activeGroups.length > 1? (idx + 1 + "" + order + " group"): "Single group"} bullseye ${computeBearingRangeString(bullseyes[coalitionToEnum(mapOptions.AWACSCoalition)].getLatLng(), group[0].getPosition()).replace("/", " ")}, ${ (mToFt(group[0].getPosition().alt ?? 0) / 1000).toFixed()} thousand, ${relTrackStrings[trackIndex]}`;
+          
+          if (group.find((unit) => unit.getCoalition() === "neutral")) groupLine += ", bogey"
+          else groupLine += ", hostile"
+
+          return groupLine;
+        })
+      );
     } else {
-      readout.push(`${callsign}, ${activeGroups.length} group${activeGroups.length > 1 && "s"}`);
+      readout.push(`${callsign}, ${activeGroups.length} group${activeGroups.length > 1 ? "s": ""}`);
       readout.push(
         ...activeGroups.map((group, idx) => {
           let order = "th";
@@ -55,14 +79,16 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
           if (trackDegs < 0) trackDegs += 360
           let trackIndex = Math.round(trackDegs / 45)
           
-          let groupLine = `${idx + 1}${order} group bullseye ${computeBearingRangeString(bullseyes[coalitionToEnum(coalition)].getLatLng(), group[0].getPosition()).replace("/", " ")}, ${ (mToFt(group[0].getPosition().alt ?? 0) / 1000).toFixed()} thousand, track ${trackStrings[trackIndex]}`;
+          let groupLine = `${activeGroups.length > 1? (idx + 1 + "" + order + " group"): "Single group"} bullseye ${computeBearingRangeString(bullseyes[coalitionToEnum(mapOptions.AWACSCoalition)].getLatLng(), group[0].getPosition()).replace("/", " ")}, ${ (mToFt(group[0].getPosition().alt ?? 0) / 1000).toFixed()} thousand, track ${trackStrings[trackIndex]}`;
+          
+          if (group.find((unit) => unit.getCoalition() === "neutral")) groupLine += ", bogey"
+          else groupLine += ", hostile"
+
           return groupLine;
         })
       );
-      
     }
   }
-
 
   return (
     <Menu title={"AWACS Tools"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
@@ -75,14 +101,11 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
         <>
           <div className="flex content-center gap-4">
             <FaQuestionCircle
-              className={`
-              my-auto min-h-5 min-w-5 text-sm text-gray-500
-            `}
+              className={`my-auto min-h-5 min-w-5 text-sm text-gray-500`}
             />
             <div className="flex flex-col gap-1 text-sm text-gray-500">
               <p>1 Use the coalition toggle to change your coalition as AWACS.</p>
-              <p>2 Set enemy unit hotgroups to automatically create picture calls to read on radio for your CAP.</p>
-              <p>3 Optionally, set a friendly unit as reference by right clicking on it and selecting "Set AWACS reference" to create tactical calls.</p>
+              <p>2 Optionally, set a friendly unit as reference by right clicking on it and selecting "Set AWACS reference" to create tactical calls.</p>
             </div>
           </div>
           <div className="flex gap-4">
@@ -101,11 +124,11 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
             ></input>
             <OlCoalitionToggle
               onClick={() => {
-                coalition === "blue" && setCoalition("neutral");
-                coalition === "neutral" && setCoalition("red");
-                coalition === "red" && setCoalition("blue");
+                mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
+                mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
+                mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition","blue");
               }}
-              coalition={coalition}
+              coalition={mapOptions.AWACSCoalition}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -117,24 +140,6 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
                 toggled={mapOptions.AWACSMode}
               />{" "}
               Enable AWACS map mode
-            </div>
-            <div className="flex gap-2">
-              <OlToggle
-                onClick={() => {
-                  getApp().getMap().setOption("showUnitBullseyes", !mapOptions.showUnitBullseyes);
-                }}
-                toggled={mapOptions.showUnitBullseyes}
-              />{" "}
-              Show units Bullseye position
-            </div>
-            <div className="flex gap-2">
-              <OlToggle
-                onClick={() => {
-                  getApp().getMap().setOption("showUnitBRAA", !mapOptions.showUnitBRAA);
-                }}
-                toggled={mapOptions.showUnitBRAA}
-              />
-              Show units BRAA from reference unit
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-2">

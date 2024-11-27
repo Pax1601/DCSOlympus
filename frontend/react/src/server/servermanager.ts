@@ -14,7 +14,7 @@ import {
   reactionsToThreat,
 } from "../constants/constants";
 import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
-import { ServerStatusUpdatedEvent } from "../events";
+import { MapOptionsChangedEvent, ServerStatusUpdatedEvent } from "../events";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -28,6 +28,7 @@ export class ServerManager {
   #serverIsPaused: boolean = false;
   #intervals: number[] = [];
   #requests: { [key: string]: XMLHttpRequest } = {};
+  #updateMode = "normal"; // normal or awacs
 
   constructor() {
     this.#lastUpdateTimes[UNITS_URI] = Date.now();
@@ -43,6 +44,16 @@ export class ServerManager {
         this.setPaused(!this.getPaused());
       },
       code: "Enter"
+    })
+
+    MapOptionsChangedEvent.on((mapOptions) => {
+      if (this.#updateMode === "normal" && mapOptions.AWACSMode) {
+        this.#updateMode = "awacs";
+        this.startUpdate();
+      } else if (this.#updateMode === "awacs" && !mapOptions.AWACSMode) {
+        this.#updateMode = "normal";
+        this.startUpdate();
+      }
     })
   }
 
@@ -566,7 +577,7 @@ export class ServerManager {
             return time;
           }, false);
         }
-      }, 250)
+      }, this.#updateMode === "normal"? 250: 2000)
     );
 
     this.#intervals.push(
@@ -577,7 +588,7 @@ export class ServerManager {
             return time;
           }, false);
         }
-      }, 250)
+      }, this.#updateMode === "normal"? 250: 2000)
     );
 
     this.#intervals.push(
@@ -590,7 +601,7 @@ export class ServerManager {
             }, true);
           }
         },
-        this.getServerIsPaused() ? 500 : 5000
+        5000
       )
     );
 
