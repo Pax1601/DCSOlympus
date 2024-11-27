@@ -54,7 +54,7 @@ module.exports = function (configLocation) {
     }
   });
 
-  router.put("/profile/resetall", function (req, res, next) {
+  router.put("/profile/delete/all", function (req, res, next) {
     if (fs.existsSync(configLocation)) {
       let rawdata = fs.readFileSync(configLocation, "utf-8");
       const config = JSON.parse(rawdata);

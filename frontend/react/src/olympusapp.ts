@@ -224,7 +224,7 @@ export class OlympusApp {
       body: "", // Send the data in JSON format
     };
 
-    fetch(this.getExpressAddress() + `/resources/profile/resetall`, requestOptions)
+    fetch(this.getExpressAddress() + `/resources/profile/delete/all`, requestOptions)
       .then((response) => {
         if (response.status === 200) {
           console.log(`All profiles reset correctly`);
