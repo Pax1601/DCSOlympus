@@ -11,15 +11,27 @@ import { UnitSinkPanel } from "./components/unitsinkpanel";
 import { UnitSink } from "../../audio/unitsink";
 import { FaMinus, FaVolumeHigh } from "react-icons/fa6";
 import { getRandomColor } from "../../other/utils";
-import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent, ShortcutsChangedEvent } from "../../events";
+import {
+  AudioManagerDevicesChangedEvent,
+  AudioManagerInputChangedEvent,
+  AudioManagerOutputChangedEvent,
+  AudioManagerStateChangedEvent,
+  AudioSinksChangedEvent,
+  AudioSourcesChangedEvent,
+  ShortcutsChangedEvent,
+} from "../../events";
+import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
+  const [devices, setDevices] = useState([] as MediaDeviceInfo[]);
   const [sinks, setSinks] = useState([] as AudioSink[]);
   const [sources, setSources] = useState([] as AudioSource[]);
   const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
   const [activeSource, setActiveSource] = useState(null as AudioSource | null);
   const [count, setCount] = useState(0);
   const [shortcuts, setShortcuts] = useState({});
+  const [input, setInput] = useState(undefined as undefined | MediaDeviceInfo);
+  const [output, setOutput] = useState(undefined as undefined | MediaDeviceInfo);
 
   /* Preallocate 128 references for the source and sink panels. If the number of references changes, React will give an error */
   const sourceRefs = Array(128)
@@ -61,6 +73,10 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
     });
 
     ShortcutsChangedEvent.on((shortcuts) => setShortcuts(shortcuts));
+
+    AudioManagerDevicesChangedEvent.on((devices) => setDevices([...devices]));
+    AudioManagerInputChangedEvent.on((input) => setInput(input));
+    AudioManagerOutputChangedEvent.on((output) => setOutput(output));
   }, []);
 
   /* When the sinks or sources change, use the count state to force a rerender to update the connection lines */
@@ -127,6 +143,40 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
           `}
           style={{ paddingRight: `${paddingRight}px` }}
         >
+          {audioManagerEnabled && (
+            <>
+              <span>Input</span>
+
+              <OlDropdown label={input ? input.label : "Default"}>
+                {devices
+                  .filter((device) => device.kind === "audioinput")
+                  .map((device, idx) => {
+                    return (
+                      <OlDropdownItem onClick={() => getApp().getAudioManager().setInput(device)}>
+                        <div className="w-full truncate">{device.label}</div>
+                      </OlDropdownItem>
+                    );
+                  })}
+              </OlDropdown>
+            </>
+          )}
+          {audioManagerEnabled && (
+            <>
+              {" "}
+              <span>Output</span>
+              <OlDropdown label={output ? output.label : "Default"}>
+                {devices
+                  .filter((device) => device.kind === "audiooutput")
+                  .map((device, idx) => {
+                    return (
+                      <OlDropdownItem onClick={() => getApp().getAudioManager().setOutput(device)}>
+                        <div className="w-full truncate">{device.label}</div>
+                      </OlDropdownItem>
+                    );
+                  })}
+              </OlDropdown>
+            </>
+          )}
           {audioManagerEnabled && <span>Audio sources</span>}
           <>
             {sources.map((source, idx) => {

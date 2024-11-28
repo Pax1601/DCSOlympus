@@ -151,6 +151,7 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
                 {readout.map((line) => (
                   <span className="font-bold italic text-cyan-500">{line}</span>
                 ))}
+                <button onClick={() => getApp().getAudioManager().playText(readout.reduce((acc, line) => acc += " " + line, ""))}>Play</button>
               </>
             )}
           </div>

@@ -21,6 +21,7 @@
     "express-basic-auth": "^1.2.1",
     "http-proxy-middleware": "^2.0.6",
     "morgan": "~1.9.1",
+    "node-gtts": "^2.0.2",
     "open": "^10.0.0",
     "regedit": "^5.1.2",
     "save": "^2.9.0",

@@ -11,11 +11,25 @@ import { AudioSink } from "./audiosink";
 import { Unit } from "../unit/unit";
 import { UnitSink } from "./unitsink";
 import { AudioPacket, MessageType } from "./audiopacket";
-import { AudioManagerStateChangedEvent, AudioSinksChangedEvent, AudioSourcesChangedEvent, ConfigLoadedEvent, SRSClientsChangedEvent } from "../events";
+import {
+  AudioManagerDevicesChangedEvent,
+  AudioManagerInputChangedEvent,
+  AudioManagerOutputChangedEvent,
+  AudioManagerStateChangedEvent,
+  AudioSinksChangedEvent,
+  AudioSourcesChangedEvent,
+  ConfigLoadedEvent,
+  SRSClientsChangedEvent,
+} from "../events";
 import { OlympusConfig } from "../interfaces";
+import { TextToSpeechSource } from "./texttospeechsource";
 
 export class AudioManager {
   #audioContext: AudioContext;
+  #synth = window.speechSynthesis;
+  #devices: MediaDeviceInfo[] = [];
+  #input: MediaDeviceInfo;
+  #output: MediaDeviceInfo;
 
   /* The playback pipeline enables audio playback on the speakers/headphones */
   #playbackPipeline: PlaybackPipeline;
@@ -53,7 +67,7 @@ export class AudioManager {
           code: key,
           shiftKey: true,
           ctrlKey: false,
-          altKey: false
+          altKey: false,
         });
     });
   }
@@ -65,6 +79,10 @@ export class AudioManager {
 
     this.#running = true;
     this.#audioContext = new AudioContext({ sampleRate: 16000 });
+
+    //@ts-ignore
+    if (this.#output) this.#audioContext.setSinkId(this.#output.deviceId);
+
     this.#playbackPipeline = new PlaybackPipeline();
 
     /* Connect the audio websocket */
@@ -118,7 +136,7 @@ export class AudioManager {
     });
 
     /* Add the microphone source and connect it directly to the radio */
-    const microphoneSource = new MicrophoneSource();
+    const microphoneSource = new MicrophoneSource(this.#input);
     microphoneSource.initialize().then(() => {
       this.#sinks.forEach((sink) => {
         if (sink instanceof RadioSink) microphoneSource.connect(sink);
@@ -130,7 +148,18 @@ export class AudioManager {
       this.addRadio();
       this.addRadio();
     });
+
+    const textToSpeechSource = new TextToSpeechSource();
+    this.#sources.push(textToSpeechSource);
+
     AudioManagerStateChangedEvent.dispatch(this.#running);
+
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      this.#devices = devices;
+      AudioManagerDevicesChangedEvent.dispatch(devices);
+    });
+
+    this.#startSpeechRecognition();
   }
 
   stop() {
@@ -141,7 +170,7 @@ export class AudioManager {
     this.#sources = [];
     this.#sinks = [];
     this.#socket?.close();
-    
+
     window.clearInterval(this.#syncInterval);
 
     AudioSourcesChangedEvent.dispatch(this.#sources);
@@ -207,7 +236,7 @@ export class AudioManager {
     this.#sinks.push(newRadio);
     /* Set radio name by default to be incremental number */
     newRadio.setName(`Radio ${this.#sinks.length}`);
-    this.#sources[0].connect(newRadio);
+    this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
     AudioSinksChangedEvent.dispatch(this.#sinks);
   }
 
@@ -256,6 +285,32 @@ export class AudioManager {
     return this.#running;
   }
 
+  setInput(input: MediaDeviceInfo) {
+    if (this.#devices.includes(input)) {
+      this.#input = input;
+      AudioManagerInputChangedEvent.dispatch(input);
+      this.stop();
+      this.start();
+    } else {
+      console.error("Requested input device is not in devices list");
+    }
+  }
+
+  setOutput(output: MediaDeviceInfo) {
+    if (this.#devices.includes(output)) {
+      this.#input = output;
+      AudioManagerOutputChangedEvent.dispatch(output);
+      this.stop();
+      this.start();
+    } else {
+      console.error("Requested output device is not in devices list");
+    }
+  }
+
+  playText(text) {
+    this.#sources.find((source) => source instanceof TextToSpeechSource)?.playText(text);
+  }
+
   #syncRadioSettings() {
     /* Send the radio settings of each radio to the SRS backend */
     let message = {
@@ -274,5 +329,31 @@ export class AudioManager {
     };
 
     if (this.#socket?.readyState == 1) this.#socket?.send(new Uint8Array([AudioMessageType.settings, ...Buffer.from(JSON.stringify(message), "utf-8")]));
+  }
+
+  #startSpeechRecognition() {
+    const grammar =
+      "#JSGF V1.0; grammar colors; public <color> = aqua | azure | beige | bisque | black | blue | brown | chocolate | coral | crimson | cyan | fuchsia | ghostwhite | gold | goldenrod | gray | green | indigo | ivory | khaki | lavender | lime | linen | magenta | maroon | moccasin | navy | olive | orange | orchid | peru | pink | plum | purple | red | salmon | sienna | silver | snow | tan | teal | thistle | tomato | turquoise | violet | white | yellow ;";
+    //@ts-ignore
+    const recognition = new window.webkitSpeechRecognition();
+    //@ts-ignore
+    const speechRecognitionList = new window.webkitSpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+    recognition.continuous = true;
+    recognition.lang = "en-US";
+    recognition.interimResults = true;
+    //recognition.maxAlternatives = 1;
+
+    const diagnostic = document.querySelector(".output");
+    const bg = document.querySelector("html");
+    recognition.start();
+
+
+    recognition.onresult = (event) => {
+      const color = event.results[0][0].transcript;
+      diagnostic.textContent = `Result received: ${color}`;
+      bg.style.backgroundColor = color;
+    };
   }
 }

@@ -466,6 +466,45 @@ export class AudioManagerStateChangedEvent {
   }
 }
 
+export class AudioManagerDevicesChangedEvent {
+  static on(callback: (devices: MediaDeviceInfo[]) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.devices);
+    });
+  }
+
+  static dispatch(devices: MediaDeviceInfo[]) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { devices } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class AudioManagerInputChangedEvent {
+  static on(callback: (input: MediaDeviceInfo) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.input);
+    });
+  }
+
+  static dispatch(input: MediaDeviceInfo) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { input } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class AudioManagerOutputChangedEvent {
+  static on(callback: (output: MediaDeviceInfo) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.output);
+    });
+  }
+
+  static dispatch(output: MediaDeviceInfo) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { output } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 /************** Mission data events ***************/
 export class BullseyesDataChanged {
   static on(callback: (bullseyes: { [name: string]: Bullseye }) => void) {

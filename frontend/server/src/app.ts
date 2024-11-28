@@ -27,6 +27,7 @@ module.exports = function (configLocation, viteProxy) {
       "databases"
     )
   );
+  const textToSpeechRouter = require("./routes/api/texttospeech")();
 
   /* Load the config and create the express app */
   let config = {};
@@ -75,10 +76,12 @@ module.exports = function (configLocation, viteProxy) {
   app.use("/api/airbases", airbasesRouter);
   app.use("/api/elevation", elevationRouter);
   app.use("/api/databases", databasesRouter);
+  app.use("/api/texttospeech", textToSpeechRouter);
   app.use("/resources", resourcesRouter);
   app.use("/express/api/airbases", airbasesRouter);
   app.use("/express/api/elevation", elevationRouter);
   app.use("/express/api/databases", databasesRouter);
+  app.use("/express/api/texttospeech", textToSpeechRouter);
   app.use("/express/resources", resourcesRouter);
 
   /* Set default index */

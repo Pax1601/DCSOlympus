@@ -7,14 +7,16 @@ import { FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
 import { OlRangeSlider } from "../../components/olrangeslider";
 import { FileSource } from "../../../audio/filesource";
 import { MicrophoneSource } from "../../../audio/microphonesource";
+import { TextToSpeechSource } from "../../../audio/texttospeechsource";
 
 export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
   const [meterLevel, setMeterLevel] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [text, setText] = useState("");
 
   useEffect(() => {
     if (props.onExpanded) props.onExpanded();
-  }, [expanded])
+  }, [expanded]);
 
   useEffect(() => {
     setInterval(() => {
@@ -46,13 +48,9 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
           />
         </div>
         <div className="flex w-full overflow-hidden">
-          <span
-            className={`my-auto truncate`}
-          >
-            {props.source.getName()}
-          </span>
+          <span className={`my-auto truncate`}>{props.source.getName()}</span>
         </div>
-        {!(props.source instanceof MicrophoneSource) && (
+        {!(props.source instanceof MicrophoneSource) && !(props.source instanceof TextToSpeechSource) && (
           <div
             className={`
               mb-auto aspect-square cursor-pointer rounded-md p-2
@@ -68,21 +66,38 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
       </div>
       {expanded && (
         <>
-          {props.source instanceof FileSource && (
+          {(props.source instanceof FileSource || props.source instanceof TextToSpeechSource) && (
             <div className="flex flex-col gap-2 rounded-md bg-olympus-400 p-2">
+              {props.source instanceof TextToSpeechSource && 
+              <input
+              className={`
+                block h-10 w-full border-[2px] bg-gray-50 py-2.5 text-center
+                text-sm text-gray-900
+                dark:border-gray-700 dark:bg-olympus-600 dark:text-white
+                dark:placeholder-gray-400 dark:focus:border-blue-700
+                dark:focus:ring-blue-700
+                focus:border-blue-700 focus:ring-blue-500
+              `}
+              value={text}
+              onChange={(ev) => {
+                setText(ev.target.value);
+              }}
+            ></input>
+              }
               <div className="flex gap-4">
                 <OlStateButton
                   checked={false}
                   icon={props.source.getPlaying() ? faPause : faPlay}
                   onClick={() => {
                     if (props.source instanceof FileSource) props.source.getPlaying() ? props.source.pause() : props.source.play();
+                    else if (props.source instanceof TextToSpeechSource) props.source.getPlaying() ? props.source.pause() : props.source.playText(text);
                   }}
-                  tooltip="Play file"
+                  tooltip="Play file / Text to speech"
                 ></OlStateButton>
                 <OlRangeSlider
                   value={props.source.getDuration() > 0 ? (props.source.getCurrentPosition() / props.source.getDuration()) * 100 : 0}
                   onChange={(ev) => {
-                    if (props.source instanceof FileSource) props.source.setCurrentPosition(parseFloat(ev.currentTarget.value));
+                    if (props.source instanceof FileSource || props.source instanceof TextToSpeechSource) props.source.setCurrentPosition(parseFloat(ev.currentTarget.value));
                   }}
                   className="my-auto"
                 />
@@ -90,7 +105,7 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
                   checked={props.source.getLooping()}
                   icon={faRepeat}
                   onClick={() => {
-                    if (props.source instanceof FileSource) props.source.setLooping(!props.source.getLooping());
+                    if (props.source instanceof FileSource || props.source instanceof TextToSpeechSource) props.source.setLooping(!props.source.getLooping());
                   }}
                   tooltip="Loop"
                 ></OlStateButton>
