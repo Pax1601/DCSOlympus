@@ -12,6 +12,7 @@
 #define BULLSEYE_URI "bullseyes"
 #define MISSION_URI "mission"
 #define COMMANDS_URI "commands"
+#define DRAWINGS_URI "drawings"
 
 #define FRAMERATE_TIME_INTERVAL 0.05
 

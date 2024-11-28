@@ -121,9 +121,6 @@ export class MissionManager {
                 //commandModePhaseEl.classList.toggle("game-commenced", this.#remainingSetupTime <= 0 || !this.getCommandModeOptions().restrictSpawns);
                 //commandModePhaseEl.classList.toggle("no-restrictions", !this.getCommandModeOptions().restrictSpawns);
             }
-
-            console.log("----- mission data drawings: ", data);
-            
         }
     }
 
@@ -242,6 +239,12 @@ export class MissionManager {
         blueSpawnPointsInput.value = String(options.spawnPoints.blue);
         redSpawnPointsInput.value = String(options.spawnPoints.red);
         setupTimeInput.value = String(Math.floor(setupTime / 60.0));
+    }
+
+    getDrawingsByLayerName(layerName: string) {
+        getApp().getServerManager().getDrawings((drawingsData: any) => {
+            console.log('---- drawings data: ', drawingsData)
+        })
     }
 
     #applycommandModeOptions() {

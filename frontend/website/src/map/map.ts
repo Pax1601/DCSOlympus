@@ -179,6 +179,11 @@ export class Map extends L.Map {
             el?.classList.toggle("off");
             this.setHiddenType(ev.detail.coalition, !el?.classList.contains("off"));
             Object.values(getApp().getUnitsManager().getUnits()).forEach((unit: Unit) => unit.updateVisibility());
+
+            console.log('---- cliccato il toggle per vedere la coalizione ', ev.detail);
+
+            getApp().getMissionManager().getDrawingsByLayerName('Common')
+            
         });
 
         document.addEventListener("toggleMarkerVisibility", (ev: CustomEventInit) => {

@@ -141,7 +141,8 @@ declare module "constants/constants" {
         Falklands: LatLng[];
         Normandy: LatLng[];
         SinaiMap: LatLng[];
-		Kola: LatLng[];
+        Kola: LatLng[];
+        Afghanistan: LatLng[];
     };
     export const mapBounds: {
         Syria: {
@@ -180,43 +181,13 @@ declare module "constants/constants" {
             bounds: LatLngBounds;
             zoom: number;
         };
-    };
-    export const defaultMapLayers: {
-        "ArcGIS Satellite": {
-            urlTemplate: string;
-            minZoom: number;
-            maxZoom: number;
-            attribution: string;
+        Afghanistan: {
+            bounds: LatLngBounds;
+            zoom: number;
         };
-        "OpenStreetMap Mapnik": {
-            urlTemplate: string;
-            minZoom: number;
-            maxZoom: number;
-            attribution: string;
-        };
-        "DCS Marianas Modern": ({
-            urlTemplate: string;
-            minZoom: number;
-            maxZoom: number;
-            minNativeZoom?: undefined;
-            maxNativeZoom?: undefined;
-            attribution?: undefined;
-        } | {
-            urlTemplate: string;
-            minNativeZoom: number;
-            maxNativeZoom: number;
-            minZoom: number;
-            maxZoom: number;
-            attribution?: undefined;
-        } | {
-            urlTemplate: string;
-            minNativeZoom: number;
-            maxNativeZoom: number;
-            minZoom: number;
-            maxZoom: number;
-            attribution: string;
-        })[];
     };
+    export const defaultMapMirrors: {};
+    export const defaultMapLayers: {};
     export const IDLE = "Idle";
     export const MOVE_UNIT = "Move unit";
     export const COALITIONAREA_DRAW_POLYGON = "Draw Coalition Area";
@@ -239,6 +210,8 @@ declare module "constants/constants" {
     export const SHOW_UNIT_PATHS = "Show selected unit paths";
     export const SHOW_UNIT_TARGETS = "Show selected unit targets";
     export const DCS_LINK_PORT = "DCS Camera link port";
+    export const DCS_LINK_RATIO = "DCS Camera zoom";
+    export const SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN = "Show human controlled unit original callsign";
     export enum DataIndexes {
         startOfData = 0,
         category = 1,
@@ -249,43 +222,44 @@ declare module "constants/constants" {
         country = 6,
         name = 7,
         unitName = 8,
-        groupName = 9,
-        state = 10,
-        task = 11,
-        hasTask = 12,
-        position = 13,
-        speed = 14,
-        horizontalVelocity = 15,
-        verticalVelocity = 16,
-        heading = 17,
-        track = 18,
-        isActiveTanker = 19,
-        isActiveAWACS = 20,
-        onOff = 21,
-        followRoads = 22,
-        fuel = 23,
-        desiredSpeed = 24,
-        desiredSpeedType = 25,
-        desiredAltitude = 26,
-        desiredAltitudeType = 27,
-        leaderID = 28,
-        formationOffset = 29,
-        targetID = 30,
-        targetPosition = 31,
-        ROE = 32,
-        reactionToThreat = 33,
-        emissionsCountermeasures = 34,
-        TACAN = 35,
-        radio = 36,
-        generalSettings = 37,
-        ammo = 38,
-        contacts = 39,
-        activePath = 40,
-        isLeader = 41,
-        operateAs = 42,
-        shotsScatter = 43,
-        shotsIntensity = 44,
-        health = 45,
+        callsign = 9,
+        groupName = 10,
+        state = 11,
+        task = 12,
+        hasTask = 13,
+        position = 14,
+        speed = 15,
+        horizontalVelocity = 16,
+        verticalVelocity = 17,
+        heading = 18,
+        track = 19,
+        isActiveTanker = 20,
+        isActiveAWACS = 21,
+        onOff = 22,
+        followRoads = 23,
+        fuel = 24,
+        desiredSpeed = 25,
+        desiredSpeedType = 26,
+        desiredAltitude = 27,
+        desiredAltitudeType = 28,
+        leaderID = 29,
+        formationOffset = 30,
+        targetID = 31,
+        targetPosition = 32,
+        ROE = 33,
+        reactionToThreat = 34,
+        emissionsCountermeasures = 35,
+        TACAN = 36,
+        radio = 37,
+        generalSettings = 38,
+        ammo = 39,
+        contacts = 40,
+        activePath = 41,
+        isLeader = 42,
+        operateAs = 43,
+        shotsScatter = 44,
+        shotsIntensity = 45,
+        health = 46,
         endOfData = 255
     }
     export const MGRS_PRECISION_10KM = 2;
@@ -502,7 +476,7 @@ declare module "interfaces" {
         location: LatLng;
         altitude?: number;
         loadout?: string;
-        skill?: string;
+        skill: string;
         liveryID: string;
     }
     export interface ObjectIconOptions {
@@ -516,6 +490,7 @@ declare module "interfaces" {
         showAmmo: boolean;
         showSummary: boolean;
         showCallsign: boolean;
+        showOriginalCallsign?: boolean;
         rotateToHeading: boolean;
     }
     export interface GeneralSettings {
@@ -563,6 +538,7 @@ declare module "interfaces" {
         country: number;
         name: string;
         unitName: string;
+        callsign: string;
         groupName: string;
         state: string;
         task: string;
@@ -710,7 +686,6 @@ declare module "interfaces" {
     }
 }
 declare module "unit/databases/unitdatabase" {
-    import { LatLng } from "leaflet";
     import { UnitBlueprint } from "interfaces";
     export abstract class UnitDatabase {
         #private;
@@ -737,7 +712,6 @@ declare module "unit/databases/unitdatabase" {
             countries: string[];
         }[];
         getLoadoutByName(name: string, loadoutName: string): import("interfaces").LoadoutBlueprint | null;
-        generateTestGrid(initialPosition: LatLng): void;
         getSpawnPointsByLabel(label: string): number;
         getSpawnPointsByName(name: string): number;
         getUnkownUnit(name: string): UnitBlueprint;
@@ -861,6 +835,7 @@ declare module "other/utils" {
         [key: string]: boolean;
     };
     export function createTextInputOption(text: string, description: string, initialValue: string, type: string, callback?: CallableFunction, options?: any): HTMLElement;
+    export function createSliderInputOption(text: string, description: string, initialValue: number, callback?: CallableFunction, options?: any): HTMLElement;
     export function getGroundElevation(latlng: LatLng, callback: CallableFunction): void;
 }
 declare module "controls/slider" {
@@ -1159,6 +1134,7 @@ declare module "unit/unit" {
         getCountry(): number;
         getName(): string;
         getUnitName(): string;
+        getCallsign(): string;
         getGroupName(): string;
         getState(): string;
         getTask(): string;
@@ -1196,7 +1172,7 @@ declare module "unit/unit" {
         getShotsScatter(): number;
         getShotsIntensity(): number;
         getHealth(): number;
-        static getConstructor(type: string): typeof Aircraft | undefined;
+        static getConstructor(type: string): typeof NavyUnit | undefined;
         constructor(ID: number);
         /********************** Abstract methods  *************************/
         /** Get the unit category string
@@ -1374,6 +1350,7 @@ declare module "unit/unit" {
             showAmmo: boolean;
             showSummary: boolean;
             showCallsign: boolean;
+            showOriginalCallsign: boolean;
             rotateToHeading: boolean;
         };
         appendContextActions(contextActionSet: ContextActionSet, targetUnit: Unit | null, targetPosition: LatLng | null): void;
@@ -1603,6 +1580,12 @@ declare module "map/markers/destinationpreviewHandle" {
         createIcon(): void;
     }
 }
+declare module "map/dcslayer" {
+    import * as L from "leaflet";
+    export class DCSLayer extends L.TileLayer {
+        createTile(coords: L.Coords, done: L.DoneCallback): HTMLElement;
+    }
+}
 declare module "map/map" {
     import * as L from "leaflet";
     import { MapContextMenu } from "contextmenus/mapcontextmenu";
@@ -1676,6 +1659,8 @@ declare module "map/map" {
         getMapMarkerVisibilityControls(): MapMarkerVisibilityControl[];
         setSlaveDCSCamera(newSlaveDCSCamera: boolean): void;
         setCameraControlMode(newCameraControlMode: string): void;
+        increaseCameraZoom(): void;
+        decreaseCameraZoom(): void;
     }
 }
 declare module "mission/bullseye" {

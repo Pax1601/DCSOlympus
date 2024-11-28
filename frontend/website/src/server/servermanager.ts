@@ -1,6 +1,6 @@
 import { LatLng } from 'leaflet';
 import { getApp } from '..';
-import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, LOGS_URI, MISSION_URI, NONE, ROEs, UNITS_URI, WEAPONS_URI, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
+import { AIRBASES_URI, BULLSEYE_URI, COMMANDS_URI, DRAWINGS_URI, LOGS_URI, MISSION_URI, NONE, ROEs, UNITS_URI, WEAPONS_URI, emissionsCountermeasures, reactionsToThreat } from '../constants/constants';
 import { ServerStatusPanel } from '../panels/serverstatuspanel';
 import { LogPanel } from '../panels/logpanel';
 import { Popup } from '../popups/popup';
@@ -151,6 +151,10 @@ export class ServerManager {
 
     getWeapons(callback: CallableFunction, refresh: boolean = false) {
         this.GET(callback, WEAPONS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[WEAPONS_URI] }, 'arraybuffer', refresh);
+    }
+
+    getDrawings(callback: CallableFunction, refresh: boolean = false) {
+        this.GET(callback, DRAWINGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[DRAWINGS_URI] }, 'arraybuffer', refresh);
     }
 
     isCommandExecuted(callback: CallableFunction, commandHash: string) {

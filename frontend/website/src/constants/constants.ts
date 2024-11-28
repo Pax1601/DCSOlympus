@@ -8,6 +8,7 @@ export const AIRBASES_URI = "airbases";
 export const BULLSEYE_URI = "bullseyes";
 export const MISSION_URI = "mission";
 export const COMMANDS_URI = "commands";
+export const DRAWINGS_URI = "drawings";
 
 export const NONE = "None";
 export const GAME_MASTER = "Game master";
