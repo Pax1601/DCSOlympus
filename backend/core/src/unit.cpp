@@ -28,6 +28,13 @@ Unit::~Unit()
 
 void Unit::initialize(json::value json)
 {
+	update(json, 0);
+	setDefaults();
+}
+
+
+void Unit::update(json::value json, double dt)
+{
 	if (json.has_string_field(L"name"))
 		setName(to_string(json[L"name"]));
 
@@ -42,21 +49,13 @@ void Unit::initialize(json::value json)
 
 	if (json.has_number_field(L"coalitionID"))
 		setCoalition(json[L"coalitionID"].as_number().to_int32());
-
 	//if (json.has_number_field(L"Country"))
 	//	setCountry(json[L"Country"].as_number().to_int32());
-
+	
 	/* All units which contain the name "Olympus" are automatically under AI control */
 	if (getUnitName().find("Olympus") != string::npos)
 		setControlled(true);
 
-	update(json, 0);
-	setDefaults();
-}
-
-
-void Unit::update(json::value json, double dt)
-{
 	if (json.has_object_field(L"position"))
 	{
 		setPosition({
