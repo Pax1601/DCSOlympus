@@ -26,7 +26,7 @@ export class TextToSpeechSource extends AudioSource {
       body: JSON.stringify({ text }), // Send the data in JSON format
     };
 
-    fetch(getApp().getExpressAddress() + `/api/texttospeech/generate`, requestOptions)
+    fetch(getApp().getExpressAddress() + `/api/speech/generate`, requestOptions)
       .then((response) => {
         if (response.status === 200) {
           console.log(`Text to speech generate correctly`);
