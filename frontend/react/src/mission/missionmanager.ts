@@ -37,7 +37,6 @@ export class MissionManager {
     AppStateChangedEvent.on((state, subState) => {
       if (this.getSelectedAirbase() !== null) AirbaseSelectedEvent.dispatch(null);
     })
-
   }
 
   /** Update location of bullseyes

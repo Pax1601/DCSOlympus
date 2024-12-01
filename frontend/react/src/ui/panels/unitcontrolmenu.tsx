@@ -110,7 +110,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       navyunit: true,
     },
   });
-  const [selectionBlueprint, setSelectionBlueprint] = useState(null as null | UnitBlueprint);
+  const [selectionID, setSelectionID] = useState(null as null | number);
   const [searchBarRefState, setSearchBarRefState] = useState(null as MutableRefObject<null> | null);
   const [filterString, setFilterString] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
@@ -126,7 +126,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
   useEffect(() => {
     if (!searchBarRefState) setSearchBarRefState(searchBarRef);
-    if (!props.open && selectionBlueprint !== null) setSelectionBlueprint(null);
+    if (!props.open && selectionID !== null) setSelectionID(null);
     if (!props.open && filterString !== "") setFilterString("");
   });
 
@@ -194,11 +194,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
 
   const selectedCategories = getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
-  const [filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits] = [{}, {}, {}, {}, {}]; // TODOgetUnitsByLabel(filterString);
-
-  const mergedFilteredUnits = Object.assign({}, filteredAircraft, filteredHelicopters, filteredAirDefense, filteredGroundUnits, filteredNavyUnits) as {
-    [key: string]: UnitBlueprint;
-  };
+  const filteredUnits = Object.values(getApp()?.getUnitsManager()?.getUnits() ?? {}).filter(
+    (unit) => unit.getUnitName().toLowerCase().indexOf(filterString.toLowerCase()) >= 0
+  );
 
   const everyUnitIsGround = selectedCategories.every((category) => {
     return category === "GroundUnit";
@@ -249,51 +247,58 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
               their specific type by using the search input.
             </div>
             <div className="flex flex-col gap-4 rounded-lg bg-olympus-600 p-4">
-              <div
-                className={`
-                  text-bold border-b-2 border-b-white/10 pb-2 text-gray-400
-                `}
-              >
-                Control mode
-              </div>
-              <div className="flex flex-col justify-start gap-2">
-                {Object.entries({
-                  human: ["Human", olButtonsVisibilityHuman],
-                  olympus: ["Olympus controlled", olButtonsVisibilityOlympus],
-                  dcs: ["From DCS mission", olButtonsVisibilityDcs],
-                }).map((entry, idx) => {
-                  return (
-                    <div className="flex justify-between" key={idx}>
-                      <span className="font-light text-white">{entry[1][0] as string}</span>
-                      <OlToggle
-                        key={entry[0]}
-                        onClick={() => {
-                          selectionFilter["control"][entry[0]] = !selectionFilter["control"][entry[0]];
-                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                        }}
-                        toggled={selectionFilter["control"][entry[0]]}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+              {selectionID === null && (
+                <>
+                  <div
+                    className={`
+                      text-bold border-b-2 border-b-white/10 pb-2 text-gray-400
+                    `}
+                  >
+                    Control mode
+                  </div>
 
-              <div
-                className={`
-                  text-bold border-b-2 border-b-white/10 pb-2 text-gray-400
-                `}
-              >
-                Types and coalitions
-              </div>
+                  <div className="flex flex-col justify-start gap-2">
+                    {Object.entries({
+                      human: ["Human", olButtonsVisibilityHuman],
+                      olympus: ["Olympus controlled", olButtonsVisibilityOlympus],
+                      dcs: ["From DCS mission", olButtonsVisibilityDcs],
+                    }).map((entry, idx) => {
+                      return (
+                        <div className="flex justify-between" key={idx}>
+                          <span className="font-light text-white">{entry[1][0] as string}</span>
+                          <OlToggle
+                            key={entry[0]}
+                            onClick={() => {
+                              selectionFilter["control"][entry[0]] = !selectionFilter["control"][entry[0]];
+                              setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                            }}
+                            toggled={selectionFilter["control"][entry[0]]}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div
+                    className={`
+                      text-bold border-b-2 border-b-white/10 pb-2 text-gray-400
+                    `}
+                  >
+                    Types and coalitions
+                  </div>
+                </>
+              )}
               <table>
                 <tbody>
-                  <tr>
-                    <td></td>
-                    <td className="pb-4 text-center font-bold text-blue-500">BLUE</td>
-                    <td className="pb-4 text-center font-bold text-gray-500">NEUTRAL</td>
-                    <td className="pb-4 text-center font-bold text-red-500">RED</td>
-                  </tr>
-                  {selectionBlueprint === null &&
+                  {selectionID === null && (
+                    <tr>
+                      <td></td>
+                      <td className="pb-4 text-center font-bold text-blue-500">BLUE</td>
+                      <td className="pb-4 text-center font-bold text-gray-500">NEUTRAL</td>
+                      <td className="pb-4 text-center font-bold text-red-500">RED</td>
+                    </tr>
+                  )}
+                  {selectionID === null &&
                     Object.entries({
                       aircraft: olButtonsVisibilityAircraft,
                       helicopter: olButtonsVisibilityHelicopter,
@@ -311,7 +316,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <td className="text-center" key={coalition}>
                                 <OlCheckbox
                                   checked={selectionFilter[coalition][entry[0]]}
-                                  disabled={selectionBlueprint !== null}
+                                  disabled={selectionID !== null}
                                   onChange={() => {
                                     selectionFilter[coalition][entry[0]] = !selectionFilter[coalition][entry[0]];
                                     setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
@@ -323,45 +328,47 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         </tr>
                       );
                     })}
-                  <tr>
-                    <td className="text-gray-200"></td>
-                    <td className="text-center">
-                      <OlCheckbox
-                        checked={Object.values(selectionFilter["blue"]).some((value) => value)}
-                        onChange={() => {
-                          const newValue = !Object.values(selectionFilter["blue"]).some((value) => value);
-                          Object.keys(selectionFilter["blue"]).forEach((key) => {
-                            selectionFilter["blue"][key] = newValue;
-                          });
-                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                        }}
-                      />
-                    </td>
-                    <td className="text-center">
-                      <OlCheckbox
-                        checked={Object.values(selectionFilter["neutral"]).some((value) => value)}
-                        onChange={() => {
-                          const newValue = !Object.values(selectionFilter["neutral"]).some((value) => value);
-                          Object.keys(selectionFilter["neutral"]).forEach((key) => {
-                            selectionFilter["neutral"][key] = newValue;
-                          });
-                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                        }}
-                      />
-                    </td>
-                    <td className="text-center">
-                      <OlCheckbox
-                        checked={Object.values(selectionFilter["red"]).some((value) => value)}
-                        onChange={() => {
-                          const newValue = !Object.values(selectionFilter["red"]).some((value) => value);
-                          Object.keys(selectionFilter["red"]).forEach((key) => {
-                            selectionFilter["red"][key] = newValue;
-                          });
-                          setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
-                        }}
-                      />
-                    </td>
-                  </tr>
+                  {selectionID === null && (
+                    <tr>
+                      <td className="text-gray-200"></td>
+                      <td className="text-center">
+                        <OlCheckbox
+                          checked={Object.values(selectionFilter["blue"]).some((value) => value)}
+                          onChange={() => {
+                            const newValue = !Object.values(selectionFilter["blue"]).some((value) => value);
+                            Object.keys(selectionFilter["blue"]).forEach((key) => {
+                              selectionFilter["blue"][key] = newValue;
+                            });
+                            setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                          }}
+                        />
+                      </td>
+                      <td className="text-center">
+                        <OlCheckbox
+                          checked={Object.values(selectionFilter["neutral"]).some((value) => value)}
+                          onChange={() => {
+                            const newValue = !Object.values(selectionFilter["neutral"]).some((value) => value);
+                            Object.keys(selectionFilter["neutral"]).forEach((key) => {
+                              selectionFilter["neutral"][key] = newValue;
+                            });
+                            setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                          }}
+                        />
+                      </td>
+                      <td className="text-center">
+                        <OlCheckbox
+                          checked={Object.values(selectionFilter["red"]).some((value) => value)}
+                          onChange={() => {
+                            const newValue = !Object.values(selectionFilter["red"]).some((value) => value);
+                            Object.keys(selectionFilter["red"]).forEach((key) => {
+                              selectionFilter["red"][key] = newValue;
+                            });
+                            setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
               <div>
@@ -369,29 +376,28 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   <OlSearchBar
                     onChange={(value) => {
                       setFilterString(value);
-                      selectionBlueprint && setSelectionBlueprint(null);
+                      selectionID && setSelectionID(null);
                     }}
-                    text={selectionBlueprint ? selectionBlueprint.label : filterString}
+                    text={selectionID ? (getApp().getUnitsManager().getUnitByID(selectionID)?.getUnitName() ?? "") : filterString}
                   />
                 </div>
-                <OlDropdown buttonRef={searchBarRefState} open={filterString !== "" && selectionBlueprint === null}>
+                <OlDropdown buttonRef={searchBarRefState} open={filterString !== "" && selectionID === null}>
                   <div className="max-h-48">
                     {filterString !== "" &&
-                      Object.keys(mergedFilteredUnits).length > 0 &&
-                      Object.entries(mergedFilteredUnits).map((entry) => {
-                        const blueprint = entry[1];
+                      filteredUnits.length > 0 &&
+                      filteredUnits.map((unit) => {
                         return (
                           <OlDropdownItem
-                            key={entry[0]}
+                            key={unit[0]}
                             onClick={() => {
-                              setSelectionBlueprint(blueprint);
+                              setSelectionID(unit.ID);
                             }}
                           >
-                            {blueprint.label}
+                            {unit.getUnitName()}
                           </OlDropdownItem>
                         );
                       })}
-                    {Object.keys(mergedFilteredUnits).length == 0 && <span>No results</span>}
+                    {filteredUnits.length == 0 && <span>No results</span>}
                   </div>
                 </OlDropdown>
               </div>
@@ -409,19 +415,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                 Object.values(getApp().getUnitsManager().getUnits()).forEach((unit) => {
                   /* Check if the control type is respected, return if it is not */
                   if (unit.getHuman() && !selectionFilter["control"]["human"]) return;
-
                   if (unit.isControlledByOlympus() && !selectionFilter["control"]["olympus"]) return;
-
                   if (!unit.isControlledByDCS() && !selectionFilter["control"]["dcs"]) return;
 
-                  /* If a specific unit is being selected check that the label is correct, otherwise check if the unit type is active for the coalition */
-                  if (selectionBlueprint) {
-                    if (unit.getBlueprint()?.label === undefined || unit.getBlueprint()?.label !== selectionBlueprint.label) return;
-
-                    /* This is a trick to easily reuse the same checkboxes used to globally enable unit types for a coalition,
-                      since those checkboxes are checked if at least one type is selected for a specific coalition.
-                      */
-                    if (!Object.values(selectionFilter[unit.getCoalition()]).some((value) => value)) return;
+                  /* If a specific unit is being selected select the unit */
+                  if (selectionID) {
+                    if (unit.ID !== selectionID) return;
                   } else {
                     if (!selectionFilter[unit.getCoalition()][unit.getMarkerCategory()]) return;
                   }
@@ -644,7 +643,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             <OlButtonGroupItem
                               key={idx}
                               onClick={() => {
-                                
                                 selectedUnits.forEach((unit) => {
                                   unit.setROE(ROEs[convertROE(idx)]);
                                   setSelectedUnitsData({
@@ -1180,9 +1178,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
-                      my-auto w-20
-                    `}>
+                    <OlDropdown
+                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
+                      className={`my-auto w-20`}
+                    >
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1301,9 +1300,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
-                          bg-yellow-700
-                        `}
+                        ${
+                          selectedUnits[0].getFuel() > 10 &&
+                          selectedUnits[0].getFuel() <= 40 &&
+                          `bg-yellow-700`
+                        }
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}

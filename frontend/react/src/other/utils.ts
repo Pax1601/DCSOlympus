@@ -397,3 +397,11 @@ export function wait(time) {
 export function computeBearingRangeString(latlng1, latlng2) {
   return `${bearing(latlng1.lat, latlng1.lng, latlng2.lat, latlng2.lng).toFixed()}/${(latlng1.distanceTo(latlng2) / 1852).toFixed(0)}`;
 }
+
+export function blobToBase64(blob) {
+  return new Promise((resolve: (value: string) => void, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.readAsDataURL(blob);
+  });
+}

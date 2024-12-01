@@ -4,6 +4,7 @@ import { AudioSourcesChangedEvent } from "../events";
 
 export class FileSource extends AudioSource {
   #file: File;
+  #filename: string;
   #source: AudioBufferSourceNode;
   #duration: number = 0;
   #currentPosition: number = 0;
@@ -17,6 +18,7 @@ export class FileSource extends AudioSource {
   constructor(file) {
     super();
     this.#file = file;
+    this.#filename = this.#file?.name;
 
     this.setName(this.#file?.name ?? "N/A");
     
@@ -116,5 +118,9 @@ export class FileSource extends AudioSource {
 
   getLooping() {
     return this.#looping;
+  }
+
+  getFilename() {
+    return this.#filename;
   }
 }

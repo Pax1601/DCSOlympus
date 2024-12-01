@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { CommandModeOptions, OlympusConfig, ServerStatus, SpawnRequestTable } from "./interfaces";
+import { CommandModeOptions, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -146,6 +146,19 @@ export class ModalEvent {
 
   static dispatch(modal: boolean) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { modal } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class SessionDataLoadedEvent {
+  static on(callback: (sessionData: SessionData) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.sessionData);
+    });
+  }
+
+  static dispatch(sessionData: SessionData) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { sessionData } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }

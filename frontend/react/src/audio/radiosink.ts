@@ -2,8 +2,8 @@ import { AudioSink } from "./audiosink";
 import { AudioPacket } from "./audiopacket";
 import { getApp } from "../olympusapp";
 import { AudioSinksChangedEvent } from "../events";
-import { timeStamp } from "console";
 import { makeID } from "../other/utils";
+import { Recorder } from "./recorder";
 
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
@@ -19,9 +19,14 @@ export class RadioSink extends AudioSink {
   #clearReceivingTimeout: number;
   #packetID = 0;
   #guid = makeID(22);
+  #recorder: Recorder;
+  speechDataAvailable: (blob: Blob) => void;
 
   constructor() {
     super();
+
+    this.#recorder = new Recorder();
+    this.#recorder.onRecordingCompleted = (blob) => this.speechDataAvailable(blob);
 
     this.#encoder = new AudioEncoder({
       output: (data) => this.handleEncodedData(data),
@@ -104,11 +109,19 @@ export class RadioSink extends AudioSink {
 
   setReceiving(receiving) {
     // Only do it if actually changed
-    if (receiving !== this.#receiving) AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+    if (receiving !== this.#receiving) {
+      AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+
+      if (getApp().getAudioManager().getSpeechRecognition()) {
+        if (receiving) this.#recorder.start();
+        else this.#recorder.stop();
+      }
+    }
     if (receiving) {
       window.clearTimeout(this.#clearReceivingTimeout);
       this.#clearReceivingTimeout = window.setTimeout(() => this.setReceiving(false), 500);
     }
+
     this.#receiving = receiving;
   }
 
@@ -124,11 +137,13 @@ export class RadioSink extends AudioSink {
       let audioPacket = new AudioPacket();
       audioPacket.setAudioData(new Uint8Array(arrayBuffer));
       audioPacket.setPacketID(this.#packetID++);
-      audioPacket.setFrequencies([{
+      audioPacket.setFrequencies([
+        {
           frequency: this.#frequency,
           modulation: this.#modulation,
-          encryption: 0
-      }])
+          encryption: 0,
+        },
+      ]);
       audioPacket.setClientGUID(getApp().getAudioManager().getGuid());
       audioPacket.setTransmissionGUID(this.#guid);
       getApp().getAudioManager().send(audioPacket.toByteArray());
@@ -138,5 +153,9 @@ export class RadioSink extends AudioSink {
   handleRawData(audioData) {
     this.#encoder.encode(audioData);
     audioData.close();
+  }
+
+  recordArrayBuffer(arrayBuffer: ArrayBuffer) {
+    this.#recorder.recordBuffer(arrayBuffer);
   }
 }

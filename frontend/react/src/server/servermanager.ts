@@ -668,7 +668,10 @@ export class ServerManager {
   checkSessionHash(newSessionHash: string) {
     if (this.#sessionHash != null) {
       if (newSessionHash !== this.#sessionHash) location.reload();
-    } else this.#sessionHash = newSessionHash;
+    } else {
+      this.#sessionHash = newSessionHash;
+      getApp().getSessionDataManager().loadSessionData(newSessionHash);
+    }
   }
 
   setConnected(newConnected: boolean) {

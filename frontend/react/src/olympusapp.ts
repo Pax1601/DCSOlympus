@@ -23,6 +23,8 @@ import { AudioManager } from "./audio/audiomanager";
 import { NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
 import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig, ProfileOptions } from "./interfaces";
+import { AWACSController } from "./controllers/awacs";
+import { SessionDataManager } from "./sessiondata";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -46,7 +48,11 @@ export class OlympusApp {
   #unitsManager: UnitsManager | null = null;
   #weaponsManager: WeaponsManager | null = null;
   #audioManager: AudioManager | null = null;
+  #sessionDataManager: SessionDataManager | null = null;
   //#pluginsManager: // TODO
+
+  /* Controllers */
+  #AWACSController: AWACSController | null = null;
 
   constructor() {
     SelectedUnitsChangedEvent.on((selectedUnits) => {
@@ -86,11 +92,19 @@ export class OlympusApp {
     return this.#audioManager as AudioManager;
   }
 
+  getSessionDataManager() {
+    return this.#sessionDataManager as SessionDataManager;
+  }
+
   /* TODO
     getPluginsManager() {
         return null //  this.#pluginsManager as PluginsManager;
     }
     */
+
+  getAWACSController() {
+    return this.#AWACSController;
+  }
 
   getExpressAddress() {
     return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}express`;
@@ -103,6 +117,7 @@ export class OlympusApp {
   start() {
     /* Initialize base functionalitites */
     this.#shortcutManager = new ShortcutManager(); /* Keep first */
+    this.#sessionDataManager = new SessionDataManager();
 
     this.#map = new Map("map-container");
 
@@ -111,6 +126,9 @@ export class OlympusApp {
     this.#unitsManager = new UnitsManager();
     this.#weaponsManager = new WeaponsManager();
     this.#audioManager = new AudioManager();
+
+    /* Controllers */
+    this.#AWACSController = new AWACSController();
 
     /* Set the address of the server */
     this.getServerManager().setAddress(this.getBackendAddress());
@@ -207,7 +225,7 @@ export class OlympusApp {
         .then((response) => {
           if (response.status === 200) {
             console.log(`Profile ${this.#profileName} reset correctly`);
-            location.reload()
+            location.reload();
           } else {
             this.addInfoMessage("Error resetting profile");
             throw new Error("Error resetting profile");
@@ -228,7 +246,7 @@ export class OlympusApp {
       .then((response) => {
         if (response.status === 200) {
           console.log(`All profiles reset correctly`);
-          location.reload()
+          location.reload();
         } else {
           this.addInfoMessage("Error resetting profiles");
           throw new Error("Error resetting profiles");
@@ -241,6 +259,10 @@ export class OlympusApp {
     if (this.#profileName && this.#config?.profiles && this.#config?.profiles[this.#profileName])
       return this.#config?.profiles[this.#profileName] as ProfileOptions;
     else return null;
+  }
+
+  getProfileName() {
+    return this.#profileName;
   }
 
   loadProfile() {
@@ -280,4 +302,6 @@ export class OlympusApp {
       InfoPopupEvent.dispatch(this.#infoMessages);
     }, 5000);
   }
+
+  
 }

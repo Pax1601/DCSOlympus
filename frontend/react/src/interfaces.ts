@@ -29,9 +29,15 @@ export interface OlympusConfig {
   profiles?: ProfileOptions;
 }
 
+export interface SessionData {
+  radios?: { frequency: number; modulation: number }[];
+  fileSources?: { filename: string; volume: number }[];
+  unitSinks?: {ID: number}[];
+}
+
 export interface ProfileOptions {
-  mapOptions: MapOptions,
-  shortcuts: {[key: string]: ShortcutOptions}
+  mapOptions: MapOptions;
+  shortcuts: { [key: string]: ShortcutOptions };
 }
 
 export interface ContextMenuOption {
@@ -100,7 +106,7 @@ export interface SpawnRequestTable {
   coalition: string;
   unit: UnitSpawnTable;
   amount: number;
-  quickAccessName?: string
+  quickAccessName?: string;
 }
 
 export interface EffectRequestTable {

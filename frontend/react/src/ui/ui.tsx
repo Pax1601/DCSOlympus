@@ -11,6 +11,7 @@ import { MapHiddenTypes, MapOptions } from "../types/types";
 import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/loginmodal";
+import { FileSourceLoadPrompt } from "./modals/filesourceloadprompt";
 
 import { MiniMapPanel } from "./panels/minimappanel";
 import { UnitControlBar } from "./panels/unitcontrolbar";
@@ -69,6 +70,7 @@ export function UI() {
         <LoginModal open={appState === OlympusState.LOGIN} />
         <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
         <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
+        <FileSourceLoadPrompt open={appState === OlympusState.LOAD_FILES}/>
 
         <div id="map-container" className="z-0 h-full w-screen" />
 

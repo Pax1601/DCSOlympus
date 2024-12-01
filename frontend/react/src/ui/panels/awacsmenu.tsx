@@ -14,10 +14,6 @@ import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Unit } from "../../unit/unit";
 import { Bullseye } from "../../mission/bullseye";
-import { bearing, coalitionToEnum, computeBearingRangeString, mToFt, rad2deg } from "../../other/utils";
-
-const trackStrings = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "North"]
-const relTrackStrings = ["hot", "flank right", "beam right", "cold", "cold", "cold", "beam left", "flank left", "hot"]
 
 export function AWACSMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [callsign, setCallsign] = useState("Magic");
@@ -35,61 +31,9 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
     UnitUpdatedEvent.on((unit) => setRefreshTime(Date.now()));
   }, []);
 
-  const activeGroups = Object.values(getApp()?.getUnitsManager().computeClusters((unit) => unit.getCoalition() !== mapOptions.AWACSCoalition, 6) ?? {});
+
+
   
-  /*Object.values(hotgroups).filter((hotgroup) => {
-    return hotgroup.every((unit) => unit.getCoalition() !== mapOptions.AWACSCoalition);
-  });*/
-
-  let readout: string[] = [];
-
-  if (bullseyes) {
-    if (referenceUnit) {
-      readout.push(`${callsign}, ${activeGroups.length} group${activeGroups.length > 1 ? "s": ""}`);
-      readout.push(
-        ...activeGroups.map((group, idx) => {
-          let order = "th";
-          if (idx == 0) order = "st";
-          else if (idx == 1) order = "nd";
-          else if (idx == 2) order = "rd";
-
-          let trackDegs = bearing(group[0].getPosition().lat, group[0].getPosition().lng, referenceUnit.getPosition().lat, referenceUnit.getPosition().lng) - rad2deg(group[0].getTrack())
-          if (trackDegs < 0) trackDegs += 360
-          if (trackDegs > 360) trackDegs -= 360
-          let trackIndex = Math.round(trackDegs / 45)
-          
-          let groupLine = `${activeGroups.length > 1? (idx + 1 + "" + order + " group"): "Single group"} bullseye ${computeBearingRangeString(bullseyes[coalitionToEnum(mapOptions.AWACSCoalition)].getLatLng(), group[0].getPosition()).replace("/", " ")}, ${ (mToFt(group[0].getPosition().alt ?? 0) / 1000).toFixed()} thousand, ${relTrackStrings[trackIndex]}`;
-          
-          if (group.find((unit) => unit.getCoalition() === "neutral")) groupLine += ", bogey"
-          else groupLine += ", hostile"
-
-          return groupLine;
-        })
-      );
-    } else {
-      readout.push(`${callsign}, ${activeGroups.length} group${activeGroups.length > 1 ? "s": ""}`);
-      readout.push(
-        ...activeGroups.map((group, idx) => {
-          let order = "th";
-          if (idx == 0) order = "st";
-          else if (idx == 1) order = "nd";
-          else if (idx == 2) order = "rd";
-
-          let trackDegs = rad2deg(group[0].getTrack())
-          if (trackDegs < 0) trackDegs += 360
-          let trackIndex = Math.round(trackDegs / 45)
-          
-          let groupLine = `${activeGroups.length > 1? (idx + 1 + "" + order + " group"): "Single group"} bullseye ${computeBearingRangeString(bullseyes[coalitionToEnum(mapOptions.AWACSCoalition)].getLatLng(), group[0].getPosition()).replace("/", " ")}, ${ (mToFt(group[0].getPosition().alt ?? 0) / 1000).toFixed()} thousand, track ${trackStrings[trackIndex]}`;
-          
-          if (group.find((unit) => unit.getCoalition() === "neutral")) groupLine += ", bogey"
-          else groupLine += ", hostile"
-
-          return groupLine;
-        })
-      );
-    }
-  }
-
   return (
     <Menu title={"AWACS Tools"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
       <div
@@ -143,6 +87,7 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-2">
+            {/*}
             {activeGroups.length == 0 ? (
               <>No hotgroups</>
             ) : (
@@ -154,6 +99,7 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
                 <button onClick={() => getApp().getAudioManager().playText(readout.reduce((acc, line) => acc += " " + line, ""))}>Play</button>
               </>
             )}
+              {*/}
           </div>
         </>
       </div>

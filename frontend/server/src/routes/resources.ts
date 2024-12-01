@@ -2,6 +2,9 @@ import express = require("express");
 import fs = require("fs");
 const router = express.Router();
 
+let sessionHash = "";
+let sessionData = {}
+
 module.exports = function (configLocation) {
   router.get("/config", function (req, res, next) {
     if (fs.existsSync(configLocation)) {
@@ -69,6 +72,30 @@ module.exports = function (configLocation) {
       res.sendStatus(404);
     }
   });
+
+  router.put("/sessiondata/save/:profileName", function (req, res, next) {
+    if (req.body.sessionHash === undefined || req.body.sessionData === undefined) res.sendStatus(400);
+    let thisSessionHash = req.body.sessionHash;
+    if (thisSessionHash !== sessionHash) {
+      sessionHash = thisSessionHash;
+      sessionData = {};
+    }
+    sessionData[req.params.profileName] = req.body.sessionData;
+    res.end()
+  })
+
+  router.put("/sessiondata/load/:profileName", function (req, res, next) {
+    if (req.body.sessionHash === undefined) res.sendStatus(400);
+    let thisSessionHash = req.body.sessionHash;
+    if (thisSessionHash !== sessionHash) {
+      sessionHash = thisSessionHash;
+      sessionData = {};
+      res.sendStatus(404);
+    } else {
+      res.send(sessionData[req.params.profileName]);
+      res.end();
+    }
+  })
 
   return router;
 };
