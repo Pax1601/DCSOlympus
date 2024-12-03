@@ -202,18 +202,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
                 focus:outline-none focus:ring-4 focus:ring-blue-300
                 hover:bg-blue-800
               `}
-              onClick={() => {
-                var input = document.createElement("input");
-                input.type = "file";
-                input.click();
-                input.onchange = (e: Event) => {
-                  let target = e.target as HTMLInputElement;
-                  if (target && target.files) {
-                    var file = target.files[0];
-                    getApp().getAudioManager().addFileSource(file);
-                  }
-                };
-              }}
+              onClick={() => getApp().getAudioManager().addFileSource()}
             >
               Add audio source
             </button>

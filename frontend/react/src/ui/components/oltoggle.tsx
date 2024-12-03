@@ -2,10 +2,16 @@ import React from "react";
 
 export function OlToggle(props: { toggled: boolean | undefined; onClick: () => void }) {
   return (
-    <div className="inline-flex cursor-pointer items-center" onClick={props.onClick}>
+    <div
+      className="inline-flex cursor-pointer items-center"
+      onClick={(e) => {
+        e.stopPropagation();
+        props.onClick();
+      }}
+    >
       <button className="peer sr-only" />
       <div
-        data-toggled={props.toggled === true? 'true': props.toggled === undefined? 'undefined': 'false'}
+        data-toggled={props.toggled === true ? "true" : props.toggled === undefined ? "undefined" : "false"}
         className={`
           peer relative h-7 w-14 rounded-full bg-gray-200
           after:absolute after:start-[4px] after:top-0.5 after:h-6 after:w-6

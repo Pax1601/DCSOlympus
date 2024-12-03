@@ -12,11 +12,12 @@ export class TextToSpeechSource extends AudioSource {
   #audioBuffer: AudioBuffer;
   #restartTimeout: any;
   #looping = false;
+  onMessageCompleted: () => void = () => {};
 
   constructor() {
     super();
 
-    this.setName("Text to speech")
+    this.setName("Text to speech");
   }
 
   playText(text: string) {
@@ -36,7 +37,7 @@ export class TextToSpeechSource extends AudioSource {
         }
       }) // Parse the response
       .then((blob) => {
-        return blob.arrayBuffer()
+        return blob.arrayBuffer();
       })
       .then((contents) => {
         getApp()
@@ -76,7 +77,10 @@ export class TextToSpeechSource extends AudioSource {
 
       if (this.#currentPosition > this.#duration) {
         this.#currentPosition = 0;
-        if (!this.#looping) this.pause();
+        if (!this.#looping) {
+          this.pause();
+          this.onMessageCompleted();
+        }
       }
 
       AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
@@ -133,4 +137,3 @@ export class TextToSpeechSource extends AudioSource {
     return this.#looping;
   }
 }
-

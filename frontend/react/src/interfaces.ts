@@ -33,6 +33,7 @@ export interface SessionData {
   radios?: { frequency: number; modulation: number }[];
   fileSources?: { filename: string; volume: number }[];
   unitSinks?: {ID: number}[];
+  connections?: any[];
 }
 
 export interface ProfileOptions {

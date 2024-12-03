@@ -8,6 +8,7 @@ import { OlRangeSlider } from "../../components/olrangeslider";
 import { FileSource } from "../../../audio/filesource";
 import { MicrophoneSource } from "../../../audio/microphonesource";
 import { TextToSpeechSource } from "../../../audio/texttospeechsource";
+import { FaUpload } from "react-icons/fa";
 
 export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
   const [meterLevel, setMeterLevel] = useState(0);
@@ -48,7 +49,47 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
           />
         </div>
         <div className="flex w-full overflow-hidden">
-          <span className={`my-auto truncate`}>{props.source.getName()}</span>
+          <div className={`my-auto w-full truncate`}>
+            {props.source.getName() === "" ? (
+              props.source instanceof FileSource ? (
+                <div
+                  className="flex w-full content-center justify-between"
+                >
+                  <span className={`my-auto text-red-500`}>No file selected</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      var input = document.createElement("input");
+                      input.type = "file";
+                      input.click();
+                      input.onchange = (e: Event) => {
+                        let target = e.target as HTMLInputElement;
+                        if (target && target.files) {
+                          var file = target.files[0];
+                          (props.source as FileSource).setFile(file)
+                          
+                        }
+                      };
+                    }}
+                    className={`
+                      flex cursor-pointer content-center items-center gap-2
+                      rounded-sm bg-blue-600 px-5 py-2.5 text-sm font-medium
+                      text-white
+                      data-[disabled="true"]:bg-blue-800
+                      focus:outline-none focus:ring-4 focus:ring-blue-800
+                      hover:bg-blue-700
+                    `}
+                  >
+                    <FaUpload className={`my-auto`} />
+                  </button>
+                </div>
+              ) : (
+                "No name"
+              )
+            ) : (
+              props.source.getName()
+            )}
+          </div>
         </div>
         {!(props.source instanceof MicrophoneSource) && !(props.source instanceof TextToSpeechSource) && (
           <div
@@ -68,22 +109,22 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
         <>
           {(props.source instanceof FileSource || props.source instanceof TextToSpeechSource) && (
             <div className="flex flex-col gap-2 rounded-md bg-olympus-400 p-2">
-              {props.source instanceof TextToSpeechSource && 
-              <input
-              className={`
-                block h-10 w-full border-[2px] bg-gray-50 py-2.5 text-center
-                text-sm text-gray-900
-                dark:border-gray-700 dark:bg-olympus-600 dark:text-white
-                dark:placeholder-gray-400 dark:focus:border-blue-700
-                dark:focus:ring-blue-700
-                focus:border-blue-700 focus:ring-blue-500
-              `}
-              value={text}
-              onChange={(ev) => {
-                setText(ev.target.value);
-              }}
-            ></input>
-              }
+              {props.source instanceof TextToSpeechSource && (
+                <input
+                  className={`
+                    block h-10 w-full border-[2px] bg-gray-50 py-2.5 text-center
+                    text-sm text-gray-900
+                    dark:border-gray-700 dark:bg-olympus-600 dark:text-white
+                    dark:placeholder-gray-400 dark:focus:border-blue-700
+                    dark:focus:ring-blue-700
+                    focus:border-blue-700 focus:ring-blue-500
+                  `}
+                  value={text}
+                  onChange={(ev) => {
+                    setText(ev.target.value);
+                  }}
+                ></input>
+              )}
               <div className="flex gap-4">
                 <OlStateButton
                   checked={false}
@@ -97,7 +138,8 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
                 <OlRangeSlider
                   value={props.source.getDuration() > 0 ? (props.source.getCurrentPosition() / props.source.getDuration()) * 100 : 0}
                   onChange={(ev) => {
-                    if (props.source instanceof FileSource || props.source instanceof TextToSpeechSource) props.source.setCurrentPosition(parseFloat(ev.currentTarget.value));
+                    if (props.source instanceof FileSource || props.source instanceof TextToSpeechSource)
+                      props.source.setCurrentPosition(parseFloat(ev.currentTarget.value));
                   }}
                   className="my-auto"
                 />
@@ -124,9 +166,10 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
                   flex-row border-gray-500
                 `}
               >
-                <div style={{ minWidth: `${meterLevel * 100}%` }} className={`
-                  rounded-full bg-gray-200
-                `}></div>
+                <div
+                  style={{ minWidth: `${meterLevel * 100}%` }}
+                  className={`rounded-full bg-gray-200`}
+                ></div>
               </div>
               <OlRangeSlider
                 value={props.source.getVolume() * 100}

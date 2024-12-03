@@ -3,7 +3,10 @@ import React from "react";
 export function OlLabelToggle(props: { toggled: boolean | undefined; leftLabel: string; rightLabel: string; onClick: () => void }) {
   return (
     <button
-      onClick={props.onClick}
+    onClick={(e) => {
+      e.stopPropagation();
+      props.onClick();
+    }}
       className={`
         relative flex h-10 w-[120px] flex-none cursor-pointer select-none
         flex-row content-center justify-between rounded-md border px-1 py-[5px]

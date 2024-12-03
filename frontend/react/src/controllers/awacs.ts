@@ -2,6 +2,7 @@ import { getApp } from "../olympusapp";
 import { Coalition } from "../types/types";
 import { Unit } from "../unit/unit";
 import { bearing, coalitionToEnum, computeBearingRangeString, mToFt, rad2deg } from "../other/utils";
+import { TextToSpeechSource } from "../audio/texttospeechsource";
 
 const trackStrings = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "North"];
 const relTrackStrings = ["hot", "flank right", "beam right", "cold", "cold", "cold", "beam left", "flank left", "hot"];
@@ -11,9 +12,11 @@ export class AWACSController {
   #callsign: string = "Magic";
   #referenceUnit: Unit;
 
-  constructor() {}
+  constructor() {
 
-  executeCommand(text) {
+  }
+
+  executeCommand(text, radio) {
     if (text.indexOf("request picture") > 0) {
       console.log("Requested AWACS picture");
       const readout = this.createPicture(true);

@@ -52,6 +52,7 @@ export class AudioManager {
   #SRSClientUnitIDs: number[] = [];
   #syncInterval: number;
   #speechRecognition: boolean = true;
+  #internalTextToSpeechSource: TextToSpeechSource;
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
@@ -161,23 +162,41 @@ export class AudioManager {
           newRadio?.setModulation(options.modulation);
         });
       } else {
-        /* Add two default radios */
-        this.addRadio();
-        this.addRadio();
+        /* Add two default radios and connect to the microphone*/
+        let newRadio = this.addRadio();
+        this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
+        this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
+        
+        newRadio = this.addRadio();
+        this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
+        this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
+      }
+
+      let sessionFileSources = getApp().getSessionDataManager().getSessionData().fileSources;
+      if (sessionFileSources) {
+        /* Load file sources */
+        sessionFileSources.forEach((options) => {
+          this.addFileSource();
+        });
       }
 
       let sessionUnitSinks = getApp().getSessionDataManager().getSessionData().unitSinks;
       if (sessionUnitSinks) {
-        /* Load session radios */
+        /* Load unit sinks */
         sessionUnitSinks.forEach((options) => {
           let unit = getApp().getUnitsManager().getUnitByID(options.ID);
           if (unit) {
-            let newSink = this.addUnitSink(unit);
+            this.addUnitSink(unit);
           }
         });
       }
-      let sessionFileSources = getApp().getSessionDataManager().getSessionData().fileSources;
-      if (sessionFileSources && sessionFileSources.length > 0) getApp().setState(OlympusState.LOAD_FILES);
+
+      let sessionConnections = getApp().getSessionDataManager().getSessionData().connections;
+      if (sessionConnections) {
+        sessionConnections.forEach((connection) => {
+          this.#sources[connection[0]]?.connect(this.#sinks[connection[1]]);
+        })
+      }
 
       this.#running = true;
       AudioManagerStateChangedEvent.dispatch(this.#running);
@@ -190,6 +209,8 @@ export class AudioManager {
       this.#devices = devices;
       AudioManagerDevicesChangedEvent.dispatch(devices);
     });
+
+    this.#internalTextToSpeechSource = new TextToSpeechSource(); 
   }
 
   stop() {
@@ -220,9 +241,9 @@ export class AudioManager {
     this.#endpoint = endpoint;
   }
 
-  addFileSource(file) {
-    console.log(`Adding file source from ${file.name}`);
-    const newSource = new FileSource(file);
+  addFileSource() {
+    console.log(`Adding file source`);
+    const newSource = new FileSource();
     this.#sources.push(newSource);
     AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
     return newSource;
@@ -250,11 +271,10 @@ export class AudioManager {
   addRadio() {
     console.log("Adding new radio");
     const newRadio = new RadioSink();
-    newRadio.speechDataAvailable = (blob) => this.#speechController.analyzeData(blob);
+    newRadio.speechDataAvailable = (blob) => this.#speechController.analyzeData(blob, newRadio);
     this.#sinks.push(newRadio);
     /* Set radio name by default to be incremental number */
     newRadio.setName(`Radio ${this.#sinks.length}`);
-    this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
     AudioSinksChangedEvent.dispatch(this.#sinks);
     return newRadio;
   }
@@ -327,11 +347,15 @@ export class AudioManager {
   }
 
   setSpeechRecognition(speechRecognition: boolean) {
-    this.#speechRecognition = this.#speechRecognition;
+    this.#speechRecognition = speechRecognition;
   }
 
   getSpeechRecognition() {
     return this.#speechRecognition;
+  }
+
+  getInternalTextToSpeechSource() {
+    return this.#internalTextToSpeechSource;
   }
 
   #syncRadioSettings() {

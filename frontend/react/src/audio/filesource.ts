@@ -15,13 +15,12 @@ export class FileSource extends AudioSource {
   #restartTimeout: any;
   #looping = false;
 
-  constructor(file) {
-    super();
+  setFile(file: File) {
     this.#file = file;
     this.#filename = this.#file?.name;
 
     this.setName(this.#file?.name ?? "N/A");
-    
+
     /* Create the file reader and read the file from disk */
     var reader = new FileReader();
     reader.onload = (e) => {
@@ -38,6 +37,8 @@ export class FileSource extends AudioSource {
       }
     };
     reader.readAsArrayBuffer(this.#file);
+
+    AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
 
   play() {

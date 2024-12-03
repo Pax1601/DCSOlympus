@@ -21,7 +21,10 @@ export function OlNumberInput(props: {
       <div className="relative flex max-w-[8rem] items-center">
         <button
           type="button"
-          onClick={props.onDecrease}
+          onClick={(e) => {
+            e.stopPropagation();
+            props.onDecrease();
+          }}
           className={`
             h-10 rounded-s-lg bg-gray-100 p-3
             dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-blue-700
@@ -45,6 +48,7 @@ export function OlNumberInput(props: {
         <input
           type="text"
           onChange={props.onChange}
+          onClick={(e) => e.stopPropagation()}
           min={props.min}
           max={props.max}
           className={`
@@ -59,7 +63,10 @@ export function OlNumberInput(props: {
         />
         <button
           type="button"
-          onClick={props.onIncrease}
+          onClick={(e) => {
+            e.stopPropagation();
+            props.onIncrease();
+          }}
           className={`
             h-10 rounded-e-lg bg-gray-100 p-3
             dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-blue-500

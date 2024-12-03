@@ -18,11 +18,14 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
     <div
       data-receiving={props.radio.getReceiving()}
       className={`
-        box-border flex flex-col content-center justify-between gap-2 rounded-md
-        border-2 border-transparent bg-olympus-200/30 px-4 py-3
+        box-border flex cursor-pointer flex-col content-center justify-between
+        gap-2 rounded-md border-2 border-transparent bg-olympus-200/30 px-4 py-3
         data-[receiving='true']:border-white
       `}
       ref={ref}
+      onClick={() => {
+        setExpanded(!expanded);
+      }}
     >
       <div className="flex content-center justify-between gap-2">
         <div

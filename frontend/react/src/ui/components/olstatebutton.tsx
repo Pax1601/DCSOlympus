@@ -30,13 +30,14 @@ export function OlStateButton(props: {
     textColor = "#243141";
   }
 
-  const opacity = (hover && !props.checked) ? "AA" : "FF";
+  const opacity = hover && !props.checked ? "AA" : "FF";
 
   return (
     <>
       <button
         ref={buttonRef}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           props.onClick();
           props.onClick ?? setHover(false);
         }}

@@ -286,8 +286,7 @@ export enum OlympusState {
   OPTIONS = "Options",
   AUDIO = "Audio",
   AIRBASE = "Airbase",
-  GAME_MASTER = "Game master",
-  LOAD_FILES = "Load files"
+  GAME_MASTER = "Game master"
 }
 
 export const NO_SUBSTATE = "No substate";

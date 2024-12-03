@@ -1,10 +1,12 @@
 import { getApp } from "../olympusapp";
 import { blobToBase64 } from "../other/utils";
+import { AudioSource } from "./audiosource";
+import { RadioSink } from "./radiosink";
 
 export class SpeechController {
   constructor() {}
 
-  analyzeData(blob: Blob) {
+  analyzeData(blob: Blob, radio: RadioSink) {
     blobToBase64(blob)
       .then((base64) => {
         const requestOptions = {
@@ -23,23 +25,45 @@ export class SpeechController {
               throw new Error("Error saving profile");
             }
           })
-          .then((text) => this.#executeCommand(text))
+          .then((text) => this.#executeCommand(text.toLowerCase(), radio))
           .catch((error) => console.error(error)); // Handle errors
       })
       .catch((error) => console.error(error));
   }
 
-  #executeCommand(text) {
+  playText(text, radio: RadioSink) {
+    const textToSpeechSource = getApp()
+        .getAudioManager()
+        .getInternalTextToSpeechSource();
+
+      textToSpeechSource.connect(radio);
+      textToSpeechSource.playText(text);
+      radio.setPtt(true);
+      textToSpeechSource.onMessageCompleted = () => {
+        radio.setPtt(false);
+        textToSpeechSource.disconnect(radio);
+      }
+  }
+
+  #executeCommand(text, radio) {
     console.log(`Received speech command: ${text}`);
 
     if (text.indexOf("olympus") === 0 ) {
-      this.#olympusCommand(text);
+      this.#olympusCommand(text, radio);
     } else if (text.indexOf(getApp().getAWACSController()?.getCallsign().toLowerCase()) === 0) {
-      getApp().getAWACSController()?.executeCommand(text);
+      getApp().getAWACSController()?.executeCommand(text, radio);
     }
   }
 
-  #olympusCommand(text) {
-
+  #olympusCommand(text, radio) {
+    if (text.indexOf("request straight") > 0 || text.indexOf("request straightin") > 0) {
+      this.playText("Confirm you are on step 13, being a pussy?", radio);
+    }
+    else if (text.indexOf("bolter") > 0) {
+      this.playText("What an idiot, I never boltered, 100% boarding rate", radio);
+    }
+    else if (text.indexOf("read back") > 0) {
+      this.playText(text.replace("olympus", ""), radio);
+    }
   }
 }

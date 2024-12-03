@@ -1,3 +1,4 @@
+import { AudioSink } from "./audio/audiosink";
 import { FileSource } from "./audio/filesource";
 import { RadioSink } from "./audio/radiosink";
 import { UnitSink } from "./audio/unitsink";
@@ -26,9 +27,22 @@ export class SessionDataManager {
           .filter((sink) => sink instanceof UnitSink)
           .map((unitSink) => {
             return {
-              ID: unitSink.getUnit().ID
+              ID: unitSink.getUnit().ID,
             };
           });
+
+        this.#sessionData.connections = [];
+        let counter = 0;
+        let sources = getApp().getAudioManager().getSources();
+        let sinks = getApp().getAudioManager().getSinks();
+        sources.forEach((source, idx) => {
+          counter++;
+          source.getConnectedTo().forEach((sink) => {
+            if (sinks.indexOf(sink as AudioSink) !== undefined) {
+              this.#sessionData.connections?.push([idx, sinks.indexOf(sink as AudioSink)]);
+            }
+          });
+        });
 
         this.#saveSessionData();
       }
@@ -41,6 +55,20 @@ export class SessionDataManager {
           .map((fileSource) => {
             return { filename: fileSource.getFilename(), volume: fileSource.getVolume() };
           });
+
+        this.#sessionData.connections = [];
+        let counter = 0;
+        let sources = getApp().getAudioManager().getSources();
+        let sinks = getApp().getAudioManager().getSinks();
+        sources.forEach((source, idx) => {
+          counter++;
+          source.getConnectedTo().forEach((sink) => {
+            if (sinks.indexOf(sink as AudioSink) !== undefined) {
+              this.#sessionData.connections?.push([idx, sinks.indexOf(sink as AudioSink)]);
+            }
+          });
+        });
+
         this.#saveSessionData();
       }
     });

@@ -10,10 +10,10 @@ export function OlFrequencyInput(props: { value: number; className?: string; onC
       flex gap-2
     `}>
       <OlNumberInput
-        min={1}
+        min={0}
         max={400}
         onChange={(e) => {
-          let newValue = Math.max(Math.min(Number(e.target.value), 400), 1) * 1000000;
+          let newValue = Math.max(Math.min(Number(e.target.value), 400), 0) * 1000000;
           let decimalPart = frequency - Math.floor(frequency / 1000000) * 1000000;
           frequency = newValue + decimalPart;
           props.onChange(frequency);
