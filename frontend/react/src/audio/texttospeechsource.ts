@@ -6,7 +6,7 @@ export class TextToSpeechSource extends AudioSource {
   #source: AudioBufferSourceNode;
   #duration: number = 0;
   #currentPosition: number = 0;
-  #updateInterval: any;
+  #updateInterval: number | null;
   #lastUpdateTime: number = 0;
   #playing = false;
   #audioBuffer: AudioBuffer;
@@ -69,22 +69,24 @@ export class TextToSpeechSource extends AudioSource {
 
     AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
 
-    this.#updateInterval = setInterval(() => {
-      /* Update the current position value every second */
-      const now = Date.now() / 1000;
-      this.#currentPosition += now - this.#lastUpdateTime;
-      this.#lastUpdateTime = now;
+    if (this.#updateInterval === null) {
+      this.#updateInterval = window.setInterval(() => {
+        /* Update the current position value every second */
+        const now = Date.now() / 1000;
+        this.#currentPosition += now - this.#lastUpdateTime;
+        this.#lastUpdateTime = now;
 
-      if (this.#currentPosition > this.#duration) {
-        this.#currentPosition = 0;
-        if (!this.#looping) {
-          this.pause();
-          this.onMessageCompleted();
+        if (this.#currentPosition > this.#duration) {
+          this.#currentPosition = 0;
+          if (!this.#looping) {
+            this.pause();
+            this.onMessageCompleted();
+          }
         }
-      }
 
-      AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
-    }, 1000);
+        AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
+      }, 1000);
+    }
   }
 
   pause() {
@@ -95,7 +97,8 @@ export class TextToSpeechSource extends AudioSource {
 
     const now = Date.now() / 1000;
     this.#currentPosition += now - this.#lastUpdateTime;
-    clearInterval(this.#updateInterval);
+    if (this.#updateInterval) window.clearInterval(this.#updateInterval);
+    this.#updateInterval = null;
 
     AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
   }
