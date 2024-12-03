@@ -1,6 +1,6 @@
 import React, { ForwardedRef, forwardRef, useEffect, useState } from "react";
 import { OlStateButton } from "../../components/olstatebutton";
-import { faPause, faPlay, faRepeat, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faHourglass, faPause, faPlay, faRepeat, faStop } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../../olympusapp";
 import { AudioSource } from "../../../audio/audiosource";
 import { FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
@@ -52,9 +52,7 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
           <div className={`my-auto w-full truncate`}>
             {props.source.getName() === "" ? (
               props.source instanceof FileSource ? (
-                <div
-                  className="flex w-full content-center justify-between"
-                >
+                <div className="flex w-full content-center justify-between">
                   <span className={`my-auto text-red-500`}>No file selected</span>
                   <button
                     type="button"
@@ -66,8 +64,7 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
                         let target = e.target as HTMLInputElement;
                         if (target && target.files) {
                           var file = target.files[0];
-                          (props.source as FileSource).setFile(file)
-                          
+                          (props.source as FileSource).setFile(file);
                         }
                       };
                     }}
@@ -128,10 +125,21 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
               <div className="flex gap-4">
                 <OlStateButton
                   checked={false}
-                  icon={props.source.getPlaying() ? faPause : faPlay}
+                  icon={
+                    props.source instanceof TextToSpeechSource
+                      ? props.source.getLoading()
+                        ? faHourglass
+                        : props.source.getPlaying()
+                          ? faPause
+                          : faPlay
+                      : props.source.getPlaying()
+                        ? faPause
+                        : faPlay
+                  }
                   onClick={() => {
                     if (props.source instanceof FileSource) props.source.getPlaying() ? props.source.pause() : props.source.play();
-                    else if (props.source instanceof TextToSpeechSource) props.source.getPlaying() ? props.source.pause() : props.source.playText(text);
+                    else if (props.source instanceof TextToSpeechSource)
+                      !props.source.getLoading() && (props.source.getPlaying() ? props.source.pause() : props.source.playText(text));
                   }}
                   tooltip="Play file / Text to speech"
                 ></OlStateButton>

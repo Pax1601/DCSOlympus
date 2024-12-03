@@ -8,7 +8,7 @@ export class FileSource extends AudioSource {
   #source: AudioBufferSourceNode;
   #duration: number = 0;
   #currentPosition: number = 0;
-  #updateInterval: number | null;
+  #updateInterval: number | null = null;
   #lastUpdateTime: number = 0;
   #playing = false;
   #audioBuffer: AudioBuffer;

@@ -6,12 +6,13 @@ export class TextToSpeechSource extends AudioSource {
   #source: AudioBufferSourceNode;
   #duration: number = 0;
   #currentPosition: number = 0;
-  #updateInterval: number | null;
+  #updateInterval: number | null = null;
   #lastUpdateTime: number = 0;
   #playing = false;
   #audioBuffer: AudioBuffer;
   #restartTimeout: any;
   #looping = false;
+  #loading = false;
   onMessageCompleted: () => void = () => {};
 
   constructor() {
@@ -26,6 +27,8 @@ export class TextToSpeechSource extends AudioSource {
       headers: { "Content-Type": "application/json" }, // Specify the content type
       body: JSON.stringify({ text }), // Send the data in JSON format
     };
+
+    this.#loading = true;
 
     fetch(getApp().getExpressAddress() + `/api/speech/generate`, requestOptions)
       .then((response) => {
@@ -48,10 +51,15 @@ export class TextToSpeechSource extends AudioSource {
             this.#audioBuffer = audioBuffer;
             this.#duration = audioBuffer.duration;
 
+            this.#loading = false;
             this.play();
           });
       })
-      .catch((error) => console.error(error)); // Handle errors
+      .catch((error) => {
+        console.error(error);
+        this.#loading = false;
+        }
+      ); // Handle errors
   }
 
   play() {
@@ -105,6 +113,10 @@ export class TextToSpeechSource extends AudioSource {
 
   getPlaying() {
     return this.#playing;
+  }
+
+  getLoading() {
+    return this.#loading;
   }
 
   getCurrentPosition() {
