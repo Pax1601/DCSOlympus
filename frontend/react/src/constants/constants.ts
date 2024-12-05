@@ -300,6 +300,13 @@ export enum UnitControlSubState {
   UNIT_EXPLOSION_MENU = "Unit explosion menu",
 }
 
+export enum LoginSubState {
+  NO_SUBSTATE = "No substate",
+  CREDENTIALS = "Credentials",
+  COMMAND_MODE = "Command mode",
+  CONNECT = "Connect"
+}
+
 export enum DrawSubState {
   NO_SUBSTATE = "No substate",
   DRAW_POLYGON = "Polygon",

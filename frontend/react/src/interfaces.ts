@@ -4,6 +4,11 @@ import { MapOptions } from "./types/types";
 export interface OlympusConfig {
   frontend: {
     port: number;
+    customAuthHeaders: {
+      enabled: boolean,
+      username: string,
+      group: string
+    }
     elevationProvider: {
       provider: string;
       username: string | null;
@@ -26,7 +31,7 @@ export interface OlympusConfig {
     WSPort?: number;
     WSEndpoint?: string;
   };
-  profiles?: ProfileOptions;
+  profiles?: {[key: string]: ProfileOptions};
 }
 
 export interface SessionData {
@@ -277,6 +282,7 @@ export interface UnitBlueprint {
   indirectFire?: boolean;
   markerFile?: string;
   unitWhenGrouped?: string;
+  mainRole?: string;
 }
 
 export interface AirbaseOptions {

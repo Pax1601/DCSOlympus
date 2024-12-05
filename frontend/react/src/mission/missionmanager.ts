@@ -32,6 +32,7 @@ export class MissionManager {
   #remainingSetupTime: number = 0;
   #spentSpawnPoint: number = 0;
   #coalitions: { red: string[]; blue: string[] } = { red: [], blue: [] };
+  #enabledCommandModes: string[] = [];
 
   constructor() {
     AppStateChangedEvent.on((state, subState) => {
@@ -218,6 +219,14 @@ export class MissionManager {
     });
 
     return airbase ?? null;
+  }
+
+  setEnabledCommandModes(enabledCommandModes: string[]) {
+    this.#enabledCommandModes = enabledCommandModes;
+  }
+
+  getEnabledCommandModes() {
+    return this.#enabledCommandModes;
   }
 
   #setcommandModeOptions(commandModeOptions: CommandModeOptions) {

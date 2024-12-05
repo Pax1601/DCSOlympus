@@ -10,6 +10,11 @@
 	},
 	"frontend": {
 		"port": 3000,
+		"customAuthHeaders": {
+			"enabled": false,
+			"username": "X-Authorized",
+			"group": "X-Group"
+		},
 		"elevationProvider": {
 			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
 			"username": null,

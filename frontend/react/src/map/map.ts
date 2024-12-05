@@ -546,8 +546,9 @@ export class Map extends L.Map {
     this.#spawnRequestTable = spawnRequestTable;
   }
 
-  addStarredSpawnRequestTable(key, spawnRequestTable: SpawnRequestTable) {
+  addStarredSpawnRequestTable(key, spawnRequestTable: SpawnRequestTable, quickAccessName: string) {
     this.#starredSpawnRequestTables[key] = spawnRequestTable;
+    this.#starredSpawnRequestTables[key].quickAccessName = quickAccessName;
     StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
   }
 

@@ -20,7 +20,7 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
-import { NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
+import { LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
 import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig, ProfileOptions } from "./interfaces";
 import { AWACSController } from "./controllers/awacs";
@@ -32,27 +32,26 @@ export var IP = window.location.toString();
 export class OlympusApp {
   /* Global data */
   #latestVersion: string | undefined = undefined;
-  #config: OlympusConfig | null = null;
+  #config: OlympusConfig;
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
   #infoMessages: string[] = [];
-  #profileName: string | null = null;
 
   /* Main leaflet map, extended by custom methods */
-  #map: Map | null = null;
+  #map: Map;
 
   /* Managers */
-  #missionManager: MissionManager | null = null;
-  #serverManager: ServerManager | null = null;
-  #shortcutManager: ShortcutManager | null = null;
-  #unitsManager: UnitsManager | null = null;
-  #weaponsManager: WeaponsManager | null = null;
-  #audioManager: AudioManager | null = null;
-  #sessionDataManager: SessionDataManager | null = null;
+  #missionManager: MissionManager;
+  #serverManager: ServerManager;
+  #shortcutManager: ShortcutManager;
+  #unitsManager: UnitsManager;
+  #weaponsManager: WeaponsManager;
+  #audioManager: AudioManager;
+  #sessionDataManager: SessionDataManager;
   //#pluginsManager: // TODO
 
   /* Controllers */
-  #AWACSController: AWACSController | null = null;
+  #AWACSController: AWACSController;
 
   constructor() {
     SelectedUnitsChangedEvent.on((selectedUnits) => {
@@ -69,31 +68,31 @@ export class OlympusApp {
   }
 
   getServerManager() {
-    return this.#serverManager as ServerManager;
+    return this.#serverManager;
   }
 
   getShortcutManager() {
-    return this.#shortcutManager as ShortcutManager;
+    return this.#shortcutManager;
   }
 
   getUnitsManager() {
-    return this.#unitsManager as UnitsManager;
+    return this.#unitsManager;
   }
 
   getWeaponsManager() {
-    return this.#weaponsManager as WeaponsManager;
+    return this.#weaponsManager;
   }
 
   getMissionManager() {
-    return this.#missionManager as MissionManager;
+    return this.#missionManager;
   }
 
   getAudioManager() {
-    return this.#audioManager as AudioManager;
+    return this.#audioManager;
   }
 
   getSessionDataManager() {
-    return this.#sessionDataManager as SessionDataManager;
+    return this.#sessionDataManager;
   }
 
   /* TODO
@@ -154,20 +153,37 @@ export class OlympusApp {
       });
 
     /* Load the config file from the server */
-    const configRequest = new Request(this.getExpressAddress() + "/resources/config");
+    const configRequest = new Request(this.getExpressAddress() + "/resources/config", {
+      headers: {
+        'Cache-Control': 'no-cache',
+      }
+    });
+
     fetch(configRequest)
       .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          throw new Error("Error retrieving config file");
-        }
+        if (response.status === 200)
+          return new Promise((res: ([OlympusConfig, Headers]) => void, rej) => {
+            response
+              .json()
+              .then((result) => res([result, response.headers]))
+              .catch((error) => rej(error));
+          });
+        else throw new Error("Error retrieving config file");
       })
-      .then((res) => {
-        this.#config = res;
+      .then(([result, headers]) => {
+        this.#config = result;
+        if (this.#config.frontend.customAuthHeaders.enabled) {
+          if (headers.has(this.#config.frontend.customAuthHeaders.username) && headers.has(this.#config.frontend.customAuthHeaders.group)) {
+            this.getServerManager().setUsername(headers.get(this.#config.frontend.customAuthHeaders.username));
+            this.setState(OlympusState.LOGIN, LoginSubState.COMMAND_MODE);
+          }
+        }
+        if (this.getState() !== OlympusState.LOGIN) {
+          this.setState(OlympusState.LOGIN, LoginSubState.CREDENTIALS);
+        }
         ConfigLoadedEvent.dispatch(this.#config as OlympusConfig);
-        this.setState(OlympusState.LOGIN);
-      });
+      })
+      .catch((error) => console.error);
 
     this.#shortcutManager?.addShortcut("idle", {
       label: "Deselect all",
@@ -184,12 +200,9 @@ export class OlympusApp {
     return this.#config;
   }
 
-  setProfile(profileName: string) {
-    this.#profileName = profileName;
-  }
-
   saveProfile() {
-    if (this.#profileName !== null) {
+    const username = this.getServerManager()?.getUsername();
+    if (username) {
       let profile = {};
       profile["mapOptions"] = this.#map?.getOptions();
       profile["shortcuts"] = this.#shortcutManager?.getShortcutsOptions();
@@ -200,10 +213,10 @@ export class OlympusApp {
         body: JSON.stringify(profile), // Send the data in JSON format
       };
 
-      fetch(this.getExpressAddress() + `/resources/profile/${this.#profileName}`, requestOptions)
+      fetch(this.getExpressAddress() + `/resources/profile/${username}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
-            console.log(`Profile ${this.#profileName} saved correctly`);
+            console.log(`Profile for ${username} saved correctly`);
           } else {
             this.addInfoMessage("Error saving profile");
             throw new Error("Error saving profile");
@@ -214,17 +227,18 @@ export class OlympusApp {
   }
 
   resetProfile() {
-    if (this.#profileName !== null) {
+    const username = this.getServerManager().getUsername();
+    if (username) {
       const requestOptions = {
         method: "PUT", // Specify the request method
         headers: { "Content-Type": "application/json" }, // Specify the content type
         body: "", // Send the data in JSON format
       };
 
-      fetch(this.getExpressAddress() + `/resources/profile/reset/${this.#profileName}`, requestOptions)
+      fetch(this.getExpressAddress() + `/resources/profile/reset/${username}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
-            console.log(`Profile ${this.#profileName} reset correctly`);
+            console.log(`Profile for ${username} reset correctly`);
             location.reload();
           } else {
             this.addInfoMessage("Error resetting profile");
@@ -256,22 +270,19 @@ export class OlympusApp {
   }
 
   getProfile() {
-    if (this.#profileName && this.#config?.profiles && this.#config?.profiles[this.#profileName])
-      return this.#config?.profiles[this.#profileName] as ProfileOptions;
+    const username = this.getServerManager().getUsername();
+    if (username && this.#config?.profiles && username in this.#config.profiles) return this.#config?.profiles[username];
     else return null;
   }
 
-  getProfileName() {
-    return this.#profileName;
-  }
-
   loadProfile() {
+    const username = this.getServerManager().getUsername();
     const profile = this.getProfile();
-    if (profile) {
+    if (username && profile) {
       this.#map?.setOptions(profile.mapOptions);
       this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
       this.addInfoMessage("Profile loaded correctly");
-      console.log(`Profile ${this.#profileName} loaded correctly`);
+      console.log(`Profile for ${username} loaded correctly`);
     } else {
       this.addInfoMessage("Profile not found, creating new profile");
       console.log(`Error loading profile`);
@@ -302,6 +313,4 @@ export class OlympusApp {
       InfoPopupEvent.dispatch(this.#infoMessages);
     }, 5000);
   }
-
-  
 }

@@ -87,10 +87,10 @@ export class SessionDataManager {
       body: JSON.stringify({ sessionHash }), // Send the data in JSON format
     };
 
-    fetch(getApp().getExpressAddress() + `/resources/sessiondata/load/${getApp().getProfileName()}`, requestOptions)
+    fetch(getApp().getExpressAddress() + `/resources/sessiondata/load/${getApp().getServerManager().getUsername()}`, requestOptions)
       .then((response) => {
         if (response.status === 200) {
-          console.log(`Session data for profile ${getApp().getProfileName()} and session hash ${sessionHash} loaded correctly`);
+          console.log(`Session data for profile ${getApp().getServerManager().getUsername()} and session hash ${sessionHash} loaded correctly`);
           return response.json();
         } else {
           getApp().addInfoMessage("No session data found for this profile");
@@ -118,10 +118,10 @@ export class SessionDataManager {
         body: JSON.stringify({ sessionHash: this.#sessionHash, sessionData: this.#sessionData }), // Send the data in JSON format
       };
 
-      fetch(getApp().getExpressAddress() + `/resources/sessiondata/save/${getApp().getProfileName()}`, requestOptions)
+      fetch(getApp().getExpressAddress() + `/resources/sessiondata/save/${getApp().getServerManager().getUsername()}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
-            console.log(`Session data for profile ${getApp().getProfileName()} and session hash ${this.#sessionHash} saved correctly`);
+            console.log(`Session data for profile ${getApp().getServerManager().getUsername()} and session hash ${this.#sessionHash} saved correctly`);
             console.log(this.#sessionData);
             SessionDataChangedEvent.dispatch(this.#sessionData);
           } else {

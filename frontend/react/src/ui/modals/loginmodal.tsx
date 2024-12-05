@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Modal } from "./components/modal";
 import { Card } from "./components/card";
 import { ErrorCallout } from "../components/olcallout";
@@ -6,33 +6,49 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { getApp, VERSION } from "../../olympusapp";
 import { sha256 } from "js-sha256";
-import { BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../../constants/constants";
+import { BLUE_COMMANDER, GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, RED_COMMANDER } from "../../constants/constants";
+import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
+import { AppStateChangedEvent } from "../../events";
+
+var hash = sha256.create();
 
 export function LoginModal(props: { open: boolean }) {
   // TODO: add warning if not in secure context and some features are disabled
+  const [subState, setSubState] = useState(NO_SUBSTATE);
   const [password, setPassword] = useState("");
-  const [profileName, setProfileName] = useState("");
+  const [username, setUsername] = useState("");
   const [checkingPassword, setCheckingPassword] = useState(false);
   const [loginError, setLoginError] = useState(false);
-  const [commandMode, setCommandMode] = useState(null as null | string);
+  const [commandModes, setCommandModes] = useState(null as null | string[]);
+  const [activeCommandMode, setActiveCommandMode] = useState(null as null | string);
 
   useEffect(() => {
-    /* Set the profile name */
-    if (profileName !== "") getApp().setProfile(profileName);
-  }, [profileName]);
+    AppStateChangedEvent.on((state, subState) => {
+      setSubState(subState);
+    });
+  }, []);
 
-  function checkPassword(password: string) {
+  const usernameCallback = useCallback(() => getApp()?.getServerManager().setUsername(username), [username]);
+  useEffect(usernameCallback, [username]);
+
+  const passwordCallback = useCallback(() => getApp()?.getServerManager().setPassword(hash.update(password).hex()), [password]);
+  useEffect(passwordCallback, [password]);
+
+  const login = useCallback(() => {
     setCheckingPassword(true);
-    var hash = sha256.create();
-    getApp().getServerManager().setPassword(hash.update(password).hex());
+
     getApp()
       .getServerManager()
       .getMission(
         (response) => {
-          const commandMode = response.mission.commandModeOptions.commandMode;
-          try {
-            [GAME_MASTER, BLUE_COMMANDER, RED_COMMANDER].includes(commandMode) ? setCommandMode(commandMode) : setLoginError(true);
-          } catch {
+          const commandModes = getApp().getMissionManager().getEnabledCommandModes();
+          if (commandModes.length > 1) {
+            setCommandModes(commandModes);
+            setActiveCommandMode(commandModes[0]);
+          } else if (commandModes.length == 1) {
+            setActiveCommandMode(commandModes[0]);
+            getApp().setState(OlympusState.LOGIN, LoginSubState.CONNECT);
+          } else {
             setLoginError(true);
           }
           setCheckingPassword(false);
@@ -42,34 +58,44 @@ export function LoginModal(props: { open: boolean }) {
           setCheckingPassword(false);
         }
       );
-  }
+  }, [commandModes, username, password]);
 
-  function connect() {
-    getApp().getServerManager().setUsername(profileName);
-    getApp().getServerManager().startUpdate();
-    getApp().setState(OlympusState.IDLE);
+  const connect = useCallback(() => {
+    if (activeCommandMode) {
+      getApp().getServerManager().setActiveCommandMode(activeCommandMode);
+      getApp().getServerManager().startUpdate();
+      getApp().setState(OlympusState.IDLE);
 
-    /* If no profile exists already with that name, create it from scratch from the defaults */
-    if (getApp().getProfile() === null) getApp().saveProfile();
-    /* Load the profile */
-    getApp().loadProfile();
-  }
+      /* If no profile exists already with that name, create it from scratch from the defaults */
+      if (getApp().getProfile() === null) getApp().saveProfile();
+      /* Load the profile */
+      getApp().loadProfile();
+    }
+  }, [activeCommandMode]);
+
+  const subStateCallback = useCallback(() => {
+    if (subState === LoginSubState.COMMAND_MODE) {
+      login();
+    } else if (subState === LoginSubState.CONNECT) {
+      connect();
+    }
+  }, [subState, activeCommandMode, commandModes, username, password]);
+  useEffect(subStateCallback, [subState]);
 
   return (
     <Modal
       open={props.open}
       className={`
-        inline-flex h-[75%] max-h-[570px] w-[80%] max-w-[1100px] overflow-y-auto
+        inline-flex h-[75%] max-h-[600px] w-[80%] max-w-[1100px] overflow-y-auto
         scroll-smooth bg-white
         dark:bg-olympus-800
         max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
         max-md:border-none
       `}
     >
-      <img
-        src="/vite/images/splash/1.jpg"
-        className={`contents-center w-full object-cover opacity-[7%]`}
-      ></img>
+      <img src="/vite/images/splash/1.jpg" className={`
+        contents-center w-full object-cover opacity-[7%]
+      `}></img>
       <div
         className={`
           absolute h-full w-full bg-gradient-to-r from-blue-200/25
@@ -127,10 +153,9 @@ export function LoginModal(props: { open: boolean }) {
                   `}
                 >
                   <span className="size-[80px] min-w-14">
-                    <img
-                      src="..\vite\images\olympus-500x500.png"
-                      className={`flex w-full`}
-                    ></img>
+                    <img src="..\vite\images\olympus-500x500.png" className={`
+                      flex w-full
+                    `}></img>
                   </span>
                   <div className={`flex flex-col items-start gap-1`}>
                     <h1
@@ -155,9 +180,36 @@ export function LoginModal(props: { open: boolean }) {
                 </div>
                 {!loginError ? (
                   <>
-                    {commandMode === null ? (
+                    {subState === LoginSubState.CREDENTIALS && (
                       <>
                         <div className={`flex flex-col items-start gap-2`}>
+                          <label
+                            className={`
+                              text-gray-800 text-md
+                              dark:text-white
+                            `}
+                          >
+                            Username
+                          </label>
+                          <input
+                            type="text"
+                            autoComplete="username"
+                            onChange={(ev) => setUsername(ev.currentTarget.value)}
+                            className={`
+                              block w-full max-w-80 rounded-lg border
+                              border-gray-300 bg-gray-50 p-2.5 text-sm
+                              text-gray-900
+                              dark:border-gray-600 dark:bg-gray-700
+                              dark:text-white dark:placeholder-gray-400
+                              dark:focus:border-blue-500
+                              dark:focus:ring-blue-500
+                              focus:border-blue-500 focus:ring-blue-500
+                            `}
+                            placeholder="Enter display name"
+                            value={username}
+                            required
+                          />
+
                           <label
                             className={`
                               text-gray-800 text-md
@@ -186,7 +238,7 @@ export function LoginModal(props: { open: boolean }) {
                         <div className="flex">
                           <button
                             type="button"
-                            onClick={() => checkPassword(password)}
+                            onClick={() => getApp().setState(OlympusState.LOGIN, LoginSubState.COMMAND_MODE)}
                             className={`
                               mb-2 me-2 flex content-center items-center gap-2
                               rounded-sm bg-blue-700 px-5 py-2.5 text-sm
@@ -208,7 +260,8 @@ export function LoginModal(props: { open: boolean }) {
                           */}
                         </div>
                       </>
-                    ) : (
+                    )}
+                    {subState === LoginSubState.COMMAND_MODE && (
                       <>
                         <div className={`flex flex-col items-start gap-2`}>
                           <label
@@ -217,32 +270,20 @@ export function LoginModal(props: { open: boolean }) {
                               dark:text-white
                             `}
                           >
-                            Set profile name
+                            Choose your role
                           </label>
-                          <input
-                            type="text"
-                            autoComplete="username"
-                            onChange={(ev) => setProfileName(ev.currentTarget.value)}
-                            className={`
-                              block w-full max-w-80 rounded-lg border
-                              border-gray-300 bg-gray-50 p-2.5 text-sm
-                              text-gray-900
-                              dark:border-gray-600 dark:bg-gray-700
-                              dark:text-white dark:placeholder-gray-400
-                              dark:focus:border-blue-500
-                              dark:focus:ring-blue-500
-                              focus:border-blue-500 focus:ring-blue-500
-                            `}
-                            placeholder="Enter display name"
-                            value={profileName}
-                            required
-                          />
+                          <OlDropdown label={activeCommandMode ?? ""} className={`
+                            w-48
+                          `}>
+                            {commandModes?.map((commandMode) => {
+                              return <OlDropdownItem onClick={() => setActiveCommandMode(commandMode)}>{commandMode}</OlDropdownItem>;
+                            })}
+                          </OlDropdown>
                         </div>
-                        <div className="text-xs text-gray-400">The profile name you choose determines the saved key binds, groups and options you see.</div>
                         <div className="flex">
                           <button
                             type="button"
-                            onClick={() => connect()}
+                            onClick={() => getApp().setState(OlympusState.LOGIN, LoginSubState.CONNECT)}
                             className={`
                               mb-2 me-2 flex content-center items-center gap-2
                               rounded-sm bg-blue-700 px-5 py-2.5 text-sm
@@ -256,22 +297,6 @@ export function LoginModal(props: { open: boolean }) {
                           >
                             Continue
                             <FontAwesomeIcon className={`my-auto`} icon={faArrowRight} />
-                          </button>
-                          <button
-                            type="button"
-                            className={`
-                              mb-2 me-2 flex content-center items-center gap-2
-                              rounded-sm border-[1px] bg-blue-700 px-5 py-2.5
-                              text-sm font-medium text-white
-                              dark:border-gray-600 dark:bg-gray-800
-                              dark:text-gray-400 dark:hover:bg-gray-700
-                              dark:focus:ring-blue-800
-                              focus:outline-none focus:ring-4
-                              focus:ring-blue-300
-                              hover:bg-blue-800
-                            `}
-                          >
-                            Back
                           </button>
                         </div>
                       </>

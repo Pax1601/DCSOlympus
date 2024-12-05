@@ -20,8 +20,8 @@ export class ServerManager {
   #connected: boolean = false;
   #paused: boolean = false;
   #REST_ADDRESS = "http://localhost:3001/olympus";
-  #username = "no-username";
-  #password = "";
+  #username: null | string = null;
+  #password: null | string = null;
   #sessionHash: string | null = null;
   #lastUpdateTimes: { [key: string]: number } = {};
   #previousMissionElapsedTime: number = 0; // Track if mission elapsed time is increasing (i.e. is the server paused)
@@ -29,6 +29,7 @@ export class ServerManager {
   #intervals: number[] = [];
   #requests: { [key: string]: XMLHttpRequest } = {};
   #updateMode = "normal"; // normal or awacs
+  #activeCommandMode = "";
 
   constructor() {
     this.#lastUpdateTimes[UNITS_URI] = Date.now();
@@ -61,8 +62,16 @@ export class ServerManager {
     this.#username = newUsername;
   }
 
+  getUsername() {
+    return this.#username;
+  }
+
   setPassword(newPassword: string) {
     this.#password = newPassword;
+  }
+
+  setActiveCommandMode(activeCommandMode: string) {
+    this.#activeCommandMode = activeCommandMode;
   }
 
   GET(
@@ -94,7 +103,8 @@ export class ServerManager {
     xmlHttp.open("GET", `${this.#REST_ADDRESS}/${uri}${optionsString ? `?${optionsString}` : ""}`, true);
 
     /* If provided, set the credentials */
-    if (this.#username && this.#password) xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username}:${this.#password}`));
+    xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username ?? ""}:${this.#password ?? ""}`));
+    xmlHttp.setRequestHeader("X-Command-Mode", this.#activeCommandMode);
 
     /* If specified, set the response type */
     if (responseType) xmlHttp.responseType = responseType as XMLHttpRequestResponseType;
@@ -105,6 +115,10 @@ export class ServerManager {
         this.setConnected(true);
         if (xmlHttp.responseType == "arraybuffer") this.#lastUpdateTimes[uri] = callback(xmlHttp.response);
         else {
+          /* Check if the response headers contain the enabled command modes and set them */
+          if (xmlHttp.getResponseHeader("X-Enabled-Command-Modes")) 
+            getApp().getMissionManager().setEnabledCommandModes(xmlHttp.getResponseHeader("X-Enabled-Command-Modes")?.split(",") ??[])
+
           const result = JSON.parse(xmlHttp.responseText);
           this.#lastUpdateTimes[uri] = callback(result);
 
@@ -137,7 +151,8 @@ export class ServerManager {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("PUT", this.#REST_ADDRESS);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
-    if (this.#username && this.#password) xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username}:${this.#password}`));
+    xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username ?? ""}:${this.#password ?? ""}`));
+    xmlHttp.setRequestHeader("X-Command-Mode", this.#activeCommandMode);
     xmlHttp.onload = (res: any) => {
       var res = JSON.parse(xmlHttp.responseText);
       callback(res.commandHash);

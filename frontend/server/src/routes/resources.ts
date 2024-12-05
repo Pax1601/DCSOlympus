@@ -1,12 +1,26 @@
 import express = require("express");
 import fs = require("fs");
+import path = require("path");
+
 const router = express.Router();
 
 let sessionHash = "";
-let sessionData = {}
+let sessionData = {};
 
 module.exports = function (configLocation) {
   router.get("/config", function (req, res, next) {
+    let profiles = null;
+    if (
+      fs.existsSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json")
+      )
+    ) {
+      let rawdata = fs.readFileSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        "utf-8"
+      );
+      profiles = JSON.parse(rawdata);
+    }
     if (fs.existsSync(configLocation)) {
       let rawdata = fs.readFileSync(configLocation, "utf-8");
       const config = JSON.parse(rawdata);
@@ -14,7 +28,7 @@ module.exports = function (configLocation) {
         JSON.stringify({
           frontend: { ...config.frontend },
           audio: { ...(config.audio ?? {}) },
-          profiles: { ...(config.profiles ?? {}) },
+          profiles: { ...(profiles ?? {}) },
         })
       );
       res.end();
@@ -24,14 +38,34 @@ module.exports = function (configLocation) {
   });
 
   router.put("/profile/:profileName", function (req, res, next) {
-    if (fs.existsSync(configLocation)) {
-      let rawdata = fs.readFileSync(configLocation, "utf-8");
-      const config = JSON.parse(rawdata);
-      if (config.profiles === undefined) config.profiles = {};
-      config.profiles[req.params.profileName] = req.body;
+    /* Create empty profiles file*/
+    if (
+      !fs.existsSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json")
+      )
+    ) {
       fs.writeFileSync(
-        configLocation,
-        JSON.stringify(config, null, 2),
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        "{}",
+        "utf-8"
+      );
+    }
+
+    /* Check that the previous operation was successfull */
+    if (
+      fs.existsSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json")
+      )
+    ) {
+      let rawdata = fs.readFileSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        "utf-8"
+      );
+      const usersProfiles = JSON.parse(rawdata);
+      usersProfiles[req.params.profileName] = req.body;
+      fs.writeFileSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        JSON.stringify(usersProfiles, null, 2),
         "utf-8"
       );
       res.end();
@@ -41,14 +75,21 @@ module.exports = function (configLocation) {
   });
 
   router.put("/profile/reset/:profileName", function (req, res, next) {
-    if (fs.existsSync(configLocation)) {
-      let rawdata = fs.readFileSync(configLocation, "utf-8");
-      const config = JSON.parse(rawdata);
-      if (config.profiles[req.params.profileName])
-        delete config.profiles[req.params.profileName];
+    if (
+      fs.existsSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json")
+      )
+    ) {
+      let rawdata = fs.readFileSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        "utf-8"
+      );
+      const usersProfiles = JSON.parse(rawdata);
+      if (req.params.profileName in usersProfiles)
+        delete usersProfiles[req.params.profileName];
       fs.writeFileSync(
-        configLocation,
-        JSON.stringify(config, null, 2),
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        JSON.stringify(usersProfiles, null, 2),
         "utf-8"
       );
       res.end();
@@ -58,13 +99,14 @@ module.exports = function (configLocation) {
   });
 
   router.put("/profile/delete/all", function (req, res, next) {
-    if (fs.existsSync(configLocation)) {
-      let rawdata = fs.readFileSync(configLocation, "utf-8");
-      const config = JSON.parse(rawdata);
-      config.profiles = {};
+    if (
+      fs.existsSync(
+        path.join(path.dirname(configLocation), "olympusProfiles.json")
+      )
+    ) {
       fs.writeFileSync(
-        configLocation,
-        JSON.stringify(config, null, 2),
+        path.join(path.dirname(configLocation), "olympusProfiles.json"),
+        "{}",
         "utf-8"
       );
       res.end();
@@ -74,15 +116,19 @@ module.exports = function (configLocation) {
   });
 
   router.put("/sessiondata/save/:profileName", function (req, res, next) {
-    if (req.body.sessionHash === undefined || req.body.sessionData === undefined) res.sendStatus(400);
+    if (
+      req.body.sessionHash === undefined ||
+      req.body.sessionData === undefined
+    )
+      res.sendStatus(400);
     let thisSessionHash = req.body.sessionHash;
     if (thisSessionHash !== sessionHash) {
       sessionHash = thisSessionHash;
       sessionData = {};
     }
     sessionData[req.params.profileName] = req.body.sessionData;
-    res.end()
-  })
+    res.end();
+  });
 
   router.put("/sessiondata/load/:profileName", function (req, res, next) {
     if (req.body.sessionHash === undefined) res.sendStatus(400);
@@ -95,7 +141,7 @@ module.exports = function (configLocation) {
       res.send(sessionData[req.params.profileName]);
       res.end();
     }
-  })
+  });
 
   return router;
 };

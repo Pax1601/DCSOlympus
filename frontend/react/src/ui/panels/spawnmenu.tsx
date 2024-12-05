@@ -166,7 +166,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                     return (
                       <OlUnitListEntry
                         key={blueprint.name}
-                        icon={olButtonsVisibilityAircraft}
+                        silhouette={blueprint.filename}
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
@@ -433,13 +433,14 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
           </div>
         )}
 
-        {!(blueprint === null) && (
-          <UnitSpawnMenu
-            blueprint={blueprint}
-            starredSpawns={starredSpawns}
-            coalition={commandModeOptions.commandMode !== GAME_MASTER ? (commandModeOptions.commandMode === BLUE_COMMANDER ? "blue" : "red") : undefined}
-          />
-        )}
+        <UnitSpawnMenu
+          visible={blueprint !== null}
+          compact={false}
+          blueprint={blueprint}
+          starredSpawns={starredSpawns}
+          coalition={commandModeOptions.commandMode !== GAME_MASTER ? (commandModeOptions.commandMode === BLUE_COMMANDER ? "blue" : "red") : undefined}
+        />
+
         {!(effect === null) && <EffectSpawnMenu effect={effect} />}
       </>
     </Menu>
