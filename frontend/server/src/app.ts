@@ -222,15 +222,7 @@ module.exports = function (configLocation, viteProxy) {
     })
   );
 
-  if (viteProxy) {
-    app.use(
-      "/vite",
-      httpProxyMiddleware.createProxyMiddleware({
-        target: `http://localhost:8080/`,
-        ws: true,
-      })
-    );
-  }
+
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(path.join(__dirname, "..", "public")));
@@ -242,19 +234,23 @@ module.exports = function (configLocation, viteProxy) {
   app.use("/api/databases", databasesRouter);
   app.use("/api/speech", speechRouter);
   app.use("/resources", resourcesRouter);
-  app.use("/express/api/airbases", airbasesRouter);
-  app.use("/express/api/elevation", elevationRouter);
-  app.use("/express/api/databases", databasesRouter);
-  app.use("/express/api/speech", speechRouter);
-  app.use("/express/resources", resourcesRouter);
 
   /* Set default index */
-  if (!viteProxy) {
+  if (viteProxy) {
+    app.use(
+      "/vite",
+      httpProxyMiddleware.createProxyMiddleware({
+        target: `http://localhost:8080/`,
+        ws: true,
+      })
+    );
+  } else {
     app.get("/", function (req, res) {
       res.sendfile(path.join(__dirname, "..", "public", "vite", "index.html"));
     });
   }
 
+  /* Start the audio backend */
   if (config["audio"]) {
     let audioBackend = new AudioBackend(
       config["audio"]["SRSPort"],

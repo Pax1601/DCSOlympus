@@ -164,7 +164,7 @@ export class ServerManager {
 
   getConfig(callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", getApp().getExpressAddress() + "/config", true);
+    xmlHttp.open("GET", getApp().getExpressAddress() + "config", true);
     xmlHttp.onload = function (e) {
       var data = JSON.parse(xmlHttp.responseText);
       callback(data);

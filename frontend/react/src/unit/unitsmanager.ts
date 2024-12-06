@@ -48,10 +48,10 @@ export class UnitsManager {
 
   constructor() {
     this.#unitDatabase = new UnitDatabase();
-    this.#unitDatabase.load(getApp().getExpressAddress() + "/api/databases/units/aircraftdatabase", "aircraft");
-    this.#unitDatabase.load(getApp().getExpressAddress() + "/api/databases/units/helicopterdatabase", "helicopter");
-    this.#unitDatabase.load(getApp().getExpressAddress() + "/api/databases/units/groundunitdatabase", "groundunit");
-    this.#unitDatabase.load(getApp().getExpressAddress() + "/api/databases/units/navyunitdatabase", "navyunit");
+    this.#unitDatabase.load(getApp().getExpressAddress() + "api/databases/units/aircraftdatabase", "aircraft");
+    this.#unitDatabase.load(getApp().getExpressAddress() + "api/databases/units/helicopterdatabase", "helicopter");
+    this.#unitDatabase.load(getApp().getExpressAddress() + "api/databases/units/groundunitdatabase", "groundunit");
+    this.#unitDatabase.load(getApp().getExpressAddress() + "api/databases/units/navyunitdatabase", "navyunit");
 
     CommandModeOptionsChangedEvent.on(() => {
       Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility());

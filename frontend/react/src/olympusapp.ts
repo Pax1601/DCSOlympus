@@ -106,11 +106,15 @@ export class OlympusApp {
   }
 
   getExpressAddress() {
-    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}express`;
+    let address = `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}`;
+    if (address[address.length - 1] !== "/") address += "/"
+    return address;
   }
 
   getBackendAddress() {
-    return `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}olympus`;
+    let address = `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}`;
+    if (address[address.length - 1] !== "/") address += "/"
+    return address + "olympus"
   }
 
   start() {
@@ -153,7 +157,7 @@ export class OlympusApp {
       });
 
     /* Load the config file from the server */
-    const configRequest = new Request(this.getExpressAddress() + "/resources/config", {
+    const configRequest = new Request(this.getExpressAddress() + "resources/config", {
       headers: {
         'Cache-Control': 'no-cache',
       }
