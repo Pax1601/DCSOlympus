@@ -94,7 +94,7 @@ export function LoginModal(props: { open: boolean }) {
         max-md:border-none
       `}
     >
-      <img src="/vite/images/splash/1.jpg" className={`
+      <img src="/images/splash/1.jpg" className={`
         contents-center w-full object-cover opacity-[7%]
       `}></img>
       <div
@@ -360,7 +360,7 @@ export function LoginModal(props: { open: boolean }) {
           >
             <Card className="flex">
               <img
-                src="/vite/images/splash/1.jpg"
+                src="/images/splash/1.jpg"
                 className={`
                   h-[40%] max-h-[120px] contents-center w-full rounded-md
                   object-cover
@@ -385,7 +385,7 @@ export function LoginModal(props: { open: boolean }) {
             </Card>
             <Card className="flex">
               <img
-                src="/vite/images/splash/1.jpg"
+                src="/images/splash/1.jpg"
                 className={`
                   h-[40%] max-h-[120px] contents-center w-full rounded-md
                   object-cover
