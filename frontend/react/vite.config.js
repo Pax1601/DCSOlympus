@@ -4,9 +4,9 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/vite",
+  base: "./",
   build: {
-    outDir: '../server/public/vite'
+    outDir: '../server/public'
   },esbuild: {
     minifyIdentifiers: false,
     keepNames: true,
