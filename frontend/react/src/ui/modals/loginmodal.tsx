@@ -29,8 +29,10 @@ export function LoginModal(props: { open: boolean }) {
   const usernameCallback = useCallback(() => getApp()?.getServerManager().setUsername(username), [username]);
   useEffect(usernameCallback, [username]);
 
-  var hash = sha256.create();
-  const passwordCallback = useCallback(() => getApp()?.getServerManager().setPassword(hash.update(password).hex()), [password]);
+  const passwordCallback = useCallback(() => {
+    var hash = sha256.create();
+    getApp()?.getServerManager().setPassword(hash.update(password).hex());
+  }, [password]);
   useEffect(passwordCallback, [password]);
 
   const login = useCallback(() => {

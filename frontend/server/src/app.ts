@@ -22,21 +22,29 @@ function checkCustomHeaders(config, usersConfig, groupsConfig, req) {
   ) {
     /* If so, check that the custom headers are indeed present */
     if (
-      (config["frontend"]["customAuthHeaders"]["username"]).toLowerCase() in req.headers &&
-      (config["frontend"]["customAuthHeaders"]["group"]).toLowerCase() in req.headers
+      config["frontend"]["customAuthHeaders"]["username"].toLowerCase() in
+        req.headers &&
+      config["frontend"]["customAuthHeaders"]["group"].toLowerCase() in
+        req.headers
     ) {
       /* If they are, assign the group */
-      group = req.headers[(config["frontend"]["customAuthHeaders"]["group"]).toLowerCase()];
+      group =
+        req.headers[
+          config["frontend"]["customAuthHeaders"]["group"].toLowerCase()
+        ];
 
       /* Check that the user is in an existing group */
       if (group in groupsConfig) {
-        user = req.headers[(config["frontend"]["customAuthHeaders"]["username"]).toLowerCase()];
+        user =
+          req.headers[
+            config["frontend"]["customAuthHeaders"]["username"].toLowerCase()
+          ];
         usersConfig[user] = { password: null, roles: groupsConfig[group] };
       }
     }
   }
 
-  return user
+  return user;
 }
 
 module.exports = function (configLocation, viteProxy) {
@@ -117,19 +125,32 @@ module.exports = function (configLocation, viteProxy) {
   app.use(logger("dev"));
 
   /* Authorization middleware */
-  if ("customAuthHeaders" in config["frontend"] && config["frontend"]["customAuthHeaders"]["enabled"]) {
+  if (
+    "customAuthHeaders" in config["frontend"] &&
+    config["frontend"]["customAuthHeaders"]["enabled"]
+  ) {
     /* Custom authorization will be used */
     app.use("/", async (req, res, next) => {
       const user = checkCustomHeaders(config, usersConfig, groupsConfig, req);
 
       if (user) {
         /* If the user is preauthorized, set the authorization headers to the response */
-        res.set(config["frontend"]["customAuthHeaders"]["username"], req.headers[(config["frontend"]["customAuthHeaders"]["username"]).toLowerCase()])
-        res.set(config["frontend"]["customAuthHeaders"]["group"], req.headers[(config["frontend"]["customAuthHeaders"]["group"]).toLowerCase()])
+        res.set(
+          config["frontend"]["customAuthHeaders"]["username"],
+          req.headers[
+            config["frontend"]["customAuthHeaders"]["username"].toLowerCase()
+          ]
+        );
+        res.set(
+          config["frontend"]["customAuthHeaders"]["group"],
+          req.headers[
+            config["frontend"]["customAuthHeaders"]["group"].toLowerCase()
+          ]
+        );
       }
 
-      next()
-    })
+      next();
+    });
   } else {
     /* Simple internal authorization will be used */
     app.use("/olympus", auth);
@@ -138,18 +159,20 @@ module.exports = function (configLocation, viteProxy) {
   /* Define the middleware to replace the authorization header for the olympus backend */
   app.use("/olympus", async (req, res, next) => {
     /* Check if custom authorization headers are being used */
-    const user = req.auth?.user ?? checkCustomHeaders(config, usersConfig, groupsConfig, req);
+    const user =
+      req.auth?.user ??
+      checkCustomHeaders(config, usersConfig, groupsConfig, req);
 
     /* If either simple authentication or custom authentication has succeded */
     if (user) {
       const userConfig = usersConfig[user];
 
       /* Check that the user is authorized to at least one role */
-      if (userConfig.roles.length > 0) {
+      if (userConfig && userConfig.roles.length > 0) {
         /* If a specific command role is requested, proceed with that role */
         if (req.headers["x-command-mode"]) {
           /* Check that the user is authorized to that role */
-          if (userConfig.roles.includes(req.headers["x-command-mode"]) ) {
+          if (userConfig.roles.includes(req.headers["x-command-mode"])) {
             /* Check that the role is valid */
             if (req.headers["x-command-mode"] in defaultUsers) {
               /* Apply the authorization headers */
@@ -175,11 +198,13 @@ module.exports = function (configLocation, viteProxy) {
           }
         }
       } else {
-        res.sendStatus(401); // Unauthorized
+        if (!(user in defaultUsers)) res.sendStatus(401); // Unauthorized
       }
 
       /* Send back the roles that the user is enabled to */
-      res.set('X-Enabled-Command-Modes', `${userConfig.roles}`);
+      if (userConfig) res.set("X-Enabled-Command-Modes", `${userConfig.roles}`);
+      else if (user in defaultUsers)
+        res.set("X-Enabled-Command-Modes", `[${user}]`);
       next();
     } else {
       res.sendStatus(401); // Unauthorized
