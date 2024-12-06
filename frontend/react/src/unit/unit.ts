@@ -66,8 +66,8 @@ import {
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
 var pathIcon = new Icon({
-  iconUrl: "/vite/images/markers/marker-icon.png",
-  shadowUrl: "/vite/images/markers/marker-shadow.png",
+  iconUrl: "/images/markers/marker-icon.png",
+  shadowUrl: "/images/markers/marker-shadow.png",
   iconAnchor: [13, 41],
 });
 

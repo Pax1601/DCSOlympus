@@ -28,7 +28,7 @@ export class SmokeMarker extends CustomMarker {
     el.classList.add("ol-smoke-icon");
     el.setAttribute("data-color", this.#color);
     var img = document.createElement("img");
-    img.src = "/vite/images/markers/smoke.svg";
+    img.src = "/images/markers/smoke.svg";
     img.onload = () => SVGInjector(img);
     el.appendChild(img);
     this.getElement()?.appendChild(el);
