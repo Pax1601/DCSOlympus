@@ -246,7 +246,7 @@ module.exports = function (configLocation, viteProxy) {
     );
   } else {
     app.get("/", function (req, res) {
-      res.sendfile(path.join(__dirname, "..", "public", "vite", "index.html"));
+      res.sendfile(path.join(__dirname, "..", "public", "index.html"));
     });
   }
 
