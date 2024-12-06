@@ -50,6 +50,51 @@
             ],
             "restart": true,
             "preLaunchTask": "demo-server"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server static Vite (DCS)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--watch",
+                "src/**/*.ts",
+                "--exec",
+                "node",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "src/www.ts",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json"
+            ],
+            "restart": true
+        }, 
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server static Vite (No DCS)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--watch",
+                "src/**/*.ts",
+                "--exec",
+                "node",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "src/www.ts",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json"
+            ],
+            "restart": true,
+            "preLaunchTask": "demo-server"
         }
     ], 
     "inputs": [

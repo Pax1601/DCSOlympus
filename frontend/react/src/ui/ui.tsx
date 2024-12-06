@@ -56,13 +56,16 @@ export function UI() {
     });
   }, []);
 
+  useEffect(() => {
+    setupApp();
+  })
+
   return (
     <div
       className={`
         absolute left-0 top-0 flex h-screen w-screen flex-col overflow-hidden
         font-sans
       `}
-      onLoad={setupApp}
     >
       <Header />
       <div className="flex h-full w-full flex-row-reverse">

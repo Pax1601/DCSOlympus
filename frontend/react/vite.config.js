@@ -7,6 +7,9 @@ export default defineConfig({
   base: "/vite",
   build: {
     outDir: '../server/public/vite'
+  },esbuild: {
+    minifyIdentifiers: false,
+    keepNames: true,
   }
 });
     
