@@ -132,7 +132,7 @@
 }
 
 .ol-target-icon {
-  background-image: url("/images/markers/target.svg");
+  background-image: url("./images/markers/target.svg");
   height: 100%;
   width: 100%;
 }

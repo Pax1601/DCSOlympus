@@ -430,15 +430,15 @@
 }
 
 [data-object|="unit"][data-state="rtb"] .unit-state {
-  background-image: url("/images/states/rtb.svg");
+  background-image: url("./images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="land"] .unit-state {
-  background-image: url("/images/states/rtb.svg");
+  background-image: url("./images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="idle"] .unit-state {
-  background-image: url("/images/states/idle.svg");
+  background-image: url("./images/states/idle.svg");
 }
 
 [data-object*="groundunit"][data-state="idle"] .unit-state,
@@ -450,59 +450,59 @@
 [data-object|="unit"][data-state="bomb-point"] .unit-state,
 [data-object|="unit"][data-state="carpet-bombing"] .unit-state,
 [data-object|="unit"][data-state="fire-at-area"] .unit-state {
-  background-image: url("/images/states/attack.svg");
+  background-image: url("./images/states/attack.svg");
 }
 
 [data-object|="unit"][data-state="follow"] .unit-state {
-  background-image: url("/images/states/follow.svg");
+  background-image: url("./images/states/follow.svg");
 }
 
 [data-object|="unit"][data-state="refuel"] .unit-state {
-  background-image: url("/images/states/refuel.svg");
+  background-image: url("./images/states/refuel.svg");
 }
 
 [data-object|="unit"][data-state="human"] .unit-state {
-  background-image: url("/images/states/human.svg");
+  background-image: url("./images/states/human.svg");
 }
 
 [data-object|="unit"][data-state="dcs"] .unit-state {
-  background-image: url("/images/states/dcs.svg");
+  background-image: url("./images/states/dcs.svg");
 }
 
 [data-object|="unit"][data-state="land-at-point"] .unit-state {
-  background-image: url("/images/states/land-at-point.svg");
+  background-image: url("./images/states/land-at-point.svg");
 }
 
 [data-object|="unit"][data-state="no-task"] .unit-state {
-  background-image: url("/images/states/no-task.svg");
+  background-image: url("./images/states/no-task.svg");
 }
 
 [data-object|="unit"][data-state="off"] .unit-state {
-  background-image: url("/images/states/off.svg");
+  background-image: url("./images/states/off.svg");
 }
 
 [data-object|="unit"][data-state="tanker"] .unit-state {
-  background-image: url("/images/states/tanker.svg");
+  background-image: url("./images/states/tanker.svg");
 }
 
 [data-object|="unit"][data-state="AWACS"] .unit-state {
-  background-image: url("/images/states/awacs.svg");
+  background-image: url("./images/states/awacs.svg");
 }
 
 [data-object|="unit"][data-state="miss-on-purpose"] .unit-state {
-  background-image: url("/images/states/miss-on-purpose.svg");
+  background-image: url("./images/states/miss-on-purpose.svg");
 }
 
 [data-object|="unit"][data-state="scenic-aaa"] .unit-state {
-  background-image: url("/images/states/scenic-aaa.svg");
+  background-image: url("./images/states/scenic-aaa.svg");
 }
 
 [data-object|="unit"][data-state="simulate-fire-fight"] .unit-state {
-  background-image: url("/images/states/simulate-fire-fight.svg");
+  background-image: url("./images/states/simulate-fire-fight.svg");
 }
 
 [data-object|="unit"] .unit-health::before {
-  background-image: url("/images/icons/health.svg");
+  background-image: url("./images/icons/health.svg");
   background-repeat: no-repeat;
   background-size: contain;
   content: " ";

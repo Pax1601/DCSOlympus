@@ -349,7 +349,7 @@ export function FormationMenu(props: {
                         translate-y-[-50%] rotate-90 cursor-move opacity-80
                         invert
                       `}
-                      src={`public/images/units/${unit?.getBlueprint()?.filename}`}
+                      src={`public./images/units/${unit?.getBlueprint()?.filename}`}
                     ></img>
                   </div>
                 );
