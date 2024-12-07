@@ -44,7 +44,7 @@ export function OlUnitListEntry(props: {
           invert
         `}>
         <img
-          src={`public./images/units/${props.silhouette}`}
+          src={`./images/units/${props.silhouette}`}
           className="my-auto max-h-full max-w-full"
         />
         </div>
