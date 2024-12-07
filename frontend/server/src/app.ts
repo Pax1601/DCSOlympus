@@ -238,7 +238,7 @@ module.exports = function (configLocation, viteProxy) {
   /* Set default index */
   if (viteProxy) {
     app.use(
-      "/vite",
+      "/",
       httpProxyMiddleware.createProxyMiddleware({
         target: `http://localhost:8080/`,
         ws: true,

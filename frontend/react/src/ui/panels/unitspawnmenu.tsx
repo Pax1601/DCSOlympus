@@ -69,7 +69,7 @@ export function UnitSpawnMenu(props: {
   const setSpawnRequestTableCallback = useCallback(() => {
     if (spawnRequestTable) {
       /* Refresh the unique key identified */
-      const tempTable = {...spawnRequestTable} as any;
+      const tempTable = JSON.parse(JSON.stringify(spawnRequestTable));
       delete tempTable.quickAccessName;
       delete tempTable.unit.location;
       delete tempTable.unit.altitude;
