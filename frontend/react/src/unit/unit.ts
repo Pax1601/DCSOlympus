@@ -909,7 +909,7 @@ export abstract class Unit extends CustomMarker {
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `/vite./images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${marker}.svg`;
+      img.src = `./images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
