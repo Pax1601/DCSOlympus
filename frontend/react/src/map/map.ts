@@ -542,6 +542,10 @@ export class Map extends L.Map {
     return Object.keys(this.#mapLayers);
   }
 
+  getMirrors() {
+    return this.#mapMirrors;
+  }
+
   setSpawnRequestTable(spawnRequestTable: SpawnRequestTable) {
     this.#spawnRequestTable = spawnRequestTable;
   }
@@ -574,6 +578,17 @@ export class Map extends L.Map {
   }
 
   setContextAction(contextAction: ContextAction | null) {
+    //if (contextAction) {
+    //  this.getContainer().classList.add(`${contextAction.getId()}-cursor`);
+    //  Object.values(getApp().getUnitsManager().getUnits()).forEach((node) => {
+    //    if (node instanceof Unit) node.getElement()?.classList.add(`${contextAction.getId()}-cursor`);
+    //  });
+    //} else if (this.#contextAction) {
+    //  this.getContainer().classList.remove(`${this.#contextAction.getId()}-cursor`);
+    //  Object.values(getApp().getUnitsManager().getUnits()).forEach((node) => {
+    //    if (node instanceof Unit) node.getElement()?.classList.remove(`${this.#contextAction?.getId()}-cursor`);
+    //  });
+    //}
     this.#contextAction = contextAction;
     ContextActionChangedEvent.dispatch(this.#contextAction);
   }

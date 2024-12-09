@@ -182,3 +182,7 @@
 path.leaflet-interactive:focus {
   outline: none;
 }
+
+.attack-cursor {
+  cursor: url("./images/buttons/context/attack.svg"), auto !important;
+}

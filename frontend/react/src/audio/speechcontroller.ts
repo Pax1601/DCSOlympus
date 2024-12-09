@@ -15,7 +15,7 @@ export class SpeechController {
           body: JSON.stringify({ data: base64 }), // Send the data in blob format
         };
 
-        fetch(getApp().getExpressAddress() + `/api/speech/recognize`, requestOptions)
+        fetch(`./api/speech/recognize`, requestOptions)
           .then((response) => {
             if (response.status === 200) {
               console.log(`Speech recognized correctly`);

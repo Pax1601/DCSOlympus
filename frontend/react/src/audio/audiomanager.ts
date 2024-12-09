@@ -44,7 +44,6 @@ export class AudioManager {
   /* The audio backend must be manually started so that the browser can detect the user is enabling audio.
   Otherwise, no playback will be performed. */
   #running: boolean = false;
-  #address: string = "localhost";
   #port: number;
   #endpoint: string;
   #socket: WebSocket | null = null;
@@ -90,10 +89,10 @@ export class AudioManager {
     this.#playbackPipeline = new PlaybackPipeline();
 
     /* Connect the audio websocket */
-    let res = this.#address.match(/(?:http|https):\/\/(.+):/);
-    if (res === null) res = this.#address.match(/(?:http|https):\/\/(.+)/);
+    let res = location.toString().match(/(?:http|https):\/\/(.+):/);
+    if (res === null) res = location.toString().match(/(?:http|https):\/\/(.+)/);
 
-    let wsAddress = res ? res[1] : this.#address;
+    let wsAddress = res ? res[1] : location.toString();
     if (this.#endpoint) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
     else if (this.#port) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
     else console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
@@ -227,10 +226,6 @@ export class AudioManager {
     AudioSourcesChangedEvent.dispatch(this.#sources);
     AudioSinksChangedEvent.dispatch(this.#sinks);
     AudioManagerStateChangedEvent.dispatch(this.#running);
-  }
-
-  setAddress(address) {
-    this.#address = address;
   }
 
   setPort(port) {

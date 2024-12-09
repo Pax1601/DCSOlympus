@@ -19,7 +19,7 @@ import { MapOptionsChangedEvent, ServerStatusUpdatedEvent } from "../events";
 export class ServerManager {
   #connected: boolean = false;
   #paused: boolean = false;
-  #REST_ADDRESS = "http://localhost:3001/olympus";
+  #REST_ADDRESS = "./olympus";
   #username: null | string = null;
   #password: null | string = null;
   #sessionHash: string | null = null;
@@ -164,7 +164,7 @@ export class ServerManager {
 
   getConfig(callback: CallableFunction) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", getApp().getExpressAddress() + "config", true);
+    xmlHttp.open("GET", "./config", true);
     xmlHttp.onload = function (e) {
       var data = JSON.parse(xmlHttp.responseText);
       callback(data);
@@ -173,12 +173,6 @@ export class ServerManager {
       console.error("An error occurred during the XMLHttpRequest, could not retrieve configuration file");
     };
     xmlHttp.send(null);
-  }
-
-  setAddress(address: string) {
-    this.#REST_ADDRESS = address;
-
-    console.log(`Setting REST address to ${this.#REST_ADDRESS}`);
   }
 
   getAirbases(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {

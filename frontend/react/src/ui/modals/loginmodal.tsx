@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { getApp, VERSION } from "../../olympusapp";
 import { sha256 } from "js-sha256";
-import { BLUE_COMMANDER, GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, RED_COMMANDER } from "../../constants/constants";
+import { LoginSubState, NO_SUBSTATE, OlympusState } from "../../constants/constants";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { AppStateChangedEvent } from "../../events";
 
