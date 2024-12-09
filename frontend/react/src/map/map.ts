@@ -578,17 +578,20 @@ export class Map extends L.Map {
   }
 
   setContextAction(contextAction: ContextAction | null) {
-    //if (contextAction) {
-    //  this.getContainer().classList.add(`${contextAction.getId()}-cursor`);
-    //  Object.values(getApp().getUnitsManager().getUnits()).forEach((node) => {
-    //    if (node instanceof Unit) node.getElement()?.classList.add(`${contextAction.getId()}-cursor`);
-    //  });
-    //} else if (this.#contextAction) {
-    //  this.getContainer().classList.remove(`${this.#contextAction.getId()}-cursor`);
-    //  Object.values(getApp().getUnitsManager().getUnits()).forEach((node) => {
-    //    if (node instanceof Unit) node.getElement()?.classList.remove(`${this.#contextAction?.getId()}-cursor`);
-    //  });
-    //}
+    if (this.#contextAction) {
+      this.getContainer().classList.remove(`${this.#contextAction.getId()}-cursor`);
+      Object.values(getApp().getUnitsManager().getUnits()).forEach((unit) => {
+        unit.getElement()?.querySelector(`[data-object|="unit"]`)?.classList.remove(`${this.#contextAction?.getId()}-cursor`);
+      });
+    }
+
+    if (contextAction) {
+      this.getContainer().classList.add(`${contextAction.getId()}-cursor`);
+      Object.values(getApp().getUnitsManager().getUnits()).forEach((unit) => {
+        unit.getElement()?.querySelector(`[data-object|="unit"]`)?.classList.add(`${contextAction.getId()}-cursor`);
+      });
+    }
+
     this.#contextAction = contextAction;
     ContextActionChangedEvent.dispatch(this.#contextAction);
   }
@@ -802,8 +805,11 @@ export class Map extends L.Map {
     this.#currentSpawnMarker = null;
     this.#currentEffectMarker?.removeFrom(this);
     this.#currentEffectMarker = null;
+    this.setContextAction(null);
     if (state !== OlympusState.UNIT_CONTROL) getApp().getUnitsManager().deselectAllUnits();
     if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) this.deselectAllCoalitionAreas();
+    this.getContainer().classList.remove(`explosion-cursor`);
+    ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
 
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {
@@ -821,10 +827,11 @@ export class Map extends L.Map {
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
         console.log(`Effect request table:`);
         console.log(this.#effectRequestTable);
-        if (this.#effectRequestTable?.type === "explosion") this.#currentEffectMarker = new ExplosionMarker(new L.LatLng(0, 0));
-        else if (this.#effectRequestTable?.type === "smoke")
-          this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white");
-        this.#currentEffectMarker?.addTo(this);
+        if (this.#effectRequestTable?.type === "explosion") {
+          this.getContainer().classList.add(`explosion-cursor`);
+        } else if (this.#effectRequestTable?.type === "smoke") {
+          this.getContainer().classList.add(`smoke-${this.#effectRequestTable?.smokeColor?.toLowerCase()}-cursor`);
+        }
       }
     } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
