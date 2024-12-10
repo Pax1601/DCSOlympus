@@ -5,6 +5,7 @@ import { MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, Spawn
 import { AppStateChangedEvent, ContextActionSetChangedEvent, MapOptionsChangedEvent, ShortcutsChangedEvent } from "../../events";
 import { ContextAction } from "../../unit/contextaction";
 import { ContextActionSet } from "../../unit/contextactionset";
+import { MapToolBar } from "./maptoolbar";
 
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
@@ -19,8 +20,8 @@ export function ControlsPanel(props: {}) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
-  const [shortcuts, setShortcuts] = useState({})
-  const [contextActionSet, setContextActionSet] = useState(null as null | ContextActionSet)
+  const [shortcuts, setShortcuts] = useState({});
+  const [contextActionSet, setContextActionSet] = useState(null as null | ContextActionSet);
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -74,53 +75,28 @@ export function ControlsPanel(props: {}) {
         }
       );
     } else if (appState === OlympusState.UNIT_CONTROL) {
-      if (!mapOptions.tabletMode) {
-        controls = Object.values(contextActionSet?.getContextActions() ?? {})
-          .sort((a: ContextAction, b: ContextAction) => (a.getLabel() > b.getLabel() ? 1 : -1))
-          .filter((contextAction: ContextAction) => contextAction.getOptions().code)
-          .map((contextAction: ContextAction) => {
-            let actions: (string | IconDefinition)[] = [];
-            contextAction.getOptions().shiftKey && actions.push("Shift");
-            contextAction.getOptions().altKey && actions.push("Alt");
-            contextAction.getOptions().ctrlKey && actions.push("Ctrl");
-            actions.push(
-              (contextAction.getOptions().code as string)
-                .replace("Key", "")
-                .replace("ControlLeft", "Left Ctrl")
-                .replace("AltLeft", "Left Alt")
-                .replace("ShiftLeft", "Left Shift")
-                .replace("ControlRight", "Right Ctrl")
-                .replace("AltRight", "Right Alt")
-                .replace("ShiftRight", "Right Shift")
-            );
-            return {
-              actions: actions,
-              text: contextAction.getLabel(),
-            };
-          });
-        controls.unshift({
-          actions: ["RMB"],
-          text: "Move",
-        });
-        controls.push({
-          actions: ["RMB", "Hold"],
-          target: faMap,
-          text: "Show point actions",
-        });
-        controls.push({
-          actions: ["RMB", "Hold"],
-          target: faFighterJet,
-          text: "Show unit actions",
-        });
-        controls.push({
-          actions: shortcuts["toggleRelativePositions"]?.toActions(),
-          text: "Activate group movement",
-        });
-        controls.push({
-          actions: [...shortcuts["toggleRelativePositions"]?.toActions(), "Wheel"],
-          text: "Rotate formation",
-        });
-      }
+      controls.unshift({
+        actions: ["RMB"],
+        text: "Move",
+      });
+      controls.push({
+        actions: ["RMB", "Hold"],
+        target: faMap,
+        text: "Show point actions",
+      });
+      controls.push({
+        actions: ["RMB", "Hold"],
+        target: faFighterJet,
+        text: "Show unit actions",
+      });
+      controls.push({
+        actions: shortcuts["toggleRelativePositions"]?.toActions(),
+        text: "Activate group movement",
+      });
+      controls.push({
+        actions: [...shortcuts["toggleRelativePositions"]?.toActions(), "Wheel"],
+        text: "Rotate formation",
+      });
     } else if (appState === OlympusState.SPAWN) {
       controls = [
         {
@@ -151,8 +127,8 @@ export function ControlsPanel(props: {}) {
       controls = baseControls;
       controls.push({
         actions: ["LMB"],
-        text: "Return to idle state"
-      })
+        text: "Return to idle state",
+      });
     }
 
     setControls(controls);
@@ -163,11 +139,13 @@ export function ControlsPanel(props: {}) {
   return (
     <div
       className={`
-        absolute right-[0px]
+        absolute right-[0px] top-16
         ${mapOptions.showMinimap ? `bottom-[233px]` : `bottom-[65px]`}
-        flex w-[310px] flex-col items-center justify-between gap-1 p-3 text-sm
+        pointer-events-none flex w-[310px] flex-col items-center justify-between
+        gap-1 p-3 text-sm
       `}
     >
+      <MapToolBar />
       {controls?.map((control) => {
         return (
           <div
@@ -189,9 +167,14 @@ export function ControlsPanel(props: {}) {
                 return (
                   <div key={idx} className="flex gap-1">
                     <div>
-                      {typeof action === "string" || typeof action === "number" ? action : <FontAwesomeIcon icon={action} className={`
-                        my-auto ml-auto
-                      `} />}
+                      {typeof action === "string" || typeof action === "number" ? (
+                        action
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={action}
+                          className={`my-auto ml-auto`}
+                        />
+                      )}
                     </div>
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "string" && <div>+</div>}
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "number" && <div>x</div>}

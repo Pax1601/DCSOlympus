@@ -20,7 +20,7 @@ export function MiniMapPanel(props: {}) {
   useEffect(() => {
     let miniMap = document.querySelector(".leaflet-control-minimap");
     if (miniMap) {
-      miniMap.classList.add("rounded-t-lg");
+      miniMap.classList.add("rounded-b-lg");
     }
   });
 

@@ -46,7 +46,7 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseDown: function (e: any) {
-    if (this._map.getEnableSelection() && e.button == 0) {
+    if (this._map.getSelectionEnabled() && e.button == 0) {
       // Clear the deferred resetState if it hasn't executed yet, otherwise it
       // will interrupt the interaction and orphan a box element in the container.
       this._clearDeferredResetState();
