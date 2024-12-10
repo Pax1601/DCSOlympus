@@ -1,6 +1,6 @@
 .bullseye-icon {
   align-items: center;
-  cursor: pointer;
+  cursor: url("../images/cursors/pointer.svg"), auto;
   display: flex;
   justify-content: center;
   position: relative;

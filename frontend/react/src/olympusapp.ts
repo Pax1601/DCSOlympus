@@ -105,18 +105,6 @@ export class OlympusApp {
     return this.#AWACSController;
   }
 
-  getExpressAddress() {
-    let address = `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}`;
-    if (address[address.length - 1] !== "/") address += "/"
-    return address;
-  }
-
-  getBackendAddress() {
-    let address = `${window.location.href.split("?")[0].replace("vite/", "").replace("vite", "")}`;
-    if (address[address.length - 1] !== "/") address += "/"
-    return address + "olympus"
-  }
-
   start() {
     /* Initialize base functionalitites */
     this.#shortcutManager = new ShortcutManager(); /* Keep first */
@@ -132,10 +120,6 @@ export class OlympusApp {
 
     /* Controllers */
     this.#AWACSController = new AWACSController();
-
-    /* Set the address of the server */
-    this.getServerManager().setAddress(this.getBackendAddress());
-    this.getAudioManager().setAddress(this.getExpressAddress());
 
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
@@ -157,7 +141,7 @@ export class OlympusApp {
       });
 
     /* Load the config file from the server */
-    const configRequest = new Request(this.getExpressAddress() + "resources/config", {
+    const configRequest = new Request("./resources/config", {
       headers: {
         'Cache-Control': 'no-cache',
       }
@@ -187,7 +171,7 @@ export class OlympusApp {
         }
         ConfigLoadedEvent.dispatch(this.#config as OlympusConfig);
       })
-      .catch((error) => console.error);
+      .catch((error) => console.error(error));
 
     this.#shortcutManager?.addShortcut("idle", {
       label: "Deselect all",
@@ -217,7 +201,7 @@ export class OlympusApp {
         body: JSON.stringify(profile), // Send the data in JSON format
       };
 
-      fetch(this.getExpressAddress() + `/resources/profile/${username}`, requestOptions)
+      fetch(`./resources/profile/${username}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
             console.log(`Profile for ${username} saved correctly`);
@@ -239,7 +223,7 @@ export class OlympusApp {
         body: "", // Send the data in JSON format
       };
 
-      fetch(this.getExpressAddress() + `/resources/profile/reset/${username}`, requestOptions)
+      fetch(`./resources/profile/reset/${username}`, requestOptions)
         .then((response) => {
           if (response.status === 200) {
             console.log(`Profile for ${username} reset correctly`);
@@ -260,7 +244,7 @@ export class OlympusApp {
       body: "", // Send the data in JSON format
     };
 
-    fetch(this.getExpressAddress() + `/resources/profile/delete/all`, requestOptions)
+    fetch(`./resources/profile/delete/all`, requestOptions)
       .then((response) => {
         if (response.status === 200) {
           console.log(`All profiles reset correctly`);

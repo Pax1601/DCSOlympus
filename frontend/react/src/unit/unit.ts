@@ -836,6 +836,9 @@ export abstract class Unit extends CustomMarker {
     contextActionSet.addContextAction(this, ContextActions.PATH);
     contextActionSet.addContextAction(this, ContextActions.DELETE);
     contextActionSet.addContextAction(this, ContextActions.EXPLODE);
+    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
+    contextActionSet.addContextAction(this, ContextActions.CLONE);
+    contextActionSet.addContextAction(this, ContextActions.ATTACK);
 
     contextActionSet.addDefaultContextAction(this, ContextActions.MOVE);
   }
@@ -1357,16 +1360,18 @@ export abstract class Unit extends CustomMarker {
     this.#debounceTimeout = window.setTimeout(() => {
       console.log(`Left short click on ${this.getUnitName()}`);
 
-      if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
-      this.setSelected(!this.getSelected());
+      if (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getMap().getContextAction()) {
+        if (getApp().getMap().getContextAction()?.getTarget() === ContextActionTarget.UNIT) getApp().getMap().executeContextAction(this, null, e.originalEvent);
+        else getApp().getMap().executeContextAction(null, this.getPosition(), e.originalEvent);
+      } else {
+        if (!e.originalEvent.ctrlKey) getApp().getUnitsManager().deselectAllUnits();
+        this.setSelected(!this.getSelected());
+      }
     }, SHORT_PRESS_MILLISECONDS);
   }
 
   #onRightShortClick(e: any) {
     console.log(`Right short click on ${this.getUnitName()}`);
-
-    if (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getMap().getContextAction()?.getTarget() === ContextActionTarget.UNIT)
-      getApp().getMap().executeContextAction(this, null, e.originalEvent);
   }
 
   #onRightLongClick(e: any) {
@@ -1848,7 +1853,7 @@ export abstract class AirUnit extends Unit {
       showAmmo: belongsToCommandedCoalition,
       showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
-      rotateToHeading: false
+      rotateToHeading: false,
     } as ObjectIconOptions;
   }
 
@@ -1857,10 +1862,8 @@ export abstract class AirUnit extends Unit {
 
     /* Context actions to be executed immediately */
     contextActionSet.addContextAction(this, ContextActions.REFUEL);
-    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
 
     /* Context actions that require a target unit */
-    contextActionSet.addContextAction(this, ContextActions.ATTACK);
     contextActionSet.addContextAction(this, ContextActions.FOLLOW);
     contextActionSet.addContextAction(this, ContextActions.SET_AWACS_REFERENCE);
 
@@ -1946,10 +1949,6 @@ export class GroundUnit extends Unit {
 
     /* Context actions to be executed immediately */
     contextActionSet.addContextAction(this, ContextActions.GROUP);
-    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
-
-    /* Context actions that require a target unit */
-    contextActionSet.addContextAction(this, ContextActions.ATTACK);
 
     /* Context actions that require a target position */
     if (this.canTargetPoint()) {
@@ -2015,10 +2014,6 @@ export class NavyUnit extends Unit {
 
     /* Context actions to be executed immediately */
     contextActionSet.addContextAction(this, ContextActions.GROUP);
-    contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
-
-    /* Context actions that require a target unit */
-    contextActionSet.addContextAction(this, ContextActions.ATTACK);
 
     /* Context actions that require a target position */
     contextActionSet.addContextAction(this, ContextActions.FIRE_AT_AREA);

@@ -270,7 +270,7 @@ export class MissionManager {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", getApp().getExpressAddress() + `/api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
+    xhr.open("GET", `./api/airbases/${this.#theatre.toLowerCase()}/${callsign}`, true);
     xhr.responseType = "json";
     xhr.onload = () => {
       var status = xhr.status;

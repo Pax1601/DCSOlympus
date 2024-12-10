@@ -1,11 +1,37 @@
 /*** Unit marker elements ***/
 [data-object|="unit"] {
-  cursor: pointer;
+  cursor: url("../images/cursors/pointer.svg"), auto;
   display: flex;
   height: 100%;
   justify-content: center;
   position: relative;
   width: 100%;
+}
+
+[data-object|="unit"].attack-cursor {
+  cursor: url("../images/cursors/attack.svg"), auto !important;
+}
+
+[data-object|="unit"].follow-cursor {
+  cursor: url("../images/cursors/follow.svg"), auto !important;
+}
+
+[data-object|="unit"].fire-at-area-cursor,
+[data-object|="unit"].bomb-cursor,
+[data-object|="unit"].carpet-bomb-cursor {
+  cursor: url("../images/cursors/fire-at-area.svg"), auto !important;
+}
+
+[data-object|="unit"].land-cursor {
+  cursor: url("../images/cursors/land.svg"), auto !important;
+}
+
+[data-object|="unit"].land-at-point-cursor {
+  cursor: url("../images/cursors/land-at-point.svg"), auto !important;
+}
+
+[data-object|="unit"].simulate-fire-fight-cursor {
+  cursor: url("../images/cursors/simulate-fire-fight.svg"), auto !important;
 }
 
 [data-awacs-mode] .unit-short-label {
@@ -113,42 +139,43 @@
   stroke: white;
 }
 
-[data-awacs-mode] [data-coalition="blue"] .unit-icon svg  {
+[data-awacs-mode] [data-coalition="blue"] .unit-icon svg {
   fill: transparent !important;
   stroke: var(--unit-background-blue) !important;
 }
 
-[data-awacs-mode] [data-coalition="red"] .unit-icon svg  {
+[data-awacs-mode] [data-coalition="red"] .unit-icon svg {
   fill: transparent !important;
   stroke: var(--unit-background-red) !important;
 }
 
-[data-awacs-mode] [data-coalition="neutral"] .unit-icon svg  {
+[data-awacs-mode] [data-coalition="neutral"] .unit-icon svg {
   fill: transparent !important;
   stroke: var(--unit-background-neutral) !important;
 }
 
 [data-awacs-mode] [data-is-selected] .unit-icon svg {
-  stroke: #FF0 !important;
+  stroke: #ff0 !important;
 }
 
 [data-awacs-mode] [data-is-selected] .unit-vvi {
-  background-color: #FF0 !important;
+  background-color: #ff0 !important;
 }
 
 [data-awacs-mode] [data-is-selected] .unit-summary {
-  color: #FF0 !important;
+  color: #ff0 !important;
 }
 
 [data-awacs-mode] [data-is-selected] .unit-summary::after {
-  background-color: #FF0 !important;
+  background-color: #ff0 !important;
 }
 
 /*** Cursors ***/
 [data-is-dead],
-[data-object|="unit-missile"],
-[data-object|="unit-bomb"] {
-  cursor: default;
+[data-object|="unit-missile"] *,
+[data-object|="unit-bomb"] *{
+  pointer-events: none;
+
 }
 
 /*** Labels ***/
@@ -236,7 +263,7 @@
   translate: 80px 10px;
 }
 
-[data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north { 
+[data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north {
   translate: 50px -45px;
 }
 
@@ -276,7 +303,7 @@
   position: absolute;
   z-index: -1;
   transform-origin: 0% 0%;
-  top: 30px
+  top: 30px;
 }
 
 [data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north::after {
@@ -367,25 +394,16 @@
   background-color: var(--secondary-gunmetal-grey);
 }
 
-[data-object|="unit"][data-coalition="blue"][data-is-selected]
-  .unit-short-label {
+[data-object|="unit"][data-coalition="blue"][data-is-selected] .unit-short-label {
   color: var(--secondary-blue-text);
 }
 
 [data-object|="unit"][data-coalition="blue"] .unit-fuel-level,
 [data-object|="unit"][data-coalition="blue"] .unit-health-level,
-[data-object|="unit"][data-coalition="blue"][data-has-fox-1]
-  .unit-ammo
-  > div:nth-child(1),
-[data-object|="unit"][data-coalition="blue"][data-has-fox-2]
-  .unit-ammo
-  > div:nth-child(2),
-[data-object|="unit"][data-coalition="blue"][data-has-fox-3]
-  .unit-ammo
-  > div:nth-child(3),
-[data-object|="unit"][data-coalition="blue"][data-has-other-ammo]
-  .unit-ammo
-  > div:nth-child(4) {
+[data-object|="unit"][data-coalition="blue"][data-has-fox-1] .unit-ammo > div:nth-child(1),
+[data-object|="unit"][data-coalition="blue"][data-has-fox-2] .unit-ammo > div:nth-child(2),
+[data-object|="unit"][data-coalition="blue"][data-has-fox-3] .unit-ammo > div:nth-child(3),
+[data-object|="unit"][data-coalition="blue"][data-has-other-ammo] .unit-ammo > div:nth-child(4) {
   background-color: var(--primary-blue);
 }
 
@@ -393,25 +411,16 @@
   background-color: var(--secondary-blue-outline);
 }
 
-[data-object|="unit"][data-coalition="red"][data-is-selected]
-  .unit-short-label {
+[data-object|="unit"][data-coalition="red"][data-is-selected] .unit-short-label {
   color: var(--secondary-red-text);
 }
 
 [data-object|="unit"][data-coalition="red"] .unit-fuel-level,
 [data-object|="unit"][data-coalition="red"] .unit-health-level,
-[data-object|="unit"][data-coalition="red"][data-has-fox-1]
-  .unit-ammo
-  > div:nth-child(1),
-[data-object|="unit"][data-coalition="red"][data-has-fox-2]
-  .unit-ammo
-  > div:nth-child(2),
-[data-object|="unit"][data-coalition="red"][data-has-fox-3]
-  .unit-ammo
-  > div:nth-child(3),
-[data-object|="unit"][data-coalition="red"][data-has-other-ammo]
-  .unit-ammo
-  > div:nth-child(4) {
+[data-object|="unit"][data-coalition="red"][data-has-fox-1] .unit-ammo > div:nth-child(1),
+[data-object|="unit"][data-coalition="red"][data-has-fox-2] .unit-ammo > div:nth-child(2),
+[data-object|="unit"][data-coalition="red"][data-has-fox-3] .unit-ammo > div:nth-child(3),
+[data-object|="unit"][data-coalition="red"][data-has-other-ammo] .unit-ammo > div:nth-child(4) {
   background-color: var(--primary-red);
 }
 
@@ -430,15 +439,15 @@
 }
 
 [data-object|="unit"][data-state="rtb"] .unit-state {
-  background-image: url("./images/states/rtb.svg");
+  background-image: url("../images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="land"] .unit-state {
-  background-image: url("./images/states/rtb.svg");
+  background-image: url("../images/states/rtb.svg");
 }
 
 [data-object|="unit"][data-state="idle"] .unit-state {
-  background-image: url("./images/states/idle.svg");
+  background-image: url("../images/states/idle.svg");
 }
 
 [data-object*="groundunit"][data-state="idle"] .unit-state,
@@ -450,59 +459,59 @@
 [data-object|="unit"][data-state="bomb-point"] .unit-state,
 [data-object|="unit"][data-state="carpet-bombing"] .unit-state,
 [data-object|="unit"][data-state="fire-at-area"] .unit-state {
-  background-image: url("./images/states/attack.svg");
+  background-image: url("../images/states/attack.svg");
 }
 
 [data-object|="unit"][data-state="follow"] .unit-state {
-  background-image: url("./images/states/follow.svg");
+  background-image: url("../images/states/follow.svg");
 }
 
 [data-object|="unit"][data-state="refuel"] .unit-state {
-  background-image: url("./images/states/refuel.svg");
+  background-image: url("../images/states/refuel.svg");
 }
 
 [data-object|="unit"][data-state="human"] .unit-state {
-  background-image: url("./images/states/human.svg");
+  background-image: url("../images/states/human.svg");
 }
 
 [data-object|="unit"][data-state="dcs"] .unit-state {
-  background-image: url("./images/states/dcs.svg");
+  background-image: url("../images/states/dcs.svg");
 }
 
 [data-object|="unit"][data-state="land-at-point"] .unit-state {
-  background-image: url("./images/states/land-at-point.svg");
+  background-image: url("../images/states/land-at-point.svg");
 }
 
 [data-object|="unit"][data-state="no-task"] .unit-state {
-  background-image: url("./images/states/no-task.svg");
+  background-image: url("../images/states/no-task.svg");
 }
 
 [data-object|="unit"][data-state="off"] .unit-state {
-  background-image: url("./images/states/off.svg");
+  background-image: url("../images/states/off.svg");
 }
 
 [data-object|="unit"][data-state="tanker"] .unit-state {
-  background-image: url("./images/states/tanker.svg");
+  background-image: url("../images/states/tanker.svg");
 }
 
 [data-object|="unit"][data-state="AWACS"] .unit-state {
-  background-image: url("./images/states/awacs.svg");
+  background-image: url("../images/states/awacs.svg");
 }
 
 [data-object|="unit"][data-state="miss-on-purpose"] .unit-state {
-  background-image: url("./images/states/miss-on-purpose.svg");
+  background-image: url("../images/states/miss-on-purpose.svg");
 }
 
 [data-object|="unit"][data-state="scenic-aaa"] .unit-state {
-  background-image: url("./images/states/scenic-aaa.svg");
+  background-image: url("../images/states/scenic-aaa.svg");
 }
 
 [data-object|="unit"][data-state="simulate-fire-fight"] .unit-state {
-  background-image: url("./images/states/simulate-fire-fight.svg");
+  background-image: url("../images/states/simulate-fire-fight.svg");
 }
 
 [data-object|="unit"] .unit-health::before {
-  background-image: url("./images/icons/health.svg");
+  background-image: url("../images/icons/health.svg");
   background-repeat: no-repeat;
   background-size: contain;
   content: " ";
@@ -541,11 +550,12 @@
   opacity: 0.5;
 }
 
-.unit-bullseye, .unit-braa {
+.unit-bullseye,
+.unit-braa {
   display: none;
 }
 
-[data-awacs-mode] .unit-bullseye, 
+[data-awacs-mode] .unit-bullseye,
 [data-awacs-mode] .unit-braa {
   display: inline;
 }

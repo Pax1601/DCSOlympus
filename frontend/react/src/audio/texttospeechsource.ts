@@ -30,7 +30,7 @@ export class TextToSpeechSource extends AudioSource {
 
     this.#loading = true;
 
-    fetch(getApp().getExpressAddress() + `/api/speech/generate`, requestOptions)
+    fetch(`./api/speech/generate`, requestOptions)
       .then((response) => {
         if (response.status === 200) {
           console.log(`Text to speech generate correctly`);

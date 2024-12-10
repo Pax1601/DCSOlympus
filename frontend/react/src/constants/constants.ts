@@ -3,6 +3,7 @@ import { Coalition, MapOptions } from "../types/types";
 import { CommandModeOptions } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 import {
+  faClone,
   faExplosion,
   faHand,
   faLocationCrosshairs,
@@ -264,12 +265,12 @@ export const mapBounds = {
 
 export const defaultMapMirrors = {};
 export const defaultMapLayers = {
-  "AWACS": {
-				"urlTemplate": 'https://abcd.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-				"minZoom": 1,
-				"maxZoom": 19,
-				"attribution": `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'`
-			},
+  AWACS: {
+    urlTemplate: "https://abcd.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
+    minZoom: 1,
+    maxZoom: 19,
+    attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'`,
+  },
 };
 
 export enum OlympusState {
@@ -286,7 +287,7 @@ export enum OlympusState {
   OPTIONS = "Options",
   AUDIO = "Audio",
   AIRBASE = "Airbase",
-  GAME_MASTER = "Game master"
+  GAME_MASTER = "Game master",
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -304,7 +305,7 @@ export enum LoginSubState {
   NO_SUBSTATE = "No substate",
   CREDENTIALS = "Credentials",
   COMMAND_MODE = "Command mode",
-  CONNECT = "Connect"
+  CONNECT = "Connect",
 }
 
 export enum DrawSubState {
@@ -359,7 +360,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   cameraPluginMode: "map",
   tabletMode: false,
   AWACSMode: false,
-  AWACSCoalition: "blue"
+  AWACSCoalition: "blue",
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -602,9 +603,7 @@ export namespace ContextActions {
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
       if (targetPosition)
-        getApp()
-          .getUnitsManager()
-          .bombPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+        getApp().getUnitsManager().bombPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ENGAGE, code: "KeyB", ctrlKey: false, shiftKey: false }
   );
@@ -617,11 +616,9 @@ export namespace ContextActions {
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
       if (targetPosition)
-        getApp()
-          .getUnitsManager()
-          .carpetBomb(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+        getApp().getUnitsManager().carpetBomb(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.ENGAGE, code: "KeyC", ctrlKey: false, shiftKey: false }
+    { type: ContextActionType.ENGAGE, code: "KeyH", ctrlKey: false, shiftKey: false }
   );
 
   export const LAND = new ContextAction(
@@ -644,9 +641,7 @@ export namespace ContextActions {
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
       if (targetPosition)
-        getApp()
-          .getUnitsManager()
-          .landAtPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+        getApp().getUnitsManager().landAtPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ADMIN, code: "KeyK", ctrlKey: false, shiftKey: false }
   );
@@ -660,7 +655,7 @@ export namespace ContextActions {
     (units: Unit[], _1, _2) => {
       getApp().getUnitsManager().createGroup(units);
     },
-    {  type: ContextActionType.OTHER, code: "KeyG", ctrlKey: false, shiftKey: false, altKey: false }
+    { type: ContextActionType.OTHER, code: "KeyG", ctrlKey: false, shiftKey: false, altKey: false }
   );
 
   export const ATTACK = new ContextAction(
@@ -683,9 +678,7 @@ export namespace ContextActions {
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
       if (targetPosition)
-        getApp()
-          .getUnitsManager()
-          .fireAtArea(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+        getApp().getUnitsManager().fireAtArea(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ENGAGE, code: "KeyV", ctrlKey: false, shiftKey: false }
   );
@@ -714,6 +707,19 @@ export namespace ContextActions {
     (units: Unit[], _1, _2) => {
       getApp().getUnitsManager().setAWACSReference(units[0].ID);
     },
-    {  type: ContextActionType.ADMIN, code: "KeyU", ctrlKey: false, shiftKey: false, altKey: false }
+    { type: ContextActionType.ADMIN, code: "KeyU", ctrlKey: false, shiftKey: false, altKey: false }
+  );
+
+  export const CLONE = new ContextAction(
+    "clone",
+    "Clone unit",
+    "Clone the unit at the given location",
+    faClone,
+    ContextActionTarget.POINT,
+    (units: Unit[], _1, targetPosition) => {
+      getApp().getUnitsManager().copy(units);
+      if (targetPosition) getApp().getUnitsManager().paste(targetPosition);
+    },
+    { type: ContextActionType.ADMIN, code: "KeyC", ctrlKey: false, shiftKey: false, altKey: false }
   );
 }

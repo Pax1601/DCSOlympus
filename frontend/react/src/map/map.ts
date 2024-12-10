@@ -53,7 +53,9 @@ import {
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
   MouseMovedEvent,
+  PasteEnabledChangedEvent,
   SelectionClearedEvent,
+  SelectionEnabledChangedEvent,
   SpawnContextMenuRequestEvent,
   StarredSpawnsChangedEvent,
   UnitDeselectedEvent,
@@ -113,7 +115,8 @@ export class Map extends L.Map {
   #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
   #previousZoom: number = 0;
   #keepRelativePositions: boolean = false;
-  #enableSelection: boolean = false;
+  #selectionEnabled: boolean = false;
+  #pasteEnabled: boolean = false;
 
   /* Camera control plugin */
   #slaveDCSCamera: boolean = false;
@@ -363,10 +366,10 @@ export class Map extends L.Map {
         shiftKey: false,
         ctrlKey: false,
       })
-      .addShortcut("toggleEnableSelection", {
+      .addShortcut("toggleSelectionEnabled", {
         label: "Toggle box selection",
-        keyUpCallback: () => this.setEnableSelection(false),
-        keyDownCallback: () => this.setEnableSelection(true),
+        keyUpCallback: () => this.setSelectionEnabled(false),
+        keyDownCallback: () => this.setSelectionEnabled(true),
         code: "ShiftLeft",
         altKey: false,
         ctrlKey: false,
@@ -542,6 +545,10 @@ export class Map extends L.Map {
     return Object.keys(this.#mapLayers);
   }
 
+  getMirrors() {
+    return this.#mapMirrors;
+  }
+
   setSpawnRequestTable(spawnRequestTable: SpawnRequestTable) {
     this.#spawnRequestTable = spawnRequestTable;
   }
@@ -574,6 +581,20 @@ export class Map extends L.Map {
   }
 
   setContextAction(contextAction: ContextAction | null) {
+    if (this.#contextAction) {
+      this.getContainer().classList.remove(`${this.#contextAction.getId()}-cursor`);
+      Object.values(getApp().getUnitsManager().getUnits()).forEach((unit) => {
+        unit.getElement()?.querySelector(`[data-object|="unit"]`)?.classList.remove(`${this.#contextAction?.getId()}-cursor`);
+      });
+    }
+
+    if (contextAction) {
+      this.getContainer().classList.add(`${contextAction.getId()}-cursor`);
+      Object.values(getApp().getUnitsManager().getUnits()).forEach((unit) => {
+        unit.getElement()?.querySelector(`[data-object|="unit"]`)?.classList.add(`${contextAction.getId()}-cursor`);
+      });
+    }
+
     this.#contextAction = contextAction;
     ContextActionChangedEvent.dispatch(this.#contextAction);
   }
@@ -737,12 +758,22 @@ export class Map extends L.Map {
     return this.#keepRelativePositions;
   }
 
-  setEnableSelection(enableSelection: boolean) {
-    this.#enableSelection = enableSelection;
+  setSelectionEnabled(selectionEnabled: boolean) {
+    this.#selectionEnabled = selectionEnabled;
+    SelectionEnabledChangedEvent.dispatch(selectionEnabled)
   }
 
-  getEnableSelection() {
-    return this.#enableSelection;
+  getSelectionEnabled() {
+    return this.#selectionEnabled;
+  }
+
+  setPasteEnabled(pasteEnabled: boolean) {
+    this.#pasteEnabled = pasteEnabled;
+    PasteEnabledChangedEvent.dispatch(pasteEnabled)
+  }
+
+  getPasteEnabled() {
+    return this.#pasteEnabled;
   }
 
   increaseCameraZoom() {
@@ -787,8 +818,15 @@ export class Map extends L.Map {
     this.#currentSpawnMarker = null;
     this.#currentEffectMarker?.removeFrom(this);
     this.#currentEffectMarker = null;
-    if (state !== OlympusState.UNIT_CONTROL) getApp().getUnitsManager().deselectAllUnits();
+    
+    if (state !== OlympusState.UNIT_CONTROL) {
+      getApp().getUnitsManager().deselectAllUnits();
+      this.setContextAction(null);
+      this.setContextActionSet(null);
+    }
     if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) this.deselectAllCoalitionAreas();
+    this.getContainer().classList.remove(`explosion-cursor`);
+    ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
 
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {
@@ -806,10 +844,11 @@ export class Map extends L.Map {
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
         console.log(`Effect request table:`);
         console.log(this.#effectRequestTable);
-        if (this.#effectRequestTable?.type === "explosion") this.#currentEffectMarker = new ExplosionMarker(new L.LatLng(0, 0));
-        else if (this.#effectRequestTable?.type === "smoke")
-          this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white");
-        this.#currentEffectMarker?.addTo(this);
+        if (this.#effectRequestTable?.type === "explosion") {
+          this.getContainer().classList.add(`explosion-cursor`);
+        } else if (this.#effectRequestTable?.type === "smoke") {
+          this.getContainer().classList.add(`smoke-${this.#effectRequestTable?.smokeColor?.toLowerCase()}-cursor`);
+        }
       }
     } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
@@ -885,6 +924,10 @@ export class Map extends L.Map {
       this.#debounceTimeout = window.setTimeout(() => {
         if (!this.#isSelecting) {
           console.log(`Left short click at ${e.latlng}`);
+
+          if (this.#pasteEnabled) {
+            getApp().getUnitsManager().paste(e.latlng)
+          }
 
           /* Execute the short click action */
           if (getApp().getState() === OlympusState.IDLE) {
@@ -1001,6 +1044,10 @@ export class Map extends L.Map {
             }
             getApp().setState(OlympusState.JTAC);
             this.#drawIPToTargetLine();
+          } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
+            if (this.#contextAction !== null) this.executeContextAction(null, e.latlng, e.originalEvent);
+            else if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
+            else getApp().setState(OlympusState.UNIT_CONTROL);
           } else {
             if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
             else getApp().setState(OlympusState.UNIT_CONTROL);
@@ -1019,8 +1066,7 @@ export class Map extends L.Map {
       SpawnContextMenuRequestEvent.dispatch(e.latlng);
       getApp().setState(OlympusState.SPAWN_CONTEXT);
     } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-      if (this.#contextAction !== null) this.executeContextAction(null, e.latlng, e.originalEvent);
-      else this.executeDefaultContextAction(null, e.latlng, e.originalEvent);
+      this.executeDefaultContextAction(null, e.latlng, e.originalEvent);
     }
   }
 
@@ -1039,6 +1085,8 @@ export class Map extends L.Map {
     console.log(`Double click at ${e.latlng}`);
 
     if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
+
+    this.setPasteEnabled(false);
 
     if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
     else getApp().setState(getApp().getState());

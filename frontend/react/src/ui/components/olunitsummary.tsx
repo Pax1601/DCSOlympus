@@ -33,9 +33,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
         </div>
       </div>
       <div
-        className={`
-													flex h-fit flex-col justify-between px-2 leading-normal
-												`}
+        className={`flex h-fit flex-col justify-between px-2 leading-normal`}
       >
         <p
           className={`

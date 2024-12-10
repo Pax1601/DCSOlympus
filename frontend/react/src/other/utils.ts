@@ -306,7 +306,7 @@ export function convertDateAndTimeToDate(dateAndTime: DateAndTime) {
 export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
   /* Get the ground elevation from the server endpoint */
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", getApp().getExpressAddress() + `/api/elevation/${latlng.lat}/${latlng.lng}`, true);
+  xhr.open("GET", `./api/elevation/${latlng.lat}/${latlng.lng}`, true);
   xhr.timeout = 500; // ms
   xhr.responseType = "json";
   xhr.onload = () => {

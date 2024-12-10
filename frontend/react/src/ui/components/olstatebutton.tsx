@@ -9,7 +9,8 @@ export function OlStateButton(props: {
   buttonColor?: string | null;
   checked: boolean;
   icon?: IconProp;
-  tooltip: string;
+  tooltip?: string | JSX.Element | JSX.Element[];
+  tooltipPosition?: string;
   onClick: () => void;
   onMouseUp?: () => void;
   onMouseDown?: () => void;
@@ -21,7 +22,8 @@ export function OlStateButton(props: {
   const className =
     (props.className ?? "") +
     `
-      h-[40px] w-[40px] flex-none rounded-md text-lg font-medium
+      pointer-events-auto h-[40px] w-[40px] flex-none rounded-md text-lg
+      font-medium
       dark:bg-olympus-600 dark:text-gray-300
     `;
 
@@ -57,12 +59,12 @@ export function OlStateButton(props: {
           setHover(false);
         }}
       >
-        <div className="m-auto flex w-fit content-center justify-center gap-2">
+        <div className={`m-auto flex w-fit content-center justify-center gap-2`}>
           {props.icon && <FontAwesomeIcon icon={props.icon} className="m-auto" style={{ color: textColor }} />}
           {props.children}
         </div>
       </button>
-      {hover && <OlTooltip buttonRef={buttonRef} content={props.tooltip} />}
+      {hover && props.tooltip && <OlTooltip buttonRef={buttonRef} content={props.tooltip} position={props.tooltipPosition}/>}
     </>
   );
 }
