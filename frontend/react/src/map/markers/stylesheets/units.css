@@ -172,9 +172,10 @@
 
 /*** Cursors ***/
 [data-is-dead],
-[data-object|="unit-missile"],
-[data-object|="unit-bomb"] {
-  cursor: default;
+[data-object|="unit-missile"] *,
+[data-object|="unit-bomb"] *{
+  pointer-events: none;
+
 }
 
 /*** Labels ***/

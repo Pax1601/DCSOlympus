@@ -32,6 +32,7 @@ export function SideBar() {
             checked={appState === OlympusState.MAIN_MENU}
             icon={faEllipsisV}
             tooltip="Hide/show main menu"
+            tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {
@@ -40,6 +41,7 @@ export function SideBar() {
             checked={appState === OlympusState.SPAWN}
             icon={faPlusSquare}
             tooltip="Hide/show unit spawn menu"
+            tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {
@@ -48,6 +50,7 @@ export function SideBar() {
             checked={appState === OlympusState.UNIT_CONTROL}
             icon={faGamepad}
             tooltip="Hide/show selection tool and unit control menu"
+            tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {
@@ -56,6 +59,7 @@ export function SideBar() {
             checked={appState === OlympusState.DRAW}
             icon={faPencil}
             tooltip="Hide/show drawing menu"
+            tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {
@@ -64,6 +68,7 @@ export function SideBar() {
             checked={appState === OlympusState.AUDIO}
             icon={faVolumeHigh}
             tooltip="Hide/show audio menu"
+            tooltipPosition="side"
           ></OlStateButton>
           {/*}<OlStateButton
             onClick={() => {
@@ -80,6 +85,7 @@ export function SideBar() {
             checked={appState === OlympusState.AWACS}
             icon={faA}
             tooltip="Hide/show AWACS menu"
+            tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {
@@ -88,6 +94,7 @@ export function SideBar() {
             checked={appState === OlympusState.GAME_MASTER}
             icon={faCrown}
             tooltip="Hide/show Game Master menu"
+            tooltipPosition="side"
           ></OlStateButton>
         </div>
       </div>
@@ -98,6 +105,7 @@ export function SideBar() {
             checked={false}
             icon={faQuestionCircle}
             tooltip="Open user guide on separate window"
+            tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton
             onClick={() => {
@@ -106,6 +114,7 @@ export function SideBar() {
             checked={appState === OlympusState.OPTIONS}
             icon={faCog}
             tooltip="Hide/show settings menu"
+            tooltipPosition="side"
           ></OlStateButton>
         </div>
       </div>

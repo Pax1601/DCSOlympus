@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { CommandModeOptions, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable } from "./interfaces";
+import { CommandModeOptions, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable, UnitData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -242,6 +242,32 @@ export class AirbaseSelectedEvent {
   }
 }
 
+export class SelectionEnabledChangedEvent {
+  static on(callback: (enabled: boolean) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.enabled);
+    });
+  }
+
+  static dispatch(enabled: boolean) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { enabled } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+};
+
+export class PasteEnabledChangedEvent {
+  static on(callback: (enabled: boolean) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.enabled);
+    });
+  }
+
+  static dispatch(enabled: boolean) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { enabled } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+};
+
 export class ContactsUpdatedEvent {
   static on(callback: () => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
@@ -277,6 +303,19 @@ export class ContextActionChangedEvent {
 
   static dispatch(contextAction: ContextAction | null) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { contextAction } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class CopiedUnitsEvents {
+  static on(callback: (unitsData: UnitData[]) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.unitsData);
+    });
+  }
+
+  static dispatch(unitsData: UnitData[]) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { unitsData } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }

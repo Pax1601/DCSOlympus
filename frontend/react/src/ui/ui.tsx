@@ -13,7 +13,7 @@ import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/loginmodal";
 
 import { MiniMapPanel } from "./panels/minimappanel";
-import { UnitControlBar } from "./panels/unitcontrolbar";
+import { MapToolBar } from "./panels/maptoolbar";
 import { DrawingMenu } from "./panels/drawingmenu";
 import { ControlsPanel } from "./panels/controlspanel";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
@@ -105,7 +105,6 @@ export function UI() {
         <CoordinatesPanel />
         <RadiosSummaryPanel />
 
-        <UnitControlBar />
         <SideBar />
         <InfoBar />
         <HotGroupBar />

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export function OlTooltip(props: { content: string; buttonRef: React.MutableRefObject<null> }) {
+export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]; buttonRef: React.MutableRefObject<null>; position?: string }) {
   var contentRef = useRef(null);
 
   function setPosition(content: HTMLDivElement, button: HTMLButtonElement) {
@@ -13,18 +13,18 @@ export function OlTooltip(props: { content: string; buttonRef: React.MutableRefO
     let [cxl, cyt, cxr, cyb, cw, ch] = [
       content.getBoundingClientRect().x,
       content.getBoundingClientRect().y,
-      content.getBoundingClientRect().x + content.clientWidth,
-      content.getBoundingClientRect().y + content.clientHeight,
-      content.clientWidth,
-      content.clientHeight,
+      content.getBoundingClientRect().x + content.offsetWidth,
+      content.getBoundingClientRect().y + content.offsetHeight,
+      content.offsetWidth,
+      content.offsetHeight,
     ];
     let [bxl, byt, bxr, byb, bbw, bh] = [
       button.getBoundingClientRect().x,
       button.getBoundingClientRect().y,
-      button.getBoundingClientRect().x + button.clientWidth,
-      button.getBoundingClientRect().y + button.clientHeight,
-      button.clientWidth,
-      button.clientHeight,
+      button.getBoundingClientRect().x + button.offsetWidth,
+      button.getBoundingClientRect().y + button.offsetHeight,
+      button.offsetWidth,
+      button.offsetHeight,
     ];
 
     /* Limit the maximum height */
@@ -37,19 +37,29 @@ export function OlTooltip(props: { content: string; buttonRef: React.MutableRefO
     var cxc = (cxl + cxr) / 2;
     var bxc = (bxl + bxr) / 2;
 
-    /* Compute the x and y offsets needed to align the button and element horizontally, and to put the content below the button */
-    var offsetX = bxc - cxc;
-    var offsetY = byb - cyt + 8;
+    /* Compute the x and y offsets needed to align the button and element horizontally, and to put the content depending on the requested position */
+    var offsetX = 0;
+    var offsetY = 0;
+
+    if (props.position === undefined || props.position === "below") {
+      offsetX = bxc - cxc;
+      offsetY = byb - cyt + 8;
+    } else if (props.position === "side") {
+      offsetX = bxr + 8;
+      offsetY = byt - cyt + (bh - ch) / 2;
+    }
 
     /* Compute the new position of the left and right margins of the content */
-    cxl += offsetX;
-    cxr += offsetX;
-    cyb += offsetY;
+    let ncxl = cxl + offsetX;
+    let ncxr = cxr + offsetX;
+    let ncyb = cyb + offsetY;
 
     /* Try and move the content so it is inside the screen */
-    if (cxl < 0) offsetX -= cxl;
-    if (cxr > window.innerWidth) offsetX -= cxr - window.innerWidth;
-    if (cyb > window.innerHeight) offsetY -= bh + ch + 16;
+    if (ncxl < 0) offsetX -= cxl;
+    if (ncxr > window.innerWidth) {
+      offsetX = bxl - cxl - cw - 12;
+    }
+    if (ncyb > window.innerHeight) offsetY -= bh + ch + 16;
 
     /* Apply the offset */
     content.style.left = `${offsetX}px`;

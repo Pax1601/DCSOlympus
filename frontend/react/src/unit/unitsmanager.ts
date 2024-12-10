@@ -17,6 +17,7 @@ import {
   AWACSReferenceChangedEvent,
   CommandModeOptionsChangedEvent,
   ContactsUpdatedEvent,
+  CopiedUnitsEvents,
   HotgroupsChangedEvent,
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
@@ -1234,6 +1235,8 @@ export class UnitsManager {
       )
     ); /* Can be applied to humans too */
     getApp().addInfoMessage(`${this.#copiedUnits.length} units copied`);
+
+    CopiedUnitsEvents.dispatch(this.#copiedUnits)
   }
 
   /*********************** Unit manipulation functions  ************************/
@@ -1241,7 +1244,7 @@ export class UnitsManager {
    *
    * @returns True if units were pasted successfully
    */
-  paste() {
+  paste(location?: LatLng) {
     let spawnPoints = 0;
 
     /* If spawns are restricted, check that the user has the necessary spawn points */
@@ -1285,7 +1288,10 @@ export class UnitsManager {
         var units: { ID: number; location: LatLng }[] = [];
         let markers: TemporaryUnitMarker[] = [];
         groups[groupName].forEach((unit: UnitData) => {
-          var position = new LatLng(
+          var position = location ? new LatLng(
+            location.lat + unit.position.lat - avgLat,
+            location.lng + unit.position.lng - avgLng
+          ) : new LatLng(
             getApp().getMap().getMouseCoordinates().lat + unit.position.lat - avgLat,
             getApp().getMap().getMouseCoordinates().lng + unit.position.lng - avgLng
           );
