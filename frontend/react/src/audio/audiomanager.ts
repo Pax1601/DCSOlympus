@@ -93,7 +93,7 @@ export class AudioManager {
     if (res === null) res = location.toString().match(/(?:http|https):\/\/(.+)/);
 
     let wsAddress = res ? res[1] : location.toString();
-    if (wsAddress.at(wsAddress.length - 1) === "/") wsAddress = wsAddress.substring(0, wsAddress.length - 2)
+    if (wsAddress.at(wsAddress.length - 1) === "/") wsAddress = wsAddress.substring(0, wsAddress.length - 1)
     if (this.#endpoint) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
     else if (this.#port) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
     else console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
