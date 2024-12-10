@@ -132,7 +132,7 @@
 }
 
 .ol-target-icon {
-  background-image: url("./images/markers/target.svg");
+  background-image: url("/images/markers/target.svg");
   height: 100%;
   width: 100%;
 }
@@ -184,53 +184,53 @@ path.leaflet-interactive:focus {
 }
 
 .attack-cursor {
-  cursor: url("./images/cursors/attack.svg"), auto !important;
+  cursor: url("/images/cursors/attack.svg"), auto !important;
 }
 
 .follow-cursor {
-  cursor: url("./images/cursors/follow.svg"), auto !important;
+  cursor: url("/images/cursors/follow.svg"), auto !important;
 }
 
 .fire-at-area-cursor, .bomb-cursor, .carpet-bomb-cursor {
-  cursor: url("./images/cursors/fire-at-area.svg"), auto !important;
+  cursor: url("/images/cursors/fire-at-area.svg"), auto !important;
 }
 
 .land-cursor {
-  cursor: url("./images/cursors/land.svg"), auto !important;
+  cursor: url("/images/cursors/land.svg"), auto !important;
 }
 
 .land-at-point-cursor {
-  cursor: url("./images/cursors/land-at-point.svg"), auto !important;
+  cursor: url("/images/cursors/land-at-point.svg"), auto !important;
 }
 
 .simulate-fire-fight-cursor {
-  cursor: url("./images/cursors/simulate-fire-fight.svg"), auto !important;
+  cursor: url("/images/cursors/simulate-fire-fight.svg"), auto !important;
 }
 
 #map-container.leaflet-grab {
-  cursor: url("./images/cursors/grab.svg") 16 16, auto;
+  cursor: url("/images/cursors/grab.svg") 16 16, auto;
 }
 
 .explosion-cursor {
-  cursor: url("./images/cursors/explosion.svg"), auto !important;
+  cursor: url("/images/cursors/explosion.svg"), auto !important;
 }
 
 .smoke-white-cursor {
-  cursor: url("./images/cursors/smoke-white.svg"), auto !important;
+  cursor: url("/images/cursors/smoke-white.svg"), auto !important;
 }
 
 .smoke-blue-cursor {
-  cursor: url("./images/cursors/smoke-blue.svg"), auto !important;
+  cursor: url("/images/cursors/smoke-blue.svg"), auto !important;
 }
 
 .smoke-red-cursor {
-  cursor: url("./images/cursors/smoke-red.svg"), auto !important;
+  cursor: url("/images/cursors/smoke-red.svg"), auto !important;
 }
 
 .smoke-green-cursor {
-  cursor: url("./images/cursors/smoke-green.svg"), auto !important;
+  cursor: url("/images/cursors/smoke-green.svg"), auto !important;
 }
 
 .smoke-orange-cursor {
-  cursor: url("./images/cursors/smoke-orange.svg"), auto !important;
+  cursor: url("/images/cursors/smoke-orange.svg"), auto !important;
 }

@@ -20,7 +20,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
           className={`
             absolute right-5 top-0 h-full object-cover opacity-10 invert
           `}
-          src={"vite./images/units/" + props.blueprint.filename}
+          src={"vite/images/units/" + props.blueprint.filename}
           alt=""
         />
         <div
@@ -33,9 +33,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
         </div>
       </div>
       <div
-        className={`
-													flex h-fit flex-col justify-between px-2 leading-normal
-												`}
+        className={`flex h-fit flex-col justify-between px-2 leading-normal`}
       >
         <p
           className={`
