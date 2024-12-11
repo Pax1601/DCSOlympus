@@ -1372,6 +1372,14 @@ export abstract class Unit extends CustomMarker {
 
   #onRightShortClick(e: any) {
     console.log(`Right short click on ${this.getUnitName()}`);
+
+    window.clearTimeout(this.#rightMouseDownTimeout);
+    if (
+      getApp().getState() === OlympusState.UNIT_CONTROL &&
+      getApp().getMap().getDefaultContextAction() &&
+      getApp().getMap().getDefaultContextAction()?.getTarget() === ContextActionTarget.POINT
+    )
+      getApp().getMap().executeDefaultContextAction(null, this.getPosition(), e.originalEvent);
   }
 
   #onRightLongClick(e: any) {

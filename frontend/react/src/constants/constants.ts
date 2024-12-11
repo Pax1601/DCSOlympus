@@ -513,7 +513,7 @@ export namespace ContextActions {
           .getUnitsManager()
           .addDestination(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.MOVE, code: "ControlLeft", shiftKey: false }
+    { type: ContextActionType.MOVE, code: null}
   );
 
   export const DELETE = new ContextAction(

@@ -9,7 +9,7 @@ export function OlStateButton(props: {
   buttonColor?: string | null;
   checked: boolean;
   icon?: IconProp;
-  tooltip?: string | JSX.Element | JSX.Element[];
+  tooltip?: string | (() => JSX.Element | JSX.Element[]);
   tooltipPosition?: string;
   onClick: () => void;
   onMouseUp?: () => void;
@@ -64,7 +64,7 @@ export function OlStateButton(props: {
           {props.children}
         </div>
       </button>
-      {hover && props.tooltip && <OlTooltip buttonRef={buttonRef} content={props.tooltip} position={props.tooltipPosition}/>}
+      {hover && props.tooltip && <OlTooltip buttonRef={buttonRef} content={typeof(props.tooltip) === "string" ? props.tooltip: props.tooltip()} position={props.tooltipPosition}/>}
     </>
   );
 }

@@ -12,7 +12,6 @@ export var BoxSelect = Handler.extend({
     this._map = map;
     this._container = map.getContainer();
     this._pane = map.getPanes().overlayPane;
-    this._resetStateTimeout = 0;
     map.on("unload", this._destroy, this);
   },
 
@@ -34,23 +33,12 @@ export var BoxSelect = Handler.extend({
   },
 
   _resetState: function () {
-    this._resetStateTimeout = 0;
     this._moved = false;
-  },
-
-  _clearDeferredResetState: function () {
-    if (this._resetStateTimeout !== 0) {
-      clearTimeout(this._resetStateTimeout);
-      this._resetStateTimeout = 0;
-    }
   },
 
   _onMouseDown: function (e: any) {
     if (this._map.getSelectionEnabled() && e.button == 0) {
-      // Clear the deferred resetState if it hasn't executed yet, otherwise it
-      // will interrupt the interaction and orphan a box element in the container.
-      this._clearDeferredResetState();
-      this._resetState();
+      if (this._moved) this._finish();
 
       DomUtil.disableImageDrag();
       this._map.dragging.disable();
@@ -66,7 +54,7 @@ export var BoxSelect = Handler.extend({
           touchmove: this._onMouseMove,
           touchend: this._onMouseUp,
           mousemove: this._onMouseMove,
-          mouseup: this._onMouseUp
+          mouseup: this._onMouseUp,
         },
         this
       );
@@ -76,20 +64,10 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseUp: function (e: any) {
-    if (e.button !== 0) {
-      return;
-    }
-
-    this._finish();
-
-    if (!this._moved) {
-      return;
-    }
-    // Postpone to next JS tick so internal click event handling
-    // still see it as "moved".
-    window.setTimeout(Util.bind(this._resetState, this), 0);
+    if (e.button !== 0) return;
+    window.setTimeout(Util.bind(this._finish, this), 0);
+    if (!this._moved) return;
     var bounds = new LatLngBounds(this._map.containerPointToLatLng(this._startPoint), this._map.containerPointToLatLng(this._point));
-
     this._map.fire("selectionend", { selectionBounds: bounds });
   },
 
@@ -141,5 +119,7 @@ export var BoxSelect = Handler.extend({
       },
       this
     );
+
+    this._resetState();
   },
 });

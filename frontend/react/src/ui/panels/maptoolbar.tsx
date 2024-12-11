@@ -152,26 +152,28 @@ export function MapToolBar(props: {}) {
                   key={"select"}
                   checked={selectionEnabled}
                   icon={faObjectGroup}
-                  tooltip={
-                    <div className="flex content-center gap-2">
-                      {shortcutCombination(shortcuts["toggleSelectionEnabled"]?.getOptions())}
-                      <div className="my-auto">Box selection</div>
+                  tooltip={() => (
+                    <div
+                      className="overflow-hidden"
+                      style={{ animationName: "fadeIn", animationDuration: "1s", animationFillMode: "forwards", height: "25px" }}
+                    >
+                      <div className="flex content-center gap-2">
+                        {shortcutCombination(shortcuts["toggleSelectionEnabled"]?.getOptions())}
+                        <div className="my-auto">Box selection</div>
+                      </div>
                     </div>
-                  }
+                  )}
                   tooltipPosition="side"
                   onClick={() => {
                     getApp().getMap().setSelectionEnabled(!selectionEnabled);
                     if (!selectionEnabled) {
-                      getApp()
-                        .getMap()
-                        .getContainer()
-                        .addEventListener(
-                          "mouseup",
-                          () => {
-                            getApp().getMap().setSelectionEnabled(false);
-                          },
-                          { once: true, signal: controller.signal }
-                        );
+                      window.addEventListener(
+                        "mouseup",
+                        () => {
+                          getApp().getMap().setSelectionEnabled(false);
+                        },
+                        { once: true, signal: controller.signal }
+                      );
                     } else {
                       controller.abort();
                     }
@@ -184,12 +186,12 @@ export function MapToolBar(props: {}) {
                     key={"copy"}
                     checked={false}
                     icon={faCopy}
-                    tooltip={
+                    tooltip={() => (
                       <div className="flex content-center gap-2">
                         {shortcutCombination(shortcuts["copyUnits"]?.getOptions())}
                         <div className="my-auto">Copy selected units</div>
                       </div>
-                    }
+                    )}
                     tooltipPosition="side"
                     onClick={() => {
                       getApp().getUnitsManager().copy(selectedUnits);
@@ -199,14 +201,21 @@ export function MapToolBar(props: {}) {
               )}
               {copiedUnitsData.length > 0 && (
                 <div className="flex flex-col gap-1">
-                  <OlStateButton key={"paste"} checked={pasteEnabled} icon={faPaste} tooltip={
+                  <OlStateButton
+                    key={"paste"}
+                    checked={pasteEnabled}
+                    icon={faPaste}
+                    tooltip={() => (
                       <div className="flex content-center gap-2">
                         {shortcutCombination(shortcuts["pasteUnits"]?.getOptions())}
                         <div className="my-auto">Paste copied units</div>
                       </div>
-                    } tooltipPosition="side" onClick={() => {
-                      getApp().getMap().setPasteEnabled(!pasteEnabled)
-                    }} />
+                    )}
+                    tooltipPosition="side"
+                    onClick={() => {
+                      getApp().getMap().setPasteEnabled(!pasteEnabled);
+                    }}
+                  />
                 </div>
               )}
             </>
@@ -218,12 +227,18 @@ export function MapToolBar(props: {}) {
                     key={contextActionIt.getId()}
                     checked={contextActionIt === contextAction}
                     icon={contextActionIt.getIcon()}
-                    tooltip={
+                    tooltip={() => (
+                      <div
+                      className="overflow-hidden"
+                      style={{ animationName: "tooltipFadeInHeight", animationDuration: "1s", animationFillMode: "forwards", height: "25px" }}
+                    >
                       <div className="flex content-center gap-2">
                         {shortcutCombination(contextActionIt.getOptions())}
                         <div className="my-auto">{contextActionIt.getLabel()}</div>
                       </div>
-                    }
+                      <div className={"max-w-[200px] text-wrap"} style={{ animationName: "tooltipFadeInWidth", animationDuration: "1s", animationFillMode: "forwards", width: "1px" }}>{contextActionIt.getDescription()}</div>
+                      </div>
+                    )}
                     tooltipPosition="side"
                     buttonColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type ?? 0]}
                     onClick={() => {

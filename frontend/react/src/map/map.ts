@@ -297,6 +297,11 @@ export class Map extends L.Map {
     ContextActionChangedEvent.on((contextAction) => this.#updateDestinationPreviewMarkers());
     MapOptionsChangedEvent.on((mapOptions) => this.#moveDestinationPreviewMarkers());
 
+    window.addEventListener("blur", () => {
+      this.setSelectionEnabled(false);
+      this.setPasteEnabled(false);
+    })
+
     /* Pan interval */
     this.#panInterval = window.setInterval(() => {
       if (this.#panUp || this.#panDown || this.#panRight || this.#panLeft)
@@ -804,6 +809,10 @@ export class Map extends L.Map {
 
   getContextAction() {
     return this.#contextAction;
+  }
+
+  getDefaultContextAction() {
+    return this.#contextActionSet?.getDefaultContextAction();
   }
 
   executeDefaultContextAction(targetUnit: Unit | null, targetPosition: L.LatLng | null, originalEvent?: MouseEvent) {

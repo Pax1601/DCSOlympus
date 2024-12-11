@@ -234,3 +234,7 @@ path.leaflet-interactive:focus {
 .smoke-orange-cursor {
   cursor: url("/images/cursors/smoke-orange.svg"), auto !important;
 }
+
+#map-container .disable-pointer-events {
+  pointer-events: none;
+}

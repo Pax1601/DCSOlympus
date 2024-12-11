@@ -26,6 +26,7 @@ export function MapContextMenu(props: {}) {
   const [latLng, setLatLng] = useState(null as null | LatLng);
   const [unit, setUnit] = useState(null as null | Unit);
   const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
+  const [height, setHeight] = useState(0);
 
   var contentRef = useRef(null);
 
@@ -68,6 +69,14 @@ export function MapContextMenu(props: {}) {
 
       content.style.left = `${newXPosition}px`;
       content.style.top = `${newYposition}px`;
+
+      setHeight(content.clientHeight);
+
+      const resizeObserver = new ResizeObserver(() => {
+        setHeight(content.clientHeight);
+      });
+      resizeObserver.observe(content);
+      return () => resizeObserver.disconnect(); // clean up 
     }
   });
 
