@@ -28,12 +28,14 @@ export class Airbase extends CustomMarker {
     this.#img = document.createElement("img");
 
     AppStateChangedEvent.on((state, subState) => {
-      const element = this.getElement();
-      if (element) element.style.pointerEvents = state === OlympusState.IDLE || state === OlympusState.AIRBASE ? "all" : "none";
+      const el = this.getElement();
+      if (el === undefined) return;
+      if (state === OlympusState.IDLE || state === OlympusState.AIRBASE) el.classList.remove("airbase-disable-pointer-events");
+      else el.classList.add("airbase-disable-pointer-events");
     });
 
     AirbaseSelectedEvent.on((airbase) => {
-      this.#selected = (airbase === this);
+      this.#selected = airbase === this;
       if (this.getElement()?.querySelector(".airbase-icon"))
         (this.getElement()?.querySelector(".airbase-icon") as HTMLElement).dataset.selected = `${this.#selected}`;
     });

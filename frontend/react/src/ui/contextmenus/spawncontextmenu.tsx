@@ -62,6 +62,7 @@ export function SpawnContextMenu(props: {}) {
   const [showCost, setShowCost] = useState(false);
   const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
   const [showMore, setShowMore] = useState(false);
+  const [height, setHeight] = useState(0);
 
   useEffect(() => {
     if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
@@ -152,17 +153,24 @@ export function SpawnContextMenu(props: {}) {
 
       content.style.left = `${newXPosition}px`;
       content.style.top = `${newYposition}px`;
+
+      const resizeObserver = new ResizeObserver(() => {
+        setHeight(content.clientHeight);
+      });
+      resizeObserver.observe(content);
+      return () => resizeObserver.disconnect(); // clean up 
     }
   });
 
+  // TODO fix button being moved if overflowing
   return (
     <>
       <div
         ref={contentRef}
         data-hidden={appState !== OlympusState.SPAWN_CONTEXT}
         className={`
-          absolute flex w-[395px] data- flex-wrap gap-2 rounded-md
-          bg-olympus-800
+          absolute flex w-[395px] data- max-h-[800px] flex-wrap gap-2
+          overflow-auto rounded-md bg-olympus-800
           data-[hidden=true]:hidden
         `}
       >

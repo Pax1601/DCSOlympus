@@ -104,3 +104,21 @@ input[type="range"]:focus::-moz-range-thumb {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+@keyframes tooltipFadeInHeight {
+  99% {
+    height: 25px;
+  }
+  100% {
+    height: fit-content;
+  }
+}
+
+@keyframes tooltipFadeInWidth {
+  99% {
+    width: 0px;
+  }
+  100% {
+    width: 200px;
+  }
+}

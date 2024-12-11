@@ -32,3 +32,7 @@
 [data-awacs-mode] .airbase-icon svg * {
   fill: transparent !important;
 }
+
+#map-container .leaflet-airbase-marker.airbase-disable-pointer-events {
+  pointer-events: none;
+}

@@ -72,6 +72,12 @@ export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]
       const button = props.buttonRef.current as HTMLButtonElement;
 
       setPosition(content, button);
+
+      const resizeObserver = new ResizeObserver(() => {
+        setPosition(content, button);
+      });
+      resizeObserver.observe(content);
+      return () => resizeObserver.disconnect(); // clean up 
     }
   });
 

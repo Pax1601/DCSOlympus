@@ -20,7 +20,17 @@ export class Shortcut {
     document.addEventListener("keyup", (ev: any) => {
       if (this.#modal) return;
       if (this.#keydown && this.getOptions().code === ev.code) {
-        console.log(`Keydown up for shortcut ${this.#id}`)
+        console.log(`Keyup for shortcut ${this.#id}`)
+        ev.preventDefault();
+        this.#keydown = false;
+        this.getOptions().keyUpCallback(ev);
+      }
+    });
+
+    /* Forced keyup, in case the window loses focus */
+    document.addEventListener("blur", (ev: any) => {
+      if (this.#keydown) {
+        console.log(`Keyup (forced by blur) for shortcut ${this.#id}`)
         ev.preventDefault();
         this.#keydown = false;
         this.getOptions().keyUpCallback(ev);
