@@ -1,0 +1,106 @@
+* {
+  user-select: none; /* Standard syntax */
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ffffffaa;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.tiny-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+input[type="range"] {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  /*  overflow: hidden;  remove this line*/
+
+  /* New additions */
+  height: 6px;
+  background: #4b5563;
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  height: 22px;
+  width: 22px;
+  background-color: #4b5563;
+  border-radius: 50%;
+  border: 1px solid #6b7280;
+
+  /* box-shadow: -407px 0 0 400px #4B5563; emove this line */
+  transition: 0.2s ease-in-out;
+}
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #4b5563;
+  border-radius: 50%;
+  border: none;
+  border: 1px solid #6b7280;
+
+  /* box-shadow: -407px 0 0 400px #4B5563; emove this line */
+  transition: 0.2s ease-in-out;
+}
+
+/* Hover, active & focus Thumb: Webkit */
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 5px #3f83f822;
+}
+input[type="range"]:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 7px #3f83f855;
+}
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 7px #3f83f855;
+}
+
+/* Hover, active & focus Thumb: Firefox */
+input[type="range"]::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 10px #3f83f822;
+}
+input[type="range"]:active::-moz-range-thumb {
+  box-shadow: 0 0 0 13px #3f83f855;
+}
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 13px #3f83f855;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

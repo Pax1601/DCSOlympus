@@ -1528,1094 +1528,1094 @@
   },
   "F-4E-45MC": {
     "CLUSTER: CBU-87*8, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-65D*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-87*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A SHORT RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "_GUNPOD: SUU-23*2, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A MEDIUM RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "GUIDED: GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-82 (LD)*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_Z_Clean": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*4, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A LONG RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "A2A ECM: Aim-7E*3, Aim-9J*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "_A2A HEATERS: Aim-9P*4, ALE-40 (30-60)*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*2, SUU-23*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "_GUNPOD + IRON: SUU-23*2, Mk-82 (LD)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-82 Snakeye*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + ROCKETS: SUU-23*3, LAU-68 7x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-24*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: M-117*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-84*2, Mk-82 (LD)*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "IRON: Mk-83*10, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1,": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-65B*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-82 (LD)*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-65A*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-52B*10, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-62 Walleye II*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A ECM: Aim-7M*3, Aim-9M*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-52B*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "CLUSTER: CBU-2A/A (BLU-3*361)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-83*4, Mk-83*3 (Ripple), Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-65A*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-87*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: M-117*17, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-2B/A (BLU-3B*418)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD: AGM-45A*4, Aim-7E2*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "CLUSTER: Mk-20*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A MEDIUM RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "IRON: Mk-84*2, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A HEATERS: Aim-9B*4, ALE-40 (30-60)*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "GUIDED: GBU-12*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A HEATERS: Aim-9M*4, ALE-40 (30-60)*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "GUIDED: GBU-10*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-82 (LD)*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A LONG RANGE: Aim-7M*4, Aim-9M*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "ATGM: AGM-62 Walleye I*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*6, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "GUIDED: GBU-8 HOBOS*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A HEATERS: Aim-9J*4, ALE-40 (30-60)*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "CLUSTER + IRON: Mk-20*6, Mk-82 Snakeye*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD + ATGM: AGM-45A*2, AGM-65A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "ATGM + GUIDED: AGM-65B*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-12*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-82 Snakeye*24, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-12*6, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A HEATERS: Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "ATGM + GUIDED: AGM-65A*4, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + ROCKETS: SUU-23*2, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-65B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: Mk-20*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*3, LAU-68  7x 2.75 FFAR, MK-5 HEAT*6, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*9, LAU-68  7x 2.75 FFAR, MK-5 HEAT*2, Aim-7E2*4, AIM-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A MEDIUM RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "IRON: Mk-82 (LD)*18, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-24*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-82 Snakeye*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD: AGM-45A*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD: SUU-23*3, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_AFAC: LAU-3 pod - 19x2.75 FFAR, M156 WP*5, SUU-23*2, Aim-7E2*4, ALE-40 (30-60)": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "CLUSTER: CBU-52B*4, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD + ATGM: AGM-45A*2, AGM-65D*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "CLUSTER: CBU-87*14, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-65D*6, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*15, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ROCKETS: LAU-3 19x 2.75 FFAR, Mk-5 HEAT*7, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A LONG RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "IRON: M-117*12, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD + ATGM: AGM-45A*2, AGM-65B*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "GUIDED: GBU-10*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-65D*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-52B*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-10*2, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*4, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "A2A LONG RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "GUIDED: GBU-24*2, GBU-12*4, Aim-7E2*3, Aim-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A SHORT RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "GUIDED: GBU-8 HOBOS*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-62 Walleye II*2, GBU-10*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CONRETE PIERCING: BLU-107/B Durandal*12, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A HEATERS: Aim-9Juli*4, ALE-40 (30-60)*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "ATGM: AGM-12B Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A TRAINING: Captive Aim-9M for ACM*2, ALQ-131 ECM*1, ALE-40 (empty)*1 ": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "A2A SHORT RANGE: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "ATGM + GUIDED: AGM-65B*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A ECM: Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "IRON: Mk-82 Snakeye*10, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-52B*10, Aim-7E2*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER + IRON: Mk-20*6, Mk-82 (LD)*4 Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD: AGM-45A*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 370 Gal*2": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "CONRETE PIERCING: BLU-107/B Durandal*6, Aim-7E2*3, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + Cluster: SUU-23*2, CBU-52B*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + ROCKETS: SUU-23*1, LAU-3 19x 2.75 FFAR, Mk-5 HEAT*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-1A/A (BLU-4B*513)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1 empty": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "CLUSTER: CBU-52B*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "A2A ECM: Aim-7F*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "CLUSTER: CBU-2A/A (BLU-3*361)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1, Sargent Fletcher Fuel Tank 370 gallons*2 empty": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "IRON: Mk-83*6, Mk-83*3 (Ripple), Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: Mk-84*3, Mk-82 (LD)*4, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "IRON: M-117*8, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-12A Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-65A*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_Z_Clean, Sargent Fletcher Fuel Tank 600 gallons*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye I*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "IRON: Mk-84*3, Aim-7E2*3, Aim-9L*4, ALQ-131 ECM*1, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_AFAC: LAU-3 19x 2.75 FFAR, M156 WP*2, LAU-68 7x .75, M156 WP*2, Aim-7E2*3, Aim-9P*4, ALQ-131 ECM*1, ALE-40 (30-60), Sgt Fl 600 GAL*1": {
-      "1": 16,
-      "2": 17
+      "1": "AFAC",
+      "2": "Reconnaissance"
     },
     "A2A SHORT RANGE: Aim-7F*4, Aim-9P*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "SEAD + ATGM: AGM-45A*2, AGM-62 Walleye II*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-65D*2, GBU-24*2, Aim-7E2*3, AIM-9L*4, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + Cluster: SUU-23*2, CBU-87*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM + GUIDED: AGM-62 Walleye I*2, GBU-12*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD: AGM-45A*4, Aim-7E2*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1, Sargent Fl. Fuel Tank 370 Gal*2": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "A2A MEDIUM RANGE: Aim-7E*4, Aim-9J*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "CLUSTER: Mk-20*6, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD + GUIDED: AGM-45A*2, GBU-12*2, Aim-7F*3, Aim-9L*4, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "CLUSTER: CBU-2B/A (BLU-3B*418)*5, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_Z_Clean, Sargent Fletcher Fuel Tank 370 gallons*2 empty": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "5": 10,
-      "6": 31,
-      "7": 32,
-      "8": 33,
-      "9": 34,
-      "10": 16,
-      "11": 30,
-      "12": 17,
-      "13": 29
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "5": "Intercept",
+      "6": "CAS",
+      "7": "GroundAttack",
+      "8": "PinpointStrike",
+      "9": "RunwayAttack",
+      "10": "AFAC",
+      "11": "AntishipStrike",
+      "12": "Reconnaissance",
+      "13": "SEAD"
     },
     "CLUSTER: CBU-1A/A (BLU-4B*513)*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-12C Bullpup*2, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_A2A Refueling Practice: Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2 empty": {
-      "1": 11,
-      "2": 18,
-      "3": 19,
-      "4": 10
+      "1": "CAP",
+      "2": "Escort",
+      "3": "FighterSweep",
+      "4": "Intercept"
     },
     "_GUNPOD + Cluster: SUU-23*2, Mk-20*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "CLUSTER: CBU-87*12, Aim-7E2*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-8 HOBOS*2, GBU-24*2, Aim-7E2*3, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "_GUNPOD + IRON: SUU-23*2, Mk-82 Snakeye*4, Aim-7E2*4, Aim-9L*4, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "GUIDED: GBU-12*4, CBU-87*4, Aim-7E2*3, Aim-9L, AN/AVQ-23 Pave Spike*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "SEAD + ATGM: AGM-45A*2, GBU-8 HOBOS*2, Aim-7F*3, ALQ-131*1, ALE-40 (30-60)*1, Sargent Fl. Fuel Tank 600 Gal*1": {
-      "1": 29,
-      "2": 31,
-      "3": 32,
-      "4": 33,
-      "5": 34,
-      "6": 30
+      "1": "SEAD",
+      "2": "CAS",
+      "3": "GroundAttack",
+      "4": "PinpointStrike",
+      "5": "RunwayAttack",
+      "6": "AntishipStrike"
     },
     "IRON: M-117*11, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Sargent Fletcher Fuel Tank 370 GAL*2": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-12A Bullpup*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     },
     "ATGM: AGM-12B Bullpup*4, Aim-7E2*3, ALQ-131 ECM*1, ALE-40 (30-60)*1, Srgt Fletcher Fl. Tank 600 GAL*1": {
-      "1": 31,
-      "2": 32,
-      "3": 33,
-      "4": 34,
-      "5": 30
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
     }
   },
   "F-5E-3": {
@@ -3129,31 +3129,91 @@
       "3": "Escort",
       "4": "FighterSweep"
     },
+    "AIM-54A-MK47*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
     "AIM-54A-MK47*6, AIM-9L*2, XT*2": {
       "1": "Intercept",
       "2": "CAP",
       "3": "Escort",
       "4": "FighterSweep"
     },
-    "AIM-7F*6, AIM-9L*2, XT*2": {
+    "AIM-54A-MK60*6, AIM-9M*2, XT*2": {
       "1": "Intercept",
       "2": "CAP",
       "3": "Escort",
       "4": "FighterSweep"
     },
-    "AIM-54A-MK47*4, AIM-7F*2, AIM-9L*2, XT*2": {
+    "AIM-54C-MK47*6, AIM-9M*2, XT*2": {
       "1": "Intercept",
       "2": "CAP",
       "3": "Escort",
       "4": "FighterSweep"
     },
-    "AIM-54A-MK47*2, AIM-7F*1, AIM-9L*4, XT*2": {
+    "AIM-7M*6, AIM-9M*2, XT*2": {
       "1": "Intercept",
       "2": "CAP",
       "3": "Escort",
       "4": "FighterSweep"
     },
-    "AIM-54A-MK47*4, AIM-9L*4, XT*2": {
+    "AIM-7M*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*1, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9M*2, AIM-9L*2, XT*2": {
       "1": "Intercept",
       "2": "CAP",
       "3": "Escort",
@@ -3171,7 +3231,37 @@
       "3": "Escort",
       "4": "FighterSweep"
     },
-    "AIM-7F*4, AIM-9L*4, XT*2": {
+    "AIM-54C-MK47*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*4, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*4, AIM-9L*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*2, AIM-7M*3, AIM-9M*2, XT*2": {
       "1": "Intercept",
       "2": "CAP",
       "3": "Escort",
@@ -3242,15 +3332,15 @@
       "3": "RunwayAttack",
       "4": "PinpointStrike"
     },
-    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, XT*2, Mk-82*2": {
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*2": {
       "1": "GroundAttack",
       "2": "CAS"
     },
-    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, XT*2, Mk-82*1": {
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*1": {
       "1": "GroundAttack",
       "2": "CAS"
     },
-    "AIM-54A-MK60*1, AIM-7F*1, AIM-9L*2, XT*2, Mk-20*2": {
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-20*2": {
       "1": "GroundAttack",
       "2": "CAS"
     },
@@ -7830,11 +7920,11 @@
       "1": 31,
       "2": 32
     },
-    "AGM-114K*8,GBU-38*2": {
+    "AGM-114K*4,GBU-38*2": {
       "1": 31,
       "2": 32
     },
-    "AGM-114K*12": {
+    "AGM-114K*8": {
       "1": 31,
       "2": 32
     }

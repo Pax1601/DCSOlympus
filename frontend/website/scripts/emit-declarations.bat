@@ -1,1 +1,0 @@
-tsc --project tsconfig.json --declaration --emitDeclarationOnly --outfile .\@types\olympus\index.d.ts

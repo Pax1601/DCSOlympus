@@ -4,14 +4,17 @@
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
-    "server": "node ./bin/www",
-    "client": "electron ."
+    "server": "node ./build/www.js",
+    "client": "electron .",
+    "tsc": "tsc"
   },
   "private": true,
   "dependencies": {
+    "@google-cloud/speech": "^6.7.0",
     "appjs": "^0.0.20",
     "appjs-win32": "^0.0.19",
     "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "ejs": "^3.1.8",
     "electron": "^28.0.0",
@@ -19,6 +22,7 @@
     "express-basic-auth": "^1.2.1",
     "http-proxy-middleware": "^2.0.6",
     "morgan": "~1.9.1",
+    "node-gtts": "^2.0.2",
     "open": "^10.0.0",
     "regedit": "^5.1.2",
     "save": "^2.9.0",
@@ -26,6 +30,12 @@
     "srtm-elevation": "^2.1.2",
     "tcp-ping-port": "^1.0.1",
     "uuid": "^9.0.1",
+    "ws": "^8.18.0",
     "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "vite": "^6.0.3"
   }
 }

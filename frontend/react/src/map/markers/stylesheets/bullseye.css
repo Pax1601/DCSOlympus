@@ -1,0 +1,26 @@
+.bullseye-icon {
+  align-items: center;
+  cursor: url("/images/cursors/pointer.svg"), auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  fill: white;
+}
+
+.bullseye-icon[data-coalition="red"] svg * {
+  stroke: var(--unit-background-red);
+}
+
+.bullseye-icon[data-coalition="blue"] svg * {
+  stroke: var(--unit-background-blue);
+}
+
+.bullseye-icon[data-coalition="neutral"] svg * {
+  stroke: var(--unit-background-neutral);
+}
+
+[data-awacs-mode] .bullseye-icon svg * {
+  fill: transparent !important;
+}
