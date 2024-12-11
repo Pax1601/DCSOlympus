@@ -178,7 +178,7 @@ export class Weapon extends CustomMarker {
       var unitIcon = document.createElement("div");
       unitIcon.classList.add("unit-icon");
       var img = document.createElement("img");
-      img.src = `./images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${this.getMarkerCategory()}.svg`;
+      img.src = `/images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${this.getMarkerCategory()}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
       unitIcon.toggleAttribute("data-rotate-to-heading", this.getIconOptions().rotateToHeading);

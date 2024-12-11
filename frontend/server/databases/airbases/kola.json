@@ -1,0 +1,399 @@
+{
+    "airfields": {
+        "Severomorsk-1": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "14": {
+                                "magHeading": "118",
+                                "Heading": "135",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "32": {
+                                "magHeading": "299",
+                                "Heading": "315",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "9084"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "ULAK",
+            "elevation": "261"
+        },
+        "Banak": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "34": {
+                                "magHeading": "339",
+                                "Heading": "352",
+                                "ILS": "108.30"
+                            }
+                        },
+                        {
+                            "16": {
+                                "magHeading": "159",
+                                "Heading": "172",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "8104"
+                }
+            ],
+            "TACAN": "47X",
+            "ICAO": "ENNA",
+            "elevation": "17"
+        },
+        "Severomorsk-3": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "35": {
+                                "magHeading": "334",
+                                "Heading": "351",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "17": {
+                                "magHeading": "154",
+                                "Heading": "171",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "7497"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "XLMV",
+            "elevation": "567"
+        },
+        "Kemi Tornio": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "18": {
+                                "magHeading": "173",
+                                "Heading": "184",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "36": {
+                                "magHeading": "355",
+                                "Heading": "4",
+                                "ILS": "110.90"
+                            }
+                        }
+                    ],
+                    "length": "7862"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "EFKE",
+            "elevation": "46"
+        },
+        "Murmansk International": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "13": {
+                                "magHeading": "119",
+                                "Heading": "135",
+                                "ILS": "110.30"
+                            }
+                        },
+                        {
+                            "31": {
+                                "magHeading": "299",
+                                "Heading": "315",
+                                "ILS": "108.50"
+                            }
+                        }
+                    ],
+                    "length": "7926"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "ULMM",
+            "elevation": "249"
+        },
+        "Bodo": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "07": {
+                                "magHeading": "78",
+                                "Heading": "84",
+                                "ILS": "110.30"
+                            }
+                        },
+                        {
+                            "25": {
+                                "magHeading": "257",
+                                "Heading": "264",
+                                "ILS": "108.70"
+                            }
+                        }
+                    ],
+                    "length": "8618"
+                }
+            ],
+            "TACAN": "45X",
+            "ICAO": "ENBO",
+            "elevation": "25"
+        },
+        "Rovaniemi": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "21": {
+                                "magHeading": "201",
+                                "Heading": "213",
+                                "ILS": "117.70"
+                            }
+                        },
+                        {
+                            "03": {
+                                "magHeading": "21",
+                                "Heading": "33",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "9096"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "EFRO",
+            "elevation": "612"
+        },
+        "Kalixfors": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "17": {
+                                "magHeading": "162",
+                                "Heading": "171",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "35": {
+                                "magHeading": "342",
+                                "Heading": "351",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "3597"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "ESUK",
+            "elevation": "1552"
+        },
+        "Jokkmokk": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "14": {
+                                "magHeading": "136",
+                                "Heading": "145",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "32": {
+                                "magHeading": "316",
+                                "Heading": "325",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "6306"
+                },
+                {
+                    "headings": [
+                        {
+                            "32": {
+                                "magHeading": "323",
+                                "Heading": "332",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "14": {
+                                "magHeading": "143",
+                                "Heading": "152",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "6306"
+                },
+                {
+                    "headings": [
+                        {
+                            "15": {
+                                "magHeading": "124",
+                                "Heading": "133",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "33": {
+                                "magHeading": "302",
+                                "Heading": "313",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "3828"
+                },
+                {
+                    "headings": [
+                        {
+                            "36": {
+                                "magHeading": "354",
+                                "Heading": "3",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "18": {
+                                "magHeading": "174",
+                                "Heading": "183",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "3828"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "ESNJ",
+            "elevation": "891"
+        },
+        "Monchegorsk": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "01": {
+                                "magHeading": "001",
+                                "Heading": "16",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "19": {
+                                "magHeading": "180",
+                                "Heading": "196",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "7509"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "UMOE",
+            "elevation": "547"
+        },
+        "Olenya": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "19": {
+                                "magHeading": "171",
+                                "Heading": "188",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "01": {
+                                "magHeading": "352",
+                                "Heading": "8",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "10863"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "UOLE",
+            "elevation": "721"
+        },
+        "Bas 100": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "22": {
+                                "magHeading": "210",
+                                "Heading": "223",
+                                "ILS": ""
+                            }
+                        },
+                        {
+                            "04": {
+                                "magHeading": "31",
+                                "Heading": "43",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "7719"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "",
+            "elevation": "735"
+        },
+        "Kiruna": {
+            "runways": [
+                {
+                    "headings": [
+                        {
+                            "21": {
+                                "magHeading": "204",
+                                "Heading": "214",
+                                "ILS": "110.30"
+                            }
+                        },
+                        {
+                            "03": {
+                                "magHeading": "25",
+                                "Heading": "34",
+                                "ILS": ""
+                            }
+                        }
+                    ],
+                    "length": "7432"
+                }
+            ],
+            "TACAN": "",
+            "ICAO": "ESNQ",
+            "elevation": "1434"
+        }
+    }
+}

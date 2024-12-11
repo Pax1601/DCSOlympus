@@ -6,10 +6,11 @@ export default defineConfig({
   plugins: [react()],
   base: "./",
   build: {
-    outDir: '../server/public'
-  },esbuild: {
+    outDir: "../server/public",
+    emptyOutDir : true
+  },
+  esbuild: {
     minifyIdentifiers: false,
     keepNames: true,
-  }
+  },
 });
-    
