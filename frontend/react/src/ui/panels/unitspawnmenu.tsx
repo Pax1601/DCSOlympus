@@ -154,7 +154,7 @@ export function UnitSpawnMenu(props: {
       {props.compact ? (
         <>
           {props.visible && (
-            <div className="flex flex-col">
+            <div className="flex max-h-[800px] flex-col overflow-auto">
               <div className="flex h-fit flex-col gap-3">
                 <div className="flex">
                   <FontAwesomeIcon
