@@ -66,8 +66,8 @@ import {
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
 var pathIcon = new Icon({
-  iconUrl: "/images/markers/marker-icon.png",
-  shadowUrl: "/images/markers/marker-shadow.png",
+  iconUrl: "./images/markers/marker-icon.png",
+  shadowUrl: "./images/markers/marker-shadow.png",
   iconAnchor: [13, 41],
 });
 
@@ -912,7 +912,7 @@ export abstract class Unit extends CustomMarker {
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `/images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${marker}.svg`;
+      img.src = `./images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 

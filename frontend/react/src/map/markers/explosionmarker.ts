@@ -31,7 +31,7 @@ export class ExplosionMarker extends CustomMarker {
     var el = document.createElement("div");
     el.classList.add("ol-explosion-icon");
     var img = document.createElement("img");
-    img.src = "/images/markers/explosion.svg";
+    img.src = "./images/markers/explosion.svg";
     img.onload = () => SVGInjector(img);
     el.appendChild(img);
     this.getElement()?.appendChild(el);

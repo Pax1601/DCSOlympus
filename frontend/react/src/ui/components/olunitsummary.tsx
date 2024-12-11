@@ -20,7 +20,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
           className={`
             absolute right-5 top-0 h-full object-cover opacity-10 invert
           `}
-          src={"vite/images/units/" + props.blueprint.filename}
+          src={"vite./images/units/" + props.blueprint.filename}
           alt=""
         />
         <div

@@ -15,7 +15,7 @@ export class Carrier extends Airbase {
     el.classList.add("airbase-icon");
     el.setAttribute("data-object", "airbase");
 
-    this.getImg().src = "/images/carriers/nimitz.png";
+    this.getImg().src = "./images/carriers/nimitz.png";
     this.getImg().style.width = `0px`; // Make the image immediately small to avoid giant carriers
     el.appendChild(this.getImg());
     this.getElement()?.appendChild(el);
