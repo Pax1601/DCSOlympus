@@ -43,7 +43,7 @@ export class SRSHandler {
       console.log("Could not connect to SRS Server");
     });
 
-    this.tcp.connect(SRSPort, "localhost", () => {
+    this.tcp.connect(SRSPort, "127.0.0.1", () => {
       console.log(`Connected to SRS Server on TCP Port ${SRSPort}`);
 
       this.syncInterval = setInterval(() => {
@@ -54,7 +54,7 @@ export class SRSHandler {
         };
 
         this.data.ClientGuid !== "" &&
-          this.udp.send(this.data.ClientGuid, SRSPort, "localhost", (error) => {
+          this.udp.send(this.data.ClientGuid, SRSPort, "127.0.0.1", (error) => {
             if (error) console.log(`Error pinging SRS server on UDP: ${error}`);
           });
 
@@ -107,7 +107,7 @@ export class SRSHandler {
     switch (data[0]) {
       case MessageType.audio:
         const encodedData = new Uint8Array(data.slice(1));
-        this.udp.send(encodedData, this.SRSPort, "localhost", (error) => {
+        this.udp.send(encodedData, this.SRSPort, "127.0.0.1", (error) => {
           if (error) console.log(`Error sending data to SRS server: ${error}`);
         });
         break;
