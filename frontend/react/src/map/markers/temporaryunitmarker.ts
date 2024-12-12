@@ -56,7 +56,7 @@ export class TemporaryUnitMarker extends CustomMarker {
       var unitIcon = document.createElement("div");
       unitIcon.classList.add("unit-icon");
       var img = document.createElement("img");
-      img.src = `./images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.#coalition}/${blueprint.markerFile ?? blueprint.category}.svg`;
+      img.src = `./images/units/map/${/*TODO getApp().getMap().getOptions().AWACSMode ? "awacs" :*/ "normal"}/${this.#coalition}/${blueprint.markerFile ?? blueprint.category}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
       unitIcon.toggleAttribute("data-rotate-to-heading", false);

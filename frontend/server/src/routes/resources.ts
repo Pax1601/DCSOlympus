@@ -138,7 +138,7 @@ module.exports = function (configLocation) {
       sessionData = {};
       res.sendStatus(404);
     } else {
-      res.send(sessionData[req.params.profileName]);
+      res.send(sessionData[req.params.profileName] ?? {});
       res.end();
     }
   });

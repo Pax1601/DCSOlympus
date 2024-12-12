@@ -2,7 +2,6 @@ import { getApp } from "../olympusapp";
 import { Coalition } from "../types/types";
 import { Unit } from "../unit/unit";
 import { bearing, coalitionToEnum, computeBearingRangeString, mToFt, rad2deg } from "../other/utils";
-import { TextToSpeechSource } from "../audio/texttospeechsource";
 
 const trackStrings = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West", "North"];
 const relTrackStrings = ["hot", "flank right", "beam right", "cold", "cold", "cold", "beam left", "flank left", "hot"];
@@ -49,7 +48,7 @@ export class AWACSController {
             else if (idx == 2) order = "rd";
 
             let trackDegs =
-              bearing(group[0].getPosition().lat, group[0].getPosition().lng, referenceUnit.getPosition().lat, referenceUnit.getPosition().lng) -
+              bearing(group[0].getPosition().lat, group[0].getPosition().lng, referenceUnit.getPosition().lat, referenceUnit.getPosition().lng, true) -
               rad2deg(group[0].getTrack());
             if (trackDegs < 0) trackDegs += 360;
             if (trackDegs > 360) trackDegs -= 360;

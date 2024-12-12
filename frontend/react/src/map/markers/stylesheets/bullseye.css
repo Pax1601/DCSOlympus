@@ -21,6 +21,6 @@
   stroke: var(--unit-background-neutral);
 }
 
-[data-awacs-mode] .bullseye-icon svg * {
+[todo-todo-data-awacs-mode] .bullseye-icon svg * {
   fill: transparent !important;
 }

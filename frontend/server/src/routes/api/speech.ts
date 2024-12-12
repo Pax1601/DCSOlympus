@@ -22,7 +22,7 @@ module.exports = function () {
         res.send(response[0].audioContent);
         res.end()
       }
-    ).catch((error) => res.sendStatus(400)); 
+    ).catch((error) => res.sendStatus(404)); 
   });
 
   router.put("/recognize", (req, res, next) => {
@@ -46,7 +46,7 @@ module.exports = function () {
         .map((result) => result.alternatives[0].transcript)
         .join("\n");
       res.send(transcription)
-    }).catch((error) => res.sendStatus(400)); 
+    }).catch((error) => res.sendStatus(404)); 
   });
 
   return router;

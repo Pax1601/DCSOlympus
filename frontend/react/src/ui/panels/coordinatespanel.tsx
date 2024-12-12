@@ -3,7 +3,7 @@ import { OlLocation } from "../components/ollocation";
 import { LatLng } from "leaflet";
 import { FaBullseye, FaChevronDown, FaChevronUp, FaJetFighter, FaMountain } from "react-icons/fa6";
 import { BullseyesDataChanged, MouseMovedEvent, SelectedUnitsChangedEvent } from "../../events";
-import { bearing, mToFt } from "../../other/utils";
+import { bearing, computeBearingRangeString, mToFt } from "../../other/utils";
 import { Bullseye } from "../../mission/bullseye";
 import { Unit } from "../../unit/unit";
 
@@ -52,8 +52,7 @@ export function CoordinatesPanel(props: {}) {
                   >
                     <FaBullseye />
                   </span>{" "}
-                  {bearing(bullseyes[2].getLatLng().lat, bullseyes[2].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° /{" "}
-                  {(bullseyes[2].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
+                  {computeBearingRangeString(bullseyes[2].getLatLng(), latlng)}
                 </div>
                 <div className="flex w-[50%] justify-start gap-2">
                   <span
@@ -64,8 +63,7 @@ export function CoordinatesPanel(props: {}) {
                   >
                     <FaBullseye />
                   </span>
-                  {bearing(bullseyes[1].getLatLng().lat, bullseyes[1].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° /{" "}
-                  {(bullseyes[1].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
+                  {computeBearingRangeString(bullseyes[1].getLatLng(), latlng)}
                 </div>
               </div>
               {selectedUnits.length == 1 && (
@@ -80,8 +78,7 @@ export function CoordinatesPanel(props: {}) {
                   </span>
                   <div>
                     {" "}
-                    {bearing(selectedUnits[0].getLatLng().lat, selectedUnits[0].getLatLng().lng, latlng.lat, latlng.lng).toFixed()}° /
-                    {(selectedUnits[0].getLatLng().distanceTo(latlng) / 1852).toFixed(0)}
+                    {computeBearingRangeString(selectedUnits[0].getPosition(), latlng)}
                   </div>
                 </div>
               )}

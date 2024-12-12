@@ -26,6 +26,7 @@
     "leaflet": "^1.9.4",
     "leaflet-control-mini-map": "^0.4.0",
     "leaflet-path-drag": "^1.9.5",
+    "magvar": "^1.1.5",
     "opus-decoder": "^0.7.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

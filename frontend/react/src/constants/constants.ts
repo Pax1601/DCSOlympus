@@ -473,7 +473,7 @@ export namespace ContextActions {
   export const STOP = new ContextAction(
     "stop",
     "Stop unit",
-    "Stops the unit",
+    "Stops the unit, removing any currently assigned task. Air units will orbin in place, while ground unit will halt.",
     faHand,
     ContextActionTarget.NONE,
     (units: Unit[], _1, _2) => {
@@ -488,7 +488,7 @@ export namespace ContextActions {
   export const MOVE = new ContextAction(
     "move",
     "Set destination",
-    "Click on the map to move the units there",
+    "Click on the map to directly move the units there, overriding any existing command.",
     faLocationDot,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition, originalEvent) => {
@@ -504,7 +504,7 @@ export namespace ContextActions {
   export const PATH = new ContextAction(
     "path",
     "Create route",
-    "Click on the map to add a destination to the path",
+    "Click on the map to add a destination add the end of the path. This allows to create a more complex route.",
     faRoute,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition) => {
@@ -519,7 +519,7 @@ export namespace ContextActions {
   export const DELETE = new ContextAction(
     "delete",
     "Delete unit",
-    "Deletes the unit",
+    "Deletes the unit immediately with no effect.",
     faTrash,
     ContextActionTarget.NONE,
     (units: Unit[], _1, _2) => {
@@ -537,7 +537,7 @@ export namespace ContextActions {
   export const EXPLODE = new ContextAction(
     "explode",
     "Explode unit",
-    "Explodes the unit",
+    "Explodes the unit using different explosions effects. WARNING: may affect surrounding units too!",
     faExplosion,
     ContextActionTarget.NONE,
     (units: Unit[], _1, _2) => {
@@ -556,7 +556,7 @@ export namespace ContextActions {
   export const CENTER_MAP = new ContextAction(
     "center-map",
     "Center map",
-    "Center the map on the unit and follow it",
+    "Center the map on the unit and follow it.",
     faMapLocation,
     ContextActionTarget.NONE,
     (units: Unit[]) => {
@@ -568,7 +568,7 @@ export namespace ContextActions {
   export const REFUEL = new ContextAction(
     "refuel",
     "Refuel at tanker",
-    "Refuel units at the nearest AAR Tanker. If no tanker is available the unit will RTB",
+    "Refuel units at the nearest Air-to-Air refuelling tanker of the appropriate type. If no tanker is available the unit will return to the nearest base.",
     olButtonsContextRefuel,
     ContextActionTarget.NONE,
     (units: Unit[]) => {
@@ -580,7 +580,7 @@ export namespace ContextActions {
   export const FOLLOW = new ContextAction(
     "follow",
     "Follow unit",
-    "Right-click on a unit to follow it in formation",
+    "Click on a unit to follow it in formation. A menu allows to choose the formation type.",
     olButtonsContextFollow,
     ContextActionTarget.UNIT,
     (units: Unit[], targetUnit: Unit | null, _) => {
@@ -598,7 +598,7 @@ export namespace ContextActions {
   export const BOMB = new ContextAction(
     "bomb",
     "Precision bomb location",
-    "Right-click on a point to execute a precision bombing attack",
+    "Click on a point to execute a precision bombing attack with the available A/G weapons.",
     faLocationCrosshairs,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -611,7 +611,7 @@ export namespace ContextActions {
   export const CARPET_BOMB = new ContextAction(
     "carpet-bomb",
     "Carpet bomb location",
-    "Right-click on a point to execute a carpet bombing attack",
+    "Click on a point to execute a carpet bombing attack with the available A/G weapons.",
     faXmarksLines,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -624,7 +624,7 @@ export namespace ContextActions {
   export const LAND = new ContextAction(
     "land",
     "Land",
-    "Right-click on a point to land at the nearest airbase",
+    "Click on a point to land at the nearest airbase.",
     faPlaneArrival,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -636,7 +636,7 @@ export namespace ContextActions {
   export const LAND_AT_POINT = new ContextAction(
     "land-at-point",
     "Land at location",
-    "Right-click on a point to land there",
+    "Click on a point to land there. WARNING: if multiple units are selected make sure to choose a different point for each or the units will crash!",
     olButtonsContextLandAtPoint,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -649,7 +649,7 @@ export namespace ContextActions {
   export const GROUP = new ContextAction(
     "group-ground",
     "Group ground units",
-    "Create a group of ground units",
+    "Create a DCS group of ground units. This is different from hotgroups or formations and is used primarily to create functioning SAM sites. When a group is created, units will no longer be individually controllable.",
     faPeopleGroup,
     ContextActionTarget.NONE,
     (units: Unit[], _1, _2) => {
@@ -661,7 +661,7 @@ export namespace ContextActions {
   export const ATTACK = new ContextAction(
     "attack",
     "Attack unit",
-    "Right-click on a unit to attack it",
+    "Click on a unit to attack it using A/A or A/G weapons, depending on the target.",
     olButtonsContextAttack,
     ContextActionTarget.UNIT,
     (units: Unit[], targetUnit: Unit | null, _) => {
@@ -673,7 +673,7 @@ export namespace ContextActions {
   export const FIRE_AT_AREA = new ContextAction(
     "fire-at-area",
     "Fire at area",
-    "Right-click on a point to precisely fire at it (if possible)",
+    "Click on a point to precisely fire at it, if possible. WARNING: this requires the unit to be able to reach the target and not be obstructed by obstacles.",
     faLocationCrosshairs,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -686,7 +686,7 @@ export namespace ContextActions {
   export const SIMULATE_FIRE_FIGHT = new ContextAction(
     "simulate-fire-fight",
     "Simulate fire fight",
-    "Simulate a fire fight by shooting randomly in a certain large area. WARNING: works correctly only on neutral units, blue or red units will aim",
+    "Click on a point to simulate a fire fight by shooting randomly in that general direction. WARNING: works correctly only on neutral units, blue or red units will aim",
     olButtonsContextSimulateFireFight,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
@@ -701,7 +701,7 @@ export namespace ContextActions {
   export const SET_AWACS_REFERENCE = new ContextAction(
     "set-awacs-reference",
     "Set AWACS reference",
-    "Set unit as AWACS reference",
+    "Set unit as AWACS reference. BRAA indicators will be shown next to Air unit markers.",
     faWifi,
     ContextActionTarget.NONE,
     (units: Unit[], _1, _2) => {
@@ -713,7 +713,7 @@ export namespace ContextActions {
   export const CLONE = new ContextAction(
     "clone",
     "Clone unit",
-    "Clone the unit at the given location",
+    "Click on a point to clone the units there.",
     faClone,
     ContextActionTarget.POINT,
     (units: Unit[], _1, targetPosition) => {

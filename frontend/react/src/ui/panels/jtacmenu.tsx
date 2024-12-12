@@ -39,7 +39,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
   let IPPosition = "";
   if (IP && ECHO) {
     let dist = Math.round(IP.distanceTo(ECHO) / 1852);
-    let bear = bearing(point([ECHO.lng, ECHO.lat]), point([IP.lng, IP.lat]));
+    let bear = bearing(point([ECHO.lng, ECHO.lat]), point([IP.lng, IP.lat])); // TODO switch to mag
     IPPosition = ["A", "AB", "B", "BC", "C", "CD", "D", "DA"][Math.round((bear > 0 ? bear : bear + 360) / 45)] + String(dist);
   }
 
@@ -50,7 +50,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
     let location = targetUnit ? targetUnit.getPosition() : targetLocation;
     if (location) {
       IPtoTargetDist = Math.round(IP.distanceTo(location) / 1852);
-      IPtoTargetBear = bearing(point([IP.lng, IP.lat]), point([location.lng, location.lat]));
+      IPtoTargetBear = bearing(point([IP.lng, IP.lat]), point([location.lng, location.lat])); // TODO switch to mag
       if (IPtoTargetBear < 0) IPtoTargetBear += 360;
       IPtoTargetBear = Math.round(IPtoTargetBear);
     }

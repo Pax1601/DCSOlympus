@@ -48,13 +48,13 @@ export class ServerManager {
     })
 
     MapOptionsChangedEvent.on((mapOptions) => {
-      if (this.#updateMode === "normal" && mapOptions.AWACSMode) {
+      /* TODO if (this.#updateMode === "normal" && mapOptions.AWACSMode) {
         this.#updateMode = "awacs";
         this.startUpdate();
       } else if (this.#updateMode === "awacs" && !mapOptions.AWACSMode) {
         this.#updateMode = "normal";
         this.startUpdate();
-      }
+      } */
     })
   }
 

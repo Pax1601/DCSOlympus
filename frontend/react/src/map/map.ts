@@ -243,7 +243,7 @@ export class Map extends L.Map {
         }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
       }
 
-      if (options.AWACSMode && this.#layerName !== "AWACS") this.setLayerName("AWACS");
+      //TODO if (options.AWACSMode && this.#layerName !== "AWACS") this.setLayerName("AWACS");
 
       this.updateMinimap();
     });

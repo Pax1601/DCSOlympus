@@ -912,7 +912,7 @@ export abstract class Unit extends CustomMarker {
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `./images/units/map/${getApp().getMap().getOptions().AWACSMode ? "awacs" : "normal"}/${this.getCoalition()}/${marker}.svg`;
+      img.src = `./images/units/map/${/*TODO getApp().getMap().getOptions().AWACSMode ? "awacs" : */"normal"}/${this.getCoalition()}/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
@@ -1567,7 +1567,8 @@ export abstract class Unit extends CustomMarker {
           clusterMean.geometry.coordinates[1],
           clusterMean.geometry.coordinates[0],
           this.getPosition().lat,
-          this.getPosition().lng
+          this.getPosition().lng,
+          false
         );
 
         if (bearingFromCluster < 0) bearingFromCluster += 360;
@@ -1581,7 +1582,7 @@ export abstract class Unit extends CustomMarker {
       }
 
       /* Draw the contact trail */
-      if (getApp().getMap().getOptions().AWACSMode) {
+      if (/*TODO getApp().getMap().getOptions().AWACSMode*/ false) {
         this.#trailPolylines = this.#trailPositions.map(
           (latlng, idx) => new Polyline([latlng, latlng], { color: "#FFFFFF", opacity: 1 - (idx + 1) / TRAIL_LENGTH })
         );
@@ -1668,7 +1669,7 @@ export abstract class Unit extends CustomMarker {
           var startLatLng = new LatLng(this.#position.lat, this.#position.lng);
           var endLatLng: LatLng;
           if (contactData.detectionMethod === RWR) {
-            var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.getPosition().lat, contact.getPosition().lng);
+            var bearingToContact = bearing(this.#position.lat, this.#position.lng, contact.getPosition().lat, contact.getPosition().lng, false);
             var startXY = getApp().getMap().latLngToContainerPoint(startLatLng);
             var endX = startXY.x + 80 * Math.sin(deg2rad(bearingToContact));
             var endY = startXY.y - 80 * Math.cos(deg2rad(bearingToContact));
@@ -1860,7 +1861,7 @@ export abstract class AirUnit extends Unit {
       showFuel: belongsToCommandedCoalition,
       showAmmo: belongsToCommandedCoalition,
       showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
-      showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
+      showCallsign: belongsToCommandedCoalition && (/*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman()),
       rotateToHeading: false,
     } as ObjectIconOptions;
   }
@@ -1947,7 +1948,7 @@ export class GroundUnit extends Unit {
       showFuel: false,
       showAmmo: false,
       showSummary: false,
-      showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
+      showCallsign: belongsToCommandedCoalition && (/*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman()),
       rotateToHeading: false,
     } as ObjectIconOptions;
   }
@@ -2012,7 +2013,7 @@ export class NavyUnit extends Unit {
       showFuel: false,
       showAmmo: false,
       showSummary: false,
-      showCallsign: belongsToCommandedCoalition && (!getApp().getMap().getOptions().AWACSMode || this.getHuman()),
+      showCallsign: belongsToCommandedCoalition && (/*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman()),
       rotateToHeading: false,
     } as ObjectIconOptions;
   }

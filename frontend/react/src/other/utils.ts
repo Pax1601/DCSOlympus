@@ -1,14 +1,13 @@
 import { Circle, LatLng, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
-import { UnitDatabase } from "../unit/databases/unitdatabase";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
-import { DateAndTime, UnitBlueprint } from "../interfaces";
+import { DateAndTime } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { featureCollection } from "turf";
-import { getApp } from "../olympusapp";
+import MagVar from "magvar";
 
-export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) {
+export function bearing(lat1: number, lon1: number, lat2: number, lon2: number, magnetic = true) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
   const φ2 = deg2rad(lat2);
   const λ1 = deg2rad(lon1); // φ, λ in radians
@@ -16,7 +15,8 @@ export function bearing(lat1: number, lon1: number, lat2: number, lon2: number) 
   const y = Math.sin(λ2 - λ1) * Math.cos(φ2);
   const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
   const θ = Math.atan2(y, x);
-  const brng = (rad2deg(θ) + 360) % 360; // in degrees
+  const magvar = MagVar.get(lat1, lon1);
+  const brng = (rad2deg(θ) - (magnetic ? magvar : 0) + 360) % 360; // in degrees
 
   return brng;
 }
@@ -406,24 +406,19 @@ export function blobToBase64(blob) {
   });
 }
 
-export function mode(array)
-{
-    if(array.length == 0)
-        return null;
-    var modeMap = {};
-    var maxEl = array[0], maxCount = 1;
-    for(var i = 0; i < array.length; i++)
-    {
-        var el = array[i];
-        if(modeMap[el] == null)
-            modeMap[el] = 1;
-        else
-            modeMap[el]++;  
-        if(modeMap[el] > maxCount)
-        {
-            maxEl = el;
-            maxCount = modeMap[el];
-        }
+export function mode(array) {
+  if (array.length == 0) return null;
+  var modeMap = {};
+  var maxEl = array[0],
+    maxCount = 1;
+  for (var i = 0; i < array.length; i++) {
+    var el = array[i];
+    if (modeMap[el] == null) modeMap[el] = 1;
+    else modeMap[el]++;
+    if (modeMap[el] > maxCount) {
+      maxEl = el;
+      maxCount = modeMap[el];
     }
-    return maxEl;
+  }
+  return maxEl;
 }
