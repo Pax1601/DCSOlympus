@@ -78,8 +78,8 @@ export function MapToolBar(props: {}) {
         {options.ctrlKey && (
           <kbd
             className={`
-              my-auto ml-auto text-nowrap rounded-lg border border-gray-200
-              bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-800
+              my-auto text-nowrap rounded-lg border border-gray-200 bg-gray-100
+              px-2 py-1 text-xs font-semibold text-gray-800
               dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
             `}
           >
@@ -89,8 +89,8 @@ export function MapToolBar(props: {}) {
         {options.altKey && (
           <kbd
             className={`
-              my-auto ml-auto text-nowrap rounded-lg border border-gray-200
-              bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-800
+              my-auto text-nowrap rounded-lg border border-gray-200 bg-gray-100
+              px-2 py-1 text-xs font-semibold text-gray-800
               dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
             `}
           >
@@ -100,8 +100,8 @@ export function MapToolBar(props: {}) {
         {options.shiftKey && (
           <kbd
             className={`
-              my-auto ml-auto text-nowrap rounded-lg border border-gray-200
-              bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-800
+              my-auto text-nowrap rounded-lg border border-gray-200 bg-gray-100
+              px-2 py-1 text-xs font-semibold text-gray-800
               dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
             `}
           >
@@ -112,8 +112,8 @@ export function MapToolBar(props: {}) {
         {options.code && (
           <kbd
             className={`
-              my-auto ml-auto text-nowrap rounded-lg border border-gray-200
-              bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-800
+              my-auto text-nowrap rounded-lg border border-gray-200 bg-gray-100
+              px-2 py-1 text-xs font-semibold text-gray-800
               dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
             `}
           >
@@ -153,10 +153,7 @@ export function MapToolBar(props: {}) {
                   checked={selectionEnabled}
                   icon={faObjectGroup}
                   tooltip={() => (
-                    <div
-                      className="overflow-hidden"
-                      style={{ animationName: "fadeIn", animationDuration: "1s", animationFillMode: "forwards", height: "25px" }}
-                    >
+                    <div>
                       <div className="flex content-center gap-2">
                         {shortcutCombination(shortcuts["toggleSelectionEnabled"]?.getOptions())}
                         <div className="my-auto">Box selection</div>
@@ -229,14 +226,19 @@ export function MapToolBar(props: {}) {
                     icon={contextActionIt.getIcon()}
                     tooltip={() => (
                       <div
-                      className="overflow-hidden"
-                      style={{ animationName: "tooltipFadeInHeight", animationDuration: "1s", animationFillMode: "forwards", height: "25px" }}
-                    >
-                      <div className="flex content-center gap-2">
-                        {shortcutCombination(contextActionIt.getOptions())}
-                        <div className="my-auto">{contextActionIt.getLabel()}</div>
-                      </div>
-                      <div className={"max-w-[200px] text-wrap"} style={{ animationName: "tooltipFadeInWidth", animationDuration: "1s", animationFillMode: "forwards", width: "1px" }}>{contextActionIt.getDescription()}</div>
+                        className="overflow-hidden"
+                        style={{ animationName: "tooltipFadeInHeight", animationDuration: "1s", animationFillMode: "forwards", height: "26px" }}
+                      >
+                        <div className="mb-4 flex h-6 content-center gap-2">
+                          {shortcutCombination(contextActionIt.getOptions())}
+                          <div className="my-auto">{contextActionIt.getLabel()}</div>
+                        </div>
+                        <div
+                          className={"max-w-[200px] text-wrap"}
+                          style={{ animationName: "tooltipFadeInWidth", animationDuration: "1s", animationFillMode: "forwards", width: "1px" }}
+                        >
+                          {contextActionIt.getDescription()}
+                        </div>
                       </div>
                     )}
                     tooltipPosition="side"

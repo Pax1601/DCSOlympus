@@ -107,7 +107,7 @@ input[type="range"]:focus::-moz-range-thumb {
 
 @keyframes tooltipFadeInHeight {
   99% {
-    height: 25px;
+    height: 26px;
   }
   100% {
     height: fit-content;

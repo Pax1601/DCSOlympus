@@ -504,7 +504,7 @@ export namespace ContextActions {
   export const PATH = new ContextAction(
     "path",
     "Create route",
-    "Click on the map to add a destination add the end of the path. This allows to create a more complex route.",
+    "Click on the map to add a destination at the end of the path. This allows to create a more complex route.",
     faRoute,
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition) => {
