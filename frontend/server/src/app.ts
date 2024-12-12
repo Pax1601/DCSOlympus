@@ -160,6 +160,7 @@ module.exports = function (configLocation, viteProxy) {
   app.use("/olympus", async (req, res, next) => {
     /* Check if custom authorization headers are being used */
     const user =
+    //@ts-ignore
       req.auth?.user ??
       checkCustomHeaders(config, usersConfig, groupsConfig, req);
 
@@ -174,9 +175,11 @@ module.exports = function (configLocation, viteProxy) {
           /* Check that the user is authorized to that role */
           if (userConfig.roles.includes(req.headers["x-command-mode"])) {
             /* Check that the role is valid */
+            //@ts-ignore
             if (req.headers["x-command-mode"] in defaultUsers) {
               /* Apply the authorization headers */
               req.headers.authorization = `Basic ${btoa(
+                //@ts-ignore
                 user + ":" + defaultUsers[req.headers["x-command-mode"]]
               )}`;
             } else {
@@ -246,7 +249,7 @@ module.exports = function (configLocation, viteProxy) {
     );
   } else {
     app.get("/", function (req, res) {
-      res.sendfile(path.join(__dirname, "..", "public", "index.html"));
+      res.sendFile(path.join(__dirname, "..", "public", "index.html"));
     });
   }
 

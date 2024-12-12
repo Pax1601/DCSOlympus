@@ -1,12 +1,14 @@
 import express = require("express");
-const gtts = require("node-gtts")("en");
+//const gtts = require("node-gtts")("en");
 const speech = require("@google-cloud/speech");
 const router = express.Router();
 
 module.exports = function () {
   router.put("/generate", (req, res, next) => {
-    res.set({ "Content-Type": "audio/mpeg" });
-    gtts.stream(req.body.text).pipe(res);
+    //res.set({ "Content-Type": "audio/mpeg" });
+    // TODO
+    //gtts.stream(req.body.text).pipe(res);
+    res.sendStatus(404);
   });
 
   router.put("/recognize", (req, res, next) => {
