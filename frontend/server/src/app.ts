@@ -220,7 +220,7 @@ module.exports = function (configLocation, viteProxy) {
     httpProxyMiddleware.createProxyMiddleware({
       target: `http://${
         backendAddress === "*" ? "localhost" : backendAddress
-      }:${config["backend"]["port"]}/`,
+      }:${config["backend"]["port"]}/olympus`,
       changeOrigin: true,
     })
   );
