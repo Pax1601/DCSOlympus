@@ -35,8 +35,11 @@ export function Header() {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
     MapSourceChangedEvent.on((source) => setMapSource(source));
     ConfigLoadedEvent.on((config: OlympusConfig) => {
-      var sources = Object.keys(getApp().getMap().getMirrors()).concat(getApp().getMap().getLayers());
-      setMapSources(sources);
+      // Timeout needed to make sure the map configuration has updated
+      window.setTimeout(() => {
+        var sources = Object.keys(getApp().getMap().getMirrors()).concat(getApp().getMap().getLayers());
+        setMapSources(sources);
+      }, 200);
     });
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {
       setCommandModeOptions(commandModeOptions);
@@ -116,7 +119,9 @@ export function Header() {
           </div>
         )}
         <div
-        className="cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white"
+          className={`
+            cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white
+          `}
           onClick={() => {
             getApp().getMap().setOption("tabletMode", !mapOptions.tabletMode);
           }}
