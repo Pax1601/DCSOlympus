@@ -26,6 +26,8 @@ Olympus.weaponIndex = 0			-- Counter used to spread the computational load of da
 Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
 Olympus.weapons = {}			-- Table holding references to all the currently existing weapons
 
+Olympus.drawingsByLayer = {}
+
 -- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
@@ -964,9 +966,25 @@ function getUnitDescription(unit)
 	return unit:getDescr()
 end
 
-function Olympus.getDrawings()
+function Olympus.initDrawings()
 	if mist.DBs.drawingByName ~= nil then
-		return mist.DBs.drawingByName
+		for drawingName, drawingData in pairs(mist.DBs.drawingByName) do
+			local customLayer = drawingData.name:match("^%[LYR:(.-)%]")
+
+			if customLayer then
+				-- drawing belongs to a custom layer
+				Olympus.drawingsByLayer[customLayer][drawingName] = drawingData
+			else
+				Olympus.drawingsByLayer[drawingData["layerName"]] = drawingData
+			end
+			
+		end
+
+		-- Send the drawings to the DLL
+		Olympus.OlympusDLL.setDrawingsData()
+	else
+		Olympus.debug("MIST DBs not ready", 2)
+		timer.scheduleFunction(Olympus.initDrawings, {}, timer.getTime() + 1)
 	end
 end
 
@@ -1300,8 +1318,6 @@ function Olympus.setMissionData(arg, time)
 		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
 	end
 
-	mission.drawings = Olympus.getDrawings()
-
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
 	Olympus.missionData["airbases"] = airbases
@@ -1435,6 +1451,9 @@ timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 
 -- Initialize the ME units
 Olympus.initializeUnits()
+
+-- Initialize the Drawings
+Olympus.initDrawings()
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
 
