@@ -149,6 +149,8 @@ void Server::handle_get(http_request request)
                     }
                     /* Drawings data*/
                     else if (URI.compare(DRAWINGS_URI) == 0) {
+                        log("trying to answer with drawings: ");
+                        log(drawings.serialize());
                         answer[L"drawings"] = drawings;
                     }
                     

@@ -154,7 +154,7 @@ export class ServerManager {
     }
 
     getDrawings(callback: CallableFunction, refresh: boolean = false) {
-        this.GET(callback, DRAWINGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[DRAWINGS_URI] }, 'arraybuffer', refresh);
+        this.GET(callback, DRAWINGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[DRAWINGS_URI] }, '', refresh);
     }
 
     isCommandExecuted(callback: CallableFunction, commandHash: string) {

@@ -165,6 +165,8 @@ extern "C" DllExport int coreMissionData(lua_State * L)
 
 extern "C" DllExport int coreDrawingsData(lua_State * L)
 {
+    log("Olympus coreDrawingsData called successfully");
+
     if (!initialized)
         return (0);
 
@@ -172,8 +174,11 @@ extern "C" DllExport int coreDrawingsData(lua_State * L)
     lock_guard<mutex> guard(mutexLock);
 
     lua_getglobal(L, "Olympus");
-    lua_getfield(L, -1, "drawings");
+    lua_getfield(L, -1, "drawingsByLayer");
     luaTableToJSON(L, -1, drawings);
+
+    log("Olympus coreDrawingsData: set lua table drawings ");
+    log(drawings.serialize());
 
     return(0);
 }
