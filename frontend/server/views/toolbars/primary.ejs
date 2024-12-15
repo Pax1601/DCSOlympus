@@ -79,6 +79,28 @@
                     data-coalition="neutral" inject-svg /></button>
         </div>
     </div>
+
+    <!-- Buttons group for drawings, enabled only if the option is checked -->
+    <div id="drawings-visibility-control" class="ol-group ol-navbar-buttons-group">
+        <div>
+            <button id="drawings-visibility-control-blue" data-on-click="toggleDrawingsVisibility"
+                data-on-click-params='{ "coalition": "blue" }' title="Toggle Blue drawings visibility"><img
+                    src="/resources/theme/images/buttons/tools/draw-polygon-solid.svg" class="fill-coalition"
+                    data-coalition="blue" inject-svg /></button>
+        </div>
+        <div>
+            <button id="drawings-visibility-control-red" data-on-click="toggleDrawingsVisibility"
+                data-on-click-params='{ "coalition": "red" }' title="Toggle Red drawings visibility"><img
+                    src="/resources/theme/images/buttons/tools/draw-polygon-solid.svg" class="fill-coalition"
+                    data-coalition="neutral" inject-svg /></button>
+        </div>
+        <div>
+            <button id="drawings-visibility-control-common" data-on-click="toggleDrawingsVisibility"
+                data-on-click-params='{ "coalition": "common" }' title="Toggle Common drawings visibility"><img
+                    src="/resources/theme/images/buttons/tools/draw-polygon-solid.svg" class="fill-coalition"
+                    data-coalition="neutral" inject-svg /></button>
+        </div>
+    </div>
 </nav>
 <nav class="ol-panel" oncontextmenu="return false;">
     <div id="camera-label" class="ol-panel-tab">

@@ -12,7 +12,7 @@ import { DestinationPreviewMarker } from "./markers/destinationpreviewmarker";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import { SVGInjector } from '@tanem/svg-injector'
-import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCS_LINK_RATIO, defaultMapMirrors, SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN } from "../constants/constants";
+import { defaultMapLayers, mapBounds, minimapBoundaries, IDLE, COALITIONAREA_DRAW_POLYGON, MOVE_UNIT, SHOW_UNIT_CONTACTS, HIDE_GROUP_MEMBERS, SHOW_UNIT_PATHS, SHOW_UNIT_TARGETS, SHOW_UNIT_LABELS, SHOW_UNITS_ENGAGEMENT_RINGS, SHOW_UNITS_ACQUISITION_RINGS, HIDE_UNITS_SHORT_RANGE_RINGS, FILL_SELECTED_RING, MAP_MARKER_CONTROLS, DCS_LINK_PORT, DCS_LINK_RATIO, defaultMapMirrors, SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN, SHOW_DRAWINGS } from "../constants/constants";
 import { CoalitionArea } from "./coalitionarea/coalitionarea";
 import { CoalitionAreaContextMenu } from "../contextmenus/coalitionareacontextmenu";
 import { DrawingCursor } from "./coalitionarea/drawingcursor";
@@ -229,6 +229,16 @@ export class Map extends L.Map {
                     this.#broadcastPosition();
                 }, 500); // DCS does not always apply the altitude correctly at the first set when changing map type
             }
+
+            // Additional drawings visibility buttons if option is selected
+            var showDrawings = getApp().getMap().getVisibilityOptions()[SHOW_DRAWINGS] as boolean;
+            let drawingsVisbilityControlEl = document.getElementById('drawings-visibility-control');
+            if (showDrawings) {
+                drawingsVisbilityControlEl ? (drawingsVisbilityControlEl.style.display = 'inherit') : null;
+            } else {
+                drawingsVisbilityControlEl ? (drawingsVisbilityControlEl.style.display = 'none'): null;
+            }
+
         });
 
         document.addEventListener("configLoaded", () => {
@@ -312,6 +322,7 @@ export class Map extends L.Map {
         this.addVisibilityOption(SHOW_UNITS_ACQUISITION_RINGS, true);
         this.addVisibilityOption(HIDE_UNITS_SHORT_RANGE_RINGS, true);
         this.addVisibilityOption(SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN, false);
+        this.addVisibilityOption(SHOW_DRAWINGS, false);
         /* this.addVisibilityOption(FILL_SELECTED_RING, false); Removed since currently broken: TODO fix!*/
     }
 

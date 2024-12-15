@@ -253,6 +253,7 @@ export const SHOW_UNIT_TARGETS = "Show selected unit targets";
 export const DCS_LINK_PORT = "DCS Camera link port";
 export const DCS_LINK_RATIO = "DCS Camera zoom";
 export const SHOW_HUMAN_CONTROLLED_UNIT_ORIGINAL_CALLSIGN = "Show human controlled unit original callsign";
+export const SHOW_DRAWINGS = "Show drawings";
 
 export enum DataIndexes {
     startOfData = 0,
