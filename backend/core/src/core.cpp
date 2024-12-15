@@ -22,7 +22,7 @@ Scheduler* scheduler = nullptr;
 
 /* Data jsons */
 json::value missionData = json::value::object();
-json::value drawings = json::value::object();
+json::value drawingsByLayer = json::value::object();
 
 mutex mutexLock;
 string sessionHash;
@@ -175,10 +175,7 @@ extern "C" DllExport int coreDrawingsData(lua_State * L)
 
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "drawingsByLayer");
-    luaTableToJSON(L, -1, drawings);
-
-    log("Olympus coreDrawingsData: set lua table drawings ");
-    log(drawings.serialize());
+    luaTableToJSON(L, -1, drawingsByLayer);
 
     return(0);
 }

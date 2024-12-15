@@ -1,6 +1,6 @@
 local version = "v1.0.4.8b5df691"
 
-local debug = false				-- True enables debug printing using DCS messages
+local debug = true				-- True enables debug printing using DCS messages
 
 -- .dll related variables
 Olympus.OlympusDLL = nil
@@ -967,18 +967,27 @@ function getUnitDescription(unit)
 end
 
 function Olympus.initDrawings()
+	local drawings = {}
 	if mist.DBs.drawingByName ~= nil then
 		for drawingName, drawingData in pairs(mist.DBs.drawingByName) do
 			local customLayer = drawingData.name:match("^%[LYR:(.-)%]")
 
 			if customLayer then
 				-- drawing belongs to a custom layer
-				Olympus.drawingsByLayer[customLayer][drawingName] = drawingData
+				drawings[customLayer][drawingName] = drawingData
 			else
-				Olympus.drawingsByLayer[drawingData["layerName"]] = drawingData
+
+				if drawings[drawingData.layerName] ~= nil then
+					drawings[drawingData.layerName][drawingName] = drawingData
+				else
+					drawings[drawingData.layerName] = {}
+					drawings[drawingData.layerName][drawingName] = drawingData
+				end
 			end
 			
 		end
+
+		Olympus.drawingsByLayer["drawings"] = drawings
 
 		-- Send the drawings to the DLL
 		Olympus.OlympusDLL.setDrawingsData()

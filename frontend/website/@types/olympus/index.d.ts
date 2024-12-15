@@ -2455,6 +2455,7 @@ declare module "server/servermanager" {
         getBullseye(callback: CallableFunction): void;
         getLogs(callback: CallableFunction, refresh?: boolean): void;
         getMission(callback: CallableFunction): void;
+        getDrawings(callback: CallableFunction): void;
         getUnits(callback: CallableFunction, refresh?: boolean): void;
         getWeapons(callback: CallableFunction, refresh?: boolean): void;
         isCommandExecuted(callback: CallableFunction, commandHash: string): void;
