@@ -167,9 +167,6 @@ extern "C" DllExport int coreDrawingsData(lua_State * L)
 {
     log("Olympus coreDrawingsData called successfully");
 
-    if (!initialized)
-        return (0);
-
     /* Lock for thread safety */
     lock_guard<mutex> guard(mutexLock);
 
