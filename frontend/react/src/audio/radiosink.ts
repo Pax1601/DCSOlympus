@@ -4,6 +4,7 @@ import { getApp } from "../olympusapp";
 import { AudioSinksChangedEvent } from "../events";
 import { makeID } from "../other/utils";
 import { Recorder } from "./recorder";
+import { Unit } from "../unit/unit";
 
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
@@ -20,7 +21,8 @@ export class RadioSink extends AudioSink {
   #packetID = 0;
   #guid = makeID(22);
   #recorder: Recorder;
-  speechDataAvailable: (blob: Blob) => void;
+  #transmittingUnit: Unit | undefined;
+  speechDataAvailable: (blob: Blob) => void = (blob) => {};
 
   constructor() {
     super();
@@ -157,5 +159,13 @@ export class RadioSink extends AudioSink {
 
   recordArrayBuffer(arrayBuffer: ArrayBuffer) {
     this.#recorder.recordBuffer(arrayBuffer);
+  }
+
+  setTransmittingUnit(transmittingUnit: Unit | undefined) {
+    this.#transmittingUnit = transmittingUnit;
+  }
+
+  getTransmittingUnit() {
+    return this.#transmittingUnit;
   }
 }

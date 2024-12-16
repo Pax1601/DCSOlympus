@@ -32,6 +32,7 @@ import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
 import { CoordinatesPanel } from "./panels/coordinatespanel";
 import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
 import { AWACSMenu } from "./panels/awacsmenu";
+import { ServerOverlay } from "./serveroverlay";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -58,7 +59,7 @@ export function UI() {
 
   useEffect(() => {
     setupApp();
-  })
+  });
 
   return (
     <div
@@ -67,50 +68,64 @@ export function UI() {
         font-sans
       `}
     >
-      <Header />
+      {appState !== OlympusState.SERVER && (
+        <>
+          <Header />
+        </>
+      )}
       <div className="flex h-full w-full flex-row-reverse">
-        <LoginModal open={appState === OlympusState.LOGIN} />
-        <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
-        <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
-        
+        {appState === OlympusState.SERVER && <ServerOverlay />}
+
+        {appState !== OlympusState.SERVER && (
+          <>
+            <LoginModal open={appState === OlympusState.LOGIN} />
+            <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
+            <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
+          </>
+        )}
+
         <div id="map-container" className="z-0 h-full w-screen" />
 
-        <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <UnitControlMenu
-          open={
-            appState === OlympusState.UNIT_CONTROL &&
-            ![UnitControlSubState.FORMATION, UnitControlSubState.UNIT_EXPLOSION_MENU].includes(appSubState as UnitControlSubState)
-          }
-          onClose={() => getApp().setState(OlympusState.IDLE)}
-        />
-        <FormationMenu
-          open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION}
-          onClose={() => getApp().setState(OlympusState.IDLE)}
-        />
-        <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
-        <UnitExplosionMenu
-          open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
-          onClose={() => getApp().setState(OlympusState.IDLE)}
-        />
-        {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
+        {appState !== OlympusState.SERVER && (
+          <>
+            <MainMenu open={appState === OlympusState.MAIN_MENU} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <SpawnMenu open={appState === OlympusState.SPAWN} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <OptionsMenu open={appState === OlympusState.OPTIONS} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <UnitControlMenu
+              open={
+                appState === OlympusState.UNIT_CONTROL &&
+                ![UnitControlSubState.FORMATION, UnitControlSubState.UNIT_EXPLOSION_MENU].includes(appSubState as UnitControlSubState)
+              }
+              onClose={() => getApp().setState(OlympusState.IDLE)}
+            />
+            <FormationMenu
+              open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.FORMATION}
+              onClose={() => getApp().setState(OlympusState.IDLE)}
+            />
+            <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <UnitExplosionMenu
+              open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
+              onClose={() => getApp().setState(OlympusState.IDLE)}
+            />
+            {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AWACSMenu open={appState === OlympusState.AWACS} onClose={() => getApp().setState(OlympusState.IDLE)} />{*/}
 
-        <MiniMapPanel />
-        <ControlsPanel />
-        <CoordinatesPanel />
-        <RadiosSummaryPanel />
+            <MiniMapPanel />
+            <ControlsPanel />
+            <CoordinatesPanel />
+            <RadiosSummaryPanel />
 
-        <SideBar />
-        <InfoBar />
-        <HotGroupBar />
+            <SideBar />
+            <InfoBar />
+            <HotGroupBar />
 
-        <MapContextMenu />
-        <SpawnContextMenu />
+            <MapContextMenu />
+            <SpawnContextMenu />
+          </>
+        )}
       </div>
     </div>
   );

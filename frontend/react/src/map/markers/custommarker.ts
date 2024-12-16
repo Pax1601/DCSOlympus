@@ -7,7 +7,7 @@ export class CustomMarker extends Marker {
 
     SelectionEnabledChangedEvent.on((enabled) => {
       const el = this.getElement();
-      if (el === undefined) return;
+      if (el === undefined || el === null) return;
       if (enabled) el.classList.add("disable-pointer-events");
       else el.classList.remove("disable-pointer-events");
     });

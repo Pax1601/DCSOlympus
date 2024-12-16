@@ -20,11 +20,12 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
-import { LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
+import { GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
 import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
-import { OlympusConfig, ProfileOptions } from "./interfaces";
-import { AWACSController } from "./controllers/awacs";
+import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
+import { ControllerManager } from "./controllers/controllermanager";
+import { AWACSController } from "./controllers/awacs";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -48,10 +49,8 @@ export class OlympusApp {
   #weaponsManager: WeaponsManager;
   #audioManager: AudioManager;
   #sessionDataManager: SessionDataManager;
+  #controllerManager: ControllerManager;
   //#pluginsManager: // TODO
-
-  /* Controllers */
-  #AWACSController: AWACSController;
 
   constructor() {
     SelectedUnitsChangedEvent.on((selectedUnits) => {
@@ -95,15 +94,15 @@ export class OlympusApp {
     return this.#sessionDataManager;
   }
 
+  getControllerManager() {
+    return this.#controllerManager;
+  }
+
   /* TODO
     getPluginsManager() {
         return null //  this.#pluginsManager as PluginsManager;
     }
     */
-
-  getAWACSController() {
-    return this.#AWACSController;
-  }
 
   start() {
     /* Initialize base functionalitites */
@@ -117,9 +116,7 @@ export class OlympusApp {
     this.#unitsManager = new UnitsManager();
     this.#weaponsManager = new WeaponsManager();
     this.#audioManager = new AudioManager();
-
-    /* Controllers */
-    this.#AWACSController = new AWACSController();
+    this.#controllerManager = new ControllerManager();
 
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
@@ -143,8 +140,8 @@ export class OlympusApp {
     /* Load the config file from the server */
     const configRequest = new Request("./resources/config", {
       headers: {
-        'Cache-Control': 'no-cache',
-      }
+        "Cache-Control": "no-cache",
+      },
     });
 
     fetch(configRequest)
@@ -166,7 +163,28 @@ export class OlympusApp {
             this.setState(OlympusState.LOGIN, LoginSubState.COMMAND_MODE);
           }
         }
-        if (this.getState() !== OlympusState.LOGIN) {
+        if (this.#config.local && this.#config.authentication) {
+          if (this.#config.frontend.autoconnectWhenLocal) {
+            this.getServerManager().setUsername("Game master");
+            this.getServerManager().setPassword(this.#config.authentication.gameMasterPassword);
+            this.getServerManager().startUpdate();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const server = urlParams.get("server");
+            if (server == null) {
+              this.setState(OlympusState.IDLE);
+              /* If no profile exists already with that name, create it from scratch from the defaults */
+              if (this.getProfile() === null) this.saveProfile();
+              /* Load the profile */
+              this.loadProfile();
+            } else {
+              this.setState(OlympusState.SERVER);
+              this.startServerMode();
+            }
+
+            this.getServerManager().setActiveCommandMode(GAME_MASTER);
+          }
+        } else if (this.getState() !== OlympusState.LOGIN) {
           this.setState(OlympusState.LOGIN, LoginSubState.CREDENTIALS);
         }
         ConfigLoadedEvent.dispatch(this.#config as OlympusConfig);
@@ -300,5 +318,23 @@ export class OlympusApp {
       this.#infoMessages.shift();
       InfoPopupEvent.dispatch(this.#infoMessages);
     }, 5000);
+  }
+
+  startServerMode() {
+    ConfigLoadedEvent.on((config) => {
+      this.getAudioManager().start();
+
+      Object.values(config.controllers).forEach((controllerOptions) => {
+        if (controllerOptions.type.toLowerCase() === "awacs") {
+          this.getControllerManager().addController(
+            new AWACSController(
+              { frequency: controllerOptions.frequency, modulation: controllerOptions.modulation },
+              controllerOptions.coalition,
+              controllerOptions.callsign
+            )
+          );
+        }
+      });
+    });
   }
 }

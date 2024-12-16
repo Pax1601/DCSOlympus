@@ -11,7 +11,7 @@ const generateClient = new textToSpeech.TextToSpeechClient();
 module.exports = function () {
   router.put("/generate", (req, res, next) => {
     const request = {
-      input: {text: req.body.text},
+      input: {ssml: `<speak>${req.body.text}</speak>`},
       voice: {languageCode: 'en-US', ssmlGender: 'MALE'},
       audioConfig: {audioEncoding: 'MP3'},
     };

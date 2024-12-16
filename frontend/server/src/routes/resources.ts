@@ -23,13 +23,20 @@ module.exports = function (configLocation) {
     }
     if (fs.existsSync(configLocation)) {
       let rawdata = fs.readFileSync(configLocation, "utf-8");
+      const local = ["127.0.0.1", "::ffff:127.0.0.1", "::1"].includes(req.connection.remoteAddress);
       const config = JSON.parse(rawdata);
+      let resConfig = {
+        frontend: { ...config.frontend },
+        audio: { ...(config.audio ?? {}) },
+        controllers: { ...(config.controllers  ?? {}) },
+        profiles: { ...(profiles ?? {}) },
+        local: local,
+      };
+      if (local) {
+        resConfig["authentication"] = config["authentication"]
+      }
       res.send(
-        JSON.stringify({
-          frontend: { ...config.frontend },
-          audio: { ...(config.audio ?? {}) },
-          profiles: { ...(profiles ?? {}) },
-        })
+        JSON.stringify(resConfig)
       );
       res.end();
     } else {

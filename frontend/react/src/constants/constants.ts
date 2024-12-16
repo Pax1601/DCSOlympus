@@ -275,6 +275,7 @@ export const defaultMapLayers = {
 
 export enum OlympusState {
   NOT_INITIALIZED = "Not initialized",
+  SERVER = "Server",
   LOGIN = "Login",
   IDLE = "Idle",
   MAIN_MENU = "Main menu",

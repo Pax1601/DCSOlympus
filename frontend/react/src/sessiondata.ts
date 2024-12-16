@@ -2,6 +2,7 @@ import { AudioSink } from "./audio/audiosink";
 import { FileSource } from "./audio/filesource";
 import { RadioSink } from "./audio/radiosink";
 import { UnitSink } from "./audio/unitsink";
+import { OlympusState } from "./constants/constants";
 import { AudioSinksChangedEvent, AudioSourcesChangedEvent, SessionDataLoadedEvent as SessionDataChangedEvent } from "./events";
 import { SessionData } from "./interfaces";
 import { getApp } from "./olympusapp";
@@ -75,6 +76,8 @@ export class SessionDataManager {
   }
 
   loadSessionData(sessionHash?: string) {
+    if (getApp().getState() === OlympusState.SERVER) return;
+
     if (sessionHash) this.#sessionHash = sessionHash;
     if (this.#sessionHash === undefined) {
       console.error("Trying to load session data but no session hash provided");
@@ -110,6 +113,8 @@ export class SessionDataManager {
   }
 
   #saveSessionData() {
+    if (getApp().getState() === OlympusState.SERVER) return;
+    
     if (this.#saveSessionDataTimeout) window.clearTimeout(this.#saveSessionDataTimeout);
     this.#saveSessionDataTimeout = window.setTimeout(() => {
       const requestOptions = {

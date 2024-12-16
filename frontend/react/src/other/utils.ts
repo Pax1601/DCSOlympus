@@ -72,7 +72,7 @@ export function keyEventWasInInput(event: KeyboardEvent) {
 }
 
 export const zeroAppend = function (num: number, places: number, decimal: boolean = false, decimalPlaces: number = 2) {
-  var string = decimal ? num.toFixed(decimalPlaces) : String(num);
+  var string = decimal ? num.toFixed(decimalPlaces) : num.toFixed(0);
   while (string.length < places) {
     string = "0" + string;
   }
@@ -395,7 +395,21 @@ export function wait(time) {
 }
 
 export function computeBearingRangeString(latlng1, latlng2) {
-  return `${bearing(latlng1.lat, latlng1.lng, latlng2.lat, latlng2.lng).toFixed()}/${(latlng1.distanceTo(latlng2) / 1852).toFixed(0)}`;
+  return `${zeroAppend(bearing(latlng1.lat, latlng1.lng, latlng2.lat, latlng2.lng), 3)}/${zeroAppend(latlng1.distanceTo(latlng2) / 1852, 3)}`;
+}
+
+export function spellNumbers(string: string) {
+  string = string.replaceAll("1", "one ");
+  string = string.replaceAll("2", "two ");
+  string = string.replaceAll("3", "three ");
+  string = string.replaceAll("4", "four ");
+  string = string.replaceAll("5", "five ");
+  string = string.replaceAll("6", "six ");
+  string = string.replaceAll("7", "seven ");
+  string = string.replaceAll("8", "eight ");
+  string = string.replaceAll("9", "nine ");
+  string = string.replaceAll("0", "zero ");
+  return string;
 }
 
 export function blobToBase64(blob) {

@@ -23,14 +23,12 @@ import {
 } from "../events";
 import { OlympusConfig } from "../interfaces";
 import { TextToSpeechSource } from "./texttospeechsource";
-import { SpeechController } from "./speechcontroller";
 
 export class AudioManager {
   #audioContext: AudioContext;
   #devices: MediaDeviceInfo[] = [];
   #input: MediaDeviceInfo;
   #output: MediaDeviceInfo;
-  #speechController: SpeechController;
 
   /* The playback pipeline enables audio playback on the speakers/headphones */
   #playbackPipeline: PlaybackPipeline;
@@ -72,8 +70,6 @@ export class AudioManager {
           altKey: false,
         });
     });
-
-    this.#speechController = new SpeechController();
   }
 
   start() {
@@ -93,7 +89,7 @@ export class AudioManager {
     if (res === null) res = location.toString().match(/(?:http|https):\/\/(.+)/);
 
     let wsAddress = res ? res[1] : location.toString();
-    if (wsAddress.at(wsAddress.length - 1) === "/") wsAddress = wsAddress.substring(0, wsAddress.length - 1)
+    if (wsAddress.at(wsAddress.length - 1) === "/") wsAddress = wsAddress.substring(0, wsAddress.length - 1);
     if (this.#endpoint) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
     else if (this.#port) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
     else console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
@@ -126,6 +122,8 @@ export class AudioManager {
             audioPacket.getFrequencies().forEach((frequencyInfo) => {
               if (sink.getFrequency() === frequencyInfo.frequency && sink.getModulation() === frequencyInfo.modulation && sink.getTuned()) {
                 sink.setReceiving(true);
+
+                sink.setTransmittingUnit(getApp().getUnitsManager().getUnitByID(audioPacket.getUnitID()) ?? undefined)
 
                 /* Make a copy of the array buffer for the playback pipeline to use */
                 var dst = new ArrayBuffer(audioPacket.getAudioData().buffer.byteLength);
@@ -164,7 +162,7 @@ export class AudioManager {
         let newRadio = this.addRadio();
         this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
         this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
-        
+
         newRadio = this.addRadio();
         this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
         this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
@@ -192,8 +190,8 @@ export class AudioManager {
       let sessionConnections = getApp().getSessionDataManager().getSessionData().connections;
       if (sessionConnections) {
         sessionConnections.forEach((connection) => {
-          this.#sources[connection[0]]?.connect(this.#sinks[connection[1]]);
-        })
+          if (connection[0] < this.#sources.length && connection[1] < this.#sinks.length) this.#sources[connection[0]]?.connect(this.#sinks[connection[1]]);
+        });
       }
 
       this.#running = true;
@@ -208,7 +206,7 @@ export class AudioManager {
       AudioManagerDevicesChangedEvent.dispatch(devices);
     });
 
-    this.#internalTextToSpeechSource = new TextToSpeechSource(); 
+    this.#internalTextToSpeechSource = new TextToSpeechSource();
   }
 
   stop() {
@@ -265,7 +263,6 @@ export class AudioManager {
   addRadio() {
     console.log("Adding new radio");
     const newRadio = new RadioSink();
-    newRadio.speechDataAvailable = (blob) => this.#speechController.analyzeData(blob, newRadio);
     this.#sinks.push(newRadio);
     /* Set radio name by default to be incremental number */
     newRadio.setName(`Radio ${this.#sinks.length}`);

@@ -37,11 +37,15 @@
 		"mapMirrors": {
 			"DCS Map (Official)": "https://maps.dcsolympus.com/maps",
 			"DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
-		}
+		},
+		"autoconnectWhenLocal": true
 	},
 	"audio": {
 		"SRSPort": 5002,
 		"WSPort": 4000,
 		"WSEndpoint": "audio"
-	}
+	},
+	"controllers": [
+		{"type": "awacs", "coalition": "blue", "callsign": "Magic", "frequency": 251000000, "modulation": 0}
+	]
 }

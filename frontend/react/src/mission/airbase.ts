@@ -29,7 +29,7 @@ export class Airbase extends CustomMarker {
 
     AppStateChangedEvent.on((state, subState) => {
       const el = this.getElement();
-      if (el === undefined) return;
+      if (el === undefined || el === null) return;
       if (state === OlympusState.IDLE || state === OlympusState.AIRBASE) el.classList.remove("airbase-disable-pointer-events");
       else el.classList.add("airbase-disable-pointer-events");
     });

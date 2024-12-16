@@ -1,12 +1,20 @@
+import { RadioSink } from "../audio/radiosink";
 import { getApp } from "../olympusapp";
 import { blobToBase64 } from "../other/utils";
-import { RadioSink } from "./radiosink";
 
-export class SpeechController {
+export abstract class Controller {
+  #radio: RadioSink;
   #playingText: boolean = false;
-  constructor() {}
 
-  analyzeData(blob: Blob, radio: RadioSink) {
+  constructor(radioOptions: { frequency: number; modulation: number }) {
+    this.#radio = getApp().getAudioManager().addRadio();
+    this.#radio.setFrequency(radioOptions.frequency);
+    this.#radio.setModulation(radioOptions.modulation);
+
+    this.#radio.speechDataAvailable = (blob) => this.analyzeData(blob)
+  }
+
+  analyzeData(blob: Blob) {
     blobToBase64(blob)
       .then((base64) => {
         const requestOptions = {
@@ -25,46 +33,28 @@ export class SpeechController {
               throw new Error("Error saving profile");
             }
           })
-          .then((text) => this.#executeCommand(text.toLowerCase(), radio))
+          .then((text) => this.parseText(text.toLowerCase()))
           .catch((error) => console.error(error)); // Handle errors
       })
       .catch((error) => console.error(error));
   }
 
-  playText(text, radio: RadioSink) {
+  playText(text) {
     if (this.#playingText) return;
     this.#playingText = true;
     const textToSpeechSource = getApp().getAudioManager().getInternalTextToSpeechSource();
-    textToSpeechSource.connect(radio);
+    textToSpeechSource.connect(this.#radio);
     textToSpeechSource.playText(text);
-    radio.setPtt(true);
+    this.#radio.setPtt(true);
     textToSpeechSource.onMessageCompleted = () => {
       this.#playingText = false;
-      radio.setPtt(false);
-      textToSpeechSource.disconnect(radio);
+      this.#radio.setPtt(false);
+      textToSpeechSource.disconnect(this.#radio);
     };
     window.setTimeout(() => {
       this.#playingText = false;
     }, 30000); // Reset to false as failsafe
   }
 
-  #executeCommand(text, radio) {
-    console.log(`Received speech command: ${text}`);
-
-    if (text.indexOf("olympus") === 0) {
-      this.#olympusCommand(text, radio);
-    } else if (text.indexOf(getApp().getAWACSController()?.getCallsign().toLowerCase()) === 0) {
-      getApp().getAWACSController()?.executeCommand(text, radio);
-    }
-  }
-
-  #olympusCommand(text, radio) {
-    if (text.indexOf("request straight") > 0 || text.indexOf("request straightin") > 0) {
-      this.playText("Confirm you are on step 13, being a pussy?", radio);
-    } else if (text.indexOf("bolter") > 0) {
-      this.playText("What an idiot, I never boltered, 100% boarding rate", radio);
-    } else if (text.indexOf("read back") > 0) {
-      this.playText(text.replace("olympus", ""), radio);
-    }
-  }
+  abstract parseText(text: string): void;
 }
