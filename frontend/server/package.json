@@ -1,10 +1,10 @@
 {
-  "name": "DCSOlympus Server",
+  "name": "DCSOlympus",
   "main": "client.js",
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
-    "server": "electron .",
+    "server": "electron . --server",
     "client": "electron .",
     "tsc": "tsc"
   },
@@ -37,8 +37,7 @@
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.3"
+    "typescript": "^5.7.2"
   },
   "overrides": {
     "node-fetch": "^3.3.2"

@@ -39,7 +39,24 @@
                 "run",
                 "server",
                 "--",
-                "-s",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json",
+                "--vite"
+            ],
+            "restart": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch client (Electron)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "client",
+                "--",
                 "-c", 
                 "${input:enterDir}/Config/olympus.json",
                 "--vite"
