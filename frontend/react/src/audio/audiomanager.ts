@@ -6,7 +6,6 @@ import { makeID } from "../other/utils";
 import { FileSource } from "./filesource";
 import { AudioSource } from "./audiosource";
 import { Buffer } from "buffer";
-import { PlaybackPipeline } from "./playbackpipeline";
 import { AudioSink } from "./audiosink";
 import { Unit } from "../unit/unit";
 import { UnitSink } from "./unitsink";
@@ -29,9 +28,6 @@ export class AudioManager {
   #devices: MediaDeviceInfo[] = [];
   #input: MediaDeviceInfo;
   #output: MediaDeviceInfo;
-
-  /* The playback pipeline enables audio playback on the speakers/headphones */
-  #playbackPipeline: PlaybackPipeline;
 
   /* The audio sinks used to transmit the audio stream to the SRS backend */
   #sinks: AudioSink[] = [];
@@ -82,8 +78,6 @@ export class AudioManager {
     //@ts-ignore
     if (this.#output) this.#audioContext.setSinkId(this.#output.deviceId);
 
-    this.#playbackPipeline = new PlaybackPipeline();
-
     /* Connect the audio websocket */
     let res = location.toString().match(/(?:http|https):\/\/(.+):/);
     if (res === null) res = location.toString().match(/(?:http|https):\/\/(.+)/);
@@ -129,7 +123,7 @@ export class AudioManager {
                 var dst = new ArrayBuffer(audioPacket.getAudioData().buffer.byteLength);
                 new Uint8Array(dst).set(new Uint8Array(audioPacket.getAudioData().buffer));
                 sink.recordArrayBuffer(audioPacket.getAudioData().buffer);
-                this.#playbackPipeline.playBuffer(dst);
+                sink.playBuffer(dst);
               }
             });
           } else {
@@ -156,16 +150,19 @@ export class AudioManager {
           let newRadio = this.addRadio();
           newRadio?.setFrequency(options.frequency);
           newRadio?.setModulation(options.modulation);
+          newRadio?.setPan(options.pan)
         });
       } else {
         /* Add two default radios and connect to the microphone*/
         let newRadio = this.addRadio();
         this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
         this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
+        newRadio.setPan(-1);
 
         newRadio = this.addRadio();
         this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
         this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
+        newRadio.setPan(1);
       }
 
       let sessionFileSources = getApp().getSessionDataManager().getSessionData().fileSources;

@@ -5,6 +5,7 @@ import { AudioSinksChangedEvent } from "../events";
 import { makeID } from "../other/utils";
 import { Recorder } from "./recorder";
 import { Unit } from "../unit/unit";
+import { PlaybackPipeline } from "./playbackpipeline";
 
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
@@ -22,10 +23,14 @@ export class RadioSink extends AudioSink {
   #guid = makeID(22);
   #recorder: Recorder;
   #transmittingUnit: Unit | undefined;
+  #pan: number = 0;
+  #playbackPipeline: PlaybackPipeline;
   speechDataAvailable: (blob: Blob) => void = (blob) => {};
 
   constructor() {
     super();
+
+    this.#playbackPipeline = new PlaybackPipeline();
 
     this.#recorder = new Recorder();
     this.#recorder.onRecordingCompleted = (blob) => this.speechDataAvailable(blob);
@@ -109,10 +114,22 @@ export class RadioSink extends AudioSink {
     return this.#volume;
   }
 
+  setPan(pan: number) {
+    this.#pan = pan;
+    this.#playbackPipeline.setPan(pan);
+    AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+  }
+
+  getPan() {
+    return this.#pan;
+  }
+
   setReceiving(receiving) {
     // Only do it if actually changed
     if (receiving !== this.#receiving) {
       AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+
+      this.#playbackPipeline.setEnabled(receiving);
 
       if (getApp().getAudioManager().getSpeechRecognition()) {
         if (receiving) this.#recorder.start();
@@ -167,5 +184,9 @@ export class RadioSink extends AudioSink {
 
   getTransmittingUnit() {
     return this.#transmittingUnit;
+  }
+
+  playBuffer(arrayBuffer) {
+    this.#playbackPipeline.playBuffer(arrayBuffer);
   }
 }

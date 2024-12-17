@@ -45,7 +45,7 @@ export interface OlympusConfig {
 }
 
 export interface SessionData {
-  radios?: { frequency: number; modulation: number }[];
+  radios?: { frequency: number; modulation: number; pan: number }[];
   fileSources?: { filename: string; volume: number }[];
   unitSinks?: {ID: number}[];
   connections?: any[];

@@ -6,6 +6,7 @@ import { OlStateButton } from "../../components/olstatebutton";
 import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
 import { RadioSink } from "../../../audio/radiosink";
 import { getApp } from "../../../olympusapp";
+import { OlRangeSlider } from "../../components/olrangeslider";
 
 export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKeys: string[]; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
   const [expanded, setExpanded] = useState(false);
@@ -18,16 +19,16 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
     <div
       data-receiving={props.radio.getReceiving()}
       className={`
-        box-border flex cursor-pointer flex-col content-center justify-between
-        gap-2 rounded-md border-2 border-transparent bg-olympus-200/30 px-4 py-3
+        box-border flex flex-col content-center justify-between gap-2 rounded-md
+        border-2 border-transparent bg-olympus-200/30 px-4 py-3
         data-[receiving='true']:border-white
       `}
       ref={ref}
-      onClick={() => {
-        setExpanded(!expanded);
-      }}
+      
     >
-      <div className="flex content-center justify-between gap-2">
+      <div className="flex cursor-pointer content-center justify-between gap-2" onClick={() => {
+        setExpanded(!expanded);
+      }}>
         <div
           className={`h-fit w-fit cursor-pointer rounded-sm py-2`}
           onClick={() => {
@@ -76,6 +77,17 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
               props.radio.setFrequency(value);
             }}
           />
+          <div className="flex content-center gap-2 p-2">
+            <div>Left</div>
+          <OlRangeSlider
+            value={props.radio.getPan() * 50 + 50}
+            onChange={(ev) => {
+              props.radio.setPan((Number(ev.currentTarget.value) - 50) / 50);
+            }}
+            className="my-auto"
+          ></OlRangeSlider>
+          <div>Right</div>
+          </div>
           <div className="flex flex-row gap-2">
             <OlLabelToggle
               leftLabel="AM"
@@ -90,7 +102,9 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
               className="ml-auto"
               checked={props.radio.getPtt()}
               icon={faMicrophoneLines}
-              onClick={() => {props.radio.setPtt(!props.radio.getPtt())}}
+              onClick={() => {
+                props.radio.setPtt(!props.radio.getPtt());
+              }}
               tooltip="Talk on frequency"
             ></OlStateButton>
 

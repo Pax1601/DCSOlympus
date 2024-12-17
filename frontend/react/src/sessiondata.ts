@@ -21,6 +21,7 @@ export class SessionDataManager {
             return {
               frequency: radioSink.getFrequency(),
               modulation: radioSink.getModulation(),
+              pan: radioSink.getPan()
             };
           });
 
