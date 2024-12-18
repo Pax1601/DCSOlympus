@@ -17,7 +17,6 @@ import {
   OlympusSubState,
   NO_SUBSTATE,
   SpawnSubState,
-  DrawSubState,
   JTACSubState,
   UnitControlSubState,
   ContextActionTarget,
@@ -26,7 +25,6 @@ import {
   SHORT_PRESS_MILLISECONDS,
   DEBOUNCE_MILLISECONDS,
 } from "../constants/constants";
-import { CoalitionPolygon } from "./coalitionarea/coalitionpolygon";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { EffectRequestTable, OlympusConfig, SpawnRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
@@ -36,7 +34,6 @@ import "./markers/stylesheets/airbase.css";
 import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
 import "./stylesheets/map.css";
-import { CoalitionCircle } from "./coalitionarea/coalitioncircle";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
 import { ExplosionMarker } from "./markers/explosionmarker";
@@ -44,7 +41,6 @@ import { TextMarker } from "./markers/textmarker";
 import { TargetMarker } from "./markers/targetmarker";
 import {
   AppStateChangedEvent,
-  CoalitionAreaSelectedEvent,
   ConfigLoadedEvent,
   ContextActionChangedEvent,
   ContextActionSetChangedEvent,
@@ -127,9 +123,6 @@ export class Map extends L.Map {
   #cameraOptionsXmlHttp: XMLHttpRequest | null = null;
   #bradcastPositionXmlHttp: XMLHttpRequest | null = null;
   #cameraZoomRatio: number = 1.0;
-
-  /* Coalition areas drawing */
-  #coalitionAreas: (CoalitionPolygon | CoalitionCircle)[] = [];
 
   /* Units movement */
   #destinationPreviewMarkers: { [key: number]: TemporaryUnitMarker | TargetMarker } = {};
@@ -300,7 +293,7 @@ export class Map extends L.Map {
     window.addEventListener("blur", () => {
       this.setSelectionEnabled(false);
       this.setPasteEnabled(false);
-    })
+    });
 
     /* Pan interval */
     this.#panInterval = window.setInterval(() => {
@@ -604,27 +597,6 @@ export class Map extends L.Map {
     ContextActionChangedEvent.dispatch(this.#contextAction);
   }
 
-  deselectAllCoalitionAreas() {
-    if (this.getSelectedCoalitionArea() !== null) {
-      CoalitionAreaSelectedEvent.dispatch(null);
-      this.#coalitionAreas.forEach((coalitionArea: CoalitionPolygon | CoalitionCircle) => coalitionArea.setSelected(false));
-    }
-  }
-
-  deleteCoalitionArea(coalitionArea: CoalitionPolygon | CoalitionCircle) {
-    if (this.#coalitionAreas.includes(coalitionArea)) this.#coalitionAreas.splice(this.#coalitionAreas.indexOf(coalitionArea), 1);
-
-    if (this.hasLayer(coalitionArea)) this.removeLayer(coalitionArea);
-  }
-
-  getSelectedCoalitionArea() {
-    const coalitionArea = this.#coalitionAreas.find((coalitionArea: CoalitionPolygon | CoalitionCircle) => {
-      return coalitionArea.getSelected();
-    });
-
-    return coalitionArea ?? null;
-  }
-
   setHiddenType(key: string, value: boolean) {
     this.#hiddenTypes[key] = value;
     HiddenTypesChangedEvent.dispatch(this.#hiddenTypes);
@@ -765,7 +737,7 @@ export class Map extends L.Map {
 
   setSelectionEnabled(selectionEnabled: boolean) {
     this.#selectionEnabled = selectionEnabled;
-    SelectionEnabledChangedEvent.dispatch(selectionEnabled)
+    SelectionEnabledChangedEvent.dispatch(selectionEnabled);
   }
 
   getSelectionEnabled() {
@@ -774,7 +746,7 @@ export class Map extends L.Map {
 
   setPasteEnabled(pasteEnabled: boolean) {
     this.#pasteEnabled = pasteEnabled;
-    PasteEnabledChangedEvent.dispatch(pasteEnabled)
+    PasteEnabledChangedEvent.dispatch(pasteEnabled);
   }
 
   getPasteEnabled() {
@@ -822,18 +794,16 @@ export class Map extends L.Map {
   /* Event handlers */
   #onStateChanged(state: OlympusState, subState: OlympusSubState) {
     /* Operations to perform when leaving a state */
-    this.getSelectedCoalitionArea()?.setEditing(false);
     this.#currentSpawnMarker?.removeFrom(this);
     this.#currentSpawnMarker = null;
     this.#currentEffectMarker?.removeFrom(this);
     this.#currentEffectMarker = null;
-    
+
     if (state !== OlympusState.UNIT_CONTROL) {
       getApp().getUnitsManager().deselectAllUnits();
       this.setContextAction(null);
       this.setContextActionSet(null);
     }
-    if (state !== OlympusState.DRAW || (state === OlympusState.DRAW && subState !== DrawSubState.EDIT)) this.deselectAllCoalitionAreas();
     this.getContainer().classList.remove(`explosion-cursor`);
     ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
 
@@ -862,17 +832,7 @@ export class Map extends L.Map {
     } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
       console.log(this.#contextAction);
-    } else if (state === OlympusState.DRAW) {
-      if (subState == DrawSubState.DRAW_POLYGON) {
-        this.#coalitionAreas.push(new CoalitionPolygon([]));
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
-      } else if (subState === DrawSubState.DRAW_CIRCLE) {
-        this.#coalitionAreas.push(new CoalitionCircle(new L.LatLng(0, 0), { radius: 1000 }));
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].addTo(this);
-        this.#coalitionAreas[this.#coalitionAreas.length - 1].setSelected(true);
-      }
-    }
+    } 
   }
 
   #onDragStart(e: any) {
@@ -935,7 +895,7 @@ export class Map extends L.Map {
           console.log(`Left short click at ${e.latlng}`);
 
           if (this.#pasteEnabled) {
-            getApp().getUnitsManager().paste(e.latlng)
+            getApp().getUnitsManager().paste(e.latlng);
           }
 
           /* Execute the short click action */
@@ -982,27 +942,7 @@ export class Map extends L.Map {
               }
             }
           } else if (getApp().getState() === OlympusState.DRAW) {
-            if (getApp().getSubState() === DrawSubState.DRAW_POLYGON) {
-              const selectedArea = this.getSelectedCoalitionArea();
-              if (selectedArea && selectedArea instanceof CoalitionPolygon) {
-                selectedArea.addTemporaryLatLng(e.latlng);
-              }
-            } else if (getApp().getSubState() === DrawSubState.DRAW_CIRCLE) {
-              const selectedArea = this.getSelectedCoalitionArea();
-              if (selectedArea && selectedArea instanceof CoalitionCircle) {
-                if (selectedArea.getLatLng().lat == 0 && selectedArea.getLatLng().lng == 0) selectedArea.setLatLng(e.latlng);
-                getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
-              }
-            } else if (getApp().getSubState() == DrawSubState.NO_SUBSTATE) {
-              this.deselectAllCoalitionAreas();
-              for (let idx = 0; idx < this.#coalitionAreas.length; idx++) {
-                if (areaContains(e.latlng, this.#coalitionAreas[idx])) {
-                  this.#coalitionAreas[idx].setSelected(true);
-                  getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
-                  break;
-                }
-              }
-            }
+            getApp().getCoalitionAreasManager().onLeftShortClick(e);
           } else if (getApp().getState() === OlympusState.JTAC) {
             // TODO less redundant way to do this
             if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
@@ -1097,8 +1037,12 @@ export class Map extends L.Map {
 
     this.setPasteEnabled(false);
 
-    if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
-    else getApp().setState(getApp().getState());
+    if (getApp().getState() === OlympusState.DRAW) {
+      getApp().getCoalitionAreasManager().onDoubleClick(e);
+    } else {
+      if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
+      else getApp().setState(getApp().getState());
+    }
   }
 
   #onMouseMove(e: any) {

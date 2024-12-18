@@ -12,7 +12,7 @@ let totalPolygons = 0;
 export class CoalitionPolygon extends Polygon {
   #coalition: Coalition = "blue";
   #selected: boolean = true;
-  #editing: boolean = true;
+  #creating: boolean = true;
   #handles: CoalitionAreaHandle[] = [];
   #middleHandles: CoalitionAreaMiddleHandle[] = [];
   #activeIndex: number = 0;
@@ -43,9 +43,7 @@ export class CoalitionPolygon extends Polygon {
       this.#drawLabel();
     });
 
-    this.on("remove", () => {
-      this.#label?.removeFrom(this._map);
-    });
+    getApp().getMap().addLayer(this);
   }
 
   setCoalition(coalition: Coalition) {
@@ -63,12 +61,12 @@ export class CoalitionPolygon extends Polygon {
     this.#setHandles();
     this.#drawLabel();
     this.setOpacity(selected ? 1 : 0.5);
-    if (!this.getSelected() && this.getEditing()) {
+    if (!this.getSelected() && this.getCreating()) {
       /* Remove the vertex we were working on */
       var latlngs = this.getLatLngs()[0] as LatLng[];
       latlngs.splice(this.#activeIndex, 1);
       this.setLatLngs(latlngs);
-      this.setEditing(false);
+      this.setCreating(false);
     }
 
     if (selected) CoalitionAreaSelectedEvent.dispatch(this);
@@ -81,17 +79,17 @@ export class CoalitionPolygon extends Polygon {
     return this.#selected;
   }
 
-  setEditing(editing: boolean) {
-    this.#editing = editing;
+  setCreating(creating: boolean) {
+    this.#creating = creating;
     this.#setHandles();
     var latlngs = this.getLatLngs()[0] as LatLng[];
 
     /* Remove areas with less than 2 vertexes */
-    if (latlngs.length <= 2) getApp().getMap().deleteCoalitionArea(this);
+    if (latlngs.length <= 2) getApp().getCoalitionAreasManager().deleteCoalitionArea(this);
   }
 
-  getEditing() {
-    return this.#editing;
+  getCreating() {
+    return this.#creating;
   }
 
   addTemporaryLatLng(latlng: LatLng) {
@@ -115,9 +113,16 @@ export class CoalitionPolygon extends Polygon {
     this.#drawLabel();
   }
 
+  onAdd(map: Map): this {
+    super.onAdd(map);
+    this.#drawLabel();
+    return this;
+  }
+
   onRemove(map: Map): this {
     super.onRemove(map);
-    this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(getApp().getMap()));
+    this.#label?.removeFrom(map);
+    this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(map));
     return this;
   }
 
@@ -176,7 +181,6 @@ export class CoalitionPolygon extends Polygon {
           const middleHandle = new CoalitionAreaMiddleHandle(middleLatLng);
           middleHandle.addTo(getApp().getMap());
           middleHandle.on("click", (e: any) => {
-            getApp().getMap().preventClicks();
             this.#activeIndex = idx - 1;
             this.addTemporaryLatLng(middleLatLng);
           });

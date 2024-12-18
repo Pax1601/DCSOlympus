@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
-import { FaTrash } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaTrash } from "react-icons/fa";
 import { getApp } from "../../olympusapp";
 import { OlStateButton } from "../components/olstatebutton";
 import { faDrawPolygon } from "@fortawesome/free-solid-svg-icons";
@@ -13,14 +13,14 @@ import { Coalition } from "../../types/types";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
 import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
-import { AppStateChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
-import { UnitBlueprint } from "../../interfaces";
+import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
+import { FaXmark } from "react-icons/fa6";
 
 export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
   const [activeCoalitionArea, setActiveCoalitionArea] = useState(null as null | CoalitionPolygon | CoalitionCircle);
-  const [areaCoalition, setAreaCoalition] = useState("blue" as Coalition);
+  const [coalitionAreas, setCoalitionAreas] = useState([] as (CoalitionPolygon | CoalitionCircle)[]);
   const [IADSDensity, setIADSDensity] = useState(50);
   const [IADSDistribution, setIADSDistribution] = useState(50);
   const [forceCoalitionAppropriateUnits, setForceCoalitionApproriateUnits] = useState(false);
@@ -38,27 +38,15 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
   /* Get all the unique types and eras for groundunits */
   let types = IADSTypes;
-  let eras = getApp()?.getUnitsManager().getDatabase().getEras().sort((era1, era2) => ERAS_ORDER[era1] > ERAS_ORDER[era2] ? 1: -1 );
-
-  useEffect(() => {
-    if (getApp()) {
-      // TODO
-      ///* If we are not in polygon drawing mode, force the draw polygon button off */
-      //if (drawingPolygon && getApp().getState() !== COALITIONAREA_DRAW_POLYGON) setDrawingPolygon(false);
-      //
-      ///* If we are not in circle drawing mode, force the draw circle button off */
-      //if (drawingCircle && getApp().getState() !== COALITIONAREA_DRAW_CIRCLE) setDrawingCircle(false);
-      //
-      ///* If we are not in any drawing mode, force the map in edit mode */
-      //if (props.open && !drawingPolygon && !drawingCircle) getApp().getMap().setState(COALITIONAREA_EDIT);
-      //
-      ///* Align the state of the coalition toggle to the coalition of the area */
-      //if (activeCoalitionArea && activeCoalitionArea?.getCoalition() !== areaCoalition) setAreaCoalition(activeCoalitionArea?.getCoalition());
-    }
-  });
+  let eras = getApp()
+    ?.getUnitsManager()
+    .getDatabase()
+    .getEras()
+    .sort((era1, era2) => (ERAS_ORDER[era1] > ERAS_ORDER[era2] ? 1 : -1));
 
   useEffect(() => {
     CoalitionAreaSelectedEvent.on((coalitionArea) => setActiveCoalitionArea(coalitionArea));
+    CoalitionAreasChangedEvent.on((coalitionAreas) => setCoalitionAreas([...coalitionAreas]));
   }, []);
 
   return (
@@ -67,43 +55,87 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
       title="Draw"
       onClose={props.onClose}
       canBeHidden={true}
-      showBackButton={activeCoalitionArea !== null}
+      showBackButton={appSubState !== DrawSubState.NO_SUBSTATE}
       onBack={() => {
+        getApp().getCoalitionAreasManager().setSelectedArea(null);
         getApp().setState(OlympusState.DRAW, DrawSubState.NO_SUBSTATE);
       }}
     >
       <>
-        {appState === OlympusState.DRAW && appSubState !== DrawSubState.EDIT && (
-          <div className="flex flex-col gap-2 p-6 text-sm text-gray-400">
-            <OlStateButton
-              className="!w-full"
-              icon={faDrawPolygon}
-              tooltip={"Add a new polygon"}
-              checked={appSubState === DrawSubState.DRAW_POLYGON}
-              onClick={() => {
-                if (appSubState === DrawSubState.DRAW_POLYGON) getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
-                else getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_POLYGON);
-              }}
-            >
-              <div className="text-sm">Add polygon</div>
-            </OlStateButton>
-            <OlStateButton
-              className="!w-full"
-              icon={faCircle}
-              tooltip={"Add a new circle"}
-              checked={appSubState === DrawSubState.DRAW_CIRCLE}
-              onClick={() => {
-                if (appSubState === DrawSubState.DRAW_CIRCLE) getApp().setState(OlympusState.DRAW);
-                else getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_CIRCLE);
-              }}
-            >
-              <div className="text-sm">Add circle</div>
-            </OlStateButton>
+        {appState === OlympusState.DRAW && appSubState === DrawSubState.NO_SUBSTATE && (
+          <div className="flex flex-col gap-2 text-sm text-gray-400">
+            <div className="flex flex-col bg-olympus-200/30">
+              {coalitionAreas.map((coalitionArea) => {
+                return (
+                  <div
+                    data-coalition={coalitionArea.getCoalition()}
+                    className={`
+                      flex cursor-pointer content-center border-l-4 px-4
+                      text-base text-white
+                      data-[coalition="blue"]:border-blue-500
+                      data-[coalition="neutral"]:border-gray-500
+                      data-[coalition="red"]:border-red-500
+                      hover:bg-white/10
+                    `}
+                    onClick={() => {
+                      coalitionArea.setSelected(true);
+                      getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
+                    }}
+                  >
+                    <div className="py-3">{coalitionArea.getLabelText()}</div>
+                    <FaArrowUp
+                      onClick={(ev) => {
+                        ev.stopPropagation();
+                        getApp().getCoalitionAreasManager().moveAreaUp(coalitionArea);
+                      }}
+                      className={`
+                        my-auto ml-auto rounded-md p-2 text-3xl
+                        hover:bg-white/10
+                      `}
+                    />
+                    <FaArrowDown
+                      onClick={(ev) => {
+                        ev.stopPropagation();
+                        getApp().getCoalitionAreasManager().moveCoalitionAreaDown(coalitionArea);
+                      }}
+                      className={`
+                        my-auto rounded-md p-2 text-3xl
+                        hover:bg-white/10
+                      `}
+                    />
+                    <FaXmark
+                      onClick={(ev) => {
+                        ev.stopPropagation();
+                        getApp().getCoalitionAreasManager().deleteCoalitionArea(coalitionArea);
+                      }}
+                      className={`
+                        my-auto rounded-md p-2 text-3xl
+                        hover:bg-red-500/50
+                      `}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col gap-2 p-6">
+              <OlStateButton
+                className="!w-full"
+                icon={faDrawPolygon}
+                checked={false}
+                onClick={() => getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_POLYGON)}
+              >
+                <div className="text-sm">Add polygon</div>
+              </OlStateButton>
+              <OlStateButton className="!w-full" icon={faCircle} checked={false} onClick={() => getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_CIRCLE)}>
+                <div className="text-sm">Add circle</div>
+              </OlStateButton>
+            </div>
           </div>
         )}
       </>
       <div>
-        {activeCoalitionArea !== null && appSubState === DrawSubState.EDIT && (
+        {activeCoalitionArea !== null && (
           <div className={`flex flex-col gap-4 py-4`}>
             <div
               className={`
@@ -114,9 +146,13 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               <div className="my-auto flex justify-between text-md">
                 Area label
                 <div
-                  className="rounded-md bg-red-800 p-2"
+                  className={`
+                    cursor-pointer rounded-md bg-red-600 p-2
+                    hover:bg-red-400
+                  `}
                   onClick={() => {
-                    getApp().getMap().deleteCoalitionArea(activeCoalitionArea);
+                    getApp().getCoalitionAreasManager().deleteCoalitionArea(activeCoalitionArea);
+                    getApp().setState(OlympusState.DRAW);
                     setActiveCoalitionArea(null);
                   }}
                 >
@@ -144,13 +180,12 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
             >
               <div className="my-auto text-md">Coalition: </div>
               <OlCoalitionToggle
-                coalition={areaCoalition}
+                coalition={activeCoalitionArea.getCoalition()}
                 onClick={() => {
                   let newCoalition = "";
-                  if (areaCoalition === "blue") newCoalition = "neutral";
-                  else if (areaCoalition === "neutral") newCoalition = "red";
-                  else if (areaCoalition === "red") newCoalition = "blue";
-                  setAreaCoalition(newCoalition as Coalition);
+                  if (activeCoalitionArea.getCoalition() === "blue") newCoalition = "neutral";
+                  else if (activeCoalitionArea.getCoalition() === "neutral") newCoalition = "red";
+                  else if (activeCoalitionArea.getCoalition() === "red") newCoalition = "blue";
                   activeCoalitionArea.setCoalition(newCoalition as Coalition);
                 }}
               ></OlCoalitionToggle>
@@ -161,9 +196,11 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 bg-olympus-600 p-5
               `}
             >
-              <div className={`
-                border-b-2 border-b-olympus-100 pb-4 text-gray-300
-              `}>Automatic IADS generation</div>
+              <div
+                className={`border-b-2 border-b-olympus-100 pb-4 text-gray-300`}
+              >
+                Automatic IADS generation
+              </div>
               <OlDropdown className="" label="Units types">
                 {types.map((type, idx) => {
                   if (!(type in typesSelection)) {

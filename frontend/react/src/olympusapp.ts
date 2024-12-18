@@ -26,6 +26,7 @@ import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
 import { ControllerManager } from "./controllers/controllermanager";
 import { AWACSController } from "./controllers/awacs";
+import { CoalitionAreasManager } from "./map/coalitionarea/coalitionareamanager";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -50,6 +51,7 @@ export class OlympusApp {
   #audioManager: AudioManager;
   #sessionDataManager: SessionDataManager;
   #controllerManager: ControllerManager;
+  #coalitionAreasManager: CoalitionAreasManager;
   //#pluginsManager: // TODO
 
   constructor() {
@@ -98,6 +100,10 @@ export class OlympusApp {
     return this.#controllerManager;
   }
 
+  getCoalitionAreasManager() {
+    return this.#coalitionAreasManager;
+  }
+
   /* TODO
     getPluginsManager() {
         return null //  this.#pluginsManager as PluginsManager;
@@ -117,6 +123,7 @@ export class OlympusApp {
     this.#weaponsManager = new WeaponsManager();
     this.#audioManager = new AudioManager();
     this.#controllerManager = new ControllerManager();
+    this.#coalitionAreasManager = new CoalitionAreasManager();
 
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");

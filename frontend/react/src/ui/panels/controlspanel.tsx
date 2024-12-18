@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { faFighterJet, faHandPointer, faJetFighter, faMap, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
+import { DrawSubState, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
 import { AppStateChangedEvent, ContextActionSetChangedEvent, MapOptionsChangedEvent, ShortcutsChangedEvent } from "../../events";
-import { ContextAction } from "../../unit/contextaction";
 import { ContextActionSet } from "../../unit/contextactionset";
 import { MapToolBar } from "./maptoolbar";
 
@@ -22,6 +21,8 @@ export function ControlsPanel(props: {}) {
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [shortcuts, setShortcuts] = useState({});
   const [contextActionSet, setContextActionSet] = useState(null as null | ContextActionSet);
+
+  // TODO change constant references of "Shift with actual keybind"
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -100,7 +101,7 @@ export function ControlsPanel(props: {}) {
     } else if (appState === OlympusState.SPAWN) {
       controls = [
         {
-          actions: [touch ? faHandPointer : "LMB", 2],
+          actions: [touch ? faHandPointer : "LMB"],
           text: appSubState === SpawnSubState.NO_SUBSTATE ? "Close spawn menu" : "Return to spawn menu",
         },
         {
@@ -121,6 +122,64 @@ export function ControlsPanel(props: {}) {
         controls.unshift({
           actions: [touch ? faHandPointer : "LMB"],
           text: "Spawn effect",
+        });
+      }
+    } else if (appState === OlympusState.DRAW) {
+      controls = [
+        {
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          text: "Move map location",
+        },
+      ];
+
+      if (appSubState === DrawSubState.NO_SUBSTATE) {
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Close draw menu",
+        });
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Select drawing",
+        });
+      }
+
+      if (appSubState === DrawSubState.DRAW_CIRCLE) {
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Add new circle",
+        });
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          text: "Drag circle",
+        });
+      }
+
+      if (appSubState === DrawSubState.DRAW_POLYGON) {
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Add point to polygon",
+        });
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          text: "Drag polygon",
+        });
+      }
+
+      if (appSubState === DrawSubState.EDIT) {
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Add/drag point",
+        });
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB", "Drag"],
+          text: "Drag drawing",
+        });
+      }
+
+      if (appSubState !== DrawSubState.NO_SUBSTATE) {
+        controls.push({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Deselect drawing",
         });
       }
     } else {
@@ -167,14 +226,9 @@ export function ControlsPanel(props: {}) {
                 return (
                   <div key={idx} className="flex gap-1">
                     <div>
-                      {typeof action === "string" || typeof action === "number" ? (
-                        action
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={action}
-                          className={`my-auto ml-auto`}
-                        />
-                      )}
+                      {typeof action === "string" || typeof action === "number" ? action : <FontAwesomeIcon icon={action} className={`
+                        my-auto ml-auto
+                      `} />}
                     </div>
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "string" && <div>+</div>}
                     {idx < control.actions.length - 1 && typeof control.actions[idx + 1] === "number" && <div>x</div>}

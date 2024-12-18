@@ -229,6 +229,19 @@ export class CoalitionAreaSelectedEvent {
   }
 }
 
+export class CoalitionAreasChangedEvent {
+  static on(callback: (coalitionAreas: (CoalitionCircle | CoalitionPolygon)[]) => void) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.coalitionAreas);
+    });
+  }
+
+  static dispatch(coalitionAreas: (CoalitionCircle | CoalitionPolygon)[]) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { coalitionAreas } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 export class AirbaseSelectedEvent {
   static on(callback: (airbase: Airbase | null) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {

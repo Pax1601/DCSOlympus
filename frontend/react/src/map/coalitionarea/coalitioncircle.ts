@@ -11,7 +11,7 @@ let totalCircles = 0;
 export class CoalitionCircle extends Circle {
   #coalition: Coalition = "blue";
   #selected: boolean = true;
-  #editing: boolean = true;
+  #creating: boolean = true;
   #radiusHandle: CoalitionAreaHandle;
   #labelText: string;
   #label: Marker;
@@ -39,9 +39,7 @@ export class CoalitionCircle extends Circle {
       this.#drawLabel();
     });
 
-    this.on("remove", () => {
-      this.#label.removeFrom(this._map);
-    });
+    getApp().getMap().addLayer(this);
   }
 
   setCoalition(coalition: Coalition) {
@@ -70,13 +68,16 @@ export class CoalitionCircle extends Circle {
     return this.#selected;
   }
 
-  setEditing(editing: boolean) {
-    this.#editing = editing;
+  setCreating(creating: boolean) {
+    this.#creating = creating;
     this.#setRadiusHandle();
+
+    /* Remove areas with less than 2 vertexes */
+    if (this.getLatLng().lat === 0 && this.getLatLng().lng === 0) getApp().getCoalitionAreasManager().deleteCoalitionArea(this);
   }
 
-  getEditing() {
-    return this.#editing;
+  getCreating() {
+    return this.#creating;
   }
 
   setOpacity(opacity: number) {
@@ -92,9 +93,16 @@ export class CoalitionCircle extends Circle {
     this.#drawLabel();
   }
 
+  onAdd(map: Map): this {
+    super.onAdd(map);
+    this.#drawLabel();
+    return this;
+  }
+
   onRemove(map: Map): this {
     super.onRemove(map);
-    this.#radiusHandle.removeFrom(getApp().getMap());
+    this.#label?.removeFrom(map);
+    this.#radiusHandle.removeFrom(map);
     return this;
   }
 
@@ -130,9 +138,8 @@ export class CoalitionCircle extends Circle {
   }
 
   #drawLabel() {
-    if (this.#label) {
-      this.#label.removeFrom(this._map);
-    }
+    this.#label?.removeFrom(this._map);
+    
     this.#label = new Marker(this.getLatLng(), {
       icon: new DivIcon({
         className: "label",
