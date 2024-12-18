@@ -26,6 +26,28 @@
                 "--vite"
             ],
             "restart": true
+        },  
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch server (core only, static)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--watch",
+                "src/**/*.ts",
+                "--exec",
+                "node",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "src/www.ts",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json"
+            ],
+            "restart": true
         },         
         {
             "type": "node",

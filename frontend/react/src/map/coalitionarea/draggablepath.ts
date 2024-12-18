@@ -1,6 +1,6 @@
 export const initDraggablePath = (L) => {
   //@ts-ignore
-  L.PathDraggable = L.Draggable.extend({
+  const PathDraggable = L.Draggable.extend({
     initialize: function (path) {
       this._path = path;
 
@@ -52,7 +52,7 @@ export const initDraggablePath = (L) => {
     addHooks: function () {
       if (!this._draggable) {
         //@ts-ignore
-        this._draggable = new L.PathDraggable(this._path);
+        this._draggable = new PathDraggable(this._path);
       }
 
       this._draggable.on(this.getEvents(), this).enable();
