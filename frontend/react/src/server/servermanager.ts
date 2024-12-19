@@ -582,7 +582,7 @@ export class ServerManager {
       window.setInterval(() => {
         if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getUnits((buffer: ArrayBuffer) => {
-            var time = getApp().getUnitsManager()?.update(buffer);
+            var time = getApp().getUnitsManager()?.update(buffer, false);
             return time;
           }, false);
         }
@@ -593,7 +593,7 @@ export class ServerManager {
       window.setInterval(() => {
         if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getWeapons((buffer: ArrayBuffer) => {
-            var time = getApp().getWeaponsManager()?.update(buffer);
+            var time = getApp().getWeaponsManager()?.update(buffer, false);
             return time;
           }, false);
         }
@@ -605,7 +605,7 @@ export class ServerManager {
         () => {
           if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
             this.getUnits((buffer: ArrayBuffer) => {
-              var time = getApp().getUnitsManager()?.update(buffer);
+              var time = getApp().getUnitsManager()?.update(buffer, true);
               return time;
             }, true);
           }
@@ -636,7 +636,7 @@ export class ServerManager {
       window.setInterval(() => {
         if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
           this.getWeapons((buffer: ArrayBuffer) => {
-            var time = getApp().getWeaponsManager()?.update(buffer);
+            var time = getApp().getWeaponsManager()?.update(buffer, true);
             return time;
           }, true);
         }
@@ -664,12 +664,12 @@ export class ServerManager {
     });
 
     this.getWeapons((buffer: ArrayBuffer) => {
-      var time = getApp().getWeaponsManager()?.update(buffer);
+      var time = getApp().getWeaponsManager()?.update(buffer, true);
       return time;
     }, true);
 
     this.getUnits((buffer: ArrayBuffer) => {
-      var time = getApp().getUnitsManager()?.update(buffer);
+      var time = getApp().getUnitsManager()?.update(buffer, true);
       return time;
     }, true);
   }

@@ -51,6 +51,7 @@ export interface SessionData {
     | { type: 'circle', label: string; latlng: { lat: number; lng: number }; radius: number; coalition: Coalition }
     | { type: 'polygon', label: string; latlngs: { lat: number; lng: number }[]; coalition: Coalition }
   )[];
+  hotgroups?: {[key: string]: number[]}
 }
 
 export interface ProfileOptions {

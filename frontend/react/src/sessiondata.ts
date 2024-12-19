@@ -4,7 +4,15 @@ import { FileSource } from "./audio/filesource";
 import { RadioSink } from "./audio/radiosink";
 import { UnitSink } from "./audio/unitsink";
 import { OlympusState } from "./constants/constants";
-import { AudioSinksChangedEvent, AudioSourcesChangedEvent, CoalitionAreasChangedEvent, SessionDataChangedEvent, SessionDataLoadedEvent, SessionDataSavedEvent } from "./events";
+import {
+  AudioSinksChangedEvent,
+  AudioSourcesChangedEvent,
+  CoalitionAreasChangedEvent,
+  HotgroupsChangedEvent,
+  SessionDataChangedEvent,
+  SessionDataLoadedEvent,
+  SessionDataSavedEvent,
+} from "./events";
 import { SessionData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
@@ -16,95 +24,109 @@ export class SessionDataManager {
   #saveSessionDataTimeout: number | null = null;
 
   constructor() {
-    AudioSinksChangedEvent.on((audioSinks) => {
-      if (getApp().getAudioManager().isRunning()) {
-        this.#sessionData.radios = audioSinks
-          .filter((sink) => sink instanceof RadioSink)
-          .map((radioSink) => {
-            return {
-              frequency: radioSink.getFrequency(),
-              modulation: radioSink.getModulation(),
-              pan: radioSink.getPan()
-            };
-          });
+    SessionDataLoadedEvent.on(() => {
+      /* Wait for all the loading to be completed before enabling session data saving */
+      window.setTimeout(() => {
+        AudioSinksChangedEvent.on((audioSinks) => {
+          if (getApp().getAudioManager().isRunning()) {
+            this.#sessionData.radios = audioSinks
+              .filter((sink) => sink instanceof RadioSink)
+              .map((radioSink) => {
+                return {
+                  frequency: radioSink.getFrequency(),
+                  modulation: radioSink.getModulation(),
+                  pan: radioSink.getPan(),
+                };
+              });
 
-        this.#sessionData.unitSinks = audioSinks
-          .filter((sink) => sink instanceof UnitSink)
-          .map((unitSink) => {
-            return {
-              ID: unitSink.getUnit().ID,
-            };
-          });
+            this.#sessionData.unitSinks = audioSinks
+              .filter((sink) => sink instanceof UnitSink)
+              .map((unitSink) => {
+                return {
+                  ID: unitSink.getUnit().ID,
+                };
+              });
 
-        this.#sessionData.connections = [];
-        let counter = 0;
-        let sources = getApp().getAudioManager().getSources();
-        let sinks = getApp().getAudioManager().getSinks();
-        sources.forEach((source, idx) => {
-          counter++;
-          source.getConnectedTo().forEach((sink) => {
-            if (sinks.indexOf(sink as AudioSink) !== undefined) {
-              this.#sessionData.connections?.push([idx, sinks.indexOf(sink as AudioSink)]);
-            }
-          });
+            this.#sessionData.connections = [];
+            let counter = 0;
+            let sources = getApp().getAudioManager().getSources();
+            let sinks = getApp().getAudioManager().getSinks();
+            sources.forEach((source, idx) => {
+              counter++;
+              source.getConnectedTo().forEach((sink) => {
+                if (sinks.indexOf(sink as AudioSink) !== undefined) {
+                  this.#sessionData.connections?.push([idx, sinks.indexOf(sink as AudioSink)]);
+                }
+              });
+            });
+
+            this.#saveSessionData();
+          }
         });
 
-        this.#saveSessionData();
-      }
-    });
+        AudioSourcesChangedEvent.on((audioSources) => {
+          if (getApp().getAudioManager().isRunning()) {
+            this.#sessionData.fileSources = audioSources
+              .filter((sink) => sink instanceof FileSource)
+              .map((fileSource) => {
+                return { filename: fileSource.getFilename(), volume: fileSource.getVolume() };
+              });
 
-    AudioSourcesChangedEvent.on((audioSources) => {
-      if (getApp().getAudioManager().isRunning()) {
-        this.#sessionData.fileSources = audioSources
-          .filter((sink) => sink instanceof FileSource)
-          .map((fileSource) => {
-            return { filename: fileSource.getFilename(), volume: fileSource.getVolume() };
-          });
+            this.#sessionData.connections = [];
+            let counter = 0;
+            let sources = getApp().getAudioManager().getSources();
+            let sinks = getApp().getAudioManager().getSinks();
+            sources.forEach((source, idx) => {
+              counter++;
+              source.getConnectedTo().forEach((sink) => {
+                if (sinks.indexOf(sink as AudioSink) !== undefined) {
+                  this.#sessionData.connections?.push([idx, sinks.indexOf(sink as AudioSink)]);
+                }
+              });
+            });
 
-        this.#sessionData.connections = [];
-        let counter = 0;
-        let sources = getApp().getAudioManager().getSources();
-        let sinks = getApp().getAudioManager().getSinks();
-        sources.forEach((source, idx) => {
-          counter++;
-          source.getConnectedTo().forEach((sink) => {
-            if (sinks.indexOf(sink as AudioSink) !== undefined) {
-              this.#sessionData.connections?.push([idx, sinks.indexOf(sink as AudioSink)]);
-            }
-          });
+            this.#saveSessionData();
+          }
         });
 
-        this.#saveSessionData();
-      }
+        CoalitionAreasChangedEvent.on(() => {
+          this.#sessionData.coalitionAreas = [];
+          getApp()
+            .getCoalitionAreasManager()
+            .getAreas()
+            .forEach((area) => {
+              if (area instanceof CoalitionCircle) {
+                this.#sessionData.coalitionAreas?.push({
+                  type: "circle",
+                  latlng: { lat: area.getLatLng().lat, lng: area.getLatLng().lng },
+                  coalition: area.getCoalition(),
+                  label: area.getLabelText(),
+                  radius: area.getRadius(),
+                });
+              } else if (area instanceof CoalitionPolygon) {
+                this.#sessionData.coalitionAreas?.push({
+                  type: "polygon",
+                  latlngs: (area.getLatLngs()[0] as LatLng[]).map((latlng) => {
+                    return { lat: latlng.lat, lng: latlng.lng };
+                  }),
+                  coalition: area.getCoalition(),
+                  label: area.getLabelText(),
+                });
+              }
+            });
+
+          this.#saveSessionData();
+        });
+
+        HotgroupsChangedEvent.on((hotgroups) => {
+          this.#sessionData.hotgroups = {};
+          Object.keys(hotgroups).forEach((hotgroup) => {
+            (this.#sessionData.hotgroups as { [key: string]: number[] })[hotgroup] = hotgroups[hotgroup].map((unit) => unit.ID);
+          });
+          this.#saveSessionData();
+        });
+      }, 200);
     });
-
-    CoalitionAreasChangedEvent.on(() => {
-      this.#sessionData.coalitionAreas = []
-      getApp().getCoalitionAreasManager().getAreas().forEach((area) => {
-        if (area instanceof CoalitionCircle) {
-          this.#sessionData.coalitionAreas?.push(
-            {
-              type: 'circle',
-              latlng: {lat: area.getLatLng().lat, lng: area.getLatLng().lng},
-              coalition: area.getCoalition(),
-              label: area.getLabelText(),
-              radius: area.getRadius()
-            }
-          )
-        } else if (area instanceof CoalitionPolygon) {
-          this.#sessionData.coalitionAreas?.push(
-            {
-              type: 'polygon',
-              latlngs: (area.getLatLngs()[0] as LatLng[]).map((latlng) => {return {lat: latlng.lat, lng: latlng.lng}}),
-              coalition: area.getCoalition(),
-              label: area.getLabelText()
-            }
-          )
-        }
-      })
-
-      this.#saveSessionData();
-    })
   }
 
   loadSessionData(sessionHash?: string) {
@@ -146,7 +168,7 @@ export class SessionDataManager {
 
   #saveSessionData() {
     if (getApp().getState() === OlympusState.SERVER) return;
-    
+
     SessionDataChangedEvent.dispatch(this.#sessionData);
 
     if (this.#saveSessionDataTimeout) window.clearTimeout(this.#saveSessionDataTimeout);

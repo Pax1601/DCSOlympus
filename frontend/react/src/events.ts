@@ -14,10 +14,10 @@ import { Unit } from "./unit/unit";
 import { LatLng } from "leaflet";
 
 export class BaseOlympusEvent {
-  static on(callback: () => void) {
+  static on(callback: () => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback();
-    });
+    }, {once: singleShot});
   }
 
   static dispatch() {
@@ -27,10 +27,10 @@ export class BaseOlympusEvent {
 }
 
 export class BaseUnitEvent {
-  static on(callback: (unit: Unit) => void) {
+  static on(callback: (unit: Unit) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.unit);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(unit: Unit) {
@@ -42,10 +42,10 @@ export class BaseUnitEvent {
 
 /************** App events ***************/
 export class AppStateChangedEvent {
-  static on(callback: (state: OlympusState, subState: OlympusSubState) => void) {
+  static on(callback: (state: OlympusState, subState: OlympusSubState) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.state, ev.detail.subState);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(state: OlympusState, subState: OlympusSubState) {
@@ -57,10 +57,10 @@ export class AppStateChangedEvent {
 }
 
 export class ConfigLoadedEvent {
-  static on(callback: (config: OlympusConfig) => void) {
+  static on(callback: (config: OlympusConfig) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(config: OlympusConfig) {
@@ -71,10 +71,10 @@ export class ConfigLoadedEvent {
 }
 
 export class ServerStatusUpdatedEvent {
-  static on(callback: (serverStatus: ServerStatus) => void) {
+  static on(callback: (serverStatus: ServerStatus) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.serverStatus);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(serverStatus: ServerStatus) {
@@ -86,10 +86,10 @@ export class ServerStatusUpdatedEvent {
 export class UnitDatabaseLoadedEvent extends BaseOlympusEvent {}
 
 export class InfoPopupEvent {
-  static on(callback: (messages: string[]) => void) {
+  static on(callback: (messages: string[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.messages);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(messages: string[]) {
@@ -99,10 +99,10 @@ export class InfoPopupEvent {
 }
 
 export class ShortcutsChangedEvent {
-  static on(callback: (shortcuts: { [key: string]: Shortcut }) => void) {
+  static on(callback: (shortcuts: { [key: string]: Shortcut }) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.shortcuts);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(shortcuts: { [key: string]: Shortcut }) {
@@ -112,10 +112,10 @@ export class ShortcutsChangedEvent {
 }
 
 export class ShortcutChangedEvent {
-  static on(callback: (shortcut: Shortcut) => void) {
+  static on(callback: (shortcut: Shortcut) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.shortcut);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(shortcut: Shortcut) {
@@ -125,10 +125,10 @@ export class ShortcutChangedEvent {
 }
 
 export class BindShortcutRequestEvent {
-  static on(callback: (shortcut: Shortcut) => void) {
+  static on(callback: (shortcut: Shortcut) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.shortcut);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(shortcut: Shortcut) {
@@ -138,10 +138,10 @@ export class BindShortcutRequestEvent {
 }
 
 export class ModalEvent {
-  static on(callback: (modal: boolean) => void) {
+  static on(callback: (modal: boolean) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.modal);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(modal: boolean) {
@@ -151,10 +151,10 @@ export class ModalEvent {
 }
 
 export class SessionDataChangedEvent {
-  static on(callback: (sessionData: SessionData) => void) {
+  static on(callback: (sessionData: SessionData) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.sessionData);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(sessionData: SessionData) {
@@ -168,10 +168,10 @@ export class SessionDataLoadedEvent extends SessionDataChangedEvent {}
 
 /************** Map events ***************/
 export class MouseMovedEvent {
-  static on(callback: (latlng: LatLng, elevation: number) => void) {
+  static on(callback: (latlng: LatLng, elevation: number) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.latlng, ev.detail.elevation);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(latlng: LatLng, elevation?: number) {
@@ -181,10 +181,10 @@ export class MouseMovedEvent {
 }
 
 export class HiddenTypesChangedEvent {
-  static on(callback: (hiddenTypes: MapHiddenTypes) => void) {
+  static on(callback: (hiddenTypes: MapHiddenTypes) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.hiddenTypes);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(hiddenTypes: MapHiddenTypes) {
@@ -194,10 +194,10 @@ export class HiddenTypesChangedEvent {
 }
 
 export class MapOptionsChangedEvent {
-  static on(callback: (mapOptions: MapOptions) => void) {
+  static on(callback: (mapOptions: MapOptions) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.mapOptions);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(mapOptions: MapOptions) {
@@ -207,10 +207,10 @@ export class MapOptionsChangedEvent {
 }
 
 export class MapSourceChangedEvent {
-  static on(callback: (source: string) => void) {
+  static on(callback: (source: string) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.source);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(source: string) {
@@ -220,10 +220,10 @@ export class MapSourceChangedEvent {
 }
 
 export class CoalitionAreaSelectedEvent {
-  static on(callback: (coalitionArea: CoalitionCircle | CoalitionPolygon | null) => void) {
+  static on(callback: (coalitionArea: CoalitionCircle | CoalitionPolygon | null) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.coalitionArea);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(coalitionArea: CoalitionCircle | CoalitionPolygon | null) {
@@ -235,10 +235,10 @@ export class CoalitionAreaSelectedEvent {
 export class CoalitionAreaChangedEvent extends CoalitionAreaSelectedEvent {}
 
 export class CoalitionAreasChangedEvent {
-  static on(callback: (coalitionAreas: (CoalitionCircle | CoalitionPolygon)[]) => void) {
+  static on(callback: (coalitionAreas: (CoalitionCircle | CoalitionPolygon)[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.coalitionAreas);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(coalitionAreas: (CoalitionCircle | CoalitionPolygon)[]) {
@@ -248,10 +248,10 @@ export class CoalitionAreasChangedEvent {
 }
 
 export class AirbaseSelectedEvent {
-  static on(callback: (airbase: Airbase | null) => void) {
+  static on(callback: (airbase: Airbase | null) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.airbase);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(airbase: Airbase | null) {
@@ -261,10 +261,10 @@ export class AirbaseSelectedEvent {
 }
 
 export class SelectionEnabledChangedEvent {
-  static on(callback: (enabled: boolean) => void) {
+  static on(callback: (enabled: boolean) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.enabled);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(enabled: boolean) {
@@ -274,10 +274,10 @@ export class SelectionEnabledChangedEvent {
 };
 
 export class PasteEnabledChangedEvent {
-  static on(callback: (enabled: boolean) => void) {
+  static on(callback: (enabled: boolean) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.enabled);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(enabled: boolean) {
@@ -287,10 +287,10 @@ export class PasteEnabledChangedEvent {
 };
 
 export class ContactsUpdatedEvent {
-  static on(callback: () => void) {
+  static on(callback: () => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback();
-    });
+    }, {once: singleShot});
   }
 
   static dispatch() {
@@ -300,10 +300,10 @@ export class ContactsUpdatedEvent {
 }
 
 export class ContextActionSetChangedEvent {
-  static on(callback: (contextActionSet: ContextActionSet | null) => void) {
+  static on(callback: (contextActionSet: ContextActionSet | null) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.contextActionSet);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(contextActionSet: ContextActionSet | null) {
@@ -313,10 +313,10 @@ export class ContextActionSetChangedEvent {
 }
 
 export class ContextActionChangedEvent {
-  static on(callback: (contextAction: ContextAction | null) => void) {
+  static on(callback: (contextAction: ContextAction | null) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.contextAction);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(contextAction: ContextAction | null) {
@@ -326,10 +326,10 @@ export class ContextActionChangedEvent {
 }
 
 export class CopiedUnitsEvents {
-  static on(callback: (unitsData: UnitData[]) => void) {
+  static on(callback: (unitsData: UnitData[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.unitsData);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(unitsData: UnitData[]) {
@@ -348,12 +348,14 @@ export class UnitSelectedEvent extends BaseUnitEvent {}
 export class UnitDeselectedEvent extends BaseUnitEvent {}
 export class UnitDeadEvent extends BaseUnitEvent {}
 export class SelectionClearedEvent extends BaseOlympusEvent {}
+export class UnitsRefreshed extends BaseOlympusEvent {}
+export class WeaponsRefreshed extends BaseOlympusEvent {}
 
 export class SelectedUnitsChangedEvent {
-  static on(callback: (selectedUnits: Unit[]) => void) {
+  static on(callback: (selectedUnits: Unit[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(selectedUnits: Unit[]) {
@@ -364,10 +366,10 @@ export class SelectedUnitsChangedEvent {
 }
 
 export class UnitExplosionRequestEvent {
-  static on(callback: (units: Unit[]) => void) {
+  static on(callback: (units: Unit[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.units);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(units: Unit[]) {
@@ -377,10 +379,10 @@ export class UnitExplosionRequestEvent {
 }
 
 export class FormationCreationRequestEvent {
-  static on(callback: (leader: Unit, wingmen: Unit[]) => void) {
+  static on(callback: (leader: Unit, wingmen: Unit[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.leader, ev.detail.wingmen);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(leader: Unit, wingmen: Unit[]) {
@@ -390,10 +392,10 @@ export class FormationCreationRequestEvent {
 }
 
 export class MapContextMenuRequestEvent {
-  static on(callback: (latlng: L.LatLng) => void) {
+  static on(callback: (latlng: L.LatLng) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.latlng);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(latlng: L.LatLng) {
@@ -403,10 +405,10 @@ export class MapContextMenuRequestEvent {
 }
 
 export class UnitContextMenuRequestEvent {
-  static on(callback: (unit: Unit) => void) {
+  static on(callback: (unit: Unit) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.unit);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(unit: Unit) {
@@ -416,10 +418,10 @@ export class UnitContextMenuRequestEvent {
 }
 
 export class SpawnContextMenuRequestEvent {
-  static on(callback: (latlng: L.LatLng) => void) {
+  static on(callback: (latlng: L.LatLng) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.latlng);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(latlng: L.LatLng) {
@@ -429,10 +431,10 @@ export class SpawnContextMenuRequestEvent {
 }
 
 export class HotgroupsChangedEvent {
-  static on(callback: (hotgroups: { [key: number]: Unit[] }) => void) {
+  static on(callback: (hotgroups: { [key: number]: Unit[] }) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.hotgroups);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(hotgroups: { [key: number]: Unit[] }) {
@@ -442,10 +444,10 @@ export class HotgroupsChangedEvent {
 }
 
 export class StarredSpawnsChangedEvent {
-  static on(callback: (starredSpawns: { [key: number]: SpawnRequestTable }) => void) {
+  static on(callback: (starredSpawns: { [key: number]: SpawnRequestTable }) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.starredSpawns);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(starredSpawns: { [key: number]: SpawnRequestTable }) {
@@ -455,10 +457,10 @@ export class StarredSpawnsChangedEvent {
 }
 
 export class AWACSReferenceChangedEvent {
-  static on(callback: (unit: Unit | null) => void) {
+  static on(callback: (unit: Unit | null) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(unit: Unit | null) {
@@ -469,10 +471,10 @@ export class AWACSReferenceChangedEvent {
 
 /************** Command mode events ***************/
 export class CommandModeOptionsChangedEvent {
-  static on(callback: (options: CommandModeOptions) => void) {
+  static on(callback: (options: CommandModeOptions) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(options: CommandModeOptions) {
@@ -483,10 +485,10 @@ export class CommandModeOptionsChangedEvent {
 
 /************** Audio backend events ***************/
 export class AudioSourcesChangedEvent {
-  static on(callback: (audioSources: AudioSource[]) => void) {
+  static on(callback: (audioSources: AudioSource[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.audioSources);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(audioSources: AudioSource[]) {
@@ -497,10 +499,10 @@ export class AudioSourcesChangedEvent {
 }
 
 export class AudioSinksChangedEvent {
-  static on(callback: (audioSinks: AudioSink[]) => void) {
+  static on(callback: (audioSinks: AudioSink[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.audioSinks);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(audioSinks: AudioSink[]) {
@@ -511,10 +513,10 @@ export class AudioSinksChangedEvent {
 }
 
 export class SRSClientsChangedEvent {
-  static on(callback: () => void) {
+  static on(callback: () => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback();
-    });
+    }, {once: singleShot});
   }
 
   static dispatch() {
@@ -524,10 +526,10 @@ export class SRSClientsChangedEvent {
 }
 
 export class AudioManagerStateChangedEvent {
-  static on(callback: (state: boolean) => void) {
+  static on(callback: (state: boolean) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.state);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(state: boolean) {
@@ -537,10 +539,10 @@ export class AudioManagerStateChangedEvent {
 }
 
 export class AudioManagerDevicesChangedEvent {
-  static on(callback: (devices: MediaDeviceInfo[]) => void) {
+  static on(callback: (devices: MediaDeviceInfo[]) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.devices);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(devices: MediaDeviceInfo[]) {
@@ -550,10 +552,10 @@ export class AudioManagerDevicesChangedEvent {
 }
 
 export class AudioManagerInputChangedEvent {
-  static on(callback: (input: MediaDeviceInfo) => void) {
+  static on(callback: (input: MediaDeviceInfo) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.input);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(input: MediaDeviceInfo) {
@@ -563,10 +565,10 @@ export class AudioManagerInputChangedEvent {
 }
 
 export class AudioManagerOutputChangedEvent {
-  static on(callback: (output: MediaDeviceInfo) => void) {
+  static on(callback: (output: MediaDeviceInfo) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.output);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(output: MediaDeviceInfo) {
@@ -577,10 +579,10 @@ export class AudioManagerOutputChangedEvent {
 
 /************** Mission data events ***************/
 export class BullseyesDataChanged {
-  static on(callback: (bullseyes: { [name: string]: Bullseye }) => void) {
+  static on(callback: (bullseyes: { [name: string]: Bullseye }) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.bullseyes);
-    });
+    }, {once: singleShot});
   }
 
   static dispatch(bullseyes: { [name: string]: Bullseye }) {

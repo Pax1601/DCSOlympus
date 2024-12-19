@@ -3,7 +3,7 @@ import { Weapon } from "./weapon";
 import { DataIndexes } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Contact } from "../interfaces";
-import { CommandModeOptionsChangedEvent } from "../events";
+import { CommandModeOptionsChangedEvent, WeaponsRefreshed } from "../events";
 
 /** The WeaponsManager handles the creation and update of weapons. Data is strictly updated by the server ONLY. */
 export class WeaponsManager {
@@ -55,7 +55,7 @@ export class WeaponsManager {
    * @param buffer The arraybuffer, encoded according to the ICD defined in: TODO Add reference to ICD
    * @returns The decoded updateTime of the data update.
    */
-  update(buffer: ArrayBuffer) {
+  update(buffer: ArrayBuffer, fullUpdate: boolean) {
     /* Extract the data from the arraybuffer. Since data is encoded dynamically (not all data is always present, but rather only the data that was actually updated since the last request).
         No a prori casting can be performed. On the contrary, the array is decoded incrementally, depending on the DataIndexes of the data. The actual data decoding is performed by the Weapon class directly. 
         Every time a piece of data is decoded the decoder seeker is incremented. */
@@ -82,6 +82,9 @@ export class WeaponsManager {
       /* Update the data of the weapon */
       this.#weapons[ID]?.setData(dataExtractor);
     }
+
+    if (fullUpdate) WeaponsRefreshed.dispatch();
+
     return updateTime;
   }
 

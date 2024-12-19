@@ -48,15 +48,21 @@ export class CoalitionAreasManager {
       const localSessionData = JSON.parse(JSON.stringify(sessionData)) as SessionData;
       this.#areas.forEach((area) => this.deleteCoalitionArea(area));
       localSessionData.coalitionAreas?.forEach((options) => {
-        if (options.type === 'circle') {
-          let newCircle = new CoalitionCircle(new LatLng(options.latlng.lat, options.latlng.lng), { radius: options.radius }, false);
-          newCircle.setCoalition(options.coalition);
-          newCircle.setLabelText(options.label);
-          newCircle.setSelected(false);
-          this.#areas.push(newCircle);
-        } else if (options.type === 'polygon') {
+        if (options.type === "circle") {
+          if (options.latlng.lat !== 0 && options.latlng.lng) {
+            let newCircle = new CoalitionCircle(new LatLng(options.latlng.lat, options.latlng.lng), { radius: options.radius }, false);
+            newCircle.setCoalition(options.coalition);
+            newCircle.setLabelText(options.label);
+            newCircle.setSelected(false);
+            this.#areas.push(newCircle);
+          }
+        } else if (options.type === "polygon") {
           if (options.latlngs.length >= 3) {
-            let newPolygon = new CoalitionPolygon(options.latlngs.map((latlng) => new LatLng(latlng.lat, latlng.lng)), {}, false);
+            let newPolygon = new CoalitionPolygon(
+              options.latlngs.map((latlng) => new LatLng(latlng.lat, latlng.lng)),
+              {},
+              false
+            );
             newPolygon.setCoalition(options.coalition);
             newPolygon.setLabelText(options.label);
             newPolygon.setSelected(false);

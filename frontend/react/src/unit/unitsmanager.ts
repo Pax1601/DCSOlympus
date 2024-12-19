@@ -21,12 +21,13 @@ import {
   HotgroupsChangedEvent,
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
+  SessionDataLoadedEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
+  UnitsRefreshed,
 } from "../events";
 import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
-import * as turfC from "@turf/clusters";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -45,7 +46,7 @@ export class UnitsManager {
   #unitDatabase: UnitDatabase;
   #protectionCallback: (units: Unit[]) => void = (units) => {};
   #AWACSReference: Unit | null = null;
-  #clusters: {[key: number]: Unit[]} = {};
+  #clusters: { [key: number]: Unit[] } = {};
 
   constructor() {
     this.#unitDatabase = new UnitDatabase();
@@ -62,6 +63,18 @@ export class UnitsManager {
     });
     UnitSelectedEvent.on((unit) => this.#onUnitSelection(unit));
     UnitDeselectedEvent.on((unit) => this.#onUnitDeselection(unit));
+
+    SessionDataLoadedEvent.on((sessionData) => {
+      UnitsRefreshed.on(() => {
+        const localSessionData = JSON.parse(JSON.stringify(sessionData));
+        Object.keys(localSessionData.hotgroups).forEach((hotgroup) => {
+          localSessionData.hotgroups[hotgroup].forEach((ID) => {
+            let unit = this.getUnitByID(ID);
+            if (unit) this.addToHotgroup(Number(hotgroup), [unit]);
+          });
+        });
+      }, true);
+    });
 
     getApp()
       .getShortcutManager()
@@ -194,7 +207,7 @@ export class UnitsManager {
    * @param buffer The arraybuffer, encoded according to the ICD defined in: TODO Add reference to ICD
    * @returns The decoded updateTime of the data update.
    */
-  update(buffer: ArrayBuffer) {
+  update(buffer: ArrayBuffer, fullUpdate: boolean) {
     /* Extract the data from the arraybuffer. Since data is encoded dynamically (not all data is always present, but rather only the data that was actually updated since the last request).
         No a prori casting can be performed. On the contrary, the array is decoded incrementally, depending on the DataIndexes of the data. The actual data decoding is performed by the Unit class directly. 
         Every time a piece of data is decoded the decoder seeker is incremented. */
@@ -280,6 +293,8 @@ export class UnitsManager {
 
     /* Compute the base clusters */
     this.#clusters = this.computeClusters();
+
+    if (fullUpdate) UnitsRefreshed.dispatch();
 
     return updateTime;
   }
@@ -1236,7 +1251,7 @@ export class UnitsManager {
     ); /* Can be applied to humans too */
     getApp().addInfoMessage(`${this.#copiedUnits.length} units copied`);
 
-    CopiedUnitsEvents.dispatch(this.#copiedUnits)
+    CopiedUnitsEvents.dispatch(this.#copiedUnits);
   }
 
   /*********************** Unit manipulation functions  ************************/
@@ -1288,13 +1303,12 @@ export class UnitsManager {
         var units: { ID: number; location: LatLng }[] = [];
         let markers: TemporaryUnitMarker[] = [];
         groups[groupName].forEach((unit: UnitData) => {
-          var position = location ? new LatLng(
-            location.lat + unit.position.lat - avgLat,
-            location.lng + unit.position.lng - avgLng
-          ) : new LatLng(
-            getApp().getMap().getMouseCoordinates().lat + unit.position.lat - avgLat,
-            getApp().getMap().getMouseCoordinates().lng + unit.position.lng - avgLng
-          );
+          var position = location
+            ? new LatLng(location.lat + unit.position.lat - avgLat, location.lng + unit.position.lng - avgLng)
+            : new LatLng(
+                getApp().getMap().getMouseCoordinates().lat + unit.position.lat - avgLat,
+                getApp().getMap().getMouseCoordinates().lng + unit.position.lng - avgLng
+              );
           markers.push(getApp().getMap().addTemporaryMarker(position, unit.name, unit.coalition));
           units.push({ ID: unit.ID, location: position });
         });
@@ -1571,12 +1585,11 @@ export class UnitsManager {
     //@ts-ignore
     var clustered = turf.clustersDbscan(geojson, distance, { minPoints: 1 });
 
-    let clusters: {[key: number]: Unit[]} = {};
+    let clusters: { [key: number]: Unit[] } = {};
     clustered.features.forEach((feature, idx) => {
-      if (clusters[feature.properties.cluster] === undefined)
-        clusters[feature.properties.cluster] = [] as Unit[];
+      if (clusters[feature.properties.cluster] === undefined) clusters[feature.properties.cluster] = [] as Unit[];
       clusters[feature.properties.cluster].push(units[idx]);
-    })
+    });
 
     return clusters;
   }
