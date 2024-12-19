@@ -1,10 +1,13 @@
+import { LatLng } from "leaflet";
 import { AudioSink } from "./audio/audiosink";
 import { FileSource } from "./audio/filesource";
 import { RadioSink } from "./audio/radiosink";
 import { UnitSink } from "./audio/unitsink";
 import { OlympusState } from "./constants/constants";
-import { AudioSinksChangedEvent, AudioSourcesChangedEvent, SessionDataLoadedEvent as SessionDataChangedEvent } from "./events";
+import { AudioSinksChangedEvent, AudioSourcesChangedEvent, CoalitionAreasChangedEvent, SessionDataChangedEvent, SessionDataLoadedEvent, SessionDataSavedEvent } from "./events";
 import { SessionData } from "./interfaces";
+import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
+import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { getApp } from "./olympusapp";
 
 export class SessionDataManager {
@@ -74,6 +77,34 @@ export class SessionDataManager {
         this.#saveSessionData();
       }
     });
+
+    CoalitionAreasChangedEvent.on(() => {
+      this.#sessionData.coalitionAreas = []
+      getApp().getCoalitionAreasManager().getAreas().forEach((area) => {
+        if (area instanceof CoalitionCircle) {
+          this.#sessionData.coalitionAreas?.push(
+            {
+              type: 'circle',
+              latlng: {lat: area.getLatLng().lat, lng: area.getLatLng().lng},
+              coalition: area.getCoalition(),
+              label: area.getLabelText(),
+              radius: area.getRadius()
+            }
+          )
+        } else if (area instanceof CoalitionPolygon) {
+          this.#sessionData.coalitionAreas?.push(
+            {
+              type: 'polygon',
+              latlngs: (area.getLatLngs()[0] as LatLng[]).map((latlng) => {return {lat: latlng.lat, lng: latlng.lng}}),
+              coalition: area.getCoalition(),
+              label: area.getLabelText()
+            }
+          )
+        }
+      })
+
+      this.#saveSessionData();
+    })
   }
 
   loadSessionData(sessionHash?: string) {
@@ -103,8 +134,8 @@ export class SessionDataManager {
       }) // Parse the response as JSON
       .then((sessionData) => {
         this.#sessionData = sessionData;
-        this.#applySessionData();
-        SessionDataChangedEvent.dispatch(this.#sessionData);
+        console.log(this.#sessionData);
+        SessionDataLoadedEvent.dispatch(this.#sessionData);
       })
       .catch((error) => console.error(error)); // Handle errors
   }
@@ -116,6 +147,8 @@ export class SessionDataManager {
   #saveSessionData() {
     if (getApp().getState() === OlympusState.SERVER) return;
     
+    SessionDataChangedEvent.dispatch(this.#sessionData);
+
     if (this.#saveSessionDataTimeout) window.clearTimeout(this.#saveSessionDataTimeout);
     this.#saveSessionDataTimeout = window.setTimeout(() => {
       const requestOptions = {
@@ -129,7 +162,7 @@ export class SessionDataManager {
           if (response.status === 200) {
             console.log(`Session data for profile ${getApp().getServerManager().getUsername()} and session hash ${this.#sessionHash} saved correctly`);
             console.log(this.#sessionData);
-            SessionDataChangedEvent.dispatch(this.#sessionData);
+            SessionDataSavedEvent.dispatch(this.#sessionData);
           } else {
             getApp().addInfoMessage("Error loading session data");
             throw new Error("Error loading session data");
@@ -138,9 +171,5 @@ export class SessionDataManager {
         .catch((error) => console.error(error)); // Handle errors
       this.#saveSessionDataTimeout = null;
     }, 1000);
-  }
-
-  #applySessionData() {
-    let asd = 1;
   }
 }

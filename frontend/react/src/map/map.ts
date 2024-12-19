@@ -24,6 +24,7 @@ import {
   ContextActions,
   SHORT_PRESS_MILLISECONDS,
   DEBOUNCE_MILLISECONDS,
+  DrawSubState,
 } from "../constants/constants";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { EffectRequestTable, OlympusConfig, SpawnRequestTable } from "../interfaces";
@@ -806,6 +807,7 @@ export class Map extends L.Map {
     }
     this.getContainer().classList.remove(`explosion-cursor`);
     ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
+    this.getContainer().classList.remove(`plus-cursor`);
 
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {
@@ -832,7 +834,9 @@ export class Map extends L.Map {
     } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
       console.log(this.#contextAction);
-    } 
+    } else if (state === OlympusState.DRAW) {
+      if (subState === DrawSubState.DRAW_CIRCLE || subState === DrawSubState.DRAW_POLYGON) this.getContainer().classList.add(`plus-cursor`);
+    }
   }
 
   #onDragStart(e: any) {
@@ -1062,6 +1066,15 @@ export class Map extends L.Map {
     } else {
       this.#destionationWasRotated = true;
       this.#destinationRotation -= e.originalEvent.movementX;
+    }
+
+    if (getApp().getState() === OlympusState.DRAW && (getApp().getSubState() === DrawSubState.NO_SUBSTATE || getApp().getSubState() === DrawSubState.EDIT)) {
+      getApp()
+        .getCoalitionAreasManager()
+        .getAreas()
+        .find((area) => areaContains(e.latlng, area))
+        ? this.getContainer()?.classList.add("pointer-cursor")
+        : this.getContainer()?.classList.remove("pointer-cursor");
     }
 
     this.#moveDestinationPreviewMarkers();

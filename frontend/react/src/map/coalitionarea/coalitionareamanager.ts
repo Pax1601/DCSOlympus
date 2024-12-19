@@ -1,10 +1,11 @@
 import { LatLng, LeafletMouseEvent } from "leaflet";
 import { DrawSubState, OlympusState } from "../../constants/constants";
-import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
+import { AppStateChangedEvent, CoalitionAreaChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent, SessionDataLoadedEvent } from "../../events";
 import { getApp } from "../../olympusapp";
 import { areaContains } from "../../other/utils";
 import { CoalitionCircle } from "./coalitioncircle";
 import { CoalitionPolygon } from "./coalitionpolygon";
+import { SessionData } from "../../interfaces";
 
 export class CoalitionAreasManager {
   /* Coalition areas drawing */
@@ -36,6 +37,34 @@ export class CoalitionAreasManager {
           }
         }
       }, 200);
+    });
+
+    CoalitionAreaChangedEvent.on((area) => {
+      CoalitionAreasChangedEvent.dispatch(this.#areas);
+    });
+
+    SessionDataLoadedEvent.on((sessionData: SessionData) => {
+      /* Make a local copy */
+      const localSessionData = JSON.parse(JSON.stringify(sessionData)) as SessionData;
+      this.#areas.forEach((area) => this.deleteCoalitionArea(area));
+      localSessionData.coalitionAreas?.forEach((options) => {
+        if (options.type === 'circle') {
+          let newCircle = new CoalitionCircle(new LatLng(options.latlng.lat, options.latlng.lng), { radius: options.radius }, false);
+          newCircle.setCoalition(options.coalition);
+          newCircle.setLabelText(options.label);
+          newCircle.setSelected(false);
+          this.#areas.push(newCircle);
+        } else if (options.type === 'polygon') {
+          if (options.latlngs.length >= 3) {
+            let newPolygon = new CoalitionPolygon(options.latlngs.map((latlng) => new LatLng(latlng.lat, latlng.lng)), {}, false);
+            newPolygon.setCoalition(options.coalition);
+            newPolygon.setLabelText(options.label);
+            newPolygon.setSelected(false);
+            this.#areas.push(newPolygon);
+          }
+        }
+      });
+      CoalitionAreasChangedEvent.dispatch(this.#areas);
     });
   }
 
@@ -117,5 +146,9 @@ export class CoalitionAreasManager {
     if (getApp().getSubState() === DrawSubState.DRAW_CIRCLE || getApp().getSubState() === DrawSubState.DRAW_POLYGON)
       getApp().setState(OlympusState.DRAW, DrawSubState.EDIT);
     else getApp().setState(OlympusState.DRAW);
+  }
+
+  getAreas() {
+    return this.#areas;
   }
 }

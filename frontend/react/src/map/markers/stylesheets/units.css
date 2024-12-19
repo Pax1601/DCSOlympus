@@ -1,6 +1,6 @@
 /*** Unit marker elements ***/
 [data-object|="unit"] {
-  cursor: url("/images/cursors/pointer.svg"), auto;
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
   display: flex;
   height: 100%;
   justify-content: center;

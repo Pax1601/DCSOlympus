@@ -5,10 +5,10 @@ export interface OlympusConfig {
   frontend: {
     port: number;
     customAuthHeaders: {
-      enabled: boolean,
-      username: string,
-      group: string
-    }
+      enabled: boolean;
+      username: string;
+      group: string;
+    };
     elevationProvider: {
       provider: string;
       username: string | null;
@@ -32,23 +32,25 @@ export interface OlympusConfig {
     WSPort?: number;
     WSEndpoint?: string;
   };
-  controllers: [
-    {type: string, coalition: Coalition, frequency: number, modulation: number, callsign: string},
-  ];
+  controllers: [{ type: string; coalition: Coalition; frequency: number; modulation: number; callsign: string }];
   local: boolean;
-  profiles?: {[key: string]: ProfileOptions};
+  profiles?: { [key: string]: ProfileOptions };
   authentication?: {
-    gameMasterPassword: string,
-    blueCommanderPasword: string,
-    redCommanderPassword: string
-  }
+    gameMasterPassword: string;
+    blueCommanderPasword: string;
+    redCommanderPassword: string;
+  };
 }
 
 export interface SessionData {
   radios?: { frequency: number; modulation: number; pan: number }[];
   fileSources?: { filename: string; volume: number }[];
-  unitSinks?: {ID: number}[];
+  unitSinks?: { ID: number }[];
   connections?: any[];
+  coalitionAreas?: (
+    | { type: 'circle', label: string; latlng: { lat: number; lng: number }; radius: number; coalition: Coalition }
+    | { type: 'polygon', label: string; latlngs: { lat: number; lng: number }[]; coalition: Coalition }
+  )[];
 }
 
 export interface ProfileOptions {

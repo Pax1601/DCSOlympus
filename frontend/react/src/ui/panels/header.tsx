@@ -15,10 +15,11 @@ import {
   olButtonsVisibilityNavyunit,
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
-import { FaChevronLeft, FaChevronRight, FaComputer, FaTabletScreenButton } from "react-icons/fa6";
-import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent } from "../../events";
+import { FaChevronLeft, FaChevronRight, FaComputer, FaFloppyDisk, FaTabletScreenButton } from "react-icons/fa6";
+import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent, SessionDataChangedEvent, SessionDataSavedEvent } from "../../events";
 import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
+import { FaCheck, FaSpinner } from "react-icons/fa";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -29,6 +30,7 @@ export function Header() {
   const [scrolledRight, setScrolledRight] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
+  const [savingSessionData, setSavingSessionData] = useState(false);
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
@@ -44,6 +46,8 @@ export function Header() {
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {
       setCommandModeOptions(commandModeOptions);
     });
+    SessionDataChangedEvent.on(() => setSavingSessionData(true));
+    SessionDataSavedEvent.on(() => setSavingSessionData(false));
   }, []);
 
   /* Initialize the "scroll" position of the element */
@@ -112,7 +116,15 @@ export function Header() {
               {IP}
             </div>
           </div>
+          {savingSessionData ? <div className="text-white"><FaSpinner className={`
+            animate-spin text-2xl
+          `}/></div> : <div className={`relative text-white`}><FaFloppyDisk className={`
+            absolute -top-3 text-2xl
+          `}/><FaCheck className={`
+            absolute left-[9px] top-[-6px] text-2xl text-olympus-900
+          `}/><FaCheck className={`absolute left-3 top-0 text-green-500`}/></div>}
         </div>
+
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
           <div className={`flex h-full rounded-md bg-blue-600 px-4 text-white`}>
             <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>

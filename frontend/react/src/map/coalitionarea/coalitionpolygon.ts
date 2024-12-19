@@ -5,21 +5,22 @@ import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
 import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import { polyCenter } from "../../other/utils";
-import { CoalitionAreaSelectedEvent } from "../../events";
+import { CoalitionAreaChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
 
 let totalPolygons = 0;
 
 export class CoalitionPolygon extends Polygon {
   #coalition: Coalition = "blue";
   #selected: boolean = true;
-  #creating: boolean = true;
+  #creating: boolean = false;
   #handles: CoalitionAreaHandle[] = [];
   #middleHandles: CoalitionAreaMiddleHandle[] = [];
   #activeIndex: number = 0;
   #labelText: string;
   #label: Marker;
+  #updateTimeout: number | null = null;
 
-  constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolylineOptions) {
+  constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolylineOptions, creating = true) {
     if (options === undefined) options = {};
 
     totalPolygons++;
@@ -33,6 +34,7 @@ export class CoalitionPolygon extends Polygon {
     this.#setColors();
 
     this.#labelText = `Polygon ${totalPolygons}`;
+    this.#creating = creating;
 
     if ([BLUE_COMMANDER, RED_COMMANDER].includes(getApp().getMissionManager().getCommandModeOptions().commandMode))
       this.setCoalition(getApp().getMissionManager().getCommandedCoalition());
@@ -41,6 +43,12 @@ export class CoalitionPolygon extends Polygon {
       this.#setHandles();
       this.#setMiddleHandles();
       this.#drawLabel();
+
+      if (this.#updateTimeout) window.clearTimeout(this.#updateTimeout);
+      this.#updateTimeout = window.setTimeout(() => {
+        CoalitionAreaChangedEvent.dispatch(this);
+        this.#updateTimeout = null;
+      }, 500);
     });
 
     getApp().getMap().addLayer(this);
@@ -49,6 +57,7 @@ export class CoalitionPolygon extends Polygon {
   setCoalition(coalition: Coalition) {
     this.#coalition = coalition;
     this.#setColors();
+    CoalitionAreaChangedEvent.dispatch(this);
   }
 
   getCoalition() {
@@ -111,6 +120,7 @@ export class CoalitionPolygon extends Polygon {
   setLabelText(labelText: string) {
     this.#labelText = labelText;
     this.#drawLabel();
+    CoalitionAreaChangedEvent.dispatch(this);
   }
 
   onAdd(map: Map): this {
@@ -129,6 +139,13 @@ export class CoalitionPolygon extends Polygon {
   setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]) {
     super.setLatLngs(latlngs);
     this.#drawLabel();
+
+    if (this.#updateTimeout) window.clearTimeout(this.#updateTimeout);
+    this.#updateTimeout = window.setTimeout(() => {
+      CoalitionAreaChangedEvent.dispatch(this);
+      this.#updateTimeout = null;
+    }, 500);
+
     return this;
   }
 

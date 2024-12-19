@@ -150,7 +150,7 @@ export class ModalEvent {
   }
 }
 
-export class SessionDataLoadedEvent {
+export class SessionDataChangedEvent {
   static on(callback: (sessionData: SessionData) => void) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.sessionData);
@@ -162,6 +162,9 @@ export class SessionDataLoadedEvent {
     console.log(`Event ${this.name} dispatched`);
   }
 }
+
+export class SessionDataSavedEvent extends SessionDataChangedEvent {}
+export class SessionDataLoadedEvent extends SessionDataChangedEvent {}
 
 /************** Map events ***************/
 export class MouseMovedEvent {
@@ -228,6 +231,8 @@ export class CoalitionAreaSelectedEvent {
     console.log(`Event ${this.name} dispatched`);
   }
 }
+
+export class CoalitionAreaChangedEvent extends CoalitionAreaSelectedEvent {}
 
 export class CoalitionAreasChangedEvent {
   static on(callback: (coalitionAreas: (CoalitionCircle | CoalitionPolygon)[]) => void) {

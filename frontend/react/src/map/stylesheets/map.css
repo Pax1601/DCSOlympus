@@ -99,6 +99,7 @@
 }
 
 .ol-coalitionarea-handle-icon {
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
   background-color: #FFFFFFAA;
   width: 100%;
   height: 100%;
@@ -106,6 +107,7 @@
 }
 
 .ol-coalitionarea-middle-handle-icon {
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
   background-color: #FFFFFFAA;
   width: 100%;
   height: 100%;
@@ -207,6 +209,14 @@ path.leaflet-interactive:focus {
   cursor: url("/images/cursors/simulate-fire-fight.svg"), auto !important;
 }
 
+.clone-cursor {
+  cursor: url("/images/cursors/clone.svg"), auto !important;
+}
+
+.plus-cursor {
+  cursor: url("/images/cursors/plus.svg"), auto !important;
+}
+
 #map-container.leaflet-grab {
   cursor: url("/images/cursors/grab.svg") 16 16, auto;
 }
@@ -237,4 +247,8 @@ path.leaflet-interactive:focus {
 
 #map-container .disable-pointer-events {
   pointer-events: none;
+}
+
+.pointer-cursor {
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto !important;
 }
