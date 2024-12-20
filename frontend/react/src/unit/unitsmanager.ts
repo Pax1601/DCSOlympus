@@ -1,7 +1,17 @@
 import { LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "../olympusapp";
 import { AirUnit, Unit } from "./unit";
-import { areaContains, bearingAndDistanceToLatLng, deg2rad, getGroundElevation, latLngToMercator, mToFt, mercatorToLatLng, msToKnots } from "../other/utils";
+import {
+  areaContains,
+  bearingAndDistanceToLatLng,
+  deepCopyTable,
+  deg2rad,
+  getGroundElevation,
+  latLngToMercator,
+  mToFt,
+  mercatorToLatLng,
+  msToKnots,
+} from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
@@ -66,13 +76,15 @@ export class UnitsManager {
 
     SessionDataLoadedEvent.on((sessionData) => {
       UnitsRefreshed.on(() => {
-        const localSessionData = JSON.parse(JSON.stringify(sessionData));
-        Object.keys(localSessionData.hotgroups).forEach((hotgroup) => {
-          localSessionData.hotgroups[hotgroup].forEach((ID) => {
-            let unit = this.getUnitByID(ID);
-            if (unit) this.addToHotgroup(Number(hotgroup), [unit]);
+        const localSessionData = deepCopyTable(sessionData);
+        if (localSessionData.hotgroups) {
+          Object.keys(localSessionData.hotgroups).forEach((hotgroup) => {
+            localSessionData.hotgroups[hotgroup].forEach((ID) => {
+              let unit = this.getUnitByID(ID);
+              if (unit) this.addToHotgroup(Number(hotgroup), [unit]);
+            });
           });
-        });
+        }
       }, true);
     });
 

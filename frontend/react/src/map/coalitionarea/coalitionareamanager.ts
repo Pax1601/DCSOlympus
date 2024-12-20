@@ -2,7 +2,7 @@ import { LatLng, LeafletMouseEvent } from "leaflet";
 import { DrawSubState, OlympusState } from "../../constants/constants";
 import { AppStateChangedEvent, CoalitionAreaChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent, SessionDataLoadedEvent } from "../../events";
 import { getApp } from "../../olympusapp";
-import { areaContains } from "../../other/utils";
+import { areaContains, deepCopyTable } from "../../other/utils";
 import { CoalitionCircle } from "./coalitioncircle";
 import { CoalitionPolygon } from "./coalitionpolygon";
 import { SessionData } from "../../interfaces";
@@ -45,7 +45,7 @@ export class CoalitionAreasManager {
 
     SessionDataLoadedEvent.on((sessionData: SessionData) => {
       /* Make a local copy */
-      const localSessionData = JSON.parse(JSON.stringify(sessionData)) as SessionData;
+      const localSessionData = deepCopyTable(sessionData) as SessionData;
       this.#areas.forEach((area) => this.deleteCoalitionArea(area));
       localSessionData.coalitionAreas?.forEach((options) => {
         if (options.type === "circle") {

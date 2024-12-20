@@ -46,7 +46,7 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
-import { convertROE, ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
+import { convertROE, deepCopyTable, ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
 import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -270,7 +270,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             key={entry[0]}
                             onClick={() => {
                               selectionFilter["control"][entry[0]] = !selectionFilter["control"][entry[0]];
-                              setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                              setSelectionFilter(deepCopyTable(selectionFilter));
                             }}
                             toggled={selectionFilter["control"][entry[0]]}
                           />
@@ -319,7 +319,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   disabled={selectionID !== null}
                                   onChange={() => {
                                     selectionFilter[coalition][entry[0]] = !selectionFilter[coalition][entry[0]];
-                                    setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                                    setSelectionFilter(deepCopyTable(selectionFilter));
                                   }}
                                 />
                               </td>
@@ -339,7 +339,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             Object.keys(selectionFilter["blue"]).forEach((key) => {
                               selectionFilter["blue"][key] = newValue;
                             });
-                            setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                            setSelectionFilter(deepCopyTable(selectionFilter));
                           }}
                         />
                       </td>
@@ -351,7 +351,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             Object.keys(selectionFilter["neutral"]).forEach((key) => {
                               selectionFilter["neutral"][key] = newValue;
                             });
-                            setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                            setSelectionFilter(deepCopyTable(selectionFilter));
                           }}
                         />
                       </td>
@@ -363,7 +363,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             Object.keys(selectionFilter["red"]).forEach((key) => {
                               selectionFilter["red"][key] = newValue;
                             });
-                            setSelectionFilter(JSON.parse(JSON.stringify(selectionFilter)));
+                            setSelectionFilter(deepCopyTable(selectionFilter));
                           }}
                         />
                       </td>
@@ -812,8 +812,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         `}
                         onClick={() => {
                           setActiveAdvancedSettings({
-                            radio: JSON.parse(JSON.stringify(selectedUnits[0].getRadio())),
-                            TACAN: JSON.parse(JSON.stringify(selectedUnits[0].getTACAN())),
+                            radio: deepCopyTable(selectedUnits[0].getRadio()),
+                            TACAN: deepCopyTable(selectedUnits[0].getTACAN()),
                           });
                           setShowAdvancedSettings(true);
                         }}
@@ -1104,7 +1104,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   key={idx}
                                   onClick={() => {
                                     if (activeAdvancedSettings) activeAdvancedSettings.radio.callsign = idx + 1;
-                                    setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                                    setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                                   }}
                                 >
                                   {name}
@@ -1123,7 +1123,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   key={idx}
                                   onClick={() => {
                                     if (activeAdvancedSettings) activeAdvancedSettings.radio.callsign = idx + 1;
-                                    setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                                    setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                                   }}
                                 >
                                   {name}
@@ -1141,17 +1141,17 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       max={9}
                       onChange={(e) => {
                         if (activeAdvancedSettings) activeAdvancedSettings.radio.callsignNumber = Math.max(Math.min(Number(e.target.value), 9), 1);
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                       onDecrease={() => {
                         if (activeAdvancedSettings)
                           activeAdvancedSettings.radio.callsignNumber = Math.max(Math.min(Number(activeAdvancedSettings.radio.callsignNumber - 1), 9), 1);
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                       onIncrease={() => {
                         if (activeAdvancedSettings)
                           activeAdvancedSettings.radio.callsignNumber = Math.max(Math.min(Number(activeAdvancedSettings.radio.callsignNumber + 1), 9), 1);
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                       value={activeAdvancedSettings ? activeAdvancedSettings.radio.callsignNumber : 1}
                     ></OlNumberInput>
@@ -1163,17 +1163,17 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       max={126}
                       onChange={(e) => {
                         if (activeAdvancedSettings) activeAdvancedSettings.TACAN.channel = Math.max(Math.min(Number(e.target.value), 126), 1);
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                       onDecrease={() => {
                         if (activeAdvancedSettings)
                           activeAdvancedSettings.TACAN.channel = Math.max(Math.min(Number(activeAdvancedSettings.TACAN.channel - 1), 126), 1);
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                       onIncrease={() => {
                         if (activeAdvancedSettings)
                           activeAdvancedSettings.TACAN.channel = Math.max(Math.min(Number(activeAdvancedSettings.TACAN.channel + 1), 126), 1);
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
@@ -1186,7 +1186,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         key={"X"}
                         onClick={() => {
                           if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "X";
-                          setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                          setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                         }}
                       >
                         X
@@ -1195,7 +1195,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         key={"Y"}
                         onClick={() => {
                           if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "Y";
-                          setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                          setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                         }}
                       >
                         Y
@@ -1210,7 +1210,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           if (activeAdvancedSettings.TACAN.callsign.length > 3)
                             activeAdvancedSettings.TACAN.callsign = activeAdvancedSettings.TACAN.callsign.slice(0, 3);
                         }
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                     />
                   </div>
@@ -1220,7 +1220,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       toggled={activeAdvancedSettings ? activeAdvancedSettings.TACAN.isOn : false}
                       onClick={() => {
                         if (activeAdvancedSettings) activeAdvancedSettings.TACAN.isOn = !activeAdvancedSettings.TACAN.isOn;
-                        setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                       }}
                     />
                   </div>
@@ -1232,7 +1232,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       onChange={(value) => {
                         if (activeAdvancedSettings) {
                           activeAdvancedSettings.radio.frequency = value;
-                          setActiveAdvancedSettings(JSON.parse(JSON.stringify(activeAdvancedSettings)));
+                          setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
                         }
                       }}
                     />

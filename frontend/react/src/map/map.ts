@@ -3,7 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { areaContains, deg2rad, getGroundElevation } from "../other/utils";
+import { areaContains, deepCopyTable, deg2rad, getGroundElevation } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -53,6 +53,7 @@ import {
   PasteEnabledChangedEvent,
   SelectionClearedEvent,
   SelectionEnabledChangedEvent,
+  SessionDataLoadedEvent,
   SpawnContextMenuRequestEvent,
   StarredSpawnsChangedEvent,
   UnitDeselectedEvent,
@@ -290,6 +291,14 @@ export class Map extends L.Map {
     });
     ContextActionChangedEvent.on((contextAction) => this.#updateDestinationPreviewMarkers());
     MapOptionsChangedEvent.on((mapOptions) => this.#moveDestinationPreviewMarkers());
+
+    SessionDataLoadedEvent.on((sessionData) => {
+      const localSessionData = deepCopyTable(sessionData);
+      if (localSessionData.starredSpawns) {
+        this.#starredSpawnRequestTables = localSessionData.starredSpawns;
+        StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
+      }
+    });
 
     window.addEventListener("blur", () => {
       this.setSelectionEnabled(false);

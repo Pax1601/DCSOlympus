@@ -9,7 +9,7 @@ import { LoadoutBlueprint, SpawnRequestTable, UnitBlueprint } from "../../interf
 import { OlStateButton } from "../components/olstatebutton";
 import { Coalition } from "../../types/types";
 import { getApp } from "../../olympusapp";
-import { ftToM, hash, mode } from "../../other/utils";
+import { deepCopyTable, ftToM, hash, mode } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
 import { altitudeIncrements, groupUnitCount, maxAltitudeValues, minAltitudeValues, OlympusState, SpawnSubState } from "../../constants/constants";
@@ -50,7 +50,7 @@ export function UnitSpawnMenu(props: {
   const [showLoadout, setShowLoadout] = useState(false);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [showUnitSummary, setShowUnitSummary] = useState(false);
-  const [quickAccessName, setQuickAccessName] = useState("No name");
+  const [quickAccessName, setQuickAccessName] = useState("Preset 1");
   const [key, setKey] = useState("");
   const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
 
@@ -69,7 +69,7 @@ export function UnitSpawnMenu(props: {
   const setSpawnRequestTableCallback = useCallback(() => {
     if (spawnRequestTable) {
       /* Refresh the unique key identified */
-      const tempTable = JSON.parse(JSON.stringify(spawnRequestTable));
+      const tempTable = deepCopyTable(spawnRequestTable);
       delete tempTable.quickAccessName;
       delete tempTable.unit.location;
       delete tempTable.unit.altitude;
@@ -93,7 +93,7 @@ export function UnitSpawnMenu(props: {
     if (!props.airbase) {
       /* If the spawn is starred, set the quick access name */
       if (key in props.starredSpawns && props.starredSpawns[key].quickAccessName) setQuickAccessName(props.starredSpawns[key].quickAccessName);
-      else setQuickAccessName("No name");
+      else setQuickAccessName(`Preset ${Object.keys(props.starredSpawns).length + 1}`);
     }
   }, [props.starredSpawns, key]);
   useEffect(updateQuickAccessName, [key]);

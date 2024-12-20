@@ -12,6 +12,7 @@ import {
   SessionDataChangedEvent,
   SessionDataLoadedEvent,
   SessionDataSavedEvent,
+  StarredSpawnsChangedEvent,
 } from "./events";
 import { SessionData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
@@ -125,6 +126,11 @@ export class SessionDataManager {
           });
           this.#saveSessionData();
         });
+
+        StarredSpawnsChangedEvent.on((starredSpawns) => {
+          this.#sessionData.starredSpawns = starredSpawns;
+          this.#saveSessionData();
+        })
       }, 200);
     });
   }

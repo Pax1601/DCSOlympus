@@ -258,9 +258,9 @@
     1px -1px 0 #000,
     -1px 1px 0 #000,
     1px 1px 0 #000;
-  width: 80px;
+  width: 100px;
   height: 45px;
-  translate: 60px 2px;
+  translate: 80px 2px;
 }
 
 [todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north {

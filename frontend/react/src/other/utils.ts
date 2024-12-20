@@ -436,3 +436,12 @@ export function mode(array) {
   }
   return maxEl;
 }
+
+export function deepCopyTable(table) {
+  try {
+    return JSON.parse(JSON.stringify(table));
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+}

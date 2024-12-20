@@ -15,6 +15,7 @@ import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
 import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
 import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
 import { FaXmark } from "react-icons/fa6";
+import { deepCopyTable } from "../../other/utils";
 
 export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -205,7 +206,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 {types.map((type, idx) => {
                   if (!(type in typesSelection)) {
                     typesSelection[type] = true;
-                    setTypesSelection(JSON.parse(JSON.stringify(typesSelection)));
+                    setTypesSelection(deepCopyTable(typesSelection));
                   }
 
                   return (
@@ -214,7 +215,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                         checked={typesSelection[type]}
                         onChange={(ev) => {
                           typesSelection[type] = ev.currentTarget.checked;
-                          setTypesSelection(JSON.parse(JSON.stringify(typesSelection)));
+                          setTypesSelection(deepCopyTable(typesSelection));
                         }}
                       />
                       <div>{type}</div>
@@ -226,7 +227,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 {eras.map((era) => {
                   if (!(era in erasSelection)) {
                     erasSelection[era] = true;
-                    setErasSelection(JSON.parse(JSON.stringify(erasSelection)));
+                    setErasSelection(deepCopyTable(erasSelection));
                   }
 
                   return (
@@ -235,7 +236,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                         checked={erasSelection[era]}
                         onChange={(ev) => {
                           erasSelection[era] = ev.currentTarget.checked;
-                          setErasSelection(JSON.parse(JSON.stringify(erasSelection)));
+                          setErasSelection(deepCopyTable(erasSelection));
                         }}
                       />
                       <div>{era}</div>
@@ -247,7 +248,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 {["Short range", "Medium range", "Long range"].map((range) => {
                   if (!(range in rangesSelection)) {
                     rangesSelection[range] = true;
-                    setRangesSelection(JSON.parse(JSON.stringify(rangesSelection)));
+                    setRangesSelection(deepCopyTable(rangesSelection));
                   }
 
                   return (
@@ -256,7 +257,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                         checked={rangesSelection[range]}
                         onChange={(ev) => {
                           rangesSelection[range] = ev.currentTarget.checked;
-                          setErasSelection(JSON.parse(JSON.stringify(rangesSelection)));
+                          setErasSelection(deepCopyTable(rangesSelection));
                         }}
                       />
                       <div>{range}</div>
