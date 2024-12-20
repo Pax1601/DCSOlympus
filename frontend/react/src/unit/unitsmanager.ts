@@ -32,6 +32,7 @@ import {
   SelectedUnitsChangedEvent,
   SelectionClearedEvent,
   SessionDataLoadedEvent,
+  UnitDeadEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
   UnitsRefreshed,
@@ -73,6 +74,10 @@ export class UnitsManager {
     });
     UnitSelectedEvent.on((unit) => this.#onUnitSelection(unit));
     UnitDeselectedEvent.on((unit) => this.#onUnitDeselection(unit));
+
+    UnitDeadEvent.on((unit) => {
+      if (unit.getHotgroup()) HotgroupsChangedEvent.dispatch(this.getHotgroups());
+    });
 
     SessionDataLoadedEvent.on((sessionData) => {
       UnitsRefreshed.on(() => {
@@ -1154,7 +1159,10 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units.forEach((unit: Unit) => unit.setHotgroup(hotgroup));
     this.#showActionMessage(units, `added to hotgroup ${hotgroup}`);
+    HotgroupsChangedEvent.dispatch(this.getHotgroups());
+  }
 
+  getHotgroups() {
     let hotgroups: { [key: number]: Unit[] } = {};
     for (let ID in this.#units) {
       const unit = this.#units[ID];
@@ -1167,7 +1175,7 @@ export class UnitsManager {
         }
       }
     }
-    HotgroupsChangedEvent.dispatch(hotgroups);
+    return hotgroups;
   }
 
   /** Delete the selected units

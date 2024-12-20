@@ -7,10 +7,8 @@ import { Unit } from "../../unit/unit";
 
 export function HotGroupBar(props: {}) {
   const [hotgroups, setHotgroups] = useState({} as { [key: number]: Unit[] });
-  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
 
   useEffect(() => {
-    AppStateChangedEvent.on((state, subState) => setAppState(state));
     HotgroupsChangedEvent.on((hotgroups) => setHotgroups({ ...hotgroups }));
   }, []);
 
@@ -38,7 +36,7 @@ export function HotGroupBar(props: {}) {
               <span
                 className={`text-white`}
               >
-                {units.length}
+                {units.filter((unit) => unit.getAlive()).length}
               </span>
             </OlStateButton>
           </div>
