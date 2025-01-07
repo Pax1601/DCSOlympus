@@ -3,7 +3,7 @@ import { Weapon } from "./weapon";
 import { DataIndexes } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Contact } from "../interfaces";
-import { CommandModeOptionsChangedEvent, WeaponsRefreshed } from "../events";
+import { CommandModeOptionsChangedEvent, WeaponsRefreshedEvent } from "../events";
 
 /** The WeaponsManager handles the creation and update of weapons. Data is strictly updated by the server ONLY. */
 export class WeaponsManager {
@@ -83,7 +83,7 @@ export class WeaponsManager {
       this.#weapons[ID]?.setData(dataExtractor);
     }
 
-    if (fullUpdate) WeaponsRefreshed.dispatch();
+    if (fullUpdate) WeaponsRefreshedEvent.dispatch(this.#weapons);
 
     return updateTime;
   }

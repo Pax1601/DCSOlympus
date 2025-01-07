@@ -289,6 +289,7 @@ export enum OlympusState {
   AUDIO = "Audio",
   AIRBASE = "Airbase",
   GAME_MASTER = "Game master",
+  IMPORT_EXPORT = "Import/export"
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -333,6 +334,13 @@ export enum OptionsSubstate {
   NO_SUBSTATE = "No substate",
   KEYBIND = "Keybind",
 }
+
+export enum ImportExportSubstate {
+  NO_SUBSTATE = "No substate",
+  IMPORT = "IMPORT",
+  EXPORT = "EXPORT"
+}
+
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
 

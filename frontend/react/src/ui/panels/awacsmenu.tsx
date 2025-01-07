@@ -4,7 +4,7 @@ import { OlToggle } from "../components/oltoggle";
 import { MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
 import {
   AWACSReferenceChangedEvent as AWACSReferenceUnitChangedEvent,
-  BullseyesDataChanged,
+  BullseyesDataChangedEvent,
   HotgroupsChangedEvent,
   MapOptionsChangedEvent,
   UnitUpdatedEvent,
@@ -27,13 +27,10 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
     HotgroupsChangedEvent.on((hotgroups) => setHotgroups({ ...hotgroups }));
     AWACSReferenceUnitChangedEvent.on((unit) => setReferenceUnit(unit)); 
-    BullseyesDataChanged.on((bullseyes) => setBullseyes(bullseyes));
+    BullseyesDataChangedEvent.on((bullseyes) => setBullseyes(bullseyes));
     UnitUpdatedEvent.on((unit) => setRefreshTime(Date.now()));
   }, []);
 
-
-
-  
   return (
     <Menu title={"AWACS Tools"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
       <div

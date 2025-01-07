@@ -6,7 +6,7 @@ import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/c
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
-import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChanged, CommandModeOptionsChangedEvent, InfoPopupEvent } from "../events";
+import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChangedEvent, CommandModeOptionsChangedEvent, InfoPopupEvent, MissionDataChangedEvent } from "../events";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -61,7 +61,7 @@ export class MissionManager {
         this.#bullseyes[idx].setCoalition(bullseye.coalition);
       }
 
-      BullseyesDataChanged.dispatch(this.#bullseyes)
+      BullseyesDataChangedEvent.dispatch(this.#bullseyes)
     }
   }
 
@@ -96,6 +96,8 @@ export class MissionManager {
    */
   updateMission(data: MissionData) {
     if (data.mission) {
+      MissionDataChangedEvent.dispatch(data);
+
       /* Set the mission theatre */
       if (data.mission.theatre != this.#theatre) {
         this.#theatre = data.mission.theatre;

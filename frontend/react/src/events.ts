@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { CommandModeOptions, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable, UnitData } from "./interfaces";
+import { CommandModeOptions, MissionData, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable, UnitData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -12,6 +12,7 @@ import { ContextAction } from "./unit/contextaction";
 import { ContextActionSet } from "./unit/contextactionset";
 import { Unit } from "./unit/unit";
 import { LatLng } from "leaflet";
+import { Weapon } from "./weapon/weapon";
 
 export class BaseOlympusEvent {
   static on(callback: () => void, singleShot = false) {
@@ -348,8 +349,33 @@ export class UnitSelectedEvent extends BaseUnitEvent {}
 export class UnitDeselectedEvent extends BaseUnitEvent {}
 export class UnitDeadEvent extends BaseUnitEvent {}
 export class SelectionClearedEvent extends BaseOlympusEvent {}
-export class UnitsRefreshed extends BaseOlympusEvent {}
-export class WeaponsRefreshed extends BaseOlympusEvent {}
+
+export class UnitsRefreshedEvent {
+  static on(callback: (units:  { [ID: number]: Unit }) => void, singleShot = false) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail);
+    }, {once: singleShot});
+  }
+
+  static dispatch(units:  { [ID: number]: Unit }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: units }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class WeaponsRefreshedEvent {
+  static on(callback: (weapons:  { [ID: number]: Weapon }) => void, singleShot = false) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail);
+    }, {once: singleShot});
+  }
+
+  static dispatch(weapons:  { [ID: number]: Weapon }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: weapons }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 
 export class SelectedUnitsChangedEvent {
   static on(callback: (selectedUnits: Unit[]) => void, singleShot = false) {
@@ -361,7 +387,6 @@ export class SelectedUnitsChangedEvent {
   static dispatch(selectedUnits: Unit[]) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: selectedUnits }));
     console.log(`Event ${this.name} dispatched`);
-    console.log(selectedUnits);
   }
 }
 
@@ -578,7 +603,7 @@ export class AudioManagerOutputChangedEvent {
 }
 
 /************** Mission data events ***************/
-export class BullseyesDataChanged {
+export class BullseyesDataChangedEvent {
   static on(callback: (bullseyes: { [name: string]: Bullseye }) => void, singleShot = false) {
     document.addEventListener(this.name, (ev: CustomEventInit) => {
       callback(ev.detail.bullseyes);
@@ -587,6 +612,19 @@ export class BullseyesDataChanged {
 
   static dispatch(bullseyes: { [name: string]: Bullseye }) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { bullseyes } }));
+    // Logging disabled since periodic
+  }
+}
+
+export class MissionDataChangedEvent {
+  static on(callback: (missionData: MissionData) => void, singleShot = false) {
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback(ev.detail.missionData);
+    }, {once: singleShot});
+  }
+
+  static dispatch(missionData: MissionData) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { missionData } }));
     // Logging disabled since periodic
   }
 }

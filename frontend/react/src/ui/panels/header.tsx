@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import { faSkull, faCamera, faFlag, faLink, faUnlink, faBars, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
+import { faSkull, faCamera, faFlag, faVolumeHigh, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { getApp, IP } from "../../olympusapp";
@@ -15,11 +15,11 @@ import {
   olButtonsVisibilityNavyunit,
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
-import { FaChevronLeft, FaChevronRight, FaComputer, FaFloppyDisk, FaTabletScreenButton } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaFloppyDisk } from "react-icons/fa6";
 import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent, SessionDataChangedEvent, SessionDataSavedEvent } from "../../events";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ImportExportSubstate, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, OlympusState } from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
-import { FaCheck, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaSave, FaSpinner } from "react-icons/fa";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -93,11 +93,11 @@ export function Header() {
       >
         <div
           className={`
-            mr-auto hidden flex-none flex-row items-center justify-start gap-6
+            mr-auto hidden flex-none flex-row items-center justify-start gap-2
             lg:flex
           `}
         >
-          <div className="flex flex-col items-start">
+          <div className="mr-2 flex flex-col items-start">
             <div
               className={`
                 pt-1 text-xs text-gray-800
@@ -123,6 +123,8 @@ export function Header() {
           `}/><FaCheck className={`
             absolute left-[9px] top-[-6px] text-2xl text-olympus-900
           `}/><FaCheck className={`absolute left-3 top-0 text-green-500`}/></div>}
+          <OlStateButton className="ml-8" icon={faDownload} onClick={() => {getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT)}} checked={false}/>
+          <OlStateButton icon={faUpload} onClick={() => {getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT)}} checked={false}/>
         </div>
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
@@ -130,16 +132,6 @@ export function Header() {
             <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
           </div>
         )}
-        <div
-          className={`
-            cursor-pointer rounded-full bg-blue-500 px-4 py-2 text-white
-          `}
-          onClick={() => {
-            getApp().getMap().setOption("tabletMode", !mapOptions.tabletMode);
-          }}
-        >
-          {mapOptions.tabletMode ? <FaTabletScreenButton /> : <FaComputer />}
-        </div>
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
           <OlLockStateButton
             checked={!mapOptions.protectDCSUnits}

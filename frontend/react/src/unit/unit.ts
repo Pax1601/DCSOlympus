@@ -632,6 +632,7 @@ export abstract class Unit extends CustomMarker {
   getData(): UnitData {
     return {
       category: this.getCategory(),
+      markerCategory: this.getMarkerCategory(),
       ID: this.ID,
       alive: this.#alive,
       human: this.#human,
@@ -1229,7 +1230,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
-    if (!this.#human) getApp().getServerManager().setAdvacedOptions(this.ID, isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings);
+    if (!this.#human) getApp().getServerManager().setAdvancedOptions(this.ID, isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings);
   }
 
   bombPoint(latlng: LatLng) {
@@ -1549,7 +1550,7 @@ export abstract class Unit extends CustomMarker {
 
         /* Set BRAA */
         const reference = getApp().getUnitsManager().getAWACSReference();
-        if (reference && reference !== this) {
+        if (reference && reference !== this && reference.getAlive()) {
           const BRAA = `${computeBearingRangeString(reference.getPosition(), this.getPosition())}`;
           if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = `${BRAA}`;
         } else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;

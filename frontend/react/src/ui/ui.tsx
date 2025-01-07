@@ -33,6 +33,7 @@ import { CoordinatesPanel } from "./panels/coordinatespanel";
 import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
 import { AWACSMenu } from "./panels/awacsmenu";
 import { ServerOverlay } from "./serveroverlay";
+import { ImportExportModal } from "./modals/importexportmodal";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -81,6 +82,7 @@ export function UI() {
             <LoginModal open={appState === OlympusState.LOGIN} />
             <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
             <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
+            <ImportExportModal open={appState === OlympusState.IMPORT_EXPORT} />
           </>
         )}
 

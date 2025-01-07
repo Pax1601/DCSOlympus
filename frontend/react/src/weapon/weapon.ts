@@ -8,7 +8,7 @@ import { DataExtractor } from "../server/dataextractor";
 import { ObjectIconOptions } from "../interfaces";
 import { MapOptionsChangedEvent } from "../events";
 
-export class Weapon extends CustomMarker {
+export abstract class Weapon extends CustomMarker {
   ID: number;
 
   #alive: boolean = false;
@@ -54,10 +54,9 @@ export class Weapon extends CustomMarker {
     MapOptionsChangedEvent.on(() => this.#updateMarker());
   }
 
-  getCategory() {
-    // Overloaded by child classes
-    return "";
-  }
+  abstract getCategory(): string;
+  abstract getMarkerCategory(): string;
+  abstract getIconOptions(): ObjectIconOptions;
 
   /********************** Unit data *************************/
   setData(dataExtractor: DataExtractor) {
@@ -110,28 +109,7 @@ export class Weapon extends CustomMarker {
       heading: this.#heading,
     };
   }
-
-  getMarkerCategory(): string {
-    return "";
-  }
-
-  getIconOptions(): ObjectIconOptions {
-    // Default values, overloaded by child classes if needed
-    return {
-      showState: false,
-      showVvi: false,
-      showHealth: false,
-      showHotgroup: false,
-      showUnitIcon: true,
-      showShortLabel: false,
-      showFuel: false,
-      showAmmo: false,
-      showSummary: true,
-      showCallsign: true,
-      rotateToHeading: false,
-    };
-  }
-
+  
   setAlive(newAlive: boolean) {
     this.#alive = newAlive;
   }

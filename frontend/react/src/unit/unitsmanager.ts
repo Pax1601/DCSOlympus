@@ -35,7 +35,7 @@ import {
   UnitDeadEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
-  UnitsRefreshed,
+  UnitsRefreshedEvent,
 } from "../events";
 import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
@@ -80,7 +80,7 @@ export class UnitsManager {
     });
 
     SessionDataLoadedEvent.on((sessionData) => {
-      UnitsRefreshed.on(() => {
+      UnitsRefreshedEvent.on((units) => {
         const localSessionData = deepCopyTable(sessionData);
         if (localSessionData.hotgroups) {
           Object.keys(localSessionData.hotgroups).forEach((hotgroup) => {
@@ -311,7 +311,7 @@ export class UnitsManager {
     /* Compute the base clusters */
     this.#clusters = this.computeClusters();
 
-    if (fullUpdate) UnitsRefreshed.dispatch();
+    if (fullUpdate) UnitsRefreshedEvent.dispatch(this.#units);
 
     return updateTime;
   }

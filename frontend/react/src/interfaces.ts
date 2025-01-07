@@ -200,6 +200,7 @@ export interface Offset {
 
 export interface UnitData {
   category: string;
+  markerCategory: string;
   ID: number;
   alive: boolean;
   human: boolean;

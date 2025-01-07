@@ -488,7 +488,7 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  setAdvacedOptions(
+  setAdvancedOptions(
     ID: number,
     isActiveTanker: boolean,
     isActiveAWACS: boolean,

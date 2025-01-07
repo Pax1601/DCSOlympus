@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { OlLocation } from "../components/ollocation";
 import { LatLng } from "leaflet";
 import { FaBullseye, FaChevronDown, FaChevronUp, FaJetFighter, FaMountain } from "react-icons/fa6";
-import { BullseyesDataChanged, MouseMovedEvent, SelectedUnitsChangedEvent } from "../../events";
-import { bearing, computeBearingRangeString, mToFt } from "../../other/utils";
+import { BullseyesDataChangedEvent, MouseMovedEvent, SelectedUnitsChangedEvent } from "../../events";
+import { computeBearingRangeString, mToFt } from "../../other/utils";
 import { Bullseye } from "../../mission/bullseye";
 import { Unit } from "../../unit/unit";
 
@@ -20,7 +20,7 @@ export function CoordinatesPanel(props: {}) {
       if (elevation) setElevation(elevation);
     });
 
-    BullseyesDataChanged.on((bullseyes) => setBullseyes(bullseyes));
+    BullseyesDataChangedEvent.on((bullseyes) => setBullseyes(bullseyes));
     SelectedUnitsChangedEvent.on((selectedUnits) => setSelectedUnits(selectedUnits));
   }, []);
 
