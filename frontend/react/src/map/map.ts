@@ -559,6 +559,9 @@ export class Map extends L.Map {
 
   setSpawnRequestTable(spawnRequestTable: SpawnRequestTable) {
     this.#spawnRequestTable = spawnRequestTable;
+
+    this.#currentSpawnMarker?.removeFrom(this);
+    this.#currentSpawnMarker = this.addTemporaryMarker(spawnRequestTable.unit.location, spawnRequestTable.unit.unitType, spawnRequestTable.coalition, true);
   }
 
   addStarredSpawnRequestTable(key, spawnRequestTable: SpawnRequestTable, quickAccessName: string) {
@@ -693,8 +696,8 @@ export class Map extends L.Map {
     return this.#miniMapLayerGroup;
   }
 
-  addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, commandHash?: string) {
-    var marker = new TemporaryUnitMarker(latlng, name, coalition, commandHash);
+  addTemporaryMarker(latlng: L.LatLng, name: string, coalition: string, headingHandle: boolean, commandHash?: string) {
+    var marker = new TemporaryUnitMarker(latlng, name, coalition, headingHandle, commandHash);
     marker.addTo(this);
     this.#temporaryMarkers.push(marker);
     return marker;
@@ -828,7 +831,8 @@ export class Map extends L.Map {
         this.#currentSpawnMarker = new TemporaryUnitMarker(
           new L.LatLng(0, 0),
           this.#spawnRequestTable?.unit.unitType ?? "",
-          this.#spawnRequestTable?.coalition ?? "neutral"
+          this.#spawnRequestTable?.coalition ?? "neutral",
+          false
         );
         this.#currentSpawnMarker.addTo(this);
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
@@ -1073,8 +1077,10 @@ export class Map extends L.Map {
         MouseMovedEvent.dispatch(e.latlng, elevation);
       });
 
-      if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
-      if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
+      if (getApp().getState() === OlympusState.SPAWN) {
+        if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
+        if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
+      }
     } else {
       this.#destionationWasRotated = true;
       this.#destinationRotation -= e.originalEvent.movementX;
@@ -1202,7 +1208,7 @@ export class Map extends L.Map {
     if (this.#keepRelativePositions) {
       selectedUnits.forEach((unit) => {
         if (this.#contextAction?.getOptions().type === ContextActionType.MOVE || this.#contextAction === null) {
-          this.#destinationPreviewMarkers[unit.ID] = new TemporaryUnitMarker(new L.LatLng(0, 0), unit.getName(), unit.getCoalition());
+          this.#destinationPreviewMarkers[unit.ID] = new TemporaryUnitMarker(new L.LatLng(0, 0), unit.getName(), unit.getCoalition(), false);
         } else if (this.#contextAction?.getTarget() === ContextActionTarget.POINT) {
           this.#destinationPreviewMarkers[unit.ID] = new TargetMarker(new L.LatLng(0, 0));
         }

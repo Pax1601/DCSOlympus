@@ -9,12 +9,14 @@ export class TemporaryUnitMarker extends CustomMarker {
   #coalition: string;
   #commandHash: string | undefined = undefined;
   #timer: number = 0;
+  #headingHandle: boolean;
 
-  constructor(latlng: LatLng, name: string, coalition: string, commandHash?: string) {
+  constructor(latlng: LatLng, name: string, coalition: string, headingHandle: boolean, commandHash?: string) {
     super(latlng, { interactive: false });
     this.#name = name;
     this.#coalition = coalition;
     this.#commandHash = commandHash;
+    this.#headingHandle = headingHandle;
 
     if (commandHash !== undefined) this.setCommandHash(commandHash);
   }

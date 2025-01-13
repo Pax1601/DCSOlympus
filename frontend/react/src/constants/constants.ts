@@ -301,7 +301,8 @@ export enum OlympusState {
   AUDIO = "Audio",
   AIRBASE = "Airbase",
   GAME_MASTER = "Game master",
-  IMPORT_EXPORT = "Import/export"
+  IMPORT_EXPORT = "Import/export",
+  WARNING = "Warning modal"
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -353,6 +354,12 @@ export enum ImportExportSubstate {
   EXPORT = "EXPORT"
 }
 
+export enum WarningSubstate {
+  NO_SUBSTATE = "No substate",
+  NOT_CHROME = "Not chrome",
+  NOT_SECURE = "Not secure"
+}
+
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
 
@@ -379,9 +386,10 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   cameraPluginRatio: 1,
   cameraPluginEnabled: false,
   cameraPluginMode: "map",
-  tabletMode: false,
   AWACSMode: false,
   AWACSCoalition: "blue",
+  hideChromeWarning: false,
+  hideSecureWarning: false
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {

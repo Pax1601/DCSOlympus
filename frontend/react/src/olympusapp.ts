@@ -20,7 +20,7 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
-import { GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState } from "./constants/constants";
+import { GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState, WarningSubstate } from "./constants/constants";
 import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
@@ -38,6 +38,7 @@ export class OlympusApp {
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
   #infoMessages: string[] = [];
+  #startupWarningsShown: boolean = false;
 
   /* Main leaflet map, extended by custom methods */
   #map: Map;
@@ -305,6 +306,16 @@ export class OlympusApp {
   setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {
     this.#state = state;
     this.#subState = subState;
+
+    if (this.#state === OlympusState.IDLE && !this.#startupWarningsShown) {
+      window.setTimeout(() => {
+        const isChrome = navigator.userAgent.indexOf("Chrome") > -1;
+        if (!isChrome && !this.getMap().getOptions().hideChromeWarning) this.setState(OlympusState.WARNING, WarningSubstate.NOT_CHROME);
+        if (!isSecureContext && !this.getMap().getOptions().hideSecureWarning) this.setState(OlympusState.WARNING, WarningSubstate.NOT_SECURE);
+      }, 200);
+
+      this.#startupWarningsShown = true;
+    }
 
     console.log(`App state set to ${state}, substate ${subState}`);
     AppStateChangedEvent.dispatch(state, subState);

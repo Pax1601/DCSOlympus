@@ -8,7 +8,13 @@ import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { OptionsMenu } from "./panels/optionsmenu";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
+import {
+  NO_SUBSTATE,
+  OlympusState,
+  OlympusSubState,
+  OptionsSubstate,
+  UnitControlSubState
+} from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/loginmodal";
 
@@ -34,6 +40,7 @@ import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
 import { AWACSMenu } from "./panels/awacsmenu";
 import { ServerOverlay } from "./serveroverlay";
 import { ImportExportModal } from "./modals/importexportmodal";
+import { WarningModal } from "./modals/warningmodal";
 
 export type OlympusUIState = {
   mainMenuVisible: boolean;
@@ -83,6 +90,8 @@ export function UI() {
             <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
             <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
             <ImportExportModal open={appState === OlympusState.IMPORT_EXPORT} />
+            <LoginModal open={appState === OlympusState.LOGIN} />
+            <WarningModal open={appState === OlympusState.WARNING} />
           </>
         )}
 

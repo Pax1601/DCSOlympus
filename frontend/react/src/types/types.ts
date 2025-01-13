@@ -25,9 +25,10 @@ export type MapOptions = {
   cameraPluginRatio: number;
   cameraPluginEnabled: boolean;
   cameraPluginMode: string;
-  tabletMode: boolean;
   AWACSMode: boolean;
   AWACSCoalition: Coalition;
+  hideChromeWarning: boolean;
+  hideSecureWarning: boolean;
 };
 
 export type MapHiddenTypes = {
