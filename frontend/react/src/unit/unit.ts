@@ -420,7 +420,7 @@ export abstract class Unit extends CustomMarker {
    */
   setData(dataExtractor: DataExtractor) {
     /* This variable controls if the marker must be updated. This is not always true since not all variables have an effect on the marker */
-    var updateMarker = !getApp().getMap().hasLayer(this);
+    var updateMarker = !getApp().getMap().hasLayer(this) && this.getAlive();
 
     var oldIsLeader = this.#isLeader;
     var datumIndex = 0;

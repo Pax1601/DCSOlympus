@@ -445,3 +445,52 @@ export function deepCopyTable(table) {
     return {};
   }
 }
+
+export function computeStandardFormationOffset(formation, idx) {
+  let offset = { x: 0, y: 0 };
+  if (formation === "trail") {
+    offset.y = 50 * idx;
+    offset.x = 0;
+  } else if (formation === "echelon-lh" || formation == "custom" /* default fallback if needed */) {
+    offset.y = 50 * idx;
+    offset.x = -50 * idx;
+  } else if (formation === "echelon-rh") {
+    offset.y = 50 * idx;
+    offset.x = 50 * idx;
+  } else if (formation === "line-abreast-lh") {
+    offset.y = 0;
+    offset.x = -50 * idx;
+  } else if (formation === "line-abreast-rh") {
+    offset.y = 0;
+    offset.x = 50 * idx;
+  } else if (formation === "front") {
+    offset.y = -100 * idx;
+    offset.x = 0;
+  } else if (formation === "diamond") {
+    var xr = 0;
+    var yr = 1;
+    var zr = -1;
+    var layer = 1;
+
+    for (let i = 0; i < idx; i++) {
+      var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
+      var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
+      offset = { x: xl * 50, y: yl * 50 };
+      if (yr == 0) {
+        layer++;
+        xr = 0;
+        yr = layer;
+        zr = -layer;
+      } else {
+        if (xr < layer) {
+          xr++;
+          zr--;
+        } else {
+          yr--;
+          zr++;
+        }
+      }
+    }
+  }
+  return offset;
+}

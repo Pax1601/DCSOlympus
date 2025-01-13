@@ -83,7 +83,7 @@ export class WeaponsManager {
       this.#weapons[ID]?.setData(dataExtractor);
     }
 
-    if (fullUpdate) WeaponsRefreshedEvent.dispatch(this.#weapons);
+    if (fullUpdate) WeaponsRefreshedEvent.dispatch(Object.values(this.#weapons));
 
     return updateTime;
   }

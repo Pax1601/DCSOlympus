@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 
 export const useDrag = (props: { ref, initialPosition, count}) => {
-  const [finalPosition, setFinalPosition] = useState({ x: props.initialPosition.x, y: props.initialPosition.y });
-  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: props.initialPosition.x, y: props.initialPosition.y });
+  const [dragging, isDragging] = useState(false);
   const [count, setCount] = useState(0)
 
   if (count !== props.count) {
     setCount(props.count)
-    setFinalPosition({ x: props.initialPosition.x, y: props.initialPosition.y })
+    setPosition({ x: props.initialPosition.x, y: props.initialPosition.y })
   }
 
   const handleMouseUp = (evt) => {
     evt.preventDefault();
 
-    setIsDragging(false);
+    isDragging(false);
   };
 
   const handleMouseDown = (evt) => {
@@ -25,14 +25,14 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
       return;
     }
 
-    setIsDragging(true);
+    isDragging(true);
   };
 
   const handleMouseMove = useCallback(
     (evt) => {
       const { current: draggableElement } = props.ref;
 
-      if (!isDragging || !draggableElement) return;
+      if (!dragging || !draggableElement) return;
 
       evt.preventDefault();
 
@@ -43,12 +43,12 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
       const [mouseX, mouseY] = [evt.clientX, evt.clientY];
       const [parentTop, parentLeft, parentWidth, parentHeight] = [parentRect.top, parentRect.left, parentRect.width, parentRect.height];
 
-      setFinalPosition({
-        x: Math.round(Math.max(width / 2, Math.min(mouseX - parentLeft, parentWidth - width / 2)) / 10) * 10,
-        y: Math.round(Math.max(height / 2, Math.min(mouseY - parentTop, parentHeight - height / 2)) / 10) * 10,
+      setPosition({
+        x: Math.max(width / 2, Math.min(mouseX - parentLeft, parentWidth - width / 2)),
+        y: Math.max(height / 2, Math.min(mouseY - parentTop, parentHeight - height / 2)),
       });
     },
-    [isDragging, props.ref]
+    [dragging, props.ref]
   );
 
   useEffect(() => {
@@ -61,8 +61,13 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
     };
   }, [handleMouseMove]);
 
+  const forcePosition = (x, y) => {
+    setPosition({x, y});
+  }
+
   return {
-    position: finalPosition,
-    handleMouseDown
+    position: position,
+    handleMouseDown,
+    forcePosition
   };
 };

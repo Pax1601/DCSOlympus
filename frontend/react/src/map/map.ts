@@ -1054,7 +1054,10 @@ export class Map extends L.Map {
       getApp().getCoalitionAreasManager().onDoubleClick(e);
     } else {
       if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
-      else getApp().setState(getApp().getState());
+      else {
+        if (getApp().getState() === OlympusState.UNIT_CONTROL) getApp().setState(OlympusState.IDLE);
+        else getApp().setState(getApp().getState());
+      }
     }
   }
 

@@ -36,6 +36,7 @@ import {
   UnitDeselectedEvent,
   UnitSelectedEvent,
   UnitsRefreshedEvent,
+  UnitsUpdatedEvent,
 } from "../events";
 import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
@@ -49,7 +50,6 @@ export class UnitsManager {
   #deselectionEventDisabled: boolean = false;
   #requestDetectionUpdate: boolean = false;
   #selectionEventDisabled: boolean = false;
-  //#slowDeleteDialog!: Dialog;
   #units: { [ID: number]: Unit } = {};
   #groups: { [groupName: string]: Group } = {};
   #unitDataExport!: UnitDataFileExport;
@@ -171,8 +171,6 @@ export class UnitsManager {
           altKey: false,
         });
     });
-
-    //this.#slowDeleteDialog = new Dialog("slow-delete-dialog");
   }
 
   /**
@@ -231,6 +229,7 @@ export class UnitsManager {
     var dataExtractor = new DataExtractor(buffer);
 
     var updateTime = Number(dataExtractor.extractUInt64());
+    let updatedUnits: Unit[] = [];
 
     /* Run until all data is extracted or an error occurs */
     while (dataExtractor.getSeekPosition() < buffer.byteLength) {
@@ -249,7 +248,10 @@ export class UnitsManager {
         }
       }
       /* Update the data of the unit */
-      this.#units[ID]?.setData(dataExtractor);
+      if (ID in this.#units) {
+        this.#units[ID].setData(dataExtractor);
+        this.#units[ID].getAlive() && updatedUnits.push(this.#units[ID]);
+      }
     }
 
     /* Update the unit groups */
@@ -311,7 +313,8 @@ export class UnitsManager {
     /* Compute the base clusters */
     this.#clusters = this.computeClusters();
 
-    if (fullUpdate) UnitsRefreshedEvent.dispatch(this.#units);
+    if (fullUpdate) UnitsRefreshedEvent.dispatch(Object.values(this.#units));
+    else UnitsUpdatedEvent.dispatch(updatedUnits);
 
     return updateTime;
   }

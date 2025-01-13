@@ -273,6 +273,18 @@ export const defaultMapLayers = {
   },
 };
 
+export const formationTypes = {
+  "echelon-lh": "Echelon left",
+  "echelon-rh": "Echelon right",
+  "line-abreast-rh": "Line abreast right",
+  "line-abreast-lh": "Line abreast left",
+  trail: "Trail",
+  front: "Front",
+  diamond: "Diamond",
+  custom: "Custom",
+};
+
+
 export enum OlympusState {
   NOT_INITIALIZED = "Not initialized",
   SERVER = "Server",

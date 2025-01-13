@@ -21,7 +21,7 @@ import { MissionData, UnitData } from "../../interfaces";
 export function ImportExportModal(props: { open: boolean }) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE);
-  const [units, setUnits] = useState({} as { [ID: number]: Unit });
+  const [units, setUnits] = useState([] as Unit[]);
   const [missionData, setMissionData] = useState({} as MissionData);
   const [importData, setImportData] = useState({} as { [key: string]: UnitData[] });
 
@@ -86,7 +86,7 @@ export function ImportExportModal(props: { open: boolean }) {
     }
   }, [appState, appSubState]);
 
-  const selectableUnits = Object.values(units).filter((unit) => {
+  const selectableUnits = units.filter((unit) => {
     return (
       unit.getAlive() &&
       !unit.getHuman() &&

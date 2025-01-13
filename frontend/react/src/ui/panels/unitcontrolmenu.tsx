@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Menu } from "./components/menu";
 import { Unit } from "../../unit/unit";
 import { OlLabelToggle } from "../components/ollabeltoggle";
@@ -51,37 +51,41 @@ import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
-import { UnitBlueprint } from "../../interfaces";
 import { FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlNumberInput } from "../components/olnumberinput";
 import { Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
-import { AudioManagerStateChangedEvent, SelectedUnitsChangedEvent, SelectionClearedEvent } from "../../events";
+import { AudioManagerStateChangedEvent, SelectedUnitsChangedEvent, SelectionClearedEvent, UnitsUpdatedEvent } from "../../events";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
+  function initializeUnitsData() {
+    return {
+      desiredAltitude: undefined as undefined | number,
+      desiredAltitudeType: undefined as undefined | string,
+      desiredSpeed: undefined as undefined | number,
+      desiredSpeedType: undefined as undefined | string,
+      ROE: undefined as undefined | string,
+      reactionToThreat: undefined as undefined | string,
+      emissionsCountermeasures: undefined as undefined | string,
+      scenicAAA: undefined as undefined | boolean,
+      missOnPurpose: undefined as undefined | boolean,
+      shotsScatter: undefined as undefined | number,
+      shotsIntensity: undefined as undefined | number,
+      operateAs: undefined as undefined | Coalition,
+      followRoads: undefined as undefined | boolean,
+      isActiveAWACS: undefined as undefined | boolean,
+      isActiveTanker: undefined as undefined | boolean,
+      onOff: undefined as undefined | boolean,
+      isAudioSink: undefined as undefined | boolean,
+    };
+  }
+
   const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
   const [audioManagerState, setAudioManagerState] = useState(false);
-  const [selectedUnitsData, setSelectedUnitsData] = useState({
-    desiredAltitude: undefined as undefined | number,
-    desiredAltitudeType: undefined as undefined | string,
-    desiredSpeed: undefined as undefined | number,
-    desiredSpeedType: undefined as undefined | string,
-    ROE: undefined as undefined | string,
-    reactionToThreat: undefined as undefined | string,
-    emissionsCountermeasures: undefined as undefined | string,
-    scenicAAA: undefined as undefined | boolean,
-    missOnPurpose: undefined as undefined | boolean,
-    shotsScatter: undefined as undefined | number,
-    shotsIntensity: undefined as undefined | number,
-    operateAs: undefined as undefined | Coalition,
-    followRoads: undefined as undefined | boolean,
-    isActiveAWACS: undefined as undefined | boolean,
-    isActiveTanker: undefined as undefined | boolean,
-    onOff: undefined as undefined | boolean,
-    isAudioSink: undefined as undefined | boolean,
-  });
+  const [selectedUnitsData, setSelectedUnitsData] = useState(initializeUnitsData);
+  const [forcedUnitsData, setForcedUnitsData] = useState(initializeUnitsData);
   const [selectionFilter, setSelectionFilter] = useState({
     control: {
       human: true,
@@ -115,6 +119,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [filterString, setFilterString] = useState("");
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
+  const [lastUpdateTime, setLastUpdateTime] = useState(0);
 
   var searchBarRef = useRef(null);
 
@@ -122,6 +127,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     SelectedUnitsChangedEvent.on((units) => setSelectedUnits(units));
     SelectionClearedEvent.on(() => setSelectedUnits([]));
     AudioManagerStateChangedEvent.on((state) => setAudioManagerState(state));
+    UnitsUpdatedEvent.on((units) => units.find((unit) => unit.getSelected()) && setLastUpdateTime(Date.now()));
   }, []);
 
   useEffect(() => {
@@ -130,7 +136,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     if (!props.open && filterString !== "") setFilterString("");
   });
 
-  useEffect(() => {
+  const updateData = useCallback(() => {
     setShowAdvancedSettings(false);
 
     const getters = {
@@ -169,10 +175,24 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     } as { [key in keyof typeof selectedUnitsData]: (unit: Unit) => void };
 
     var updatedData = {};
+    let anyForcedDataUpdated = false;
     Object.entries(getters).forEach(([key, getter]) => {
-      updatedData[key] = getApp()?.getUnitsManager()?.getSelectedUnitsVariable(getter);
+      let newDatum = getApp()?.getUnitsManager()?.getSelectedUnitsVariable(getter);
+      if (forcedUnitsData[key] !== undefined) {
+        if (newDatum === updatedData[key]) {
+          anyForcedDataUpdated = true;
+          forcedUnitsData[key] === undefined;
+        }
+        updatedData[key] = forcedUnitsData[key];
+      } else updatedData[key] = newDatum;
     });
     setSelectedUnitsData(updatedData as typeof selectedUnitsData);
+    if (anyForcedDataUpdated) setForcedUnitsData({...forcedUnitsData})
+  }, [forcedUnitsData])
+  useEffect(updateData, [selectedUnits, lastUpdateTime, forcedUnitsData]);
+
+  useEffect(() => {
+    setForcedUnitsData(initializeUnitsData);
   }, [selectedUnits]);
 
   /* Count how many units are selected of each type, divided by coalition */
@@ -538,8 +558,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           onClick={() => {
                             selectedUnits.forEach((unit) => {
                               unit.setAltitudeType(selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL");
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
                                 desiredAltitudeType: selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL",
                               });
                             });
@@ -550,8 +570,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         onChange={(ev) => {
                           selectedUnits.forEach((unit) => {
                             unit.setAltitude(ftToM(Number(ev.target.value)));
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
+                            setForcedUnitsData({
+                              ...forcedUnitsData,
                               desiredAltitude: Number(ev.target.value),
                             });
                           });
@@ -600,8 +620,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           onClick={() => {
                             selectedUnits.forEach((unit) => {
                               unit.setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS");
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
                                 desiredSpeedType: selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS",
                               });
                             });
@@ -613,8 +633,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       onChange={(ev) => {
                         selectedUnits.forEach((unit) => {
                           unit.setSpeed(knotsToMs(Number(ev.target.value)));
-                          setSelectedUnitsData({
-                            ...selectedUnitsData,
+                          setForcedUnitsData({
+                            ...forcedUnitsData,
                             desiredSpeed: Number(ev.target.value),
                           });
                         });
@@ -645,8 +665,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               onClick={() => {
                                 selectedUnits.forEach((unit) => {
                                   unit.setROE(ROEs[convertROE(idx)]);
-                                  setSelectedUnitsData({
-                                    ...selectedUnitsData,
+                                  setForcedUnitsData({
+                                    ...forcedUnitsData,
                                     ROE: ROEs[convertROE(idx)],
                                   });
                                 });
@@ -682,8 +702,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 onClick={() => {
                                   selectedUnits.forEach((unit) => {
                                     unit.setReactionToThreat(reactionsToThreat[idx]);
-                                    setSelectedUnitsData({
-                                      ...selectedUnitsData,
+                                    setForcedUnitsData({
+                                      ...forcedUnitsData,
                                       reactionToThreat: reactionsToThreat[idx],
                                     });
                                   });
@@ -714,8 +734,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 onClick={() => {
                                   selectedUnits.forEach((unit) => {
                                     unit.setEmissionsCountermeasures(emissionsCountermeasures[idx]);
-                                    setSelectedUnitsData({
-                                      ...selectedUnitsData,
+                                    setForcedUnitsData({
+                                      ...forcedUnitsData,
                                       emissionsCountermeasures: emissionsCountermeasures[idx],
                                     });
                                   });
@@ -756,8 +776,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               unit.getRadio(),
                               unit.getGeneralSettings()
                             );
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
+                            setForcedUnitsData({
+                              ...forcedUnitsData,
                               isActiveTanker: !selectedUnitsData.isActiveTanker,
                             });
                           });
@@ -790,8 +810,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               unit.getRadio(),
                               unit.getGeneralSettings()
                             );
-                            setSelectedUnitsData({
-                              ...selectedUnitsData,
+                            setForcedUnitsData({
+                              ...forcedUnitsData,
                               isActiveAWACS: !selectedUnitsData.isActiveAWACS,
                             });
                           });
@@ -848,8 +868,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             onClick={() => {
                               selectedUnits.forEach((unit) => {
                                 selectedUnitsData.scenicAAA ? unit.changeSpeed("stop") : unit.scenicAAA();
-                                setSelectedUnitsData({
-                                  ...selectedUnitsData,
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
                                   scenicAAA: !selectedUnitsData.scenicAAA,
                                   missOnPurpose: false,
                                 });
@@ -873,8 +893,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             onClick={() => {
                               selectedUnits.forEach((unit) => {
                                 selectedUnitsData.missOnPurpose ? unit.changeSpeed("stop") : unit.missOnPurpose();
-                                setSelectedUnitsData({
-                                  ...selectedUnitsData,
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
                                   scenicAAA: false,
                                   missOnPurpose: !selectedUnitsData.missOnPurpose,
                                 });
@@ -902,8 +922,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                     onClick={() => {
                                       selectedUnits.forEach((unit) => {
                                         unit.setShotsScatter(idx + 1);
-                                        setSelectedUnitsData({
-                                          ...selectedUnitsData,
+                                        setForcedUnitsData({
+                                          ...forcedUnitsData,
                                           shotsScatter: idx + 1,
                                         });
                                       });
@@ -934,8 +954,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                     onClick={() => {
                                       selectedUnits.forEach((unit) => {
                                         unit.setShotsIntensity(idx + 1);
-                                        setSelectedUnitsData({
-                                          ...selectedUnitsData,
+                                        setForcedUnitsData({
+                                          ...forcedUnitsData,
                                           shotsIntensity: idx + 1,
                                         });
                                       });
@@ -964,8 +984,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             onClick={() => {
                               selectedUnits.forEach((unit) => {
                                 unit.setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue");
-                                setSelectedUnitsData({
-                                  ...selectedUnitsData,
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
                                   operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
                                 });
                               });
@@ -989,8 +1009,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           onClick={() => {
                             selectedUnits.forEach((unit) => {
                               unit.setFollowRoads(!selectedUnitsData.followRoads);
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
                                 followRoads: !selectedUnitsData.followRoads,
                               });
                             });
@@ -1013,8 +1033,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           onClick={() => {
                             selectedUnits.forEach((unit) => {
                               unit.setOnOff(!selectedUnitsData.onOff);
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
                                 onOff: !selectedUnitsData.onOff,
                               });
                             });
@@ -1041,8 +1061,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           selectedUnits.forEach((unit) => {
                             if (!selectedUnitsData.isAudioSink) {
                               getApp()?.getAudioManager().addUnitSink(unit);
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
                                 isAudioSink: true,
                               });
                             } else {
@@ -1054,8 +1074,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 });
                               if (sink !== undefined) getApp()?.getAudioManager().removeSink(sink);
 
-                              setSelectedUnitsData({
-                                ...selectedUnitsData,
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
                                 isAudioSink: false,
                               });
                             }
@@ -1178,10 +1198,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown
-                      label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"}
-                      className={`my-auto w-20`}
-                    >
+                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
+                      my-auto w-20
+                    `}>
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1300,11 +1319,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${
-                          selectedUnits[0].getFuel() > 10 &&
-                          selectedUnits[0].getFuel() <= 40 &&
-                          `bg-yellow-700`
-                        }
+                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
+                          bg-yellow-700
+                        `}
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}

@@ -298,6 +298,7 @@ export interface UnitBlueprint {
   markerFile?: string;
   unitWhenGrouped?: string;
   mainRole?: string;
+  length?: number;
 }
 
 export interface AirbaseOptions {
