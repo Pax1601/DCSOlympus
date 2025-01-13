@@ -17,8 +17,8 @@
     "abilities": "",
     "canTargetPoint": false,
     "canRearm": false,
-    "carrierFilename": "nimitz.svg",
-    "length": 300
+    "carrierFilename": "nimitz.png",
+    "length": 333
   },
   "CVN_72": {
     "name": "CVN_72",
@@ -38,8 +38,8 @@
     "abilities": "",
     "canTargetPoint": false,
     "canRearm": false,
-    "carrierFilename": "nimitz.svg",
-    "length": 300
+    "carrierFilename": "nimitz.png",
+    "length": 333
   },
   "CVN_73": {
     "name": "CVN_73",
@@ -59,8 +59,8 @@
     "abilities": "",
     "canTargetPoint": false,
     "canRearm": false,
-    "carrierFilename": "nimitz.svg",
-    "length": 300
+    "carrierFilename": "nimitz.png",
+    "length": 333
   },
   "CVN_75": {
     "name": "CVN_75",
@@ -102,8 +102,8 @@
     "abilities": "",
     "canTargetPoint": false,
     "canRearm": false,
-    "carrierFilename": "nimitz.svg",
-    "length": 300
+    "carrierFilename": "nimitz.png",
+    "length": 333
   },
   "CV_1143_5": {
     "name": "CV_1143_5",
@@ -122,7 +122,9 @@
     "description": "Admiral Kuznetsov. Conventional STOBAR carrier",
     "abilities": "",
     "canTargetPoint": false,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "kuznetsov.png",
+    "length": 305
   },
   "CastleClass_01": {
     "name": "CastleClass_01",
@@ -240,7 +242,9 @@
     "description": "",
     "abilities": "",
     "canTargetPoint": true,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "tarawa.png",
+    "length": 270
   },
   "La_Combattante_II": {
     "name": "La_Combattante_II",
@@ -474,7 +478,9 @@
     "description": "",
     "abilities": "",
     "canTargetPoint": true,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "nimitz.png",
+    "length": 333
   },
   "TICONDEROG": {
     "name": "TICONDEROG",
@@ -910,7 +916,9 @@
     "description": "",
     "abilities": "",
     "canTargetPoint": true,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "vienticincodemayo.png",
+    "length": 210
   },
   "hms_invincible": {
     "name": "hms_invincible",
@@ -929,7 +937,9 @@
     "description": "",
     "abilities": "",
     "canTargetPoint": true,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "invincible.png",
+    "length": 206
   },
   "leander-gun-achilles": {
     "name": "leander-gun-achilles",
@@ -1198,7 +1208,9 @@
     "description": "",
     "abilities": "",
     "canTargetPoint": false,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "kuznetsov.png",
+    "length": 305
   },
   "MOLNIYA": {
     "name": "MOLNIYA",
@@ -1485,7 +1497,9 @@
     "description": "",
     "abilities": "",
     "canTargetPoint": false,
-    "canRearm": false
+    "canRearm": false,
+    "carrierFilename": "forrestal.png",
+    "length": 326
   },
   "LST_Mk2": {
     "name": "LST_Mk2",

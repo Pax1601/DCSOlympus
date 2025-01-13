@@ -2058,7 +2058,7 @@ export class NavyUnit extends Unit {
   onAdd(map: Map): this {
     super.onAdd(map);
     if (this.getBlueprint()?.type === "Aircraft Carrier")
-      this.#carrier = new Carrier({
+      this.#carrier = new Carrier(this, {
         position: this.getPosition(),
         name: this.getUnitName(),
       }).addTo(getApp().getMap());

@@ -299,6 +299,7 @@ export interface UnitBlueprint {
   unitWhenGrouped?: string;
   mainRole?: string;
   length?: number;
+  carrierFilename?: string;
 }
 
 export interface AirbaseOptions {

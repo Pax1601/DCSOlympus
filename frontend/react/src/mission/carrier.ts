@@ -1,8 +1,15 @@
 import { DivIcon, Map } from "leaflet";
 import { Airbase } from "./airbase";
+import { AirbaseOptions } from "../interfaces";
+import { Unit } from "../unit/unit";
 
-// TODO add more carrier types, currently works only for the Nimitz class
 export class Carrier extends Airbase {
+  #unit: Unit;
+
+  constructor(unit: Unit, options: AirbaseOptions) {
+    super(options);
+    this.#unit = unit;
+  }
   createIcon() {
     var icon = new DivIcon({
       className: "leaflet-airbase-marker",
@@ -15,7 +22,7 @@ export class Carrier extends Airbase {
     el.classList.add("airbase-icon");
     el.setAttribute("data-object", "airbase");
 
-    this.getImg().src = "./images/carriers/nimitz.png";
+    this.getImg().src = `./images/carriers/${this.#unit.getBlueprint()?.carrierFilename ?? ""}`;
     this.getImg().style.width = `0px`; // Make the image immediately small to avoid giant carriers
     el.appendChild(this.getImg());
     this.getElement()?.appendChild(el);
@@ -44,7 +51,7 @@ export class Carrier extends Airbase {
       const x = this._map.getSize().x;
       const maxMeters = this._map.containerPointToLatLng([0, y]).distanceTo(this._map.containerPointToLatLng([x, y]));
       const meterPerPixel = maxMeters / x;
-      this.getImg().style.width = `${Math.round(333 / meterPerPixel)}px`;
+      this.getImg().style.width = `${Math.round((this.#unit.getBlueprint()?.length ?? 333) / meterPerPixel)}px`;
       this.setZIndexOffset(-10000);
     }
   }
