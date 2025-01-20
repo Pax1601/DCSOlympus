@@ -16,7 +16,7 @@ export class RadioSink extends AudioSink {
   #modulation = 0;
   #ptt = false;
   #tuned = true;
-  #volume = 0.5;
+  #volume = 1;
   #receiving = false;
   #clearReceivingTimeout: number;
   #packetID = 0;
@@ -107,6 +107,7 @@ export class RadioSink extends AudioSink {
 
   setVolume(volume) {
     this.#volume = volume;
+    this.getInputNode().gain.value = volume;
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
