@@ -1,6 +1,6 @@
 import React, { ForwardedRef, forwardRef, useEffect, useState } from "react";
 import { OlFrequencyInput } from "../../components/olfrequencyinput";
-import { FaChevronUp, FaXmark } from "react-icons/fa6";
+import { FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
 import { OlLabelToggle } from "../../components/ollabeltoggle";
 import { OlStateButton } from "../../components/olstatebutton";
 import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
@@ -77,6 +77,16 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
               props.radio.setFrequency(value);
             }}
           />
+          <div className="flex content-center gap-2 p-2">
+            <div><FaVolumeHigh className="text-xl"/></div>
+            <OlRangeSlider
+              value={props.radio.getVolume() * 100}
+              onChange={(ev) => {
+                props.radio.setVolume(Number(ev.currentTarget.value) / 100);
+              }}
+              className="my-auto"
+            ></OlRangeSlider>
+          </div>
           <div className="flex content-center gap-2 p-2">
             <div>Left</div>
           <OlRangeSlider
