@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { Unit } from "../../unit/unit";
-import { OlRangeSlider } from "../components/olrangeslider";
 import { FormationCreationRequestEvent } from "../../events";
-import { computeStandardFormationOffset } from "../../other/utils";
-import { formationTypes } from "../../constants/constants";
+import { computeStandardFormationOffset, fromDCSFormationOffset, toDCSFormationOffset } from "../../other/utils";
+import { formationTypes, UnitState } from "../../constants/constants";
 import { FormationCanvas } from "./components/formationcanvas";
 
 export function FormationMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
@@ -14,10 +13,11 @@ export function FormationMenu(props: { open: boolean; onClose: () => void; child
 
   /* Init state variables */
   const [formationType, setFormationType] = useState("echelon-lh");
-  const [verticalScale, setVerticalScale] = useState(30);
-  const [unitPositions, setUnitPositions] = useState([] as { x: number; y: number }[]);
+  const [unitPositions, setUnitPositions] = useState([] as { x: number; y: number, z: number }[]);
 
-  const verticalRatio = (verticalScale - 50) / 50;
+  useEffect(() => {
+    setFormationType("echelon-lh");
+  }, [props.open])
 
   /* Listen for the setting of a new leader and wingmen and check if the formation is too big */
   useEffect(() => {
@@ -39,6 +39,23 @@ export function FormationMenu(props: { open: boolean; onClose: () => void; child
     }
   }, [formationType]);
   useEffect(setStandardFormation, [formationType]);
+
+  const setCurrentFormation = useCallback(() => {
+    if (
+      wingmen.every((unit: Unit) => {
+        return unit.getState() === UnitState.FOLLOW && unit.getLeader() === leader;
+      })
+    ) {
+      setUnitPositions([
+        { x: 0, y: 0, z: 0 },
+        ...wingmen.map((unit, idx) => {
+          return fromDCSFormationOffset(unit.getFormationOffset());
+        }),
+      ]);
+      setFormationType("custom");
+    }
+  }, [leader, wingmen]);
+  useEffect(setCurrentFormation, [leader, wingmen]);
 
   if (leader && unitPositions.length < [leader, ...wingmen].length) {
     /* If more units are added to the group keep the existing positions */
@@ -120,18 +137,6 @@ export function FormationMenu(props: { open: boolean; onClose: () => void; child
             Load
           </button>
         </div>
-        <span className="text-white">Vertical separation</span>
-        <div className="flex h-fit content-center gap-4">
-          <span className="ml-auto min-w-16 text-center text-sm text-white">Down</span>
-          <OlRangeSlider
-            className="my-auto"
-            value={verticalScale}
-            onChange={(ev) => {
-              setVerticalScale(Number(ev.target.value));
-            }}
-          />
-          <span className="my-auto min-w-16 text-center text-sm text-white">Up</span>
-        </div>
         <FormationCanvas
           units={leader ? [leader, ...wingmen] : []}
           unitPositions={unitPositions}
@@ -148,14 +153,13 @@ export function FormationMenu(props: { open: boolean; onClose: () => void; child
                 .filter((unit) => unit !== null)
                 .forEach((unit, idx) => {
                   if (idx != 0) {
-                    const [dx, dz] = [-(unitPositions[idx].y - unitPositions[0].y), unitPositions[idx].x - unitPositions[0].x];
-                    const distance = Math.sqrt(dx ** 2 + dz ** 2);
-                    const offset = {
+                    const [dx, dy] = [unitPositions[idx].x - unitPositions[0].x, unitPositions[idx].y - unitPositions[0].y];
+
+                    unit.followUnit(leader.ID, toDCSFormationOffset({
                       x: dx,
-                      y: distance * verticalRatio,
-                      z: dz,
-                    };
-                    unit.followUnit(leader.ID, offset);
+                      y: dy,
+                      z: unitPositions[idx].z,
+                    }));
                   }
                 });
             }

@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Unit } from "../../../unit/unit";
 import { DraggableSilhouette } from "./draggablesilhouette";
-import { FaCompressArrowsAlt, FaExclamationTriangle, FaExpand, FaExpandArrowsAlt } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaCompressArrowsAlt, FaExclamationTriangle, FaExpand, FaExpandArrowsAlt, FaQuestionCircle } from "react-icons/fa";
+import { OlToggle } from "../../components/oltoggle";
 
 const FT_TO_PX = 1;
 
 export function FormationCanvas(props: {
   units: Unit[];
-  unitPositions: { x: number; y: number }[];
-  setUnitPositions: (positions: { x: number; y: number }[]) => void;
+  unitPositions: { x: number; y: number; z: number }[];
+  setUnitPositions: (positions: { x: number; y: number; z: number }[]) => void;
 }) {
   const [dragging, setDragging] = useState(false);
   const [refPosition, setRefPosition] = useState({ x: 0, y: 0 });
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [showVerticalOffset, setShowVerticalOffset] = useState(true);
 
   /* Init references and hooks */
   const containerRef = useRef(null);
@@ -79,54 +81,117 @@ export function FormationCanvas(props: {
 
   return (
     <>
-      <div className="flex w-fit gap-1 p-1">
-        <button
-          type="button"
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-          }}
-          onClick={() => {
-            props.setUnitPositions(
-              props.unitPositions.map((position) => {
-                return {
-                  x: position.x * 1.1,
-                  y: position.y * 1.1,
-                };
-              })
-            );
-          }}
-          className={`
-            rounded-lg p-2 text-md flex content-center justify-center gap-2
-            bg-gray-600 font-medium text-white
-            hover:bg-gray-700
-          `}
-        >
-          <FaExpandArrowsAlt className="my-auto" /> <div> Loosen </div>
-        </button>
-        <button
-          type="button"
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-          }}
-          onClick={() => {
-            props.setUnitPositions(
-              props.unitPositions.map((position) => {
-                return {
-                  x: position.x * 0.9,
-                  y: position.y * 0.9,
-                };
-              })
-            );
-          }}
-          className={`
-            rounded-lg p-2 text-md flex content-center justify-center gap-2
-            bg-gray-600 font-medium text-white
-            hover:bg-gray-700
-          `}
-        >
-          <FaCompressArrowsAlt className="my-auto" /> <div>Tighten</div>
-        </button>
+      <div className="flex">
+        <div className="flex w-fit p-1">
+          <button
+            type="button"
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+            }}
+            onClick={() => {
+              props.setUnitPositions(
+                props.unitPositions.map((position) => {
+                  return {
+                    x: position.x * 1.1,
+                    y: position.y * 1.1,
+                    z: position.z,
+                  };
+                })
+              );
+            }}
+            className={`
+              rounded-l-lg px-3 py-2 text-md flex content-center justify-center
+              gap-2 border-r-2 border-gray-400 bg-gray-600 font-medium
+              text-white
+              hover:bg-gray-700
+            `}
+          >
+            <FaExpandArrowsAlt className="my-auto" /> <div> Loose </div>
+          </button>
+          <button
+            type="button"
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+            }}
+            onClick={() => {
+              props.setUnitPositions(
+                props.unitPositions.map((position) => {
+                  return {
+                    x: position.x * 0.9,
+                    y: position.y * 0.9,
+                    z: position.z,
+                  };
+                })
+              );
+            }}
+            className={`
+              rounded-r-lg px-3 py-2 text-md flex content-center justify-center
+              gap-2 bg-gray-600 font-medium text-white
+              hover:bg-gray-700
+            `}
+          >
+            <FaCompressArrowsAlt className="my-auto" /> <div className="">Tight</div>
+          </button>
+        </div>
+
+        <div className="flex w-fit p-1">
+          <button
+            type="button"
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+            }}
+            onClick={() => {
+              props.setUnitPositions(
+                props.unitPositions.map((position, idx) => {
+                  const [dx, dz] = [-(props.unitPositions[idx].y - props.unitPositions[0].y), props.unitPositions[idx].x - props.unitPositions[0].x];
+                  const distance = Math.sqrt(dx ** 2 + dz ** 2);
+                  return {
+                    x: position.x,
+                    y: position.y,
+                    z: position.z + 0.1 * distance,
+                  };
+                })
+              );
+            }}
+            className={`
+              rounded-l-lg px-3 py-2 text-md flex content-center justify-center
+              gap-2 border-r-2 border-gray-400 bg-gray-600 font-medium
+              text-white
+              hover:bg-gray-700
+            `}
+          >
+            <FaArrowUp className="my-auto" /> <div> Up </div>
+          </button>
+          <button
+            type="button"
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+            }}
+            onClick={() => {
+              props.setUnitPositions(
+                props.unitPositions.map((position, idx) => {
+                  const [dx, dz] = [-(props.unitPositions[idx].y - props.unitPositions[0].y), props.unitPositions[idx].x - props.unitPositions[0].x];
+                  const distance = Math.sqrt(dx ** 2 + dz ** 2);
+                  return {
+                    x: position.x,
+                    y: position.y,
+                    z: position.z - 0.1 * distance,
+                  };
+                })
+              );
+            }}
+            className={`
+              rounded-r-lg px-3 py-2 text-md flex content-center justify-center
+              gap-2 bg-gray-600 font-medium text-white
+              hover:bg-gray-700
+            `}
+          >
+            <FaArrowDown className="my-auto" /> <div className="">Down</div>
+          </button>
+        </div>
       </div>
+
+      <div className="flex justify-between"><div className="text-white">Show units vertical offset</div> <OlToggle onClick={() => {setShowVerticalOffset(!showVerticalOffset)}} toggled={showVerticalOffset} /></div>
 
       <div
         data-dragging={dragging}
@@ -164,8 +229,9 @@ export function FormationCanvas(props: {
                     (((props.unitPositions[idx].y - props.unitPositions[0].y) * 1) / zoom) * FT_TO_PX +
                     dragDelta.y +
                     containerCenter.y,
+                  z: props.unitPositions[idx].z,
                 }
-              : { x: 0, y: 0 };
+              : { x: 0, y: 0, z: 0 };
 
             let disabled = false;
             let overflowX = null as null | string;
@@ -213,10 +279,13 @@ export function FormationCanvas(props: {
                 unit={unit}
                 scale={FT_TO_PX}
                 disabled={disabled}
-                onPositionChange={({ x, y }) => {
+                showVerticalOffset={showVerticalOffset}
+                onPositionChange={({ x, y, z }) => {
+                  if (idx === 0) return;
                   props.unitPositions[idx] = {
                     x: ((x - props.unitPositions[0].x - dragDelta.x - containerCenter.x) * zoom) / FT_TO_PX - props.unitPositions[0].x,
                     y: ((y - props.unitPositions[0].y - dragDelta.y - containerCenter.y) * zoom) / FT_TO_PX - props.unitPositions[0].y,
+                    z: z,
                   };
                   props.setUnitPositions([...props.unitPositions]);
                 }}
@@ -226,12 +295,12 @@ export function FormationCanvas(props: {
             );
           })}
         </div>
-        {zoom > 3 && (
+
           <div className="absolute bottom-2 left-2 flex gap-2">
-            <FaExclamationTriangle className={`text-xl text-yellow-400`} />
-            <div className="text-white">Silhouettes not to scale!</div>
+            <FaQuestionCircle className={`text-xl text-gray-400`} />
+            <div className="text-gray-400">Double click to reset view</div>
           </div>
-        )}
+
         <div className="absolute left-0 top-2 m-[-0.75rem] h-0">
           <div
             className={`
@@ -243,13 +312,9 @@ export function FormationCanvas(props: {
             }}
           >
             {referenceDistance === 5280 && <div className="translate-y-[-8px]">1 NM</div>}
-            {referenceDistance === 5280 * 2 && (
-              <div
-                className={`translate-y-[-8px]`}
-              >
-                2 NM
-              </div>
-            )}
+            {referenceDistance === 5280 * 2 && <div className={`
+              translate-y-[-8px]
+            `}>2 NM</div>}
             {referenceDistance < 5280 && <div className="translate-y-[-8px]">{referenceDistance} ft</div>}
           </div>
         </div>

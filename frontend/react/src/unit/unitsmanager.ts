@@ -807,86 +807,17 @@ export class UnitsManager {
    * @param formation Optional parameter, defines a predefined formation type. Values are: "trail", "echelon-lh", "echelon-rh", "line-abreast-lh", "line-abreast-rh", "front", "diamond"
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
    */
-  followUnit(ID: number, offset?: { x: number; y: number; z: number }, formation?: string, units: Unit[] | null = null) {
+  followUnit(ID: number, offset?: { x: number; y: number; z: number }, units: Unit[] | null = null) {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units) => {
-      if (offset == undefined) {
-        /* Simple formations with fixed offsets */
-        offset = { x: 0, y: 0, z: 0 };
-        if (formation === "trail") {
-          offset.x = -50;
-          offset.y = -30;
-          offset.z = 0;
-        } else if (formation === "echelon-lh") {
-          offset.x = -50;
-          offset.y = -10;
-          offset.z = -50;
-        } else if (formation === "echelon-rh") {
-          offset.x = -50;
-          offset.y = -10;
-          offset.z = 50;
-        } else if (formation === "line-abreast-lh") {
-          offset.x = 0;
-          offset.y = 0;
-          offset.z = -50;
-        } else if (formation === "line-abreast-rh") {
-          offset.x = 0;
-          offset.y = 0;
-          offset.z = 50;
-        } else if (formation === "front") {
-          offset.x = 100;
-          offset.y = 0;
-          offset.z = 0;
-        } else offset = undefined;
-      }
-
       if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
         getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
         this.#protectionCallback = callback;
       } else callback(units);
     };
-    var count = 1;
-    var xr = 0;
-    var yr = 1;
-    var zr = -1;
-    var layer = 1;
-    units.forEach((unit: Unit) => {
-      if (unit.ID !== ID) {
-        if (offset != undefined)
-          /* Offset is set, apply it */
-          unit.followUnit(ID, {
-            x: offset.x * count,
-            y: offset.y * count,
-            z: offset.z * count,
-          });
-        else {
-          /* More complex formations with variable offsets */
-          if (formation === "diamond") {
-            var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
-            var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
-            unit.followUnit(ID, { x: -yl * 50, y: zr * 10, z: xl * 50 });
 
-            if (yr == 0) {
-              layer++;
-              xr = 0;
-              yr = layer;
-              zr = -layer;
-            } else {
-              if (xr < layer) {
-                xr++;
-                zr--;
-              } else {
-                yr--;
-                zr++;
-              }
-            }
-          }
-        }
-        count++;
-      }
-    });
     this.#showActionMessage(units, `following unit ${this.getUnitByID(ID)?.getUnitName()}`);
   }
 
@@ -1332,7 +1263,7 @@ export class UnitsManager {
                 getApp().getMap().getMouseCoordinates().lat + unit.position.lat - avgLat,
                 getApp().getMap().getMouseCoordinates().lng + unit.position.lng - avgLng
               );
-          markers.push(getApp().getMap().addTemporaryMarker(position, unit.name, unit.coalition));
+          markers.push(getApp().getMap().addTemporaryMarker(position, unit.name, unit.coalition, false));
           units.push({ ID: unit.ID, location: position });
         });
 

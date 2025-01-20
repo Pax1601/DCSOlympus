@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export function Draggable(props: {
-  position: { x: number; y: number };
+  position: { x: number; y: number, z: number };
   children: JSX.Element | JSX.Element[];
   disabled: boolean;
-  onPositionChange: (position: { x: number; y: number }) => void;
+  onPositionChange: (position: { x: number; y: number, z: number }) => void;
 }) {
   const [dragging, setDragging] = useState(false);
   const [refPosition, setRefPosition] = useState({ x: 0, y: 0 });
@@ -15,7 +15,7 @@ export function Draggable(props: {
         e.stopPropagation();
         e.preventDefault();
         setRefPosition({ x: e.clientX, y: e.clientY });
-        if (!props.disabled) props.onPositionChange({ x: props.position.x + e.clientX - refPosition.x, y: props.position.y + e.clientY - refPosition.y });
+        if (!props.disabled) props.onPositionChange({ x: props.position.x + e.clientX - refPosition.x, y: props.position.y + e.clientY - refPosition.y, z: props.position.z });
       }
     },
     [dragging, refPosition]

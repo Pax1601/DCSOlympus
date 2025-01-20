@@ -53,25 +53,46 @@ export const IRST = 8;
 export const RWR = 16;
 export const DLINK = 32;
 
+export enum UnitState {
+  NONE = "none",
+  IDLE = "idle",
+  REACH_DESTINATION = "reach-destination",
+  ATTACK = "attack",
+  FOLLOW = "follow",
+  LAND = "land",
+  REFUEL = "refuel",
+  AWACS = "AWACS",
+  TANKER = "tanker",
+  BOMB_POINT = "bomb-point",
+  CARPET_BOMB = "carpet-bomb",
+  BOMB_BUILDING = "bomb-building",
+  FIRE_AT_AREA = "fire-at-area",
+  SIMULATE_FIRE_FIGHT = "simulate-fire-fight",
+  SCENIC_AAA = "scenic-aaa",
+  MISS_ON_PURPOSE = "miss-on-purpose",
+  LAND_AT_POINT = "land-at-point",
+}
+
 export const states: string[] = [
-  "none",
-  "idle",
-  "reach-destination",
-  "attack",
-  "follow",
-  "land",
-  "refuel",
-  "AWACS",
-  "tanker",
-  "bomb-point",
-  "carpet-bomb",
-  "bomb-building",
-  "fire-at-area",
-  "simulate-fire-fight",
-  "scenic-aaa",
-  "miss-on-purpose",
-  "land-at-point",
+  UnitState.NONE,
+  UnitState.IDLE,
+  UnitState.REACH_DESTINATION,
+  UnitState.ATTACK,
+  UnitState.FOLLOW,
+  UnitState.LAND,
+  UnitState.REFUEL,
+  UnitState.AWACS,
+  UnitState.TANKER,
+  UnitState.BOMB_POINT,
+  UnitState.CARPET_BOMB,
+  UnitState.BOMB_BUILDING,
+  UnitState.FIRE_AT_AREA,
+  UnitState.SIMULATE_FIRE_FIGHT,
+  UnitState.SCENIC_AAA,
+  UnitState.MISS_ON_PURPOSE,
+  UnitState.LAND_AT_POINT,
 ];
+
 export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
@@ -284,7 +305,6 @@ export const formationTypes = {
   custom: "Custom",
 };
 
-
 export enum OlympusState {
   NOT_INITIALIZED = "Not initialized",
   SERVER = "Server",
@@ -302,7 +322,7 @@ export enum OlympusState {
   AIRBASE = "Airbase",
   GAME_MASTER = "Game master",
   IMPORT_EXPORT = "Import/export",
-  WARNING = "Warning modal"
+  WARNING = "Warning modal",
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -351,15 +371,14 @@ export enum OptionsSubstate {
 export enum ImportExportSubstate {
   NO_SUBSTATE = "No substate",
   IMPORT = "IMPORT",
-  EXPORT = "EXPORT"
+  EXPORT = "EXPORT",
 }
 
 export enum WarningSubstate {
   NO_SUBSTATE = "No substate",
   NOT_CHROME = "Not chrome",
-  NOT_SECURE = "Not secure"
+  NOT_SECURE = "Not secure",
 }
-
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
 
@@ -389,7 +408,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   AWACSMode: false,
   AWACSCoalition: "blue",
   hideChromeWarning: false,
-  hideSecureWarning: false
+  hideSecureWarning: false,
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -542,7 +561,7 @@ export namespace ContextActions {
           .getUnitsManager()
           .addDestination(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
-    { type: ContextActionType.MOVE, code: null}
+    { type: ContextActionType.MOVE, code: null }
   );
 
   export const DELETE = new ContextAction(

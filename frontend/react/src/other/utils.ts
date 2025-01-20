@@ -447,22 +447,25 @@ export function deepCopyTable(table) {
 }
 
 export function computeStandardFormationOffset(formation, idx) {
-  let offset = { x: 0, y: 0 };
+  let offset = { x: 0, y: 0, z: 0 };
   if (formation === "trail") {
-    offset.y = 50 * idx;
+    offset.y = 75 * idx;
     offset.x = 0;
+    offset.z = -Math.sqrt(offset.x * offset.x + offset.y * offset.y) * 0.1;
   } else if (formation === "echelon-lh" || formation == "custom" /* default fallback if needed */) {
     offset.y = 50 * idx;
     offset.x = -50 * idx;
+    offset.z = -Math.sqrt(offset.x * offset.x + offset.y * offset.y) * 0.1;
   } else if (formation === "echelon-rh") {
     offset.y = 50 * idx;
     offset.x = 50 * idx;
+    offset.z = -Math.sqrt(offset.x * offset.x + offset.y * offset.y) * 0.1;
   } else if (formation === "line-abreast-lh") {
     offset.y = 0;
-    offset.x = -50 * idx;
+    offset.x = -75 * idx;
   } else if (formation === "line-abreast-rh") {
     offset.y = 0;
-    offset.x = 50 * idx;
+    offset.x = 75 * idx;
   } else if (formation === "front") {
     offset.y = -100 * idx;
     offset.x = 0;
@@ -475,7 +478,8 @@ export function computeStandardFormationOffset(formation, idx) {
     for (let i = 0; i < idx; i++) {
       var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
       var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
-      offset = { x: xl * 50, y: yl * 50 };
+      offset = { x: xl * 50, y: yl * 50, z: 0 };
+      offset.z = -Math.sqrt(offset.x * offset.x + offset.y * offset.y) * 0.1
       if (yr == 0) {
         layer++;
         xr = 0;
@@ -493,4 +497,32 @@ export function computeStandardFormationOffset(formation, idx) {
     }
   }
   return offset;
+}
+
+export function nearestNiceNumber(number) {
+  let niceNumbers = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
+  let niceNumber = niceNumbers[0];
+  for (let i = 0; i < niceNumbers.length; i++) {
+    if (niceNumbers[i] >= number) {
+      niceNumber = niceNumbers[i];
+      break;
+    }
+  }
+  return niceNumber;
+}
+
+export function roundToNearestFive(number) {
+  return Math.round(number / 5) * 5;
+}
+
+export function toDCSFormationOffset(offset: {x: number, y: number, z: number}) {
+  // X: front-rear, positive front
+  // Y: top-bottom, positive top
+  // Z: left-right, positive right
+
+  return { x: -offset.y, y: offset.z, z: offset.x };
+}
+
+export function fromDCSFormationOffset(offset: {x: number, y: number, z: number}) {
+  return { x: offset.z, y: -offset.x, z: offset.y };
 }
