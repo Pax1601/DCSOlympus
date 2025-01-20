@@ -53,7 +53,7 @@ import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlNumberInput } from "../components/olnumberinput";
-import { Radio, TACAN } from "../../interfaces";
+import { GeneralSettings, Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
@@ -117,8 +117,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [selectionID, setSelectionID] = useState(null as null | number);
   const [searchBarRefState, setSearchBarRefState] = useState(null as MutableRefObject<null> | null);
   const [filterString, setFilterString] = useState("");
+  const [showRadioSettings, setShowRadioSettings] = useState(false);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
+  const [activeRadioSettings, setActiveRadioSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
+  const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | GeneralSettings);
   const [lastUpdateTime, setLastUpdateTime] = useState(0);
 
   var searchBarRef = useRef(null);
@@ -137,8 +139,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   });
 
   const updateData = useCallback(() => {
-    setShowAdvancedSettings(false);
-
     const getters = {
       desiredAltitude: (unit: Unit) => Math.round(mToFt(unit.getDesiredAltitude())),
       desiredAltitudeType: (unit: Unit) => unit.getDesiredAltitudeType(),
@@ -187,12 +187,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       } else updatedData[key] = newDatum;
     });
     setSelectedUnitsData(updatedData as typeof selectedUnitsData);
-    if (anyForcedDataUpdated) setForcedUnitsData({...forcedUnitsData})
-  }, [forcedUnitsData])
+    if (anyForcedDataUpdated) setForcedUnitsData({ ...forcedUnitsData });
+  }, [forcedUnitsData]);
   useEffect(updateData, [selectedUnits, lastUpdateTime, forcedUnitsData]);
 
   useEffect(() => {
     setForcedUnitsData(initializeUnitsData);
+    setShowRadioSettings(false);
+    setShowAdvancedSettings(false);
   }, [selectedUnits]);
 
   /* Count how many units are selected of each type, divided by coalition */
@@ -516,7 +518,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             {/* ============== Units list END ============== */}
             {/* ============== Unit basic options START ============== */}
             <>
-              {!showAdvancedSettings && (
+              {!showRadioSettings && !showAdvancedSettings && (
                 <div className="flex flex-col gap-5 p-5">
                   {/* ============== Altitude selector START ============== */}
                   {selectedCategories.every((category) => {
@@ -820,7 +822,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     </div>
                   )}
                   {/* ============== Tanker and AWACS available button END ============== */}
-                  {/* ============== Advanced settings buttons START ============== */}
+                  {/* ============== Radio settings buttons START ============== */}
                   {selectedUnits.length === 1 && (selectedUnits[0].isTanker() || selectedUnits[0].isAWACS()) && (
                     <div className="flex content-center justify-between">
                       <button
@@ -831,17 +833,40 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           hover:bg-white/10
                         `}
                         onClick={() => {
-                          setActiveAdvancedSettings({
+                          setActiveRadioSettings({
                             radio: deepCopyTable(selectedUnits[0].getRadio()),
                             TACAN: deepCopyTable(selectedUnits[0].getTACAN()),
                           });
-                          setShowAdvancedSettings(true);
+                          setShowRadioSettings(true);
                         }}
                       >
                         <FaCog className="my-auto" /> {selectedUnits[0].isTanker() ? "Configure tanker settings" : "Configure AWACS settings"}
                       </button>
                     </div>
                   )}
+                  {/* ============== Radio settings buttons END ============== */}
+                  {/* ============== Advanced settings buttons START ============== */}
+                  {selectedUnits.length === 1 &&
+                    !selectedUnits[0].isTanker() &&
+                    !selectedUnits[0].isAWACS() &&
+                    ["Aircraft", "Helicopter"].includes(selectedUnits[0].getCategory()) && (
+                      <div className="flex content-center justify-between">
+                        <button
+                          className={`
+                            flex w-full justify-center gap-2 rounded-md
+                            border-[1px] p-2 align-middle text-sm
+                            dark:text-white
+                            hover:bg-white/10
+                          `}
+                          onClick={() => {
+                            setActiveAdvancedSettings(selectedUnits[0].getGeneralSettings());
+                            setShowAdvancedSettings(true);
+                          }}
+                        >
+                          <FaCog className="my-auto" /> Configure advanced settings
+                        </button>
+                      </div>
+                    )}
                   {/* ============== Advanced settings buttons END ============== */}
 
                   {selectedCategories.every((category) => {
@@ -1101,17 +1126,17 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   {/* ============== Audio sink toggle END ============== */}
                 </div>
               )}
-              {/* ============== Advanced settings START ============== */}
-              {showAdvancedSettings && (
+              {/* ============== Radio settings START ============== */}
+              {showRadioSettings && (
                 <div className="flex flex-col gap-2 p-4 text-white">
-                  <div className="pb-4">Advanced settings</div>
+                  <div className="pb-4">Radio settings</div>
                   <div className="text-sm text-gray-200">Callsign</div>
                   <div className="flex content-center gap-2">
                     <OlDropdown
                       label={
                         selectedUnits[0].isAWACS()
-                          ? ["Overlord", "Magic", "Wizard", "Focus", "Darkstar"][activeAdvancedSettings ? activeAdvancedSettings.radio.callsign - 1 : 0]
-                          : ["Texaco", "Arco", "Shell"][activeAdvancedSettings ? activeAdvancedSettings.radio.callsign - 1 : 0]
+                          ? ["Overlord", "Magic", "Wizard", "Focus", "Darkstar"][activeRadioSettings ? activeRadioSettings.radio.callsign - 1 : 0]
+                          : ["Texaco", "Arco", "Shell"][activeRadioSettings ? activeRadioSettings.radio.callsign - 1 : 0]
                       }
                       className="my-auto w-full"
                     >
@@ -1123,8 +1148,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 <OlDropdownItem
                                   key={idx}
                                   onClick={() => {
-                                    if (activeAdvancedSettings) activeAdvancedSettings.radio.callsign = idx + 1;
-                                    setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                                    if (activeRadioSettings) activeRadioSettings.radio.callsign = idx + 1;
+                                    setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                                   }}
                                 >
                                   {name}
@@ -1142,8 +1167,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 <OlDropdownItem
                                   key={idx}
                                   onClick={() => {
-                                    if (activeAdvancedSettings) activeAdvancedSettings.radio.callsign = idx + 1;
-                                    setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                                    if (activeRadioSettings) activeRadioSettings.radio.callsign = idx + 1;
+                                    setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                                   }}
                                 >
                                   {name}
@@ -1160,20 +1185,20 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       min={1}
                       max={9}
                       onChange={(e) => {
-                        if (activeAdvancedSettings) activeAdvancedSettings.radio.callsignNumber = Math.max(Math.min(Number(e.target.value), 9), 1);
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings) activeRadioSettings.radio.callsignNumber = Math.max(Math.min(Number(e.target.value), 9), 1);
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
                       onDecrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.radio.callsignNumber = Math.max(Math.min(Number(activeAdvancedSettings.radio.callsignNumber - 1), 9), 1);
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings)
+                          activeRadioSettings.radio.callsignNumber = Math.max(Math.min(Number(activeRadioSettings.radio.callsignNumber - 1), 9), 1);
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
                       onIncrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.radio.callsignNumber = Math.max(Math.min(Number(activeAdvancedSettings.radio.callsignNumber + 1), 9), 1);
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings)
+                          activeRadioSettings.radio.callsignNumber = Math.max(Math.min(Number(activeRadioSettings.radio.callsignNumber + 1), 9), 1);
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
-                      value={activeAdvancedSettings ? activeAdvancedSettings.radio.callsignNumber : 1}
+                      value={activeRadioSettings ? activeRadioSettings.radio.callsignNumber : 1}
                     ></OlNumberInput>
                   </div>
                   <div className="text-sm text-gray-200">TACAN</div>
@@ -1182,30 +1207,29 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       min={1}
                       max={126}
                       onChange={(e) => {
-                        if (activeAdvancedSettings) activeAdvancedSettings.TACAN.channel = Math.max(Math.min(Number(e.target.value), 126), 1);
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings) activeRadioSettings.TACAN.channel = Math.max(Math.min(Number(e.target.value), 126), 1);
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
                       onDecrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.TACAN.channel = Math.max(Math.min(Number(activeAdvancedSettings.TACAN.channel - 1), 126), 1);
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings) activeRadioSettings.TACAN.channel = Math.max(Math.min(Number(activeRadioSettings.TACAN.channel - 1), 126), 1);
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
                       onIncrease={() => {
-                        if (activeAdvancedSettings)
-                          activeAdvancedSettings.TACAN.channel = Math.max(Math.min(Number(activeAdvancedSettings.TACAN.channel + 1), 126), 1);
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings) activeRadioSettings.TACAN.channel = Math.max(Math.min(Number(activeRadioSettings.TACAN.channel + 1), 126), 1);
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
-                      value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.channel : 1}
+                      value={activeRadioSettings ? activeRadioSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown label={activeAdvancedSettings ? activeAdvancedSettings.TACAN.XY : "X"} className={`
-                      my-auto w-20
-                    `}>
+                    <OlDropdown
+                      label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"}
+                      className={`my-auto w-20`}
+                    >
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
-                          if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "X";
-                          setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                          if (activeRadioSettings) activeRadioSettings.TACAN.XY = "X";
+                          setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                         }}
                       >
                         X
@@ -1213,33 +1237,33 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <OlDropdownItem
                         key={"Y"}
                         onClick={() => {
-                          if (activeAdvancedSettings) activeAdvancedSettings.TACAN.XY = "Y";
-                          setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                          if (activeRadioSettings) activeRadioSettings.TACAN.XY = "Y";
+                          setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                         }}
                       >
                         Y
                       </OlDropdownItem>
                     </OlDropdown>
                     <OlStringInput
-                      value={activeAdvancedSettings ? activeAdvancedSettings.TACAN.callsign : ""}
+                      value={activeRadioSettings ? activeRadioSettings.TACAN.callsign : ""}
                       className="my-auto"
                       onChange={(e) => {
-                        if (activeAdvancedSettings) {
-                          activeAdvancedSettings.TACAN.callsign = e.target.value;
-                          if (activeAdvancedSettings.TACAN.callsign.length > 3)
-                            activeAdvancedSettings.TACAN.callsign = activeAdvancedSettings.TACAN.callsign.slice(0, 3);
+                        if (activeRadioSettings) {
+                          activeRadioSettings.TACAN.callsign = e.target.value;
+                          if (activeRadioSettings.TACAN.callsign.length > 3)
+                            activeRadioSettings.TACAN.callsign = activeRadioSettings.TACAN.callsign.slice(0, 3);
                         }
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
                     />
                   </div>
                   <div className="flex content-center gap-2">
                     <span className="my-auto text-sm">Enabled</span>{" "}
                     <OlToggle
-                      toggled={activeAdvancedSettings ? activeAdvancedSettings.TACAN.isOn : false}
+                      toggled={activeRadioSettings ? activeRadioSettings.TACAN.isOn : false}
                       onClick={() => {
-                        if (activeAdvancedSettings) activeAdvancedSettings.TACAN.isOn = !activeAdvancedSettings.TACAN.isOn;
-                        setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings) activeRadioSettings.TACAN.isOn = !activeRadioSettings.TACAN.isOn;
+                        setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                       }}
                     />
                   </div>
@@ -1247,11 +1271,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   <div className="text-sm text-gray-200">Radio frequency</div>
                   <div className="flex content-center gap-2">
                     <OlFrequencyInput
-                      value={activeAdvancedSettings ? activeAdvancedSettings.radio.frequency : 251000000}
+                      value={activeRadioSettings ? activeRadioSettings.radio.frequency : 251000000}
                       onChange={(value) => {
-                        if (activeAdvancedSettings) {
-                          activeAdvancedSettings.radio.frequency = value;
-                          setActiveAdvancedSettings(deepCopyTable(activeAdvancedSettings));
+                        if (activeRadioSettings) {
+                          activeRadioSettings.radio.frequency = value;
+                          setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                         }
                       }}
                     />
@@ -1268,13 +1292,106 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         hover:bg-blue-800
                       `}
                       onClick={() => {
+                        if (activeRadioSettings)
+                          selectedUnits[0].setAdvancedOptions(
+                            selectedUnits[0].getIsActiveTanker(),
+                            selectedUnits[0].getIsActiveAWACS(),
+                            activeRadioSettings.TACAN,
+                            activeRadioSettings.radio,
+                            selectedUnits[0].getGeneralSettings()
+                          );
+                        setActiveRadioSettings(null);
+                        setShowRadioSettings(false);
+                      }}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className={`
+                        mb-2 me-2 rounded-sm border-[1px] border-gray-600
+                        bg-blue-700 px-5 py-2.5 text-md font-medium
+                        text-gray-400
+                        dark:bg-transparent dark:hover:bg-gray-700
+                        dark:focus:ring-blue-800
+                        focus:outline-none focus:ring-4 focus:ring-blue-300
+                        hover:bg-gray-800
+                      `}
+                      onClick={() => {
+                        setActiveRadioSettings(null);
+                        setShowRadioSettings(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+              {/* ============== Radio settings END ============== */}
+              {/* ============== Advanced settings START ============== */}
+              {showAdvancedSettings && (
+                <div className="flex flex-col gap-2 p-4 text-white">
+                  <div className="pb-4">Radio settings</div>
+                  <div className="flex justify-between text-sm text-gray-200">
+                    <span className="my-auto">Prohibit AA</span>
+                    <OlToggle
+                      onClick={() => {
+                        setActiveAdvancedSettings({ ...(activeAdvancedSettings as GeneralSettings), prohibitAA: !activeAdvancedSettings?.prohibitAA });
+                      }}
+                      toggled={activeAdvancedSettings?.prohibitAA}
+                    />
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-200">
+                    <span className="my-auto">Prohibit AG</span>
+                    <OlToggle
+                      onClick={() => {
+                        setActiveAdvancedSettings({ ...(activeAdvancedSettings as GeneralSettings), prohibitAG: !activeAdvancedSettings?.prohibitAG });
+                      }}
+                      toggled={activeAdvancedSettings?.prohibitAG}
+                    />
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-200">
+                    <span className="my-auto">Prohibit Jettison</span>
+                    <OlToggle
+                      onClick={() => {
+                        setActiveAdvancedSettings({
+                          ...(activeAdvancedSettings as GeneralSettings),
+                          prohibitJettison: !activeAdvancedSettings?.prohibitJettison,
+                        });
+                      }}
+                      toggled={activeAdvancedSettings?.prohibitJettison}
+                    />
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-200">
+                    <span className="my-auto">Prohibit afterburner</span>
+                    <OlToggle
+                      onClick={() => {
+                        setActiveAdvancedSettings({
+                          ...(activeAdvancedSettings as GeneralSettings),
+                          prohibitAfterburner: !activeAdvancedSettings?.prohibitAfterburner,
+                        });
+                      }}
+                      toggled={activeAdvancedSettings?.prohibitAfterburner}
+                    />
+                  </div>
+                  
+                  <div className="flex pt-8">
+                    <button
+                      className={`
+                        mb-2 me-2 rounded-sm bg-blue-700 px-5 py-2.5 text-md
+                        font-medium text-white
+                        dark:bg-blue-600 dark:hover:bg-blue-700
+                        dark:focus:ring-blue-800
+                        focus:outline-none focus:ring-4 focus:ring-blue-300
+                        hover:bg-blue-800
+                      `}
+                      onClick={() => {
                         if (activeAdvancedSettings)
                           selectedUnits[0].setAdvancedOptions(
                             selectedUnits[0].getIsActiveTanker(),
                             selectedUnits[0].getIsActiveAWACS(),
-                            activeAdvancedSettings.TACAN,
-                            activeAdvancedSettings.radio,
-                            selectedUnits[0].getGeneralSettings()
+                            selectedUnits[0].getTACAN(),
+                            selectedUnits[0].getRadio(),
+                            activeAdvancedSettings
                           );
                         setActiveAdvancedSettings(null);
                         setShowAdvancedSettings(false);
@@ -1293,8 +1410,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         hover:bg-gray-800
                       `}
                       onClick={() => {
-                        setActiveAdvancedSettings(null);
-                        setShowAdvancedSettings(false);
+                        setActiveRadioSettings(null);
+                        setShowRadioSettings(false);
                       }}
                     >
                       Cancel
@@ -1319,9 +1436,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
-                          bg-yellow-700
-                        `}
+                        ${
+                          selectedUnits[0].getFuel() > 10 &&
+                          selectedUnits[0].getFuel() <= 40 &&
+                          `bg-yellow-700`
+                        }
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}
