@@ -80,12 +80,8 @@ export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKeys: 
           <OlStateButton
             checked={props.sink.getPtt()}
             icon={faMicrophoneLines}
-            onClick={() => {}}
-            onMouseDown={() => {
-              props.sink.setPtt(true);
-            }}
-            onMouseUp={() => {
-              props.sink.setPtt(false);
+            onClick={() => {
+              props.sink.setPtt(!props.sink.getPtt());
             }}
             tooltip="Talk on frequency"
           ></OlStateButton>

@@ -72,6 +72,7 @@ export class TextToSpeechSource extends AudioSource {
     /* Start playing the file at the selected position */
     this.#source.start(0, this.#currentPosition);
     this.#playing = true;
+    this.getConnectedTo().forEach((sink) => sink.setPtt(true));
     const now = Date.now() / 1000;
     this.#lastUpdateTime = now;
 
@@ -102,6 +103,7 @@ export class TextToSpeechSource extends AudioSource {
     this.#source.stop();
     this.#source.disconnect();
     this.#playing = false;
+    this.getConnectedTo().forEach((sink) => sink.setPtt(false));
 
     const now = Date.now() / 1000;
     this.#currentPosition += now - this.#lastUpdateTime;
