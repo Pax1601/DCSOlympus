@@ -605,7 +605,7 @@ export function SpawnContextMenu(props: {}) {
             coalition={spawnCoalition}
             onBack={() => setBlueprint(null)}
           />
-          {!(effect === null) && latlng && <CompactEffectSpawnMenu effect={effect} latlng={latlng} onBack={() => setEffect(null)} />}
+          <EffectSpawnMenu visible={effect !== null} compact={true} effect={effect} latlng={latlng} onBack={() => setEffect(null)} />
         </div>
       </div>
     </>

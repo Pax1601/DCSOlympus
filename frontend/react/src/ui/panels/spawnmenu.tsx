@@ -441,7 +441,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
           coalition={commandModeOptions.commandMode !== GAME_MASTER ? (commandModeOptions.commandMode === BLUE_COMMANDER ? "blue" : "red") : undefined}
         />
 
-        {!(effect === null) && <EffectSpawnMenu effect={effect} />}
+        <EffectSpawnMenu visible={effect !== null} compact={false} effect={effect} />
       </>
     </Menu>
   );

@@ -117,9 +117,10 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                   <div key={idx}>
                     {Object.keys(runway.headings[0]).map((runwayName) => {
                       return (
-                        <div key={`${idx}-${runwayName}`} className={`
-                          flex w-full justify-between
-                        `}>
+                        <div
+                          key={`${idx}-${runwayName}`}
+                          className={`flex w-full justify-between`}
+                        >
                           <span>
                             {" "}
                             <span className="text-gray-400">RWY</span> {runwayName}
@@ -268,14 +269,14 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
               </div>
             )}
             <>
-              {!(blueprint === null) && (
-                <UnitSpawnMenu
-                  blueprint={blueprint}
-                  starredSpawns={starredSpawns}
-                  airbase={airbase}
-                  coalition={(airbase?.getCoalition() ?? "blue") as Coalition}
-                />
-              )}
+              <UnitSpawnMenu
+                visible={blueprint !== null}
+                compact={false}
+                blueprint={blueprint}
+                starredSpawns={starredSpawns}
+                airbase={airbase}
+                coalition={(airbase?.getCoalition() ?? "blue") as Coalition}
+              />
             </>
           </>
         )}
