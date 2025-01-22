@@ -28,7 +28,6 @@ import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { Coalition } from "../../types/types";
-import { CompactEffectSpawnMenu } from "../panels/compacteffectspawnmenu";
 
 enum CategoryGroup {
   NONE,

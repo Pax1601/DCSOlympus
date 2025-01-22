@@ -1,4 +1,4 @@
-import { AudioMessageType, OlympusState } from "../constants/constants";
+import { AudioMessageType, BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../constants/constants";
 import { MicrophoneSource } from "./microphonesource";
 import { RadioSink } from "./radiosink";
 import { getApp } from "../olympusapp";
@@ -11,17 +11,20 @@ import { Unit } from "../unit/unit";
 import { UnitSink } from "./unitsink";
 import { AudioPacket, MessageType } from "./audiopacket";
 import {
+  AudioManagerCoalitionChangedEvent,
   AudioManagerDevicesChangedEvent,
   AudioManagerInputChangedEvent,
   AudioManagerOutputChangedEvent,
   AudioManagerStateChangedEvent,
   AudioSinksChangedEvent,
   AudioSourcesChangedEvent,
+  CommandModeOptionsChangedEvent,
   ConfigLoadedEvent,
   SRSClientsChangedEvent,
 } from "../events";
-import { OlympusConfig } from "../interfaces";
+import { CommandModeOptions, OlympusConfig } from "../interfaces";
 import { TextToSpeechSource } from "./texttospeechsource";
+import { Coalition } from "../types/types";
 
 export class AudioManager {
   #audioContext: AudioContext;
@@ -46,10 +49,21 @@ export class AudioManager {
   #syncInterval: number;
   #speechRecognition: boolean = true;
   #internalTextToSpeechSource: TextToSpeechSource;
+  #coalition: Coalition = "blue";
+  #commandMode: string = BLUE_COMMANDER;
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
+    });
+
+    CommandModeOptionsChangedEvent.on((options: CommandModeOptions) => {
+      if (options.commandMode === BLUE_COMMANDER) {
+        this.setCoalition("blue");
+      } else if (options.commandMode === RED_COMMANDER) {
+        this.setCoalition("red");
+      }
+      this.#commandMode = options.commandMode;
     });
 
     let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyComma", "KeyDot"];
@@ -117,7 +131,7 @@ export class AudioManager {
               if (sink.getFrequency() === frequencyInfo.frequency && sink.getModulation() === frequencyInfo.modulation && sink.getTuned()) {
                 sink.setReceiving(true);
 
-                sink.setTransmittingUnit(getApp().getUnitsManager().getUnitByID(audioPacket.getUnitID()) ?? undefined)
+                sink.setTransmittingUnit(getApp().getUnitsManager().getUnitByID(audioPacket.getUnitID()) ?? undefined);
 
                 /* Make a copy of the array buffer for the playback pipeline to use */
                 var dst = new ArrayBuffer(audioPacket.getAudioData().buffer.byteLength);
@@ -150,7 +164,7 @@ export class AudioManager {
           let newRadio = this.addRadio();
           newRadio?.setFrequency(options.frequency);
           newRadio?.setModulation(options.modulation);
-          newRadio?.setPan(options.pan)
+          newRadio?.setPan(options.pan);
         });
       } else {
         /* Add two default radios and connect to the microphone*/
@@ -346,12 +360,23 @@ export class AudioManager {
     return this.#internalTextToSpeechSource;
   }
 
+  setCoalition(coalition: Coalition) {
+    if (this.#commandMode === GAME_MASTER) {
+      this.#coalition = coalition;
+      AudioManagerCoalitionChangedEvent.dispatch(coalition);
+    }
+  }
+
+  getCoalition() {
+    return this.#coalition;
+  }
+
   #syncRadioSettings() {
     /* Send the radio settings of each radio to the SRS backend */
     let message = {
       type: "Settings update",
       guid: this.#guid,
-      coalition: 2, // TODO
+      coalition: this.#coalition,
       settings: this.#sinks
         .filter((sink) => sink instanceof RadioSink)
         .map((radio) => {

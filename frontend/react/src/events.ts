@@ -7,7 +7,7 @@ import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
 import { Bullseye } from "./mission/bullseye";
 import { Shortcut } from "./shortcut/shortcut";
-import { MapHiddenTypes, MapOptions } from "./types/types";
+import { Coalition, MapHiddenTypes, MapOptions } from "./types/types";
 import { ContextAction } from "./unit/contextaction";
 import { ContextActionSet } from "./unit/contextactionset";
 import { Unit } from "./unit/unit";
@@ -745,6 +745,23 @@ export class AudioManagerOutputChangedEvent {
 
   static dispatch(output: MediaDeviceInfo) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { output } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class AudioManagerCoalitionChangedEvent {
+  static on(callback: (coalition: Coalition) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail.coalition);
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(coalition: Coalition) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { coalition } }));
     console.log(`Event ${this.name} dispatched`);
   }
 }

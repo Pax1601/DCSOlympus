@@ -21,7 +21,7 @@ export function CoordinatesPanel(props: {}) {
 
     BullseyesDataChangedEvent.on((bullseyes) => setBullseyes(bullseyes));
     SelectedUnitsChangedEvent.on((selectedUnits) => setSelectedUnits(selectedUnits));
-    SelectionClearedEvent.on(() => setSelectedUnits([]))
+    SelectionClearedEvent.on(() => setSelectedUnits([]));
   }, []);
 
   return (
@@ -41,28 +41,32 @@ export function CoordinatesPanel(props: {}) {
               gap-2
             `}
           >
-            <div className="flex justify-start gap-2">
-              <span
-                className={`
-                  rounded-sm bg-blue-500 px-1 py-1 text-center font-bold
-                  text-olympus-700
-                `}
-              >
-                <FaBullseye />
-              </span>{" "}
-              {computeBearingRangeString(bullseyes[2].getLatLng(), latlng)}
-            </div>
-            <div className="flex w-[50%] justify-start gap-2">
-              <span
-                className={`
-                  rounded-sm bg-red-500 px-1 py-1 text-center font-bold
-                  text-olympus-700
-                `}
-              >
-                <FaBullseye />
-              </span>
-              {computeBearingRangeString(bullseyes[1].getLatLng(), latlng)}
-            </div>
+            {bullseyes[2] && (
+              <div className="flex justify-start gap-2">
+                <span
+                  className={`
+                    rounded-sm bg-blue-500 px-1 py-1 text-center font-bold
+                    text-olympus-700
+                  `}
+                >
+                  <FaBullseye />
+                </span>{" "}
+                {computeBearingRangeString(bullseyes[2].getLatLng(), latlng)}
+              </div>
+            )}
+            {bullseyes[1] && (
+              <div className="flex w-[50%] justify-start gap-2">
+                <span
+                  className={`
+                    rounded-sm bg-red-500 px-1 py-1 text-center font-bold
+                    text-olympus-700
+                  `}
+                >
+                  <FaBullseye />
+                </span>
+                {computeBearingRangeString(bullseyes[1].getLatLng(), latlng)}
+              </div>
+            )}
           </div>
           {selectedUnits.length == 1 && (
             <div className="flex justify-start gap-2">

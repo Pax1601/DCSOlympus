@@ -12,15 +12,20 @@ import { UnitSink } from "../../audio/unitsink";
 import { FaMinus, FaVolumeHigh } from "react-icons/fa6";
 import { getRandomColor } from "../../other/utils";
 import {
+  AudioManagerCoalitionChangedEvent,
   AudioManagerDevicesChangedEvent,
   AudioManagerInputChangedEvent,
   AudioManagerOutputChangedEvent,
   AudioManagerStateChangedEvent,
   AudioSinksChangedEvent,
   AudioSourcesChangedEvent,
+  CommandModeOptionsChangedEvent,
   ShortcutsChangedEvent,
 } from "../../events";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
+import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
+import { Coalition } from "../../types/types";
+import { GAME_MASTER, NONE } from "../../constants/constants";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [devices, setDevices] = useState([] as MediaDeviceInfo[]);
@@ -32,6 +37,8 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   const [shortcuts, setShortcuts] = useState({});
   const [input, setInput] = useState(undefined as undefined | MediaDeviceInfo);
   const [output, setOutput] = useState(undefined as undefined | MediaDeviceInfo);
+  const [coalition, setCoalition] = useState("blue" as Coalition);
+  const [commandMode, setCommandMode] = useState(NONE as string);
 
   /* Preallocate 128 references for the source and sink panels. If the number of references changes, React will give an error */
   const sourceRefs = Array(128)
@@ -77,6 +84,8 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
     AudioManagerDevicesChangedEvent.on((devices) => setDevices([...devices]));
     AudioManagerInputChangedEvent.on((input) => setInput(input));
     AudioManagerOutputChangedEvent.on((output) => setOutput(output));
+    AudioManagerCoalitionChangedEvent.on((coalition) => setCoalition(coalition));
+    CommandModeOptionsChangedEvent.on((options) => setCommandMode(options.commandMode));
   }, []);
 
   /* When the sinks or sources change, use the count state to force a rerender to update the connection lines */
@@ -135,6 +144,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
           </div>
         )}
       </>
+
       <div className="flex flex-col gap-3">
         <div
           className={`
@@ -145,6 +155,24 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
         >
           {audioManagerEnabled && (
             <>
+              {commandMode === GAME_MASTER && (
+                <div className="flex justify-between">
+                  <div>Radio coalition </div>
+                  <OlCoalitionToggle
+                    coalition={coalition}
+                    onClick={() => {
+                      let newCoalition = "";
+                      if (coalition === "blue") newCoalition = "neutral";
+                      else if (coalition === "neutral") newCoalition = "red";
+                      else if (coalition === "red") newCoalition = "blue";
+                      getApp()
+                        .getAudioManager()
+                        .setCoalition(newCoalition as Coalition);
+                    }}
+                  />
+                </div>
+              )}
+
               <span>Input</span>
 
               <OlDropdown label={input ? input.label : "Default"}>
