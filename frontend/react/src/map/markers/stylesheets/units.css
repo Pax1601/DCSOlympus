@@ -143,6 +143,13 @@
   fill: white !important;
 }
 
+[data-is-selected][data-coalition="blue"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-blue);
+}
+[data-is-selected][data-coalition="red"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-red);
+}
+
 [data-is-highlighted] .unit-icon svg > *:first-child {
   stroke: white;
 }
@@ -414,6 +421,10 @@
   color: var(--secondary-blue-text);
 }
 
+[data-object|="unit"][data-coalition="blue"][data-is-selected] path {
+  fill: var(--secondary-blue-text);
+}
+
 [data-object|="unit"][data-coalition="blue"] .unit-fuel-level,
 [data-object|="unit"][data-coalition="blue"] .unit-health-level,
 [data-object|="unit"][data-coalition="blue"][data-has-fox-1] .unit-ammo > div:nth-child(1),
@@ -429,6 +440,10 @@
 
 [data-object|="unit"][data-coalition="red"][data-is-selected] .unit-short-label {
   color: var(--secondary-red-text);
+}
+
+[data-object|="unit"][data-coalition="red"][data-is-selected] path {
+  fill: var(--secondary-red-text);
 }
 
 [data-object|="unit"][data-coalition="red"] .unit-fuel-level,

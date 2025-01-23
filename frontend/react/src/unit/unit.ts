@@ -45,6 +45,7 @@ import {
   SHORT_PRESS_MILLISECONDS,
   TRAIL_LENGTH,
   colors,
+  UnitState,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -425,7 +426,6 @@ export abstract class Unit extends CustomMarker {
     var updateMarker = !getApp().getMap().hasLayer(this) && this.getAlive();
 
     var oldIsLeader = this.#isLeader;
-    var oldOperateAs = this.#operateAs;
     var datumIndex = 0;
     while (datumIndex != DataIndexes.endOfData) {
       datumIndex = dataExtractor.extractUInt8();
@@ -591,7 +591,7 @@ export abstract class Unit extends CustomMarker {
     if (updateMarker) this.#updateMarker();
 
     /* Redraw the marker if isLeader has changed. TODO I don't love this approach, observables may be more elegant */
-    if (oldIsLeader !== this.#isLeader || oldOperateAs !== this.#operateAs) {
+    if (oldIsLeader !== this.#isLeader) {
       this.#redrawMarker();
 
       /* Reapply selection */
@@ -885,8 +885,7 @@ export abstract class Unit extends CustomMarker {
     el.classList.add("unit");
     el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
     el.setAttribute("data-coalition", this.#coalition);
-    el.setAttribute("data-operate-as", this.#operateAs);
-
+  
     var iconOptions = this.getIconOptions();
 
     /* Generate and append elements depending on active options */
@@ -919,7 +918,7 @@ export abstract class Unit extends CustomMarker {
       if (this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)))
         marker = this.getBlueprint()?.markerFile ?? this.getDefaultMarker();
       else marker = "aircraft";
-      img.src = `./images/units/map/${/*TODO getApp().getMap().getOptions().AWACSMode ? "awacs" : */"normal"}/${this.getCoalition()}/${marker}.svg`;
+      img.src = `./images/units/map/${/*TODO getApp().getMap().getOptions().AWACSMode ? "awacs" : */ "normal"}/${this.getCoalition()}/${marker}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
 
@@ -1560,6 +1559,14 @@ export abstract class Unit extends CustomMarker {
           const BRAA = `${computeBearingRangeString(reference.getPosition(), this.getPosition())}`;
           if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = `${BRAA}`;
         } else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
+
+        /* Set operate as */
+        element.querySelector(".unit")?.setAttribute(
+          "data-operate-as",
+          this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT
+            ? this.#operateAs
+            : "neutral"
+        );
       }
 
       /* Set vertical offset for altitude stacking */
@@ -1868,7 +1875,7 @@ export abstract class AirUnit extends Unit {
       showFuel: belongsToCommandedCoalition,
       showAmmo: belongsToCommandedCoalition,
       showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
-      showCallsign: belongsToCommandedCoalition && (/*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman()),
+      showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
     } as ObjectIconOptions;
   }
@@ -1955,7 +1962,7 @@ export class GroundUnit extends Unit {
       showFuel: false,
       showAmmo: false,
       showSummary: false,
-      showCallsign: belongsToCommandedCoalition && (/*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman()),
+      showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
     } as ObjectIconOptions;
   }
@@ -2020,7 +2027,7 @@ export class NavyUnit extends Unit {
       showFuel: false,
       showAmmo: false,
       showSummary: false,
-      showCallsign: belongsToCommandedCoalition && (/*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman()),
+      showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
     } as ObjectIconOptions;
   }
