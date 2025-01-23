@@ -5,6 +5,8 @@
   --secondary-neutral-outline: #111111;
   --secondary-neutral-text: #111111;
   --unit-background-neutral: #cfd9e8;
+  --unit-background-operate-as-blue: #9dc1d6;
+  --unit-background-operate-as-red: rgb(226, 170, 170);
 
   /*** Coalition: blue  ***/
   --primary-blue: #247be2;

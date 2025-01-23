@@ -995,7 +995,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {/* ============== Shots intensity END ============== */}
                         </div>
                         {/* ============== Operate as toggle START ============== */}
-                        <div className="flex content-center justify-between">
+                        {selectedUnits.every((unit) => unit.getCoalition() === 'neutral') && <div className={`
+                          flex content-center justify-between
+                        `}>
                           <span
                             className={`
                               my-auto font-normal
@@ -1016,7 +1018,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               });
                             }}
                           />
-                        </div>
+                        </div>}
                         {/* ============== Operate as toggle END ============== */}
                       </div>
                       {/* ============== Follow roads toggle START ============== */}

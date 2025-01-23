@@ -131,8 +131,16 @@
   fill: var(--unit-background-neutral);
 }
 
+[data-coalition="neutral"][data-operate-as="blue"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-blue);
+}
+
+[data-coalition="neutral"][data-operate-as="red"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-red);
+}
+
 [data-is-selected] .unit-icon svg > *:first-child {
-  fill: white;
+  fill: white !important;
 }
 
 [data-is-highlighted] .unit-icon svg > *:first-child {

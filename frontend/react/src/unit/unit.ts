@@ -425,6 +425,7 @@ export abstract class Unit extends CustomMarker {
     var updateMarker = !getApp().getMap().hasLayer(this) && this.getAlive();
 
     var oldIsLeader = this.#isLeader;
+    var oldOperateAs = this.#operateAs;
     var datumIndex = 0;
     while (datumIndex != DataIndexes.endOfData) {
       datumIndex = dataExtractor.extractUInt8();
@@ -568,6 +569,7 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.operateAs:
           this.#operateAs = enumToCoalition(dataExtractor.extractUInt8());
+          updateMarker = true;
           break;
         case DataIndexes.shotsScatter:
           this.#shotsScatter = dataExtractor.extractUInt8();
@@ -589,7 +591,7 @@ export abstract class Unit extends CustomMarker {
     if (updateMarker) this.#updateMarker();
 
     /* Redraw the marker if isLeader has changed. TODO I don't love this approach, observables may be more elegant */
-    if (oldIsLeader !== this.#isLeader) {
+    if (oldIsLeader !== this.#isLeader || oldOperateAs !== this.#operateAs) {
       this.#redrawMarker();
 
       /* Reapply selection */
@@ -883,6 +885,7 @@ export abstract class Unit extends CustomMarker {
     el.classList.add("unit");
     el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
     el.setAttribute("data-coalition", this.#coalition);
+    el.setAttribute("data-operate-as", this.#operateAs);
 
     var iconOptions = this.getIconOptions();
 
