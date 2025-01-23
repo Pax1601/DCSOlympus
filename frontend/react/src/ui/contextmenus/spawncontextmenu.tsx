@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
+import { BLUE_COMMANDER, colors, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
 import { LatLng } from "leaflet";
 import {
   AppStateChangedEvent,
@@ -187,35 +187,35 @@ export function SpawnContextMenu(props: {}) {
               onClick={() => (openAccordion !== CategoryGroup.AIRCRAFT ? setOpenAccordion(CategoryGroup.AIRCRAFT) : setOpenAccordion(CategoryGroup.NONE))}
               icon={olButtonsVisibilityAircraft}
               tooltip="Show aircraft units"
-              buttonColor={spawnCoalition === "blue" ? "#2563eb" : spawnCoalition === "neutral" ? "#9ca3af" : "#ef4444"}
+              buttonColor={spawnCoalition === "blue" ? colors.BLUE_COALITION : spawnCoalition === "neutral" ? colors.NEUTRAL_COALITION : colors.RED_COALITION}
             />
             <OlStateButton
               checked={openAccordion === CategoryGroup.HELICOPTER}
               onClick={() => (openAccordion !== CategoryGroup.HELICOPTER ? setOpenAccordion(CategoryGroup.HELICOPTER) : setOpenAccordion(CategoryGroup.NONE))}
               icon={olButtonsVisibilityHelicopter}
               tooltip="Show helicopter units"
-              buttonColor={spawnCoalition === "blue" ? "#2563eb" : spawnCoalition === "neutral" ? "#9ca3af" : "#ef4444"}
+              buttonColor={spawnCoalition === "blue" ? colors.BLUE_COALITION : spawnCoalition === "neutral" ? colors.NEUTRAL_COALITION : colors.RED_COALITION}
             />
             <OlStateButton
               checked={openAccordion === CategoryGroup.AIR_DEFENCE}
               onClick={() => (openAccordion !== CategoryGroup.AIR_DEFENCE ? setOpenAccordion(CategoryGroup.AIR_DEFENCE) : setOpenAccordion(CategoryGroup.NONE))}
               icon={olButtonsVisibilityGroundunitSam}
               tooltip="Show air defence units"
-              buttonColor={spawnCoalition === "blue" ? "#2563eb" : spawnCoalition === "neutral" ? "#9ca3af" : "#ef4444"}
+              buttonColor={spawnCoalition === "blue" ? colors.BLUE_COALITION : spawnCoalition === "neutral" ? colors.NEUTRAL_COALITION : colors.RED_COALITION}
             />
             <OlStateButton
               checked={openAccordion === CategoryGroup.GROUND_UNIT}
               onClick={() => (openAccordion !== CategoryGroup.GROUND_UNIT ? setOpenAccordion(CategoryGroup.GROUND_UNIT) : setOpenAccordion(CategoryGroup.NONE))}
               icon={olButtonsVisibilityGroundunit}
               tooltip="Show ground units"
-              buttonColor={spawnCoalition === "blue" ? "#2563eb" : spawnCoalition === "neutral" ? "#9ca3af" : "#ef4444"}
+              buttonColor={spawnCoalition === "blue" ? colors.BLUE_COALITION : spawnCoalition === "neutral" ? colors.NEUTRAL_COALITION : colors.RED_COALITION}
             />
             <OlStateButton
               checked={openAccordion === CategoryGroup.NAVY_UNIT}
               onClick={() => (openAccordion !== CategoryGroup.NAVY_UNIT ? setOpenAccordion(CategoryGroup.NAVY_UNIT) : setOpenAccordion(CategoryGroup.NONE))}
               icon={olButtonsVisibilityNavyunit}
               tooltip="Show navy units"
-              buttonColor={spawnCoalition === "blue" ? "#2563eb" : spawnCoalition === "neutral" ? "#9ca3af" : "#ef4444"}
+              buttonColor={spawnCoalition === "blue" ? colors.BLUE_COALITION : spawnCoalition === "neutral" ? colors.NEUTRAL_COALITION : colors.RED_COALITION}
             />
             <OlStateButton checked={showMore} onClick={() => setShowMore(!showMore)} icon={faEllipsisVertical} tooltip="Show more options" />
             {showMore && (

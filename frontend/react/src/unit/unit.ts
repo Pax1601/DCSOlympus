@@ -16,6 +16,7 @@ import {
   nmToM,
   zeroAppend,
   computeBearingRangeString,
+  adjustBrightness,
 } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
@@ -43,6 +44,7 @@ import {
   ContextActionTarget,
   SHORT_PRESS_MILLISECONDS,
   TRAIL_LENGTH,
+  colors,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -319,7 +321,7 @@ export abstract class Unit extends CustomMarker {
     this.ID = ID;
 
     this.#pathPolyline = new Polyline([], {
-      color: "#2d3e50",
+      color: colors.GRAY,
       weight: 3,
       opacity: 0.5,
       smoothFactor: 1,
@@ -327,7 +329,7 @@ export abstract class Unit extends CustomMarker {
     this.#pathPolyline.addTo(getApp().getMap());
     this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
     this.#targetPositionPolyline = new Polyline([], {
-      color: "#FF0000",
+      color: colors.WHITE,
       weight: 3,
       opacity: 0.5,
       smoothFactor: 1,
@@ -601,8 +603,9 @@ export abstract class Unit extends CustomMarker {
     if (!this.#blueprint && this.#name !== "") {
       const blueprint = getApp().getUnitsManager().getDatabase().getByName(this.#name);
       this.#blueprint = blueprint ?? null;
-      /* Refresh the marker */
-      this.#redrawMarker();
+      if (this.#blueprint)
+        /* Refresh the marker */
+        this.#redrawMarker();
     }
 
     /* Update the blueprint to use when the unit is grouped */
@@ -1438,9 +1441,9 @@ export abstract class Unit extends CustomMarker {
     if (this.#alive && drawMiniMapMarker) {
       if (this.#miniMapMarker == null) {
         this.#miniMapMarker = new CircleMarker(new LatLng(this.#position.lat, this.#position.lng), { radius: 0.5 });
-        if (this.#coalition == "neutral") this.#miniMapMarker.setStyle({ color: "#CFD9E8", radius: 2 });
-        else if (this.#coalition == "red") this.#miniMapMarker.setStyle({ color: "#ff5858", radius: 2 });
-        else this.#miniMapMarker.setStyle({ color: "#247be2", radius: 2 });
+        if (this.#coalition == "neutral") this.#miniMapMarker.setStyle({ color: colors.NEUTRAL_COALITION, radius: 2 });
+        else if (this.#coalition == "red") this.#miniMapMarker.setStyle({ color: colors.RED_COALITION, radius: 2 });
+        else this.#miniMapMarker.setStyle({ color: colors.BLUE_COALITION, radius: 2 });
         this.#miniMapMarker.addTo(getApp().getMap().getMiniMapLayerGroup());
         this.#miniMapMarker.bringToBack();
       } else {
@@ -1585,7 +1588,7 @@ export abstract class Unit extends CustomMarker {
       /* Draw the contact trail */
       if (/*TODO getApp().getMap().getOptions().AWACSMode*/ false) {
         this.#trailPolylines = this.#trailPositions.map(
-          (latlng, idx) => new Polyline([latlng, latlng], { color: "#FFFFFF", opacity: 1 - (idx + 1) / TRAIL_LENGTH })
+          (latlng, idx) => new Polyline([latlng, latlng], { color: colors.WHITE, opacity: 1 - (idx + 1) / TRAIL_LENGTH })
         );
         this.#trailPolylines.forEach((polyline) => polyline.addTo(getApp().getMap()));
       }
@@ -1678,10 +1681,10 @@ export abstract class Unit extends CustomMarker {
           } else endLatLng = new LatLng(contact.getPosition().lat, contact.getPosition().lng);
 
           var color;
-          if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC) color = "#FF00FF";
-          else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST) color = "#FFFF00";
-          else if (contactData.detectionMethod === RWR) color = "#00FF00";
-          else color = "#FFFFFF";
+          if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC) color = colors.MAGENTA;
+          else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST) color = colors.YELLOW;
+          else if (contactData.detectionMethod === RWR) color = colors.GREEN;
+          else color = colors.WHITE;
           var contactPolyline = new Polyline([startLatLng, endLatLng], {
             color: color,
             weight: 3,
@@ -1742,13 +1745,13 @@ export abstract class Unit extends CustomMarker {
           this.#acquisitionCircle.addTo(getApp().getMap());
           switch (this.getCoalition()) {
             case "red":
-              this.#acquisitionCircle.options.color = "#D42121";
+              this.#acquisitionCircle.options.color = adjustBrightness(colors.RED_COALITION, -20);
               break;
             case "blue":
-              this.#acquisitionCircle.options.color = "#017DC1";
+              this.#acquisitionCircle.options.color = adjustBrightness(colors.BLUE_COALITION, -20);
               break;
             default:
-              this.#acquisitionCircle.options.color = "#111111";
+              this.#acquisitionCircle.options.color = adjustBrightness(colors.NEUTRAL_COALITION, -20);
               break;
           }
         }
@@ -1768,13 +1771,13 @@ export abstract class Unit extends CustomMarker {
           this.#engagementCircle.addTo(getApp().getMap());
           switch (this.getCoalition()) {
             case "red":
-              this.#engagementCircle.options.color = "#FF5858";
+              this.#engagementCircle.options.color = colors.RED_COALITION;
               break;
             case "blue":
-              this.#engagementCircle.options.color = "#3BB9FF";
+              this.#engagementCircle.options.color = colors.BLUE_COALITION;
               break;
             default:
-              this.#engagementCircle.options.color = "#CFD9E8";
+              this.#engagementCircle.options.color = colors.NEUTRAL_COALITION;
               break;
           }
         }

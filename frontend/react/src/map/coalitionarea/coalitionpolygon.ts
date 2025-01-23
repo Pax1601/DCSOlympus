@@ -2,7 +2,7 @@ import { LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions, DivIcon
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
-import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
+import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import { polyCenter } from "../../other/utils";
 import { CoalitionAreaChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
@@ -150,9 +150,9 @@ export class CoalitionPolygon extends Polygon {
   }
 
   #setColors() {
-    let coalitionColor = "#FFFFFF";
-    if (this.getCoalition() === "blue") coalitionColor = "#247be2";
-    else if (this.getCoalition() === "red") coalitionColor = "#ff5858";
+    let coalitionColor = colors.NEUTRAL_COALITION;
+    if (this.getCoalition() === "blue") coalitionColor = colors.BLUE_COALITION;
+    else if (this.getCoalition() === "red") coalitionColor = colors.RED_COALITION;
 
     this.setStyle({
       color: this.getSelected() ? "white" : coalitionColor,

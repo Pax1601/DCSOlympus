@@ -4,7 +4,7 @@ import { DateAndTime, ServerStatus } from "../../interfaces";
 import { getApp } from "../../olympusapp";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { MapOptionsChangedEvent, ServerStatusUpdatedEvent } from "../../events";
-import { MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
+import { colors, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
 
 export function MiniMapPanel(props: {}) {
   const [serverStatus, setServerStatus] = useState({} as ServerStatus);
@@ -41,15 +41,13 @@ export function MiniMapPanel(props: {}) {
 
   let timeString = `${zeroAppend(hours, 2)}:${zeroAppend(minutes, 2)}:${zeroAppend(seconds, 2)}`;
 
-  // Choose frame rate string color
-  let frameRateColor = "#8BFF63";
-  if (serverStatus.frameRate < 30) frameRateColor = "#F05252";
-  else if (serverStatus.frameRate >= 30 && serverStatus.frameRate < 60) frameRateColor = "#FF9900";
+  let loadColor = colors.OLYMPUS_GREEN;
+  if (serverStatus.load > 1000) loadColor = colors.OLYMPUS_RED;
+  else if (serverStatus.load >= 100 && serverStatus.load < 1000) loadColor = colors.OLYMPUS_ORANGE;
 
-  // Choose load string color
-  let loadColor = "#8BFF63";
-  if (serverStatus.load > 1000) loadColor = "#F05252";
-  else if (serverStatus.load >= 100 && serverStatus.load < 1000) loadColor = "#FF9900";
+  let frameRateColor = colors.OLYMPUS_GREEN;
+  if (serverStatus.frameRate < 30) frameRateColor = colors.OLYMPUS_RED;
+  else if (serverStatus.frameRate >= 30 && serverStatus.frameRate < 60) frameRateColor = colors.OLYMPUS_ORANGE;
 
   return (
     <div

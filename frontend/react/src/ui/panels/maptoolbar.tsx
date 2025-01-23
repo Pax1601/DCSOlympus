@@ -244,11 +244,8 @@ export function MapToolBar(props: {}) {
                     tooltipPosition="side"
                     buttonColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type ?? 0]}
                     onClick={() => {
-                      if (contextActionIt.getTarget() === ContextActionTarget.NONE) {
-                        contextActionIt.executeCallback(null, null);
-                      } else {
-                        contextActionIt !== contextAction ? getApp().getMap().setContextAction(contextActionIt) : getApp().getMap().setContextAction(null);
-                      }
+                      if (contextActionIt.getTarget() === ContextActionTarget.NONE) contextActionIt.executeCallback(null, null);
+                      else contextActionIt !== contextAction ? getApp().getMap().setContextAction(contextActionIt) : getApp().getMap().setContextAction(null);
                     }}
                   />
                 </div>

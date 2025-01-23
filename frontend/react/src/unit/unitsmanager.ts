@@ -19,8 +19,6 @@ import { citiesDatabase } from "./databases/citiesdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
 import { Contact, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
 import { Group } from "./group";
-import { UnitDataFileExport } from "./importexport/unitdatafileexport";
-import { UnitDataFileImport } from "./importexport/unitdatafileimport";
 import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
 import { ContextActionSet } from "./contextactionset";
 import {
@@ -52,8 +50,6 @@ export class UnitsManager {
   #selectionEventDisabled: boolean = false;
   #units: { [ID: number]: Unit } = {};
   #groups: { [groupName: string]: Group } = {};
-  #unitDataExport!: UnitDataFileExport;
-  #unitDataImport!: UnitDataFileImport;
   #unitDatabase: UnitDatabase;
   #protectionCallback: (units: Unit[]) => void = (units) => {};
   #AWACSReference: Unit | null = null;
@@ -1419,22 +1415,6 @@ export class UnitsManager {
         }
       }
     });
-  }
-
-  /** Export all the ground and navy units to file. Does not work on Aircraft and Helicopter units.
-   *  TODO: Extend to aircraft and helicopters
-   */
-  exportToFile() {
-    if (!this.#unitDataExport) this.#unitDataExport = new UnitDataFileExport("unit-export-dialog");
-    this.#unitDataExport.showForm(Object.values(this.#units));
-  }
-
-  /** Import ground and navy units from file
-   * TODO: extend to support aircraft and helicopters
-   */
-  importFromFile() {
-    if (!this.#unitDataImport) this.#unitDataImport = new UnitDataFileImport("unit-import-dialog");
-    this.#unitDataImport.selectFile();
   }
 
   /** Spawn a new group of units

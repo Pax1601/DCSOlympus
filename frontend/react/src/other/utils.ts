@@ -526,3 +526,78 @@ export function toDCSFormationOffset(offset: {x: number, y: number, z: number}) 
 export function fromDCSFormationOffset(offset: {x: number, y: number, z: number}) {
   return { x: offset.z, y: -offset.x, z: offset.y };
 }
+
+/**
+ * Adjusts the brightness of a color.
+ * @param {string} color - The color in hashtag format (e.g., "#RRGGBB").
+ * @param {number} percent - The percentage to adjust the brightness (positive to lighten, negative to darken).
+ * @returns {string} - The adjusted color in hashtag format.
+ */
+export function adjustBrightness(color, percent) {
+  // Ensure the color is in the correct format
+  if (!/^#[0-9A-F]{6}$/i.test(color)) {
+    throw new Error('Invalid color format. Use #RRGGBB.');
+  }
+
+  // Parse the color components
+  let r = parseInt(color.slice(1, 3), 16);
+  let g = parseInt(color.slice(3, 5), 16);
+  let b = parseInt(color.slice(5, 7), 16);
+
+  // Adjust the brightness
+  r = Math.min(255, Math.max(0, r + Math.round((percent / 100) * 255)));
+  g = Math.min(255, Math.max(0, g + Math.round((percent / 100) * 255)));
+  b = Math.min(255, Math.max(0, b + Math.round((percent / 100) * 255)));
+
+  // Convert back to hexadecimal and return the adjusted color
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+}
+
+/**
+ * Sets the opacity of a color.
+ * @param {string} color - The color in hashtag format (e.g., "#RRGGBB").
+ * @param {number} opacity - The opacity value (between 0 and 1).
+ * @returns {string} - The color in rgba format.
+ */
+export function setOpacity(color, opacity) {
+  // Ensure the color is in the correct format
+  if (!/^#[0-9A-F]{6}$/i.test(color)) {
+    throw new Error('Invalid color format. Use #RRGGBB.');
+  }
+
+  // Ensure the opacity is within the valid range
+  if (opacity < 0 || opacity > 1) {
+    throw new Error('Opacity must be between 0 and 1.');
+  }
+
+  // Parse the color components
+  let r = parseInt(color.slice(1, 3), 16);
+  let g = parseInt(color.slice(3, 5), 16);
+  let b = parseInt(color.slice(5, 7), 16);
+
+  // Return the color in rgba format
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+/**
+ * Computes the brightness of a color.
+ * @param {string} color - The color in hashtag format (e.g., "#RRGGBB").
+ * @returns {number} - The brightness value (0 to 255).
+ */
+export function computeBrightness(color) {
+  // Ensure the color is in the correct format
+  if (!/^#[0-9A-F]{6}$/i.test(color)) {
+    throw new Error('Invalid color format. Use #RRGGBB.');
+  }
+
+  // Parse the color components
+  let r = parseInt(color.slice(1, 3), 16);
+  let g = parseInt(color.slice(3, 5), 16);
+  let b = parseInt(color.slice(5, 7), 16);
+
+  // Compute the brightness using the luminance formula
+  // The formula is: 0.299*R + 0.587*G + 0.114*B
+  let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+
+  return brightness;
+}

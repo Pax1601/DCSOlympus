@@ -1,12 +1,14 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faExternalLink, faLock, faLockOpen, faUnlock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { OlTooltip } from "./oltooltip";
+import { computeBrightness, setOpacity } from "../../other/utils";
+import { colors } from "../../constants/constants";
 
 export function OlStateButton(props: {
   className?: string;
-  buttonColor?: string | null;
+  buttonColor?: string;
   checked: boolean;
   icon?: IconProp;
   tooltip?: string | (() => JSX.Element | JSX.Element[]);
@@ -27,13 +29,6 @@ export function OlStateButton(props: {
       dark:bg-olympus-600 dark:text-gray-300
     `;
 
-  let textColor = "white";
-  if ((props.checked || hover) && props.buttonColor == "white") {
-    textColor = "#243141";
-  }
-
-  const opacity = hover && !props.checked ? "AA" : "FF";
-
   return (
     <>
       <button
@@ -50,7 +45,7 @@ export function OlStateButton(props: {
         className={className}
         style={{
           border: props.buttonColor ? "2px solid " + props.buttonColor : "0px solid transparent",
-          background: props.checked || hover ? (props.buttonColor ? props.buttonColor : "#3b82f6" + opacity) : "#243141" + opacity,
+          background: setOpacity(props.checked || hover ? (props.buttonColor ? props.buttonColor : colors.OLYMPUS_LIGHT_BLUE) : colors.OLYMPUS_BLUE, (!props.checked && hover)? 0.3: 1),
         }}
         onMouseEnter={() => {
           setHover(true);
@@ -60,7 +55,10 @@ export function OlStateButton(props: {
         }}
       >
         <div className={`m-auto flex w-fit content-center justify-center gap-2`}>
-          {props.icon && <FontAwesomeIcon icon={props.icon} className="m-auto" style={{ color: textColor }} />}
+          {props.icon && <FontAwesomeIcon icon={props.icon} data-bright={props.buttonColor && props.checked && computeBrightness(props.buttonColor) > 200} className={`
+            m-auto text-gray-200
+            data-[bright='true']:text-gray-800
+          `} />}
           {props.children}
         </div>
       </button>

@@ -25,6 +25,7 @@ import {
   SHORT_PRESS_MILLISECONDS,
   DEBOUNCE_MILLISECONDS,
   DrawSubState,
+  colors,
 } from "../constants/constants";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { EffectRequestTable, OlympusConfig, SpawnRequestTable } from "../interfaces";
@@ -177,7 +178,7 @@ export class Map extends L.Map {
       maxZoom: 13,
     });
     this.#miniMapLayerGroup = new L.LayerGroup([minimapLayer]);
-    this.#miniMapPolyline = new L.Polyline([], { color: "#202831" });
+    this.#miniMapPolyline = new L.Polyline([], { color: colors.DARK_GRAY });
     this.#miniMapPolyline.addTo(this.#miniMapLayerGroup);
 
     /* Register event handles */

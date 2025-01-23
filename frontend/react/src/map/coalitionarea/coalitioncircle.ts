@@ -1,7 +1,7 @@
 import { LatLngExpression, Map, Circle, DivIcon, Marker, CircleOptions, LatLng } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { CoalitionAreaHandle } from "./coalitionareahandle";
-import { BLUE_COMMANDER, RED_COMMANDER } from "../../constants/constants";
+import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import * as turf from "@turf/turf";
 import { CoalitionAreaChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
@@ -125,12 +125,12 @@ export class CoalitionCircle extends Circle {
   }
 
   #setColors() {
-    let coalitionColor = "#FFFFFF";
-    if (this.getCoalition() === "blue") coalitionColor = "#247be2";
-    else if (this.getCoalition() === "red") coalitionColor = "#ff5858";
+    let coalitionColor = colors.NEUTRAL_COALITION;
+    if (this.getCoalition() === "blue") coalitionColor = colors.BLUE_COALITION;
+    else if (this.getCoalition() === "red") coalitionColor = colors.RED_COALITION;
 
     this.setStyle({
-      color: this.getSelected() ? "white" : coalitionColor,
+      color: this.getSelected() ? colors.WHITE : coalitionColor,
       fillColor: coalitionColor,
     });
   }

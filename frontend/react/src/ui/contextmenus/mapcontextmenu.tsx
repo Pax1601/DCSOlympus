@@ -110,17 +110,13 @@ export function MapContextMenu(props: {}) {
               >
                 {contextActionSet &&
                   reorderedActions.map((contextActionIt) => {
-                    const colorString = `
-                  border-2
-                  border-${CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type]}-500
-                `;
-
                     return (
                       <OlDropdownItem
                         className={`
-                          flex w-full content-center gap-2 text-white
-                          ${colorString}
+                          flex w-full content-center gap-2 border-2 text-white
                         `}
+                        key={contextActionIt.getLabel()}
+                        borderColor={CONTEXT_ACTION_COLORS[contextActionIt.getOptions().type] as string}
                         onClick={() => {
                           if (contextActionIt.getTarget() === ContextActionTarget.NONE) {
                             contextActionIt.executeCallback(null, null);

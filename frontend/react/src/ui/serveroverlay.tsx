@@ -3,6 +3,7 @@ import { ServerStatusUpdatedEvent } from "../events";
 import { ServerStatus } from "../interfaces";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { zeroAppend } from "../other/utils";
+import { colors } from "../constants/constants";
 
 export function ServerOverlay() {
   const [serverStatus, setServerStatus] = useState({} as ServerStatus);
@@ -11,14 +12,13 @@ export function ServerOverlay() {
     ServerStatusUpdatedEvent.on((status) => setServerStatus(status));
   }, []);
 
-  let loadColor = "#8BFF63";
-  if (serverStatus.load > 1000) loadColor = "#F05252";
-  else if (serverStatus.load >= 100 && serverStatus.load < 1000) loadColor = "#FF9900";
+  let loadColor = colors.OLYMPUS_GREEN;
+  if (serverStatus.load > 1000) loadColor = colors.OLYMPUS_RED;
+  else if (serverStatus.load >= 100 && serverStatus.load < 1000) loadColor = colors.OLYMPUS_ORANGE;
 
-  let frameRateColor = "#8BFF63";
-  if (serverStatus.frameRate < 30) frameRateColor = "#F05252";
-  else if (serverStatus.frameRate >= 30 && serverStatus.frameRate < 60) frameRateColor = "#FF9900";
-
+  let frameRateColor = colors.OLYMPUS_GREEN;
+  if (serverStatus.frameRate < 30) frameRateColor = colors.OLYMPUS_RED;
+  else if (serverStatus.frameRate >= 30 && serverStatus.frameRate < 60) frameRateColor = colors.OLYMPUS_ORANGE;
 
   const MThours = serverStatus.missionTime? serverStatus.missionTime.h: 0;
   const MTminutes = serverStatus.missionTime? serverStatus.missionTime.m: 0;
