@@ -210,6 +210,7 @@ export interface UnitData {
   country: number;
   name: string;
   unitName: string;
+  callsign: string;
   groupName: string;
   state: string;
   task: string;

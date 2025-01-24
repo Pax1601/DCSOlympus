@@ -446,6 +446,7 @@ export enum DataIndexes {
   country,
   name,
   unitName,
+  callsign,
   groupName,
   state,
   task,

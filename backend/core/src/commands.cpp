@@ -46,6 +46,7 @@ string SpawnGroundUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
 
@@ -72,6 +73,7 @@ string SpawnNavyUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
@@ -97,6 +99,7 @@ string SpawnAircrafts::getString()
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
@@ -125,6 +128,7 @@ string SpawnHelicopters::getString()
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";

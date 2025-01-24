@@ -170,7 +170,8 @@ void AirUnit::AIloop()
 				if (isActiveTanker) {
 					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << 
 						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
-						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " << 
+						heading << ", length = " << (50000 * 1.852) << " }}";
 				}
 				else if (isActiveAWACS) {
 					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << 
@@ -178,9 +179,10 @@ void AirUnit::AIloop()
 						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
 				}
 				else {
-					taskSS << "{ id = 'Orbit', pattern = 'Circle', altitude = " << 
+					taskSS << "{ id = 'Orbit', pattern = 'Race-Track', altitude = " << 
 						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
-						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "'}";
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " <<
+						heading << ", length = " << desiredSpeed * 30 << " }";
 				}
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);

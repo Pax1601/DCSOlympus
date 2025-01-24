@@ -88,6 +88,7 @@ export abstract class Unit extends CustomMarker {
   #country: number = 0;
   #name: string = "";
   #unitName: string = "";
+  #callsign: string = "";
   #groupName: string = "";
   #state: string = states[0];
   #task: string = "";
@@ -196,6 +197,9 @@ export abstract class Unit extends CustomMarker {
   }
   getUnitName() {
     return this.#unitName;
+  }
+  getCallsign() {
+    return this.#callsign;
   }
   getGroupName() {
     return this.#groupName;
@@ -459,6 +463,9 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.unitName:
           this.#unitName = dataExtractor.extractString();
           break;
+        case DataIndexes.callsign:
+          this.#callsign = dataExtractor.extractString();
+          break;
         case DataIndexes.groupName:
           this.#groupName = dataExtractor.extractString();
           updateMarker = true;
@@ -646,6 +653,7 @@ export abstract class Unit extends CustomMarker {
       country: this.#country,
       name: this.#name,
       unitName: this.#unitName,
+      callsign: this.#callsign,
       groupName: this.#groupName,
       state: this.#state,
       task: this.#task,

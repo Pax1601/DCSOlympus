@@ -181,6 +181,16 @@ function Olympus.buildTask(groupName, options)
 				} 
 			}
 
+			if options['pattern'] == 'Race-Track' then
+				local heading = options['heading'] or 0
+				local length = options['length'] or 20000
+				if group ~= nil then
+					local groupPos = mist.getLeadPos(group)
+					task['params']['point'] = {x = groupPos.x, y = groupPos.z}
+					task['params']['point2'] = {x = groupPos.x + math.cos(heading) * length, y = groupPos.z + math.sin(heading) * length}
+				end
+			end
+
 			-- Compute the altitude depending on the altitude type 
 			if options['altitude'] then
 				if options ['altitudeType'] then
