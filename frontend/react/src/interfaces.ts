@@ -142,6 +142,7 @@ export interface UnitSpawnTable {
   liveryID: string;
   altitude?: number;
   loadout?: string;
+  heading?: number;
 }
 
 export interface ObjectIconOptions {

@@ -558,6 +558,23 @@ export class SpawnContextMenuRequestEvent {
   }
 }
 
+export class SpawnHeadingChangedEvent {
+  static on(callback: (heading: number) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail.heading);
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(heading: number) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { heading } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 export class HotgroupsChangedEvent {
   static on(callback: (hotgroups: { [key: number]: Unit[] }) => void, singleShot = false) {
     document.addEventListener(

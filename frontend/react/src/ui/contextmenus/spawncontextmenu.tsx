@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BLUE_COMMANDER, colors, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
 import { LatLng } from "leaflet";
 import {
@@ -10,7 +10,7 @@ import {
 } from "../../events";
 import { getApp } from "../../olympusapp";
 import { SpawnRequestTable, UnitBlueprint } from "../../interfaces";
-import { faArrowLeft, faEllipsisVertical, faExplosion, faListDots, faSearch, faSmog, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisVertical, faExplosion, faSearch, faSmog, faStar } from "@fortawesome/free-solid-svg-icons";
 import { EffectSpawnMenu } from "../panels/effectspawnmenu";
 import { UnitSpawnMenu } from "../panels/unitspawnmenu";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
@@ -28,6 +28,7 @@ import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { Coalition } from "../../types/types";
+import { spawn } from "child_process";
 
 enum CategoryGroup {
   NONE,
@@ -62,6 +63,7 @@ export function SpawnContextMenu(props: {}) {
   const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
   const [showMore, setShowMore] = useState(false);
   const [height, setHeight] = useState(0);
+  const [translated, setTranslated] = useState(false);
 
   useEffect(() => {
     if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
@@ -110,6 +112,19 @@ export function SpawnContextMenu(props: {}) {
     setSelectedRole(null);
   }, [openAccordion]);
 
+  const translateMenu = useCallback(() => {
+    if (blueprint && !translated) {
+      setTranslated(true);
+      setXPosition(xPosition + 60);
+      setYPosition(yPosition + 40);
+    } else if (!blueprint && translated) {
+      setTranslated(false);
+      setXPosition(xPosition - 60);
+      setYPosition(yPosition - 40);
+    }
+  }, [blueprint, translated])
+  useEffect(translateMenu, [blueprint, translated])
+
   /* Filter the blueprints according to the label */
   const filteredBlueprints: UnitBlueprint[] = [];
   if (blueprints && filterString !== "") {
@@ -131,6 +146,7 @@ export function SpawnContextMenu(props: {}) {
       const containerPoint = getApp().getMap().latLngToContainerPoint(latlng);
       setXPosition(getApp().getMap().getContainer().offsetLeft + containerPoint.x);
       setYPosition(getApp().getMap().getContainer().offsetTop + containerPoint.y);
+      setTranslated(false);
     });
   }, []);
 

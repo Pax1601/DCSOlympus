@@ -601,3 +601,17 @@ export function computeBrightness(color) {
 
   return brightness;
 }
+
+/**
+ * Normalizes an angle to be within the range of 0 to 360 degrees.
+ * @param {number} angle - The angle to normalize.
+ * @returns {number} - The normalized angle.
+ */
+export function normalizeAngle(angle: number): number {
+  // Ensure the angle is within the range of 0 to 360 degrees
+  angle = angle % 360;
+  if (angle < 0) {
+    angle += 360;
+  }
+  return angle;
+}

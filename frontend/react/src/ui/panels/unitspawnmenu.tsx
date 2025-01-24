@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { OlUnitSummary } from "../components/olunitsummary";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { OlNumberInput } from "../components/olnumberinput";
@@ -9,7 +9,7 @@ import { LoadoutBlueprint, SpawnRequestTable, UnitBlueprint } from "../../interf
 import { OlStateButton } from "../components/olstatebutton";
 import { Coalition } from "../../types/types";
 import { getApp } from "../../olympusapp";
-import { deepCopyTable, ftToM, hash, mode } from "../../other/utils";
+import { deepCopyTable, deg2rad, ftToM, hash, mode, normalizeAngle } from "../../other/utils";
 import { LatLng } from "leaflet";
 import { Airbase } from "../../mission/airbase";
 import { altitudeIncrements, groupUnitCount, maxAltitudeValues, minAltitudeValues, OlympusState, SpawnSubState } from "../../constants/constants";
@@ -17,8 +17,9 @@ import { faArrowLeft, faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlStringInput } from "../components/olstringinput";
 import { countryCodes } from "../data/codes";
 import { OlAccordion } from "../components/olaccordion";
-import { AppStateChangedEvent } from "../../events";
+import { AppStateChangedEvent, SpawnHeadingChangedEvent } from "../../events";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export function UnitSpawnMenu(props: {
   visible: boolean;
@@ -123,6 +124,46 @@ export function UnitSpawnMenu(props: {
     if (props.coalition) setSpawnCoalition(props.coalition);
   }, [props.coalition]);
 
+  /* Heading compass */
+  const [compassAngle, setCompassAngle] = useState(0);
+  const compassRef = useRef<HTMLImageElement>(null);
+
+  const updateSpawnRequestTableHeading = useCallback(() => {
+    getApp()?.getMap().setSpawnHeading(compassAngle);
+  }, [compassAngle]);
+  useEffect(updateSpawnRequestTableHeading, [compassAngle]);
+
+  useEffect(() => {
+    SpawnHeadingChangedEvent.on((heading) => {
+      setCompassAngle(heading);
+    });
+  }, []);
+
+  useEffect(() => {
+    setCompassAngle(getApp()?.getMap().getSpawnHeading() ?? 0);
+  }, [appState]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const onMouseMove = (e: MouseEvent) => {
+      if (compassRef.current) {
+        const rect = compassRef.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+        setCompassAngle(Math.round(normalizeAngle(angle + 90)));
+      }
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
+
   /* Get a list of all the roles */
   const roles: string[] = [];
   props.blueprint?.loadouts?.forEach((loadout) => {
@@ -198,9 +239,11 @@ export function UnitSpawnMenu(props: {
                   />
                   <OlStateButton
                     onClick={() => {
-                      if (spawnRequestTable)
+                      if (spawnRequestTable) {
+                        spawnRequestTable.unit.heading = compassAngle;
                         if (key in props.starredSpawns) getApp().getMap().removeStarredSpawnRequestTable(key);
                         else getApp().getMap().addStarredSpawnRequestTable(key, spawnRequestTable, quickAccessName);
+                      }
                     }}
                     tooltip="Save this spawn for quick access"
                     checked={key in props.starredSpawns}
@@ -355,10 +398,9 @@ export function UnitSpawnMenu(props: {
                                     `}
                                   >
                                     {props.blueprint?.liveries && props.blueprint?.liveries[id].countries.length == 1 && (
-                                      <img
-                                        src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
-                                        className={`h-6`}
-                                      />
+                                      <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
+                                        h-6
+                                      `} />
                                     )}
 
                                     <div className="my-auto truncate">
@@ -408,6 +450,48 @@ export function UnitSpawnMenu(props: {
                           );
                         })}
                       </OlDropdown>
+                    </div>
+                  </div>
+                  <div className="my-5 flex justify-between">
+                    <div className="my-auto flex flex-col gap-2">
+                      <span>Spawn heading</span>
+                      <div className="flex gap-1 text-sm text-gray-400">
+                        <FaQuestionCircle className={`my-auto`} /> <div className={`
+                          my-auto
+                        `}>Drag to change</div>
+                      </div>
+                    </div>
+
+                    <OlNumberInput
+                      className={"my-auto"}
+                      min={0}
+                      max={360}
+                      onChange={(ev) => {
+                        setCompassAngle(Number(ev.target.value));
+                      }}
+                      onDecrease={() => {
+                        setCompassAngle(normalizeAngle(compassAngle - 1));
+                      }}
+                      onIncrease={() => {
+                        setCompassAngle(normalizeAngle(compassAngle + 1));
+                      }}
+                      value={compassAngle}
+                    />
+
+                    <div className={`relative mr-3 h-[60px] w-[60px]`}>
+                      <img className="absolute" ref={compassRef} onMouseDown={handleMouseDown} src={"/images/others/arrow_background.png"}></img>
+                      <img
+                        className="absolute left-0"
+                        ref={compassRef}
+                        onMouseDown={handleMouseDown}
+                        src={"/images/others/arrow.png"}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          transform: `rotate(${compassAngle}deg)`,
+                          cursor: "pointer",
+                        }}
+                      ></img>
                     </div>
                   </div>
                 </OlAccordion>
@@ -467,7 +551,8 @@ export function UnitSpawnMenu(props: {
                     focus:outline-none focus:ring-4
                   `}
                   onClick={() => {
-                    if (spawnRequestTable)
+                    if (spawnRequestTable){
+                      spawnRequestTable.unit.heading = deg2rad(compassAngle);
                       getApp()
                         .getUnitsManager()
                         .spawnUnits(
@@ -477,6 +562,7 @@ export function UnitSpawnMenu(props: {
                           false,
                           props.airbase?.getName() ?? undefined
                         );
+                    }
 
                     getApp().setState(OlympusState.IDLE);
                   }}
@@ -694,9 +780,10 @@ export function UnitSpawnMenu(props: {
                                 `}
                               >
                                 {props.blueprint?.liveries && props.blueprint?.liveries[id].countries.length == 1 && (
-                                  <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
-                                    h-6
-                                  `} />
+                                  <img
+                                    src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
+                                    className={`h-6`}
+                                  />
                                 )}
 
                                 <div className="my-auto truncate">
@@ -748,6 +835,48 @@ export function UnitSpawnMenu(props: {
                     })}
                   </OlDropdown>
                 </div>
+                <div className="my-5 flex justify-between">
+                    <div className="my-auto flex flex-col gap-2">
+                      <span className="text-white">Spawn heading</span>
+                      <div className="flex gap-1 text-sm text-gray-400">
+                        <FaQuestionCircle className={`my-auto`} /> <div className={`
+                          my-auto
+                        `}>Drag to change</div>
+                      </div>
+                    </div>
+
+                    <OlNumberInput
+                      className={"my-auto"}
+                      min={0}
+                      max={360}
+                      onChange={(ev) => {
+                        setCompassAngle(Number(ev.target.value));
+                      }}
+                      onDecrease={() => {
+                        setCompassAngle(normalizeAngle(compassAngle - 1));
+                      }}
+                      onIncrease={() => {
+                        setCompassAngle(normalizeAngle(compassAngle + 1));
+                      }}
+                      value={compassAngle}
+                    />
+
+                    <div className={`relative mr-3 h-[60px] w-[60px]`}>
+                      <img className="absolute" ref={compassRef} onMouseDown={handleMouseDown} src={"/images/others/arrow_background.png"}></img>
+                      <img
+                        className="absolute left-0"
+                        ref={compassRef}
+                        onMouseDown={handleMouseDown}
+                        src={"/images/others/arrow.png"}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          transform: `rotate(${compassAngle}deg)`,
+                          cursor: "pointer",
+                        }}
+                      ></img>
+                    </div>
+                  </div>
               </div>
               {spawnLoadout && spawnLoadout.items.length > 0 && (
                 <div
@@ -802,7 +931,7 @@ export function UnitSpawnMenu(props: {
                     hover:bg-blue-800
                   `}
                   onClick={() => {
-                    if (spawnRequestTable)
+                    if (spawnRequestTable) {
                       getApp()
                         .getUnitsManager()
                         .spawnUnits(
@@ -812,6 +941,7 @@ export function UnitSpawnMenu(props: {
                           false,
                           props.airbase?.getName()
                         );
+                    }
                   }}
                 >
                   Spawn

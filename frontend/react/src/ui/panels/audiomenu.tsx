@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
-import { FaPlus, FaPlusCircle, FaQuestionCircle } from "react-icons/fa";
+import { FaPlus, FaQuestionCircle } from "react-icons/fa";
 import { AudioSourcePanel } from "./components/sourcepanel";
 import { AudioSource } from "../../audio/audiosource";
 import { RadioSinkPanel } from "./components/radiosinkpanel";

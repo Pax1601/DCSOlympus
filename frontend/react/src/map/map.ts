@@ -56,6 +56,7 @@ import {
   SelectionEnabledChangedEvent,
   SessionDataLoadedEvent,
   SpawnContextMenuRequestEvent,
+  SpawnHeadingChangedEvent,
   StarredSpawnsChangedEvent,
   UnitDeselectedEvent,
   UnitSelectedEvent,
@@ -144,6 +145,7 @@ export class Map extends L.Map {
   #temporaryMarkers: TemporaryUnitMarker[] = [];
   #currentSpawnMarker: TemporaryUnitMarker | null = null;
   #currentEffectMarker: ExplosionMarker | SmokeMarker | null = null;
+  #spawnHeading: number = 0;
 
   /* JTAC tools */
   #ECHOPoint: TextMarker | null = null;
@@ -565,6 +567,19 @@ export class Map extends L.Map {
     this.#currentSpawnMarker = this.addTemporaryMarker(spawnRequestTable.unit.location, spawnRequestTable.unit.unitType, spawnRequestTable.coalition, true);
   }
 
+  getSpawnRequestTable() {
+    return this.#spawnRequestTable;
+  }
+
+  setSpawnHeading(heading: number) {
+    this.#spawnHeading = heading;
+    SpawnHeadingChangedEvent.dispatch(heading);
+  }
+
+  getSpawnHeading() {
+    return this.#spawnHeading;
+  }
+
   addStarredSpawnRequestTable(key, spawnRequestTable: SpawnRequestTable, quickAccessName: string) {
     this.#starredSpawnRequestTables[key] = spawnRequestTable;
     this.#starredSpawnRequestTables[key].quickAccessName = quickAccessName;
@@ -833,7 +848,7 @@ export class Map extends L.Map {
           new L.LatLng(0, 0),
           this.#spawnRequestTable?.unit.unitType ?? "",
           this.#spawnRequestTable?.coalition ?? "neutral",
-          false
+          true
         );
         this.#currentSpawnMarker.addTo(this);
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
@@ -923,6 +938,7 @@ export class Map extends L.Map {
             if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
               if (this.#spawnRequestTable !== null) {
                 this.#spawnRequestTable.unit.location = e.latlng;
+                this.#spawnRequestTable.unit.heading = deg2rad(this.#spawnHeading);
                 getApp()
                   .getUnitsManager()
                   .spawnUnits(
@@ -937,6 +953,7 @@ export class Map extends L.Map {
                         e.latlng,
                         this.#spawnRequestTable?.unit.unitType ?? "unknown",
                         this.#spawnRequestTable?.coalition ?? "blue",
+                        false,
                         hash
                       );
                     }
