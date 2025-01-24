@@ -295,6 +295,9 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
 					case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
 					case DataIndex::health:						appendNumeric(ss, datumIndex, health); break;
+					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
+					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
+					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
 				}
 			}
 		}

@@ -154,6 +154,11 @@ void AirUnit::AIloop()
 {
 	srand(static_cast<unsigned int>(time(NULL)) + ID);
 
+	if (state != State::IDLE) {
+		setRacetrackAnchor(Coords(NULL));
+		setRacetrackBearing(NULL);
+	}
+
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
@@ -166,23 +171,27 @@ void AirUnit::AIloop()
 			
 			if (!getHasTask())
 			{
+				if (racetrackAnchor == Coords(NULL)) setRacetrackAnchor(position);
+				if (racetrackBearing == NULL) setRacetrackBearing(heading);
+
 				std::ostringstream taskSS;
 				if (isActiveTanker) {
 					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << 
-						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
+						desiredAltitude << ", lat = " << racetrackAnchor.lat << ", lng = " << racetrackAnchor.lng << ", speed = " << desiredSpeed << ", altitudeType = '" <<
 						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " << 
-						heading << ", length = " << (50000 * 1.852) << " }}";
+						racetrackBearing << ", length = " << (racetrackLength != NULL ? racetrackLength : (50000 * 1.852)) << " }}";
 				}
 				else if (isActiveAWACS) {
-					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << 
-						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
-						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " <<
+						desiredAltitude << ", lat = " << racetrackAnchor.lat << ", lng = " << racetrackAnchor.lng << ", speed = " << desiredSpeed << ", altitudeType = '" <<
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " <<
+						racetrackBearing << ", length = " << (racetrackLength != NULL ? racetrackLength : (desiredSpeed * 30)) << " }}";
 				}
 				else {
 					taskSS << "{ id = 'Orbit', pattern = 'Race-Track', altitude = " << 
-						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
+						desiredAltitude << ", lat = " << racetrackAnchor.lat << ", lng = " << racetrackAnchor.lng << ", speed = " << desiredSpeed << ", altitudeType = '" <<
 						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " <<
-						heading << ", length = " << desiredSpeed * 30 << " }";
+						racetrackBearing << ", length = " << (racetrackLength != NULL ? racetrackLength: (desiredSpeed * 30)) << " }";
 				}
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);

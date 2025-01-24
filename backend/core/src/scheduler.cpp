@@ -353,6 +353,16 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
 			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") altitude type: " + to_string(value[L"altitudeType"]), true);
 		}
+	}/************************/
+	else if (key.compare("setRacetrackLength") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unit->setRacetrackLength(value[L"racetrackLength"].as_double());
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ")  racetrack length: " + to_string(value[L"racetrackLength"].as_double()), true);
+		}
 	}
 	/************************/
 	else if (key.compare("cloneUnits") == 0)

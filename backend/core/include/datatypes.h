@@ -51,6 +51,9 @@ namespace DataIndex {
 		shotsScatter,
 		shotsIntensity,
 		health,
+		racetrackLength,
+		racetrackAnchor,
+		racetrackBearing,
 		lastIndex,
 		endOfData = 255
 	};

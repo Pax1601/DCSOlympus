@@ -1,4 +1,4 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, LeafletMouseEvent, DomEvent, DomUtil } from "leaflet";
+import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, LeafletMouseEvent, DomEvent, DomUtil, Circle } from "leaflet";
 import { getApp } from "../olympusapp";
 import {
   enumToCoalition,
@@ -17,6 +17,8 @@ import {
   zeroAppend,
   computeBearingRangeString,
   adjustBrightness,
+  bearingAndDistanceToLatLng,
+  mToNm,
 } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
@@ -145,6 +147,9 @@ export abstract class Unit extends CustomMarker {
   #shotsScatter: number = 2;
   #shotsIntensity: number = 2;
   #health: number = 100;
+  #racetrackLength: number = 0;
+  #racetrackAnchor: LatLng = new LatLng(0, 0);
+  #racetrackBearing: number = 0;
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
   #blueprint: UnitBlueprint | null = null;
@@ -166,6 +171,9 @@ export abstract class Unit extends CustomMarker {
   #detectionMethods: number[] = [];
   #trailPositions: LatLng[] = [];
   #trailPolylines: Polyline[] = [];
+  #racetrackPolylines: Polyline[] = [new Polyline([]), new Polyline([])];
+  #racetrackArcs: Polyline[] = [new Polyline([]), new Polyline([])];
+  #anchorMarkers: Marker[];
 
   /* Inputs timers */
   #debounceTimeout: number | null = null;
@@ -312,6 +320,15 @@ export abstract class Unit extends CustomMarker {
   getHealth() {
     return this.#health;
   }
+  getRaceTrackLength() {
+    return this.#racetrackLength;
+  }
+  getRaceTrackAnchor() {  
+    return this.#racetrackAnchor;
+  }
+  getRaceTrackBearing() {
+    return this.#racetrackBearing;
+  }
 
   static getConstructor(type: string) {
     if (type === "GroundUnit") return GroundUnit;
@@ -326,7 +343,7 @@ export abstract class Unit extends CustomMarker {
     this.ID = ID;
 
     this.#pathPolyline = new Polyline([], {
-      color: colors.GRAY,
+      color: colors.STEEL_BLUE,
       weight: 3,
       opacity: 0.5,
       smoothFactor: 1,
@@ -588,6 +605,15 @@ export abstract class Unit extends CustomMarker {
           this.#health = dataExtractor.extractUInt8();
           updateMarker = true;
           break;
+        case DataIndexes.racetrackLength:
+          this.#racetrackLength = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.racetrackAnchor:
+          this.#racetrackAnchor = dataExtractor.extractLatLng();
+          break;
+        case DataIndexes.racetrackBearing:
+          this.#racetrackBearing = dataExtractor.extractFloat64();
+          break;
       }
     }
 
@@ -691,6 +717,9 @@ export abstract class Unit extends CustomMarker {
       shotsScatter: this.#shotsScatter,
       shotsIntensity: this.#shotsIntensity,
       health: this.#health,
+      racetrackLength: this.#racetrackLength,
+      racetrackAnchor: this.#racetrackAnchor,
+      racetrackBearing: this.#racetrackBearing,
     };
   }
 
@@ -719,6 +748,7 @@ export abstract class Unit extends CustomMarker {
         this.#clearContacts();
         this.#clearPath();
         this.#clearTargetPosition();
+        this.#clearRacetrack();
       }
 
       /* When the group leader is selected, if grouping is active, all the other group members are also selected */
@@ -861,6 +891,7 @@ export abstract class Unit extends CustomMarker {
     /* Leaflet does not like it when you change coordinates when the map is zooming */
     if (!getApp().getMap().isZooming()) {
       this.#drawPath();
+      this.#drawRacetrack();
       this.#drawContacts();
       this.#drawTarget();
     }
@@ -893,7 +924,7 @@ export abstract class Unit extends CustomMarker {
     el.classList.add("unit");
     el.setAttribute("data-object", `unit-${this.getMarkerCategory()}`);
     el.setAttribute("data-coalition", this.#coalition);
-  
+
     var iconOptions = this.getIconOptions();
 
     /* Generate and append elements depending on active options */
@@ -1569,12 +1600,14 @@ export abstract class Unit extends CustomMarker {
         } else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
 
         /* Set operate as */
-        element.querySelector(".unit")?.setAttribute(
-          "data-operate-as",
-          this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT
-            ? this.#operateAs
-            : "neutral"
-        );
+        element
+          .querySelector(".unit")
+          ?.setAttribute(
+            "data-operate-as",
+            this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT
+              ? this.#operateAs
+              : "neutral"
+          );
       }
 
       /* Set vertical offset for altitude stacking */
@@ -1675,6 +1708,67 @@ export abstract class Unit extends CustomMarker {
       this.#pathMarkers = [];
       this.#pathPolyline.setLatLngs([]);
     }
+  }
+
+  #drawRacetrack() {
+    let groundspeed = this.#speed;
+    
+    let racetrackLength = this.#racetrackLength;
+    if (racetrackLength === 0) {
+      if (this.getIsActiveTanker()) 
+        racetrackLength = nmToM(50);
+      else 
+        racetrackLength = this.#desiredSpeed * 30;
+    }
+    const radius = Math.pow(groundspeed, 2) / 9.81 / Math.tan(deg2rad(22.5));
+    const point1 = this.#racetrackAnchor;
+    const point2 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing, racetrackLength);
+    const point3 = bearingAndDistanceToLatLng(point2.lat, point2.lng, this.#racetrackBearing - deg2rad(90), radius * 2);
+    const point4 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing - deg2rad(90), radius * 2);
+
+    const center1 = bearingAndDistanceToLatLng(point2.lat, point2.lng, this.#racetrackBearing - deg2rad(90), radius);
+    const center2 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing - deg2rad(90), radius);
+
+    if (!getApp().getMap().hasLayer(this.#racetrackPolylines[0])) {
+      this.#racetrackPolylines[0] = new Polyline([point1, point2]);
+      this.#racetrackPolylines[0].addTo(getApp().getMap());
+    } else {
+      this.#racetrackPolylines[0].setLatLngs([point1, point2]);
+    }
+
+    if (!getApp().getMap().hasLayer(this.#racetrackPolylines[1])) {
+      this.#racetrackPolylines[1] = new Polyline([point3, point4]);
+      this.#racetrackPolylines[1].addTo(getApp().getMap());
+    } else {
+      this.#racetrackPolylines[1].setLatLngs([point3, point4]);
+    }
+
+    const arc1Points: LatLng[] = [];
+    const arc2Points: LatLng[] = [];
+
+    for (let theta = 0; theta <= 180; theta += 5) {
+      arc1Points.push(bearingAndDistanceToLatLng(center1.lat, center1.lng, this.#racetrackBearing + deg2rad(theta - 90), radius));
+      arc2Points.push(bearingAndDistanceToLatLng(center2.lat, center2.lng, this.#racetrackBearing + deg2rad(theta + 90), radius));
+    }
+
+    if (!getApp().getMap().hasLayer(this.#racetrackArcs[0])) {
+      this.#racetrackArcs[0] = new Polyline(arc1Points);
+      this.#racetrackArcs[0].addTo(getApp().getMap());
+    } else {
+      this.#racetrackArcs[0].setLatLngs(arc1Points);
+    }
+
+    if (!getApp().getMap().hasLayer(this.#racetrackArcs[1])) {
+      this.#racetrackArcs[1] = new Polyline(arc2Points);
+      this.#racetrackArcs[1].addTo(getApp().getMap());
+    } else {
+      this.#racetrackArcs[1].setLatLngs(arc2Points);
+    }
+  }
+
+  #clearRacetrack() {
+    this.#racetrackPolylines.forEach((polyline) => getApp().getMap().removeLayer(polyline));
+    this.#racetrackArcs.forEach((arc) => getApp().getMap().removeLayer(arc));
   }
 
   #drawContacts() {

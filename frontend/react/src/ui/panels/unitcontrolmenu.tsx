@@ -555,8 +555,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         </div>
                         <OlLabelToggle
                           toggled={selectedUnitsData.desiredAltitudeType === undefined ? undefined : selectedUnitsData.desiredAltitudeType === "AGL"}
-                          leftLabel={"AGL"}
-                          rightLabel={"ASL"}
+                          leftLabel={"ASL"}
+                          rightLabel={"AGL"}
                           onClick={() => {
                             selectedUnits.forEach((unit) => {
                               unit.setAltitudeType(selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL");
@@ -617,8 +617,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       {!(everyUnitIsGround || everyUnitIsNavy) && (
                         <OlLabelToggle
                           toggled={selectedUnitsData.desiredSpeedType === undefined ? undefined : selectedUnitsData.desiredSpeedType === "GS"}
-                          leftLabel={"GS"}
-                          rightLabel={"CAS"}
+                          leftLabel={"CAS"}
+                          rightLabel={"GS"}
                           onClick={() => {
                             selectedUnits.forEach((unit) => {
                               unit.setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS");

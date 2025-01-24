@@ -248,6 +248,9 @@ export interface UnitData {
   shotsScatter: number;
   shotsIntensity: number;
   health: number;
+  racetrackLength: number;
+  racetrackAnchor: LatLng;
+  racetrackBearing: number;
 }
 
 export interface LoadoutItemBlueprint {

@@ -484,6 +484,9 @@ export enum DataIndexes {
   shotsScatter,
   shotsIntensity,
   health,
+  racetrackLength,
+  racetrackAnchor,
+  racetrackBearing,
   endOfData = 255,
 }
 

@@ -109,6 +109,9 @@ public:
 	virtual void setShotsScatter(unsigned char newValue) { updateValue(shotsScatter, newValue, DataIndex::shotsScatter); }
 	virtual void setShotsIntensity(unsigned char newValue) { updateValue(shotsIntensity, newValue, DataIndex::shotsIntensity); }
 	virtual void setHealth(unsigned char newValue) { updateValue(health, newValue, DataIndex::health); }
+	virtual void setRacetrackLength(double newValue) { updateValue(racetrackLength, newValue, DataIndex::racetrackLength); }
+	virtual void setRacetrackAnchor(Coords newValue) { updateValue(racetrackAnchor, newValue, DataIndex::racetrackAnchor); }
+	virtual void setRacetrackBearing(double newValue) { updateValue(racetrackBearing, newValue, DataIndex::racetrackBearing); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -157,6 +160,9 @@ public:
 	virtual unsigned char getShotsScatter() { return shotsScatter; }
 	virtual unsigned char getShotsIntensity() { return shotsIntensity; }
 	virtual unsigned char getHealth() { return health; }
+	virtual double getRacetrackLength() { return racetrackLength; }
+	virtual Coords getRacetrackAnchor() { return racetrackAnchor; }
+	virtual double getRacetrackBearing() { return racetrackBearing; }
 
 protected:
 	unsigned int ID;
@@ -190,6 +196,9 @@ protected:
 	double desiredAltitude = 1;
 	bool desiredAltitudeType = 0; /* ASL */
 	unsigned int leaderID = NULL;
+	double racetrackLength = NULL;
+	Coords racetrackAnchor = Coords(NULL);
+	double racetrackBearing = NULL;
 	Offset formationOffset = Offset(NULL);
 	unsigned int targetID = NULL;
 	Coords targetPosition = Coords(NULL);
