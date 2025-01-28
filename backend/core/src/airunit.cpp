@@ -154,9 +154,11 @@ void AirUnit::AIloop()
 {
 	srand(static_cast<unsigned int>(time(NULL)) + ID);
 
-	if (state != State::IDLE) {
+	/* Reset the anchor, but only if the unit is not a tanker or a AWACS */
+	if (state != State::IDLE && !isActiveTanker && !isActiveAWACS) {
 		setRacetrackAnchor(Coords(NULL));
 		setRacetrackBearing(NULL);
+		setRacetrackLength(NULL);
 	}
 
 	/* State machine */
@@ -386,5 +388,44 @@ void AirUnit::AIloop()
 		}
 		default:
 			break;
+	}
+}
+
+void AirUnit::setRacetrackLength(double newRacetrackLength) { 
+	if (racetrackLength != newRacetrackLength) {
+		racetrackLength = newRacetrackLength;
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
+
+		triggerUpdate(DataIndex::racetrackLength);
+	}
+}
+
+void AirUnit::setRacetrackAnchor(Coords newRacetrackAnchor) { 
+	if (racetrackAnchor != newRacetrackAnchor) {
+		racetrackAnchor = newRacetrackAnchor;
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
+
+		triggerUpdate(DataIndex::racetrackAnchor);
+	}
+}
+
+void AirUnit::setRacetrackBearing(double newRacetrackBearing) { 
+	if (racetrackBearing != newRacetrackBearing) {
+		racetrackBearing = newRacetrackBearing;
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
+
+		triggerUpdate(DataIndex::racetrackBearing);
 	}
 }

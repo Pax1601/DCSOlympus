@@ -65,7 +65,7 @@ export function ServerOverlay() {
         </div>
         
       </div>
-      <img src="./images/olympus-500x500.png" className={`
+      <img src="images/olympus-500x500.png" className={`
         absolute right-4 top-4 ml-auto flex h-24
       `}></img>
     </div>

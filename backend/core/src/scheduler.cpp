@@ -354,14 +354,22 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") altitude type: " + to_string(value[L"altitudeType"]), true);
 		}
 	}/************************/
-	else if (key.compare("setRacetrackLength") == 0)
+	else if (key.compare("setRacetrack") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		unitsManager->acquireControl(ID);
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
-			unit->setRacetrackLength(value[L"racetrackLength"].as_double());
-			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ")  racetrack length: " + to_string(value[L"racetrackLength"].as_double()), true);
+			unit->setRacetrackLength(value[L"length"].as_double());
+
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords location; location.lat = lat; location.lng = lng;
+			unit->setRacetrackAnchor(location);
+
+			unit->setRacetrackBearing(value[L"bearing"].as_double());
+
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ")  racetrack length: " + to_string(value[L"length"].as_double()) + " racetrack bearing: " + to_string(value[L"bearing"].as_double()), true);
 		}
 	}
 	/************************/

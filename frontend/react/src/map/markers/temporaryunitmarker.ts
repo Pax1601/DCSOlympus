@@ -60,7 +60,7 @@ export class TemporaryUnitMarker extends CustomMarker {
       var unitIcon = document.createElement("div");
       unitIcon.classList.add("unit-icon");
       var img = document.createElement("img");
-      img.src = `./images/units/map/${/*TODO getApp().getMap().getOptions().AWACSMode ? "awacs" :*/ "normal"}/${this.#coalition}/${blueprint.markerFile ?? blueprint.category}.svg`;
+      img.src = `images/units/map/${/*TODO getApp().getMap().getOptions().AWACSMode ? "awacs" :*/ "normal"}/${this.#coalition}/${blueprint.markerFile ?? blueprint.category}.svg`;
       img.onload = () => SVGInjector(img);
       unitIcon.appendChild(img);
       unitIcon.toggleAttribute("data-rotate-to-heading", false);
@@ -78,7 +78,7 @@ export class TemporaryUnitMarker extends CustomMarker {
       if (this.#headingHandle) {
         var handle = document.createElement("div");
         var handleImg = document.createElement("img");
-        handleImg.src = "/images/others/arrow.svg";
+        handleImg.src = "images/others/arrow.svg";
         handleImg.onload = () => SVGInjector(handleImg);
         handle.classList.add("heading-handle");
         el.append(handle);

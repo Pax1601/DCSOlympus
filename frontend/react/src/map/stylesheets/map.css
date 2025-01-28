@@ -254,3 +254,13 @@ path.leaflet-interactive:focus {
 .pointer-cursor {
   cursor: url("/images/cursors/pointer.svg") 13 5, auto !important;
 }
+
+.ol-arrow-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ol-arrow-icon svg path {
+  fill: #FFFFFFAA;
+  
+}

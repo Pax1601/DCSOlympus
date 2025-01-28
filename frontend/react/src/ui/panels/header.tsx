@@ -75,7 +75,7 @@ export function Header() {
         dark:border-gray-800 dark:bg-olympus-900
       `}
     >
-      <img src="./images/icon.png" className={`my-auto h-10 w-10 rounded-md p-0`}></img>
+      <img src="images/icon.png" className={`my-auto h-10 w-10 rounded-md p-0`}></img>
       {!scrolledLeft && (
         <FaChevronLeft
           className={`

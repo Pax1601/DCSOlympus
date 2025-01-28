@@ -479,12 +479,12 @@ export function UnitSpawnMenu(props: {
                     />
 
                     <div className={`relative mr-3 h-[60px] w-[60px]`}>
-                      <img className="absolute" ref={compassRef} onMouseDown={handleMouseDown} src={"/images/others/arrow_background.png"}></img>
+                      <img className="absolute" ref={compassRef} onMouseDown={handleMouseDown} src={"images/others/arrow_background.png"}></img>
                       <img
                         className="absolute left-0"
                         ref={compassRef}
                         onMouseDown={handleMouseDown}
-                        src={"/images/others/arrow.png"}
+                        src={"images/others/arrow.png"}
                         style={{
                           width: "60px",
                           height: "60px",

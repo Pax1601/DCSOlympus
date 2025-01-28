@@ -488,6 +488,12 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  setRacetrack(ID: number, length: number, latlng: LatLng, bearing: number, callback: CallableFunction = () => {}) {
+    var command = { ID: ID, location: latlng, bearing: bearing, length: length };
+    var data = { setRacetrack: command };
+    this.PUT(data, callback);
+  }
+
   setAdvancedOptions(
     ID: number,
     isActiveTanker: boolean,
