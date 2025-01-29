@@ -566,6 +566,30 @@ function Olympus.randomDebries(vec3)
 	end
 end
 
+-- Shines a laser from a unit to a point
+function Olympus.fireLaser(ID, code, lat, lng)
+    Olympus.debug("Olympus.fireLaser " .. ID .. " -> (" .. lat .. ", " .. lng .. ") code " .. code, 2)
+
+	local vec3 = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng))
+
+	local unit = Olympus.getUnitByID(ID)
+	if unit ~= nil and unit:isExist() then
+		local ray = Spot.createLaser(unit, {x = 0, y = 1, z = 0}, vec3, code)
+	end
+end  
+
+-- Shines a infrared light from a unit to a point
+function Olympus.fireInfrared(ID, lat, lng)
+    Olympus.debug("Olympus.fireInfrared " .. ID .. " -> (" .. lat .. ", " .. lng .. ")", 2)
+
+	local vec3 = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng))
+
+	local unit = Olympus.getUnitByID(ID)
+	if unit ~= nil and unit:isExist() then
+		local ray = Spot.createInfraRed(unit, {x = 0, y = 1, z = 0}, vec3)
+	end
+end 
+
 -- Spawns a new unit or group
 -- Spawn table contains the following parameters
 -- category: (string), either Aircraft, Helicopter, GroundUnit or NavyUnit

@@ -192,6 +192,9 @@ export class OlympusApp {
 
             this.getServerManager().setActiveCommandMode(GAME_MASTER);
           }
+          else if (this.getState() !== OlympusState.LOGIN) {
+            this.setState(OlympusState.LOGIN, LoginSubState.CREDENTIALS);
+          }
         } else if (this.getState() !== OlympusState.LOGIN) {
           this.setState(OlympusState.LOGIN, LoginSubState.CREDENTIALS);
         }

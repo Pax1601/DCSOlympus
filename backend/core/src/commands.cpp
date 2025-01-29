@@ -258,3 +258,28 @@ string Explosion::getString()
         << location.lng;
     return commandSS.str();
 }
+
+/* Laser command */
+string Laser::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.laser, "
+        << ID << ", "
+        << code << ", "
+        << destination.lat << ", "
+        << destination.lng;
+    return commandSS.str();
+}
+
+/* Infrared command */
+string Infrared::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.infrared, "
+        << ID << ", "
+        << destination.lat << ", "
+        << destination.lng;
+    return commandSS.str();
+}

@@ -450,6 +450,18 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  fireLaser(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
+    var command = { ID: ID, location: latlng, code: 1688 };
+    var data = { fireLaser: command };
+    this.PUT(data, callback);
+  }
+
+  fireInfrared(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
+    var command = { ID: ID, location: latlng };
+    var data = { fireInfrared: command };
+    this.PUT(data, callback);
+  }
+
   simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng, altitude: altitude };
     var data = { simulateFireFight: command };

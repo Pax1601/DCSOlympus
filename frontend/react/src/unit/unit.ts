@@ -915,6 +915,8 @@ export abstract class Unit extends CustomMarker {
     contextActionSet.addContextAction(this, ContextActions.CENTER_MAP);
     contextActionSet.addContextAction(this, ContextActions.CLONE);
     contextActionSet.addContextAction(this, ContextActions.ATTACK);
+    contextActionSet.addContextAction(this, ContextActions.FIRE_LASER);
+    contextActionSet.addContextAction(this, ContextActions.FIRE_INFRARED);
 
     contextActionSet.addDefaultContextAction(this, ContextActions.MOVE);
   }
@@ -1323,6 +1325,14 @@ export abstract class Unit extends CustomMarker {
 
   fireAtArea(latlng: LatLng) {
     getApp().getServerManager().fireAtArea(this.ID, latlng);
+  }
+
+  fireLaser(latlng: LatLng) {
+    getApp().getServerManager().fireLaser(this.ID, latlng);
+  }
+
+  fireInfrared(latlng: LatLng) {
+    getApp().getServerManager().fireInfrared(this.ID, latlng);
   }
 
   simulateFireFight(latlng: LatLng, targetGroundElevation: number | null) {

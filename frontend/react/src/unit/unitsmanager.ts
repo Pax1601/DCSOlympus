@@ -895,6 +895,61 @@ export class UnitsManager {
       this.#protectionCallback = callback;
     } else callback(units);
   }
+
+  /** Instruct the selected units to fire at specific coordinates
+   *
+   * @param latlng Location to fire at
+   * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
+   */
+  fireLaser(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units) => {
+      /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+      var unitTargets: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitTargets[unit.ID] = latlng;
+        });
+      units.forEach((unit: Unit) => unit.fireLaser(unitTargets[unit.ID]));
+      this.#showActionMessage(units, `unit shining laser at point`);
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
+  /** Instruct the selected units to fire at specific coordinates
+   *
+   * @param latlng Location to fire at
+   * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
+   */
+  fireInfrared(latlng: LatLng, mantainRelativePosition: boolean, rotation: number = 0, units: Unit[] | null = null) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units) => {
+      /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
+      var unitTargets: { [key: number]: LatLng } = {};
+      if (mantainRelativePosition) unitTargets = this.computeGroupDestination(latlng, rotation);
+      else
+        units.forEach((unit: Unit) => {
+          unitTargets[unit.ID] = latlng;
+        });
+      units.forEach((unit: Unit) => unit.fireInfrared(unitTargets[unit.ID]));
+      this.#showActionMessage(units, `unit shining infrared at point`);
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
   /** Instruct the selected units to simulate a fire fight at specific coordinates
    *
    * @param latlng Location to fire at

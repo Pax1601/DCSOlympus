@@ -695,6 +695,37 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 	}
 	/************************/
+	else if (key.compare("fireLaser") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords loc; loc.lat = lat; loc.lng = lng;
+			unsigned int code = value[L"code"].as_integer();
+
+			log("Adding laser with code " + to_string(code) + " from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+
+			command = dynamic_cast<Command*>(new Laser(ID, code, loc));
+		}
+	}
+	/************************/
+	else if (key.compare("fireInfrared") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords loc; loc.lat = lat; loc.lng = lng;
+			
+			log("Adding infrared from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+
+			command = dynamic_cast<Command*>(new Infrared(ID, loc));
+		}
+	}
+	/************************/
 	else if (key.compare("setCommandModeOptions") == 0) 
 	{
 		setCommandModeOptions(value);

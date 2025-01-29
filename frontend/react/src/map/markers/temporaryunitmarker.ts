@@ -67,8 +67,9 @@ export class TemporaryUnitMarker extends CustomMarker {
       el.append(unitIcon);
 
       // Short label
+      let shortLabel: null | HTMLDivElement = null;
       if (blueprint.category == "aircraft" || blueprint.category == "helicopter") {
-        var shortLabel = document.createElement("div");
+        shortLabel = document.createElement("div");
         shortLabel.classList.add("unit-short-label");
         shortLabel.innerText = blueprint?.shortLabel || "";
         el.append(shortLabel);
@@ -88,7 +89,8 @@ export class TemporaryUnitMarker extends CustomMarker {
         const rotateHandle = (heading) => {
           el.style.transform = `rotate(${heading}deg)`;
           unitIcon.style.transform = `rotate(-${heading}deg)`;
-          shortLabel.style.transform = `rotate(-${heading}deg)`;
+          if (shortLabel)
+            shortLabel.style.transform = `rotate(-${heading}deg)`;
         };
 
         SpawnHeadingChangedEvent.on((heading) => rotateHandle(heading));

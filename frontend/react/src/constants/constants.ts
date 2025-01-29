@@ -6,6 +6,7 @@ import {
   faClone,
   faExplosion,
   faHand,
+  faLightbulb,
   faLocationCrosshairs,
   faLocationDot,
   faMapLocation,
@@ -885,6 +886,32 @@ export namespace ContextActions {
         getApp().getUnitsManager().fireAtArea(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ENGAGE, code: "KeyV", ctrlKey: false, shiftKey: false }
+  );
+
+  export const FIRE_LASER = new ContextAction(
+    "fire-laser",
+    "Shine laser at point",
+    "Click on a point to shine a laser with the given code from the unit to the ground.",
+    faLightbulb,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp().getUnitsManager().fireLaser(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ENGAGE, code: "KeyL", ctrlKey: true, shiftKey: false }
+  );
+
+  export const FIRE_INFRARED = new ContextAction(
+    "fire-infrared",
+    "Shine infrared at point",
+    "Click on a point to shine a infrared beam from the unit to the ground.",
+    faLightbulb,
+    ContextActionTarget.POINT,
+    (units: Unit[], _, targetPosition: LatLng | null) => {
+      if (targetPosition)
+        getApp().getUnitsManager().fireInfrared(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+    },
+    { type: ContextActionType.ENGAGE, code: "KeyL", ctrlKey: true, shiftKey: false }
   );
 
   export const SIMULATE_FIRE_FIGHT = new ContextAction(

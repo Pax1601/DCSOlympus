@@ -430,3 +430,43 @@ private:
 	const unsigned int intensity;
 	const string explosionType;
 };
+
+/* Shine a laser with a specific code */
+class Laser : public Command
+{
+public:
+	Laser(unsigned int ID, unsigned int code, Coords destination, function<void(void)> callback = []() {}) :
+		Command(callback),
+		ID(ID),
+		destination(destination),
+		code(code)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int ID;
+	const unsigned int code;
+	const Coords destination;
+};
+
+/* Shine a infrared light */
+class Infrared : public Command
+{
+public:
+	Infrared(unsigned int ID, Coords destination, function<void(void)> callback = []() {}) :
+		Command(callback),
+		ID(ID),
+		destination(destination)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int ID;
+	const Coords destination;
+};
