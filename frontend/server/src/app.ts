@@ -194,7 +194,7 @@ module.exports = function (configLocation, viteProxy) {
           if (userConfig.roles[0] in defaultUsers) {
             /* Apply the authorization headers */
             req.headers.authorization = `Basic ${btoa(
-              user + ":" + defaultUsers[userConfig.roles[0]]
+              userConfig.roles[0] + ":" + defaultUsers[userConfig.roles[0]]
             )}`;
           } else {
             res.sendStatus(401); // Unauthorized
@@ -207,7 +207,7 @@ module.exports = function (configLocation, viteProxy) {
       /* Send back the roles that the user is enabled to */
       if (userConfig) res.set("X-Enabled-Command-Modes", `${userConfig.roles}`);
       else if (user in defaultUsers)
-        res.set("X-Enabled-Command-Modes", `[${user}]`);
+        res.set("X-Enabled-Command-Modes", `${user}`);
       next();
     } else {
       res.sendStatus(401); // Unauthorized

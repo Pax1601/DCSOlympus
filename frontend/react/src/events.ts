@@ -140,6 +140,8 @@ export class InfoPopupEvent {
   }
 }
 
+export class WrongCredentialsEvent extends BaseOlympusEvent {}
+
 export class ShortcutsChangedEvent {
   static on(callback: (shortcuts: { [key: string]: Shortcut }) => void, singleShot = false) {
     document.addEventListener(
@@ -814,6 +816,23 @@ export class MissionDataChangedEvent {
 
   static dispatch(missionData: MissionData) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { missionData } }));
+    // Logging disabled since periodic
+  }
+}
+
+export class EnabledCommandModesChangedEvent {
+  static on(callback: (enabledCommandModes: string[]) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail.enabledCommandModes);
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(enabledCommandModes: string[]) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { enabledCommandModes } }));
     // Logging disabled since periodic
   }
 }

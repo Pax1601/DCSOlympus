@@ -6,7 +6,7 @@ import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/c
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
-import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChangedEvent, CommandModeOptionsChangedEvent, MissionDataChangedEvent } from "../events";
+import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChangedEvent, CommandModeOptionsChangedEvent, EnabledCommandModesChangedEvent, MissionDataChangedEvent } from "../events";
 
 /** The MissionManager  */
 export class MissionManager {
@@ -225,6 +225,7 @@ export class MissionManager {
 
   setEnabledCommandModes(enabledCommandModes: string[]) {
     this.#enabledCommandModes = enabledCommandModes;
+    EnabledCommandModesChangedEvent.dispatch(enabledCommandModes);
   }
 
   getEnabledCommandModes() {

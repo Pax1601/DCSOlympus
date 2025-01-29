@@ -26,6 +26,10 @@ Olympus.weaponIndex = 0			-- Counter used to spread the computational load of da
 Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
 Olympus.weapons = {}			-- Table holding references to all the currently existing weapons
 
+-- Spots (laser/IR) data
+Olympus.spots = {}
+Olympus.spotsCounter = 1
+
 -- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
@@ -574,7 +578,18 @@ function Olympus.fireLaser(ID, code, lat, lng)
 
 	local unit = Olympus.getUnitByID(ID)
 	if unit ~= nil and unit:isExist() then
-		local ray = Spot.createLaser(unit, {x = 0, y = 1, z = 0}, vec3, code)
+		local spot = Spot.createLaser(unit, {x = 0, y = 1, z = 0}, vec3, code)
+		Olympus.spotsCounter = Olympus.spotsCounter + 1
+		Olympus.spots[Olympus.spotsCounter] = {
+			type = "laser",
+			object = spot,
+			sourceUnitID = ID,
+			targetPosition = {
+				lat = lat,
+				lng = lng
+			},
+			code = code
+		}
 	end
 end  
 
@@ -586,7 +601,16 @@ function Olympus.fireInfrared(ID, lat, lng)
 
 	local unit = Olympus.getUnitByID(ID)
 	if unit ~= nil and unit:isExist() then
-		local ray = Spot.createInfraRed(unit, {x = 0, y = 1, z = 0}, vec3)
+		local spot = Spot.createInfraRed(unit, {x = 0, y = 1, z = 0}, vec3)
+		Olympus.spots[Olympus.spotsCounter] = {
+			type = "infrared",
+			object = spot,
+			sourceUnitID = ID,
+			targetPosition = {
+				lat = lat,
+				lng = lng
+			}
+		}
 	end
 end 
 
@@ -1354,10 +1378,30 @@ function Olympus.setMissionData(arg, time)
 		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
 	end
 
+	-- Spots 
+	-- Initialize an empty table to store spots
+	local spots = {}
+
+	-- Iterate over each spot in Olympus.spots
+	for ID, spot in pairs(Olympus.spots) do 
+		-- Create a new entry in the spots table with the same ID
+		spots[ID] = {
+			type = spot.type,
+			sourceUnitID = spot.sourceUnitID,
+			targetPosition = spot.targetPosition,
+		}
+
+		-- If the spot type is "laser", add the code to the spot entry
+		if spot.type == "laser" then
+			spots[ID]["code"] = spot.code 
+		end
+	end
+
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
 	Olympus.missionData["airbases"] = airbases
 	Olympus.missionData["mission"] = mission
+	Olympus.missionData["spots"] = spots
 
 	Olympus.OlympusDLL.setMissionData()
 	return time + 1	-- For perfomance reasons weapons are updated once every second

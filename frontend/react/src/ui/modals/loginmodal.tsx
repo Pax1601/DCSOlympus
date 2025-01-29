@@ -8,10 +8,9 @@ import { getApp, VERSION } from "../../olympusapp";
 import { sha256 } from "js-sha256";
 import { LoginSubState, NO_SUBSTATE, OlympusState } from "../../constants/constants";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
-import { AppStateChangedEvent } from "../../events";
+import { AppStateChangedEvent, EnabledCommandModesChangedEvent, MissionDataChangedEvent, WrongCredentialsEvent } from "../../events";
 
 export function LoginModal(props: { open: boolean }) {
-  // TODO: add warning if not in secure context and some features are disabled
   const [subState, setSubState] = useState(NO_SUBSTATE);
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -23,6 +22,10 @@ export function LoginModal(props: { open: boolean }) {
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
       setSubState(subState);
+    });
+    WrongCredentialsEvent.on(() => {
+      setLoginError(true);
+      setCheckingPassword(false);
     });
   }, []);
 
@@ -37,28 +40,21 @@ export function LoginModal(props: { open: boolean }) {
 
   const login = useCallback(() => {
     setCheckingPassword(true);
-
+    EnabledCommandModesChangedEvent.on((commandModes) => {
+      if (commandModes.length > 1) {
+        setCommandModes(commandModes);
+        setActiveCommandMode(commandModes[0]);
+      } else if (commandModes.length == 1) {
+        setActiveCommandMode(commandModes[0]);
+        getApp().setState(OlympusState.LOGIN, LoginSubState.CONNECT);
+      } else {
+        setLoginError(true);
+      }
+      setCheckingPassword(false);
+    }, true);
     getApp()
       .getServerManager()
-      .getMission(
-        (response) => {
-          const commandModes = getApp().getMissionManager().getEnabledCommandModes();
-          if (commandModes.length > 1) {
-            setCommandModes(commandModes);
-            setActiveCommandMode(commandModes[0]);
-          } else if (commandModes.length == 1) {
-            setActiveCommandMode(commandModes[0]);
-            getApp().setState(OlympusState.LOGIN, LoginSubState.CONNECT);
-          } else {
-            setLoginError(true);
-          }
-          setCheckingPassword(false);
-        },
-        () => {
-          setLoginError(true);
-          setCheckingPassword(false);
-        }
-      );
+      .getMission(() => {});
   }, [commandModes, username, password]);
 
   const connect = useCallback(() => {
@@ -94,9 +90,10 @@ export function LoginModal(props: { open: boolean }) {
         max-md:border-none
       `}
     >
-      <img src="images/splash/1.jpg" className={`
-        contents-center w-full object-cover opacity-[7%]
-      `}></img>
+      <img
+        src="images/splash/1.jpg"
+        className={`contents-center w-full object-cover opacity-[7%]`}
+      ></img>
       <div
         className={`
           absolute h-full w-full bg-gradient-to-r from-blue-200/25
@@ -154,9 +151,10 @@ export function LoginModal(props: { open: boolean }) {
                   `}
                 >
                   <span className="size-[80px] min-w-14">
-                    <img src="images/olympus-500x500.png" className={`
-                      flex w-full
-                    `}></img>
+                    <img
+                      src="images/olympus-500x500.png"
+                      className={`flex w-full`}
+                    ></img>
                   </span>
                   <div className={`flex flex-col items-start gap-1`}>
                     <h1
@@ -273,9 +271,10 @@ export function LoginModal(props: { open: boolean }) {
                           >
                             Choose your role
                           </label>
-                          <OlDropdown label={activeCommandMode ?? ""} className={`
-                            w-48
-                          `}>
+                          <OlDropdown
+                            label={activeCommandMode ?? ""}
+                            className={`w-48`}
+                          >
                             {commandModes?.map((commandMode) => {
                               return <OlDropdownItem onClick={() => setActiveCommandMode(commandMode)}>{commandMode}</OlDropdownItem>;
                             })}
@@ -310,7 +309,7 @@ export function LoginModal(props: { open: boolean }) {
                       description="The Olympus Server at this address could not be reached or the password is incorrect. Check your password. If correct, check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used."
                     ></ErrorCallout>
                     <div className={`text-sm font-medium text-gray-200`}>
-                      Still having issues? See our
+                      Still having issues? See our{" "}
                       <a
                         href=""
                         className={`

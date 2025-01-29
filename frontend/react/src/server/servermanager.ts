@@ -14,7 +14,7 @@ import {
   reactionsToThreat,
 } from "../constants/constants";
 import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
-import { MapOptionsChangedEvent, ServerStatusUpdatedEvent } from "../events";
+import { MapOptionsChangedEvent, ServerStatusUpdatedEvent, WrongCredentialsEvent } from "../events";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -130,6 +130,7 @@ export class ServerManager {
       } else if (xmlHttp.status == 401) {
         /* Bad credentials */
         console.error("Incorrect username/password");
+        WrongCredentialsEvent.dispatch();
         errorCallback && errorCallback(xmlHttp.status);
       } else {
         /* Failure, probably disconnected */
