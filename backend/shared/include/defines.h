@@ -10,6 +10,7 @@
 #define LOGS_URI "logs"
 #define AIRBASES_URI "airbases"
 #define BULLSEYE_URI "bullseyes"
+#define SPOTS_URI "spots"
 #define MISSION_URI "mission"
 #define COMMANDS_URI "commands"
 

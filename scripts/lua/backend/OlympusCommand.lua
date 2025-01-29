@@ -602,6 +602,7 @@ function Olympus.fireInfrared(ID, lat, lng)
 	local unit = Olympus.getUnitByID(ID)
 	if unit ~= nil and unit:isExist() then
 		local spot = Spot.createInfraRed(unit, {x = 0, y = 1, z = 0}, vec3)
+		Olympus.spotsCounter = Olympus.spotsCounter + 1
 		Olympus.spots[Olympus.spotsCounter] = {
 			type = "infrared",
 			object = spot,

@@ -8,12 +8,13 @@ import {
   MISSION_URI,
   NONE,
   ROEs,
+  SPOTS_URI,
   UNITS_URI,
   WEAPONS_URI,
   emissionsCountermeasures,
   reactionsToThreat,
 } from "../constants/constants";
-import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, TACAN } from "../interfaces";
+import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, SpotsData, TACAN } from "../interfaces";
 import { MapOptionsChangedEvent, ServerStatusUpdatedEvent, WrongCredentialsEvent } from "../events";
 
 export class ServerManager {
@@ -180,8 +181,12 @@ export class ServerManager {
     this.GET(callback, errorCallback, AIRBASES_URI);
   }
 
-  getBullseye(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
+  getBullseyes(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, BULLSEYE_URI);
+  }
+
+  getSpots(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
+    this.GET(callback, errorCallback, SPOTS_URI);
   }
 
   getLogs(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
@@ -576,13 +581,25 @@ export class ServerManager {
     this.#intervals.push(
       window.setInterval(() => {
         if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
-          this.getBullseye((data: BullseyesData) => {
+          this.getBullseyes((data: BullseyesData) => {
             this.checkSessionHash(data.sessionHash);
             getApp().getMissionManager()?.updateBullseyes(data);
             return data.time;
           });
         }
       }, 10000)
+    );
+
+    this.#intervals.push(
+      window.setInterval(() => {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
+          this.getSpots((data: SpotsData) => {
+            this.checkSessionHash(data.sessionHash);
+            getApp().getMissionManager()?.updateSpots(data);
+            return data.time;
+          });
+        }
+      }, 2000)
     );
 
     this.#intervals.push(
@@ -670,7 +687,7 @@ export class ServerManager {
       return data.time;
     });
 
-    this.getBullseye((data: BullseyesData) => {
+    this.getBullseyes((data: BullseyesData) => {
       this.checkSessionHash(data.sessionHash);
       getApp().getMissionManager()?.updateBullseyes(data);
       return data.time;

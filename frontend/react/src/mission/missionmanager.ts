@@ -3,14 +3,16 @@ import { getApp } from "../olympusapp";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
-import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData } from "../interfaces";
+import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData, SpotsData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
 import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChangedEvent, CommandModeOptionsChangedEvent, EnabledCommandModesChangedEvent, MissionDataChangedEvent } from "../events";
+import { Spot } from "./spot";
 
 /** The MissionManager  */
 export class MissionManager {
   #bullseyes: { [name: string]: Bullseye } = {};
+  #spots: {[key: string]: Spot} = {};
   #airbases: { [name: string]: Airbase | Carrier } = {};
   #theatre: string = "";
   #dateAndTime: DateAndTime = {
@@ -62,6 +64,16 @@ export class MissionManager {
       }
 
       BullseyesDataChangedEvent.dispatch(this.#bullseyes)
+    }
+  }
+
+  updateSpots(data: SpotsData) {
+    for (let idx in data.spots) {
+      const spotID = Number(idx);
+      if (this.#spots[spotID] === undefined) {
+        const spot = data.spots[idx];
+        this.#spots[spotID] = new Spot(spotID, spot.type, new LatLng(spot.targetPosition.lat, spot.targetPosition.lng), spot.sourceUnitID, spot.code);
+      }
     }
   }
 
@@ -132,6 +144,10 @@ export class MissionManager {
    */
   getAirbases() {
     return this.#airbases;
+  }
+
+  getSpots() {  
+    return this.#spots;
   }
 
   /** Get the options/settings as set in the command mode

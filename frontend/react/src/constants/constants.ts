@@ -39,6 +39,7 @@ export const WEAPONS_URI = "weapons";
 export const LOGS_URI = "logs";
 export const AIRBASES_URI = "airbases";
 export const BULLSEYE_URI = "bullseyes";
+export const SPOTS_URI = "spots";
 export const MISSION_URI = "mission";
 export const COMMANDS_URI = "commands";
 

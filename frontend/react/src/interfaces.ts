@@ -80,6 +80,14 @@ export interface BullseyesData {
   time: number;
 }
 
+export interface SpotsData {
+  spots: {
+    [key: string]: { type: string, targetPosition: {lat: number; lng: number}; sourceUnitID: number; code?: number };
+  };
+  sessionHash: string;
+  time: number;
+}
+
 export interface MissionData {
   mission: {
     theatre: string;

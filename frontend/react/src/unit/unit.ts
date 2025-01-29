@@ -68,6 +68,9 @@ import {
 } from "../events";
 import { CoalitionAreaHandle } from "../map/coalitionarea/coalitionareahandle";
 import { ArrowMarker } from "../map/markers/arrowmarker";
+import { Spot } from "../mission/spot";
+import { SpotEditMarker } from "../map/markers/spoteditmarker";
+import { SpotMarker } from "../map/markers/spotmarker";
 
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
@@ -177,6 +180,9 @@ export abstract class Unit extends CustomMarker {
   #racetrackAnchorMarkers: CoalitionAreaHandle[] = [new CoalitionAreaHandle(new LatLng(0, 0)), new CoalitionAreaHandle(new LatLng(0, 0))];
   #racetrackArrow: ArrowMarker = new ArrowMarker(new LatLng(0, 0));
   #inhibitRacetrackDraw: boolean = false;
+  #spots: { [key: number]: Polyline } = {};
+  #spotEditMarkers: { [key: number]: SpotEditMarker } = {};
+  #spotMarkers: { [key: number]: SpotMarker } = {};
 
   /* Inputs timers */
   #debounceTimeout: number | null = null;
@@ -779,6 +785,7 @@ export abstract class Unit extends CustomMarker {
         this.#clearPath();
         this.#clearTargetPosition();
         this.#clearRacetrack();
+        this.#clearSpots();
       }
 
       /* When the group leader is selected, if grouping is active, all the other group members are also selected */
@@ -928,6 +935,7 @@ export abstract class Unit extends CustomMarker {
       this.#drawRacetrack();
       this.#drawContacts();
       this.#drawTarget();
+      this.#drawSpots();
     }
   }
 
@@ -1740,8 +1748,7 @@ export abstract class Unit extends CustomMarker {
       }
 
       /* Add racetrack anchor to the path, but only if we are an active tanker or AWACS */
-      if (this.getState() !== UnitState.IDLE && (this.getIsActiveAWACS() || this.getIsActiveTanker())) 
-        points.push(this.#racetrackAnchor);
+      if (this.getState() !== UnitState.IDLE && (this.getIsActiveAWACS() || this.getIsActiveTanker())) points.push(this.#racetrackAnchor);
 
       this.#pathPolyline.setLatLngs(points);
 
@@ -1857,6 +1864,43 @@ export abstract class Unit extends CustomMarker {
     this.setRacetrack(racetrackLength, this.#racetrackAnchorMarkers[0].getLatLng(), racetrackBearing, () => {
       this.#inhibitRacetrackDraw = false;
     });
+  }
+
+  #drawSpots() {
+    Object.values(getApp().getMissionManager().getSpots()).forEach((spot: Spot) => {
+      if (spot.getSourceUnitID() === this.ID) {
+        const spotBearing = deg2rad(bearing(this.getPosition().lat, this.getPosition().lng, spot.getTargetPosition().lat, spot.getTargetPosition().lng, false));
+        const spotDistance = this.getPosition().distanceTo(spot.getTargetPosition());
+        const midPosition = bearingAndDistanceToLatLng(this.getPosition().lat, this.getPosition().lng, spotBearing, spotDistance / 2);
+        if (this.#spots[spot.getID()] === undefined) {
+          this.#spots[spot.getID()] = new Polyline([this.getPosition(), spot.getTargetPosition()], {
+            color: spot.getType() === "laser" ? colors.BLUE_VIOLET : colors.DARK_RED,
+            dashArray: "1, 8",
+          });
+          this.#spots[spot.getID()].addTo(getApp().getMap());
+          this.#spotEditMarkers[spot.getID()] = new SpotEditMarker(midPosition, `${spot.getCode() ?? ""}`);
+          this.#spotEditMarkers[spot.getID()].addTo(getApp().getMap());
+          this.#spotEditMarkers[spot.getID()].setRotationAngle(spotBearing + Math.PI / 2);
+          this.#spotMarkers[spot.getID()] = new SpotMarker(spot.getTargetPosition());
+        } else {
+          if (!getApp().getMap().hasLayer(this.#spots[spot.getID()])) this.#spots[spot.getID()].addTo(getApp().getMap());
+          if (!getApp().getMap().hasLayer(this.#spotEditMarkers[spot.getID()])) this.#spotEditMarkers[spot.getID()].addTo(getApp().getMap());
+          if (!getApp().getMap().hasLayer(this.#spotMarkers[spot.getID()])) this.#spotMarkers[spot.getID()].addTo(getApp().getMap());
+
+          this.#spots[spot.getID()].setLatLngs([this.getPosition(), spot.getTargetPosition()]);
+          this.#spotEditMarkers[spot.getID()].setLatLng(midPosition);
+          this.#spotMarkers[spot.getID()].setLatLng(spot.getTargetPosition());
+        }
+        this.#spotEditMarkers[spot.getID()].setRotationAngle(spotBearing + Math.PI / 2);
+        this.#spotEditMarkers[spot.getID()].setTextValue(`${spot.getCode() ?? ""}`);
+      }
+    });
+  }
+
+  #clearSpots() {
+    Object.values(this.#spots).forEach((spot) => getApp().getMap().removeLayer(spot));
+    Object.values(this.#spotEditMarkers).forEach((spotEditMarker) => getApp().getMap().removeLayer(spotEditMarker));
+    Object.values(this.#spotMarkers).forEach((spotMarker) => getApp().getMap().removeLayer(spotMarker));
   }
 
   #drawContacts() {

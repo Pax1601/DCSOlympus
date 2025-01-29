@@ -35,6 +35,7 @@ import { ContextAction } from "../unit/contextaction";
 import "./markers/stylesheets/airbase.css";
 import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
+import "./markers/stylesheets/spot.css";
 import "./stylesheets/map.css";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";

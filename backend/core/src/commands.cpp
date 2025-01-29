@@ -264,7 +264,7 @@ string Laser::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.laser, "
+    commandSS << "Olympus.fireLaser, "
         << ID << ", "
         << code << ", "
         << destination.lat << ", "
@@ -277,7 +277,7 @@ string Infrared::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.infrared, "
+    commandSS << "Olympus.fireInfrared, "
         << ID << ", "
         << destination.lat << ", "
         << destination.lng;

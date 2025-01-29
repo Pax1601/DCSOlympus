@@ -128,6 +128,9 @@ void Server::handle_get(http_request request)
                     /* Bullseyes data */
                     else if (URI.compare(BULLSEYE_URI) == 0 && missionData.has_object_field(L"bullseyes")) 
                         answer[L"bullseyes"] = missionData[L"bullseyes"];
+                    /* Spots (laser/IR) data */
+                    else if (URI.compare(SPOTS_URI) == 0 && missionData.has_object_field(L"spots"))
+                        answer[L"spots"] = missionData[L"spots"];
                     /* Mission data */
                     else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
                         answer[L"mission"] = missionData[L"mission"];

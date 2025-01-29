@@ -17,7 +17,7 @@ import {
 } from "../components/olicons";
 import { FaChevronLeft, FaChevronRight, FaFloppyDisk } from "react-icons/fa6";
 import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent, SessionDataChangedEvent, SessionDataSavedEvent } from "../../events";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ImportExportSubstate, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, OlympusState } from "../../constants/constants";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ImportExportSubstate, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, OlympusState, RED_COMMANDER } from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
 import { FaCheck, FaSave, FaSpinner } from "react-icons/fa";
 
@@ -129,6 +129,11 @@ export function Header() {
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
           <div className={`flex h-full rounded-md bg-blue-600 px-4 text-white`}>
+            <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
+          </div>
+        )}
+        {commandModeOptions.commandMode === RED_COMMANDER && (
+          <div className={`flex h-full rounded-md bg-red-600 px-4 text-white`}>
             <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
           </div>
         )}
