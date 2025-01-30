@@ -179,7 +179,7 @@ export class OlympusApp {
 
             const urlParams = new URLSearchParams(window.location.search);
             const server = urlParams.get("server");
-            if (!server) {
+            if (server === null) {
               this.setState(OlympusState.IDLE);
               /* If no profile exists already with that name, create it from scratch from the defaults */
               if (this.getProfile() === null) this.saveProfile();
