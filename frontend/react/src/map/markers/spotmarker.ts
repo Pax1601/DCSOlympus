@@ -4,7 +4,8 @@ import { CustomMarker } from "./custommarker";
 export class SpotMarker extends CustomMarker {
   constructor(latlng: LatLngExpression, options?: MarkerOptions) {
     super(latlng, options);
-    this.options.interactive = false;
+    this.options.interactive = true;
+    this.options.draggable = true;
     this.setZIndexOffset(9999);
   }
 

@@ -301,7 +301,7 @@ export class UnitsManager {
       this.#requestDetectionUpdate = false;
     }
 
-    /* Update the detection lines of all the units. This code is handled by the UnitsManager since it must be run both when the detected OR the detecting unit is updated */
+    /* Update all the lines of all the selected units. This code is handled by the UnitsManager since, for example, it must be run both when the detected OR the detecting unit is updated */
     for (let ID in this.#units) {
       if (this.#units[ID].getSelected()) this.#units[ID].drawLines();
     }

@@ -432,10 +432,10 @@ private:
 };
 
 /* Shine a laser with a specific code */
-class Laser : public Command
+class FireLaser : public Command
 {
 public:
-	Laser(unsigned int ID, unsigned int code, Coords destination, function<void(void)> callback = []() {}) :
+	FireLaser(unsigned int ID, unsigned int code, Coords destination, function<void(void)> callback = []() {}) :
 		Command(callback),
 		ID(ID),
 		destination(destination),
@@ -453,10 +453,10 @@ private:
 };
 
 /* Shine a infrared light */
-class Infrared : public Command
+class FireInfrared : public Command
 {
 public:
-	Infrared(unsigned int ID, Coords destination, function<void(void)> callback = []() {}) :
+	FireInfrared(unsigned int ID, Coords destination, function<void(void)> callback = []() {}) :
 		Command(callback),
 		ID(ID),
 		destination(destination)
@@ -468,5 +468,60 @@ public:
 
 private:
 	const unsigned int ID;
+	const Coords destination;
+};
+
+/* Change a laser code */
+class SetLaserCode : public Command
+{
+public:
+	SetLaserCode(unsigned int spotID, unsigned int code, function<void(void)> callback = []() {}) :
+		Command(callback),
+		spotID(spotID),
+		code(code)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int spotID;
+	const unsigned int code;
+};
+
+/* Delete a spot code */
+class DeleteSpot : public Command
+{
+public:
+	DeleteSpot(unsigned int spotID, function<void(void)> callback = []() {}) :
+		Command(callback),
+		spotID(spotID)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int spotID;
+};
+
+/* Move spot to a new target */
+class MoveSpot : public Command
+{
+public:
+	MoveSpot(unsigned int spotID, Coords destination, function<void(void)> callback = []() {}) :
+		Command(callback),
+		spotID(spotID),
+		destination(destination)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int spotID;
 	const Coords destination;
 };

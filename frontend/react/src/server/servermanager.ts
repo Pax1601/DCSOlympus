@@ -14,7 +14,18 @@ import {
   emissionsCountermeasures,
   reactionsToThreat,
 } from "../constants/constants";
-import { AirbasesData, BullseyesData, CommandModeOptions, GeneralSettings, MissionData, Radio, ServerRequestOptions, ServerStatus, SpotsData, TACAN } from "../interfaces";
+import {
+  AirbasesData,
+  BullseyesData,
+  CommandModeOptions,
+  GeneralSettings,
+  MissionData,
+  Radio,
+  ServerRequestOptions,
+  ServerStatus,
+  SpotsData,
+  TACAN,
+} from "../interfaces";
 import { MapOptionsChangedEvent, ServerStatusUpdatedEvent, WrongCredentialsEvent } from "../events";
 
 export class ServerManager {
@@ -40,13 +51,15 @@ export class ServerManager {
     this.#lastUpdateTimes[BULLSEYE_URI] = Date.now();
     this.#lastUpdateTimes[MISSION_URI] = Date.now();
 
-    getApp().getShortcutManager().addShortcut("togglePause", {
-      label: "Pause data update",
-      keyUpCallback: () => {
-        this.setPaused(!this.getPaused());
-      },
-      code: "Enter"
-    })
+    getApp()
+      .getShortcutManager()
+      .addShortcut("togglePause", {
+        label: "Pause data update",
+        keyUpCallback: () => {
+          this.setPaused(!this.getPaused());
+        },
+        code: "Enter",
+      });
 
     MapOptionsChangedEvent.on((mapOptions) => {
       /* TODO if (this.#updateMode === "normal" && mapOptions.AWACSMode) {
@@ -56,7 +69,7 @@ export class ServerManager {
         this.#updateMode = "normal";
         this.startUpdate();
       } */
-    })
+    });
   }
 
   setUsername(newUsername: string) {
@@ -117,8 +130,10 @@ export class ServerManager {
         if (xmlHttp.responseType == "arraybuffer") this.#lastUpdateTimes[uri] = callback(xmlHttp.response);
         else {
           /* Check if the response headers contain the enabled command modes and set them */
-          if (xmlHttp.getResponseHeader("X-Enabled-Command-Modes")) 
-            getApp().getMissionManager().setEnabledCommandModes(xmlHttp.getResponseHeader("X-Enabled-Command-Modes")?.split(",") ??[])
+          if (xmlHttp.getResponseHeader("X-Enabled-Command-Modes"))
+            getApp()
+              .getMissionManager()
+              .setEnabledCommandModes(xmlHttp.getResponseHeader("X-Enabled-Command-Modes")?.split(",") ?? []);
 
           const result = JSON.parse(xmlHttp.responseText);
           this.#lastUpdateTimes[uri] = callback(result);
@@ -534,11 +549,26 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  setCommandModeOptions(
-    commandModeOptions: CommandModeOptions,
-    callback: CallableFunction = () => {}
-  ) {
+  setCommandModeOptions(commandModeOptions: CommandModeOptions, callback: CallableFunction = () => {}) {
     var data = { setCommandModeOptions: commandModeOptions };
+    this.PUT(data, callback);
+  }
+
+  setLaserCode(spotID: number, code: number, callback: CallableFunction = () => {}) {
+    var command = { spotID: spotID, code: code };
+    var data = { setLaserCode: command };
+    this.PUT(data, callback);
+  }
+
+  moveSpot(spotID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
+    var command = { spotID: spotID, location: latlng };
+    var data = { moveSpot: command };
+    this.PUT(data, callback);
+  }
+
+  deleteSpot(spotID: number, callback: CallableFunction = () => {}) {
+    var command = { spotID: spotID };
+    var data = { deleteSpot: command };
     this.PUT(data, callback);
   }
 
@@ -615,39 +645,42 @@ export class ServerManager {
     );
 
     this.#intervals.push(
-      window.setInterval(() => {
-        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
-          this.getUnits((buffer: ArrayBuffer) => {
-            var time = getApp().getUnitsManager()?.update(buffer, false);
-            return time;
-          }, false);
-        }
-      }, this.#updateMode === "normal"? 250: 2000)
-    );
-
-    this.#intervals.push(
-      window.setInterval(() => {
-        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
-          this.getWeapons((buffer: ArrayBuffer) => {
-            var time = getApp().getWeaponsManager()?.update(buffer, false);
-            return time;
-          }, false);
-        }
-      }, this.#updateMode === "normal"? 250: 2000)
+      window.setInterval(
+        () => {
+          if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
+            this.getUnits((buffer: ArrayBuffer) => {
+              var time = getApp().getUnitsManager()?.update(buffer, false);
+              return time;
+            }, false);
+          }
+        },
+        this.#updateMode === "normal" ? 250 : 2000
+      )
     );
 
     this.#intervals.push(
       window.setInterval(
         () => {
           if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
-            this.getUnits((buffer: ArrayBuffer) => {
-              var time = getApp().getUnitsManager()?.update(buffer, true);
+            this.getWeapons((buffer: ArrayBuffer) => {
+              var time = getApp().getWeaponsManager()?.update(buffer, false);
               return time;
-            }, true);
+            }, false);
           }
         },
-        5000
+        this.#updateMode === "normal" ? 250 : 2000
       )
+    );
+
+    this.#intervals.push(
+      window.setInterval(() => {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
+          this.getUnits((buffer: ArrayBuffer) => {
+            var time = getApp().getUnitsManager()?.update(buffer, true);
+            return time;
+          }, true);
+        }
+      }, 5000)
     );
 
     //  Mission clock and elapsed time

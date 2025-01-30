@@ -615,6 +615,33 @@ function Olympus.fireInfrared(ID, lat, lng)
 	end
 end 
 
+-- Set new laser code
+function Olympus.setLaserCode(spotID, code) 
+	local spot = Olympus.spots[spotID]
+	if spot ~= nil and spot.type == "laser" then
+		spot.object:setCode(code)
+		spot.code = code
+	end
+end
+
+-- Move spot to a new location
+function Olympus.moveSpot(spotID, lat, lng)
+	local spot = Olympus.spots[spotID]
+	if spot ~= nil then
+		spot.object:setPoint(coord.LLtoLO(lat, lng, 0))
+		spot.targetPosition = {lat = lat, lng = lng}
+	end
+end
+
+-- Remove the spot
+function Olympus.deleteSpot(spotID)
+	local spot = Olympus.spots[spotID]
+	if spot ~= nil then
+		spot.object:destroy()
+		Olympus.spots[spotID] = nil
+	end
+end
+
 -- Spawns a new unit or group
 -- Spawn table contains the following parameters
 -- category: (string), either Aircraft, Helicopter, GroundUnit or NavyUnit

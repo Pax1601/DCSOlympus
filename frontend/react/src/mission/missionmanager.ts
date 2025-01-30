@@ -70,11 +70,26 @@ export class MissionManager {
   updateSpots(data: SpotsData) {
     for (let idx in data.spots) {
       const spotID = Number(idx);
+      const spot = data.spots[idx];
       if (this.#spots[spotID] === undefined) {
-        const spot = data.spots[idx];
         this.#spots[spotID] = new Spot(spotID, spot.type, new LatLng(spot.targetPosition.lat, spot.targetPosition.lng), spot.sourceUnitID, spot.code);
+      } else {
+        if (spot.type === "laser")
+          this.#spots[spotID].setCode(spot.code ?? 0)
+        this.#spots[spotID].setTargetPosition( new LatLng(spot.targetPosition.lat, spot.targetPosition.lng));
       }
     }
+
+    /* Iterate the existing spots and remove all spots that where deleted */
+    for (let idx in this.#spots) {
+      if (data.spots[idx] === undefined) {
+        delete this.#spots[idx];
+      }
+    }
+  }
+
+  getSpotByID(spotID: number) {
+    return this.#spots[spotID];
   }
 
   /** Update airbase information

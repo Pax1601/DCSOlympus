@@ -69,7 +69,7 @@ import { SmokeMarker } from "./markers/smokemarker";
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
 
-initDraggablePath(L); // TODO: breaks app when compiled
+initDraggablePath(L); 
 
 export class Map extends L.Map {
   /* Options */

@@ -47,6 +47,7 @@ import {
   TRAIL_LENGTH,
   colors,
   UnitState,
+  SPOTS_EDIT_ZOOM_TRANSITION,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -71,6 +72,7 @@ import { ArrowMarker } from "../map/markers/arrowmarker";
 import { Spot } from "../mission/spot";
 import { SpotEditMarker } from "../map/markers/spoteditmarker";
 import { SpotMarker } from "../map/markers/spotmarker";
+import { get } from "http";
 
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
@@ -180,7 +182,7 @@ export abstract class Unit extends CustomMarker {
   #racetrackAnchorMarkers: CoalitionAreaHandle[] = [new CoalitionAreaHandle(new LatLng(0, 0)), new CoalitionAreaHandle(new LatLng(0, 0))];
   #racetrackArrow: ArrowMarker = new ArrowMarker(new LatLng(0, 0));
   #inhibitRacetrackDraw: boolean = false;
-  #spots: { [key: number]: Polyline } = {};
+  #spotLines: { [key: number]: Polyline } = {};
   #spotEditMarkers: { [key: number]: SpotEditMarker } = {};
   #spotMarkers: { [key: number]: SpotMarker } = {};
 
@@ -1867,39 +1869,150 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawSpots() {
+    // Iterate over all spots and draw lines, edit markers, and markers
     Object.values(getApp().getMissionManager().getSpots()).forEach((spot: Spot) => {
       if (spot.getSourceUnitID() === this.ID) {
         const spotBearing = deg2rad(bearing(this.getPosition().lat, this.getPosition().lng, spot.getTargetPosition().lat, spot.getTargetPosition().lng, false));
         const spotDistance = this.getPosition().distanceTo(spot.getTargetPosition());
         const midPosition = bearingAndDistanceToLatLng(this.getPosition().lat, this.getPosition().lng, spotBearing, spotDistance / 2);
-        if (this.#spots[spot.getID()] === undefined) {
-          this.#spots[spot.getID()] = new Polyline([this.getPosition(), spot.getTargetPosition()], {
-            color: spot.getType() === "laser" ? colors.BLUE_VIOLET : colors.DARK_RED,
-            dashArray: "1, 8",
-          });
-          this.#spots[spot.getID()].addTo(getApp().getMap());
-          this.#spotEditMarkers[spot.getID()] = new SpotEditMarker(midPosition, `${spot.getCode() ?? ""}`);
-          this.#spotEditMarkers[spot.getID()].addTo(getApp().getMap());
-          this.#spotEditMarkers[spot.getID()].setRotationAngle(spotBearing + Math.PI / 2);
-          this.#spotMarkers[spot.getID()] = new SpotMarker(spot.getTargetPosition());
-        } else {
-          if (!getApp().getMap().hasLayer(this.#spots[spot.getID()])) this.#spots[spot.getID()].addTo(getApp().getMap());
-          if (!getApp().getMap().hasLayer(this.#spotEditMarkers[spot.getID()])) this.#spotEditMarkers[spot.getID()].addTo(getApp().getMap());
-          if (!getApp().getMap().hasLayer(this.#spotMarkers[spot.getID()])) this.#spotMarkers[spot.getID()].addTo(getApp().getMap());
 
-          this.#spots[spot.getID()].setLatLngs([this.getPosition(), spot.getTargetPosition()]);
-          this.#spotEditMarkers[spot.getID()].setLatLng(midPosition);
-          this.#spotMarkers[spot.getID()].setLatLng(spot.getTargetPosition());
+        // Draw the spot line
+        this.#drawSpotLine(spot, spotBearing);
+
+        // Draw the spot edit marker if the map is zoomed in enough
+        if (getApp().getMap().getZoom() >= SPOTS_EDIT_ZOOM_TRANSITION) {
+          // Draw the spot edit marker
+          this.#drawSpotEditMarker(spot, midPosition, spotBearing);
         }
-        this.#spotEditMarkers[spot.getID()].setRotationAngle(spotBearing + Math.PI / 2);
-        this.#spotEditMarkers[spot.getID()].setTextValue(`${spot.getCode() ?? ""}`);
+
+        // Draw the spot marker
+        this.#drawSpotMarker(spot);
+      }
+    });
+  }
+
+  /**
+   * Draws or updates the spot line.
+   * @param {Spot} spot - The spot object.
+   * @param {number} spotBearing - The bearing of the spot.
+   */
+  #drawSpotLine(spot: Spot, spotBearing: number) {
+    if (this.#spotLines[spot.getID()] === undefined) {
+      // Create a new polyline for the spot
+      this.#spotLines[spot.getID()] = new Polyline([this.getPosition(), spot.getTargetPosition()], {
+        color: spot.getType() === "laser" ? colors.BLUE_VIOLET : colors.DARK_RED,
+        dashArray: "1, 8",
+      });
+      this.#spotLines[spot.getID()].addTo(getApp().getMap());
+    } else {
+      // Update the existing polyline
+      if (!getApp().getMap().hasLayer(this.#spotLines[spot.getID()])) this.#spotLines[spot.getID()].addTo(getApp().getMap());
+      this.#spotLines[spot.getID()].setLatLngs([this.getPosition(), spot.getTargetPosition()]);
+    }
+
+    /* Iterate all existing lines and remove those associated to a spot that no longer exists */
+    Object.keys(this.#spotLines).forEach((spotID) => {
+      if (getApp().getMissionManager().getSpotByID(Number(spotID)) === undefined) {
+        getApp().getMap().removeLayer(this.#spotLines[spotID]);
+        delete this.#spotLines[spotID];
+      }
+    });
+  }
+
+  /**
+   * Draws or updates the spot edit marker.
+   * @param {Spot} spot - The spot object.
+   * @param {LatLng} midPosition - The midpoint position between the unit and the spot.
+   * @param {number} spotBearing - The bearing of the spot.
+   */
+  #drawSpotEditMarker(spot: Spot, midPosition: LatLng, spotBearing: number) {
+    if (this.#spotEditMarkers[spot.getID()] === undefined) {
+      // Create a new spot edit marker
+      this.#spotEditMarkers[spot.getID()] = new SpotEditMarker(midPosition, `${spot.getCode() ?? ""}`, 0, spot.getType());
+      this.#spotEditMarkers[spot.getID()].addTo(getApp().getMap());
+      this.#spotEditMarkers[spot.getID()].setRotationAngle(spotBearing + Math.PI / 2);
+      this.#spotEditMarkers[spot.getID()].onDeleteButtonClicked = () => {
+        getApp().getServerManager().deleteSpot(spot.getID());
+      };
+      this.#spotEditMarkers[spot.getID()].onValueUpdated = (value) => {
+        getApp().getServerManager().setLaserCode(spot.getID(), value);
+      };
+    } else {
+      // Update the existing spot edit marker
+      if (!getApp().getMap().hasLayer(this.#spotEditMarkers[spot.getID()])) this.#spotEditMarkers[spot.getID()].addTo(getApp().getMap());
+      this.#spotEditMarkers[spot.getID()].setLatLng(midPosition);
+    }
+    this.#spotEditMarkers[spot.getID()].setRotationAngle(spotBearing + Math.PI / 2);
+    this.#spotEditMarkers[spot.getID()].setTextValue(`${spot.getCode() ?? ""}`);
+
+    /* Iterate all existing edit markers and remove those associated to a spot that no longer exists */
+    Object.keys(this.#spotEditMarkers).forEach((spotID) => {
+      if (getApp().getMissionManager().getSpotByID(Number(spotID)) === undefined) {
+        getApp().getMap().removeLayer(this.#spotEditMarkers[spotID]);
+        delete this.#spotEditMarkers[spotID];
+      }
+    });
+  }
+
+  /**
+   * Draws or updates the spot marker.
+   * @param {Spot} spot - The spot object.
+   */
+  #drawSpotMarker(spot: Spot) {
+    if (this.#spotMarkers[spot.getID()] === undefined) {
+      // Create a new spot marker
+      this.#spotMarkers[spot.getID()] = new SpotMarker(spot.getTargetPosition());
+      this.#spotMarkers[spot.getID()].addTo(getApp().getMap());
+      this.#spotMarkers[spot.getID()].on("dragstart", (event) => {
+        event.target.options["freeze"] = true;
+      });
+      this.#spotMarkers[spot.getID()].on("dragend", (event) => {
+        getApp().getServerManager().moveSpot(spot.getID(), event.target.getLatLng());
+        event.target.options["freeze"] = false;
+      });
+    } else {
+      // Update the existing spot marker
+      if (!getApp().getMap().hasLayer(this.#spotMarkers[spot.getID()])) this.#spotMarkers[spot.getID()].addTo(getApp().getMap());
+      var frozen = this.#spotMarkers[spot.getID()].options["freeze"];
+      if (!frozen) {
+        this.#spotMarkers[spot.getID()].setLatLng(spot.getTargetPosition());
+      }
+    }
+
+    /* Iterate all existing markers and remove those associated to a spot that no longer exists */
+    Object.keys(this.#spotMarkers).forEach((spotID) => {
+      if (getApp().getMissionManager().getSpotByID(Number(spotID)) === undefined) {
+        getApp().getMap().removeLayer(this.#spotMarkers[spotID]);
+        delete this.#spotMarkers[spotID];
       }
     });
   }
 
   #clearSpots() {
-    Object.values(this.#spots).forEach((spot) => getApp().getMap().removeLayer(spot));
+    // Clear all spot lines, edit markers, and markers
+    this.#clearSpotLines();
+    this.#clearSpotEditMarkers();
+    this.#clearSpotMarkers();
+  }
+
+  /**
+   * Clears all spot lines from the map.
+   */
+  #clearSpotLines() {
+    Object.values(this.#spotLines).forEach((spot) => getApp().getMap().removeLayer(spot));
+  }
+
+  /**
+   * Clears all spot edit markers from the map.
+   */
+  #clearSpotEditMarkers() {
     Object.values(this.#spotEditMarkers).forEach((spotEditMarker) => getApp().getMap().removeLayer(spotEditMarker));
+  }
+
+  /**
+   * Clears all spot markers from the map.
+   */
+  #clearSpotMarkers() {
     Object.values(this.#spotMarkers).forEach((spotMarker) => getApp().getMap().removeLayer(spotMarker));
   }
 
@@ -2093,6 +2206,11 @@ export abstract class Unit extends CustomMarker {
   #onZoom(e: any) {
     if (this.checkZoomRedraw()) this.#redrawMarker();
     this.#updateMarker();
+
+    // Clear the spot edit markers if the map is zoomed out too much
+    if (getApp().getMap().getZoom() < SPOTS_EDIT_ZOOM_TRANSITION) {
+      this.#clearSpotEditMarkers();
+    }
   }
 }
 

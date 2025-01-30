@@ -179,7 +179,7 @@ export class OlympusApp {
 
             const urlParams = new URLSearchParams(window.location.search);
             const server = urlParams.get("server");
-            if (server == null) {
+            if (!server) {
               this.setState(OlympusState.IDLE);
               /* If no profile exists already with that name, create it from scratch from the defaults */
               if (this.getProfile() === null) this.saveProfile();
@@ -342,20 +342,20 @@ export class OlympusApp {
   }
 
   startServerMode() {
-    ConfigLoadedEvent.on((config) => {
-      this.getAudioManager().start();
-
-      Object.values(config.controllers).forEach((controllerOptions) => {
-        if (controllerOptions.type.toLowerCase() === "awacs") {
-          this.getControllerManager().addController(
-            new AWACSController(
-              { frequency: controllerOptions.frequency, modulation: controllerOptions.modulation },
-              controllerOptions.coalition,
-              controllerOptions.callsign
-            )
-          );
-        }
-      });
-    });
+    //ConfigLoadedEvent.on((config) => {
+    //  this.getAudioManager().start();
+//
+    //  Object.values(config.controllers).forEach((controllerOptions) => {
+    //    if (controllerOptions.type.toLowerCase() === "awacs") {
+    //      this.getControllerManager().addController(
+    //        new AWACSController(
+    //          { frequency: controllerOptions.frequency, modulation: controllerOptions.modulation },
+    //          controllerOptions.coalition,
+    //          controllerOptions.callsign
+    //        )
+    //      );
+    //    }
+    //  });
+    //});
   }
 }

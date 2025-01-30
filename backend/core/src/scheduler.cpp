@@ -705,9 +705,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			Coords loc; loc.lat = lat; loc.lng = lng;
 			unsigned int code = value[L"code"].as_integer();
 
-			log("Adding laser with code " + to_string(code) + " from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+			log("Firing laser with code " + to_string(code) + " from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
 
-			command = dynamic_cast<Command*>(new Laser(ID, code, loc));
+			command = dynamic_cast<Command*>(new FireLaser(ID, code, loc));
 		}
 	}
 	/************************/
@@ -719,11 +719,39 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double lat = value[L"location"][L"lat"].as_double();
 			double lng = value[L"location"][L"lng"].as_double();
 			Coords loc; loc.lat = lat; loc.lng = lng;
-			
-			log("Adding infrared from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
 
-			command = dynamic_cast<Command*>(new Infrared(ID, loc));
+			log("Firing infrared from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+
+			command = dynamic_cast<Command*>(new FireInfrared(ID, loc));
 		}
+	}
+	/************************/
+	else if (key.compare("setLaserCode") == 0)
+	{
+		unsigned int spotID = value[L"spotID"].as_integer();
+		unsigned int code = value[L"code"].as_integer();
+
+		log("Setting laser code " + to_string(code) + " to spot with ID " + to_string(spotID));
+		command = dynamic_cast<Command*>(new SetLaserCode(spotID, code));
+	}
+	/************************/
+	else if (key.compare("moveSpot") == 0)
+	{
+		unsigned int spotID = value[L"spotID"].as_integer();
+
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+
+		log("Moving spot with ID " + to_string(spotID) + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+		command = dynamic_cast<Command*>(new MoveSpot(spotID, loc));
+	}
+	/************************/
+	else if (key.compare("deleteSpot") == 0)
+	{
+		unsigned int spotID = value[L"spotID"].as_integer();
+		log("Deleting spot with ID " + to_string(spotID));
+		command = dynamic_cast<Command*>(new DeleteSpot(spotID));
 	}
 	/************************/
 	else if (key.compare("setCommandModeOptions") == 0) 

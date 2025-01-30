@@ -259,8 +259,8 @@ string Explosion::getString()
     return commandSS.str();
 }
 
-/* Laser command */
-string Laser::getString()
+/* FireLaser command */
+string FireLaser::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -272,8 +272,8 @@ string Laser::getString()
     return commandSS.str();
 }
 
-/* Infrared command */
-string Infrared::getString()
+/* FireInfrared command */
+string FireInfrared::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
@@ -281,5 +281,38 @@ string Infrared::getString()
         << ID << ", "
         << destination.lat << ", "
         << destination.lng;
+    return commandSS.str();
+}
+
+/* SetLaserCode command */
+string SetLaserCode::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.setLaserCode, "
+        << spotID << ", "
+        << code;
+    return commandSS.str();
+}
+
+/* MoveSpot command */
+string MoveSpot::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.moveSpot, "
+        << spotID << ", "
+        << destination.lat << ", "
+        << destination.lng;
+    return commandSS.str();
+}
+
+/* DeleteSpot command */
+string DeleteSpot::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.deleteSpot, "
+        << spotID;
     return commandSS.str();
 }
