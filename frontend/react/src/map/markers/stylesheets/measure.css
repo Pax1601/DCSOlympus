@@ -1,0 +1,26 @@
+/* Container for the measure marker */
+.leaflet-measure-marker {
+  text-align: center;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container for the measure marker content */
+.leaflet-measure-marker .container {
+  min-width: 150px;
+  transform-origin: center;
+  background-color: var(--background-steel);
+  color: white;
+  border-radius: 999px;
+  font-size: 13px;
+  align-content: center;
+  border: 2px solid transparent;
+}
+
+/* Text inside the measure marker */
+.leaflet-measure-marker .text {
+  margin-left: 12px;
+  margin-top: auto;
+  margin-bottom: auto;
+}

@@ -3,7 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { areaContains, deepCopyTable, deg2rad, getGroundElevation } from "../other/utils";
+import { areaContains, bearing, bearingAndDistanceToLatLng, deepCopyTable, deg2rad, getGroundElevation, mToFt, mToNm, nmToM, rad2deg } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -36,6 +36,7 @@ import "./markers/stylesheets/airbase.css";
 import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
 import "./markers/stylesheets/spot.css";
+import "./markers/stylesheets/measure.css";
 import "./stylesheets/map.css";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
@@ -65,11 +66,12 @@ import {
 } from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
+import { MeasureMarker } from "./markers/measuremarker";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
 
-initDraggablePath(L); 
+initDraggablePath(L);
 
 export class Map extends L.Map {
   /* Options */
@@ -153,6 +155,11 @@ export class Map extends L.Map {
   #IPPoint: TextMarker | null = null;
   #targetPoint: TargetMarker | null = null;
   #IPToTargetLine: L.Polygon | null = null;
+
+  /* Measure tool */
+  #measureReference: L.LatLng | null = null;
+  #measureLines: L.Polyline[] = [];
+  #measureMarkers: MeasureMarker[] = [];
 
   /**
    *
@@ -322,6 +329,16 @@ export class Map extends L.Map {
 
     getApp()
       .getShortcutManager()
+      .addShortcut("measure", {
+        label: "Toggle measurement tool",
+        keyUpCallback: () => {
+          getApp().getState() === OlympusState.MEASURE ? getApp().setState(OlympusState.IDLE) : getApp().setState(OlympusState.MEASURE);
+        },
+        code: "KeyM",
+        shiftKey: false,
+        altKey: false,
+        ctrlKey: false,
+      })
       .addShortcut("toggleUnitLabels", {
         label: "Hide/show labels",
         keyUpCallback: () => this.setOption("showUnitLabels", !this.getOptions().showUnitLabels),
@@ -837,7 +854,7 @@ export class Map extends L.Map {
     this.getContainer().classList.remove(`explosion-cursor`);
     ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
     this.getContainer().classList.remove(`plus-cursor`);
-
+    
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {
       getApp().getUnitsManager()?.deselectAllUnits();
@@ -904,6 +921,15 @@ export class Map extends L.Map {
     if (e.originalEvent?.button === 0) {
       this.#isLeftMouseDown = true;
       this.#leftMouseDownEpoch = Date.now();
+
+      /* If we are in the measure state there can only be a short click so immediately perform the action */
+      if (getApp().getState() === OlympusState.MEASURE) {
+        if (this.#measureLines.length > 0 && this.#measureReference)
+          this.#measureLines[this.#measureLines.length - 1].setLatLngs([this.#measureReference, e.latlng]);
+        this.#measureReference = e.latlng;
+        this.#measureLines.push(new L.Polyline([this.#measureReference, e.latlng], { color: "magenta" }).addTo(this));
+        this.#measureMarkers.push(new MeasureMarker(e.latlng, "", 0).addTo(this));
+      }
     } else if (e.originalEvent?.button === 2) {
       this.#isRightMouseDown = true;
       this.#rightMouseDownEpoch = Date.now();
@@ -1033,6 +1059,8 @@ export class Map extends L.Map {
             if (this.#contextAction !== null) this.executeContextAction(null, e.latlng, e.originalEvent);
             else if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
             else getApp().setState(OlympusState.UNIT_CONTROL);
+          } else if (getApp().getState() === OlympusState.MEASURE) {
+            /* Do nothing, we already clicked on the mouse down callback */
           } else {
             if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
             else getApp().setState(OlympusState.UNIT_CONTROL);
@@ -1099,6 +1127,20 @@ export class Map extends L.Map {
       if (getApp().getState() === OlympusState.SPAWN) {
         if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
         if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
+      } else if (getApp().getState() === OlympusState.MEASURE) {
+        if (this.#measureLines.length > 0) this.#measureLines[this.#measureLines.length - 1].setLatLngs([this.#measureReference, e.latlng]);
+        if (this.#measureMarkers.length > 0 && this.#measureReference) {
+          const distance = this.#measureReference.distanceTo(e.latlng);
+          let distanceString = ""
+          if (distance > nmToM(1)) distanceString = `${mToNm(distance).toFixed(2)} NM`;
+          else distanceString = `${mToFt(distance).toFixed(2)} ft`;
+          const bearingTo = deg2rad(bearing(this.#measureReference.lat, this.#measureReference.lng, e.latlng.lat, e.latlng.lng, false));
+          const halfPoint = bearingAndDistanceToLatLng(this.#measureReference.lat, this.#measureReference.lng, bearingTo, distance/2);
+          const bearingString = `${(Math.floor(rad2deg(bearingTo) + 360) % 360)}°`;
+          this.#measureMarkers[this.#measureMarkers.length - 1].setLatLng(halfPoint);
+          this.#measureMarkers[this.#measureMarkers.length - 1].setRotationAngle(bearingTo + Math.PI / 2);
+          this.#measureMarkers[this.#measureMarkers.length - 1].setTextValue(`${distanceString} - ${bearingString}`);
+        }
       }
     } else {
       this.#destionationWasRotated = true;
@@ -1164,6 +1206,11 @@ export class Map extends L.Map {
         console.warn("broadcastPosition: could not retrieve ground elevation");
       }
     });
+  }
+
+  #clearMeasures() {
+    this.#measureLines.forEach((line) => line.removeFrom(this));
+    this.#measureMarkers.forEach((marker) => marker.removeFrom(this));
   }
 
   /* */
