@@ -325,6 +325,7 @@ export enum OlympusState {
   GAME_MASTER = "Game master",
   IMPORT_EXPORT = "Import/export",
   WARNING = "Warning modal",
+  DATABASE_EDITOR = "Database editor"
 }
 
 export const NO_SUBSTATE = "No substate";

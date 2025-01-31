@@ -141,10 +141,13 @@ export function UI() {
         <div
           className={`
             absolute left-0 top-0 z-50 flex h-screen w-screen items-center
-            justify-center bg-gray-900 bg-opacity-80 text-white backdrop-blur-sm
+            justify-center bg-gray-900 bg-opacity-80 text-center text-white
+            backdrop-blur-sm
           `}
         >
-          <div className="flex flex-col items-center justify-center gap-4">
+          <div className={`
+            flex w-[400px] flex-col items-center justify-center gap-4
+          `}>
             <div className="bouncing-ball">
               <img
                 src="images/olympus-500x500.png"

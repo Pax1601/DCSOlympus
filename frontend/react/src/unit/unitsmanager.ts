@@ -61,6 +61,7 @@ export class UnitsManager {
     this.#unitDatabase.load("./api/databases/units/helicopterdatabase", "helicopter");
     this.#unitDatabase.load("./api/databases/units/groundunitdatabase", "groundunit");
     this.#unitDatabase.load("./api/databases/units/navyunitdatabase", "navyunit");
+    this.#unitDatabase.load("./api/databases/units/mods");
 
     CommandModeOptionsChangedEvent.on(() => {
       Object.values(this.#units).forEach((unit: Unit) => unit.updateVisibility());

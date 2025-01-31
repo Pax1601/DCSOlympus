@@ -20,7 +20,7 @@ export class UnitDatabase {
           const newBlueprints = xhr.response as { [key: string]: UnitBlueprint };
           for (let unit in newBlueprints) {
             if (!newBlueprints[unit].category) {
-              if (category)  newBlueprints[unit].category = category
+              if (category) newBlueprints[unit].category = category
               else console.warn(`No category provided for ${unit}`)
             } 
           }

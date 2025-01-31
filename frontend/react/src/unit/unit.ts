@@ -766,8 +766,10 @@ export abstract class Unit extends CustomMarker {
    * @param newAlive (boolean) true = alive, false = dead
    */
   setAlive(newAlive: boolean) {
-    if (newAlive != this.#alive) UnitDeadEvent.dispatch(this);
-    this.#alive = newAlive;
+    if (newAlive != this.#alive) {
+      this.#alive = newAlive;
+      UnitDeadEvent.dispatch(this);
+    }
   }
 
   /** Set the unit as user-selected
