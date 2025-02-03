@@ -139,12 +139,15 @@
   background-image: url("/images/markers/target.svg");
   height: 100%;
   width: 100%;
+  
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
 }
 
 .ol-spot-icon {
   background-image: url("/images/markers/target.svg");
   height: 100%;
   width: 100%;
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
 }
 
 .ol-text-icon {
@@ -159,26 +162,7 @@
 
 .ol-smoke-icon {
   opacity: 75%;
-}
-
-[data-color="white"].ol-smoke-icon {
-  fill: white;
-}
-
-[data-color="blue"].ol-smoke-icon {
-  fill: blue;
-}
-
-[data-color="red"].ol-smoke-icon {
-  fill: red;
-}
-
-[data-color="green"].ol-smoke-icon {
-  fill: green;
-}
-
-[data-color="orange"].ol-smoke-icon {
-  fill: orange;
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
 }
 
 .ol-explosion-icon * { 
@@ -224,6 +208,11 @@ path.leaflet-interactive:focus {
 .plus-cursor {
   cursor: url("/images/cursors/plus.svg"), auto !important;
 }
+
+.measure-cursor {
+  cursor: url("/images/cursors/measure.svg"), auto !important;
+}
+
 
 #map-container.leaflet-grab {
   cursor: url("/images/cursors/grab.svg") 16 16, auto;

@@ -3,7 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { areaContains, bearing, bearingAndDistanceToLatLng, deepCopyTable, deg2rad, getGroundElevation, mToFt, mToNm, nmToM, rad2deg } from "../other/utils";
+import { areaContains, deepCopyTable, deg2rad, getGroundElevation } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -67,6 +67,9 @@ import {
 import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
 import { MeasureMarker } from "./markers/measuremarker";
+import { MeasureStartMarker } from "./markers/measurestartmarker";
+import { MeasureEndMarker } from "./markers/measureendmarker";
+import { Measure } from "./measure";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -107,6 +110,7 @@ export class Map extends L.Map {
   #isDragging: boolean = false;
   #isSelecting: boolean = false;
 
+  #originalMouseClickLatLng: L.LatLng | null = null;
   #debounceTimeout: number | null = null;
   #isLeftMouseDown: boolean = false;
   #isRightMouseDown: boolean = false;
@@ -157,9 +161,11 @@ export class Map extends L.Map {
   #IPToTargetLine: L.Polygon | null = null;
 
   /* Measure tool */
-  #measureReference: L.LatLng | null = null;
-  #measureLines: L.Polyline[] = [];
-  #measureMarkers: MeasureMarker[] = [];
+  #measures: Measure[] = [];
+
+  /* State variables */
+  #previousAppState: OlympusState = OlympusState.IDLE;
+  #previousAppSubstate: OlympusSubState = NO_SUBSTATE;
 
   /**
    *
@@ -335,6 +341,15 @@ export class Map extends L.Map {
           getApp().getState() === OlympusState.MEASURE ? getApp().setState(OlympusState.IDLE) : getApp().setState(OlympusState.MEASURE);
         },
         code: "KeyM",
+        shiftKey: false,
+        altKey: false,
+        ctrlKey: false,
+      }).addShortcut("clearMeasures", {
+        label: "Clear measures",
+        keyUpCallback: () => {
+          this.clearMeasures();
+        },
+        code: "KeyComma",
         shiftKey: false,
         altKey: false,
         ctrlKey: false,
@@ -854,7 +869,24 @@ export class Map extends L.Map {
     this.getContainer().classList.remove(`explosion-cursor`);
     ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
     this.getContainer().classList.remove(`plus-cursor`);
-    
+    this.getContainer().classList.remove(`measure-cursor`);
+
+    /* Clear the last measure if the state is changed */
+    if (this.#previousAppState === OlympusState.MEASURE) {
+      if (this.#measures.length > 0 && this.#measures[this.#measures.length - 1].isActive()) {
+        this.#measures[this.#measures.length - 1].remove();
+        this.#measures.pop();
+        if (this.#measures.length > 0) {
+          if (this.#measures[this.#measures.length - 1].getDistance() < 1) {
+            this.#measures[this.#measures.length - 1].remove();
+            this.#measures.pop();
+          } else {
+            this.#measures[this.#measures.length - 1].showEndMarker();
+          }
+        }
+      }
+    }
+
     /* Operations to perform when entering a state */
     if (state === OlympusState.IDLE) {
       getApp().getUnitsManager()?.deselectAllUnits();
@@ -883,7 +915,12 @@ export class Map extends L.Map {
       console.log(this.#contextAction);
     } else if (state === OlympusState.DRAW) {
       if (subState === DrawSubState.DRAW_CIRCLE || subState === DrawSubState.DRAW_POLYGON) this.getContainer().classList.add(`plus-cursor`);
+    } else if (state === OlympusState.MEASURE) {
+      this.getContainer().classList.add(`measure-cursor`);
     }
+
+    this.#previousAppState = state;
+    this.#previousAppSubstate = subState;
   }
 
   #onDragStart(e: any) {
@@ -918,18 +955,10 @@ export class Map extends L.Map {
   }
 
   #onMouseDown(e: any) {
+    this.#originalMouseClickLatLng = e.latlng;
     if (e.originalEvent?.button === 0) {
       this.#isLeftMouseDown = true;
       this.#leftMouseDownEpoch = Date.now();
-
-      /* If we are in the measure state there can only be a short click so immediately perform the action */
-      if (getApp().getState() === OlympusState.MEASURE) {
-        if (this.#measureLines.length > 0 && this.#measureReference)
-          this.#measureLines[this.#measureLines.length - 1].setLatLngs([this.#measureReference, e.latlng]);
-        this.#measureReference = e.latlng;
-        this.#measureLines.push(new L.Polyline([this.#measureReference, e.latlng], { color: "magenta" }).addTo(this));
-        this.#measureMarkers.push(new MeasureMarker(e.latlng, "", 0).addTo(this));
-      }
     } else if (e.originalEvent?.button === 2) {
       this.#isRightMouseDown = true;
       this.#rightMouseDownEpoch = Date.now();
@@ -947,8 +976,6 @@ export class Map extends L.Map {
   }
 
   #onLeftShortClick(e: L.LeafletMouseEvent) {
-    if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
-
     if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) {
       this.#debounceTimeout = window.setTimeout(() => {
         if (!this.#isSelecting) {
@@ -1060,12 +1087,25 @@ export class Map extends L.Map {
             else if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
             else getApp().setState(OlympusState.UNIT_CONTROL);
           } else if (getApp().getState() === OlympusState.MEASURE) {
-            /* Do nothing, we already clicked on the mouse down callback */
+            const newMeasure = new Measure(this);
+            const previousMeasure = this.#measures[this.#measures.length - 1];
+            this.#measures.push(newMeasure);
+            newMeasure.onClick(e.latlng);
+            if (previousMeasure && previousMeasure.isActive()) {
+              previousMeasure.finish();
+              previousMeasure.hideEndMarker();
+              newMeasure.onMarkerMoved = (startLatLng, endLatLng) => {
+                previousMeasure.moveMarkers(null, startLatLng);
+              };
+            }
           } else {
             if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
             else getApp().setState(OlympusState.UNIT_CONTROL);
           }
         }
+
+        if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
+        this.#debounceTimeout = null;
       }, DEBOUNCE_MILLISECONDS);
     }
   }
@@ -1128,18 +1168,13 @@ export class Map extends L.Map {
         if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
         if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
       } else if (getApp().getState() === OlympusState.MEASURE) {
-        if (this.#measureLines.length > 0) this.#measureLines[this.#measureLines.length - 1].setLatLngs([this.#measureReference, e.latlng]);
-        if (this.#measureMarkers.length > 0 && this.#measureReference) {
-          const distance = this.#measureReference.distanceTo(e.latlng);
-          let distanceString = ""
-          if (distance > nmToM(1)) distanceString = `${mToNm(distance).toFixed(2)} NM`;
-          else distanceString = `${mToFt(distance).toFixed(2)} ft`;
-          const bearingTo = deg2rad(bearing(this.#measureReference.lat, this.#measureReference.lng, e.latlng.lat, e.latlng.lng, false));
-          const halfPoint = bearingAndDistanceToLatLng(this.#measureReference.lat, this.#measureReference.lng, bearingTo, distance/2);
-          const bearingString = `${(Math.floor(rad2deg(bearingTo) + 360) % 360)}°`;
-          this.#measureMarkers[this.#measureMarkers.length - 1].setLatLng(halfPoint);
-          this.#measureMarkers[this.#measureMarkers.length - 1].setRotationAngle(bearingTo + Math.PI / 2);
-          this.#measureMarkers[this.#measureMarkers.length - 1].setTextValue(`${distanceString} - ${bearingString}`);
+        if (this.#debounceTimeout === null) {
+          this.#measures[this.#measures.length - 1]?.onMouseMove(e.latlng);
+          let totalLength = 0;
+          this.#measures.forEach((measure) => {
+            measure.setTotalDistance(totalLength);
+            totalLength += measure.getDistance();
+          });
         }
       }
     } else {
@@ -1206,11 +1241,6 @@ export class Map extends L.Map {
         console.warn("broadcastPosition: could not retrieve ground elevation");
       }
     });
-  }
-
-  #clearMeasures() {
-    this.#measureLines.forEach((line) => line.removeFrom(this));
-    this.#measureMarkers.forEach((marker) => marker.removeFrom(this));
   }
 
   /* */
@@ -1293,5 +1323,10 @@ export class Map extends L.Map {
         marker.setLatLng(this.#lastMouseCoordinates);
       });
     }
+  }
+
+  clearMeasures() {
+    this.#measures.forEach((measure) => measure.remove());
+    this.#measures = [];
   }
 }

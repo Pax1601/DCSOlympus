@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { getApp } from "../../olympusapp";
-import { NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
+import { colors, NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
 import { OlStateButton } from "../components/olstatebutton";
 import { faArrowLeft, faSmog } from "@fortawesome/free-solid-svg-icons";
 import { LatLng } from "leaflet";
@@ -97,7 +97,7 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                   <span className="my-auto text-white">Smoke color</span>
                 </div>
                 <div className="flex w-full gap-2">
-                  {["white", "blue", "red", "green", "orange"].map((optionSmokeColor) => {
+                  {[colors.WHITE, colors.BLUE, colors.RED, colors.GREEN, colors.ORANGE].map((optionSmokeColor) => {
                     return (
                       <OlStateButton
                         checked={smokeColor === optionSmokeColor}
@@ -132,7 +132,7 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                       getApp().getServerManager().spawnSmoke(smokeColor, props.latlng);
                       getApp()
                         .getMap()
-                        .addSmokeMarker(props.latlng, smokeColor ?? "white");
+                        .addSmokeMarker(props.latlng, smokeColor ?? colors.WHITE);
                     }
                   }
 

@@ -2,9 +2,7 @@ import { Marker, LatLng, DivIcon, Map } from "leaflet";
 
 export class MeasureMarker extends Marker {
   #textValue: string;
-  #isEditable: boolean = false;
   #rotationAngle: number; // Rotation angle in radians
-  #previousValue: string;
 
   onValueUpdated: (value: number) => void = () => {};
   onDeleteButtonClicked: () => void = () => {};
@@ -56,9 +54,7 @@ export class MeasureMarker extends Marker {
    */
   setRotationAngle(angle: number) {
     this.#rotationAngle = angle;
-    if (!this.#isEditable) {
-      this.#updateRotation();
-    }
+    this.#updateRotation();
   }
 
   /**

@@ -5,6 +5,7 @@ import { RadioSink } from "../../audio/radiosink";
 import { FaJetFighter, FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlStateButton } from "../components/olstatebutton";
 import { UnitSink } from "../../audio/unitsink";
+import { colors } from "../../constants/constants";
 
 export function RadiosSummaryPanel(props: {}) {
   const [audioSinks, setAudioSinks] = useState([] as AudioSink[]);
@@ -41,7 +42,7 @@ export function RadiosSummaryPanel(props: {}) {
                         radioSink.setPtt(false);
                       }}
                       tooltip="Click to talk, lights up when receiving"
-                      buttonColor={radioSink.getReceiving() ? "white" : null}
+                      buttonColor={radioSink.getReceiving() ? colors.WHITE : undefined}
                       className="min-h-12 min-w-12"
                     >
                       <span className={`text-gray-200`}><FaRadio className={`

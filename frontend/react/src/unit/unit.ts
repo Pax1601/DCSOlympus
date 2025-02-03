@@ -77,9 +77,8 @@ import { get } from "http";
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
 var pathIcon = new Icon({
-  iconUrl: "images/markers/marker-icon.png",
-  shadowUrl: "images/markers/marker-shadow.png",
-  iconAnchor: [13, 41],
+  iconUrl: "images/markers/path.svg",
+  iconAnchor: [20, 43],
 });
 
 /**

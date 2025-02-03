@@ -46,6 +46,32 @@ export function bearingAndDistanceToLatLng(lat: number, lon: number, brng: numbe
   return new LatLng(rad2deg(φ2), rad2deg(λ2));
 }
 
+export function midpoint(lat1: number, lon1: number, lat2: number, lon2: number, zoom: number = 10) {
+  const φ1 = deg2rad(lat1); // Convert latitude of point 1 from degrees to radians
+  const λ1 = deg2rad(lon1); // Convert longitude of point 1 from degrees to radians
+  const φ2 = deg2rad(lat2); // Convert latitude of point 2 from degrees to radians
+  const λ2 = deg2rad(lon2); // Convert longitude of point 2 from degrees to radians
+
+  // Convert point 1 to Mercator projection coordinates
+  const x1 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI + λ1);
+  const y1 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI - Math.log(Math.tan(Math.PI / 4 + φ1 / 2)));
+
+  // Convert point 2 to Mercator projection coordinates
+  const x2 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI + λ2);
+  const y2 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI - Math.log(Math.tan(Math.PI / 4 + φ2 / 2)));
+
+  // Calculate the midpoint in Mercator projection coordinates
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2;
+
+  // Convert the midpoint back to latitude and longitude
+  const λ = (2 * Math.PI * mx / Math.pow(2, zoom)) - Math.PI;
+  const φ = 2 * Math.atan(Math.exp(Math.PI - (2 * Math.PI * my) / Math.pow(2, zoom))) - Math.PI / 2;
+
+  // Return the midpoint as a LatLng object
+  return new LatLng(rad2deg(φ), rad2deg(λ));
+}
+
 export function ConvertDDToDMS(D: number, lng: boolean) {
   var deg = 0 | (D < 0 ? (D = -D) : D);
   var min = 0 | (((D += 1e-9) % 1) * 60);
@@ -90,6 +116,11 @@ export const zeroPad = function (num: number, places: number) {
 export function latLngToMGRS(lat: number, lng: number, precision: number = 4): MGRS | undefined {
   if (precision < 0 || precision > 6) {
     console.error("latLngToMGRS: precision must be a number >= 0 and <= 6.  Given precision: " + precision);
+    return undefined;
+  }
+
+  if (lng > 360 || lng < -180 || lat > 84 || lat < -80) {
+    console.error("latLngToMGRS: value outside of bounds");
     return undefined;
   }
 

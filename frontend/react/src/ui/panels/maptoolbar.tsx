@@ -18,7 +18,7 @@ import {
   SelectionEnabledChangedEvent,
   ShortcutsChangedEvent,
 } from "../../events";
-import { faCopy, faObjectGroup, faPaste } from "@fortawesome/free-solid-svg-icons";
+import { faCopy, faEraser, faObjectGroup, faPaste, faTape } from "@fortawesome/free-solid-svg-icons";
 import { Shortcut } from "../../shortcut/shortcut";
 import { ShortcutOptions, UnitData } from "../../interfaces";
 import { Unit } from "../../unit/unit";
@@ -215,6 +215,40 @@ export function MapToolBar(props: {}) {
                   />
                 </div>
               )}
+              <div className="flex flex-col gap-1">
+                  <OlStateButton
+                    key={"measure"}
+                    checked={appState === OlympusState.MEASURE}
+                    icon={faTape}
+                    tooltip={() => (
+                      <div className="flex content-center gap-2">
+                        {shortcutCombination(shortcuts["measure"]?.getOptions())}
+                        <div className="my-auto">Enter measure mode</div>
+                      </div>
+                    )}
+                    tooltipPosition="side"
+                    onClick={() => {
+                      getApp().setState(appState === OlympusState.MEASURE? OlympusState.IDLE : OlympusState.MEASURE);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <OlStateButton
+                    key={"clearMeasures"}
+                    checked={false}
+                    icon={faEraser}
+                    tooltip={() => (
+                      <div className="flex content-center gap-2">
+                        {shortcutCombination(shortcuts["clearMeasures"]?.getOptions())}
+                        <div className="my-auto">Clear all measures</div>
+                      </div>
+                    )}
+                    tooltipPosition="side"
+                    onClick={() => {
+                      getApp().getMap().clearMeasures();
+                    }}
+                  />
+                </div>
             </>
 
             {reorderedActions.map((contextActionIt: ContextAction) => {

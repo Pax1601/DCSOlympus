@@ -26,8 +26,8 @@
      width="52mm"
      units="px"
      inkscape:zoom="8.3856042"
-     inkscape:cx="14.250613"
-     inkscape:cy="36.550735"
+     inkscape:cx="-19.855457"
+     inkscape:cy="24.506284"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -46,14 +46,67 @@
          offset="0"
          id="stop4715" />
     </linearGradient>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3">
+      <path
+         style="fill:#fbfbfb;fill-opacity:1;stroke:#ffffff;stroke-width:0.285001;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         d="M 6.5629959,12.964765 1.2937969,11.166296 4.7014228,11.418713 1.4831099,6.9067638 5.0484958,9.6833476 3.5024428,0.84876278 6.846965,9.6202434 8.645434,3.025857 8.0143919,9.9357643 11.737538,6.8752117 l -3.18676,4.1017713 4.354188,-0.09466 z"
+         id="path3" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3-3">
+      <path
+         style="fill:#fbfbfb;fill-opacity:1;stroke:#ffffff;stroke-width:0.285001;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         d="M 6.5629959,12.964765 1.2937969,11.166296 4.7014228,11.418713 1.4831099,6.9067638 5.0484958,9.6833476 3.5024428,0.84876278 6.846965,9.6202434 8.645434,3.025857 8.0143919,9.9357643 11.737538,6.8752117 l -3.18676,4.1017713 4.354188,-0.09466 z"
+         id="path3-4" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4">
+      <ellipse
+         style="fill:#f48800;fill-opacity:1;stroke:none;stroke-width:1.10409;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="ellipse4"
+         cx="6.4735489"
+         cy="8.0908279"
+         rx="7.8196473"
+         ry="8.125103"
+         clip-path="url(#clipPath3)" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3-3-7">
+      <path
+         style="fill:#fbfbfb;fill-opacity:1;stroke:#ffffff;stroke-width:0.285001;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         d="M 6.5629959,12.964765 1.2937969,11.166296 4.7014228,11.418713 1.4831099,6.9067638 5.0484958,9.6833476 3.5024428,0.84876278 6.846965,9.6202434 8.645434,3.025857 8.0143919,9.9357643 11.737538,6.8752117 l -3.18676,4.1017713 4.354188,-0.09466 z"
+         id="path3-4-8" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath5">
+      <ellipse
+         style="fill:#f48800;fill-opacity:1;stroke:none;stroke-width:1.10409;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         id="ellipse5"
+         cx="6.4735489"
+         cy="8.0908279"
+         rx="7.8196473"
+         ry="8.125103"
+         clip-path="url(#clipPath3-3-7)"
+         transform="translate(-0.00203625,0.00601104)" />
+    </clipPath>
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="stroke-width:6.985;stroke-linejoin:round;paint-order:stroke fill markers;fill-opacity:1"
+       style="stroke-width:1.485;stroke-linejoin:round;paint-order:stroke fill markers;fill-opacity:1;stroke:#272727;stroke-opacity:1;stroke-dasharray:none;fill:#fbfbfb;stroke-linecap:butt"
        d="M 6.5628344,12.967909 1.2936356,11.16944 4.7012613,11.421857 1.4829482,6.9099074 5.0483343,9.6864912 3.5022818,0.8519064 6.8468032,9.623387 8.6452724,3.0290005 8.0142306,9.9389079 11.737377,6.8783553 8.5506162,10.980127 12.904805,10.885471 Z"
        id="path1" />
+    <path
+       style="fill:#f88000;fill-opacity:1;stroke:#f88000;stroke-width:0.285;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="M 6.533962,12.945328 1.2647628,11.146859 4.672389,11.399276 1.4540754,6.8873262 5.019462,9.66391 3.473409,0.82932521 6.81793,9.6008058 8.6164,3.0064193 7.985358,9.9163262 11.708504,6.8557741 8.521743,10.957546 l 4.354189,-0.09466 z"
+       id="path1-3" />
   </g>
 </svg>
