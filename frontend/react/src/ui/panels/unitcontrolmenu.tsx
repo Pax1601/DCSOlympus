@@ -79,6 +79,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       isActiveTanker: undefined as undefined | boolean,
       onOff: undefined as undefined | boolean,
       isAudioSink: undefined as undefined | boolean,
+      radio: undefined as undefined | Radio,
+      TACAN: undefined as undefined | TACAN,
+      generalSettings: undefined as undefined | GeneralSettings,
     };
   }
 
@@ -156,6 +159,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       isActiveAWACS: (unit: Unit) => unit.getIsActiveAWACS(),
       isActiveTanker: (unit: Unit) => unit.getIsActiveTanker(),
       onOff: (unit: Unit) => unit.getOnOff(),
+      radio: (unit: Unit) => unit.getRadio(),
+      TACAN: (unit: Unit) => unit.getTACAN(),
+      generalSettings: (unit: Unit) => unit.getGeneralSettings(),
       isAudioSink: (unit: Unit) => {
         return (
           getApp()
@@ -558,25 +564,28 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           leftLabel={"ASL"}
                           rightLabel={"AGL"}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
-                              unit.setAltitudeType(selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL");
-                              setForcedUnitsData({
-                                ...forcedUnitsData,
-                                desiredAltitudeType: selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL",
-                              });
-                            });
+                            getApp()
+                              .getUnitsManager()
+                              .setAltitudeType(selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL", null, () =>
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
+                                  desiredAltitudeType: selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL",
+                                })
+                              );
                           }}
                         />
                       </div>
                       <OlRangeSlider
                         onChange={(ev) => {
-                          selectedUnits.forEach((unit) => {
-                            unit.setAltitude(ftToM(Number(ev.target.value)));
-                            setForcedUnitsData({
-                              ...forcedUnitsData,
-                              desiredAltitude: Number(ev.target.value),
-                            });
-                          });
+                          let value = Number(ev.target.value);
+                          getApp()
+                            .getUnitsManager()
+                            .setAltitude(ftToM(value), null, () =>
+                              setForcedUnitsData({
+                                ...forcedUnitsData,
+                                desiredAltitude: value,
+                              })
+                            );
                         }}
                         value={selectedUnitsData.desiredAltitude}
                         min={minAltitude}
@@ -620,26 +629,29 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           leftLabel={"CAS"}
                           rightLabel={"GS"}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
-                              unit.setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS");
-                              setForcedUnitsData({
-                                ...forcedUnitsData,
-                                desiredSpeedType: selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS",
-                              });
-                            });
+                            getApp()
+                              .getUnitsManager()
+                              .setSpeedType(selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS", null, () =>
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
+                                  desiredSpeedType: selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS",
+                                })
+                              );
                           }}
                         />
                       )}
                     </div>
                     <OlRangeSlider
                       onChange={(ev) => {
-                        selectedUnits.forEach((unit) => {
-                          unit.setSpeed(knotsToMs(Number(ev.target.value)));
-                          setForcedUnitsData({
-                            ...forcedUnitsData,
-                            desiredSpeed: Number(ev.target.value),
-                          });
-                        });
+                        let value = Number(ev.target.value);
+                        getApp()
+                          .getUnitsManager()
+                          .setSpeed(knotsToMs(value), null, () =>
+                            setForcedUnitsData({
+                              ...forcedUnitsData,
+                              desiredSpeed: value,
+                            })
+                          );
                       }}
                       value={selectedUnitsData.desiredSpeed}
                       min={minSpeed}
@@ -665,13 +677,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             <OlButtonGroupItem
                               key={idx}
                               onClick={() => {
-                                selectedUnits.forEach((unit) => {
-                                  unit.setROE(ROEs[convertROE(idx)]);
-                                  setForcedUnitsData({
-                                    ...forcedUnitsData,
-                                    ROE: ROEs[convertROE(idx)],
-                                  });
-                                });
+                                getApp()
+                                  .getUnitsManager()
+                                  .setROE(ROEs[convertROE(idx)], null, () =>
+                                    setForcedUnitsData({
+                                      ...forcedUnitsData,
+                                      ROE: ROEs[convertROE(idx)],
+                                    })
+                                  );
                               }}
                               active={selectedUnitsData.ROE === ROEs[convertROE(idx)]}
                               icon={icon}
@@ -702,13 +715,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <OlButtonGroupItem
                                 key={idx}
                                 onClick={() => {
-                                  selectedUnits.forEach((unit) => {
-                                    unit.setReactionToThreat(reactionsToThreat[idx]);
-                                    setForcedUnitsData({
-                                      ...forcedUnitsData,
-                                      reactionToThreat: reactionsToThreat[idx],
-                                    });
-                                  });
+                                  getApp()
+                                    .getUnitsManager()
+                                    .setReactionToThreat(reactionsToThreat[idx], null, () =>
+                                      setForcedUnitsData({
+                                        ...forcedUnitsData,
+                                        reactionToThreat: reactionsToThreat[idx],
+                                      })
+                                    );
                                 }}
                                 active={selectedUnitsData.reactionToThreat === reactionsToThreat[idx]}
                                 icon={icon}
@@ -734,13 +748,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <OlButtonGroupItem
                                 key={idx}
                                 onClick={() => {
-                                  selectedUnits.forEach((unit) => {
-                                    unit.setEmissionsCountermeasures(emissionsCountermeasures[idx]);
-                                    setForcedUnitsData({
-                                      ...forcedUnitsData,
-                                      emissionsCountermeasures: emissionsCountermeasures[idx],
-                                    });
-                                  });
+                                  getApp()
+                                    .getUnitsManager()
+                                    .setEmissionsCountermeasures(emissionsCountermeasures[idx], null, () =>
+                                      setForcedUnitsData({
+                                        ...forcedUnitsData,
+                                        emissionsCountermeasures: emissionsCountermeasures[idx],
+                                      })
+                                    );
                                 }}
                                 active={selectedUnitsData.emissionsCountermeasures === emissionsCountermeasures[idx]}
                                 icon={icon}
@@ -770,19 +785,27 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <OlToggle
                         toggled={selectedUnitsData.isActiveTanker}
                         onClick={() => {
-                          selectedUnits.forEach((unit) => {
-                            unit.setAdvancedOptions(
-                              !selectedUnitsData.isActiveTanker,
-                              unit.getIsActiveAWACS(),
-                              unit.getTACAN(),
-                              unit.getRadio(),
-                              unit.getGeneralSettings()
-                            );
-                            setForcedUnitsData({
-                              ...forcedUnitsData,
-                              isActiveTanker: !selectedUnitsData.isActiveTanker,
-                            });
-                          });
+                          if (
+                            selectedUnitsData.isActiveAWACS !== undefined &&
+                            selectedUnitsData.TACAN !== undefined &&
+                            selectedUnitsData.radio !== undefined &&
+                            selectedUnitsData.generalSettings !== undefined
+                          )
+                            getApp()
+                              .getUnitsManager()
+                              .setAdvancedOptions(
+                                !selectedUnitsData.isActiveTanker,
+                                selectedUnitsData.isActiveAWACS,
+                                selectedUnitsData.TACAN,
+                                selectedUnitsData.radio,
+                                selectedUnitsData.generalSettings,
+                                null,
+                                () =>
+                                  setForcedUnitsData({
+                                    ...forcedUnitsData,
+                                    isActiveTanker: !selectedUnitsData.isActiveTanker,
+                                  })
+                              );
                         }}
                       />
                     </div>
@@ -804,19 +827,27 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       <OlToggle
                         toggled={selectedUnitsData.isActiveAWACS}
                         onClick={() => {
-                          selectedUnits.forEach((unit) => {
-                            unit.setAdvancedOptions(
-                              unit.getIsActiveTanker(),
-                              !selectedUnitsData.isActiveAWACS,
-                              unit.getTACAN(),
-                              unit.getRadio(),
-                              unit.getGeneralSettings()
-                            );
-                            setForcedUnitsData({
-                              ...forcedUnitsData,
-                              isActiveAWACS: !selectedUnitsData.isActiveAWACS,
-                            });
-                          });
+                          if (
+                            selectedUnitsData.isActiveTanker !== undefined &&
+                            selectedUnitsData.TACAN !== undefined &&
+                            selectedUnitsData.radio !== undefined &&
+                            selectedUnitsData.generalSettings !== undefined
+                          )
+                            getApp()
+                              .getUnitsManager()
+                              .setAdvancedOptions(
+                                selectedUnitsData.isActiveTanker,
+                                !selectedUnitsData.isActiveAWACS,
+                                selectedUnitsData.TACAN,
+                                selectedUnitsData.radio,
+                                selectedUnitsData.generalSettings,
+                                null,
+                                () =>
+                                  setForcedUnitsData({
+                                    ...forcedUnitsData,
+                                    isActiveAWACS: !selectedUnitsData.isActiveAWACS,
+                                  })
+                              );
                         }}
                       />
                     </div>
@@ -891,14 +922,15 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <OlToggle
                             toggled={selectedUnitsData.scenicAAA}
                             onClick={() => {
-                              selectedUnits.forEach((unit) => {
-                                selectedUnitsData.scenicAAA ? unit.changeSpeed("stop") : unit.scenicAAA();
-                                setForcedUnitsData({
-                                  ...forcedUnitsData,
-                                  scenicAAA: !selectedUnitsData.scenicAAA,
-                                  missOnPurpose: false,
-                                });
-                              });
+                              getApp()
+                                .getUnitsManager()
+                                .scenicAAA(null, () =>
+                                  setForcedUnitsData({
+                                    ...forcedUnitsData,
+                                    scenicAAA: !selectedUnitsData.scenicAAA,
+                                    missOnPurpose: false,
+                                  })
+                                );
                             }}
                           />
                         </div>
@@ -916,14 +948,15 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           <OlToggle
                             toggled={selectedUnitsData.missOnPurpose}
                             onClick={() => {
-                              selectedUnits.forEach((unit) => {
-                                selectedUnitsData.missOnPurpose ? unit.changeSpeed("stop") : unit.missOnPurpose();
-                                setForcedUnitsData({
-                                  ...forcedUnitsData,
-                                  scenicAAA: false,
-                                  missOnPurpose: !selectedUnitsData.missOnPurpose,
-                                });
-                              });
+                              getApp()
+                                .getUnitsManager()
+                                .missOnPurpose(null, () =>
+                                  setForcedUnitsData({
+                                    ...forcedUnitsData,
+                                    scenicAAA: false,
+                                    missOnPurpose: !selectedUnitsData.missOnPurpose,
+                                  })
+                                );
                             }}
                           />
                         </div>
@@ -945,13 +978,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <OlButtonGroupItem
                                     key={idx}
                                     onClick={() => {
-                                      selectedUnits.forEach((unit) => {
-                                        unit.setShotsScatter(idx + 1);
-                                        setForcedUnitsData({
-                                          ...forcedUnitsData,
-                                          shotsScatter: idx + 1,
-                                        });
-                                      });
+                                      getApp()
+                                        .getUnitsManager()
+                                        .setShotsScatter(idx + 1, null, () =>
+                                          setForcedUnitsData({
+                                            ...forcedUnitsData,
+                                            shotsScatter: idx + 1,
+                                          })
+                                        );
                                     }}
                                     active={selectedUnitsData.shotsScatter === idx + 1}
                                     icon={icon}
@@ -977,13 +1011,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <OlButtonGroupItem
                                     key={idx}
                                     onClick={() => {
-                                      selectedUnits.forEach((unit) => {
-                                        unit.setShotsIntensity(idx + 1);
-                                        setForcedUnitsData({
-                                          ...forcedUnitsData,
-                                          shotsIntensity: idx + 1,
-                                        });
-                                      });
+                                      getApp()
+                                        .getUnitsManager()
+                                        .setShotsIntensity(idx + 1, null, () =>
+                                          setForcedUnitsData({
+                                            ...forcedUnitsData,
+                                            shotsIntensity: idx + 1,
+                                          })
+                                        );
                                     }}
                                     active={selectedUnitsData.shotsIntensity === idx + 1}
                                     icon={icon}
@@ -995,30 +1030,31 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           {/* ============== Shots intensity END ============== */}
                         </div>
                         {/* ============== Operate as toggle START ============== */}
-                        {selectedUnits.every((unit) => unit.getCoalition() === 'neutral') && <div className={`
-                          flex content-center justify-between
-                        `}>
-                          <span
-                            className={`
-                              my-auto font-normal
-                              dark:text-white
-                            `}
-                          >
-                            Operate as
-                          </span>
-                          <OlCoalitionToggle
-                            coalition={selectedUnitsData.operateAs as Coalition}
-                            onClick={() => {
-                              selectedUnits.forEach((unit) => {
-                                unit.setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue");
-                                setForcedUnitsData({
-                                  ...forcedUnitsData,
-                                  operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
-                                });
-                              });
-                            }}
-                          />
-                        </div>}
+                        {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (
+                          <div className={`flex content-center justify-between`}>
+                            <span
+                              className={`
+                                my-auto font-normal
+                                dark:text-white
+                              `}
+                            >
+                              Operate as
+                            </span>
+                            <OlCoalitionToggle
+                              coalition={selectedUnitsData.operateAs as Coalition}
+                              onClick={() => {
+                                getApp()
+                                  .getUnitsManager()
+                                  .setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue", null, () =>
+                                    setForcedUnitsData({
+                                      ...forcedUnitsData,
+                                      operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
+                                    })
+                                  );
+                              }}
+                            />
+                          </div>
+                        )}
                         {/* ============== Operate as toggle END ============== */}
                       </div>
                       {/* ============== Follow roads toggle START ============== */}
@@ -1034,13 +1070,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <OlToggle
                           toggled={selectedUnitsData.followRoads}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
-                              unit.setFollowRoads(!selectedUnitsData.followRoads);
-                              setForcedUnitsData({
-                                ...forcedUnitsData,
-                                followRoads: !selectedUnitsData.followRoads,
-                              });
-                            });
+                            getApp()
+                              .getUnitsManager()
+                              .setFollowRoads(!selectedUnitsData.followRoads, null, () =>
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
+                                  followRoads: !selectedUnitsData.followRoads,
+                                })
+                              );
                           }}
                         />
                       </div>
@@ -1058,13 +1095,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         <OlToggle
                           toggled={selectedUnitsData.onOff}
                           onClick={() => {
-                            selectedUnits.forEach((unit) => {
-                              unit.setOnOff(!selectedUnitsData.onOff);
-                              setForcedUnitsData({
-                                ...forcedUnitsData,
-                                onOff: !selectedUnitsData.onOff,
-                              });
-                            });
+                            getApp()
+                              .getUnitsManager()
+                              .setOnOff(!selectedUnitsData.onOff, null, () =>
+                                setForcedUnitsData({
+                                  ...forcedUnitsData,
+                                  onOff: !selectedUnitsData.onOff,
+                                })
+                              );
                           }}
                         />
                       </div>
@@ -1223,10 +1261,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeRadioSettings ? activeRadioSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown
-                      label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"}
-                      className={`my-auto w-20`}
-                    >
+                    <OlDropdown label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"} className={`
+                      my-auto w-20
+                    `}>
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1294,14 +1331,21 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         hover:bg-blue-800
                       `}
                       onClick={() => {
-                        if (activeRadioSettings)
-                          selectedUnits[0].setAdvancedOptions(
-                            selectedUnits[0].getIsActiveTanker(),
-                            selectedUnits[0].getIsActiveAWACS(),
-                            activeRadioSettings.TACAN,
-                            activeRadioSettings.radio,
-                            selectedUnits[0].getGeneralSettings()
-                          );
+                        if (
+                          activeRadioSettings &&
+                          selectedUnitsData.isActiveTanker !== undefined &&
+                          selectedUnitsData.isActiveAWACS !== undefined &&
+                          selectedUnitsData.generalSettings !== undefined
+                        )
+                          getApp()
+                            .getUnitsManager()
+                            .setAdvancedOptions(
+                              selectedUnitsData.isActiveTanker,
+                              selectedUnitsData.isActiveAWACS,
+                              activeRadioSettings.TACAN,
+                              activeRadioSettings.radio,
+                              selectedUnitsData.generalSettings
+                            );
                         setActiveRadioSettings(null);
                         setShowRadioSettings(false);
                       }}
@@ -1375,7 +1419,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       toggled={activeAdvancedSettings?.prohibitAfterburner}
                     />
                   </div>
-                  
+
                   <div className="flex pt-8">
                     <button
                       className={`
@@ -1387,14 +1431,22 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         hover:bg-blue-800
                       `}
                       onClick={() => {
-                        if (activeAdvancedSettings)
-                          selectedUnits[0].setAdvancedOptions(
-                            selectedUnits[0].getIsActiveTanker(),
-                            selectedUnits[0].getIsActiveAWACS(),
-                            selectedUnits[0].getTACAN(),
-                            selectedUnits[0].getRadio(),
-                            activeAdvancedSettings
-                          );
+                        if (
+                          activeAdvancedSettings &&
+                          selectedUnitsData.isActiveTanker !== undefined &&
+                          selectedUnitsData.isActiveAWACS !== undefined &&
+                          selectedUnitsData.TACAN !== undefined &&
+                          selectedUnitsData.radio !== undefined
+                        )
+                          getApp()
+                            .getUnitsManager()
+                            .setAdvancedOptions(
+                              selectedUnitsData.isActiveTanker,
+                              selectedUnitsData.isActiveAWACS,
+                              selectedUnitsData.TACAN,
+                              selectedUnitsData.radio,
+                              activeAdvancedSettings
+                            );
                         setActiveAdvancedSettings(null);
                         setShowAdvancedSettings(false);
                       }}
@@ -1438,11 +1490,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       className={`
                         flex content-center gap-2 rounded-full
                         ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${
-                          selectedUnits[0].getFuel() > 10 &&
-                          selectedUnits[0].getFuel() <= 40 &&
-                          `bg-yellow-700`
-                        }
+                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
+                          bg-yellow-700
+                        `}
                         ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                         px-2 py-1 text-sm font-bold text-white
                       `}

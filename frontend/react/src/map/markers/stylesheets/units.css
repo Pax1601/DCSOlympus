@@ -6,7 +6,7 @@
   justify-content: center;
   position: relative;
   width: 100%;
-  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .4));
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
 }
 
 [data-object|="unit"].attack-cursor {
