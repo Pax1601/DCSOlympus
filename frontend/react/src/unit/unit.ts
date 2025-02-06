@@ -72,14 +72,8 @@ import { ArrowMarker } from "../map/markers/arrowmarker";
 import { Spot } from "../mission/spot";
 import { SpotEditMarker } from "../map/markers/spoteditmarker";
 import { SpotMarker } from "../map/markers/spotmarker";
-import { get } from "http";
 
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
-
-var pathIcon = new Icon({
-  iconUrl: "images/markers/path.svg",
-  iconAnchor: [20, 43],
-});
 
 /**
  * Unit class which controls unit behaviour
@@ -164,7 +158,6 @@ export abstract class Unit extends CustomMarker {
   #selected: boolean = false;
   #hidden: boolean = false;
   #highlighted: boolean = false;
-  #pathMarkers: Marker[] = [];
   #pathPolyline: Polyline;
   #contactsPolylines: Polyline[] = [];
   #engagementCircle: RangeCircle;
@@ -1223,14 +1216,6 @@ export abstract class Unit extends CustomMarker {
     if (!this.#human) this.#activePath = [];
   }
 
-  updatePathFromMarkers() {
-    var path: any = [];
-    this.#pathMarkers.forEach((marker) => {
-      path[Object.keys(path).length.toString()] = marker.getLatLng();
-    });
-    getApp().getServerManager().addDestination(this.ID, path);
-  }
-
   attackUnit(targetID: number) {
     /* Units can't attack themselves */
     if (!this.#human) if (this.ID != targetID) getApp().getServerManager().attackUnit(this.ID, targetID);
@@ -1716,37 +1701,8 @@ export abstract class Unit extends CustomMarker {
       var points: LatLng[] = [];
       points.push(new LatLng(this.#position.lat, this.#position.lng));
 
-      /* Add markers if missing */
-      while (this.#pathMarkers.length < Object.keys(this.#activePath).length) {
-        var marker = new Marker([0, 0], {
-          icon: pathIcon,
-          draggable: true,
-        }).addTo(getApp().getMap());
-        marker.on("dragstart", (event) => {
-          event.target.options["freeze"] = true;
-        });
-        marker.on("dragend", (event) => {
-          this.updatePathFromMarkers();
-          event.target.options["freeze"] = false;
-        });
-        this.#pathMarkers.push(marker);
-      }
-
-      /* Remove markers if too many */
-      while (this.#pathMarkers.length > Object.keys(this.#activePath).length) {
-        getApp()
-          .getMap()
-          .removeLayer(this.#pathMarkers[this.#pathMarkers.length - 1]);
-        this.#pathMarkers.splice(this.#pathMarkers.length - 1, 1);
-      }
-
-      /* Update the position of the existing markers (to avoid creating markers uselessly) */
       for (let WP in this.#activePath) {
         var destination = this.#activePath[WP];
-        var frozen = this.#pathMarkers[parseInt(WP)].options["freeze"];
-        if (!frozen) {
-          this.#pathMarkers[parseInt(WP)].setLatLng([destination.lat, destination.lng]);
-        }
         points.push(new LatLng(destination.lat, destination.lng));
       }
 
@@ -1763,10 +1719,6 @@ export abstract class Unit extends CustomMarker {
 
   #clearPath() {
     if (this.#pathPolyline.getLatLngs().length != 0) {
-      for (let WP in this.#pathMarkers) {
-        getApp().getMap().removeLayer(this.#pathMarkers[WP]);
-      }
-      this.#pathMarkers = [];
       this.#pathPolyline.setLatLngs([]);
     }
   }

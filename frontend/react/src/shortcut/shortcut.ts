@@ -13,14 +13,18 @@ export class Shortcut {
     this.#id = id;
     this.#options = options;
 
-    AppStateChangedEvent.on((state, subState) => (this.#keydown = false));
-    ModalEvent.on((modal) => (this.#modal = modal))
+    /* I don't know why I set this, may be a leftover from initial shortcut experiments. 
+    If enabled, it will cause the keydown to be reset when the app state changes, which may 
+    cause shortcuts that cause a state change (like unit selection) to remain stuck. */
+    //AppStateChangedEvent.on((state, subState) => (this.#keydown = false)); 
+    
+    ModalEvent.on((modal) => (this.#modal = modal));
 
     /* On keyup, it is enough to check the code only, not the entire combination */
     document.addEventListener("keyup", (ev: any) => {
       if (this.#modal) return;
       if (this.#keydown && this.getOptions().code === ev.code) {
-        console.log(`Keyup for shortcut ${this.#id}`)
+        console.log(`Keyup for shortcut ${this.#id}`);
         ev.preventDefault();
         this.#keydown = false;
         this.getOptions().keyUpCallback(ev);
@@ -30,7 +34,7 @@ export class Shortcut {
     /* Forced keyup, in case the window loses focus */
     document.addEventListener("blur", (ev: any) => {
       if (this.#keydown) {
-        console.log(`Keyup (forced by blur) for shortcut ${this.#id}`)
+        console.log(`Keyup (forced by blur) for shortcut ${this.#id}`);
         ev.preventDefault();
         this.#keydown = false;
         this.getOptions().keyUpCallback(ev);
@@ -46,10 +50,10 @@ export class Shortcut {
         (this.getOptions().ctrlKey === undefined || ev.ctrlKey === (this.getOptions().ctrlKey ?? ev.code.indexOf("Control") >= 0)) &&
         (this.getOptions().shiftKey === undefined || ev.shiftKey === (this.getOptions().shiftKey ?? ev.code.indexOf("Shift") >= 0))
       ) {
-        console.log(`Keydown event for shortcut ${this.#id}`)
+        console.log(`Keydown event for shortcut ${this.#id}`);
         ev.preventDefault();
         this.#keydown = true;
-        const keyDownCallback = this.getOptions().keyDownCallback
+        const keyDownCallback = this.getOptions().keyDownCallback;
         if (keyDownCallback) keyDownCallback(ev); /* Key down event is optional */
       }
     });
@@ -83,5 +87,9 @@ export class Shortcut {
         .replace("ShiftRight", "Right Shift")
     );
     return actions;
+  }
+
+  #setKeydown(keydown: boolean) {
+    this.#keydown = keydown;
   }
 }

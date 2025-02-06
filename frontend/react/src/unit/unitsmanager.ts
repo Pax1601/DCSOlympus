@@ -38,6 +38,7 @@ import {
 } from "../events";
 import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
+import { PathMarker } from "../map/markers/pathmarker";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -54,6 +55,7 @@ export class UnitsManager {
   #protectionCallback: (units: Unit[]) => void = (units) => {};
   #AWACSReference: Unit | null = null;
   #clusters: { [key: number]: Unit[] } = {};
+  #pathMarkers: PathMarker[] = [];
 
   constructor() {
     this.#unitDatabase = new UnitDatabase();
@@ -303,8 +305,50 @@ export class UnitsManager {
     }
 
     /* Update all the lines of all the selected units. This code is handled by the UnitsManager since, for example, it must be run both when the detected OR the detecting unit is updated */
+    let pathMarkersCoordinates: LatLng[] = [];
     for (let ID in this.#units) {
-      if (this.#units[ID].getSelected()) this.#units[ID].drawLines();
+      if (this.#units[ID].getSelected()) {
+        this.#units[ID].drawLines();
+        const unitPath = this.#units[ID].getActivePath();
+        unitPath.forEach((latlng: LatLng) => {
+          if (pathMarkersCoordinates.every((coord: LatLng) => coord.lat != latlng.lat && coord.lng != latlng.lng)) pathMarkersCoordinates.push(latlng);
+        });
+      }
+    }
+
+    /* Update the path markers */
+    if (this.#pathMarkers.find((pathMarker: PathMarker) => pathMarker.options["freeze"]) === undefined) {
+      this.#pathMarkers.forEach((pathMarker: PathMarker) => {
+        if (!pathMarkersCoordinates.some((coord: LatLng) => pathMarker.getLatLng().equals(coord))) {
+          pathMarker.remove();
+          this.#pathMarkers = this.#pathMarkers.filter((marker: PathMarker) => marker !== pathMarker);
+        }
+      });
+
+      pathMarkersCoordinates.forEach((latlng: LatLng) => {
+        if (!this.#pathMarkers.some((pathMarker: PathMarker) => pathMarker.getLatLng().equals(latlng))) {
+          const pathMarker = new PathMarker(latlng);
+
+          pathMarker.on("dragstart", (event) => {
+            event.target.options["freeze"] = true;
+            event.target.options["originalPosition"] = event.target.getLatLng();
+          });
+          pathMarker.on("dragend", (event) => {
+            event.target.options["freeze"] = false;
+            this.getSelectedUnits().forEach((unit) => {
+              let path = [...unit.getActivePath()];
+              const idx = path.findIndex((coord: LatLng) => coord.equals(event.target.options["originalPosition"]));
+              if (idx !== -1) {
+                path[idx] = event.target.getLatLng();
+                getApp().getServerManager().addDestination(unit.ID, path);
+              }
+            });
+          });
+
+          pathMarker.addTo(getApp().getMap());
+          this.#pathMarkers.push(pathMarker);
+        }
+      });
     }
 
     /* Compute the base clusters */
