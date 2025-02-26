@@ -48,7 +48,6 @@ import {
   ConfigLoadedEvent,
   ContextActionChangedEvent,
   ContextActionSetChangedEvent,
-  DrawingsInitEvent,
   HiddenTypesChangedEvent,
   MapContextMenuRequestEvent,
   MapOptionsChangedEvent,
@@ -67,9 +66,6 @@ import {
 } from "../events";
 import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
-import { MeasureMarker } from "./markers/measuremarker";
-import { MeasureStartMarker } from "./markers/measurestartmarker";
-import { MeasureEndMarker } from "./markers/measureendmarker";
 import { Measure } from "./measure";
 
 /* Register the handler for the box selection */
@@ -185,7 +181,7 @@ export class Map extends L.Map {
       maxBoundsViscosity: 1.0,
       minZoom: 7,
       keyboard: true,
-      keyboardPanDelta: 0,
+      keyboardPanDelta: 0
     });
     this.setView([37.23, -115.8], 10);
 
@@ -351,7 +347,7 @@ export class Map extends L.Map {
         keyUpCallback: () => {
           this.clearMeasures();
         },
-        code: "KeyComma",
+        code: "Comma",
         shiftKey: false,
         altKey: false,
         ctrlKey: false,
@@ -855,6 +851,19 @@ export class Map extends L.Map {
     this.#contextActionSet?.getDefaultContextAction()?.executeCallback(targetUnit, targetPosition, originalEvent);
   }
 
+  clearMeasures() {
+    this.#measures.forEach((measure) => measure.remove());
+    this.#measures = [];
+  }
+
+  getMapLayer(layerName: string) {
+    return this.#mapLayers[layerName] && this.#mapLayers[layerName];
+  }
+
+  getAllMapLayers() {
+    return this.#mapLayers;
+  }
+
   /* Event handlers */
   #onStateChanged(state: OlympusState, subState: OlympusSubState) {
     /* Operations to perform when leaving a state */
@@ -882,6 +891,7 @@ export class Map extends L.Map {
           if (this.#measures[this.#measures.length - 1].getDistance() < 1) {
             this.#measures[this.#measures.length - 1].remove();
             this.#measures.pop();
+            this.#measures[this.#measures.length - 1].showEndMarker();
           } else {
             this.#measures[this.#measures.length - 1].showEndMarker();
           }
@@ -947,16 +957,35 @@ export class Map extends L.Map {
   }
 
   #onMouseUp(e: any) {
+    this.dragging.enable();
+
     if (e.originalEvent?.button === 0) {
       if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onLeftShortClick(e);
       this.#isLeftMouseDown = false;
     } else if (e.originalEvent?.button === 2) {
       if (Date.now() - this.#rightMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onRightShortClick(e);
       this.#isRightMouseDown = false;
+    } else if (e.originalEvent?.button === 1) {
+      getApp().setState(getApp().getState() === OlympusState.MEASURE? OlympusState.IDLE: OlympusState.MEASURE);
+      if (getApp().getState() === OlympusState.MEASURE) {
+        const newMeasure = new Measure(this);
+        const previousMeasure = this.#measures[this.#measures.length - 1];
+        this.#measures.push(newMeasure);
+        newMeasure.onClick(e.latlng);
+        if (previousMeasure && previousMeasure.isActive()) {
+          previousMeasure.finish();
+          previousMeasure.hideEndMarker();
+          newMeasure.onMarkerMoved = (startLatLng, endLatLng) => {
+            previousMeasure.moveMarkers(null, startLatLng);
+          };
+        }
+      }
     }
   }
 
   #onMouseDown(e: any) {
+    if (e.originalEvent.button === 1) {this.dragging.disable();} // Disable dragging when right clicking
+
     this.#originalMouseClickLatLng = e.latlng;
     if (e.originalEvent?.button === 0) {
       this.#isLeftMouseDown = true;
@@ -1325,18 +1354,5 @@ export class Map extends L.Map {
         marker.setLatLng(this.#lastMouseCoordinates);
       });
     }
-  }
-
-  clearMeasures() {
-    this.#measures.forEach((measure) => measure.remove());
-    this.#measures = [];
-  }
-
-  getMapLayer(layerName: string) {
-    return this.#mapLayers[layerName] && this.#mapLayers[layerName];
-  }
-
-  getAllMapLayers() {
-    return this.#mapLayers;
   }
 }

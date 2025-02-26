@@ -66,7 +66,7 @@ export class AudioManager {
       this.#commandMode = options.commandMode;
     });
 
-    let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "KeyComma", "KeyDot"];
+    let PTTKeys = ["KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Dot"];
     PTTKeys.forEach((key, idx) => {
       getApp()
         .getShortcutManager()
