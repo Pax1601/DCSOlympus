@@ -67,7 +67,7 @@ import {
   UnitSelectedEvent,
   UnitUpdatedEvent,
 } from "../events";
-import { CoalitionAreaHandle } from "../map/coalitionarea/coalitionareahandle";
+import { DraggableHandle } from "../map/coalitionarea/coalitionareahandle";
 import { ArrowMarker } from "../map/markers/arrowmarker";
 import { Spot } from "../mission/spot";
 import { SpotEditMarker } from "../map/markers/spoteditmarker";
@@ -171,7 +171,7 @@ export abstract class Unit extends CustomMarker {
   #trailPolylines: Polyline[] = [];
   #racetrackPolylines: Polyline[] = [];
   #racetrackArcs: Polyline[] = [];
-  #racetrackAnchorMarkers: CoalitionAreaHandle[] = [new CoalitionAreaHandle(new LatLng(0, 0)), new CoalitionAreaHandle(new LatLng(0, 0))];
+  #racetrackAnchorMarkers: DraggableHandle[] = [new DraggableHandle(new LatLng(0, 0)), new DraggableHandle(new LatLng(0, 0))];
   #racetrackArrow: ArrowMarker = new ArrowMarker(new LatLng(0, 0));
   #inhibitRacetrackDraw: boolean = false;
   #spotLines: { [key: number]: Polyline } = {};
@@ -379,13 +379,13 @@ export abstract class Unit extends CustomMarker {
     });
 
     this.#racetrackPolylines = [
-      new Polyline([], { color: colors.OLYMPUS_BLUE, weight: 3, opacity: 0.5, smoothFactor: 1 }),
-      new Polyline([], { color: colors.OLYMPUS_BLUE, weight: 3, opacity: 0.5, smoothFactor: 1 }),
+      new Polyline([], { color: colors.WHITE, weight: 3, smoothFactor: 1, dashArray: "5, 5" }),
+      new Polyline([], { color: colors.WHITE, weight: 3, smoothFactor: 1, dashArray: "5, 5" }),
     ];
 
     this.#racetrackArcs = [
-      new Polyline([], { color: colors.OLYMPUS_BLUE, weight: 3, opacity: 0.5, smoothFactor: 1 }),
-      new Polyline([], { color: colors.OLYMPUS_BLUE, weight: 3, opacity: 0.5, smoothFactor: 1 }),
+      new Polyline([], { color: colors.WHITE, weight: 3, smoothFactor: 1, dashArray: "5, 5" }),
+      new Polyline([], { color: colors.WHITE, weight: 3, smoothFactor: 1, dashArray: "5, 5" }),
     ];
 
     this.#racetrackAnchorMarkers[0].on("drag", (e: any) => {
@@ -1724,84 +1724,88 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawRacetrack() {
-    let groundspeed = this.#speed;
+    this.#clearRacetrack();
 
-    // Determine racetrack length
-    let racetrackLength = this.#racetrackLength;
-    if (racetrackLength === 0) {
-      if (this.getIsActiveTanker())
-        racetrackLength = nmToM(50); // Default length for active tanker
-      else racetrackLength = this.#desiredSpeed * 30; // Default length based on desired speed
+    if (getApp().getMap().getOptions().showRacetracks) {
+      let groundspeed = this.#speed;
+
+      // Determine racetrack length
+      let racetrackLength = this.#racetrackLength;
+      if (racetrackLength === 0) {
+        if (this.getIsActiveTanker())
+          racetrackLength = nmToM(50); // Default length for active tanker
+        else racetrackLength = this.#desiredSpeed * 30; // Default length based on desired speed
+      }
+
+      // Calculate the radius of the racetrack turns
+      const radius = Math.pow(groundspeed, 2) / 9.81 / Math.tan(deg2rad(22.5));
+
+      let point1;
+      let point2;
+
+      // Determine the anchor points of the racetrack
+      if (!this.#inhibitRacetrackDraw) {
+        point1 = this.#racetrackAnchor;
+        point2 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing, racetrackLength);
+      } else {
+        point1 = this.#racetrackAnchorMarkers[0].getLatLng();
+        point2 = this.#racetrackAnchorMarkers[1].getLatLng();
+        this.#racetrackBearing = deg2rad(bearing(point1.lat, point1.lng, point2.lat, point2.lng, false));
+        this.#racetrackLength = point1.distanceTo(point2);
+      }
+
+      // Calculate the other points of the racetrack
+      const point3 = bearingAndDistanceToLatLng(point2.lat, point2.lng, this.#racetrackBearing - deg2rad(90), radius * 2);
+      const point4 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing - deg2rad(90), radius * 2);
+      const pointArrow = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing, racetrackLength / 2);
+
+      // Calculate the centers of the racetrack turns
+      const center1 = bearingAndDistanceToLatLng(point2.lat, point2.lng, this.#racetrackBearing - deg2rad(90), radius);
+      const center2 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing - deg2rad(90), radius);
+
+      // Draw or update the straight segments of the racetrack
+      if (!getApp().getMap().hasLayer(this.#racetrackPolylines[0])) this.#racetrackPolylines[0].addTo(getApp().getMap());
+      this.#racetrackPolylines[0].setLatLngs([point1, point2]);
+
+      if (!getApp().getMap().hasLayer(this.#racetrackPolylines[1])) this.#racetrackPolylines[1].addTo(getApp().getMap());
+      this.#racetrackPolylines[1].setLatLngs([point3, point4]);
+
+      const arc1Points: LatLng[] = [];
+      const arc2Points: LatLng[] = [];
+
+      // Calculate the points for the racetrack arcs
+      for (let theta = 0; theta <= 180; theta += 5) {
+        arc1Points.push(bearingAndDistanceToLatLng(center1.lat, center1.lng, this.#racetrackBearing + deg2rad(theta - 90), radius));
+        arc2Points.push(bearingAndDistanceToLatLng(center2.lat, center2.lng, this.#racetrackBearing + deg2rad(theta + 90), radius));
+      }
+
+      // Draw or update the racetrack arcs
+      if (!getApp().getMap().hasLayer(this.#racetrackArcs[0])) this.#racetrackArcs[0].addTo(getApp().getMap());
+      this.#racetrackArcs[0].setLatLngs(arc1Points);
+
+      if (!getApp().getMap().hasLayer(this.#racetrackArcs[1])) this.#racetrackArcs[1].addTo(getApp().getMap());
+
+      this.#racetrackArcs[1].setLatLngs(arc2Points);
+
+      // Update the positions of the racetrack anchor markers
+      this.#racetrackAnchorMarkers[0].setLatLng(point1);
+      this.#racetrackAnchorMarkers[1].setLatLng(point2);
+
+      // Add the racetrack anchor markers to the map if they are not already present
+      if (!getApp().getMap().hasLayer(this.#racetrackAnchorMarkers[0])) {
+        this.#racetrackAnchorMarkers[0].addTo(getApp().getMap());
+      }
+
+      if (!getApp().getMap().hasLayer(this.#racetrackAnchorMarkers[1])) {
+        this.#racetrackAnchorMarkers[1].addTo(getApp().getMap());
+      }
+
+      if (!getApp().getMap().hasLayer(this.#racetrackArrow)) {
+        this.#racetrackArrow.addTo(getApp().getMap());
+      }
+      this.#racetrackArrow.setLatLng(pointArrow);
+      this.#racetrackArrow.setBearing(this.#racetrackBearing);
     }
-
-    // Calculate the radius of the racetrack turns
-    const radius = Math.pow(groundspeed, 2) / 9.81 / Math.tan(deg2rad(22.5));
-
-    let point1;
-    let point2;
-
-    // Determine the anchor points of the racetrack
-    if (!this.#inhibitRacetrackDraw) {
-      point1 = this.#racetrackAnchor;
-      point2 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing, racetrackLength);
-    } else {
-      point1 = this.#racetrackAnchorMarkers[0].getLatLng();
-      point2 = this.#racetrackAnchorMarkers[1].getLatLng();
-      this.#racetrackBearing = deg2rad(bearing(point1.lat, point1.lng, point2.lat, point2.lng, false));
-      this.#racetrackLength = point1.distanceTo(point2);
-    }
-
-    // Calculate the other points of the racetrack
-    const point3 = bearingAndDistanceToLatLng(point2.lat, point2.lng, this.#racetrackBearing - deg2rad(90), radius * 2);
-    const point4 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing - deg2rad(90), radius * 2);
-    const pointArrow = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing, racetrackLength / 2);
-
-    // Calculate the centers of the racetrack turns
-    const center1 = bearingAndDistanceToLatLng(point2.lat, point2.lng, this.#racetrackBearing - deg2rad(90), radius);
-    const center2 = bearingAndDistanceToLatLng(point1.lat, point1.lng, this.#racetrackBearing - deg2rad(90), radius);
-
-    // Draw or update the straight segments of the racetrack
-    if (!getApp().getMap().hasLayer(this.#racetrackPolylines[0])) this.#racetrackPolylines[0].addTo(getApp().getMap());
-    this.#racetrackPolylines[0].setLatLngs([point1, point2]);
-
-    if (!getApp().getMap().hasLayer(this.#racetrackPolylines[1])) this.#racetrackPolylines[1].addTo(getApp().getMap());
-    this.#racetrackPolylines[1].setLatLngs([point3, point4]);
-
-    const arc1Points: LatLng[] = [];
-    const arc2Points: LatLng[] = [];
-
-    // Calculate the points for the racetrack arcs
-    for (let theta = 0; theta <= 180; theta += 5) {
-      arc1Points.push(bearingAndDistanceToLatLng(center1.lat, center1.lng, this.#racetrackBearing + deg2rad(theta - 90), radius));
-      arc2Points.push(bearingAndDistanceToLatLng(center2.lat, center2.lng, this.#racetrackBearing + deg2rad(theta + 90), radius));
-    }
-
-    // Draw or update the racetrack arcs
-    if (!getApp().getMap().hasLayer(this.#racetrackArcs[0])) this.#racetrackArcs[0].addTo(getApp().getMap());
-    this.#racetrackArcs[0].setLatLngs(arc1Points);
-
-    if (!getApp().getMap().hasLayer(this.#racetrackArcs[1])) this.#racetrackArcs[1].addTo(getApp().getMap());
-
-    this.#racetrackArcs[1].setLatLngs(arc2Points);
-
-    // Update the positions of the racetrack anchor markers
-    this.#racetrackAnchorMarkers[0].setLatLng(point1);
-    this.#racetrackAnchorMarkers[1].setLatLng(point2);
-
-    // Add the racetrack anchor markers to the map if they are not already present
-    if (!getApp().getMap().hasLayer(this.#racetrackAnchorMarkers[0])) {
-      this.#racetrackAnchorMarkers[0].addTo(getApp().getMap());
-    }
-
-    if (!getApp().getMap().hasLayer(this.#racetrackAnchorMarkers[1])) {
-      this.#racetrackAnchorMarkers[1].addTo(getApp().getMap());
-    }
-
-    if (!getApp().getMap().hasLayer(this.#racetrackArrow)) {
-      this.#racetrackArrow.addTo(getApp().getMap());
-    }
-    this.#racetrackArrow.setLatLng(pointArrow);
-    this.#racetrackArrow.setBearing(this.#racetrackBearing);
   }
 
   #clearRacetrack() {
@@ -1993,8 +1997,8 @@ export abstract class Unit extends CustomMarker {
           var color;
           if (contactData.detectionMethod === VISUAL || contactData.detectionMethod === OPTIC) color = colors.MAGENTA;
           else if (contactData.detectionMethod === RADAR || contactData.detectionMethod === IRST) color = colors.YELLOW;
-          else if (contactData.detectionMethod === RWR) color = colors.GREEN;
-          else color = colors.WHITE;
+          else if (contactData.detectionMethod === RWR) color = colors.GREEN_YELLOW;
+          else color = colors.LIGHT_GREY;
           var contactPolyline = new Polyline([startLatLng, endLatLng], {
             color: color,
             weight: 3,

@@ -1,6 +1,6 @@
 import { LatLngExpression, Map, Circle, DivIcon, Marker, CircleOptions, LatLng } from "leaflet";
 import { getApp } from "../../olympusapp";
-import { CoalitionAreaHandle } from "./coalitionareahandle";
+import { DraggableHandle } from "./coalitionareahandle";
 import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import * as turf from "@turf/turf";
@@ -12,7 +12,7 @@ export class CoalitionCircle extends Circle {
   #coalition: Coalition = "blue";
   #selected: boolean = true;
   #creating: boolean = false;
-  #radiusHandle: CoalitionAreaHandle;
+  #radiusHandle: DraggableHandle;
   #labelText: string;
   #label: Marker;
   #updateTimeout: number | null = null;
@@ -140,7 +140,7 @@ export class CoalitionCircle extends Circle {
 
     if (this.#selected) {
       const dest = turf.destination(turf.point([this.getLatLng().lng, this.getLatLng().lat]), this.getRadius() / 1000, 0);
-      this.#radiusHandle = new CoalitionAreaHandle(new LatLng(dest.geometry.coordinates[1], dest.geometry.coordinates[0]));
+      this.#radiusHandle = new DraggableHandle(new LatLng(dest.geometry.coordinates[1], dest.geometry.coordinates[0]));
       this.#radiusHandle.addTo(getApp().getMap());
       this.#radiusHandle.on("drag", (e: any) => {
         this.setRadius(this.getLatLng().distanceTo(e.latlng));

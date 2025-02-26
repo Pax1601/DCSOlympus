@@ -100,20 +100,26 @@
   font-weight: 600;
 }
 
-.ol-coalitionarea-handle-icon {
-  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
-  background-color: #FFFFFFAA;
+.ol-draggable-handle-icon {
+  cursor:
+    url("/images/cursors/pointer.svg") 13 5,
+    auto;
+  background-color: #ffffff;
   width: 100%;
   height: 100%;
   border-radius: 999px;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
 .ol-coalitionarea-middle-handle-icon {
-  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
-  background-color: #FFFFFFAA;
+  cursor:
+    url("/images/cursors/pointer.svg") 13 5,
+    auto;
+  background-color: #ffffff;
   width: 100%;
   height: 100%;
   border-radius: 999px;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
 .ol-coalitionarea-label {
@@ -124,7 +130,11 @@
 .ol-coalitionarea-label.selected {
   color: white;
   /* 1 pixel black shadow to left, top, right and bottom */
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-shadow:
+    -1px 0 black,
+    0 1px black,
+    1px 0 black,
+    0 -1px black;
 }
 
 .ol-coalitionarea-label.blue {
@@ -139,15 +149,15 @@
   background-image: url("/images/markers/target.svg");
   height: 100%;
   width: 100%;
-  
-  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
+
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
 .ol-spot-icon {
   background-image: url("/images/markers/target.svg");
   height: 100%;
   width: 100%;
-  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
 .ol-text-icon {
@@ -162,10 +172,10 @@
 
 .ol-smoke-icon {
   opacity: 75%;
-  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
-.ol-explosion-icon * { 
+.ol-explosion-icon * {
   opacity: 75%;
 }
 
@@ -185,7 +195,9 @@ path.leaflet-interactive:focus {
   cursor: url("/images/cursors/follow.svg"), auto !important;
 }
 
-.fire-at-area-cursor, .bomb-cursor, .carpet-bomb-cursor {
+.fire-at-area-cursor,
+.bomb-cursor,
+.carpet-bomb-cursor {
   cursor: url("/images/cursors/fire-at-area.svg"), auto !important;
 }
 
@@ -213,9 +225,10 @@ path.leaflet-interactive:focus {
   cursor: url("/images/cursors/measure.svg"), auto !important;
 }
 
-
 #map-container.leaflet-grab {
-  cursor: url("/images/cursors/grab.svg") 16 16, auto;
+  cursor:
+    url("/images/cursors/grab.svg") 16 16,
+    auto;
 }
 
 .explosion-cursor {
@@ -247,7 +260,13 @@ path.leaflet-interactive:focus {
 }
 
 .pointer-cursor {
-  cursor: url("/images/cursors/pointer.svg") 13 5, auto !important;
+  cursor:
+    url("/images/cursors/pointer.svg") 13 5,
+    auto !important;
+}
+
+.ol-arrow-icon  {
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
 .ol-arrow-icon svg {
@@ -256,6 +275,5 @@ path.leaflet-interactive:focus {
 }
 
 .ol-arrow-icon svg path {
-  fill: #FFFFFFAA;
-  
+  fill: #ffffff;
 }

@@ -22,9 +22,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="8.9824657"
-     inkscape:cx="20.985329"
-     inkscape:cy="21.430641"
+     inkscape:zoom="12.703125"
+     inkscape:cx="27.316114"
+     inkscape:cy="18.145142"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="1912"
@@ -33,7 +33,8 @@
      inkscape:current-layer="svg1" />
   <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
   <path
-     d="M 23.307123,3.5189202 C 22.873778,2.4788845 21.852318,1.8041019 20.725614,1.8041019 c -1.126705,0 -2.14817,0.6747826 -2.581515,1.7148183 L 5.2674896,34.22469 c -0.5200196,1.238134 -0.086679,2.661992 1.0214597,3.411065 1.1081335,0.749072 2.5938946,0.600492 3.5410687,-0.346667 L 20.725614,26.393493 31.621209,37.289088 c 0.947171,0.947172 2.426747,1.089559 3.541067,0.346667 1.114324,-0.742886 1.541478,-2.172931 1.021461,-3.411065 z"
+     d="M 23.307123,5.9592647 C 22.873778,4.919229 21.852318,4.2444464 20.725614,4.2444464 c -1.126705,0 -2.14817,0.6747826 -2.581515,1.7148183 L 4.9526064,31.075858 c -0.5200196,1.238134 -0.749486,3.365412 1.6615957,3.411065 3.2949087,0.06239 25.7802099,-0.167747 27.4538949,0 1.605575,0.16092 2.511915,-2.077361 1.800757,-3.411065 z"
      id="path1"
-     style="stroke:#262626;stroke-width:2.30583;stroke-dasharray:none;stroke-opacity:1" />
+     style="stroke:none;stroke-width:2.30583;stroke-dasharray:none;stroke-opacity:1"
+     sodipodi:nodetypes="csccsscc" />
 </svg>

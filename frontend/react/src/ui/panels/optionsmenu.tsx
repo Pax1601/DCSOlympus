@@ -11,6 +11,7 @@ import { Shortcut } from "../../shortcut/shortcut";
 import { OlSearchBar } from "../components/olsearchbar";
 import { FaTrash, FaXmark } from "react-icons/fa6";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const enum Accordion {
   NONE,
@@ -92,7 +93,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             onClick={() => getApp().getMap().setOption("showUnitLabels", !mapOptions.showUnitLabels)}
           >
             <OlCheckbox checked={mapOptions.showUnitLabels} onChange={() => {}}></OlCheckbox>
-            <span className="my-auto">Show Unit Labels</span>
+            <span className="my-auto">Show unit labels</span>
           </div>
           <div
             className={`
@@ -103,7 +104,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             onClick={() => getApp().getMap().setOption("showUnitsEngagementRings", !mapOptions.showUnitsEngagementRings)}
           >
             <OlCheckbox checked={mapOptions.showUnitsEngagementRings} onChange={() => {}}></OlCheckbox>
-            <span className="my-auto">Show Threat Rings</span>
+            <span className="my-auto">Show threat rings</span>
           </div>
           <div
             className={`
@@ -114,7 +115,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             onClick={() => getApp().getMap().setOption("showUnitsAcquisitionRings", !mapOptions.showUnitsAcquisitionRings)}
           >
             <OlCheckbox checked={mapOptions.showUnitsAcquisitionRings} onChange={() => {}}></OlCheckbox>
-            <span className="my-auto">Show Detection rings</span>
+            <span className="my-auto">Show detection rings</span>
           </div>
           <div
             className={`
@@ -125,7 +126,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             onClick={() => getApp().getMap().setOption("showUnitTargets", !mapOptions.showUnitTargets)}
           >
             <OlCheckbox checked={mapOptions.showUnitTargets} onChange={() => {}}></OlCheckbox>
-            <span className="my-auto">Show Detection lines</span>
+            <span className="my-auto">Show detection lines</span>
           </div>
           <div
             className={`
@@ -136,7 +137,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             onClick={() => getApp().getMap().setOption("hideUnitsShortRangeRings", !mapOptions.hideUnitsShortRangeRings)}
           >
             <OlCheckbox checked={mapOptions.hideUnitsShortRangeRings} onChange={() => {}}></OlCheckbox>
-            <span className="my-auto">Hide Short range Rings</span>
+            <span className="my-auto">Hide short range rings</span>
           </div>
 
           <div
@@ -148,7 +149,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             onClick={() => getApp().getMap().setOption("hideGroupMembers", !mapOptions.hideGroupMembers)}
           >
             <OlCheckbox checked={mapOptions.hideGroupMembers} onChange={() => {}}></OlCheckbox>
-            <span className="my-auto">Hide Group members</span>
+            <span className="my-auto">Hide group members</span>
           </div>
           <div
             className={`
@@ -167,14 +168,37 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
               gap-4 rounded-md p-2
               dark:hover:bg-olympus-400
             `}
+            onClick={() => getApp().getMap().setOption("showRacetracks", !mapOptions.showRacetracks)}
+          >
+            <OlCheckbox checked={mapOptions.showRacetracks} onChange={() => {}}></OlCheckbox>
+            <span className="my-auto">Show racetracks</span>
+          </div>
+          <div
+            className={`
+              group flex cursor-pointer flex-row content-center justify-start
+              gap-4 rounded-md p-2
+              dark:hover:bg-olympus-400
+            `}
             onClick={() => {
               mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
               mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
               mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
             }}
           >
+            <div className="flex flex-col gap-2">
+            <div className="flex content-center gap-4">
             <OlCoalitionToggle onClick={() => {}} coalition={mapOptions.AWACSCoalition} />
             <span className="my-auto">Coalition of unit bullseye info</span>
+            </div>
+            <div className="flex gap-1 text-sm text-gray-400">
+              <FaQuestionCircle className={`my-auto w-8`} />{" "}
+              <div
+                className={`my-auto ml-2`}
+              >
+                Change the coalition of the bullseye to use to provide bullseye information in the unit tooltip.
+              </div>
+            </div>
+            </div>
           </div>
         </OlAccordion>
 

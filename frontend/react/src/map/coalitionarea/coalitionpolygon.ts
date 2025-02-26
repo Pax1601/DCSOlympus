@@ -1,6 +1,6 @@
 import { LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions, DivIcon, Marker } from "leaflet";
 import { getApp } from "../../olympusapp";
-import { CoalitionAreaHandle } from "./coalitionareahandle";
+import { DraggableHandle } from "./coalitionareahandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
 import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
@@ -13,7 +13,7 @@ export class CoalitionPolygon extends Polygon {
   #coalition: Coalition = "blue";
   #selected: boolean = true;
   #creating: boolean = false;
-  #handles: CoalitionAreaHandle[] = [];
+  #handles: DraggableHandle[] = [];
   #middleHandles: CoalitionAreaMiddleHandle[] = [];
   #activeIndex: number = 0;
   #labelText: string;
@@ -132,7 +132,7 @@ export class CoalitionPolygon extends Polygon {
   onRemove(map: Map): this {
     super.onRemove(map);
     this.#label?.removeFrom(map);
-    this.#handles.concat(this.#middleHandles).forEach((handle: CoalitionAreaHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(map));
+    this.#handles.concat(this.#middleHandles).forEach((handle: DraggableHandle | CoalitionAreaMiddleHandle) => handle.removeFrom(map));
     return this;
   }
 
@@ -161,13 +161,13 @@ export class CoalitionPolygon extends Polygon {
   }
 
   #setHandles() {
-    this.#handles.forEach((handle: CoalitionAreaHandle) => handle.removeFrom(getApp().getMap()));
+    this.#handles.forEach((handle: DraggableHandle) => handle.removeFrom(getApp().getMap()));
     this.#handles = [];
     if (this.getSelected()) {
       var latlngs = this.getLatLngs()[0] as LatLng[];
       latlngs.forEach((latlng: LatLng, idx: number) => {
         /* Add the polygon vertex handle (for moving the vertex) */
-        const handle = new CoalitionAreaHandle(latlng);
+        const handle = new DraggableHandle(latlng);
         handle.addTo(getApp().getMap());
         handle.on("drag", (e: any) => {
           var latlngs = this.getLatLngs()[0] as LatLng[];

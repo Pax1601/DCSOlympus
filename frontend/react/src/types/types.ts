@@ -18,6 +18,7 @@ export type MapOptions = {
   showUnitLabels: boolean;
   showUnitsEngagementRings: boolean;
   showUnitsAcquisitionRings: boolean;
+  showRacetracks: boolean;
   fillSelectedRing: boolean;
   showMinimap: boolean;
   protectDCSUnits: boolean;

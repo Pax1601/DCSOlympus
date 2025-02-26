@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import { faSkull, faCamera, faFlag, faVolumeHigh, faDownload, faUpload, faDrawPolygon } from "@fortawesome/free-solid-svg-icons";
+import { faSkull, faCamera, faFlag, faVolumeHigh, faDownload, faUpload, faDrawPolygon, faCircle, faTriangleExclamation, faWifi, faHourglass, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { getApp, IP } from "../../olympusapp";
@@ -146,17 +146,13 @@ export function Header() {
             }}
             checked={false}
           />
-                    {savingSessionData ? (
+          {savingSessionData ? (
             <div className="text-white">
-              <FaSpinner
-                className={`animate-spin text-2xl`}
-              />
+              <FaSpinner className={`animate-spin text-2xl`} />
             </div>
           ) : (
             <div className={`relative text-white`}>
-              <FaFloppyDisk
-                className={`absolute -top-3 text-2xl`}
-              />
+              <FaFloppyDisk className={`absolute -top-3 text-2xl`} />
               <FaCheck
                 className={`
                   absolute left-[9px] top-[-6px] text-2xl text-olympus-900
@@ -270,6 +266,23 @@ export function Header() {
               />
             );
           })}
+        </div>
+        <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
+        <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
+          <OlRoundStateButton
+            onClick={() => getApp().getMap().setOption("showUnitsEngagementRings", !mapOptions.showUnitsEngagementRings)}
+            checked={mapOptions.showUnitsEngagementRings}
+            icon={faTriangleExclamation}
+            className={""}
+            tooltip={"Hide/show units engagement rings"}
+          />
+          <OlRoundStateButton
+            onClick={() => getApp().getMap().setOption("showUnitsAcquisitionRings", !mapOptions.showUnitsAcquisitionRings)}
+            checked={mapOptions.showUnitsAcquisitionRings}
+            icon={faWifi}
+            className={""}
+            tooltip={"Hide/show units acquisition rings"}
+          />
         </div>
 
         <OlLabelToggle

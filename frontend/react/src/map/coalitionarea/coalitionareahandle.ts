@@ -1,7 +1,7 @@
 import { DivIcon, LatLng } from "leaflet";
 import { CustomMarker } from "../markers/custommarker";
 
-export class CoalitionAreaHandle extends CustomMarker {
+export class DraggableHandle extends CustomMarker {
   constructor(latlng: LatLng) {
     super(latlng, { interactive: true, draggable: true });
 
@@ -15,11 +15,11 @@ export class CoalitionAreaHandle extends CustomMarker {
       new DivIcon({
         iconSize: [24, 24],
         iconAnchor: [12, 12],
-        className: "leaflet-coalitionarea-handle-marker",
+        className: "leaflet-draggable-handle-marker",
       })
     );
     var el = document.createElement("div");
-    el.classList.add("ol-coalitionarea-handle-icon");
+    el.classList.add("ol-draggable-handle-icon");
     this.getElement()?.appendChild(el);
   }
 }
