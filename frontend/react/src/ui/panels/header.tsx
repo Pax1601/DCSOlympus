@@ -132,7 +132,21 @@ export function Header() {
               {IP}
             </div>
           </div>
-          {savingSessionData ? (
+          <OlStateButton
+            icon={faDownload}
+            onClick={() => {
+              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT);
+            }}
+            checked={false}
+          />
+          <OlStateButton
+            icon={faUpload}
+            onClick={() => {
+              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT);
+            }}
+            checked={false}
+          />
+                    {savingSessionData ? (
             <div className="text-white">
               <FaSpinner
                 className={`animate-spin text-2xl`}
@@ -151,21 +165,6 @@ export function Header() {
               <FaCheck className={`absolute left-3 top-0 text-green-500`} />
             </div>
           )}
-          <OlStateButton
-            className="ml-8"
-            icon={faDownload}
-            onClick={() => {
-              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT);
-            }}
-            checked={false}
-          />
-          <OlStateButton
-            icon={faUpload}
-            onClick={() => {
-              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT);
-            }}
-            checked={false}
-          />
         </div>
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
