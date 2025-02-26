@@ -52,7 +52,7 @@ export type OlympusUIState = {
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
-  const [serverStatus, setServerStatus] = useState({} as ServerStatus);
+  const [serverConnected, setServerConnected] = useState(false as boolean);
   const [connectedOnce, setConnectedOnce] = useState(false);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export function UI() {
     ServerStatusUpdatedEvent.on((status) => {
       // If we connected at least once, record it
       if (status.connected) setConnectedOnce(true);
-      setServerStatus(status);
+      setServerConnected(status.connected);
     });
   }, []);
 
@@ -137,7 +137,7 @@ export function UI() {
         )}
       </div>
 
-      {!serverStatus.connected && appState !== OlympusState.LOGIN && (
+      {!serverConnected && appState !== OlympusState.LOGIN && (
         <div
           className={`
             absolute left-0 top-0 z-50 flex h-screen w-screen items-center
