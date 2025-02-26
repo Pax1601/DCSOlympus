@@ -628,6 +628,25 @@ export class AWACSReferenceChangedEvent {
   }
 }
 
+export class DrawingsInitEvent {
+  static on(callback: (drawingsData: any /*TODO*/) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail);
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(drawingsData: any  /*TODO*/) {
+    document.dispatchEvent(new CustomEvent(this.name, {detail: drawingsData}));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
+export class DrawingsUpdatedEvent extends BaseOlympusEvent {}
+
 /************** Command mode events ***************/
 export class CommandModeOptionsChangedEvent {
   static on(callback: (options: CommandModeOptions) => void, singleShot = false) {

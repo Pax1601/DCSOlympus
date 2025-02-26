@@ -29,6 +29,7 @@ export type MapOptions = {
   AWACSCoalition: Coalition;
   hideChromeWarning: boolean;
   hideSecureWarning: boolean;
+  showMissionDrawings: boolean;
 };
 
 export type MapHiddenTypes = {

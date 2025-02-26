@@ -42,6 +42,7 @@ export const BULLSEYE_URI = "bullseyes";
 export const SPOTS_URI = "spots";
 export const MISSION_URI = "mission";
 export const COMMANDS_URI = "commands";
+export const DRAWINGS_URI = "drawings";
 
 export const NONE = "None";
 export const GAME_MASTER = "Game master";
@@ -413,6 +414,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   AWACSCoalition: "blue",
   hideChromeWarning: false,
   hideSecureWarning: false,
+  showMissionDrawings: false
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {

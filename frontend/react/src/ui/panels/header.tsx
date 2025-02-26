@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import { faSkull, faCamera, faFlag, faVolumeHigh, faDownload, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faSkull, faCamera, faFlag, faVolumeHigh, faDownload, faUpload, faDrawPolygon } from "@fortawesome/free-solid-svg-icons";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { getApp, IP } from "../../olympusapp";
@@ -16,8 +16,24 @@ import {
   olButtonsVisibilityOlympus,
 } from "../components/olicons";
 import { FaChevronLeft, FaChevronRight, FaFloppyDisk } from "react-icons/fa6";
-import { CommandModeOptionsChangedEvent, ConfigLoadedEvent, HiddenTypesChangedEvent, MapOptionsChangedEvent, MapSourceChangedEvent, SessionDataChangedEvent, SessionDataSavedEvent } from "../../events";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ImportExportSubstate, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, OlympusState, RED_COMMANDER } from "../../constants/constants";
+import {
+  CommandModeOptionsChangedEvent,
+  ConfigLoadedEvent,
+  HiddenTypesChangedEvent,
+  MapOptionsChangedEvent,
+  MapSourceChangedEvent,
+  SessionDataChangedEvent,
+  SessionDataSavedEvent,
+} from "../../events";
+import {
+  BLUE_COMMANDER,
+  COMMAND_MODE_OPTIONS_DEFAULTS,
+  ImportExportSubstate,
+  MAP_HIDDEN_TYPES_DEFAULTS,
+  MAP_OPTIONS_DEFAULTS,
+  OlympusState,
+  RED_COMMANDER,
+} from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
 import { FaCheck, FaSave, FaSpinner } from "react-icons/fa";
 
@@ -116,15 +132,40 @@ export function Header() {
               {IP}
             </div>
           </div>
-          {savingSessionData ? <div className="text-white"><FaSpinner className={`
-            animate-spin text-2xl
-          `}/></div> : <div className={`relative text-white`}><FaFloppyDisk className={`
-            absolute -top-3 text-2xl
-          `}/><FaCheck className={`
-            absolute left-[9px] top-[-6px] text-2xl text-olympus-900
-          `}/><FaCheck className={`absolute left-3 top-0 text-green-500`}/></div>}
-          <OlStateButton className="ml-8" icon={faDownload} onClick={() => {getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT)}} checked={false}/>
-          <OlStateButton icon={faUpload} onClick={() => {getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT)}} checked={false}/>
+          {savingSessionData ? (
+            <div className="text-white">
+              <FaSpinner
+                className={`animate-spin text-2xl`}
+              />
+            </div>
+          ) : (
+            <div className={`relative text-white`}>
+              <FaFloppyDisk
+                className={`absolute -top-3 text-2xl`}
+              />
+              <FaCheck
+                className={`
+                  absolute left-[9px] top-[-6px] text-2xl text-olympus-900
+                `}
+              />
+              <FaCheck className={`absolute left-3 top-0 text-green-500`} />
+            </div>
+          )}
+          <OlStateButton
+            className="ml-8"
+            icon={faDownload}
+            onClick={() => {
+              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT);
+            }}
+            checked={false}
+          />
+          <OlStateButton
+            icon={faUpload}
+            onClick={() => {
+              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT);
+            }}
+            checked={false}
+          />
         </div>
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
@@ -138,6 +179,14 @@ export function Header() {
           </div>
         )}
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
+          <OlRoundStateButton
+            icon={faDrawPolygon}
+            checked={mapOptions.showMissionDrawings}
+            onClick={() => {
+              getApp().getMap().setOption("showMissionDrawings", !mapOptions.showMissionDrawings);
+            }}
+            tooltip="Show/Hide mission drawings"
+          />
           <OlLockStateButton
             checked={!mapOptions.protectDCSUnits}
             onClick={() => {

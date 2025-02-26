@@ -17,6 +17,7 @@ extern UnitsManager* unitsManager;
 extern WeaponsManager* weaponsManager;
 extern Scheduler* scheduler;
 extern json::value missionData;
+extern json::value drawingsByLayer;
 extern mutex mutexLock;
 extern string sessionHash;
 extern string instancePath;
@@ -148,6 +149,11 @@ void Server::handle_get(http_request request)
                     }
                     else if (URI.compare(COMMANDS_URI) == 0 && query.find(L"commandHash") != query.end()) {
                         answer[L"commandExecuted"] = json::value(scheduler->isCommandExecuted(to_string(query[L"commandHash"])));
+                    }
+                    /* Drawings data*/
+                    else if (URI.compare(DRAWINGS_URI) == 0 && drawingsByLayer.has_object_field(L"drawings")) {
+                        log("Trying to answer with drawings...");
+                        answer[L"drawings"] = drawingsByLayer[L"drawings"];
                     }
                     
                     /* Common data */

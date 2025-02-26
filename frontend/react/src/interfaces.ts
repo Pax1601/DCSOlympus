@@ -53,6 +53,7 @@ export interface SessionData {
   )[];
   hotgroups?: {[key: string]: number[]},
   starredSpawns?: { [key: number]: SpawnRequestTable }
+  drawings?: { [key: string]: {visibility: boolean, opacity: number, name: string, guid: string, containers: any, drawings: any} }
 }
 
 export interface ProfileOptions {
@@ -356,4 +357,42 @@ export interface ServerStatus {
   missionTime: DateAndTime["time"];
   connected: boolean;
   paused: boolean;
+}
+
+export type DrawingPoint = {
+  x: number;
+  y: number;
+};
+
+export type PolygonPoints = DrawingPoint[] | DrawingPoint;
+
+export type DrawingPrimitiveType = "TextBox" | "Polygon" | "Line" | "Icon";
+
+export interface Drawing {
+  name: string;
+  visible: boolean;
+  mapX: number;
+  mapY: number;
+  layerName: string;
+  layer: string;
+  primitiveType: DrawingPrimitiveType;
+  colorString: string;
+  fillColorString?: string;
+  borderThickness?: number;
+  fontSize?: number;
+  font?: string;
+  text?: string;
+  angle?: number;
+  radius?: number;
+  points?: PolygonPoints;
+  style?: string;
+  polygonMode?: string;
+  thickness?: number;
+  width?: number;
+  height?: number;
+  closed?: boolean;
+  lineMode?: string;
+  hiddenOnPlanner?: boolean;
+  file?: string;
+  scale?: number;
 }

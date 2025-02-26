@@ -8,6 +8,7 @@ import {
   AudioSinksChangedEvent,
   AudioSourcesChangedEvent,
   CoalitionAreasChangedEvent,
+  DrawingsUpdatedEvent,
   HotgroupsChangedEvent,
   SessionDataChangedEvent,
   SessionDataLoadedEvent,
@@ -130,7 +131,13 @@ export class SessionDataManager {
         StarredSpawnsChangedEvent.on((starredSpawns) => {
           this.#sessionData.starredSpawns = starredSpawns;
           this.#saveSessionData();
-        })
+        });
+
+        DrawingsUpdatedEvent.on(() => {
+          let container = getApp().getDrawingsManager().getDrawingsContainer();
+          this.#sessionData.drawings = {"Mission drawings": container.toJSON()};
+          this.#saveSessionData();
+        });
       }, 200);
     });
   }

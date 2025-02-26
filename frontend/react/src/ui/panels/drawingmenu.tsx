@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
-import { FaArrowDown, FaArrowUp, FaTrash } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaChevronRight, FaTrash } from "react-icons/fa";
 import { getApp } from "../../olympusapp";
 import { OlStateButton } from "../components/olstatebutton";
-import { faDrawPolygon } from "@fortawesome/free-solid-svg-icons";
+import { faDrawPolygon, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
 import { CoalitionPolygon } from "../../map/coalitionarea/coalitionpolygon";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
@@ -13,9 +13,12 @@ import { Coalition } from "../../types/types";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
 import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
-import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent } from "../../events";
+import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent, DrawingsInitEvent, DrawingsUpdatedEvent } from "../../events";
 import { FaXmark } from "react-icons/fa6";
 import { deepCopyTable } from "../../other/utils";
+import { DCSDrawingsContainer, DCSEmptyLayer } from "../../map/drawings/drawingsmanager";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { OlSearchBar } from "../components/olsearchbar";
 
 export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -30,10 +33,20 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [erasSelection, setErasSelection] = useState({});
   const [rangesSelection, setRangesSelection] = useState({});
 
+  const [openContainers, setOpenContainers] = useState([] as DCSDrawingsContainer[]);
+  const [mainDrawingsContainer, setDrawingsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
+  const [searchString, setSearchString] = useState("");
+
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
       setAppState(state);
       setAppSubState(subState);
+    });
+    DrawingsInitEvent.on((drawingContainer) => {
+      setDrawingsContainer({ container: drawingContainer });
+    });
+    DrawingsUpdatedEvent.on(() => {
+      setDrawingsContainer({ container: getApp().getDrawingsManager().getDrawingsContainer() });
     });
   }, []);
 
@@ -49,6 +62,85 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
     CoalitionAreaSelectedEvent.on((coalitionArea) => setActiveCoalitionArea(coalitionArea));
     CoalitionAreasChangedEvent.on((coalitionAreas) => setCoalitionAreas([...coalitionAreas]));
   }, []);
+
+  function renderDrawingsContainerControls(container: DCSDrawingsContainer) {
+    if (container.hasSearchString(searchString)) {
+      return (
+        <div className="ml-2 flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between gap-2">
+              <FaChevronRight
+                className={`
+                  my-auto
+                  ${openContainers.includes(container) && `rotate-90`}
+                  cursor-pointer text-gray-400 transition-transform
+                `}
+                onClick={() => {
+                  if (openContainers.includes(container)) {
+                    let index = openContainers.indexOf(container);
+                    openContainers.splice(index, 1);
+                  } else {
+                    openContainers.push(container);
+                  }
+                  setOpenContainers([...openContainers]);
+                }}
+              ></FaChevronRight>
+              <FontAwesomeIcon
+                icon={container.getVisibility() ? faEye : faEyeSlash}
+                className={`
+                  my-auto w-6 cursor-pointer text-gray-400 transition-transform
+                  hover:scale-125 hover:text-gray-200
+                `}
+                onClick={() => {
+                  container.setVisibility(!container.getVisibility(), true);
+                }}
+              />
+              <div
+                className={`
+                  w-40 w-max-40 overflow-hidden text-ellipsis text-nowrap bg-
+                `}
+              >
+                {container.getName()}
+              </div>
+
+              <OlRangeSlider
+                value={container.getOpacity() * 100}
+                min={0}
+                max={100}
+                onChange={(ev) => {
+                  container.setOpacity(Number(ev.currentTarget.value) / 100);
+                }}
+                className={`my-auto ml-auto max-w-32`}
+              ></OlRangeSlider>
+            </div>
+          </div>
+          {openContainers.includes(container) && container.getSubContainers().map((container) => renderDrawingsContainerControls(container))}
+          {openContainers.includes(container) &&
+            container.getDrawings().map((drawing) => {
+              if (drawing instanceof DCSEmptyLayer) return <></>;
+              return (
+                <div className="ml-4 flex justify-start gap-2">
+                  <FontAwesomeIcon
+                    icon={drawing.getVisibility() ? faEye : faEyeSlash}
+                    className={`
+                      my-auto w-6 cursor-pointer text-gray-400
+                      transition-transform
+                      hover:scale-125 hover:text-gray-200
+                    `}
+                    onClick={() => {
+                      drawing.setVisibility(!drawing.getVisibility());
+                    }}
+                  />
+                  <div className={`overflow-hidden text-ellipsis text-nowrap`}>{drawing.getName()}</div>
+                </div>
+              );
+            })}
+        </div>
+      );
+    } else {
+      return <></>;
+    }
+  }
 
   return (
     <Menu
@@ -131,6 +223,14 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               <OlStateButton className="!w-full" icon={faCircle} checked={false} onClick={() => getApp().setState(OlympusState.DRAW, DrawSubState.DRAW_CIRCLE)}>
                 <div className="text-sm">Add circle</div>
               </OlStateButton>
+            </div>
+
+            <div>
+              <div className="flex flex-col gap-2 p-6">
+                <div className="text-sm text-gray-400">Mission drawings</div>
+                <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
+                <div className="flex flex-col gap-2">{mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container)}</div>
+              </div>
             </div>
           </div>
         )}

@@ -48,6 +48,7 @@ import {
   ConfigLoadedEvent,
   ContextActionChangedEvent,
   ContextActionSetChangedEvent,
+  DrawingsInitEvent,
   HiddenTypesChangedEvent,
   MapContextMenuRequestEvent,
   MapOptionsChangedEvent,
@@ -344,7 +345,8 @@ export class Map extends L.Map {
         shiftKey: false,
         altKey: false,
         ctrlKey: false,
-      }).addShortcut("clearMeasures", {
+      })
+      .addShortcut("clearMeasures", {
         label: "Clear measures",
         keyUpCallback: () => {
           this.clearMeasures();
@@ -1328,5 +1330,13 @@ export class Map extends L.Map {
   clearMeasures() {
     this.#measures.forEach((measure) => measure.remove());
     this.#measures = [];
+  }
+
+  getMapLayer(layerName: string) {
+    return this.#mapLayers[layerName] && this.#mapLayers[layerName];
+  }
+
+  getAllMapLayers() {
+    return this.#mapLayers;
   }
 }

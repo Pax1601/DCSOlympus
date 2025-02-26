@@ -13,6 +13,7 @@ Olympus.log = mist.Logger:new("Olympus", 'info')
 Olympus.missionData = {}
 Olympus.unitsData = {}
 Olympus.weaponsData = {}
+Olympus.drawingsByLayer = {}
 
 -- Units data structures
 Olympus.unitCounter = 1			-- Counter to generate unique names
@@ -1075,6 +1076,71 @@ function getUnitDescription(unit)
 	return unit:getDescr()
 end
 
+-- This function is periodically called to collect the data of all the existing drawings in the mission to be transmitted to the olympus.dll
+function Olympus.initializeDrawings()
+	local drawings = {}
+	if mist.DBs.drawingByName ~= nil then
+		for drawingName, drawingData in pairs(mist.DBs.drawingByName) do
+			local customLayer = drawingData.name:match("^%[LYR:(.-)%]")
+
+			-- Let's convert DCS coords to lat lon
+			local vec3 = { x = drawingData['mapX'], y = 0, z = drawingData['mapY'] }
+			local lat, lng = coord.LOtoLL(vec3)
+			drawingData['lat'] = lat
+			drawingData['lng'] = lng
+
+			-- If the drawing has points, we have to convert those too
+			if drawingData['points'] ~= nil then
+				if drawingData['points']['x'] ~= nil then
+					-- In this case we have only one point
+					local point = { x = drawingData['points']['x'], y = 0, z = drawingData['points']['y'] }
+					local pointLat, pointLng = coord.LOtoLL(point)
+					drawingData['points'][0] = { lat = pointLat, lng = pointLng }
+				else
+					-- In this case we have multiple points indexed by number
+					for pointNumber, pointLOCoords in pairs(drawingData['points']) do
+						local point = { x = pointLOCoords['x'], y = 0, z = pointLOCoords['y'] }
+						local pointLat, pointLng = coord.LOtoLL(point)
+
+						drawingData['points'][pointNumber] = { lat = pointLat, lng = pointLng }
+					end
+				end
+			end
+
+			-- Let's initialize the layers
+			if drawings[drawingData.layerName] == nil then
+				drawings[drawingData.layerName] = {}
+			end
+
+			if customLayer and drawings[drawingData.layerName][customLayer] == nil then
+				drawings[drawingData.layerName][customLayer] = {}
+			end
+
+			-- Let's put the drawing in the correct layer
+			if customLayer then
+				-- Let's remove the tag from the drawing name
+				local cleanDrawingName = string.match(drawingName, "%] (.+)")
+				drawingData.name = cleanDrawingName
+				-- The drawing has the custom layer tag
+				drawings[drawingData.layerName][customLayer][cleanDrawingName] = drawingData
+			else
+				-- The drawing is a standard drawing
+				drawings[drawingData.layerName][drawingName] = drawingData
+			end
+		end
+
+		Olympus.drawingsByLayer["drawings"] = drawings
+
+		-- Send the drawings to the DLL
+		Olympus.OlympusDLL.setDrawingsData()
+
+		Olympus.notify("Olympus drawings initialized", 2)
+	else
+		Olympus.debug("MIST DBs not ready", 2)
+		timer.scheduleFunction(Olympus.initializeDrawings, {}, timer.getTime() + 1)
+	end
+end
+
 -- This function is periodically called to collect the data of all the existing units in the mission to be transmitted to the olympus.dll
 function Olympus.setUnitsData(arg, time)
 	-- Units data
@@ -1559,6 +1625,9 @@ timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 
 -- Initialize the ME units
 Olympus.initializeUnits()
+
+-- Initialize the Drawings
+Olympus.initializeDrawings()
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
 

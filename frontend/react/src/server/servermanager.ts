@@ -4,6 +4,7 @@ import {
   AIRBASES_URI,
   BULLSEYE_URI,
   COMMANDS_URI,
+  DRAWINGS_URI,
   LOGS_URI,
   MISSION_URI,
   NONE,
@@ -218,6 +219,10 @@ export class ServerManager {
 
   getWeapons(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, WEAPONS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[WEAPONS_URI] }, "arraybuffer", refresh);
+  }
+
+  getDrawings(callback: CallableFunction, errorCallback: CallableFunction, refresh: boolean = false) {
+    this.GET(callback, errorCallback, DRAWINGS_URI);
   }
 
   isCommandExecuted(callback: CallableFunction, commandHash: string, errorCallback: CallableFunction = () => {}) {
@@ -577,12 +582,26 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  loadEnvResources() {
+    /* Load the drawings */
+    this.getDrawings((drawingsData: { drawings: Record<string, Record<string, any>> }) => {
+      if (drawingsData) {
+        getApp().getDrawingsManager()?.initDrawings(drawingsData);
+      }
+    }, () => {});
+
+    // TODO: load navPoints
+  }
+
   startUpdate() {
     /* Clear any existing interval */
     this.#intervals.forEach((interval: number) => {
       window.clearInterval(interval);
     });
     this.#intervals = [];
+
+    // Load mission env resources (one shot)
+    this.loadEnvResources();
 
     this.#intervals.push(
       window.setInterval(() => {

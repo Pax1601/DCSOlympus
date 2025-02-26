@@ -646,3 +646,12 @@ export function normalizeAngle(angle: number): number {
   }
   return angle;
 }
+
+export function decimalToRGBA(decimal: number): string {
+  const r = (decimal >>> 24) & 0xff; 
+  const g = (decimal >>> 16) & 0xff; 
+  const b = (decimal >>> 8) & 0xff;  
+  const a = (decimal & 0xff) / 255;  
+
+  return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
+}
