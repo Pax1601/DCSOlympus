@@ -7,10 +7,12 @@ import { Circle, DivIcon, Layer, LayerGroup, layerGroup, Marker, Polygon, Polyli
 export abstract class DCSDrawing {
   #name: string;
   #parent: DCSDrawingsContainer;
+  #weight: number;
 
   constructor(drawingData, parent: DCSDrawingsContainer) {
     this.#name = drawingData["name"];
     this.#parent = parent;
+    this.setWeight(drawingData);
   }
 
   getName() {
@@ -27,6 +29,26 @@ export abstract class DCSDrawing {
       opacity: this.getOpacity(),
       visibility: this.getVisibility(),
     };
+  }
+
+  setWeight(drawingData) {
+    if (!drawingData.thickness) {
+      return;
+    }
+
+    this.#weight = drawingData.thickness * 0.5;
+
+    if (this.#weight === 0) {
+      this.#weight = 0.1;
+    }
+
+    if (this.#weight > 1) {
+      this.#weight = 1;
+    }
+  }
+
+  getWeight() {
+    return this.#weight;
   }
 
   abstract getLayer(): Layer;
@@ -101,12 +123,19 @@ export class DCSPolygon extends DCSDrawing {
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
           opacity: 1,
           fillOpacity: 1,
-          weight: 1,
+          weight: this.getWeight(),
           dashArray: dashArray,
         });
         break;
 
       case "arrow":
+        let weight = this.getWeight();
+        
+        if (!weight || weight < 1) {
+          weight = 1;
+        }
+
+
         const arrowBounds = [
           [drawingData.points["1"].lat, drawingData.points["1"].lng],
           [drawingData.points["2"].lat, drawingData.points["2"].lng],
@@ -123,7 +152,7 @@ export class DCSPolygon extends DCSDrawing {
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
           opacity: 1,
           fillOpacity: 1,
-          weight: 1,
+          weight: weight,
           dashArray,
         });
         break;
@@ -180,7 +209,7 @@ export class DCSPolygon extends DCSDrawing {
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
           opacity: 1,
           fillOpacity: 1,
-          weight: 1,
+          weight: this.getWeight(),
           dashArray: dashArray,
         });
         break;
@@ -230,7 +259,7 @@ export class DCSPolygon extends DCSDrawing {
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
           opacity: 1,
           fillOpacity: 1,
-          weight: drawingData.thickness,
+          weight: this.getWeight(),
           dashArray: dashArray,
         });
 
@@ -242,11 +271,12 @@ export class DCSPolygon extends DCSDrawing {
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
           opacity: 1,
           fillOpacity: 1,
-          weight: drawingData.thickness,
+          weight: this.getWeight(),
           dashArray: dashArray,
         });
         break;
-      default:
+      
+        default:
         break;
     }
 
@@ -297,7 +327,7 @@ export class DCSLine extends DCSDrawing {
 
     this.#line = new Polyline(points, {
       color: `${decimalToRGBA(drawingData.colorString)}`,
-      weight: drawingData.thickness,
+      weight: this.getWeight(),
       dashArray: dashArray,
     });
 
