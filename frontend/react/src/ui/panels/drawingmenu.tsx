@@ -66,7 +66,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   function renderDrawingsContainerControls(container: DCSDrawingsContainer) {
     if (container.hasSearchString(searchString)) {
       return (
-        <div className="ml-2 flex flex-col gap-2">
+        <div className="ml-2 flex flex-col gap-2" key={container.getGuid()}>
           <div className="flex flex-col gap-2">
             <div className="flex justify-between gap-2">
               <FaChevronRight
@@ -116,10 +116,10 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
           </div>
           {openContainers.includes(container) && container.getSubContainers().map((container) => renderDrawingsContainerControls(container))}
           {openContainers.includes(container) &&
-            container.getDrawings().map((drawing) => {
+            container.getDrawings().map((drawing, index) => {
               if (drawing instanceof DCSEmptyLayer) return <></>;
               return (
-                <div className="ml-4 flex justify-start gap-2">
+                <div className="ml-4 flex justify-start gap-2" key={index}>
                   <FontAwesomeIcon
                     icon={drawing.getVisibility() ? faEye : faEyeSlash}
                     className={`
