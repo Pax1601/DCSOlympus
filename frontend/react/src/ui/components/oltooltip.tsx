@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]; buttonRef: React.MutableRefObject<null>; position?: string }) {
+export function OlTooltip(props: {
+  content: string | JSX.Element | JSX.Element[];
+  buttonRef: React.MutableRefObject<null>;
+  position?: string;
+  relativeToParent?: boolean;
+}) {
   var contentRef = useRef(null);
 
   function setPosition(content: HTMLDivElement, button: HTMLButtonElement) {
@@ -9,8 +14,16 @@ export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]
     content.style.top = "0px";
     content.style.height = "";
 
+    button.style.position = "relative";
+    button.style.left = "0px";
+    button.style.top = "0px";
+    
+
+    let parent = button.closest(".ol-panel-container") as HTMLElement;
+    if (parent === null) parent = document.body;
+
     /* Get the position and size of the button and the content elements */
-    let [cxl, cyt, cxr, cyb, cw, ch] = [
+    let [contentXLeft, contentYTop, contentXRight, contentYBottom, contentWidth, contentHeight] = [
       content.getBoundingClientRect().x,
       content.getBoundingClientRect().y,
       content.getBoundingClientRect().x + content.offsetWidth,
@@ -18,7 +31,7 @@ export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]
       content.offsetWidth,
       content.offsetHeight,
     ];
-    let [bxl, byt, bxr, byb, bbw, bh] = [
+    let [buttonXLeft, buttonYTop, buttonXRight, buttonYBottom, buttonWidth, buttonHeight] = [
       button.getBoundingClientRect().x,
       button.getBoundingClientRect().y,
       button.getBoundingClientRect().x + button.offsetWidth,
@@ -28,38 +41,49 @@ export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]
     ];
 
     /* Limit the maximum height */
-    if (ch > 400) {
-      ch = 400;
-      content.style.height = `${ch}px`;
+    if (contentHeight > 400) {
+      contentHeight = 400;
+      content.style.height = `${contentHeight}px`;
     }
 
     /* Compute the horizontal position of the center of the button and the content */
-    var cxc = (cxl + cxr) / 2;
-    var bxc = (bxl + bxr) / 2;
+    var contentXCenter = (contentXLeft + contentXRight) / 2;
+    var buttonXCenter = (buttonXLeft + buttonXRight) / 2;
 
     /* Compute the x and y offsets needed to align the button and element horizontally, and to put the content depending on the requested position */
     var offsetX = 0;
     var offsetY = 0;
 
     if (props.position === undefined || props.position === "below") {
-      offsetX = bxc - cxc;
-      offsetY = byb - cyt + 8;
-    } else if (props.position === "side") {
-      offsetX = bxr + 8;
-      offsetY = byt - cyt + (bh - ch) / 2;
+      offsetX = buttonXCenter - contentXCenter;
+      offsetY = buttonYBottom - contentYTop + 8;
+    } else if (props.position === "above") {
+      offsetX = buttonXCenter - contentXCenter;
+      offsetY = buttonYTop - contentYTop - contentHeight - 8;
     }
+    else if (props.position === "side") {
+      offsetX = buttonXRight + 8;
+      offsetY = buttonYTop - contentYTop + (buttonHeight - contentHeight) / 2;
+    }
+
+    content.style.left = `${offsetX}px`;
+    content.style.top = `${offsetY}px`;
 
     /* Compute the new position of the left and right margins of the content */
-    let ncxl = cxl + offsetX;
-    let ncxr = cxr + offsetX;
-    let ncyb = cyb + offsetY;
+    let newContentXLeft = props.relativeToParent ? offsetX : contentXLeft + offsetX;
+    let newContentXRight = newContentXLeft + contentWidth;
+    let newContentYBottom = props.relativeToParent ? offsetY : contentYBottom + offsetY;
 
     /* Try and move the content so it is inside the screen */
-    if (ncxl < 0) offsetX -= cxl;
-    if (ncxr > window.innerWidth) {
-      offsetX = bxl - cxl - cw - 12;
+    if (newContentXLeft < 0) offsetX = 15;
+    if (newContentXRight > (props.relativeToParent ? parent.clientWidth : window.innerWidth)) {
+      if (props.position === "side") {
+        offsetX = buttonXLeft - contentXLeft - contentWidth - 12;
+      } else {
+        offsetX -= newContentXRight - (props.relativeToParent ? parent.clientWidth : window.innerWidth) + 15;
+      }
     }
-    if (ncyb > window.innerHeight) offsetY -= bh + ch + 16;
+    if (newContentYBottom > (props.relativeToParent ? parent.clientHeight : window.innerHeight)) offsetY -= buttonHeight + contentHeight + 16;
 
     /* Apply the offset */
     content.style.left = `${offsetX}px`;
@@ -77,7 +101,7 @@ export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]
         setPosition(content, button);
       });
       resizeObserver.observe(content);
-      return () => resizeObserver.disconnect(); // clean up 
+      return () => resizeObserver.disconnect(); // clean up
     }
   });
 
@@ -86,9 +110,9 @@ export function OlTooltip(props: { content: string | JSX.Element | JSX.Element[]
       <div
         ref={contentRef}
         className={`
-          absolute z-50 whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2
-          text-sm font-medium text-white shadow-sm
-          dark:bg-gray-700
+          pointer-events-none absolute z-50 whitespace-nowrap rounded-lg px-3
+          py-2 text-sm font-medium text-white shadow-md backdrop-blur-sm
+          backdrop-grayscale transition-transform no-scrollbar bg-olympus-800/90
         `}
       >
         {props.content}

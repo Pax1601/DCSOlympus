@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
+import { getWikipediaImage, getWikipediaSummary } from "../../other/utils";
+import { OlStateButton } from "./olstatebutton";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coalition }) {
+  const [imageUrl, setImageUrl] = useState(null as string | null);
+  const [summary, setSummary] = useState(null as string | null);
+  const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
+
+  useEffect(() => {
+    getWikipediaImage(props.blueprint.label).then((url) => {
+      setImageUrl(url);
+    });
+  }, [props.blueprint]);
+
   return (
     <div
       data-coalition={props.coalition}
@@ -14,34 +29,55 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
         data-[coalition='neutral']:border-gray-400
         data-[coalition='red']:border-red-500
       `}
+      onMouseEnter={() => {
+        setHoverTimeout(
+          window.setTimeout(() => {
+            setHover(true);
+            setHoverTimeout(null);
+          }, 400)
+        );
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+        if (hoverTimeout) {
+          window.clearTimeout(hoverTimeout);
+          setHoverTimeout(null);
+        }
+      }}
     >
-      <div className="flex flex-row content-center gap-2">
-        <img
-          className={`
-            absolute right-5 top-0 h-full object-cover opacity-10 invert
-          `}
-          src={"vite./images/units/" + props.blueprint.filename}
-          alt=""
-        />
+      {imageUrl && hover && <img className={``} src={imageUrl} alt="" />}
+      <div
+        className={`
+          flex w-full flex-row content-center justify-between gap-2
+          ol-panel-container
+        `}
+      >
         <div
           className={`
-            my-auto ml-2 w-full font-semibold tracking-tight text-gray-900
+            my-auto ml-2 flex w-full justify-between text-nowrap font-semibold
+            tracking-tight text-gray-900
             dark:text-white
           `}
         >
           {props.blueprint.label}
         </div>
+        {imageUrl && (
+          <div className="flex w-full min-w-0 gap-1 text-sm text-gray-500">
+            <FaQuestionCircle
+              className={`my-auto min-w-4`}
+            />
+            <div className={`my-auto max-w-full truncate`}>Hover to show image</div>
+          </div>
+        )}
       </div>
-      <div
-        className={`flex h-fit flex-col justify-between px-2 leading-normal`}
-      >
+      <div className={`flex h-fit flex-col justify-between px-2 leading-normal`}>
         <p
           className={`
             mb-1 text-sm text-gray-700
             dark:text-gray-400
           `}
         >
-          {props.blueprint.description}
+          {summary ?? props.blueprint.description}
         </p>
       </div>
       <div className="flex flex-row gap-1 px-2">

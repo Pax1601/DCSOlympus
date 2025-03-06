@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
-import { FaPlus, FaQuestionCircle } from "react-icons/fa";
+import { FaExclamation, FaExclamationCircle, FaPlus, FaQuestionCircle } from "react-icons/fa";
 import { AudioSourcePanel } from "./components/sourcepanel";
 import { AudioSource } from "../../audio/audiosource";
 import { RadioSinkPanel } from "./components/radiosinkpanel";
@@ -117,15 +117,20 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
 
   return (
     <Menu title="Audio menu" open={props.open} showBackButton={false} onClose={props.onClose}>
-      <div className="p-4 text-sm text-gray-400">
-        The audio menu allows you to add and manage audio sources, connect them to unit loudspeakers and radios, and to tune radio frequencies.
+      <div className="flex content-center gap-4 p-4">
+        <div className="my-auto text-gray-400">
+          <FaQuestionCircle />
+        </div>
+        <div className="text-sm text-gray-400">
+          The audio menu allows you to add and manage audio sources, connect them to unit loudspeakers and radios, and to tune radio frequencies.
+        </div>
       </div>
 
       <>
         {!audioManagerEnabled && (
-          <div className="mx-6 flex rounded-lg bg-olympus-400 p-4 text-sm">
-            <div>
-              <FaQuestionCircle className="my-4 ml-2 mr-6 text-gray-400" />
+          <div className="mx-4 flex gap-4 rounded-lg bg-olympus-400 p-4 text-sm">
+            <div className="my-auto animate-bounce text-xl">
+              <FaExclamationCircle className="text-gray-400" />
             </div>
             <div className="flex flex-col gap-1">
               <div className="text-gray-100">

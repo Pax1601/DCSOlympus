@@ -13,12 +13,14 @@ export function OlStateButton(props: {
   icon?: IconProp;
   tooltip?: string | (() => JSX.Element | JSX.Element[]);
   tooltipPosition?: string;
+  tooltipRelativeToParent?: boolean;
   onClick: () => void;
   onMouseUp?: () => void;
   onMouseDown?: () => void;
   children?: JSX.Element | JSX.Element[];
 }) {
   const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
 
   const className =
@@ -45,30 +47,63 @@ export function OlStateButton(props: {
         className={className}
         style={{
           border: props.buttonColor ? "2px solid " + props.buttonColor : "0px solid transparent",
-          background: setOpacity(props.checked || hover ? (props.buttonColor ? props.buttonColor : colors.OLYMPUS_LIGHT_BLUE) : colors.OLYMPUS_BLUE, (!props.checked && hover)? 0.3: 1),
+          background: setOpacity(
+            props.checked || hover ? (props.buttonColor ? props.buttonColor : colors.OLYMPUS_LIGHT_BLUE) : colors.OLYMPUS_BLUE,
+            !props.checked && hover ? 0.3 : 1
+          ),
         }}
         onMouseEnter={() => {
-          setHover(true);
+          setHoverTimeout(
+            window.setTimeout(() => {
+              setHover(true);
+              setHoverTimeout(null);
+            }, 400)
+          );
         }}
         onMouseLeave={() => {
           setHover(false);
+          if (hoverTimeout) {
+            window.clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+          }
         }}
       >
         <div className={`m-auto flex w-fit content-center justify-center gap-2`}>
-          {props.icon && <FontAwesomeIcon icon={props.icon} data-bright={props.buttonColor && props.checked && computeBrightness(props.buttonColor) > 200} className={`
-            m-auto text-gray-200
-            data-[bright='true']:text-gray-800
-          `} />}
+          {props.icon && (
+            <FontAwesomeIcon
+              icon={props.icon}
+              data-bright={props.buttonColor && props.checked && computeBrightness(props.buttonColor) > 200}
+              className={`
+                m-auto text-gray-200
+                data-[bright='true']:text-gray-800
+              `}
+            />
+          )}
           {props.children}
         </div>
       </button>
-      {hover && props.tooltip && <OlTooltip buttonRef={buttonRef} content={typeof(props.tooltip) === "string" ? props.tooltip: props.tooltip()} position={props.tooltipPosition}/>}
+      {hover && props.tooltip && (
+        <OlTooltip
+          buttonRef={buttonRef}
+          content={typeof props.tooltip === "string" ? props.tooltip : props.tooltip()}
+          position={props.tooltipPosition}
+          relativeToParent={props.tooltipRelativeToParent}
+        />
+      )}
     </>
   );
 }
 
-export function OlRoundStateButton(props: { className?: string; checked: boolean; icon: IconProp; tooltip: string; onClick: () => void }) {
+export function OlRoundStateButton(props: {
+  className?: string;
+  checked: boolean;
+  icon: IconProp;
+  tooltip?: string | (() => JSX.Element | JSX.Element[]);
+  tooltipPosition?: string;
+  onClick: () => void;
+}) {
   const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
 
   const className =
@@ -96,21 +131,39 @@ export function OlRoundStateButton(props: { className?: string; checked: boolean
         type="button"
         className={className}
         onMouseEnter={() => {
-          setHover(true);
+          setHoverTimeout(
+            window.setTimeout(() => {
+              setHover(true);
+              setHoverTimeout(null);
+            }, 400)
+          );
         }}
         onMouseLeave={() => {
           setHover(false);
+          if (hoverTimeout) {
+            window.clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+          }
         }}
       >
         <FontAwesomeIcon className="pt-[3px]" icon={props.icon} />
       </button>
-      {hover && <OlTooltip buttonRef={buttonRef} content={props.tooltip} />}
+      {hover && props.tooltip && (
+        <OlTooltip buttonRef={buttonRef} content={typeof props.tooltip === "string" ? props.tooltip : props.tooltip()} position={props.tooltipPosition} />
+      )}
     </>
   );
 }
 
-export function OlLockStateButton(props: { className?: string; checked: boolean; tooltip: string; onClick: () => void }) {
+export function OlLockStateButton(props: {
+  className?: string;
+  checked: boolean;
+  tooltip?: string | (() => JSX.Element | JSX.Element[]);
+  tooltipPosition?: string;
+  onClick: () => void;
+}) {
   const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
 
   const className =
@@ -135,15 +188,26 @@ export function OlLockStateButton(props: { className?: string; checked: boolean;
         type="button"
         className={className}
         onMouseEnter={() => {
-          setHover(true);
+          setHoverTimeout(
+            window.setTimeout(() => {
+              setHover(true);
+              setHoverTimeout(null);
+            }, 400)
+          );
         }}
         onMouseLeave={() => {
           setHover(false);
+          if (hoverTimeout) {
+            window.clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+          }
         }}
       >
         <FontAwesomeIcon className="pt-[3px]" icon={props.checked == true ? faUnlockAlt : faLock} />
       </button>
-      {hover && <OlTooltip buttonRef={buttonRef} content={props.tooltip} />}
+      {hover && props.tooltip && (
+        <OlTooltip buttonRef={buttonRef} content={typeof props.tooltip === "string" ? props.tooltip : props.tooltip()} position={props.tooltipPosition} />
+      )}
     </>
   );
 }

@@ -1724,8 +1724,6 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawRacetrack() {
-    this.#clearRacetrack();
-
     if (getApp().getMap().getOptions().showRacetracks) {
       let groundspeed = this.#speed;
 
@@ -1805,6 +1803,8 @@ export abstract class Unit extends CustomMarker {
       }
       this.#racetrackArrow.setLatLng(pointArrow);
       this.#racetrackArrow.setBearing(this.#racetrackBearing);
+    } else {
+      this.#clearRacetrack();
     }
   }
 

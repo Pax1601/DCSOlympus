@@ -7,13 +7,11 @@ import { UnitControlMenu } from "./panels/unitcontrolmenu";
 import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { OptionsMenu } from "./panels/optionsmenu";
-import { MapHiddenTypes, MapOptions } from "../types/types";
 import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/loginmodal";
 
 import { MiniMapPanel } from "./panels/minimappanel";
-import { MapToolBar } from "./panels/maptoolbar";
 import { DrawingMenu } from "./panels/drawingmenu";
 import { ControlsPanel } from "./panels/controlspanel";
 import { MapContextMenu } from "./contextmenus/mapcontextmenu";
@@ -23,7 +21,6 @@ import { FormationMenu } from "./panels/formationmenu";
 import { ProtectionPromptModal } from "./modals/protectionpromptmodal";
 import { KeybindModal } from "./modals/keybindmodal";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
-import { JTACMenu } from "./panels/jtacmenu";
 import { AppStateChangedEvent, ServerStatusUpdatedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
@@ -31,23 +28,10 @@ import { HotGroupBar } from "./panels/hotgroupsbar";
 import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
 import { CoordinatesPanel } from "./panels/coordinatespanel";
 import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
-import { AWACSMenu } from "./panels/awacsmenu";
 import { ServerOverlay } from "./serveroverlay";
 import { ImportExportModal } from "./modals/importexportmodal";
 import { WarningModal } from "./modals/warningmodal";
-import { ServerStatus } from "../interfaces";
-
-export type OlympusUIState = {
-  mainMenuVisible: boolean;
-  spawnMenuVisible: boolean;
-  unitControlMenuVisible: boolean;
-  measureMenuVisible: boolean;
-  drawingMenuVisible: boolean;
-  optionsMenuVisible: boolean;
-  airbaseMenuVisible: boolean;
-  mapHiddenTypes: MapHiddenTypes;
-  mapOptions: MapOptions;
-};
+import { TrainingModal } from "./modals/trainingmodal";
 
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -90,6 +74,7 @@ export function UI() {
             <ImportExportModal open={appState === OlympusState.IMPORT_EXPORT} />
             <LoginModal open={appState === OlympusState.LOGIN} />
             <WarningModal open={appState === OlympusState.WARNING} />
+            <TrainingModal open={appState === OlympusState.TRAINING} />
           </>
         )}
 

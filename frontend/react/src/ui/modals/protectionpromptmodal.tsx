@@ -10,14 +10,8 @@ export function ProtectionPromptModal(props: { open: boolean }) {
   return (
     <Modal
       open={props.open}
-      className={`
-        inline-flex h-fit w-[600px] overflow-y-auto scroll-smooth bg-white p-10
-        dark:bg-olympus-800
-        max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
-        max-md:border-none
-      `}
     >
-      <div className="flex h-full w-full flex-col gap-12">
+      <div className="flex h-full w-full flex-col justify-between gap-12">
         <div className={`flex flex-col items-start gap-2`}>
           <span
             className={`
@@ -30,7 +24,7 @@ export function ProtectionPromptModal(props: { open: boolean }) {
           <span
             className={`
               text-gray-800 text-md
-              dark:text-gray-500
+              dark:text-gray-400
             `}
           >
             Pressing "Continue" will cause all DCS controlled units in the current selection to abort their mission and start following Olympus commands only.
@@ -38,7 +32,7 @@ export function ProtectionPromptModal(props: { open: boolean }) {
           <span
             className={`
               text-gray-800 text-md
-              dark:text-gray-500
+              dark:text-gray-400
             `}
           >
             If you are trying to delete a human player unit, they will be killed and de-slotted. Be careful!
@@ -46,7 +40,7 @@ export function ProtectionPromptModal(props: { open: boolean }) {
           <span
             className={`
               text-gray-800 text-md
-              dark:text-gray-500
+              dark:text-gray-400
             `}
           >
             To disable this warning, press on the{" "}

@@ -28,10 +28,11 @@ export function WarningModal(props: { open: boolean }) {
         warningText = (
           <div className="flex flex-col gap-2 text-gray-400">
             <span>Non-Google Chrome Browser Detected.</span>
+            <span>It appears you are using a browser other than Google Chrome.</span>
             <span>
-            It appears you are using a browser other than Google Chrome. 
+              If you encounter any problems, we strongly suggest you use a Chrome based browser. Many features, especially advanced ones such as audio playback
+              and capture, were developed specifically for Chrome based browsers.{" "}
             </span>
-            <span>If you encounter any problems, we strongly suggest you use a Chrome based browser. Many features, especially advanced ones such as audio playback and capture, were developed specifically for Chrome based browsers. </span>
             <div className="mt-5 flex gap-4">
               <OlCheckbox
                 checked={mapOptions.hideChromeWarning}
@@ -49,14 +50,15 @@ export function WarningModal(props: { open: boolean }) {
         warningText = (
           <div className="flex flex-col gap-2 text-gray-400">
             <span>Your connection to DCS Olympus is not secure.</span>
+            <span>To protect your personal data some advanced DCS Olympus features like the camera plugin or the audio backend have been disabled.</span>
             <span>
-              To protect your personal data some advanced DCS Olympus features like the camera plugin or the audio backend
-              have been disabled.
-            </span>
-            <span>
-              To solve this issue, DCS Olympus should be served using the <span className={`
-                italic
-              `}>https</span> protocol.
+              To solve this issue, DCS Olympus should be served using the{" "}
+              <span
+                className={`italic`}
+              >
+                https
+              </span>{" "}
+              protocol.
             </span>
             <span>To do so, we suggest using a dedicated server and a reverse proxy with SSL enabled.</span>
             <div className="mt-5 flex gap-4">
@@ -77,38 +79,27 @@ export function WarningModal(props: { open: boolean }) {
   }
 
   return (
-    <Modal
-      open={props.open}
-      className={`
-        inline-flex h-[50%] max-h-[600px] w-[40%] max-w-[1100px] overflow-y-auto
-        scroll-smooth bg-white
-        dark:bg-olympus-800
-        max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
-        max-md:border-none
-      `}
-    >
-      <div className="flex h-full w-full flex-col p-14">
-        <div className="flex gap-2 text-xl text-white">
-          <FaExclamationTriangle className={`my-auto text-4xl text-yellow-300`} />
-          <div className="my-auto">Warning</div>
-        </div>
-        <div className="mt-10 text-white">{warningText}</div>
-        <div className="ml-auto mt-auto flex">
-          <button
-            type="button"
-            onClick={() => getApp().setState(OlympusState.IDLE)}
-            className={`
-              mb-2 me-2 flex content-center items-center gap-2 rounded-sm
-              bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
-              dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
-              focus:outline-none focus:ring-4 focus:ring-blue-300
-              hover:bg-blue-800
-            `}
-          >
-            Continue
-            <FontAwesomeIcon className={`my-auto`} icon={faArrowRight} />
-          </button>
-        </div>
+    <Modal open={props.open}>
+      <div className="flex gap-2 text-xl text-white">
+        <FaExclamationTriangle className={`my-auto text-4xl text-yellow-300`} />
+        <div className="my-auto">Warning</div>
+      </div>
+      <div className="mt-10 text-white">{warningText}</div>
+      <div className="ml-auto mt-auto flex">
+        <button
+          type="button"
+          onClick={() => getApp().setState(OlympusState.IDLE)}
+          className={`
+            mb-2 me-2 flex content-center items-center gap-2 rounded-sm
+            bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
+            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+            focus:outline-none focus:ring-4 focus:ring-blue-300
+            hover:bg-blue-800
+          `}
+        >
+          Continue
+          <FontAwesomeIcon className={`my-auto`} icon={faArrowRight} />
+        </button>
       </div>
     </Modal>
   );

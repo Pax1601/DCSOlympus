@@ -1,6 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import { faSkull, faCamera, faFlag, faVolumeHigh, faDownload, faUpload, faDrawPolygon, faCircle, faTriangleExclamation, faWifi, faHourglass, faInfo } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSkull,
+  faCamera,
+  faFlag,
+  faVolumeHigh,
+  faDownload,
+  faUpload,
+  faDrawPolygon,
+  faCircle,
+  faTriangleExclamation,
+  faWifi,
+  faHourglass,
+  faInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { getApp, IP } from "../../olympusapp";
@@ -35,7 +48,8 @@ import {
   RED_COMMANDER,
 } from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
-import { FaCheck, FaSave, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaQuestionCircle, FaSave, FaSpinner } from "react-icons/fa";
+import { OlExpandingTooltip } from "../components/olexpandingtooltip";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -84,10 +98,9 @@ export function Header() {
   }
 
   return (
-    <nav
+    <div
       className={`
-        z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3 drop-shadow-md
-        align-center
+        z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3 align-center
         dark:border-gray-800 dark:bg-olympus-900
       `}
     >
@@ -138,6 +151,13 @@ export function Header() {
               getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT);
             }}
             checked={false}
+            tooltip={() => (
+              <OlExpandingTooltip
+                title="Export scenario from file"
+                content="Selectively export the current scenario to a file. This file can be shared with other users or imported later. Currently, only ground and naval units can be exported."
+              />
+            )}
+            tooltipRelativeToParent={true}
           />
           <OlStateButton
             icon={faUpload}
@@ -145,6 +165,12 @@ export function Header() {
               getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT);
             }}
             checked={false}
+            tooltip={() => (
+              <OlExpandingTooltip
+                title="Import scenario from file"
+                content="Import a scenario from a previously exported file. This will add the imported units to the current scenario, so make sure to delete any unwanted units before importing."
+              />
+            )}
           />
           {savingSessionData ? (
             <div className="text-white">
@@ -174,20 +200,19 @@ export function Header() {
           </div>
         )}
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
-          <OlRoundStateButton
-            icon={faDrawPolygon}
-            checked={mapOptions.showMissionDrawings}
-            onClick={() => {
-              getApp().getMap().setOption("showMissionDrawings", !mapOptions.showMissionDrawings);
-            }}
-            tooltip="Show/Hide mission drawings"
-          />
           <OlLockStateButton
             checked={!mapOptions.protectDCSUnits}
             onClick={() => {
               getApp().getMap().setOption("protectDCSUnits", !mapOptions.protectDCSUnits);
             }}
-            tooltip="Lock/unlock protected units (from scripted mission)"
+            tooltip={() => (
+              <OlExpandingTooltip
+                title="Lock/unlock protected units"
+                content={<><p>By default, Mission Editor units are protected from being commanded or deleted. This option allows you to unlock them, so they can be commanded or deleted like any other unit. </p>
+                  <p>If units are protected, you will still be able to control them, but a prompt will be shown to require your confirmation. </p>
+                  <p>Once a unit has been commanded, it will be unlocked and will become an Olympus unit, completely abandoning its previuos mission. </p></>}
+              />
+            )}
           />
           <OlRoundStateButton
             checked={audioEnabled}
@@ -195,7 +220,14 @@ export function Header() {
               audioEnabled ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
               setAudioEnabled(!audioEnabled);
             }}
-            tooltip="Enable/disable audio and radio backend"
+            tooltip={() => (
+              <OlExpandingTooltip
+                title="Enable/disable audio"
+                content={<><p>If this option is enabled, you will be able to access the radio and audio features of DCS Olympus. </p>
+                  <p>For this to work, a SRS Server need to be installed and running on the same machine on which the DCS Olympus server is running.</p>
+                  <p>For security reasons, this feature will only work if a secure connection (i.e., using https) is established with the server. It is also suggested to use Google Chrome for optimal compatibility. </p></>}
+              />
+            )}
             icon={faVolumeHigh}
           />
         </div>
@@ -270,6 +302,19 @@ export function Header() {
         <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
           <OlRoundStateButton
+            icon={faDrawPolygon}
+            checked={mapOptions.showMissionDrawings}
+            onClick={() => {
+              getApp().getMap().setOption("showMissionDrawings", !mapOptions.showMissionDrawings);
+            }}
+            tooltip={() => (
+              <OlExpandingTooltip
+                title="Hide/Show mission drawings"
+                content="To filter the visibile drawings and change their opacity, use the drawings menu on the left sidebar."
+              />
+            )}
+          />
+          <OlRoundStateButton
             onClick={() => getApp().getMap().setOption("showUnitsEngagementRings", !mapOptions.showUnitsEngagementRings)}
             checked={mapOptions.showUnitsEngagementRings}
             icon={faTriangleExclamation}
@@ -294,6 +339,12 @@ export function Header() {
               .getMap()
               .setOption("cameraPluginMode", mapOptions.cameraPluginMode === "live" ? "map" : "live");
           }}
+          tooltip={() => (
+            <OlExpandingTooltip
+              title="Switch between live and map camera"
+              content="When the camera plugin is enabled, you can switch between the live camera view and the map view. These are equivalent to the F9 and F10 views in DCS."
+            />
+          )}
         />
         <OlStateButton
           checked={mapOptions.cameraPluginEnabled}
@@ -301,7 +352,12 @@ export function Header() {
           onClick={() => {
             getApp().getMap().setOption("cameraPluginEnabled", !mapOptions.cameraPluginEnabled);
           }}
-          tooltip="Activate/deactivate camera plugin"
+          tooltip={() => (
+            <OlExpandingTooltip
+              title="Activate/deactivate camera plugin"
+              content="The camera plugin allows to tie the position of the map to the position of the camera in DCS. This is useful to check exactly how things look from the players perspective. Check the in-game wiki for more information." //TODO add link to wiki
+            />
+          )}
         />
         <OlDropdown label={mapSource} className="w-60">
           {mapSources.map((source) => {
@@ -312,6 +368,10 @@ export function Header() {
             );
           })}
         </OlDropdown>
+        <FaQuestionCircle
+          onClick={() => getApp().setState(OlympusState.TRAINING)}
+          className={`cursor-pointer text-2xl text-white`}
+        />
       </div>
       {!scrolledRight && (
         <FaChevronRight
@@ -321,6 +381,6 @@ export function Header() {
           `}
         />
       )}
-    </nav>
+    </div>
   );
 }

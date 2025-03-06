@@ -181,7 +181,7 @@ export class Map extends L.Map {
       maxBoundsViscosity: 1.0,
       minZoom: 7,
       keyboard: true,
-      keyboardPanDelta: 0
+      keyboardPanDelta: 0,
     });
     this.setView([37.23, -115.8], 10);
 
@@ -592,10 +592,20 @@ export class Map extends L.Map {
   }
 
   setSpawnRequestTable(spawnRequestTable: SpawnRequestTable) {
+    let redrawMarker = false;
+    if (
+      this.#spawnRequestTable?.unit.location !== spawnRequestTable.unit.location ||
+      this.#spawnRequestTable?.unit.unitType !== spawnRequestTable.unit.unitType ||
+      this.#spawnRequestTable?.coalition !== spawnRequestTable.coalition
+    )
+      redrawMarker = true;
+
     this.#spawnRequestTable = spawnRequestTable;
 
-    this.#currentSpawnMarker?.removeFrom(this);
-    this.#currentSpawnMarker = this.addTemporaryMarker(spawnRequestTable.unit.location, spawnRequestTable.unit.unitType, spawnRequestTable.coalition, true);
+    if (redrawMarker) {
+      this.#currentSpawnMarker?.removeFrom(this);
+      this.#currentSpawnMarker = this.addTemporaryMarker(spawnRequestTable.unit.location, spawnRequestTable.unit.unitType, spawnRequestTable.coalition, true);
+    }
   }
 
   getSpawnRequestTable() {
@@ -966,7 +976,7 @@ export class Map extends L.Map {
       if (Date.now() - this.#rightMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onRightShortClick(e);
       this.#isRightMouseDown = false;
     } else if (e.originalEvent?.button === 1) {
-      getApp().setState(getApp().getState() === OlympusState.MEASURE? OlympusState.IDLE: OlympusState.MEASURE);
+      getApp().setState(getApp().getState() === OlympusState.MEASURE ? OlympusState.IDLE : OlympusState.MEASURE);
       if (getApp().getState() === OlympusState.MEASURE) {
         const newMeasure = new Measure(this);
         const previousMeasure = this.#measures[this.#measures.length - 1];
@@ -984,7 +994,9 @@ export class Map extends L.Map {
   }
 
   #onMouseDown(e: any) {
-    if (e.originalEvent.button === 1) {this.dragging.disable();} // Disable dragging when right clicking
+    if (e.originalEvent.button === 1) {
+      this.dragging.disable();
+    } // Disable dragging when right clicking
 
     this.#originalMouseClickLatLng = e.latlng;
     if (e.originalEvent?.button === 0) {

@@ -1,9 +1,50 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useRef, useState } from "react";
+import { OlTooltip } from "./oltooltip";
 
-export function OlButtonGroup(props: { children?: JSX.Element | JSX.Element[] }) {
-  return <div className="inline-flex rounded-md shadow-sm">{props.children}</div>;
+export function OlButtonGroup(props: {
+  tooltip?: string | (() => JSX.Element | JSX.Element[]);
+  tooltipPosition?: string;
+  tooltipRelativeToParent?: boolean;
+  children?: JSX.Element | JSX.Element[];
+}) {
+  const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
+  var buttonRef = useRef(null);
+  return (
+    <>
+      <div
+        ref={buttonRef}
+        className="inline-flex rounded-md shadow-sm"
+        onMouseEnter={() => {
+          setHoverTimeout(
+            window.setTimeout(() => {
+              setHover(true);
+              setHoverTimeout(null);
+            }, 400)
+          );
+        }}
+        onMouseLeave={() => {
+          setHover(false);
+          if (hoverTimeout) {
+            window.clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+          }
+        }}
+      >
+        {props.children}
+      </div>
+      {hover && props.tooltip && (
+        <OlTooltip
+          buttonRef={buttonRef}
+          content={typeof props.tooltip === "string" ? props.tooltip : props.tooltip()}
+          position={props.tooltipPosition}
+          relativeToParent={props.tooltipRelativeToParent}
+        />
+      )}
+    </>
+  );
 }
 
 export function OlButtonGroupItem(props: { icon: IconProp; active: boolean; onClick: () => void }) {

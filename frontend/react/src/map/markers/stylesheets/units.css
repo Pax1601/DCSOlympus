@@ -590,11 +590,12 @@
   width: 30px;
   height: 30px;
   position: absolute;
-  top: -40px;
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
   cursor: move;
   pointer-events: all;
+  opacity: 0.5;
 }
 
 .ol-temporary-marker .heading-handle svg {

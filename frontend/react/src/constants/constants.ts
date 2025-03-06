@@ -327,7 +327,8 @@ export enum OlympusState {
   IMPORT_EXPORT = "Import/export",
   WARNING = "Warning modal",
   DATABASE_EDITOR = "Database editor",
-  MEASURE = "Measure"
+  MEASURE = "Measure",
+  TRAINING = "Training"
 }
 
 export const NO_SUBSTATE = "No substate";

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, MutableRefObject } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { OlTooltip } from "./oltooltip";
 
 export function OlDropdown(props: {
   disableAutoClose?: boolean;
@@ -11,8 +12,13 @@ export function OlDropdown(props: {
   children?: JSX.Element | JSX.Element[];
   buttonRef?: MutableRefObject<null> | null;
   open?: boolean;
+  tooltip?: string | (() => JSX.Element | JSX.Element[]);
+  tooltipPosition?: string;
+  tooltipRelativeToParent?: boolean;
 }) {
   const [open, setOpen] = props.open !== undefined ? [props.open, () => {}] : useState(false);
+  const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var contentRef = useRef(null);
   var buttonRef = props.buttonRef !== undefined ? props.buttonRef : useRef(null);
 
@@ -88,67 +94,92 @@ export function OlDropdown(props: {
   });
 
   return (
-    <div className={props.className ?? ""}>
-      {props.buttonRef === undefined && (
-        <button
-          ref={buttonRef}
-          onClick={() => {
-            setOpen(!open);
-          }}
-          className={`
-            inline-flex w-full items-center justify-between rounded-lg border
-            bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white
-            dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100
-            dark:hover:bg-gray-600
-            hover:bg-blue-800
-          `}
-          type="button"
-        >
-          {props.leftIcon && (
-            <FontAwesomeIcon
-              icon={props.leftIcon}
-              className={`mr-3`}
-            />
-          )}
-          <span className="overflow-hidden text-ellipsis text-nowrap">{props.label ?? ""}</span>
-          <svg
+    <>
+      <div className={props.className ?? ""}>
+        {props.buttonRef === undefined && (
+          <button
+            ref={buttonRef}
+            onClick={() => {
+              setOpen(!open);
+            }}
             className={`
-              ml-auto ms-3 h-2.5 w-2.5 flex-none transition-transform
-              data-[open='true']:-scale-y-100
+              inline-flex w-full items-center justify-between rounded-lg border
+              bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white
+              dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100
+              dark:hover:bg-gray-600
+              hover:bg-blue-800
             `}
-            data-open={open}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
+            type="button"
+            onMouseEnter={() => {
+              setHoverTimeout(
+                window.setTimeout(() => {
+                  setHover(true);
+                  setHoverTimeout(null);
+                }, 400)
+              );
+            }}
+            onMouseLeave={() => {
+              setHover(false);
+              if (hoverTimeout) {
+                window.clearTimeout(hoverTimeout);
+                setHoverTimeout(null);
+              }
+            }}
           >
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-          </svg>
-        </button>
-      )}
+            {props.leftIcon && (
+              <FontAwesomeIcon
+                icon={props.leftIcon}
+                className={`mr-3`}
+              />
+            )}
+            <span className="overflow-hidden text-ellipsis text-nowrap">{props.label ?? ""}</span>
+            <svg
+              className={`
+                ml-auto ms-3 h-2.5 w-2.5 flex-none transition-transform
+                data-[open='true']:-scale-y-100
+              `}
+              data-open={open}
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+            </svg>
+          </button>
+        )}
 
-      <div
-        ref={contentRef}
-        data-open={open}
-        className={`
-          absolute z-40 divide-y divide-gray-100 overflow-y-scroll no-scrollbar
-          rounded-lg bg-white p-2 shadow
-          dark:bg-gray-700
-          data-[open='false']:hidden
-        `}
-      >
         <div
+          ref={contentRef}
+          data-open={open}
           className={`
-            h-fit w-full text-sm text-gray-700
-            dark:text-gray-200
+            absolute z-40 divide-y divide-gray-100 overflow-y-scroll
+            no-scrollbar rounded-lg bg-white p-2 shadow
+            dark:bg-gray-700
+            data-[open='false']:hidden
           `}
-          onClick={() => {
-            props.disableAutoClose !== true && setOpen(false);
-          }}
         >
-          {props.children}
+          <div
+            className={`
+              h-fit w-full text-sm text-gray-700
+              dark:text-gray-200
+            `}
+            onClick={() => {
+              props.disableAutoClose !== true && setOpen(false);
+            }}
+          >
+            {props.children}
+          </div>
         </div>
       </div>
-    </div>
+      {hover && !open && buttonRef && props.tooltip && (
+        <OlTooltip
+          buttonRef={buttonRef}
+          content={typeof props.tooltip === "string" ? props.tooltip : props.tooltip()}
+          position={props.tooltipPosition}
+          relativeToParent={props.tooltipRelativeToParent}
+        />
+      )}
+    </>
   );
 }
 

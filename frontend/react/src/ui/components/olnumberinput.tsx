@@ -1,5 +1,6 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { zeroAppend } from "../../other/utils";
+import { OlTooltip } from "./oltooltip";
 
 export function OlNumberInput(props: {
   value: number;
@@ -7,10 +8,17 @@ export function OlNumberInput(props: {
   max: number;
   minLength?: number;
   className?: string;
+  tooltip?: string | (() => JSX.Element | JSX.Element[]);
+  tooltipPosition?: string;
+  tooltipRelativeToParent?: boolean;
   onDecrease: () => void;
   onIncrease: () => void;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
+  const [hover, setHover] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
+  var buttonRef = useRef(null);
+
   return (
     <div
       className={`
@@ -18,12 +26,31 @@ export function OlNumberInput(props: {
         min-w-32
       `}
     >
-      <div className="relative flex max-w-[8rem] items-center">
+      <div
+        className="relative flex max-w-[8rem] items-center"
+        ref={buttonRef}
+        onMouseEnter={() => {
+          setHoverTimeout(
+            window.setTimeout(() => {
+              setHover(true);
+              setHoverTimeout(null);
+            }, 400)
+          );
+        }}
+        onMouseLeave={() => {
+          setHover(false);
+          if (hoverTimeout) {
+            window.clearTimeout(hoverTimeout);
+            setHoverTimeout(null);
+          }
+        }}
+      >
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             props.onDecrease();
+            setHover(false);
           }}
           className={`
             h-10 rounded-s-lg bg-gray-100 p-3
@@ -48,7 +75,10 @@ export function OlNumberInput(props: {
         <input
           type="text"
           onChange={props.onChange}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            setHover(false);
+          }}
           min={props.min}
           max={props.max}
           className={`
@@ -66,6 +96,7 @@ export function OlNumberInput(props: {
           onClick={(e) => {
             e.stopPropagation();
             props.onIncrease();
+            setHover(false);
           }}
           className={`
             h-10 rounded-e-lg bg-gray-100 p-3
@@ -88,6 +119,14 @@ export function OlNumberInput(props: {
           </svg>
         </button>
       </div>
+      {hover && props.tooltip && (
+        <OlTooltip
+          buttonRef={buttonRef}
+          content={typeof props.tooltip === "string" ? props.tooltip : props.tooltip()}
+          position={props.tooltipPosition}
+          relativeToParent={props.tooltipRelativeToParent}
+        />
+      )}
     </div>
   );
 }

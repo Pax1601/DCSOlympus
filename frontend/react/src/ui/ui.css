@@ -123,6 +123,15 @@ input[type="range"]:focus::-moz-range-thumb {
   }
 }
 
+@keyframes loadingBar {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
 .bouncing-ball {
   position: relative;
   width: 100px;

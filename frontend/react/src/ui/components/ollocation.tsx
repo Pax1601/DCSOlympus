@@ -42,7 +42,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
           >
             {props.location.lat >= 0 ? "N" : "S"}
           </span>
-          {zeroAppend(props.location.lat, 3, true, 6)}
+          {zeroAppend(props.location.lat, 3, true, 6)}°
         </div>
         <div className="flex w-[50%] gap-2">
           <span
@@ -52,7 +52,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
           >
             {props.location.lng >= 0 ? "E" : "W"}
           </span>
-          {zeroAppend(props.location.lng, 3, true, 6)}
+          {zeroAppend(props.location.lng, 3, true, 6)}°
         </div>
       </div>
     );

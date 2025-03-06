@@ -47,7 +47,7 @@ import {
 } from "../components/olicons";
 import { Coalition } from "../../types/types";
 import { convertROE, deepCopyTable, ftToM, knotsToMs, mToFt, msToKnots } from "../../other/utils";
-import { FaCog, FaGasPump, FaSignal, FaTag } from "react-icons/fa";
+import { FaChevronLeft, FaCog, FaExclamationCircle, FaGasPump, FaQuestionCircle, FaSignal, FaTag } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
@@ -58,6 +58,9 @@ import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
 import { AudioManagerStateChangedEvent, SelectedUnitsChangedEvent, SelectionClearedEvent, UnitsUpdatedEvent } from "../../events";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { OlExpandingTooltip } from "../components/olexpandingtooltip";
+import { OlLocation } from "../components/ollocation";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   function initializeUnitsData() {
@@ -125,6 +128,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [activeRadioSettings, setActiveRadioSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
   const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | GeneralSettings);
   const [lastUpdateTime, setLastUpdateTime] = useState(0);
+  const [showScenicModes, setShowScenicModes] = useState(true);
 
   var searchBarRef = useRef(null);
 
@@ -223,7 +227,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const selectedCategories = getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
   const filteredUnits = Object.values(getApp()?.getUnitsManager()?.getUnits() ?? {}).filter(
-    (unit) => unit.getUnitName().toLowerCase().indexOf(filterString.toLowerCase()) >= 0
+    (unit) => (unit.getUnitName().toLowerCase().indexOf(filterString.toLowerCase()) >= 0 || (unit.getBlueprint()?.label ?? "").toLowerCase()?.indexOf(filterString.toLowerCase()) >= 0 )
   );
 
   const everyUnitIsGround = selectedCategories.every((category) => {
@@ -264,15 +268,39 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       title={selectedUnits.length > 0 ? `Units selected (x${selectedUnits.length})` : `No units selected`}
       onClose={props.onClose}
       canBeHidden={true}
+      wiki={() => {
+        return <div className={`
+          h-full flex-col overflow-auto p-4 text-gray-400 no-scrollbar flex
+          gap-2
+        `}>
+            <h2 className="mb-4 font-bold">Unit selection tool</h2>
+            <div>
+              The unit control menu serves two purposes. If no unit is currently selected, it allows you to select units based on their category, coalition, and control mode. You can also select units based on their specific type by using the search input.
+            </div>
+            <h2 className="my-4 font-bold">Unit control tool</h2>
+            <div>If units are selected, the menu will display the selected units and allow you to control their altitude, speed, rules of engagement, and other settings.</div>
+            <div>The available controls depend on what type of unit is selected. Only controls applicable to every selected unit will be displayed, so make sure to refine your selection. </div>
+            <div> You will be able to inspect the current values of the controls, e.g. the desired altitude, rules of engagement and so on. However, if multiple units are selected, you will only see the values of controls that are set to be the same for each selected unit.</div>
+            <div> For example, if two airplanes are selected and they both have been instructed to fly at 1000ft, you will see the altitude slider set at that value. But if one airplane is set to fly at 1000ft and the other at 2000ft, you will see the slider display 'Different values'.</div>
+            <div> If at that point you move the slider, you will instruct both airplanes to fly at the same altitude.</div>
+            <div> If a single unit is selected, you will also be able to see additional info on the unit, like its fuel level, position and altitude, tasking, and available ammunition. </div>
+          </div>
+        
+      }}
     >
       <>
         {/* ============== Selection tool START ============== */}
         {selectedUnits.length == 0 && (
           <div className="flex flex-col gap-4 p-4">
             <div className="text-lg text-bold text-gray-200">Selection tool</div>
-            <div className="text-sm text-gray-400">
-              The selection tools allows you to select units depending on their category, coalition, and control mode. You can also select units depending on
-              their specific type by using the search input.
+            <div className="flex content-center gap-4">
+              <div className="my-auto text-gray-400">
+                <FaQuestionCircle />
+              </div>
+              <div className="text-sm text-gray-400">
+                The selection tools allows you to select units depending on their category, coalition, and control mode. You can also select units depending on
+                their specific type by using the search input.
+              </div>
             </div>
             <div className="flex flex-col gap-4 rounded-lg bg-olympus-600 p-4">
               {selectionID === null && (
@@ -328,16 +356,18 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   )}
                   {selectionID === null &&
                     Object.entries({
-                      aircraft: olButtonsVisibilityAircraft,
-                      helicopter: olButtonsVisibilityHelicopter,
-                      "groundunit-sam": olButtonsVisibilityGroundunitSam,
-                      groundunit: olButtonsVisibilityGroundunit,
-                      navyunit: olButtonsVisibilityNavyunit,
+                      aircraft: [olButtonsVisibilityAircraft, "Aircrafts"],
+                      helicopter: [olButtonsVisibilityHelicopter, "Helicopters"],
+                      "groundunit-sam": [olButtonsVisibilityGroundunitSam, "SAMs"],
+                      groundunit: [olButtonsVisibilityGroundunit, "Ground units"],
+                      navyunit: [olButtonsVisibilityNavyunit, "Navy units"],
                     }).map((entry, idx) => {
                       return (
                         <tr key={idx}>
-                          <td className="text-lg text-gray-200">
-                            <FontAwesomeIcon icon={entry[1]} />
+                          <td className="flex gap-2 text-lg text-gray-200">
+                            <FontAwesomeIcon icon={entry[1][0] as IconDefinition} /> <div className={`
+                              text-sm text-gray-400
+                            `}>{entry[1][1] as string}</div>
                           </td>
                           {["blue", "neutral", "red"].map((coalition) => {
                             return (
@@ -420,8 +450,23 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             onClick={() => {
                               setSelectionID(unit.ID);
                             }}
+                            
                           >
-                            {unit.getUnitName()}
+                            <div data-coalition={unit.getCoalition()}
+                            className={`
+                              flex content-center justify-between border-l-4
+                              pl-2
+                              data-[coalition='blue']:border-blue-500
+                              data-[coalition='neutral']:border-gray-500
+                              data-[coalition='red']:border-red-500
+                            `} 
+                            onMouseEnter={() => {
+                              unit.setHighlighted(true);
+                            }}
+                            onMouseLeave={() => {
+                              unit.setHighlighted(false);
+                            }}
+                            >{unit.getUnitName()} ({unit.getBlueprint()?.label ?? ""})</div>
                           </OlDropdownItem>
                         );
                       })}
@@ -573,6 +618,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 })
                               );
                           }}
+                          tooltip={() => (
+                            <OlExpandingTooltip
+                              title="Altitude type"
+                              content="Sets wether the unit will hold the selected altitude as Above Ground Level or Above Sea Level"
+                            />
+                          )}
+                          tooltipRelativeToParent={true}
                         />
                       </div>
                       <OlRangeSlider
@@ -638,6 +690,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 })
                               );
                           }}
+                          tooltip={() => (
+                            <OlExpandingTooltip
+                              title="Airspeed type"
+                              content="Sets wether the unit will hold the selected airspeed as Calibrated Air Speed or Ground Speed"
+                            />
+                          )}
+                          tooltipRelativeToParent={true}
                         />
                       )}
                     </div>
@@ -671,7 +730,71 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       >
                         Rules of engagement
                       </span>
-                      <OlButtonGroup>
+                      <OlButtonGroup
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Rules of engagement"
+                            content={
+                              <div className="flex flex-col gap-2">
+                                <div>Sets the rule of engagement of the unit, in order:</div>
+                                <div className="flex flex-col gap-2 px-2">
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeHold} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Hold fire: The unit will not shoot in
+                                    any circumstance
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Return fire: The unit will not fire
+                                    unless fired upon
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
+                                      my-auto min-w-8 text-white
+                                    `} />{" "}
+                                    <div>
+                                      {" "}
+                                      Fire on target: The unit will not fire unless fired upon <p className={`
+                                        inline font-bold
+                                      `}>or</p> ordered to do so{" "}
+                                    </div>
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeFree} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Free: The unit will fire at any
+                                    detected enemy in range
+                                  </div>
+                                </div>
+                                <div className="flex gap-4">
+                                  <div className="my-auto">
+                                    <FaExclamationCircle className={`
+                                      animate-bounce text-xl
+                                    `} />
+                                  </div>
+                                  <div>
+                                    Currently, DCS blue and red ground units do not respect{" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
+                                      my-auto text-white
+                                    `} /> and{" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
+                                      my-auto text-white
+                                    `} /> rules of engagement, so be careful, they
+                                    may start shooting when you don't want them to. Use neutral units for finer control.
+                                  </div>
+                                </div>
+                              </div>
+                            }
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
                         {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated, olButtonsRoeFree].map((icon, idx) => {
                           return (
                             <OlButtonGroupItem
@@ -709,7 +832,49 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         >
                           Threat reaction
                         </span>
-                        <OlButtonGroup>
+                        <OlButtonGroup
+                          tooltip={() => (
+                            <OlExpandingTooltip
+                              title="Reaction to threat"
+                              content={
+                                <div className="flex flex-col gap-2">
+                                  <div>Sets the reaction to threat of the unit, in order:</div>
+                                  <div className="flex flex-col gap-2 px-2">
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsThreatNone} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> No reaction: The unit will not
+                                      react in any circumstance
+                                    </div>
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsThreatPassive} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Passive: The unit will use
+                                      counter-measures, but will not alter its course
+                                    </div>
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsThreatManoeuvre} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Manouevre: The unit will try
+                                      to evade the threat using manoeuvres, but no counter-measures
+                                    </div>
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsThreatEvade} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Full evasion: the unit will try
+                                      to evade the threat both manoeuvering and using counter-measures
+                                    </div>
+                                  </div>
+                                </div>
+                              }
+                            />
+                          )}
+                          tooltipRelativeToParent={true}
+                        >
                           {[olButtonsThreatNone, olButtonsThreatPassive, olButtonsThreatManoeuvre, olButtonsThreatEvade].map((icon, idx) => {
                             return (
                               <OlButtonGroupItem
@@ -742,7 +907,50 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         >
                           Radar and ECM
                         </span>
-                        <OlButtonGroup>
+                        <OlButtonGroup
+                          tooltip={() => (
+                            <OlExpandingTooltip
+                              title="Radar and ECM"
+                              content={
+                                <div className="flex flex-col gap-2">
+                                  <div>Sets the units radar and Electronic Counter Measures (jamming) use policy, in order:</div>
+                                  <div className="flex flex-col gap-2 px-2">
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsEmissionsSilent} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Radio silence: No radar or
+                                      ECM will be used
+                                    </div>
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsEmissionsDefend} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Defensive: The unit will turn
+                                      radar and ECM on only when threatened
+                                    </div>
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsEmissionsAttack} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Attack: The unit will use
+                                      radar and ECM when engaging other units
+                                    </div>
+                                    <div className="flex content-center gap-2">
+                                      {" "}
+                                      <FontAwesomeIcon icon={olButtonsEmissionsFree} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Free: the unit will use the
+                                      radar and ECM all the time
+                                    </div>
+                                  </div>
+                                </div>
+                              }
+                            />
+                          )}
+                          tooltipRelativeToParent={true}
+                          tooltipPosition="above"
+                        >
                           {[olButtonsEmissionsSilent, olButtonsEmissionsDefend, olButtonsEmissionsAttack, olButtonsEmissionsFree].map((icon, idx) => {
                             return (
                               <OlButtonGroupItem
@@ -807,6 +1015,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   })
                               );
                         }}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Make AAR tanker available"
+                            content="This option allows you to make the unit available for refuelling other planes. You can keep moving the unit around while being available as tanker, however this may cause refuelling players to disconnect. If possible, try to avoid issuing commands to the unit while it is refuelling human players. Change the tanker settings to turn the tanker TACAN on or to change the frequency on which it will respond to refuelling requests."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
                       />
                     </div>
                   )}
@@ -849,6 +1064,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   })
                               );
                         }}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Make AWACS available"
+                            content="This option allows you to make the unit available for AWACS task. It will provide bogey dopes and picture calls on the assigned frequency, which you can change in the AWACS settings."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
                       />
                     </div>
                   )}
@@ -909,153 +1131,221 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                           flex flex-col gap-4 rounded-md bg-olympus-200/30 p-4
                         `}
                       >
-                        {/* ============== Scenic AAA toggle START ============== */}
-                        <div className="flex content-center justify-between">
-                          <span
-                            className={`
-                              my-auto font-normal
-                              dark:text-white
-                            `}
-                          >
-                            Scenic AAA mode
-                          </span>
-                          <OlToggle
-                            toggled={selectedUnitsData.scenicAAA}
-                            onClick={() => {
-                              getApp()
-                                .getUnitsManager()
-                                .scenicAAA(null, () =>
-                                  setForcedUnitsData({
-                                    ...forcedUnitsData,
-                                    scenicAAA: !selectedUnitsData.scenicAAA,
-                                    missOnPurpose: false,
-                                  })
-                                );
-                            }}
-                          />
-                        </div>
-                        {/* ============== Scenic AAA toggle END ============== */}
-                        {/* ============== Miss on purpose toggle START ============== */}
-                        <div className="flex content-center justify-between">
-                          <span
-                            className={`
-                              my-auto font-normal
-                              dark:text-white
-                            `}
-                          >
-                            Miss on purpose mode
-                          </span>
-                          <OlToggle
-                            toggled={selectedUnitsData.missOnPurpose}
-                            onClick={() => {
-                              getApp()
-                                .getUnitsManager()
-                                .missOnPurpose(null, () =>
-                                  setForcedUnitsData({
-                                    ...forcedUnitsData,
-                                    scenicAAA: false,
-                                    missOnPurpose: !selectedUnitsData.missOnPurpose,
-                                  })
-                                );
-                            }}
-                          />
-                        </div>
-                        {/* ============== Miss on purpose toggle END ============== */}
-                        <div className="flex gap-4">
-                          {/* ============== Shots scatter START ============== */}
-                          <div className={`flex flex-col gap-2`}>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between">
                             <span
                               className={`
                                 my-auto font-normal
                                 dark:text-white
                               `}
                             >
-                              Shots scatter
+                              Scenic modes
                             </span>
-                            <OlButtonGroup>
-                              {[olButtonsScatter1, olButtonsScatter2, olButtonsScatter3].map((icon, idx) => {
-                                return (
-                                  <OlButtonGroupItem
-                                    key={idx}
-                                    onClick={() => {
-                                      getApp()
-                                        .getUnitsManager()
-                                        .setShotsScatter(idx + 1, null, () =>
-                                          setForcedUnitsData({
-                                            ...forcedUnitsData,
-                                            shotsScatter: idx + 1,
-                                          })
-                                        );
-                                    }}
-                                    active={selectedUnitsData.shotsScatter === idx + 1}
-                                    icon={icon}
-                                  />
-                                );
-                              })}
-                            </OlButtonGroup>
-                          </div>
-                          {/* ============== Shots scatter END ============== */}
-                          {/* ============== Shots intensity START ============== */}
-                          <div className="flex flex-col gap-2">
-                            <span
+                            <FaChevronLeft
+                              data-open={showScenicModes}
                               className={`
-                                my-auto font-normal
-                                dark:text-white
+                                my-auto cursor-pointer text-gray-200
+                                transition-transform
+                                data-[open='true']:-rotate-90
                               `}
-                            >
-                              Shots intensity
-                            </span>
-                            <OlButtonGroup>
-                              {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
-                                return (
-                                  <OlButtonGroupItem
-                                    key={idx}
-                                    onClick={() => {
-                                      getApp()
-                                        .getUnitsManager()
-                                        .setShotsIntensity(idx + 1, null, () =>
-                                          setForcedUnitsData({
-                                            ...forcedUnitsData,
-                                            shotsIntensity: idx + 1,
-                                          })
-                                        );
-                                    }}
-                                    active={selectedUnitsData.shotsIntensity === idx + 1}
-                                    icon={icon}
-                                  />
-                                );
-                              })}
-                            </OlButtonGroup>
-                          </div>
-                          {/* ============== Shots intensity END ============== */}
-                        </div>
-                        {/* ============== Operate as toggle START ============== */}
-                        {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (
-                          <div className={`flex content-center justify-between`}>
-                            <span
-                              className={`
-                                my-auto font-normal
-                                dark:text-white
-                              `}
-                            >
-                              Operate as
-                            </span>
-                            <OlCoalitionToggle
-                              coalition={selectedUnitsData.operateAs as Coalition}
-                              onClick={() => {
-                                getApp()
-                                  .getUnitsManager()
-                                  .setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue", null, () =>
-                                    setForcedUnitsData({
-                                      ...forcedUnitsData,
-                                      operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
-                                    })
-                                  );
-                              }}
+                              onClick={() => setShowScenicModes(!showScenicModes)}
                             />
                           </div>
+                          {showScenicModes && (
+                            <div
+                              className={`
+                                flex flex-col gap-2 text-sm text-gray-400
+                              `}
+                            >
+                              <div className="flex gap-4">
+                                <div className="my-auto">
+                                  <FaExclamationCircle className={`
+                                    animate-bounce text-xl
+                                  `} />
+                                </div>
+                                <div>
+                                  Currently, DCS blue and red ground units do not respect their rules of engagement, so be careful, they may start shooting when
+                                  you don't want them to. Use neutral units for finer control, then use the "Operate as" toggle to switch their "side".
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        {showScenicModes && (
+                          <>
+                            {/* ============== Scenic AAA toggle START ============== */}
+                            <div className="flex content-center justify-between">
+                              <span
+                                className={`
+                                  my-auto font-normal
+                                  dark:text-white
+                                `}
+                              >
+                                Scenic AAA mode
+                              </span>
+                              <OlToggle
+                                toggled={selectedUnitsData.scenicAAA}
+                                onClick={() => {
+                                  getApp()
+                                    .getUnitsManager()
+                                    .scenicAAA(null, () =>
+                                      setForcedUnitsData({
+                                        ...forcedUnitsData,
+                                        scenicAAA: !selectedUnitsData.scenicAAA,
+                                        missOnPurpose: false,
+                                      })
+                                    );
+                                }}
+                                tooltip={() => (
+                                  <OlExpandingTooltip
+                                    title="Enable scenic AAA mode"
+                                    content="This mode will make the unit fire in the air any time an enemy unit is nearby. This can help Game Masters create a more immersive scenario without increasing its difficulty."
+                                  />
+                                )}
+                                tooltipRelativeToParent={true}
+                              />
+                            </div>
+                            {/* ============== Scenic AAA toggle END ============== */}
+                            {/* ============== Miss on purpose toggle START ============== */}
+                            <div className="flex content-center justify-between">
+                              <span
+                                className={`
+                                  my-auto font-normal
+                                  dark:text-white
+                                `}
+                              >
+                                Miss on purpose mode
+                              </span>
+                              <OlToggle
+                                toggled={selectedUnitsData.missOnPurpose}
+                                onClick={() => {
+                                  getApp()
+                                    .getUnitsManager()
+                                    .missOnPurpose(null, () =>
+                                      setForcedUnitsData({
+                                        ...forcedUnitsData,
+                                        scenicAAA: false,
+                                        missOnPurpose: !selectedUnitsData.missOnPurpose,
+                                      })
+                                    );
+                                }}
+                                tooltip={() => (
+                                  <OlExpandingTooltip
+                                    title="Enable scenic miss on purpose mode"
+                                    content="This mode will make the unit fire in the direction of nearby enemy units, without actively aiming at them. It represents a sort of unguided firing, which can help Game Masters create a more immersive scenario without increasing its difficulty."
+                                  />
+                                )}
+                                tooltipRelativeToParent={true}
+                              />
+                            </div>
+                            {/* ============== Miss on purpose toggle END ============== */}
+                            <div className="flex gap-4">
+                              {/* ============== Shots scatter START ============== */}
+                              <div className={`flex flex-col gap-2`}>
+                                <span
+                                  className={`
+                                    my-auto font-normal
+                                    dark:text-white
+                                  `}
+                                >
+                                  Shots scatter
+                                </span>
+                                <OlButtonGroup>
+                                  {[olButtonsScatter1, olButtonsScatter2, olButtonsScatter3].map((icon, idx) => {
+                                    return (
+                                      <OlButtonGroupItem
+                                        key={idx}
+                                        onClick={() => {
+                                          getApp()
+                                            .getUnitsManager()
+                                            .setShotsScatter(idx + 1, null, () =>
+                                              setForcedUnitsData({
+                                                ...forcedUnitsData,
+                                                shotsScatter: idx + 1,
+                                              })
+                                            );
+                                        }}
+                                        active={selectedUnitsData.shotsScatter === idx + 1}
+                                        icon={icon}
+                                      />
+                                    );
+                                  })}
+                                </OlButtonGroup>
+                              </div>
+                              {/* ============== Shots scatter END ============== */}
+                              {/* ============== Shots intensity START ============== */}
+                              <div className="flex flex-col gap-2">
+                                <span
+                                  className={`
+                                    my-auto font-normal
+                                    dark:text-white
+                                  `}
+                                >
+                                  Shots intensity
+                                </span>
+                                <OlButtonGroup>
+                                  {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
+                                    return (
+                                      <OlButtonGroupItem
+                                        key={idx}
+                                        onClick={() => {
+                                          getApp()
+                                            .getUnitsManager()
+                                            .setShotsIntensity(idx + 1, null, () =>
+                                              setForcedUnitsData({
+                                                ...forcedUnitsData,
+                                                shotsIntensity: idx + 1,
+                                              })
+                                            );
+                                        }}
+                                        active={selectedUnitsData.shotsIntensity === idx + 1}
+                                        icon={icon}
+                                      />
+                                    );
+                                  })}
+                                </OlButtonGroup>
+                              </div>
+                              {/* ============== Shots intensity END ============== */}
+                            </div>
+                            {/* ============== Operate as toggle START ============== */}
+                            {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (
+                              <div
+                                className={`flex content-center justify-between`}
+                              >
+                                <span
+                                  className={`
+                                    my-auto font-normal
+                                    dark:text-white
+                                  `}
+                                >
+                                  Operate as
+                                </span>
+                                <OlCoalitionToggle
+                                  coalition={selectedUnitsData.operateAs as Coalition}
+                                  onClick={() => {
+                                    getApp()
+                                      .getUnitsManager()
+                                      .setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue", null, () =>
+                                        setForcedUnitsData({
+                                          ...forcedUnitsData,
+                                          operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
+                                        })
+                                      );
+                                  }}
+                                  tooltip={() => (
+                                    <OlExpandingTooltip
+                                      title="Unit operate as coalition"
+                                      content="This option is only available for neutral units and it allows you to change what coalition the unit will 'operate as' when performing scenic tasks. For example, a 'red' neutral unit tasked to perform miss on purpose will shoot in the direction of blue units. "
+                                    />
+                                  )}
+                                  tooltipRelativeToParent={true}
+                                  tooltipPosition="above"
+                                />
+                              </div>
+                            )}
+                            {/* ============== Operate as toggle END ============== */}
+                          </>
                         )}
-                        {/* ============== Operate as toggle END ============== */}
                       </div>
                       {/* ============== Follow roads toggle START ============== */}
                       <div className="flex content-center justify-between">
@@ -1079,6 +1369,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 })
                               );
                           }}
+                          tooltip={() => (
+                            <OlExpandingTooltip
+                              title="Follow roads when moving"
+                              content="If enabled, this option will force the unit to stay on roads when moving to a new location. This can be useful to simulate convoys or to make the unit follow a specific path."
+                            />
+                          )}
+                          tooltipRelativeToParent={true}
+                          tooltipPosition="above"
                         />
                       </div>
                       {/* ============== Follow roads toggle END ============== */}
@@ -1104,6 +1402,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 })
                               );
                           }}
+                          tooltip={() => (
+                            <OlExpandingTooltip
+                              title="Turn unit off"
+                              content="When enabled, this option will turn the unit completely off, making it inactive. This can be useful to control when a unit starts engaging the enemy."
+                            />
+                          )}
+                          tooltipRelativeToParent={true}
+                          tooltipPosition="above"
                         />
                       </div>
                       {/* ============== Unit active toggle END ============== */}
@@ -1146,6 +1452,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             }
                           });
                         }}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Make the unit emit sounds"
+                            content="This option allows the unit to emit sounds as if it had loudspeakers. Turn this on to enable the option, then open the audio menu to connect a sound source to the unit. This is useful to simulate 5MC calls on the carrier, or attach sirens to unit. "
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                        tooltipPosition="above"
                       />
                     ) : (
                       <div className="text-white">
@@ -1261,9 +1575,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeRadioSettings ? activeRadioSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"} className={`
-                      my-auto w-20
-                    `}>
+                    <OlDropdown
+                      label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"}
+                      className={`my-auto w-20`}
+                    >
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -1297,7 +1612,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     />
                   </div>
                   <div className="flex content-center gap-2">
-                    <span className="my-auto text-sm">Enabled</span>{" "}
+                    <span className="my-auto text-sm">Enable TACAN</span>{" "}
                     <OlToggle
                       toggled={activeRadioSettings ? activeRadioSettings.TACAN.isOn : false}
                       onClick={() => {
@@ -1464,8 +1779,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         hover:bg-gray-800
                       `}
                       onClick={() => {
-                        setActiveRadioSettings(null);
-                        setShowRadioSettings(false);
+                        setActiveAdvancedSettings(null);
+                        setShowAdvancedSettings(false);
                       }}
                     >
                       Cancel
@@ -1485,20 +1800,39 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     bg-olympus-600 p-4
                   `}
                 >
-                  <div className="flex border-b-2 border-b-white/10 pb-2">
-                    <div
-                      className={`
-                        flex content-center gap-2 rounded-full
-                        ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                        ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
-                          bg-yellow-700
+                  <div
+                    className={`
+                      flex flex-col gap-2 border-b-2 border-b-white/10 pb-2
+                    `}
+                  >
+                    <div className={`flex justify-between`}>
+                      <div className="my-auto text-white">{selectedUnits[0].getUnitName()}</div>
+                      <div
+                        className={`
+                          flex content-center gap-2 rounded-full
+                          ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
+                          ${
+                            selectedUnits[0].getFuel() > 10 &&
+                            selectedUnits[0].getFuel() <= 40 &&
+                            `bg-yellow-700`
+                          }
+                          ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
+                          px-2 py-1 text-sm font-bold text-white
                         `}
-                        ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
-                        px-2 py-1 text-sm font-bold text-white
-                      `}
-                    >
-                      <FaGasPump className="my-auto" />
-                      {selectedUnits[0].getFuel()}%
+                      >
+                        <FaGasPump className="my-auto" />
+                        {selectedUnits[0].getFuel()}%
+                      </div>
+                    </div>
+
+                    <div className="my-auto text-sm text-gray-400">
+                      {selectedUnits[0].getTask()}
+                    </div>
+                    <div className="flex content-center gap-2">
+                    <OlLocation location={selectedUnits[0].getPosition()} className={`
+                      w-[280px] text-sm
+                    `}/>
+                    <div className="my-auto text-gray-200">{Math.round(mToFt(selectedUnits[0].getPosition().alt ?? 0))} ft</div>
                     </div>
                   </div>
 

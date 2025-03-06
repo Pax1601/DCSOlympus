@@ -6,6 +6,7 @@ import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { featureCollection } from "turf";
 import MagVar from "magvar";
+import axios from 'axios';
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number, magnetic = true) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -654,4 +655,103 @@ export function decimalToRGBA(decimal: number): string {
   const a = (decimal & 0xff) / 255;  
 
   return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
+}
+
+export async function getWikipediaImage(unitName: string): Promise<string | null> {
+  try {
+    // Search for the unit name on Wikipedia
+    const searchResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+      params: {
+        action: 'query',
+        list: 'search',
+        srsearch: unitName,
+        format: 'json',
+        origin: '*'
+      }
+    });
+
+    if (searchResponse.data.query.search.length === 0) {
+      console.error('No search results found for the unit name.');
+      return null;
+    }
+
+    // Get the title of the first search result
+    const pageTitle = searchResponse.data.query.search[0].title;
+
+    // Get the page content to find the image
+    const pageResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+      params: {
+        action: 'query',
+        titles: pageTitle,
+        prop: 'pageimages',
+        pithumbsize: 500,
+        format: 'json',
+        origin: '*'
+      }
+    });
+
+    const pages = pageResponse.data.query.pages;
+    const pageId = Object.keys(pages)[0];
+    const page = pages[pageId];
+
+    if (page.thumbnail && page.thumbnail.source) {
+      return page.thumbnail.source;
+    } else {
+      console.error('No image found for the unit name.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching data from Wikipedia:', error);
+    return null;
+  }
+}
+
+export async function getWikipediaSummary(unitName: string): Promise<string | null> {
+  try {
+    // Search for the unit name on Wikipedia
+    const searchResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+      params: {
+        action: 'query',
+        list: 'search',
+        srsearch: unitName,
+        format: 'json',
+        origin: '*'
+      }
+    });
+
+    if (searchResponse.data.query.search.length === 0) {
+      console.error('No search results found for the unit name.');
+      return null;
+    }
+
+    // Get the title of the first search result
+    const pageTitle = searchResponse.data.query.search[0].title;
+
+    // Get the page content to find the summary
+    const pageResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+      params: {
+        action: 'query',
+        prop: 'extracts',
+        exintro: true,
+        explaintext: true,
+        titles: pageTitle,
+        format: 'json',
+        origin: '*'
+      }
+    });
+
+    const pages = pageResponse.data.query.pages;
+    const pageId = Object.keys(pages)[0];
+    const page = pages[pageId];
+
+    if (page.extract) {
+      return page.extract;
+    } else {
+      console.error('No summary found for the unit name.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching data from Wikipedia:', error);
+    return null;
+  }
 }

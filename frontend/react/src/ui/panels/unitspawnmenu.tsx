@@ -20,6 +20,7 @@ import { OlAccordion } from "../components/olaccordion";
 import { AppStateChangedEvent, SpawnHeadingChangedEvent } from "../../events";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaQuestionCircle } from "react-icons/fa";
+import { OlExpandingTooltip } from "../components/olexpandingtooltip";
 
 export function UnitSpawnMenu(props: {
   visible: boolean;
@@ -124,6 +125,11 @@ export function UnitSpawnMenu(props: {
     if (props.coalition) setSpawnCoalition(props.coalition);
   }, [props.coalition]);
 
+  /* Effect to update the initial altitude when the blueprint changes */
+  useEffect(() => {
+    setSpawnAltitude((maxAltitude - minAltitude) / 2);
+  }, [props.blueprint]);
+
   /* Heading compass */
   const [compassAngle, setCompassAngle] = useState(0);
   const compassRef = useRef<HTMLImageElement>(null);
@@ -185,7 +191,8 @@ export function UnitSpawnMenu(props: {
   });
 
   /* Initialize the loadout */
-  spawnLoadoutName === "" && loadouts.length > 0 && setSpawnLoadoutName(loadouts[0].name);
+  if (spawnLoadoutName === "" && loadouts.length > 0)
+    setSpawnLoadoutName(loadouts.find((loadout) => loadout.name !== "Empty loadout")?.name ?? loadouts[0].name);
   const spawnLoadout = props.blueprint?.loadouts?.find((loadout) => {
     return loadout.name === spawnLoadoutName;
   });
@@ -195,7 +202,7 @@ export function UnitSpawnMenu(props: {
       {props.compact ? (
         <>
           {props.visible && (
-            <div className="flex max-h-[800px] flex-col overflow-auto">
+            <div className={`flex max-h-[800px] flex-col overflow-auto`}>
               <div className="flex h-fit flex-col gap-3">
                 <div className="flex">
                   <FontAwesomeIcon
@@ -245,7 +252,12 @@ export function UnitSpawnMenu(props: {
                         else getApp().getMap().addStarredSpawnRequestTable(key, spawnRequestTable, quickAccessName);
                       }
                     }}
-                    tooltip="Save this spawn for quick access"
+                    tooltip={() => (
+                      <OlExpandingTooltip
+                        title="Add this spawn to quick access"
+                        content="Enter a name and click on the button to later be able to quickly respawn a unit with the same configuration."
+                      />
+                    )}
                     checked={key in props.starredSpawns}
                     icon={faStar}
                   ></OlStateButton>
@@ -281,6 +293,13 @@ export function UnitSpawnMenu(props: {
                             leftLabel={"AGL"}
                             rightLabel={"ASL"}
                             onClick={() => setSpawnAltitudeType(!spawnAltitudeType)}
+                            tooltip={() => (
+                              <OlExpandingTooltip
+                                title="Select altitude type"
+                                content="If AGL is selected, the aircraft will be spawned at the selected altitude above the ground. If ASL is selected, the aircraft will be spawned at the selected altitude above sea level."
+                              />
+                            )}
+                            tooltipRelativeToParent={true}
                           />
                         </div>
                         <OlRangeSlider
@@ -301,7 +320,17 @@ export function UnitSpawnMenu(props: {
                       >
                         Role
                       </span>
-                      <OlDropdown label={spawnRole} className="w-64">
+                      <OlDropdown
+                        label={spawnRole}
+                        className="w-64"
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Role of the spawned unit"
+                            content="This selection has no effect on what the spawned unit will actually perform, and you will have total control on it. However, it is used to filter what loadouts are available."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
                         {roles.map((role) => {
                           return (
                             <OlDropdownItem
@@ -326,7 +355,17 @@ export function UnitSpawnMenu(props: {
                       >
                         Weapons
                       </span>
-                      <OlDropdown label={spawnLoadoutName} className={`w-64`}>
+                      <OlDropdown
+                        label={spawnLoadoutName}
+                        className={`w-64`}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Unit loadout"
+                            content="This will be the loadout that the unit will have when spawned. Look at the bottom of the page to check the exact type and number of items."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
                         {loadouts.map((loadout) => {
                           return (
                             <OlDropdownItem
@@ -370,6 +409,10 @@ export function UnitSpawnMenu(props: {
                       <OlDropdown
                         label={props.blueprint?.liveries ? (props.blueprint?.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"}
                         className={`w-64`}
+                        tooltip={() => (
+                          <OlExpandingTooltip title="Unit livery" content="Selects the livery of the spawned unit. This is a purely cosmetic option." />
+                        )}
+                        tooltipRelativeToParent={true}
                       >
                         {props.blueprint?.liveries &&
                           Object.keys(props.blueprint?.liveries)
@@ -428,7 +471,17 @@ export function UnitSpawnMenu(props: {
                       >
                         Skill
                       </span>
-                      <OlDropdown label={spawnSkill} className={`w-64`}>
+                      <OlDropdown
+                        label={spawnSkill}
+                        className={`w-64`}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Unit skill"
+                            content="Selects the skill of the spawned unit. Depending on the selection, the unit will be more precise and effective at its mission. Usually a lower level is selected to generate a more forgiving mission."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
                         {["Average", "Good", "High", "Excellent"].map((skill) => {
                           return (
                             <OlDropdownItem
@@ -476,6 +529,13 @@ export function UnitSpawnMenu(props: {
                         setCompassAngle(normalizeAngle(compassAngle + 1));
                       }}
                       value={compassAngle}
+                      tooltip={() => (
+                        <OlExpandingTooltip
+                          title="Spawn heading"
+                          content="This controls the direction the unit will face when spanwned. This is important for units that take longer to change direction, like ships. Air units and helicopters will enter a orbit with its major axis aligned with the spawn heading. Drag the compass to change the heading."
+                        />
+                      )}
+                      tooltipRelativeToParent={true}
                     />
 
                     <div className={`relative mr-3 h-[60px] w-[60px]`}>
@@ -551,7 +611,7 @@ export function UnitSpawnMenu(props: {
                     focus:outline-none focus:ring-4
                   `}
                   onClick={() => {
-                    if (spawnRequestTable){
+                    if (spawnRequestTable) {
                       spawnRequestTable.unit.heading = deg2rad(compassAngle);
                       getApp()
                         .getUnitsManager()
@@ -586,7 +646,7 @@ export function UnitSpawnMenu(props: {
                     gap-2
                   `}
                 >
-                  <div className="my-auto text-sm text-white">Quick access: </div>
+                  <div className="my-auto text-white">Quick access: </div>
                   <OlStringInput
                     onChange={(e) => {
                       setQuickAccessName(e.target.value);
@@ -595,11 +655,19 @@ export function UnitSpawnMenu(props: {
                   />
                   <OlStateButton
                     onClick={() => {
-                      if (spawnRequestTable)
+                      if (spawnRequestTable) {
+                        spawnRequestTable.unit.heading = compassAngle;
                         if (key in props.starredSpawns) getApp().getMap().removeStarredSpawnRequestTable(key);
                         else getApp().getMap().addStarredSpawnRequestTable(key, spawnRequestTable, quickAccessName);
+                      }
                     }}
-                    tooltip="Save this spawn for quick access"
+                    tooltip={() => (
+                      <OlExpandingTooltip
+                        title="Add this spawn to quick access"
+                        content="Enter a name and click on the button to later be able to quickly respawn a unit with the same configuration."
+                      />
+                    )}
+                    tooltipRelativeToParent={true}
                     checked={key in props.starredSpawns}
                     icon={faStar}
                   ></OlStateButton>
@@ -611,17 +679,28 @@ export function UnitSpawnMenu(props: {
                   `}
                 >
                   {!props.coalition && (
-                    <OlCoalitionToggle
-                      coalition={spawnCoalition}
-                      onClick={() => {
-                        spawnCoalition === "blue" && setSpawnCoalition("neutral");
-                        spawnCoalition === "neutral" && setSpawnCoalition("red");
-                        spawnCoalition === "red" && setSpawnCoalition("blue");
-                      }}
-                    />
+                    <>
+                      <div className="my-auto mr-2 text-white">Coalition:</div>
+                      <OlCoalitionToggle
+                        coalition={spawnCoalition}
+                        onClick={() => {
+                          spawnCoalition === "blue" && setSpawnCoalition("neutral");
+                          spawnCoalition === "neutral" && setSpawnCoalition("red");
+                          spawnCoalition === "red" && setSpawnCoalition("blue");
+                        }}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Unit coalition"
+                            content="Toggle between blue, neutral and red coalitions. Neutral coalition must be used to employ scenic functions like miss on purpose."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      />
+                    </>
                   )}
+                  <div className="my-auto ml-auto text-white">Units: </div>
                   <OlNumberInput
-                    className={"ml-auto"}
+                    className={"ml-2"}
                     value={spawnNumber}
                     min={minNumber}
                     max={maxNumber}
@@ -634,6 +713,13 @@ export function UnitSpawnMenu(props: {
                     onChange={(ev) => {
                       !isNaN(Number(ev.target.value)) && setSpawnNumber(Math.max(minNumber, Math.min(maxNumber, Number(ev.target.value))));
                     }}
+                    tooltip={() => (
+                      <OlExpandingTooltip
+                        title="Select number of units"
+                        content="This is how many units of this type will be spawned. If more than one unit is spawned, a DCS group will be created: this means that the units will be spawned in a formation, and you will not be able to control them singularly. The entire group will act as a single entity."
+                      />
+                    )}
+                    tooltipRelativeToParent={true}
                   />
                 </div>
 
@@ -668,6 +754,13 @@ export function UnitSpawnMenu(props: {
                             leftLabel={"AGL"}
                             rightLabel={"ASL"}
                             onClick={() => setSpawnAltitudeType(!spawnAltitudeType)}
+                            tooltip={() => (
+                              <OlExpandingTooltip
+                                title="Select altitude type"
+                                content="If AGL is selected, the aircraft will be spawned at the selected altitude above the ground. If ASL is selected, the aircraft will be spawned at the selected altitude above sea level."
+                              />
+                            )}
+                            tooltipRelativeToParent={true}
                           />
                         </div>
                         <OlRangeSlider
@@ -688,7 +781,17 @@ export function UnitSpawnMenu(props: {
                       >
                         Role
                       </span>
-                      <OlDropdown label={spawnRole} className="w-64">
+                      <OlDropdown
+                        label={spawnRole}
+                        className="w-64"
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Role of the spawned unit"
+                            content="This selection has no effect on what the spawned unit will actually perform, and you will have total control on it. However, it is used to filter what loadouts are available."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
                         {roles.map((role) => {
                           return (
                             <OlDropdownItem
@@ -714,7 +817,17 @@ export function UnitSpawnMenu(props: {
                       >
                         Weapons
                       </span>
-                      <OlDropdown label={spawnLoadoutName} className={`w-64`}>
+                      <OlDropdown
+                        label={spawnLoadoutName}
+                        className={`w-64`}
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Unit loadout"
+                            content="This will be the loadout that the unit will have when spawned. Look at the bottom of the page to check the exact type and number of items."
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
                         {loadouts.map((loadout) => {
                           return (
                             <OlDropdownItem
@@ -751,6 +864,10 @@ export function UnitSpawnMenu(props: {
                   <OlDropdown
                     label={props.blueprint?.liveries ? (props.blueprint?.liveries[spawnLiveryID]?.name ?? "Default") : "No livery"}
                     className={`w-64`}
+                    tooltip={() => (
+                      <OlExpandingTooltip title="Unit livery" content="Selects the livery of the spawned unit. This is a purely cosmetic option." />
+                    )}
+                    tooltipRelativeToParent={true}
                   >
                     {props.blueprint?.liveries &&
                       Object.keys(props.blueprint?.liveries)
@@ -811,7 +928,17 @@ export function UnitSpawnMenu(props: {
                   >
                     Skill
                   </span>
-                  <OlDropdown label={spawnSkill} className={`w-64`}>
+                  <OlDropdown
+                    label={spawnSkill}
+                    className={`w-64`}
+                    tooltip={() => (
+                      <OlExpandingTooltip
+                        title="Unit skill"
+                        content="Selects the skill of the spawned unit. Depending on the selection, the unit will be more precise and effective at its mission. Usually a lower level is selected to generate a more forgiving mission."
+                      />
+                    )}
+                    tooltipRelativeToParent={true}
+                  >
                     {["Average", "Good", "High", "Excellent"].map((skill) => {
                       return (
                         <OlDropdownItem
@@ -836,47 +963,55 @@ export function UnitSpawnMenu(props: {
                   </OlDropdown>
                 </div>
                 <div className="my-5 flex justify-between">
-                    <div className="my-auto flex flex-col gap-2">
-                      <span className="text-white">Spawn heading</span>
-                      <div className="flex gap-1 text-sm text-gray-400">
-                        <FaQuestionCircle className={`my-auto`} /> <div className={`
-                          my-auto
-                        `}>Drag to change</div>
-                      </div>
-                    </div>
-
-                    <OlNumberInput
-                      className={"my-auto"}
-                      min={0}
-                      max={360}
-                      onChange={(ev) => {
-                        setCompassAngle(Number(ev.target.value));
-                      }}
-                      onDecrease={() => {
-                        setCompassAngle(normalizeAngle(compassAngle - 1));
-                      }}
-                      onIncrease={() => {
-                        setCompassAngle(normalizeAngle(compassAngle + 1));
-                      }}
-                      value={compassAngle}
-                    />
-
-                    <div className={`relative mr-3 h-[60px] w-[60px]`}>
-                      <img className="absolute" ref={compassRef} onMouseDown={handleMouseDown} src={"/images/others/arrow_background.png"}></img>
-                      <img
-                        className="absolute left-0"
-                        ref={compassRef}
-                        onMouseDown={handleMouseDown}
-                        src={"/images/others/arrow.png"}
-                        style={{
-                          width: "60px",
-                          height: "60px",
-                          transform: `rotate(${compassAngle}deg)`,
-                          cursor: "pointer",
-                        }}
-                      ></img>
+                  <div className="my-auto flex flex-col gap-2">
+                    <span className="text-white">Spawn heading</span>
+                    <div className="flex gap-1 text-sm text-gray-400">
+                      <FaQuestionCircle className={`my-auto`} /> <div className={`
+                        my-auto
+                      `}>Drag to change</div>
                     </div>
                   </div>
+
+                  <OlNumberInput
+                    className={"my-auto"}
+                    min={0}
+                    max={360}
+                    onChange={(ev) => {
+                      setCompassAngle(Number(ev.target.value));
+                    }}
+                    onDecrease={() => {
+                      setCompassAngle(normalizeAngle(compassAngle - 1));
+                    }}
+                    onIncrease={() => {
+                      setCompassAngle(normalizeAngle(compassAngle + 1));
+                    }}
+                    value={compassAngle}
+                    tooltip={() => (
+                      <OlExpandingTooltip
+                        title="Spawn heading"
+                        content="This controls the direction the unit will face when spanwned. This is important for units that take longer to change direction, like ships. Air units and helicopters will enter a orbit with its major axis aligned with the spawn heading. Drag the compass to change the heading."
+                      />
+                    )}
+                    tooltipRelativeToParent={true}
+                    tooltipPosition="above"
+                  />
+
+                  <div className={`relative mr-3 h-[60px] w-[60px]`}>
+                    <img className="absolute" ref={compassRef} onMouseDown={handleMouseDown} src={"/images/others/arrow_background.png"}></img>
+                    <img
+                      className="absolute left-0"
+                      ref={compassRef}
+                      onMouseDown={handleMouseDown}
+                      src={"/images/others/arrow.png"}
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        transform: `rotate(${compassAngle}deg)`,
+                        cursor: "pointer",
+                      }}
+                    ></img>
+                  </div>
+                </div>
               </div>
               {spawnLoadout && spawnLoadout.items.length > 0 && (
                 <div
