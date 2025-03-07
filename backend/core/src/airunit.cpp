@@ -154,6 +154,13 @@ void AirUnit::AIloop()
 {
 	srand(static_cast<unsigned int>(time(NULL)) + ID);
 
+	/* Reset the anchor, but only if the unit is not a tanker or a AWACS */
+	if (state != State::IDLE && !isActiveTanker && !isActiveAWACS) {
+		setRacetrackAnchor(Coords(NULL));
+		setRacetrackBearing(NULL);
+		setRacetrackLength(NULL);
+	}
+
 	/* State machine */
 	switch (state) {
 		case State::IDLE: {
@@ -166,21 +173,27 @@ void AirUnit::AIloop()
 			
 			if (!getHasTask())
 			{
+				if (racetrackAnchor == Coords(NULL)) setRacetrackAnchor(position);
+				if (racetrackBearing == NULL) setRacetrackBearing(heading);
+
 				std::ostringstream taskSS;
 				if (isActiveTanker) {
 					taskSS << "{ [1] = { id = 'Tanker' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " << 
-						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
-						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
+						desiredAltitude << ", lat = " << racetrackAnchor.lat << ", lng = " << racetrackAnchor.lng << ", speed = " << desiredSpeed << ", altitudeType = '" <<
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " << 
+						racetrackBearing << ", length = " << (racetrackLength != NULL ? racetrackLength : (50000 * 1.852)) << " }}";
 				}
 				else if (isActiveAWACS) {
-					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Circle', altitude = " << 
-						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
-						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "' }}";
+					taskSS << "{ [1] = { id = 'AWACS' }, [2] = { id = 'Orbit', pattern = 'Race-Track', altitude = " <<
+						desiredAltitude << ", lat = " << racetrackAnchor.lat << ", lng = " << racetrackAnchor.lng << ", speed = " << desiredSpeed << ", altitudeType = '" <<
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " <<
+						racetrackBearing << ", length = " << (racetrackLength != NULL ? racetrackLength : (desiredSpeed * 30)) << " }}";
 				}
 				else {
-					taskSS << "{ id = 'Orbit', pattern = 'Circle', altitude = " << 
-						desiredAltitude << ", speed = " << desiredSpeed << ", altitudeType = '" << 
-						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "'}";
+					taskSS << "{ id = 'Orbit', pattern = 'Race-Track', altitude = " << 
+						desiredAltitude << ", lat = " << racetrackAnchor.lat << ", lng = " << racetrackAnchor.lng << ", speed = " << desiredSpeed << ", altitudeType = '" <<
+						(desiredAltitudeType ? "AGL" : "ASL") << "', speedType = '" << (desiredSpeedType ? "GS" : "CAS") << "', heading = " <<
+						racetrackBearing << ", length = " << (racetrackLength != NULL ? racetrackLength: (desiredSpeed * 30)) << " }";
 				}
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 				scheduler->appendCommand(command);
@@ -375,5 +388,44 @@ void AirUnit::AIloop()
 		}
 		default:
 			break;
+	}
+}
+
+void AirUnit::setRacetrackLength(double newRacetrackLength) { 
+	if (racetrackLength != newRacetrackLength) {
+		racetrackLength = newRacetrackLength;
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
+
+		triggerUpdate(DataIndex::racetrackLength);
+	}
+}
+
+void AirUnit::setRacetrackAnchor(Coords newRacetrackAnchor) { 
+	if (racetrackAnchor != newRacetrackAnchor) {
+		racetrackAnchor = newRacetrackAnchor;
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
+
+		triggerUpdate(DataIndex::racetrackAnchor);
+	}
+}
+
+void AirUnit::setRacetrackBearing(double newRacetrackBearing) { 
+	if (racetrackBearing != newRacetrackBearing) {
+		racetrackBearing = newRacetrackBearing;
+
+		/* Apply the change */
+		setHasTask(false);
+		resetTaskFailedCounter();
+		AIloop();
+
+		triggerUpdate(DataIndex::racetrackBearing);
 	}
 }

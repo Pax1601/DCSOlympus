@@ -1,0 +1,632 @@
+/*** Unit marker elements ***/
+[data-object|="unit"] {
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .2));
+}
+
+[data-object|="unit"].attack-cursor {
+  cursor: url("/images/cursors/attack.svg"), auto !important;
+}
+
+[data-object|="unit"].follow-cursor {
+  cursor: url("/images/cursors/follow.svg"), auto !important;
+}
+
+[data-object|="unit"].fire-at-area-cursor,
+[data-object|="unit"].bomb-cursor,
+[data-object|="unit"].carpet-bomb-cursor {
+  cursor: url("/images/cursors/fire-at-area.svg"), auto !important;
+}
+
+[data-object|="unit"].land-cursor {
+  cursor: url("/images/cursors/land.svg"), auto !important;
+}
+
+[data-object|="unit"].land-at-point-cursor {
+  cursor: url("/images/cursors/land-at-point.svg"), auto !important;
+}
+
+[data-object|="unit"].simulate-fire-fight-cursor {
+  cursor: url("/images/cursors/simulate-fire-fight.svg"), auto !important;
+}
+
+[todo-data-awacs-mode] .unit-short-label {
+  color: transparent !important;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] svg {
+  scale: 0.5;
+}
+
+.unit-vvi {
+  align-self: center;
+  background: var(--secondary-gunmetal-grey);
+  display: flex;
+  justify-self: center;
+  padding-bottom: calc((var(--unit-width) / 2) + var(--unit-stroke-width));
+  position: absolute;
+  transform-origin: bottom;
+  translate: 0 -50%;
+  width: var(--unit-vvi-width);
+}
+
+[todo-data-awacs-mode] .unit-vvi {
+  width: var(--unit-vvi-width-awacs);
+}
+
+[todo-data-awacs-mode] [data-coalition="blue"] .unit-vvi {
+  background: var(--unit-background-blue) !important;
+}
+
+[todo-data-awacs-mode] [data-coalition="red"] .unit-vvi {
+  background: var(--unit-background-red) !important;
+}
+
+[todo-data-awacs-mode] [data-coalition="neutral"] .unit-vvi {
+  background: var(--unit-background-neutral) !important;
+}
+
+.unit-hotgroup {
+  align-content: center;
+  background-color: var(--background-steel);
+  border-radius: var(--border-radius-xs);
+  display: none;
+  height: 15px;
+  justify-content: center;
+  position: absolute;
+  transform: rotate(-45deg);
+  translate: 0 -200%;
+  width: 15px;
+}
+
+.unit-hotgroup-id {
+  background-color: transparent;
+  color: white;
+  font-size: 9px;
+  font-weight: bolder;
+  transform: rotate(45deg);
+  translate: -1px 1px;
+}
+
+.unit-icon {
+  height: var(--unit-height);
+  position: absolute;
+  transform-origin: center;
+  width: var(--unit-width);
+}
+
+.unit-icon svg {
+  height: 100%;
+  width: 100%;
+}
+
+[data-is-selected] .unit-icon::before {
+  background-color: var(--unit-spotlight-fill);
+  border-radius: 50%;
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
+
+[todo-data-awacs-mode] [data-is-selected] .unit-icon::before {
+  display: none;
+}
+
+/*** Basic colours ***/
+[data-coalition="blue"] .unit-icon svg > *:first-child {
+  fill: var(--unit-background-blue);
+}
+
+[data-coalition="red"] .unit-icon svg > *:first-child {
+  fill: var(--unit-background-red);
+}
+
+[data-coalition="neutral"] .unit-icon svg > *:first-child {
+  fill: var(--unit-background-neutral);
+}
+
+[data-coalition="neutral"][data-operate-as="blue"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-blue);
+}
+
+[data-coalition="neutral"][data-operate-as="red"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-red);
+}
+
+[data-is-selected] .unit-icon svg > *:first-child {
+  fill: white !important;
+}
+
+[data-is-selected][data-coalition="blue"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-blue);
+}
+[data-is-selected][data-coalition="red"] .unit-icon svg > *:first-child {
+  stroke: var(--unit-background-red);
+}
+
+[data-is-highlighted] .unit-icon svg > *:first-child {
+  stroke: white;
+}
+
+[todo-data-awacs-mode] [data-coalition="blue"] .unit-icon svg {
+  fill: transparent !important;
+  stroke: var(--unit-background-blue) !important;
+}
+
+[todo-data-awacs-mode] [data-coalition="red"] .unit-icon svg {
+  fill: transparent !important;
+  stroke: var(--unit-background-red) !important;
+}
+
+[todo-data-awacs-mode] [data-coalition="neutral"] .unit-icon svg {
+  fill: transparent !important;
+  stroke: var(--unit-background-neutral) !important;
+}
+
+[todo-data-awacs-mode] [data-is-selected] .unit-icon svg {
+  stroke: #ff0 !important;
+}
+
+[todo-data-awacs-mode] [data-is-selected] .unit-vvi {
+  background-color: #ff0 !important;
+}
+
+[todo-data-awacs-mode] [data-is-selected] .unit-summary {
+  color: #ff0 !important;
+}
+
+[todo-data-awacs-mode] [data-is-selected] .unit-summary::after {
+  background-color: #ff0 !important;
+}
+
+/*** Cursors ***/
+[data-is-dead],
+[data-object|="unit-missile"] *,
+[data-object|="unit-bomb"] *{
+  pointer-events: none;
+
+}
+
+/*** Labels ***/
+[data-object|="unit"] .unit-short-label {
+  color: var(--secondary-gunmetal-grey);
+  font-size: var(--unit-font-size);
+  font-weight: var(--unit-font-weight);
+  line-height: normal;
+  position: absolute;
+  font-size: 12px;
+  translate: 0px 18px;
+}
+
+[data-object|="unit-groundunit"] .unit-short-label {
+  transform: translateY(7px);
+}
+
+/*** Health indicator ***/
+[data-object|="unit"] .unit-health {
+  background: white;
+  border: var(--unit-health-border-width) solid var(--secondary-dark-steel);
+  border-radius: var(--border-radius-sm);
+  display: none;
+  height: var(--unit-health-height);
+  position: absolute;
+  translate: var(--unit-health-x) calc(25px + var(--unit-health-y));
+  width: var(--unit-health-width);
+}
+
+/*** Fuel indicator ***/
+[data-object|="unit"] .unit-fuel {
+  background: white;
+  border: var(--unit-fuel-border-width) solid var(--secondary-dark-steel);
+  border-radius: var(--border-radius-sm);
+  display: none;
+  height: var(--unit-fuel-height);
+  position: absolute;
+  translate: var(--unit-fuel-x) calc(25px + var(--unit-fuel-y));
+  width: var(--unit-fuel-width);
+}
+
+[data-object|="unit"] .unit-fuel-level,
+[data-object|="unit"] .unit-health-level {
+  background-color: var(--secondary-light-grey);
+  height: 100%;
+  width: 100%;
+}
+
+/*** Ammo indicator ***/
+[data-object|="unit"] .unit-ammo {
+  column-gap: var(--unit-ammo-spacing);
+  display: none;
+  height: fit-content;
+  position: absolute;
+  translate: var(--unit-ammo-x) calc(25px + var(--unit-ammo-y));
+  width: fit-content;
+}
+
+[data-object|="unit"] .unit-ammo > * {
+  background-color: white;
+  border: var(--unit-ammo-border-width) solid var(--secondary-dark-steel);
+  border-radius: 50%;
+  padding: var(--unit-ammo-radius);
+}
+
+/*** Unit summary ***/
+[data-object|="unit"] .unit-summary {
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  font-weight: bold;
+  align-content: center;
+  line-height: 12px;
+  pointer-events: none;
+  position: absolute;
+  row-gap: 1px;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+  width: 100px;
+  height: 45px;
+  translate: 80px 2px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north {
+  translate: 50px -45px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north-east {
+  translate: 76px -32px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-east {
+  translate: 95px 7px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-south-east {
+  translate: 79px 50px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-south {
+  translate: 50px 63px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-south-west {
+  translate: -68px 50px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-west {
+  translate: -80px 7px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north-west {
+  translate: -69px -35px;
+}
+
+[todo-data-awacs-mode] .unit-summary::after {
+  content: " ";
+  background-color: white;
+  width: 40px;
+  height: 1px;
+  position: absolute;
+  z-index: -1;
+  transform-origin: 0% 0%;
+  top: 30px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north::after {
+  transform: rotate(90deg);
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north-east::after {
+  transform: rotate(135deg);
+  translate: 2px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-east::after {
+  transform: rotate(180deg);
+  translate: -5px -12px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-south-east::after {
+  transform: rotate(225deg);
+  translate: -2px -28px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-south::after {
+  transform: rotate(270deg);
+  translate: -0px -28px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-south-west::after {
+  transform: rotate(315deg);
+  translate: 90px -28px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-west::after {
+  translate: 90px -12px;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-summary.cluster-north-west::after {
+  transform: rotate(45deg);
+  translate: 90px;
+}
+
+[data-hide-labels] [data-object|="unit"] .unit-summary {
+  display: none;
+}
+
+[data-object|="unit"] .unit-summary > * {
+  padding: 1px;
+}
+
+[data-object|="unit"] .unit-summary .unit-callsign {
+  color: white;
+  overflow: hidden;
+  text-align: left;
+  transform-origin: right;
+  white-space: nowrap;
+  width: 100%;
+  text-overflow: ellipsis;
+}
+
+[data-object|="unit"]:hover .unit-summary .unit-callsign {
+  direction: ltr;
+  overflow: visible;
+}
+
+[data-object|="unit"] .unit-summary .unit-altitude {
+  width: 50%;
+}
+
+[data-object|="unit"] .unit-summary .unit-speed {
+  width: 50%;
+}
+
+/*** Common ***/
+[data-object|="unit"]:hover .unit-ammo,
+[data-object|="unit"]:hover .unit-health,
+[data-object|="unit"]:hover .unit-fuel {
+  display: flex;
+}
+
+[data-object|="unit"][data-has-low-fuel] .unit-fuel,
+[data-object|="unit"][data-has-low-health] .unit-health {
+  animation: pulse 1.5s linear infinite;
+}
+
+[data-object|="unit"][data-is-in-hotgroup] .unit-hotgroup,
+[data-object|="unit"][data-is-selected] .unit-ammo,
+[data-object|="unit"][data-is-selected] .unit-fuel,
+[data-object|="unit"][data-is-selected] .unit-health,
+[data-object|="unit"][data-is-selected] .unit-selected-spotlight {
+  display: flex;
+}
+
+[data-object|="unit"][data-has-fox-1] .unit-ammo > div:nth-child(1),
+[data-object|="unit"][data-has-fox-2] .unit-ammo > div:nth-child(2),
+[data-object|="unit"][data-has-fox-3] .unit-ammo > div:nth-child(3),
+[data-object|="unit"][data-has-other-ammo] .unit-ammo > div:nth-child(4) {
+  background-color: var(--secondary-gunmetal-grey);
+}
+
+[data-object|="unit"][data-coalition="blue"][data-is-selected] .unit-short-label {
+  color: var(--secondary-blue-text);
+}
+
+[data-object|="unit"][data-coalition="blue"][data-is-selected] path:nth-child(1) {
+  fill: var(--secondary-blue-text);
+}
+
+[data-object|="unit"][data-coalition="blue"] .unit-fuel-level,
+[data-object|="unit"][data-coalition="blue"] .unit-health-level,
+[data-object|="unit"][data-coalition="blue"][data-has-fox-1] .unit-ammo > div:nth-child(1),
+[data-object|="unit"][data-coalition="blue"][data-has-fox-2] .unit-ammo > div:nth-child(2),
+[data-object|="unit"][data-coalition="blue"][data-has-fox-3] .unit-ammo > div:nth-child(3),
+[data-object|="unit"][data-coalition="blue"][data-has-other-ammo] .unit-ammo > div:nth-child(4) {
+  background-color: var(--primary-blue);
+}
+
+[data-object|="unit"][data-coalition="blue"] .unit-vvi {
+  background-color: var(--secondary-blue-outline);
+}
+
+[data-object|="unit"][data-coalition="red"][data-is-selected] .unit-short-label {
+  color: var(--secondary-red-text);
+}
+
+[data-object|="unit"][data-coalition="red"][data-is-selected] path {
+  fill: var(--secondary-red-text);
+}
+
+[data-object|="unit"][data-coalition="red"] .unit-fuel-level,
+[data-object|="unit"][data-coalition="red"] .unit-health-level,
+[data-object|="unit"][data-coalition="red"][data-has-fox-1] .unit-ammo > div:nth-child(1),
+[data-object|="unit"][data-coalition="red"][data-has-fox-2] .unit-ammo > div:nth-child(2),
+[data-object|="unit"][data-coalition="red"][data-has-fox-3] .unit-ammo > div:nth-child(3),
+[data-object|="unit"][data-coalition="red"][data-has-other-ammo] .unit-ammo > div:nth-child(4) {
+  background-color: var(--primary-red);
+}
+
+[data-object|="unit"][data-coalition="blue"] .unit-vvi {
+  background-color: var(--secondary-red-outline);
+}
+
+/*** Unit state ***/
+[data-object|="unit"] .unit-state {
+  background-repeat: no-repeat;
+  height: 20px;
+  position: absolute;
+  width: 20px;
+  left: 0px;
+  top: 0px;
+}
+
+[data-object|="unit"][data-state="rtb"] .unit-state {
+  background-image: url("/images/states/rtb.svg");
+}
+
+[data-object|="unit"][data-state="land"] .unit-state {
+  background-image: url("/images/states/rtb.svg");
+}
+
+[data-object|="unit"][data-state="idle"] .unit-state {
+  background-image: url("/images/states/idle.svg");
+}
+
+[data-object*="groundunit"][data-state="idle"] .unit-state,
+[data-object*="navyunit"][data-state="idle"] .unit-state {
+  background-image: url(""); /* To avoid clutter, dont show the idle state for non flying units */
+}
+
+[data-object|="unit"][data-state="attack"] .unit-state,
+[data-object|="unit"][data-state="bomb-point"] .unit-state,
+[data-object|="unit"][data-state="carpet-bombing"] .unit-state,
+[data-object|="unit"][data-state="fire-at-area"] .unit-state {
+  background-image: url("/images/states/attack.svg");
+}
+
+[data-object|="unit"][data-state="follow"] .unit-state {
+  background-image: url("/images/states/follow.svg");
+}
+
+[data-object|="unit"][data-state="refuel"] .unit-state {
+  background-image: url("/images/states/refuel.svg");
+}
+
+[data-object|="unit"][data-state="human"] .unit-state {
+  background-image: url("/images/states/human.svg");
+}
+
+[data-object|="unit"][data-state="dcs"] .unit-state {
+  background-image: url("/images/states/dcs.svg");
+}
+
+[data-object|="unit"][data-state="land-at-point"] .unit-state {
+  background-image: url("/images/states/land-at-point.svg");
+}
+
+[data-object|="unit"][data-state="no-task"] .unit-state {
+  background-image: url("/images/states/no-task.svg");
+}
+
+[data-object|="unit"][data-state="off"] .unit-state {
+  background-image: url("/images/states/off.svg");
+}
+
+[data-object|="unit"][data-state="tanker"] .unit-state {
+  background-image: url("/images/states/tanker.svg");
+}
+
+[data-object|="unit"][data-state="AWACS"] .unit-state {
+  background-image: url("/images/states/awacs.svg");
+}
+
+[data-object|="unit"][data-state="miss-on-purpose"] .unit-state {
+  background-image: url("/images/states/miss-on-purpose.svg");
+}
+
+[data-object|="unit"][data-state="scenic-aaa"] .unit-state {
+  background-image: url("/images/states/scenic-aaa.svg");
+}
+
+[data-object|="unit"][data-state="simulate-fire-fight"] .unit-state {
+  background-image: url("/images/states/simulate-fire-fight.svg");
+}
+
+[data-object|="unit"] .unit-health::before {
+  background-image: url("/images/icons/health.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: " ";
+  height: 6px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  translate: -10px -2px;
+  width: 6px;
+}
+
+/*** Dead unit ***/
+[data-object|="unit"][data-is-dead] .unit-selected-spotlight,
+[data-object|="unit"][data-is-dead] .unit-short-label,
+[data-object|="unit"][data-is-dead] .unit-vvi,
+[data-object|="unit"][data-is-dead] .unit-hotgroup,
+[data-object|="unit"][data-is-dead] .unit-hotgroup-id,
+[data-object|="unit"][data-is-dead] .unit-state,
+[data-object|="unit"][data-is-dead] .unit-fuel,
+[data-object|="unit"][data-is-dead] .unit-health,
+[data-object|="unit"][data-is-dead] .unit-ammo,
+[data-object|="unit"][data-is-dead]:hover .unit-fuel,
+[data-object|="unit"][data-is-dead]:hover .unit-ammo {
+  display: none;
+}
+
+[data-object|="unit"][data-is-dead] .unit-summary > * {
+  display: none;
+}
+
+[data-object|="unit"][data-is-dead] .unit-summary .unit-callsign {
+  display: block;
+}
+
+.ol-temporary-marker .unit-icon {
+  opacity: 0.5;
+}
+
+.ol-temporary-marker .unit-short-label {
+  opacity: 0.5;
+}
+
+.ol-temporary-marker .heading-handle {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: move;
+  pointer-events: all;
+  opacity: 0.5;
+}
+
+.ol-temporary-marker .heading-handle svg {
+  position: absolute;
+  width: 100%;
+}
+
+.ol-temporary-marker [data-coalition="blue"] .heading-handle svg {
+  fill: var(--unit-background-blue);
+}
+
+.ol-temporary-marker [data-coalition="red"] .heading-handle svg {
+  fill: var(--unit-background-red);
+}
+
+.ol-temporary-marker [data-coalition="neutral"] .heading-handle svg {
+  fill: var(--unit-background-neutral);
+}
+.unit-bullseye,
+.unit-braa {
+  width: 50%;
+  display: inline;
+}
+
+[todo-data-awacs-mode] [data-object|="unit"] .unit-selected-spotlight,
+[todo-data-awacs-mode] [data-object|="unit"] .unit-short-label,
+[todo-data-awacs-mode] [data-object|="unit"] .unit-state,
+[todo-data-awacs-mode] [data-object|="unit"] .unit-fuel,
+[todo-data-awacs-mode] [data-object|="unit"] .unit-health,
+[todo-data-awacs-mode] [data-object|="unit"] .unit-ammo,
+[todo-data-awacs-mode] [data-object|="unit"]:hover .unit-fuel,
+[todo-data-awacs-mode] [data-object|="unit"]:hover .unit-ammo {
+  display: none;
+}

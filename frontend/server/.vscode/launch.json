@@ -7,24 +7,83 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Server (DCS)",
+            "name": "Launch server (core only)",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "args": ["--config",  "${input:enterDir}/Config/olympus.json"],
-            "program": "./bin/www",
-            "preLaunchTask": "copy"
-        }, 
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--watch",
+                "src/**/*.ts",
+                "--exec",
+                "node",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "src/www.ts",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json",
+                "--vite"
+            ],
+            "restart": true
+        },  
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Server (No DCS)",
+            "name": "Launch server (core only, static)",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "args": ["--config",  "${input:enterDir}/Config/olympus.json"],
-            "program": "./bin/www",
-            "preLaunchTask": "demo-server"
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--watch",
+                "src/**/*.ts",
+                "--exec",
+                "node",
+                "--inspect",
+                "-r",
+                "ts-node/register",
+                "src/www.ts",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json"
+            ],
+            "restart": true
+        },         
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch server (Electron)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "server",
+                "--",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json",
+                "--vite"
+            ],
+            "restart": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch client (Electron)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "client",
+                "--",
+                "-c", 
+                "${input:enterDir}/Config/olympus.json",
+                "--vite"
+            ],
+            "restart": true
         }
     ], 
     "inputs": [

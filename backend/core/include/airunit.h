@@ -18,6 +18,10 @@ public:
 	virtual void changeSpeed(string change) = 0;
 	virtual void changeAltitude(string change) = 0;
 	virtual double getDestinationReachedThreshold() { return AIR_DEST_DIST_THR;  }
+
+	virtual void setRacetrackLength(double newValue);
+	virtual void setRacetrackAnchor(Coords newValue);
+	virtual void setRacetrackBearing(double newValue);
 	
 protected:
 	virtual void AIloop();

@@ -51,6 +51,9 @@ namespace DataIndex {
 		shotsScatter,
 		shotsIntensity,
 		health,
+		racetrackLength,
+		racetrackAnchor,
+		racetrackBearing,
 		lastIndex,
 		endOfData = 255
 	};
@@ -155,6 +158,7 @@ struct SpawnOptions {
 	string loadout;
 	string skill;
 	string liveryID;
+	double heading;
 };
 
 struct CloneOptions {

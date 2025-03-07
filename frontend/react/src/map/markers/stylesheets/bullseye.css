@@ -1,0 +1,27 @@
+.bullseye-icon {
+  align-items: center;
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  fill: white;
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .4));
+}
+
+.bullseye-icon[data-coalition="red"] svg * {
+  stroke: var(--unit-background-red);
+}
+
+.bullseye-icon[data-coalition="blue"] svg * {
+  stroke: var(--unit-background-blue);
+}
+
+.bullseye-icon[data-coalition="neutral"] svg * {
+  stroke: var(--unit-background-neutral);
+}
+
+[todo-todo-data-awacs-mode] .bullseye-icon svg * {
+  fill: transparent !important;
+}

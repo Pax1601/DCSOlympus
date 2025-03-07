@@ -10,8 +10,10 @@
 #define LOGS_URI "logs"
 #define AIRBASES_URI "airbases"
 #define BULLSEYE_URI "bullseyes"
+#define SPOTS_URI "spots"
 #define MISSION_URI "mission"
 #define COMMANDS_URI "commands"
+#define DRAWINGS_URI "drawings"
 
 #define FRAMERATE_TIME_INTERVAL 0.05
 

@@ -1,0 +1,39 @@
+/* Container for the measure marker */
+.leaflet-measure-marker {
+  text-align: center;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .4));
+  width: fit-content !important;
+  height: fit-content !important;
+  margin: 0 !important;
+  translate: -50% -50%;
+}
+
+/* Container for the measure marker content */
+.leaflet-measure-marker .container {
+  transform-origin: center;
+  background-color: white;
+  color: #272727;
+  border-radius: 999px;
+  font-size: 13px;
+  align-content: center;
+  border: 2px solid transparent;
+  padding: 4px;
+}
+
+/* Text inside the measure marker */
+.leaflet-measure-marker .text {
+  display: block;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-weight: bolder;
+  text-wrap: nowrap;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.leaflet-measure-start-marker, .leaflet-measure-end-marker {
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .4));
+}

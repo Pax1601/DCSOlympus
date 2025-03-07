@@ -1,0 +1,279 @@
+:root {
+  /**  Colours  **/
+  /*** Coalition: neutral  ***/
+  --primary-neutral: #949ba7;
+  --secondary-neutral-outline: #111111;
+  --secondary-neutral-text: #111111;
+  --unit-background-neutral: #cfd9e8;
+  --unit-background-operate-as-blue: #9dc1d6;
+  --unit-background-operate-as-red: rgb(226, 170, 170);
+
+  /*** Coalition: blue  ***/
+  --primary-blue: #247be2;
+  --secondary-blue-outline: #082e44;
+  --secondary-blue-text: #017dc1;
+  --unit-background-blue: #3bb9ff;
+
+  /*** Coalition: red  ***/
+  --primary-red: #ff5858;
+  --secondary-red-outline: #262222;
+  --secondary-red-text: #d42121;
+  --unit-background-red: #ff5858;
+
+  /*** UI Colours **/
+  --accent-amber: #ffd828;
+  --accent-green: #8bff63;
+  --accent-light-blue: #5ca7ff;
+  --accent-dark-blue: #017dc1;
+  --transparent-accent-light-blue: rgba(92, 167, 255, 0.33);
+  --accent-light-red: #f5b6b6;
+
+  --background-grey: #3d4651;
+  --background-dark-grey: #35393d;
+  --background-slate-blue: #363c43;
+  --background-offwhite: #f2f2f3;
+  --background-steel: #202831;
+
+  --secondary-dark-steel: #181e25;
+  --secondary-gunmetal-grey: #2f2f2f;
+  --secondary-lighter-grey: #949ba7;
+  --secondary-light-grey: #797e83;
+  --secondary-semitransparent-white: #ffffffaa;
+  --secondary-transparent-white: #ffffff30;
+  --secondary-yellow: #ffd46893;
+
+  --background-hover: #f2f2f333;
+
+  --nav-text: #ececec;
+
+  --ol-select-secondary: #545f6c;
+  --ol-switch-off: #686868;
+  --ol-switch-undefined: #383838;
+
+  --ol-dialog-disabled-text-color: #ffffff20;
+
+  /*** General border radii  **/
+  --border-radius-xs: 2px;
+  --border-radius-sm: 5px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 15px;
+
+  /***  Fonts  **/
+  --font-weight-bolder: 600;
+
+  /***  Unit marker settings  ***/
+  /***   All markers  **/
+  --unit-border-radius: var(--border-radius-xs);
+  --unit-font-size: 14px;
+  --unit-font-weight: bolder;
+  --unit-label-border-width: 2px;
+  --unit-spotlight-fill: var(--secondary-yellow);
+  --unit-spotlight-radius: 26px;
+  --unit-stroke-width: 3px;
+  --unit-height: 50px;
+  --unit-width: 50px;
+
+  --unit-health-border-width: 2px;
+  --unit-health-height: 6px;
+  --unit-health-width: 36px;
+  --unit-health-x: 0px;
+  --unit-health-y: 26px;
+
+  /***  Air units  ***/
+  --unit-ammo-gap: calc(2px + var(--unit-stroke-width));
+  --unit-ammo-border-radius: 50%;
+  --unit-ammo-border-width: 2px;
+  --unit-ammo-radius: 2px;
+  --unit-ammo-spacing: 2px;
+  --unit-ammo-x: 0px;
+  --unit-ammo-y: 30px;
+  --unit-fuel-border-width: 2px;
+  --unit-fuel-height: 6px;
+  --unit-fuel-width: 36px;
+  --unit-fuel-x: 0px;
+  --unit-fuel-y: 22px;
+  --unit-vvi-width: 4px;
+  --unit-vvi-width-awacs: 2px;
+}
+
+* {
+  font-weight: 600;
+}
+
+.ol-draggable-handle-icon {
+  cursor:
+    url("/images/cursors/pointer.svg") 13 5,
+    auto;
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-coalitionarea-middle-handle-icon {
+  cursor:
+    url("/images/cursors/pointer.svg") 13 5,
+    auto;
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-coalitionarea-label {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.ol-coalitionarea-label.selected {
+  color: white;
+  /* 1 pixel black shadow to left, top, right and bottom */
+  text-shadow:
+    -1px 0 black,
+    0 1px black,
+    1px 0 black,
+    0 -1px black;
+}
+
+.ol-coalitionarea-label.blue {
+  color: #0f3764;
+}
+
+.ol-coalitionarea-label.red {
+  color: #461818;
+}
+
+.ol-target-icon {
+  background-image: url("/images/markers/target.svg");
+  height: 100%;
+  width: 100%;
+
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-spot-icon {
+  background-image: url("/images/markers/target.svg");
+  height: 100%;
+  width: 100%;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-text-icon {
+  color: #111111;
+  text-align: center;
+  padding: 7px;
+  border-radius: 999px;
+  font-weight: bold;
+  border: 2px solid black;
+  font-size: 14px;
+}
+
+.ol-smoke-icon {
+  opacity: 75%;
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-explosion-icon * {
+  opacity: 75%;
+}
+
+.ol-explosion-icon {
+  fill: red;
+}
+
+path.leaflet-interactive:focus {
+  outline: none;
+}
+
+.attack-cursor {
+  cursor: url("/images/cursors/attack.svg"), auto !important;
+}
+
+.follow-cursor {
+  cursor: url("/images/cursors/follow.svg"), auto !important;
+}
+
+.fire-at-area-cursor,
+.bomb-cursor,
+.carpet-bomb-cursor {
+  cursor: url("/images/cursors/fire-at-area.svg"), auto !important;
+}
+
+.land-cursor {
+  cursor: url("/images/cursors/land.svg"), auto !important;
+}
+
+.land-at-point-cursor {
+  cursor: url("/images/cursors/land-at-point.svg"), auto !important;
+}
+
+.simulate-fire-fight-cursor {
+  cursor: url("/images/cursors/simulate-fire-fight.svg"), auto !important;
+}
+
+.clone-cursor {
+  cursor: url("/images/cursors/clone.svg"), auto !important;
+}
+
+.plus-cursor {
+  cursor: url("/images/cursors/plus.svg"), auto !important;
+}
+
+.measure-cursor {
+  cursor: url("/images/cursors/measure.svg"), auto !important;
+}
+
+#map-container.leaflet-grab {
+  cursor:
+    url("/images/cursors/grab.svg") 16 16,
+    auto;
+}
+
+.explosion-cursor {
+  cursor: url("/images/cursors/explosion.svg"), auto !important;
+}
+
+.smoke-white-cursor {
+  cursor: url("/images/cursors/smoke-white.svg"), auto !important;
+}
+
+.smoke-blue-cursor {
+  cursor: url("/images/cursors/smoke-blue.svg"), auto !important;
+}
+
+.smoke-red-cursor {
+  cursor: url("/images/cursors/smoke-red.svg"), auto !important;
+}
+
+.smoke-green-cursor {
+  cursor: url("/images/cursors/smoke-green.svg"), auto !important;
+}
+
+.smoke-orange-cursor {
+  cursor: url("/images/cursors/smoke-orange.svg"), auto !important;
+}
+
+#map-container .disable-pointer-events {
+  pointer-events: none;
+}
+
+.pointer-cursor {
+  cursor:
+    url("/images/cursors/pointer.svg") 13 5,
+    auto !important;
+}
+
+.ol-arrow-icon  {
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-arrow-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ol-arrow-icon svg path {
+  fill: #ffffff;
+}
