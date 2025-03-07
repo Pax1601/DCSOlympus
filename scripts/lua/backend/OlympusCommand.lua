@@ -1076,6 +1076,44 @@ function getUnitDescription(unit)
 	return unit:getDescr()
 end
 
+-- This function gets the navpoints from the DCS mission
+function Olympus.getNavPoints() 	
+	local function extract_tag(str)
+		return str:match("^%[(.-)%]")
+	end
+
+	local navpoints = {}
+	if mist.DBs.navPoints ~= nil then
+		for coalitionName, coalitionNavpoints in pairs(mist.DBs.navPoints) do
+			if navpoints[coalitionName] == nil then
+				navpoints[coalitionName] = {}
+			end
+
+			for index, navpointDrawingData in pairs(coalitionNavpoints) do
+				local navpointCustomLayer = extract_tag(navpointDrawingData['callsignStr']);
+
+				-- Let's convert DCS coords to lat lon
+				local vec3 = { x = navpointDrawingData['x'], y = 0, z = navpointDrawingData['y'] }
+				local lat, lng = coord.LOtoLL(vec3)
+				navpointDrawingData['lat'] = lat
+				navpointDrawingData['lng'] = lng
+				navpointDrawingData['coalition'] = coalitionName
+
+				if navpointCustomLayer ~= nil then
+					if navpoints[coalitionName][navpointCustomLayer] == nil then
+						navpoints[coalitionName][navpointCustomLayer] = {}
+					end
+					navpoints[coalitionName][navpointCustomLayer][navpointDrawingData['callsignStr']] = navpointDrawingData
+				else
+					navpoints[coalitionName][navpointDrawingData['callsignStr']] = navpointDrawingData
+				end
+			end
+		end
+	end
+
+	return navpoints
+end
+
 -- This function is periodically called to collect the data of all the existing drawings in the mission to be transmitted to the olympus.dll
 function Olympus.initializeDrawings()
 	local drawings = {}
@@ -1128,6 +1166,10 @@ function Olympus.initializeDrawings()
 				drawings[drawingData.layerName][drawingName] = drawingData
 			end
 		end
+
+		local navpoints = Olympus.getNavPoints()
+
+		drawings['navpoints'] = navpoints
 
 		Olympus.drawingsByLayer["drawings"] = drawings
 
