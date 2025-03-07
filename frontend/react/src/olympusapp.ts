@@ -172,7 +172,7 @@ export class OlympusApp {
       })
       .then(([result, headers]) => {
         this.#config = result;
-        if (this.#config.frontend.customAuthHeaders.enabled) {
+        if (this.#config.frontend.customAuthHeaders?.enabled) {
           if (headers.has(this.#config.frontend.customAuthHeaders.username) && headers.has(this.#config.frontend.customAuthHeaders.group)) {
             this.getServerManager().setUsername(headers.get(this.#config.frontend.customAuthHeaders.username));
             this.setState(OlympusState.LOGIN, LoginSubState.COMMAND_MODE);

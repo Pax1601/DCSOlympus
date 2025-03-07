@@ -5,11 +5,6 @@ export interface OlympusConfig {
   /* Set by user */
   frontend: {
     port: number;
-    customAuthHeaders: {
-      enabled: boolean;
-      username: string;
-      group: string;
-    };
     elevationProvider: {
       provider: string;
       username: string | null;
@@ -26,23 +21,30 @@ export interface OlympusConfig {
     mapMirrors: {
       [key: string]: string;
     };
-    autoconnectWhenLocal: boolean;
+    /* New with v2.0.0 */
+    customAuthHeaders?: {
+      enabled: boolean;
+      username: string;
+      group: string;
+    };
+    autoconnectWhenLocal?: boolean;
   };
-  audio: {
+  /* New with v2.0.0 */
+  audio?: {
     SRSPort: number;
     WSPort?: number;
     WSEndpoint?: string;
   };
-  controllers: [{ type: string; coalition: Coalition; frequency: number; modulation: number; callsign: string }];
+  controllers?: [{ type: string; coalition: Coalition; frequency: number; modulation: number; callsign: string }];
   profiles?: { [key: string]: ProfileOptions };
-  authentication?: {
+
+  /* Set by server */
+  local?: boolean;
+  authentication?: { // Only sent when in localhost mode for autologin
     gameMasterPassword: string;
     blueCommanderPasword: string;
     redCommanderPassword: string;
   };
-
-  /* Set by server */
-  local: boolean;
 }
 
 export interface SessionData {

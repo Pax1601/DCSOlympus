@@ -54,7 +54,10 @@ export class AudioManager {
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
-      config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
+      if (config.audio) 
+        config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
+      else 
+        console.error("No audio configuration found in the Olympus configuration file");
     });
 
     CommandModeOptionsChangedEvent.on((options: CommandModeOptions) => {

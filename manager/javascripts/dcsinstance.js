@@ -186,8 +186,12 @@ class DCSInstance {
                 this.backendPort = config["backend"]["port"];
                 this.backendAddress = config["backend"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
-                this.autoconnectWhenLocal = config["frontend"]["autoconnectWhenLocal"];
-                this.SRSPort = config["audio"]["SRSPort"];
+
+                /* Read the new configurations added in v2.0.0 */
+                if ( config["frontend"]["autoconnectWhenLocal"] !== undefined)
+                    this.autoconnectWhenLocal = config["frontend"]["autoconnectWhenLocal"];
+                if (config["frontend"]["audio"] !== undefined && config["frontend"]["audio"]["SRSPort"] !== undefined)
+                    this.SRSPort = config["audio"]["SRSPort"];
 
                 this.gameMasterPasswordEdited = false;
                 this.blueCommanderPasswordEdited = false;
