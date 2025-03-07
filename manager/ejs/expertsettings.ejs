@@ -66,6 +66,16 @@
                     </div>
                 </div>
             </div>
+            <div class="input-group srs-port port-input">
+                <span>SRS port
+                    <img src="./icons/circle-info-solid.svg"
+                        title="This port is used by Olympus to communicate with SRS server. Unless you run multiple servers, the default value should be ok, otherwise edit it to be equal to your SRS server port.">
+                </span>
+                <div>
+                    <input type="number" min="1024" max="65535" value="<%= activeInstance["SRSPort"] %>"
+                    onchange="signal('onSRSPortChanged', this.value)">
+                </div>
+            </div>
             <div class="input-group backend-address">
                 <span onclick="signal('onEnableAPIClicked')">
                     <div class="checkbox"></div> Enable direct backend API connection

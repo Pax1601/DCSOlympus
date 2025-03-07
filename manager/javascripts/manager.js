@@ -517,6 +517,11 @@ class Manager {
         this.setPort('backend', Number(value));
     }
 
+    /* When the srs port input value is changed */
+    async onSRSPortChanged(value) {
+        this.getActiveInstance().SRSPort = Number(value);
+    }
+
     /* When the "Enable API connection" checkbox is clicked */
     async onEnableAPIClicked() {
         if (this.getActiveInstance()) {

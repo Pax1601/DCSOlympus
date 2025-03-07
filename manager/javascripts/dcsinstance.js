@@ -150,6 +150,7 @@ class DCSInstance {
     blueCommanderPasswordEdited = false;
     redCommanderPasswordEdited = false;
     autoconnectWhenLocal = false;
+    SRSPort = 5002;
 
     constructor(folder) {
         this.folder = folder;
@@ -186,6 +187,7 @@ class DCSInstance {
                 this.backendAddress = config["backend"]["address"];
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
                 this.autoconnectWhenLocal = config["frontend"]["autoconnectWhenLocal"];
+                this.SRSPort = config["audio"]["SRSPort"];
 
                 this.gameMasterPasswordEdited = false;
                 this.blueCommanderPasswordEdited = false;

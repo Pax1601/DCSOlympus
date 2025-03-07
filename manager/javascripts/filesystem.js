@@ -164,6 +164,7 @@ async function applyConfiguration(folder, instance) {
         config["frontend"]["autoconnectWhenLocal"] = instance.autoconnectWhenLocal;
         config["backend"]["port"] = instance.backendPort;
         config["backend"]["address"] = instance.backendAddress;
+        config["audio"]["SRSPort"] = instance.SRSPort;
 
         if (instance.gameMasterPassword !== "")
             config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
