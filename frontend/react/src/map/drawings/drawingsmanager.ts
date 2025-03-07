@@ -530,7 +530,7 @@ export class DCSDrawingsContainer {
       if (layerName === 'navpoints') {
         return;
       }
-      if (drawingsData[layerName]["name"] === undefined) {
+      if (drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined) {
         const newContainer = new DCSDrawingsContainer(layerName, this);
         this.addSubContainer(newContainer);
         newContainer.initFromData(drawingsData[layerName]);
@@ -557,7 +557,9 @@ export class DCSDrawingsContainer {
 
       if (isANavpoint) {
         newDrawing = new DCSNavpoint(drawingsData[layerName], othersContainer);
-        this.addDrawing(newDrawing);
+        if (hasContainers) othersContainer.addDrawing(newDrawing);
+        else this.addDrawing(newDrawing);
+        if (othersContainer.getDrawings().length === 0) this.removeSubContainer(othersContainer); // Remove empty container
         return;
       }
 
