@@ -69,7 +69,10 @@ async function installMod(folder, name) {
     logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
     if (await exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"))) {
         logger.log("Backup databases found, copying over");
-        await fsp.cp(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"), { recursive: true });
+
+        // Changed in v2.0.0, only the mods database is copied over, if present
+        //await fsp.cp(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"), { recursive: true });
+        await fsp.cp(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases", "units", "mods.json"), path.join(folder, "Mods", "Services", "Olympus", "databases", "units", "mods.json"));
     }
 
     if (exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"))) {
@@ -164,6 +167,9 @@ async function applyConfiguration(folder, instance) {
         config["frontend"]["autoconnectWhenLocal"] = instance.autoconnectWhenLocal;
         config["backend"]["port"] = instance.backendPort;
         config["backend"]["address"] = instance.backendAddress;
+
+        if (config["audio"] === undefined) 
+            config["audio"] = {};
         config["audio"]["SRSPort"] = instance.SRSPort;
 
         if (instance.gameMasterPassword !== "")
