@@ -161,6 +161,7 @@ async function applyConfiguration(folder, instance) {
 
         /* Apply the configuration */
         config["frontend"]["port"] = instance.frontendPort;
+        config["frontend"]["autoconnectWhenLocal"] = instance.autoconnectWhenLocal;
         config["backend"]["port"] = instance.backendPort;
         config["backend"]["address"] = instance.backendAddress;
 

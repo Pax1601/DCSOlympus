@@ -332,8 +332,10 @@ class Manager {
     async onInstallTypeClicked(type) {
         this.typePage.getElement().querySelector(`.singleplayer`).classList.toggle("selected", type === 'singleplayer');
         this.typePage.getElement().querySelector(`.multiplayer`).classList.toggle("selected", type === 'multiplayer');
-        if (this.getActiveInstance())
+        if (this.getActiveInstance()) {
             this.getActiveInstance().installationType = type;
+            this.getActiveInstance().autoconnectWhenLocal = type === 'singleplayer';
+        }
         else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
         }
@@ -399,6 +401,7 @@ class Manager {
                     this.activePage.hide();
                     this.connectionsPage.show();
                     (this.getMode() === 'basic' ? this.connectionsPage : this.expertSettingsPage).getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.getActiveInstance().backendAddress === '*')
+                    (this.getMode() === 'basic' ? this.passwordsPage : this.expertSettingsPage).getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
                 }
             } else {
                 showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
@@ -542,6 +545,19 @@ class Manager {
                 this.getActiveInstance().installCameraPlugin = 'install';
             }
             this.expertSettingsPage.getElement().querySelector(".camera-plugin .checkbox").classList.toggle("checked", this.getActiveInstance().installCameraPlugin === 'install')
+        } else {
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
+        }
+    }
+
+    async onEnableAutoconnectClicked() {
+        if (this.getActiveInstance()) {
+            if (this.getActiveInstance().autoconnectWhenLocal) {
+                this.getActiveInstance().autoconnectWhenLocal = false;
+            } else {
+                this.getActiveInstance().autoconnectWhenLocal = true;
+            }
+            this.expertSettingsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
         } else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
         }

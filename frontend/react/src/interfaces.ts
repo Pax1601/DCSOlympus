@@ -2,6 +2,7 @@ import { LatLng } from "leaflet";
 import { Coalition, MapOptions } from "./types/types";
 
 export interface OlympusConfig {
+  /* Set by user */
   frontend: {
     port: number;
     customAuthHeaders: {
@@ -33,13 +34,15 @@ export interface OlympusConfig {
     WSEndpoint?: string;
   };
   controllers: [{ type: string; coalition: Coalition; frequency: number; modulation: number; callsign: string }];
-  local: boolean;
   profiles?: { [key: string]: ProfileOptions };
   authentication?: {
     gameMasterPassword: string;
     blueCommanderPasword: string;
     redCommanderPassword: string;
   };
+
+  /* Set by server */
+  local: boolean;
 }
 
 export interface SessionData {
