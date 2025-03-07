@@ -101,10 +101,10 @@ export function SideBar() {
       <div className="flex w-16 flex-wrap content-end justify-center p-4">
         <div className={`flex flex-col items-center justify-center gap-2.5`}>
           <OlStateButton
-            onClick={() => window.open("https://github.com/Pax1601/DCSOlympus/wiki")}
+            onClick={() => getApp().setState(OlympusState.TRAINING)}
             checked={false}
             icon={faQuestionCircle}
-            tooltip="Open user guide on separate window"
+            tooltip="Open Quick Start Guide"
             tooltipPosition="side"
           ></OlStateButton>
           <OlStateButton

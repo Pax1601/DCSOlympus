@@ -145,33 +145,6 @@ export function Header() {
               {IP}
             </div>
           </div>
-          <OlStateButton
-            icon={faDownload}
-            onClick={() => {
-              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT);
-            }}
-            checked={false}
-            tooltip={() => (
-              <OlExpandingTooltip
-                title="Export scenario from file"
-                content="Selectively export the current scenario to a file. This file can be shared with other users or imported later. Currently, only ground and naval units can be exported."
-              />
-            )}
-            tooltipRelativeToParent={true}
-          />
-          <OlStateButton
-            icon={faUpload}
-            onClick={() => {
-              getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.IMPORT);
-            }}
-            checked={false}
-            tooltip={() => (
-              <OlExpandingTooltip
-                title="Import scenario from file"
-                content="Import a scenario from a previously exported file. This will add the imported units to the current scenario, so make sure to delete any unwanted units before importing."
-              />
-            )}
-          />
           {savingSessionData ? (
             <div className="text-white">
               <FaSpinner className={`animate-spin text-2xl`} />
@@ -208,9 +181,16 @@ export function Header() {
             tooltip={() => (
               <OlExpandingTooltip
                 title="Lock/unlock protected units"
-                content={<><p>By default, Mission Editor units are protected from being commanded or deleted. This option allows you to unlock them, so they can be commanded or deleted like any other unit. </p>
-                  <p>If units are protected, you will still be able to control them, but a prompt will be shown to require your confirmation. </p>
-                  <p>Once a unit has been commanded, it will be unlocked and will become an Olympus unit, completely abandoning its previuos mission. </p></>}
+                content={
+                  <>
+                    <p>
+                      By default, Mission Editor units are protected from being commanded or deleted. This option allows you to unlock them, so they can be
+                      commanded or deleted like any other unit.{" "}
+                    </p>
+                    <p>If units are protected, you will still be able to control them, but a prompt will be shown to require your confirmation. </p>
+                    <p>Once a unit has been commanded, it will be unlocked and will become an Olympus unit, completely abandoning its previuos mission. </p>
+                  </>
+                }
               />
             )}
           />
@@ -223,9 +203,16 @@ export function Header() {
             tooltip={() => (
               <OlExpandingTooltip
                 title="Enable/disable audio"
-                content={<><p>If this option is enabled, you will be able to access the radio and audio features of DCS Olympus. </p>
-                  <p>For this to work, a SRS Server need to be installed and running on the same machine on which the DCS Olympus server is running.</p>
-                  <p>For security reasons, this feature will only work if a secure connection (i.e., using https) is established with the server. It is also suggested to use Google Chrome for optimal compatibility. </p></>}
+                content={
+                  <>
+                    <p>If this option is enabled, you will be able to access the radio and audio features of DCS Olympus. </p>
+                    <p>For this to work, a SRS Server need to be installed and running on the same machine on which the DCS Olympus server is running.</p>
+                    <p>
+                      For security reasons, this feature will only work if a secure connection (i.e., using https) is established with the server. It is also
+                      suggested to use Google Chrome for optimal compatibility.{" "}
+                    </p>
+                  </>
+                }
               />
             )}
             icon={faVolumeHigh}
@@ -368,10 +355,6 @@ export function Header() {
             );
           })}
         </OlDropdown>
-        <FaQuestionCircle
-          onClick={() => getApp().setState(OlympusState.TRAINING)}
-          className={`cursor-pointer text-2xl text-white`}
-        />
       </div>
       {!scrolledRight && (
         <FaChevronRight
