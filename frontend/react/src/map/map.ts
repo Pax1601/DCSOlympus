@@ -37,6 +37,7 @@ import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
 import "./markers/stylesheets/spot.css";
 import "./markers/stylesheets/measure.css";
+import "./markers/stylesheets/navpoint.css";
 import "./stylesheets/map.css";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";

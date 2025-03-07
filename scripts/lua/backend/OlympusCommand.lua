@@ -1076,6 +1076,26 @@ function getUnitDescription(unit)
 	return unit:getDescr()
 end
 
+-- This function gets the navpoints from the DCS mission
+function Olympus.getNavPoints()
+	local navpoints = {}
+	if mist.DBs.navPoints ~= nil then
+		for coalitionName, coalitionNavpoints in pairs(mist.DBs.navPoints) do
+			for index, navpointDrawingData in pairs(coalitionNavpoints) do
+				-- Let's convert DCS coords to lat lon
+				local vec3 = { x = navpointDrawingData['x'], y = 0, z = navpointDrawingData['y'] }
+				local lat, lng = coord.LOtoLL(vec3)
+				navpointDrawingData['lat'] = lat
+				navpointDrawingData['lng'] = lng
+				navpointDrawingData['coalition'] = coalitionName
+			end
+			navpoints[coalitionName] = coalitionNavpoints
+		end
+	end
+
+	return navpoints
+end
+
 -- This function is periodically called to collect the data of all the existing drawings in the mission to be transmitted to the olympus.dll
 function Olympus.initializeDrawings()
 	local drawings = {}
@@ -1128,6 +1148,10 @@ function Olympus.initializeDrawings()
 				drawings[drawingData.layerName][drawingName] = drawingData
 			end
 		end
+
+		local navpoints = Olympus.getNavPoints()
+
+		drawings['navpoints'] = navpoints
 
 		Olympus.drawingsByLayer["drawings"] = drawings
 

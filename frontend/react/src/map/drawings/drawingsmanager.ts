@@ -3,6 +3,7 @@ import { getApp } from "../../olympusapp";
 import { DrawingsInitEvent, DrawingsUpdatedEvent, MapOptionsChangedEvent, SessionDataLoadedEvent } from "../../events";
 import { MapOptions } from "../../types/types";
 import { Circle, DivIcon, Layer, LayerGroup, layerGroup, Marker, Polygon, Polyline } from "leaflet";
+import { NavpointMarker } from "../markers/navpointmarker";
 
 export abstract class DCSDrawing {
   #name: string;
@@ -452,6 +453,57 @@ export class DCSTextBox extends DCSDrawing {
   }
 }
 
+export class DCSNavpoint extends DCSDrawing {
+  #point: NavpointMarker;
+
+  constructor(drawingData, parent) {
+    super(drawingData, parent);
+
+    this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment);
+
+    this.setVisibility(true);
+  }
+
+  getLayer() {
+    return this.#point;
+  }
+
+  getLabelLayer() {
+    return this.#point;
+  }
+
+  setOpacity(opacity: number): void {
+    if (opacity === this.#point.options.opacity) return;
+
+    this.#point.options.opacity = opacity;
+
+    /* Hack to force marker redraw */
+    const originalVisibility = this.getVisibility();
+    this.setVisibility(false);
+    this.setVisibility(originalVisibility);
+
+    getApp().getDrawingsManager().requestUpdateEventDispatch();
+  }
+
+  setVisibility(visibility: boolean): void {
+    if (visibility && !this.getParent().getLayerGroup().hasLayer(this.#point)) this.#point.addTo(this.getParent().getLayerGroup());
+    //@ts-ignore Leaflet typings are wrong
+    if (!visibility && this.getParent().getLayerGroup().hasLayer(this.#point)) this.#point.removeFrom(this.getParent().getLayerGroup());
+
+    if (visibility && !this.getParent().getVisibility()) this.getParent().setVisibility(true);
+
+    getApp().getDrawingsManager().requestUpdateEventDispatch();
+  }
+
+  getOpacity(): number {
+    return this.#point.options.opacity ?? 1;
+  }
+
+  getVisibility(): boolean {
+    return this.getParent().getLayerGroup().hasLayer(this.#point);
+  }
+}
+
 export class DCSDrawingsContainer {
   #drawings: DCSDrawing[] = [];
   #subContainers: DCSDrawingsContainer[] = [];
@@ -475,6 +527,9 @@ export class DCSDrawingsContainer {
   initFromData(drawingsData) {
     let hasContainers = false;
     Object.keys(drawingsData).forEach((layerName: string) => {
+      if (layerName === 'navpoints') {
+        return;
+      }
       if (drawingsData[layerName]["name"] === undefined) {
         const newContainer = new DCSDrawingsContainer(layerName, this);
         this.addSubContainer(newContainer);
@@ -487,6 +542,7 @@ export class DCSDrawingsContainer {
 
     Object.keys(drawingsData).forEach((layerName: string) => {
       const primitiveType = drawingsData[layerName]["primitiveType"];
+      const isANavpoint = !!drawingsData[layerName]['callsignStr'];
 
       // Possible primitives:
       // "Line","TextBox","Polygon","Icon"
@@ -498,6 +554,12 @@ export class DCSDrawingsContainer {
       // 'segments', 'free', 'segment'
 
       let newDrawing = new DCSEmptyLayer(drawingsData[layerName], othersContainer) as DCSDrawing;
+
+      if (isANavpoint) {
+        newDrawing = new DCSNavpoint(drawingsData[layerName], othersContainer);
+        this.addDrawing(newDrawing);
+        return;
+      }
 
       switch (primitiveType) {
         case "Polygon":
@@ -519,6 +581,12 @@ export class DCSDrawingsContainer {
     });
 
     if (othersContainer.getDrawings().length === 0) this.removeSubContainer(othersContainer); // Remove empty container
+  }
+
+  initNavpoints(drawingsData) {
+    const newContainer = new DCSDrawingsContainer('Navpoints', this);
+    this.addSubContainer(newContainer);
+    newContainer.initFromData(drawingsData);
   }
 
   getLayerGroup() {
@@ -655,6 +723,7 @@ export class DrawingsManager {
   initDrawings(data: { drawings: Record<string, Record<string, any>> }): boolean {
     if (data && data.drawings) {
       this.#drawingsContainer.initFromData(data.drawings);
+      if (data.drawings.navpoints) this.#drawingsContainer.initNavpoints(data.drawings.navpoints);
       if (this.#sessionDataDrawings["Mission drawings"]) this.#drawingsContainer.fromJSON(this.#sessionDataDrawings["Mission drawings"]);
       DrawingsInitEvent.dispatch(this.#drawingsContainer);
       this.#initialized = true;
