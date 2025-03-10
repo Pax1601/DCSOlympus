@@ -181,6 +181,9 @@ async function applyConfiguration(folder, instance) {
         if (instance.redCommanderPassword !== "")
             config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);
 
+        if (instance.adminPassword !== "")
+            config["authentication"]["adminPassword"] = sha256(instance.adminPassword);
+
         await fsp.writeFile(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4));
         logger.log(`Config succesfully applied in ${folder}`)
     } else {

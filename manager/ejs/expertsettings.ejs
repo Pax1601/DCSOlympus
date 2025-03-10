@@ -19,19 +19,25 @@
                 <span>Game Master Password<img src="./icons/circle-info-solid.svg"
                         title="This password is used to access Olympus as Game Master with full privileges.">
                 </span>
-                <input type="password" minlength="8" onchange="signal('onGameMasterPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["gameMasterPasswordEdited"]? '': 'Keep old password'%>">
+                <input type="password" class="unique" minlength="8" onchange="signal('onGameMasterPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["gameMasterPasswordEdited"]? '': 'Keep old password'%>">
             </div>
             <div class="input-group blue-commander">
                 <span>Blue Commander Password<img src="./icons/circle-info-solid.svg"
                         title="This password is used to access Olympus as blue coalition Commander.">
                 </span>
-                <input type="password" minlength="8" onchange="signal('onBlueCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["blueCommanderPasswordEdited"]? '': 'Keep old password'%>">
+                <input type="password" class="unique" minlength="8" onchange="signal('onBlueCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["blueCommanderPasswordEdited"]? '': 'Keep old password'%>">
             </div>
             <div class="input-group red-commander">
                 <span>Red Commander Password<img src="./icons/circle-info-solid.svg"
                         title="This password is used to access Olympus as red coalition Commander.">
                 </span>
-                <input type="password" minlength="8" onchange="signal('onRedCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["redCommanderPasswordEdited"]? '': 'Keep old password'%>">
+                <input type="password" class="unique" minlength="8" onchange="signal('onRedCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["redCommanderPasswordEdited"]? '': 'Keep old password'%>">
+            </div>
+            <div class="input-group admin-password">
+                <span>Admin Password<img src="./icons/circle-info-solid.svg"
+                    title="This password is used to set global Olympus configurations, like user access privileges.">
+                </span>
+                <input type="password" minlength="8" onchange="signal('onAdminPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["adminPasswordEdited"]? '': 'Keep old password'%>">
             </div>
             <div class="<%= activeInstance["installed"]? '': 'hide' %>" style="color: var(--offwhite); font-size: var(--normal); color: var(--lightgray);">
                 Note: to keep the old passwords, click <b>Next</b> without editing any value. 

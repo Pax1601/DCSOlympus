@@ -302,7 +302,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               >
                 Automatic IADS generation
               </div>
-              <OlDropdown className="" label="Units types">
+              <OlDropdown className="" label="Units types" disableAutoClose={true}>
                 {types.map((type, idx) => {
                   if (!(type in typesSelection)) {
                     typesSelection[type] = true;
@@ -323,7 +323,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   );
                 })}
               </OlDropdown>
-              <OlDropdown className="" label="Units eras">
+              <OlDropdown className="" label="Units eras" disableAutoClose={true}>
                 {eras.map((era) => {
                   if (!(era in erasSelection)) {
                     erasSelection[era] = true;
@@ -344,7 +344,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   );
                 })}
               </OlDropdown>
-              <OlDropdown className="" label="Units ranges">
+              <OlDropdown className="" label="Units ranges" disableAutoClose={true}>
                 {["Short range", "Medium range", "Long range"].map((range) => {
                   if (!(range in rangesSelection)) {
                     rangesSelection[range] = true;

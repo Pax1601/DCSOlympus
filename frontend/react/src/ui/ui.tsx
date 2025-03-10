@@ -32,6 +32,7 @@ import { ServerOverlay } from "./serveroverlay";
 import { ImportExportModal } from "./modals/importexportmodal";
 import { WarningModal } from "./modals/warningmodal";
 import { TrainingModal } from "./modals/trainingmodal";
+import { AdminModal } from "./modals/adminmodal";
 
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -75,6 +76,7 @@ export function UI() {
             <LoginModal open={appState === OlympusState.LOGIN} />
             <WarningModal open={appState === OlympusState.WARNING} />
             <TrainingModal open={appState === OlympusState.TRAINING} />
+            <AdminModal open={appState === OlympusState.ADMIN} />
           </>
         )}
 

@@ -475,7 +475,7 @@ class Manager {
     }
 
     async onGameMasterPasswordChanged(value) {
-        for (let input of this.activePage.getElement().querySelectorAll("input[type='password']")) {
+        for (let input of this.activePage.getElement().querySelectorAll("input[type='password'].unique")) {
             input.placeholder = "";
         }
 
@@ -486,7 +486,7 @@ class Manager {
     }
 
     async onBlueCommanderPasswordChanged(value) {
-        for (let input of this.activePage.getElement().querySelectorAll("input[type='password']")) {
+        for (let input of this.activePage.getElement().querySelectorAll("input[type='password'].unique")) {
             input.placeholder = "";
         }
 
@@ -497,12 +497,19 @@ class Manager {
     }
 
     async onRedCommanderPasswordChanged(value) {
-        for (let input of this.activePage.getElement().querySelectorAll("input[type='password']")) {
+        for (let input of this.activePage.getElement().querySelectorAll("input[type='password'].unique")) {
             input.placeholder = "";
         }
 
         if (this.getActiveInstance())
             this.getActiveInstance().setRedCommanderPassword(value);
+        else
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
+    }
+
+    async onAdminPasswordChanged(value) {
+        if (this.getActiveInstance())
+            this.getActiveInstance().setAdminPassword(value);
         else
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
     }

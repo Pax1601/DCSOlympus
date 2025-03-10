@@ -328,7 +328,8 @@ export enum OlympusState {
   WARNING = "Warning modal",
   DATABASE_EDITOR = "Database editor",
   MEASURE = "Measure",
-  TRAINING = "Training"
+  TRAINING = "Training",
+  ADMIN = "Admin",
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -384,6 +385,7 @@ export enum WarningSubstate {
   NO_SUBSTATE = "No substate",
   NOT_CHROME = "Not chrome",
   NOT_SECURE = "Not secure",
+  ERROR_UPLOADING_CONFIG = "Error uploading config"
 }
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;

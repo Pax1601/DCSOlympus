@@ -4,7 +4,8 @@
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
-    "server": "electron . --server",
+    "server-electron": "electron . --server",
+    "server": "node ./build/www.js",
     "client": "electron .",
     "tsc": "tsc"
   },

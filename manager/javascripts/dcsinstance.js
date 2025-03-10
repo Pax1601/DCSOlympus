@@ -136,6 +136,7 @@ class DCSInstance {
     blueCommanderPassword = "";
     redCommanderPassword = "";
     gameMasterPasswordHash = "";
+    adminPassword = "";
     installed = false;
     error = false;
     webserverOnline = false;
@@ -149,6 +150,7 @@ class DCSInstance {
     gameMasterPasswordEdited = false;
     blueCommanderPasswordEdited = false;
     redCommanderPasswordEdited = false;
+    adminPasswordEdited = false;
     autoconnectWhenLocal = false;
     SRSPort = 5002;
 
@@ -196,6 +198,7 @@ class DCSInstance {
                 this.gameMasterPasswordEdited = false;
                 this.blueCommanderPasswordEdited = false;
                 this.redCommanderPasswordEdited = false;
+                this.adminPasswordEdited = false;
 
             } catch (err) {
                 showErrorPopup(`<div class='main-message'>A critical error has occurred while reading your Olympus configuration file. </div><div class='sub-message'> Please manually reinstall Olympus in ${this.folder} using either the installation Wizard or the Expert view. </div>`)
@@ -277,7 +280,7 @@ class DCSInstance {
 
     /** Set Blue Commander password
      * 
-     * @param {String} newAddress The new Blue Commander password to set
+     * @param {String} newPassword The new Blue Commander password to set
      */
     setBlueCommanderPassword(newPassword) {
         this.blueCommanderPassword = newPassword;
@@ -286,11 +289,20 @@ class DCSInstance {
 
     /** Set Red Commander password
      * 
-     *  @param {String} newAddress The new Red Commander password to set
+     *  @param {String} newPassword The new Red Commander password to set
      */
     setRedCommanderPassword(newPassword) {
         this.redCommanderPassword = newPassword;
         this.redCommanderPasswordEdited = true;
+    }
+
+    /** Set Admin password
+     * 
+     *  @param {String} newPassword The new Admin password to set
+     */
+    setAdminPassword(newPassword) {
+        this.adminPassword = newPassword;
+        this.adminPasswordEdited = true;
     }
 
     /** Checks if any password has been edited by the user
@@ -306,7 +318,10 @@ class DCSInstance {
      * @returns true if all the password have been set
      */
     arePasswordsSet() {
-        return !(getManager().getActiveInstance().gameMasterPassword === '' || getManager().getActiveInstance().blueCommanderPassword === '' || getManager().getActiveInstance().redCommanderPassword === '');
+        if (getManager().getActiveInstance().installationType === "singleplayer")
+            return !(getManager().getActiveInstance().gameMasterPassword === '' || getManager().getActiveInstance().blueCommanderPassword === '' || getManager().getActiveInstance().redCommanderPassword === '');
+        else 
+            return !(getManager().getActiveInstance().gameMasterPassword === '' || getManager().getActiveInstance().blueCommanderPassword === '' || getManager().getActiveInstance().redCommanderPassword === '' || getManager().getActiveInstance().adminPassword === '');
     }
 
     /** Checks if all the passwords are different

@@ -21,7 +21,7 @@ import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
 import { GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState, WarningSubstate } from "./constants/constants";
-import { AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
+import { AdminPasswordChangedEvent, AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
 import { ControllerManager } from "./controllers/controllermanager";
@@ -56,6 +56,8 @@ export class OlympusApp {
   #coalitionAreasManager: CoalitionAreasManager;
   #drawingsManager: DrawingsManager;
   //#pluginsManager: // TODO
+
+  #adminPassword: string = "";
 
   constructor() {
     SelectedUnitsChangedEvent.on((selectedUnits) => {
@@ -346,6 +348,11 @@ export class OlympusApp {
       this.#infoMessages.shift();
       InfoPopupEvent.dispatch(this.#infoMessages);
     }, 5000);
+  }
+
+  setAdminPassword(newAdminPassword: string) {
+    this.#adminPassword = newAdminPassword;
+    AdminPasswordChangedEvent.dispatch(newAdminPassword);
   }
 
   startServerMode() {

@@ -73,6 +73,15 @@ export function WarningModal(props: { open: boolean }) {
           </div>
         );
         break;
+        case WarningSubstate.ERROR_UPLOADING_CONFIG:
+          warningText = (
+            <div className="flex flex-col gap-2 text-gray-400">
+              <span>An error has occurred uploading the admin configuration.</span>
+              <span></span>
+              
+            </div>
+          );
+          break;
       default:
         break;
     }
