@@ -2,7 +2,7 @@ import { AudioMessageType, BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMAN
 import { MicrophoneSource } from "./microphonesource";
 import { RadioSink } from "./radiosink";
 import { getApp } from "../olympusapp";
-import { makeID } from "../other/utils";
+import { coalitionToEnum, makeID } from "../other/utils";
 import { FileSource } from "./filesource";
 import { AudioSource } from "./audiosource";
 import { Buffer } from "buffer";
@@ -379,7 +379,7 @@ export class AudioManager {
     let message = {
       type: "Settings update",
       guid: this.#guid,
-      coalition: this.#coalition,
+      coalition: coalitionToEnum(this.#coalition),
       settings: this.#sinks
         .filter((sink) => sink instanceof RadioSink)
         .map((radio) => {
