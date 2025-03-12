@@ -54,6 +54,17 @@ namespace DataIndex {
 		racetrackLength,
 		racetrackAnchor,
 		racetrackBearing,
+		timeToNextTasking,
+		barrelHeight, 
+		muzzleVelocity,
+		aimTime, 
+		shotsToFire,
+		shotsBaseInterval, 
+		shotsBaseScatter, 
+		engagementRange, 
+		targetingRange, 
+		aimMethodRange,
+		acquisitionRange,
 		lastIndex,
 		endOfData = 255
 	};

@@ -11,6 +11,7 @@ export function OlNumberInput(props: {
   tooltip?: string | (() => JSX.Element | JSX.Element[]);
   tooltipPosition?: string;
   tooltipRelativeToParent?: boolean;
+  decimalPlaces?: number;
   onDecrease: () => void;
   onIncrease: () => void;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -89,7 +90,7 @@ export function OlNumberInput(props: {
             dark:focus:ring-blue-700
             focus:border-blue-700 focus:ring-blue-500
           `}
-          value={zeroAppend(props.value, props.minLength ?? 0)}
+          value={zeroAppend(props.value, props.minLength ?? 0, props.decimalPlaces !== undefined, props.decimalPlaces ?? 0)}
         />
         <button
           type="button"

@@ -112,6 +112,17 @@ public:
 	virtual void setRacetrackLength(double newValue) { updateValue(racetrackLength, newValue, DataIndex::racetrackLength); }
 	virtual void setRacetrackAnchor(Coords newValue) { updateValue(racetrackAnchor, newValue, DataIndex::racetrackAnchor); }
 	virtual void setRacetrackBearing(double newValue) { updateValue(racetrackBearing, newValue, DataIndex::racetrackBearing); }
+	virtual void setTimeToNextTasking(double newValue) { updateValue(timeToNextTasking, newValue, DataIndex::timeToNextTasking); }
+	virtual void setBarrelHeight(double newValue) { updateValue(barrelHeight, newValue, DataIndex::barrelHeight); }
+	virtual void setMuzzleVelocity(double newValue) { updateValue(muzzleVelocity, newValue, DataIndex::muzzleVelocity); }
+	virtual void setAimTime(double newValue) { updateValue(aimTime, newValue, DataIndex::aimTime); }
+	virtual void setShotsToFire(unsigned int newValue) { updateValue(shotsToFire, newValue, DataIndex::shotsToFire); }
+	virtual void setShotsBaseInterval(double newValue) { updateValue(shotsBaseInterval, newValue, DataIndex::shotsBaseInterval); }
+	virtual void setShotsBaseScatter(double newValue) { updateValue(shotsBaseScatter, newValue, DataIndex::shotsBaseScatter); }
+	virtual void setEngagementRange(double newValue) { updateValue(engagementRange, newValue, DataIndex::engagementRange); }
+	virtual void setTargetingRange(double newValue) { updateValue(targetingRange, newValue, DataIndex::targetingRange); }
+	virtual void setAimMethodRange(double newValue) { updateValue(aimMethodRange, newValue, DataIndex::aimMethodRange); }
+	virtual void setAcquisitionRange(double newValue) { updateValue(acquisitionRange, newValue, DataIndex::acquisitionRange); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -163,6 +174,17 @@ public:
 	virtual double getRacetrackLength() { return racetrackLength; }
 	virtual Coords getRacetrackAnchor() { return racetrackAnchor; }
 	virtual double getRacetrackBearing() { return racetrackBearing; }
+	virtual double getTimeToNextTasking() { return timeToNextTasking; }
+	virtual double getBarrelHeight() { return barrelHeight; }
+	virtual double getMuzzleVelocity() { return muzzleVelocity; }
+	virtual double getAimTime() { return aimTime; }
+	virtual unsigned int getShotsToFire() { return shotsToFire; }
+	virtual double getShotsBaseInterval() { return shotsBaseInterval; }
+	virtual double getShotsBaseScatter() { return shotsBaseScatter; }
+	virtual double getEngagementRange() { return engagementRange; }
+	virtual double getTargetingRange() { return targetingRange; }
+	virtual double getAimMethodRange() { return aimMethodRange; }
+	virtual double getAcquisitionRange() { return acquisitionRange; }
 
 protected:
 	unsigned int ID;
@@ -217,6 +239,17 @@ protected:
 	unsigned char shotsScatter = 2;
 	unsigned char shotsIntensity = 2;
 	unsigned char health = 100;
+	double timeToNextTasking = 0;
+	double barrelHeight = 1.0; /* m */
+	double muzzleVelocity = 860; /* m/s */
+	double aimTime = 10; /* s */
+	unsigned int shotsToFire = 10;
+	double shotsBaseInterval = 15; /* s */
+	double shotsBaseScatter = 2; /* degs */
+	double engagementRange = 10000; /* m */
+	double targetingRange = 0; /* m */
+	double aimMethodRange = 0; /* m */
+	double acquisitionRange = 0; /* m */
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

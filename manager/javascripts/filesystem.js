@@ -66,8 +66,8 @@ async function installMod(folder, name) {
     logger.log(`Mod succesfully installed in ${folder}`)
 
     /* Check if backup user-editable files exist. If true copy them over */
-    logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
-    if (await exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"))) {
+    logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases", "units", "mods.json"));
+    if (await exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases", "units", "mods.json"))) {
         logger.log("Backup databases found, copying over");
 
         // Changed in v2.0.0, only the mods database is copied over, if present

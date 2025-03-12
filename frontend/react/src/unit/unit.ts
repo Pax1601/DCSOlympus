@@ -177,6 +177,17 @@ export abstract class Unit extends CustomMarker {
   #spotLines: { [key: number]: Polyline } = {};
   #spotEditMarkers: { [key: number]: SpotEditMarker } = {};
   #spotMarkers: { [key: number]: SpotMarker } = {};
+  #timeToNextTasking: number = 0;
+  #barrelHeight: number = 0;
+  #muzzleVelocity: number = 0;
+  #aimTime: number = 0;
+  #shotsToFire: number = 0;
+  #shotsBaseInterval: number = 0;
+  #shotsBaseScatter: number = 0;
+  #engagementRange: number = 0;
+  #targetingRange: number = 0;
+  #aimMethodRange: number = 0;
+  #acquisitionRange: number = 0;
 
   /* Inputs timers */
   #debounceTimeout: number | null = null;
@@ -331,6 +342,39 @@ export abstract class Unit extends CustomMarker {
   }
   getRaceTrackBearing() {
     return this.#racetrackBearing;
+  }
+  getTimeToNextTasking() {
+    return this.#timeToNextTasking;
+  }
+  getBarrelHeight() {
+    return this.#barrelHeight;
+  }
+  getMuzzleVelocity() {
+    return this.#muzzleVelocity;
+  }
+  getAimTime() {
+    return this.#aimTime;
+  }
+  getShotsToFire() {
+    return this.#shotsToFire;
+  }
+  getShotsBaseInterval() {
+    return this.#shotsBaseInterval;
+  }
+  getShotsBaseScatter() {
+    return this.#shotsBaseScatter;
+  }
+  getEngagementRange() {
+    return this.#engagementRange;
+  }
+  getTargetingRange() {
+    return this.#targetingRange;
+  }
+  getAimMethodRange() {
+    return this.#aimMethodRange;
+  }
+  getAcquisitionRange() {
+    return this.#acquisitionRange;
   }
 
   static getConstructor(type: string) {
@@ -644,6 +688,41 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.racetrackBearing:
           this.#racetrackBearing = dataExtractor.extractFloat64();
           break;
+        case DataIndexes.timeToNextTasking:
+          this.#timeToNextTasking = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.barrelHeight:
+          this.#barrelHeight = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.muzzleVelocity:
+          this.#muzzleVelocity = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.aimTime:
+          this.#aimTime = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.shotsToFire:
+          this.#shotsToFire = dataExtractor.extractUInt32();
+          break;
+        case DataIndexes.shotsBaseInterval:
+          this.#shotsBaseInterval = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.shotsBaseScatter:
+          this.#shotsBaseScatter = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.engagementRange:
+          this.#engagementRange = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.targetingRange:
+          this.#targetingRange = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.aimMethodRange:
+          this.#aimMethodRange = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.acquisitionRange:
+          this.#acquisitionRange = dataExtractor.extractFloat64();
+          break;
+        default:
+          break;
       }
     }
 
@@ -750,6 +829,17 @@ export abstract class Unit extends CustomMarker {
       racetrackLength: this.#racetrackLength,
       racetrackAnchor: this.#racetrackAnchor,
       racetrackBearing: this.#racetrackBearing,
+      timeToNextTasking: this.#timeToNextTasking,
+      barrelHeight: this.#barrelHeight,
+      muzzleVelocity: this.#muzzleVelocity,
+      aimTime: this.#aimTime,
+      shotsToFire: this.#shotsToFire,
+      shotsBaseInterval: this.#shotsBaseInterval,
+      shotsBaseScatter: this.#shotsBaseScatter,
+      engagementRange: this.#engagementRange,
+      targetingRange: this.#targetingRange,
+      aimMethodRange: this.#aimMethodRange,
+      acquisitionRange: this.#acquisitionRange,
     };
   }
 
@@ -1305,6 +1395,36 @@ export abstract class Unit extends CustomMarker {
 
   setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings) {
     if (!this.#human) getApp().getServerManager().setAdvancedOptions(this.ID, isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings);
+  }
+
+  setEngagementProperties(
+    barrelHeight: number,
+    muzzleVelocity: number,
+    aimTime: number,
+    shotsToFire: number,
+    shotsBaseInterval: number,
+    shotsBaseScatter: number,
+    engagementRange: number,
+    targetingRange: number,
+    aimMethodRange: number,
+    acquisitionRange: number
+  ) {
+    if (!this.#human)
+      getApp()
+        .getServerManager()
+        .setEngagementProperties(
+          this.ID,
+          barrelHeight,
+          muzzleVelocity,
+          aimTime,
+          shotsToFire,
+          shotsBaseInterval,
+          shotsBaseScatter,
+          engagementRange,
+          targetingRange,
+          aimMethodRange,
+          acquisitionRange
+        );
   }
 
   bombPoint(latlng: LatLng) {

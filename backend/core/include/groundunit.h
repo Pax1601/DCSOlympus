@@ -17,7 +17,7 @@ public:
 	virtual void setOnOff(bool newOnOff, bool force = false);
 	virtual void setFollowRoads(bool newFollowRoads, bool force = false);
 
-	void aimAtPoint(Coords aimTarget);
+	string aimAtPoint(Coords aimTarget);
 
 protected:
 	virtual void AIloop();

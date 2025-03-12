@@ -298,6 +298,17 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
 					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
 					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
+					case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;
+					case DataIndex::barrelHeight:				appendNumeric(ss, datumIndex, barrelHeight); break;
+					case DataIndex::muzzleVelocity:				appendNumeric(ss, datumIndex, muzzleVelocity); break;
+					case DataIndex::aimTime:					appendNumeric(ss, datumIndex, aimTime); break;
+					case DataIndex::shotsToFire:				appendNumeric(ss, datumIndex, shotsToFire); break;
+					case DataIndex::shotsBaseInterval:			appendNumeric(ss, datumIndex, shotsBaseInterval); break;
+					case DataIndex::shotsBaseScatter:			appendNumeric(ss, datumIndex, shotsBaseScatter); break;
+					case DataIndex::engagementRange:			appendNumeric(ss, datumIndex, engagementRange); break;
+					case DataIndex::targetingRange:				appendNumeric(ss, datumIndex, targetingRange); break;
+					case DataIndex::aimMethodRange:				appendNumeric(ss, datumIndex, aimMethodRange); break;
+					case DataIndex::acquisitionRange:			appendNumeric(ss, datumIndex, acquisitionRange); break;
 				}
 			}
 		}

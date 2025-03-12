@@ -546,6 +546,7 @@ export class UnitsManager {
     units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units: Unit[]) => {
+      onExecution();
       for (let idx in units) {
         getApp().getServerManager().addDestination(units[idx].ID, []);
       }
@@ -819,16 +820,24 @@ export class UnitsManager {
   }
 
   /** Set the advanced options for the selected units
-   * 
+   *
    * @param isActiveTanker If true, the unit will be a tanker
    * @param isActiveAWACS If true, the unit will be an AWACS
    * @param TACAN TACAN settings
    * @param radio Radio settings
    * @param generalSettings General settings
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
-   * @param onExecution Function to execute after the operation is completed 
-  */
-  setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, units: Unit[] | null = null, onExecution: () => void = () => {}) {
+   * @param onExecution Function to execute after the operation is completed
+   */
+  setAdvancedOptions(
+    isActiveTanker: boolean,
+    isActiveAWACS: boolean,
+    TACAN: TACAN,
+    radio: Radio,
+    generalSettings: GeneralSettings,
+    units: Unit[] | null = null,
+    onExecution: () => void = () => {}
+  ) {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
     let callback = (units) => {
@@ -836,7 +845,49 @@ export class UnitsManager {
       units.forEach((unit: Unit) => unit.setAdvancedOptions(isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings));
       this.#showActionMessage(units, `advanced options set`);
     };
-    
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
+  //TODO
+  setEngagementProperties(
+    barrelHeight: number,
+    muzzleVelocity: number,
+    aimTime: number,
+    shotsToFire: number,
+    shotsBaseInterval: number,
+    shotsBaseScatter: number,
+    engagementRange: number,
+    targetingRange: number,
+    aimMethodRange: number,
+    acquisitionRange: number,
+    units: Unit[] | null = null,
+    onExecution: () => void = () => {}
+  ) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+    let callback = (units) => {
+      onExecution();
+      units.forEach((unit: Unit) =>
+        unit.setEngagementProperties(
+          barrelHeight,
+          muzzleVelocity,
+          aimTime,
+          shotsToFire,
+          shotsBaseInterval,
+          shotsBaseScatter,
+          engagementRange,
+          targetingRange,
+          aimMethodRange,
+          acquisitionRange
+        )
+      );
+      this.#showActionMessage(units, `engagement parameters set`);
+    };
+
     if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
       this.#protectionCallback = callback;

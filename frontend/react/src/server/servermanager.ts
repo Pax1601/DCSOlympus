@@ -554,6 +554,38 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  setEngagementProperties(
+    ID: number,
+    barrelHeight: number,
+    muzzleVelocity: number,
+    aimTime: number,
+    shotsToFire: number,
+    shotsBaseInterval: number,
+    shotsBaseScatter: number,
+    engagementRange: number,
+    targetingRange: number,
+    aimMethodRange: number,
+    acquisitionRange: number,
+    callback: CallableFunction = () => {}
+  ) {
+    var command = {
+      ID: ID,
+      barrelHeight: barrelHeight,
+      muzzleVelocity: muzzleVelocity,
+      aimTime: aimTime,
+      shotsToFire: shotsToFire,
+      shotsBaseInterval: shotsBaseInterval,
+      shotsBaseScatter: shotsBaseScatter,
+      engagementRange: engagementRange,
+      targetingRange: targetingRange,
+      aimMethodRange: aimMethodRange,
+      acquisitionRange: acquisitionRange,
+    }
+
+    var data = { setEngagementProperties: command };
+    this.PUT(data, callback);
+  }
+
   setCommandModeOptions(commandModeOptions: CommandModeOptions, callback: CallableFunction = () => {}) {
     var data = { setCommandModeOptions: commandModeOptions };
     this.PUT(data, callback);

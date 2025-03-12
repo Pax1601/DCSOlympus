@@ -509,6 +509,29 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 	}
 	/************************/
+	else if (key.compare("setEngagementProperties") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+		{
+			/* Engagement properties tasking */
+			unit->setBarrelHeight(value[L"barrelHeight"].as_number().to_double());
+			unit->setMuzzleVelocity(value[L"muzzleVelocity"].as_number().to_double());
+			unit->setAimTime(value[L"aimTime"].as_number().to_double());
+			unit->setShotsToFire(value[L"shotsToFire"].as_number().to_uint32());
+			unit->setShotsBaseInterval(value[L"shotsBaseInterval"].as_number().to_double());
+			unit->setShotsBaseScatter(value[L"shotsBaseScatter"].as_number().to_double());
+			unit->setEngagementRange(value[L"engagementRange"].as_number().to_double());
+			unit->setTargetingRange(value[L"targetingRange"].as_number().to_double());
+			unit->setAimMethodRange(value[L"aimMethodRange"].as_number().to_double());
+			unit->setAcquisitionRange(value[L"acquisitionRange"].as_number().to_double());
+			
+			log(username + " updated unit " + unit->getUnitName() + "(" + unit->getName() + ") engagementProperties", true);
+		}
+	}
+	/************************/
 	else if (key.compare("setFollowRoads") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();

@@ -1,3 +1,11 @@
+v2.0.0 ====================
+Changes:
+1) completely redone UI using React
+2) added audio backend for SRS integration
+3) added Mission Editor drawings in DCS
+4) multiple enhancements to control scheme
+
+
 v1.0.4 ====================
 Changes:
 1) Added Olympus Manager for unified configuration management;

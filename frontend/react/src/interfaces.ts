@@ -40,7 +40,8 @@ export interface OlympusConfig {
 
   /* Set by server */
   local?: boolean;
-  authentication?: { // Only sent when in localhost mode for autologin
+  authentication?: {
+    // Only sent when in localhost mode for autologin
     gameMasterPassword: string;
     blueCommanderPasword: string;
     redCommanderPassword: string;
@@ -53,12 +54,12 @@ export interface SessionData {
   unitSinks?: { ID: number }[];
   connections?: any[];
   coalitionAreas?: (
-    | { type: 'circle', label: string; latlng: { lat: number; lng: number }; radius: number; coalition: Coalition }
-    | { type: 'polygon', label: string; latlngs: { lat: number; lng: number }[]; coalition: Coalition }
+    | { type: "circle"; label: string; latlng: { lat: number; lng: number }; radius: number; coalition: Coalition }
+    | { type: "polygon"; label: string; latlngs: { lat: number; lng: number }[]; coalition: Coalition }
   )[];
-  hotgroups?: {[key: string]: number[]},
-  starredSpawns?: { [key: number]: SpawnRequestTable }
-  drawings?: { [key: string]: {visibility: boolean, opacity: number, name: string, guid: string, containers: any, drawings: any} }
+  hotgroups?: { [key: string]: number[] };
+  starredSpawns?: { [key: number]: SpawnRequestTable };
+  drawings?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
 }
 
 export interface ProfileOptions {
@@ -88,7 +89,7 @@ export interface BullseyesData {
 
 export interface SpotsData {
   spots: {
-    [key: string]: { type: string, targetPosition: {lat: number; lng: number}; sourceUnitID: number; code?: number };
+    [key: string]: { type: string; targetPosition: { lat: number; lng: number }; sourceUnitID: number; code?: number };
   };
   sessionHash: string;
   time: number;
@@ -265,6 +266,17 @@ export interface UnitData {
   racetrackLength: number;
   racetrackAnchor: LatLng;
   racetrackBearing: number;
+  timeToNextTasking: number;
+  barrelHeight: number;
+  muzzleVelocity: number;
+  aimTime: number;
+  shotsToFire: number;
+  shotsBaseInterval: number;
+  shotsBaseScatter: number;
+  engagementRange: number;
+  targetingRange: number;
+  aimMethodRange: number;
+  acquisitionRange: number;
 }
 
 export interface LoadoutItemBlueprint {
