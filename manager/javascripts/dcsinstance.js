@@ -190,7 +190,7 @@ class DCSInstance {
                 this.gameMasterPasswordHash = config["authentication"]["gameMasterPassword"];
 
                 /* Read the new configurations added in v2.0.0 */
-                if ( config["frontend"]["autoconnectWhenLocal"] !== undefined)
+                if (config["frontend"]["autoconnectWhenLocal"] !== undefined)
                     this.autoconnectWhenLocal = config["frontend"]["autoconnectWhenLocal"];
                 if (config["frontend"]["audio"] !== undefined && config["frontend"]["audio"]["SRSPort"] !== undefined)
                     this.SRSPort = config["audio"]["SRSPort"];
