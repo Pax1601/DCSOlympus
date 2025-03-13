@@ -45,29 +45,44 @@ module.exports = function (configLocation) {
   router.put("/config", function (req, res, next) {
     if (req.auth?.user === "Admin") {
       /* Create a backup folder for the configuration files */
-      let backupFolder = path.join(path.dirname(configLocation), "Olympus Configs Backup");
+      let backupFolder = path.join(
+        path.dirname(configLocation),
+        "Olympus Configs Backup"
+      );
       if (!fs.existsSync(backupFolder)) {
         fs.mkdirSync(backupFolder);
       }
 
       /* Make a backup of the existing files */
       let timestamp = new Date().toISOString().replace(/:/g, "-");
-      fs.copyFileSync(
-        path.join(path.dirname(configLocation),  "olympusUsers.json"),
-        path.join(
-          path.dirname(configLocation),
-          "Olympus Configs Backup",
-          "olympusUsers.json." + timestamp
+      if (
+        fs.existsSync(
+          path.join(path.dirname(configLocation), "olympusUsers.json")
         )
-      );
-      fs.copyFileSync(
-        path.join(path.dirname(configLocation), "olympusGroups.json"),
-        path.join(
-          path.dirname(configLocation),
-          "Olympus Configs Backup",
-          "olympusGroups.json." + timestamp
+      ) {
+        fs.copyFileSync(
+          path.join(path.dirname(configLocation), "olympusUsers.json"),
+          path.join(
+            path.dirname(configLocation),
+            "Olympus Configs Backup",
+            "olympusUsers.json." + timestamp
+          )
+        );
+      }
+      if (
+        fs.existsSync(
+          path.join(path.dirname(configLocation), "olympusGroups.json")
         )
-      );
+      ) {
+        fs.copyFileSync(
+          path.join(path.dirname(configLocation), "olympusGroups.json"),
+          path.join(
+            path.dirname(configLocation),
+            "Olympus Configs Backup",
+            "olympusGroups.json." + timestamp
+          )
+        );
+      }
 
       /* Save the users configuration file */
       let usersConfig = req.body.users;

@@ -159,6 +159,7 @@ class Manager {
                 if (this.getActiveInstance()) {
                     this.setPort('frontend', this.getActiveInstance().frontendPort);
                     this.setPort('backend', this.getActiveInstance().backendPort);
+                    this.expertSettingsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
                 }
             }
 
