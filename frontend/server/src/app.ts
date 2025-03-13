@@ -126,9 +126,13 @@ module.exports = function (configLocation, viteProxy) {
   });
 
   /* Define middleware */
-  app.use(logger('dev', {
-    skip: function (req, res) { return res.statusCode < 400 }
-  }));
+  app.use(
+    logger("dev", {
+      skip: function (req, res) {
+        return res.statusCode < 400;
+      },
+    })
+  );
 
   /* Authorization middleware */
   if (
@@ -166,7 +170,7 @@ module.exports = function (configLocation, viteProxy) {
   app.use("/olympus", async (req, res, next) => {
     /* Check if custom authorization headers are being used */
     const user =
-    //@ts-ignore
+      //@ts-ignore
       req.auth?.user ??
       checkCustomHeaders(config, usersConfig, groupsConfig, req);
 
@@ -221,16 +225,27 @@ module.exports = function (configLocation, viteProxy) {
   });
 
   /* Proxy middleware */
-  app.use(
-    "/olympus",
-    httpProxyMiddleware.createProxyMiddleware({
-      target: `http://${
-        backendAddress === "*" ? "localhost" : backendAddress
-      }:${config["backend"]["port"]}/olympus`,
-      changeOrigin: true,
-    })
-  );
-
+  if (config["backend"]["port"]) {
+    app.use(
+      "/olympus",
+      httpProxyMiddleware.createProxyMiddleware({
+        target: `http://${
+          backendAddress === "*" ? "localhost" : backendAddress
+        }:${config["backend"]["port"]}/olympus`,
+        changeOrigin: true,
+      })
+    );
+  } else {
+    app.use(
+      "/olympus",
+      httpProxyMiddleware.createProxyMiddleware({
+        target: `https://${
+          backendAddress === "*" ? "localhost" : backendAddress
+        }/olympus`,
+        changeOrigin: true,
+      })
+    );
+  }
 
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));

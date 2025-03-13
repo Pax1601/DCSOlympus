@@ -54,10 +54,10 @@ export class AudioManager {
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
-      if (config.audio) 
-        config.audio.WSPort ? this.setPort(config.audio.WSPort) : this.setEndpoint(config.audio.WSEndpoint);
-      else 
-        console.error("No audio configuration found in the Olympus configuration file");
+      if (config.audio) {
+        this.setPort(config.audio.WSPort);
+        this.setEndpoint(config.audio.WSEndpoint);
+      } else console.error("No audio configuration found in the Olympus configuration file");
     });
 
     CommandModeOptionsChangedEvent.on((options: CommandModeOptions) => {
@@ -101,11 +101,19 @@ export class AudioManager {
 
     let wsAddress = res ? res[1] : location.toString();
     if (wsAddress.at(wsAddress.length - 1) === "/") wsAddress = wsAddress.substring(0, wsAddress.length - 1);
-    if (this.#endpoint) this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
-    else if (this.#port) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
-    else console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
 
-    if (!this.#socket) return;
+    if (this.#port === undefined && this.#endpoint === undefined) {
+      console.error("The audio backend was enabled but no port/endpoint was provided in the configuration");
+      return;
+    }
+
+    this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
+    if (!this.#socket) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
+
+    if (!this.#socket) {
+      console.error("Failed to connect to audio websocket");
+      return;
+    }
 
     /* Log the opening of the connection */
     this.#socket.addEventListener("open", (event) => {
