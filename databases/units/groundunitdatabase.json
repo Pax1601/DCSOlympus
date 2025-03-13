@@ -8619,24 +8619,25 @@
         "countries": "All"
       }
     },
-    "acquisitionRange": 16000,
-    "engagementRange": 2000,
+    "acquisitionRange": 30000,
+    "engagementRange": 21000,
     "description": "KS-19. 100 mm AAA gun. Fixed manually aimed large calibre anti aircraft gun.",
     "abilities": "AA",
     "canTargetPoint": false,
     "canRearm": false,
     "muzzleVelocity": 1000,
-    "aimTime": 25,
-    "shotsToFire": 5,
+    "aimTime": 5,
+    "shotsToFire": 1,
     "barrelHeight": 5,
     "cost": null,
     "markerFile": "groundunit-aaa",
     "canAAA": true,
-    "targetingRange": 100,
-    "aimMethodRange": 15000,
+    "targetingRange": 0,
+    "aimMethodRange": 0,
     "shotsBaseInterval": 5,
-    "shotsBaseScatter": 5,
-    "alertnessTimeConstant": 5
+    "shotsBaseScatter": 8,
+    "alertnessTimeConstant": 5,
+    "flak": true
   },
   "SON_9": {
     "name": "SON_9",
@@ -10651,7 +10652,8 @@
     "shotsBaseScatter": 5,
     "aimMethodRange": 15000,
     "targetingRange": 200,
-    "alertnessTimeConstant": 15
+    "alertnessTimeConstant": 15,
+    "flak": true
   },
   "Pz_IV_H": {
     "name": "Pz_IV_H",
@@ -11896,7 +11898,8 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": true,
+    "flak": true
   },
   "Maschinensatz_33": {
     "name": "Maschinensatz_33",
@@ -13069,7 +13072,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    }, 
+    "flak": true
   },
   "flak36": {
     "name": "flak36",
@@ -13097,7 +13101,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    }, 
+    "flak": true
   },
   "flak37": {
     "name": "flak37",
@@ -13125,7 +13130,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    }, 
+    "flak": true
   },
   "flak38": {
     "name": "flak38",
@@ -13153,7 +13159,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "flak41": {
     "name": "flak41",
@@ -13181,7 +13188,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "HEMTT_C-RAM_Phalanx": {
     "name": "HEMTT_C-RAM_Phalanx",
