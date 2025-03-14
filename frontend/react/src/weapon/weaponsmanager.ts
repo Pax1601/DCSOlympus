@@ -38,7 +38,7 @@ export class WeaponsManager {
   /** Add a new weapon to the manager
    *
    * @param ID ID of the new weapon
-   * @param category Either "Missile" or "Bomb". Determines what class will be used to create the new unit accordingly.
+   * @param category Either "Missile", "Bomb" or "Shell". Determines what class will be used to create the new unit accordingly.
    */
   addWeapon(ID: number, category: string) {
     if (category) {

@@ -1415,6 +1415,8 @@ function Olympus.setWeaponsData(arg, time)
 						table["category"] = "Missile"
 					elseif weapon:getDesc().category == Weapon.Category.BOMB then
 						table["category"] = "Bomb"
+					elseif weapon:getDesc().category == Weapon.Category.SHELL then
+						table["category"] = "Shell"
 					end
 				else
 					weapons[ID] = {isAlive = false}

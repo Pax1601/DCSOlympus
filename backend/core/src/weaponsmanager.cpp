@@ -41,6 +41,8 @@ void WeaponsManager::update(json::value& json, double dt)
 					weapons[ID] = dynamic_cast<Weapon*>(new Missile(p.second, ID));
 				else if (category.compare("Bomb") == 0)
 					weapons[ID] = dynamic_cast<Weapon*>(new Bomb(p.second, ID));
+				else if (category.compare("Shell") == 0)
+					weapons[ID] = dynamic_cast<Weapon*>(new Shell(p.second, ID));
 
 				/* Initialize the weapon if creation was successfull */
 				if (weapons.count(ID) != 0) {
