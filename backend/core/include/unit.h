@@ -62,6 +62,8 @@ public:
 	bool hasFreshData(unsigned long long time);
 	bool checkFreshness(unsigned char datumIndex, unsigned long long time);
 
+	unsigned int computeTotalAmmo();
+
 	/********** Setters **********/
 	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }
 	virtual void setAlive(bool newValue) { updateValue(alive, newValue, DataIndex::alive); }
@@ -240,26 +242,29 @@ protected:
 	unsigned char shotsIntensity = 2;
 	unsigned char health = 100;
 	double timeToNextTasking = 0;
-	double barrelHeight = 1.0; /* m */
-	double muzzleVelocity = 860; /* m/s */
-	double aimTime = 10; /* s */
-	unsigned int shotsToFire = 10;
-	double shotsBaseInterval = 15; /* s */
-	double shotsBaseScatter = 2; /* degs */
-	double engagementRange = 10000; /* m */
-	double targetingRange = 0; /* m */
-	double aimMethodRange = 0; /* m */
-	double acquisitionRange = 0; /* m */
+	double barrelHeight = 0; 
+	double muzzleVelocity = 0; 
+	double aimTime = 0;
+	unsigned int shotsToFire = 0;
+	double shotsBaseInterval = 0;
+	double shotsBaseScatter = 0; 
+	double engagementRange = 0;
+	double targetingRange = 0;
+	double aimMethodRange = 0; 
+	double acquisitionRange = 0; 
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
-	unsigned int internalCounter = 0;
 	Unit* missOnPurposeTarget = nullptr;
 	bool hasTaskAssigned = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;
 	unsigned long long lastLoopTime = 0;
 	bool enableTaskFailedCheck = false;
+	unsigned long nextTaskingMilliseconds = 0;
+	unsigned int totalShellsFired = 0;
+	unsigned int shellsFiredAtTasking = 0;
+	unsigned int oldAmmo = 0;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

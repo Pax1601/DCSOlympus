@@ -129,7 +129,7 @@
     "canRearm": false,
     "muzzleVelocity": 1000,
     "barrelHeight": 2,
-    "aimTime": 5,
+    "aimTime": 7,
     "shotsToFire": 10,
     "cost": null,
     "tags": "Optical, Radar, CA",
@@ -587,7 +587,7 @@
     "abilities": "Combined arms, Amphibious, Transport, AA",
     "canTargetPoint": true,
     "canRearm": false,
-    "aimTime": 5,
+    "aimTime": 6,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -819,7 +819,7 @@
     "canRearm": false,
     "barrelHeight": 2.2,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 6,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -955,7 +955,7 @@
     "acquisitionRange": 3000,
     "engagementRange": 1000,
     "description": "Armoured car, MRAP. Wheeled. Amphibious. 12.7 mm machine gun.",
-    "abilities": "Combined arms, Amphibious,  AA",
+    "abilities": "Combined arms, Amphibious",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 2,
@@ -969,7 +969,7 @@
     "shotsBaseInterval": 6,
     "shotsBaseScatter": 10,
     "alertnessTimeConstant": 4,
-    "canAAA": true
+    "canAAA": false
   },
   "Dog Ear radar": {
     "name": "Dog Ear radar",
@@ -1188,7 +1188,7 @@
     "abilities": "Combined arms, AA",
     "canTargetPoint": true,
     "canRearm": false,
-    "aimTime": 8,
+    "aimTime": 7,
     "shotsToFire": 5,
     "cost": null,
     "tags": "Radar, CA",
@@ -2280,7 +2280,7 @@
     "abilities": "AA, Embark",
     "canTargetPoint": true,
     "canRearm": false,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsToFire": 5,
     "tags": "Russian type 1",
     "markerFile": "groundunit-infantry",
@@ -2789,7 +2789,7 @@
     "shotsBaseInterval": 6,
     "shotsToFire": 5,
     "tags": "CA",
-    "aimTime": 5,
+    "aimTime": 7,
     "aimMethodRange": 3000,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 4,
@@ -2931,7 +2931,7 @@
     "aimMethodRange": 300,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 3,
-    "canAAA": true
+    "canAAA": false
   },
   "M-109": {
     "name": "M-109",
@@ -3096,7 +3096,7 @@
     "canRearm": false,
     "barrelHeight": 2.8,
     "muzzleVelocity": 950,
-    "aimTime": 5,
+    "aimTime": 2.5,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -3265,7 +3265,7 @@
     "markerFile": "groundunit-tactical",
     "targetingRange": 100,
     "aimMethodRange": 2500,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsToFire": 5,
     "shotsBaseInterval": 5,
     "shotsBaseScatter": 5,
@@ -3368,7 +3368,7 @@
     "canRearm": false,
     "barrelHeight": 3,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 2.7,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -3800,7 +3800,7 @@
     "canRearm": false,
     "barrelHeight": 2.05,
     "muzzleVelocity": 800,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -3845,13 +3845,13 @@
     },
     "acquisitionRange": 3000,
     "engagementRange": 1000,
-    "description": "Marder Infantry FIghting Vehicle. Tracked. Amphibious. 20 mm gun and 7.62 mm machine gun.",
+    "description": "Marder Infantry Fighting Vehicle. Tracked. Amphibious. 20 mm gun and 7.62 mm machine gun.",
     "abilities": "Combined arms, Transport, Amphibious",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 2.82,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 9,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -3917,7 +3917,7 @@
     "acquisitionRange": 2500,
     "engagementRange": 300,
     "description": "Russian paratrooper carrying AKS-74.",
-    "abilities": "AA, Embark",
+    "abilities": "Embark",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 0.9,
@@ -3926,7 +3926,7 @@
     "shotsToFire": 5,
     "tags": "Russian Para",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "targetingRange": 100,
     "aimMethodRange": 2000,
     "shotsBaseInterval": 5,
@@ -3955,7 +3955,7 @@
     "shotsToFire": 1,
     "tags": "Russian Para",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "targetingRange": 50,
     "aimMethodRange": 750,
     "shotsBaseInterval": 5,
@@ -5613,7 +5613,7 @@
     "abilities": "AA, Embark",
     "canTargetPoint": true,
     "canRearm": false,
-    "aimTime": 5,
+    "aimTime": 2.5,
     "shotsToFire": 5,
     "tags": "Russian type 4",
     "markerFile": "groundunit-infantry",
@@ -5679,7 +5679,7 @@
     "acquisitionRange": 2500,
     "engagementRange": 300,
     "description": "Solider carrying M249.",
-    "abilities": "AA, Embark",
+    "abilities": "Embark",
     "canTargetPoint": true,
     "canRearm": false,
     "muzzleVelocity": 915,
@@ -5688,7 +5688,7 @@
     "barrelHeight": 0.25,
     "tags": "US",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "targetingRange": 100,
     "aimMethodRange": 2000,
     "shotsBaseInterval": 5,
@@ -5758,7 +5758,7 @@
     "acquisitionRange": 2500,
     "engagementRange": 300,
     "description": "Solider carrying M4.",
-    "abilities": "AA, Embark",
+    "abilities": "Embark",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 0.95,
@@ -5767,7 +5767,7 @@
     "shotsToFire": 5,
     "tags": "Georgia",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "targetingRange": 100,
     "aimMethodRange": 2000,
     "shotsBaseInterval": 5,
@@ -5829,7 +5829,7 @@
     "acquisitionRange": 2500,
     "engagementRange": 300,
     "description": "Solider carrying M4.",
-    "abilities": "AA, Embark",
+    "abilities": "Embark",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 1,
@@ -5838,7 +5838,7 @@
     "shotsToFire": 5,
     "tags": "US",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "targetingRange": 100,
     "aimMethodRange": 2000,
     "shotsBaseInterval": 5,
@@ -5909,7 +5909,7 @@
     "shotsToFire": 1,
     "tags": "Russian",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "targetingRange": 50,
     "aimMethodRange": 750,
     "shotsBaseInterval": 5,
@@ -6200,7 +6200,7 @@
     "aimMethodRange": 2500,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 6,
-    "canAAA": true
+    "canAAA": false
   },
   "T-72B": {
     "name": "T-72B",
@@ -6234,7 +6234,7 @@
     "muzzleVelocity": 700,
     "aimMethodRange": 2500,
     "alertnessTimeConstant": 4,
-    "canAAA": true,
+    "canAAA": false,
     "tags": "CA"
   },
   "T-80UD": {
@@ -6310,7 +6310,7 @@
     "aimMethodRange": 3000,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 5,
-    "canAAA": true
+    "canAAA": false
   },
   "T-90": {
     "name": "T-90",
@@ -6374,7 +6374,7 @@
     "shotsToFire": 5,
     "shotsBaseInterval": 8,
     "tags": "CA",
-    "canAAA": true,
+    "canAAA": false,
     "alertnessTimeConstant": 3,
     "shotsBaseScatter": 5,
     "aimMethodRange": 3000
@@ -6406,7 +6406,7 @@
     "shotsBaseInterval": 5,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 5,
-    "canAAA": true
+    "canAAA": false
   },
   "Tigr_233036": {
     "name": "Tigr_233036",
@@ -6757,7 +6757,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "shotsToFire": 5,
-    "aimTime": 8,
+    "aimTime": 6,
     "muzzleVelocity": 1000,
     "barrelHeight": 3,
     "cost": null,
@@ -6795,7 +6795,7 @@
     "cost": null,
     "barrelHeight": 3,
     "muzzleVelocity": 1000,
-    "aimTime": 8,
+    "aimTime": 6,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-aaa",
@@ -7028,7 +7028,7 @@
     "cost": null,
     "barrelHeight": 2.5,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 8,
     "shotsToFire": 5,
     "tags": "Radar, CA",
     "markerFile": "groundunit-aaa",
@@ -7240,7 +7240,7 @@
     "canRearm": false,
     "barrelHeight": 1.8,
     "muzzleVelocity": 1000,
-    "aimTime": 9,
+    "aimTime": 13,
     "shotsToFire": 5,
     "cost": null,
     "tags": "Radar, CA",
@@ -7325,7 +7325,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "shotsToFire": 5,
-    "aimTime": 9,
+    "aimTime": 6,
     "muzzleVelocity": 1000,
     "barrelHeight": 1.5,
     "cost": null,
@@ -7377,7 +7377,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "shotsToFire": 5,
-    "aimTime": 9,
+    "aimTime": 6,
     "muzzleVelocity": 1000,
     "barrelHeight": 1.5,
     "cost": null,
@@ -7413,7 +7413,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "shotsToFire": 5,
-    "aimTime": 9,
+    "aimTime": 6,
     "muzzleVelocity": 1000,
     "barrelHeight": 1.5,
     "cost": null,
@@ -7795,7 +7795,7 @@
     "acquisitionRange": 2500,
     "engagementRange": 300,
     "description": "Insurgent solider carrying AK-74.",
-    "abilities": "AA, Embark",
+    "abilities": "Embark",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 0.9,
@@ -7804,7 +7804,7 @@
     "shotsToFire": 5,
     "tags": "Insurgent",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "aimMethodRange": 2000,
     "targetingRange": 100,
     "shotsBaseInterval": 5,
@@ -7958,7 +7958,7 @@
     "canRearm": false,
     "barrelHeight": 0.9,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsToFire": 5,
     "tags": "Russian type 2",
     "markerFile": "groundunit-infantry",
@@ -8047,7 +8047,7 @@
     "acquisitionRange": 2500,
     "engagementRange": 300,
     "description": "Russian solider carrying AK-74.",
-    "abilities": "AA, Embark",
+    "abilities": "Embark",
     "canTargetPoint": true,
     "canRearm": false,
     "barrelHeight": 0.9,
@@ -8056,7 +8056,7 @@
     "shotsToFire": 5,
     "tags": "Russian type 3",
     "markerFile": "groundunit-infantry",
-    "canAAA": true,
+    "canAAA": false,
     "aimMethodRange": 2000,
     "targetingRange": 100,
     "shotsBaseInterval": 5,
@@ -8227,7 +8227,7 @@
     "tags": "CA",
     "aimMethodRange": 3000,
     "shotsBaseScatter": 5,
-    "canAAA": true,
+    "canAAA": false,
     "alertnessTimeConstant": 3
   },
   "LiAZ Bus": {
@@ -8619,24 +8619,25 @@
         "countries": "All"
       }
     },
-    "acquisitionRange": 16000,
-    "engagementRange": 2000,
+    "acquisitionRange": 30000,
+    "engagementRange": 21000,
     "description": "KS-19. 100 mm AAA gun. Fixed manually aimed large calibre anti aircraft gun.",
     "abilities": "AA",
     "canTargetPoint": false,
     "canRearm": false,
     "muzzleVelocity": 1000,
-    "aimTime": 25,
+    "aimTime": 15,
     "shotsToFire": 5,
     "barrelHeight": 5,
     "cost": null,
     "markerFile": "groundunit-aaa",
     "canAAA": true,
     "targetingRange": 100,
-    "aimMethodRange": 15000,
+    "aimMethodRange": 100,
     "shotsBaseInterval": 5,
     "shotsBaseScatter": 5,
-    "alertnessTimeConstant": 5
+    "alertnessTimeConstant": 5,
+    "flak": true
   },
   "SON_9": {
     "name": "SON_9",
@@ -8969,7 +8970,7 @@
     "cost": null,
     "barrelHeight": 2,
     "muzzleVelocity": 1000,
-    "aimTime": 5,
+    "aimTime": 6,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-aaa",
@@ -9016,7 +9017,7 @@
     "cost": null,
     "barrelHeight": 2,
     "muzzleVelocity": 1000,
-    "aimTime": 5,
+    "aimTime": 6,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-aaa",
@@ -9329,7 +9330,7 @@
     "canRearm": false,
     "barrelHeight": 2.6,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -9520,7 +9521,7 @@
     "canRearm": false,
     "muzzleVelocity": 1200,
     "barrelHeight": 3,
-    "aimTime": 20,
+    "aimTime": 10,
     "shotsToFire": 5,
     "cost": null,
     "tags": "CA",
@@ -9558,7 +9559,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "muzzleVelocity": 1000,
-    "aimTime": 5,
+    "aimTime": 10,
     "shotsToFire": 5,
     "barrelHeight": 2,
     "cost": null,
@@ -9645,7 +9646,7 @@
     "barrelHeight": 2.7,
     "shotsBaseInterval": 8,
     "shotsToFire": 5,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 3,
     "aimMethodRange": 3000,
@@ -9771,7 +9772,7 @@
     "canRearm": false,
     "barrelHeight": 2.8,
     "muzzleVelocity": 900,
-    "aimTime": 5,
+    "aimTime": 4,
     "shotsToFire": 5,
     "tags": "CA",
     "markerFile": "groundunit-apc",
@@ -10634,7 +10635,7 @@
         "countries": "All"
       }
     },
-    "aimTime": 25,
+    "aimTime": 15,
     "shotsToFire": 2,
     "acquisitionRange": 15000,
     "engagementRange": 12000,
@@ -10649,9 +10650,10 @@
     "canAAA": true,
     "shotsBaseInterval": 10,
     "shotsBaseScatter": 5,
-    "aimMethodRange": 15000,
-    "targetingRange": 200,
-    "alertnessTimeConstant": 15
+    "aimMethodRange": 100,
+    "targetingRange": 100,
+    "alertnessTimeConstant": 15,
+    "flak": true
   },
   "Pz_IV_H": {
     "name": "Pz_IV_H",
@@ -10768,7 +10770,7 @@
     "aimMethodRange": 3000,
     "barrelHeight": 2.7,
     "muzzleVelocity": 700,
-    "aimTime": 5,
+    "aimTime": 3,
     "shotsToFire": 5,
     "shotsBaseInterval": 6,
     "tags": "CA",
@@ -10879,7 +10881,7 @@
     "barrelHeight": 2.7,
     "shotsBaseInterval": 7,
     "tags": "CA",
-    "aimTime": 5,
+    "aimTime": 6,
     "shotsToFire": 5,
     "aimMethodRange": 3000,
     "shotsBaseScatter": 5,
@@ -10957,7 +10959,7 @@
     "barrelHeight": 2.7,
     "shotsBaseInterval": 7,
     "shotsToFire": 5,
-    "aimTime": 5,
+    "aimTime": 8,
     "tags": "CA",
     "aimMethodRange": 3000,
     "shotsBaseScatter": 5,
@@ -11195,7 +11197,7 @@
     "alertnessTimeConstant": 3,
     "shotsBaseScatter": 5,
     "aimMethodRange": 3000,
-    "canAAA": true
+    "canAAA": false
   },
   "ZBD04A": {
     "name": "ZBD04A",
@@ -11357,7 +11359,7 @@
     "aimMethodRange": 3000,
     "shotsBaseScatter": 5,
     "alertnessTimeConstant": 6,
-    "canAAA": true
+    "canAAA": false
   },
   "Kubelwagen_82": {
     "name": "Kubelwagen_82",
@@ -11860,7 +11862,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": false
   },
   "Flakscheinwerfer_37": {
     "name": "Flakscheinwerfer_37",
@@ -11896,7 +11898,8 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": true,
+    "flak": true
   },
   "Maschinensatz_33": {
     "name": "Maschinensatz_33",
@@ -11932,7 +11935,7 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": false
   },
   "soldier_mauser98": {
     "name": "soldier_mauser98",
@@ -12516,7 +12519,8 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": true,
+    "aimTime": 6
   },
   "Allies_Director": {
     "name": "Allies_Director",
@@ -12886,7 +12890,8 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": true,
+    "aimTime": 6
   },
   "M1_37mm": {
     "name": "M1_37mm",
@@ -12922,7 +12927,8 @@
     "canTargetPoint": true,
     "canRearm": false,
     "markerFile": "groundunit-aaa",
-    "canAAA": true
+    "canAAA": true,
+    "aimTime": 5
   },
   "DR_50Ton_Flat_Wagon": {
     "name": "DR_50Ton_Flat_Wagon",
@@ -13069,7 +13075,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "flak36": {
     "name": "flak36",
@@ -13097,7 +13104,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "flak37": {
     "name": "flak37",
@@ -13125,7 +13133,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "flak38": {
     "name": "flak38",
@@ -13153,7 +13162,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "flak41": {
     "name": "flak41",
@@ -13181,7 +13191,8 @@
         "name": "Winter",
         "countries": "All"
       }
-    }
+    },
+    "flak": true
   },
   "HEMTT_C-RAM_Phalanx": {
     "name": "HEMTT_C-RAM_Phalanx",

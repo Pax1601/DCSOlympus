@@ -825,3 +825,11 @@ void Unit::setHasTaskAssigned(bool newHasTaskAssigned) {
 void Unit::triggerUpdate(unsigned char datumIndex) {
 	updateTimeMap[datumIndex] = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
+
+unsigned int Unit::computeTotalAmmo()
+{
+	unsigned int totalShells = 0;
+	for (auto const& ammoItem : ammo)
+		totalShells += ammoItem.quantity;
+	return totalShells;
+}

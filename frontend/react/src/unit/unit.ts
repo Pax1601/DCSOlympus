@@ -188,6 +188,8 @@ export abstract class Unit extends CustomMarker {
   #targetingRange: number = 0;
   #aimMethodRange: number = 0;
   #acquisitionRange: number = 0;
+  #totalAmmo: number = 0;
+  #previousTotalAmmo: number = 0;
 
   /* Inputs timers */
   #debounceTimeout: number | null = null;
@@ -654,6 +656,8 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.ammo:
           this.#ammo = dataExtractor.extractAmmo();
+          this.#previousTotalAmmo = this.#totalAmmo;
+          this.#totalAmmo = this.#ammo.reduce((prev: number, ammo: Ammo) => prev + ammo.quantity, 0);
           break;
         case DataIndexes.contacts:
           this.#contacts = dataExtractor.extractContacts();

@@ -507,11 +507,6 @@ export class Map extends L.Map {
         altKey: false,
         ctrlKey: false,
       });
-
-    /* Periodically check if the camera control endpoint is available */
-    this.#cameraControlTimer = window.setInterval(() => {
-      this.#checkCameraPort();
-    }, 1000);
   }
 
   setLayerName(layerName: string) {
@@ -1296,33 +1291,6 @@ export class Map extends L.Map {
   #getMinimapBoundaries() {
     /* Draw the limits of the maps in the minimap*/
     return minimapBoundaries;
-  }
-
-  #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {
-    this.#slaveDCSCameraAvailable = newSlaveDCSCameraAvailable;
-  }
-
-  /* Check if the camera control plugin is available. Right now this will only change the color of the button, no changes in functionality */
-  #checkCameraPort() {
-    if (this.#cameraOptionsXmlHttp?.readyState !== 4) this.#cameraOptionsXmlHttp?.abort();
-
-    this.#cameraOptionsXmlHttp = new XMLHttpRequest();
-
-    /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
-        browser if it first tries to send the request on the IPv6 address for localhost */
-    this.#cameraOptionsXmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
-    this.#cameraOptionsXmlHttp.onload = (res: any) => {
-      if (this.#cameraOptionsXmlHttp !== null && this.#cameraOptionsXmlHttp.status == 204) this.#setSlaveDCSCameraAvailable(true);
-      else this.#setSlaveDCSCameraAvailable(false);
-    };
-    this.#cameraOptionsXmlHttp.onerror = (res: any) => {
-      this.#setSlaveDCSCameraAvailable(false);
-    };
-    this.#cameraOptionsXmlHttp.ontimeout = (res: any) => {
-      this.#setSlaveDCSCameraAvailable(false);
-    };
-    this.#cameraOptionsXmlHttp.timeout = 500;
-    this.#cameraOptionsXmlHttp.send("");
   }
 
   #drawIPToTargetLine() {
