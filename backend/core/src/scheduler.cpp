@@ -619,6 +619,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
+
+		if (value[L"location"].has_number_field(L"alt")) {
+			loc.alt = value[L"location"][L"alt"].as_double();
+		}
+
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);
