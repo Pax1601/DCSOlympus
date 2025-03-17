@@ -112,6 +112,9 @@ export abstract class Weapon extends CustomMarker {
   }
   
   setAlive(newAlive: boolean) {
+    if (this.#alive && !newAlive) {
+      getApp().getMap().addFlakMarker(this.getLatLng());
+    }
     this.#alive = newAlive;
   }
 

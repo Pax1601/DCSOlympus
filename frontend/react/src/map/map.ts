@@ -68,6 +68,7 @@ import {
 import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
 import { Measure } from "./measure";
+import { FlakMarker } from "./markers/flakmarker";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -758,6 +759,12 @@ export class Map extends L.Map {
 
   addExplosionMarker(latlng: L.LatLng) {
     const explosionMarker = new ExplosionMarker(latlng, 5);
+    explosionMarker.addTo(this);
+    return explosionMarker;
+  }
+
+  addFlakMarker(latlng: L.LatLng) {
+    const explosionMarker = new FlakMarker(latlng, 10);
     explosionMarker.addTo(this);
     return explosionMarker;
   }

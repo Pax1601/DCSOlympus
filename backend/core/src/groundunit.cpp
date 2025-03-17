@@ -402,6 +402,14 @@ void GroundUnit::AIloop()
 				canAAA = databaseEntry[L"canAAA"].as_bool();
 		}
 
+		/* Recover the data from the database */
+		bool flak = false;
+		if (database.has_object_field(to_wstring(name))) {
+			json::value databaseEntry = database[to_wstring(name)];
+			if (databaseEntry.has_boolean_field(L"flak"))
+				flak = databaseEntry[L"flak"].as_bool();
+		}
+
 		if (canAAA) {
 			/* Only perform scenic functions when the scheduler is "free" */
 			/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
@@ -450,13 +458,18 @@ void GroundUnit::AIloop()
 					}
 					/* Else, do miss on purpose */
 					else {
-						/* Compute where the target will be in aimTime seconds, plus the effect of scatter. */
-						double scatterDistance = distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * (RANDOM_ZERO_TO_ONE - 0.1);
-						double aimDistance = target->getHorizontalVelocity() * correctedAimTime + scatterDistance;
+						/* Compute where the target will be in aimTime seconds. */
+						double aimDistance = target->getHorizontalVelocity() * correctedAimTime;
 						double aimLat = 0;
 						double aimLng = 0;
 						Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getTrack() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util to convert degrees and radians function */
-						double aimAlt = target->getPosition().alt + target->getVerticalVelocity() * correctedAimTime + distance * tan(shotsBaseScatter * (ShotsScatter::LOW - shotsScatter) / 57.29577) * RANDOM_ZERO_TO_ONE; // Force to always miss high never low
+						double aimAlt = target->getPosition().alt + target->getVerticalVelocity();
+
+						if (flak) {
+							aimLat += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 0.01;
+							aimLng += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 0.01;
+							aimAlt += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 1000;
+						}
 
 						/* Send the command */
 						if (distance < engagementRange) {

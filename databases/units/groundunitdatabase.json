@@ -8625,8 +8625,8 @@
     "abilities": "AA",
     "canTargetPoint": false,
     "canRearm": false,
-    "muzzleVelocity": 1000,
-    "aimTime": 25,
+    "muzzleVelocity": 700,
+    "aimTime": 50,
     "shotsToFire": 1,
     "barrelHeight": 5,
     "cost": null,
@@ -10635,7 +10635,7 @@
         "countries": "All"
       }
     },
-    "aimTime": 15,
+    "aimTime": 50,
     "shotsToFire": 1,
     "acquisitionRange": 15000,
     "engagementRange": 12000,
@@ -10643,7 +10643,7 @@
     "abilities": "AA",
     "canTargetPoint": true,
     "canRearm": false,
-    "muzzleVelocity": 880,
+    "muzzleVelocity": 700,
     "barrelHeight": 2.1,
     "cost": 40000,
     "markerFile": "groundunit-aaa",
