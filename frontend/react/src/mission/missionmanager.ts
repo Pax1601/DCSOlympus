@@ -6,13 +6,20 @@ import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/c
 import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData, SpotsData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
-import { AirbaseSelectedEvent, AppStateChangedEvent, BullseyesDataChangedEvent, CommandModeOptionsChangedEvent, EnabledCommandModesChangedEvent, MissionDataChangedEvent } from "../events";
+import {
+  AirbaseSelectedEvent,
+  AppStateChangedEvent,
+  BullseyesDataChangedEvent,
+  CommandModeOptionsChangedEvent,
+  EnabledCommandModesChangedEvent,
+  MissionDataChangedEvent,
+} from "../events";
 import { Spot } from "./spot";
 
 /** The MissionManager  */
 export class MissionManager {
   #bullseyes: { [name: string]: Bullseye } = {};
-  #spots: {[key: string]: Spot} = {};
+  #spots: { [key: string]: Spot } = {};
   #airbases: { [name: string]: Airbase | Carrier } = {};
   #theatre: string = "";
   #dateAndTime: DateAndTime = {
@@ -39,7 +46,7 @@ export class MissionManager {
   constructor() {
     AppStateChangedEvent.on((state, subState) => {
       if (this.getSelectedAirbase() !== null) AirbaseSelectedEvent.dispatch(null);
-    })
+    });
   }
 
   /** Update location of bullseyes
@@ -63,7 +70,7 @@ export class MissionManager {
         this.#bullseyes[idx].setCoalition(bullseye.coalition);
       }
 
-      BullseyesDataChangedEvent.dispatch(this.#bullseyes)
+      BullseyesDataChangedEvent.dispatch(this.#bullseyes);
     }
   }
 
@@ -72,18 +79,18 @@ export class MissionManager {
       const spotID = Number(idx);
       const spot = data.spots[idx];
       if (this.#spots[spotID] === undefined) {
-        this.#spots[spotID] = new Spot(spotID, spot.type, new LatLng(spot.targetPosition.lat, spot.targetPosition.lng), spot.sourceUnitID, spot.code);
+        this.#spots[spotID] = new Spot(
+          spotID,
+          spot.type,
+          new LatLng(spot.targetPosition.lat, spot.targetPosition.lng),
+          spot.sourceUnitID,
+          spot.active,
+          spot.code
+        );
       } else {
-        if (spot.type === "laser")
-          this.#spots[spotID].setCode(spot.code ?? 0)
-        this.#spots[spotID].setTargetPosition( new LatLng(spot.targetPosition.lat, spot.targetPosition.lng));
-      }
-    }
-
-    /* Iterate the existing spots and remove all spots that where deleted */
-    for (let idx in this.#spots) {
-      if (data.spots[idx] === undefined) {
-        delete this.#spots[idx];
+        if (spot.type === "laser") this.#spots[spotID].setCode(spot.code ?? 0);
+        this.#spots[spotID].setActive(spot.active);
+        this.#spots[spotID].setTargetPosition(new LatLng(spot.targetPosition.lat, spot.targetPosition.lng));
       }
     }
   }
@@ -99,7 +106,7 @@ export class MissionManager {
   updateAirbases(data: AirbasesData) {
     for (let idx in data.airbases) {
       var airbase = data.airbases[idx];
-      var airbaseCallsign = airbase.callsign !== ""? airbase.callsign: `carrier-${airbase.unitId}`
+      var airbaseCallsign = airbase.callsign !== "" ? airbase.callsign : `carrier-${airbase.unitId}`;
       if (this.#airbases[airbaseCallsign] === undefined) {
         if (airbase.callsign != "") {
           this.#airbases[airbaseCallsign] = new Airbase({
@@ -161,7 +168,7 @@ export class MissionManager {
     return this.#airbases;
   }
 
-  getSpots() {  
+  getSpots() {
     return this.#spots;
   }
 
@@ -279,7 +286,7 @@ export class MissionManager {
       commandModeOptions.spawnPoints.red !== this.getCommandModeOptions().spawnPoints.red ||
       commandModeOptions.spawnPoints.blue !== this.getCommandModeOptions().spawnPoints.blue ||
       commandModeOptions.restrictSpawns !== this.getCommandModeOptions().restrictSpawns ||
-      commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition || 
+      commandModeOptions.restrictToCoalition !== this.getCommandModeOptions().restrictToCoalition ||
       commandModeOptions.setupTime !== this.getCommandModeOptions().setupTime;
 
     this.#commandModeOptions = commandModeOptions;

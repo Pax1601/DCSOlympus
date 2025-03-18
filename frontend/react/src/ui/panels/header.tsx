@@ -50,6 +50,8 @@ import {
 import { OlympusConfig } from "../../interfaces";
 import { FaCheck, FaQuestionCircle, FaSave, FaSpinner } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
+import { ftToM } from "../../other/utils";
+import { LatLng } from "leaflet";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -219,6 +221,18 @@ export function Header() {
           />
         </div>
         <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
+        <OlRoundStateButton
+            onClick={() => {
+              getApp().getUnitsManager().getSelectedUnits().forEach((unit) => {
+                let position = new LatLng(unit.getPosition().lat, unit.getPosition().lng);
+                position.lat += 0.01;
+                position.alt = ftToM(15000);
+                unit.fireAtArea(position);
+              })
+            }}
+            checked={false}
+            icon={faFlag}
+          />
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
           {Object.entries({
             human: olButtonsVisibilityHuman,

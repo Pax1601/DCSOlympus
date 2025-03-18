@@ -89,7 +89,7 @@ export interface BullseyesData {
 
 export interface SpotsData {
   spots: {
-    [key: string]: { type: string; targetPosition: { lat: number; lng: number }; sourceUnitID: number; code?: number };
+    [key: string]: { active: boolean; type: string; targetPosition: { lat: number; lng: number }; sourceUnitID: number; code?: number };
   };
   sessionHash: string;
   time: number;

@@ -1953,21 +1953,29 @@ export abstract class Unit extends CustomMarker {
     // Iterate over all spots and draw lines, edit markers, and markers
     Object.values(getApp().getMissionManager().getSpots()).forEach((spot: Spot) => {
       if (spot.getSourceUnitID() === this.ID) {
-        const spotBearing = deg2rad(bearing(this.getPosition().lat, this.getPosition().lng, spot.getTargetPosition().lat, spot.getTargetPosition().lng, false));
-        const spotDistance = this.getPosition().distanceTo(spot.getTargetPosition());
-        const midPosition = bearingAndDistanceToLatLng(this.getPosition().lat, this.getPosition().lng, spotBearing, spotDistance / 2);
+        if (spot.getActive()) {
+          const spotBearing = deg2rad(
+            bearing(this.getPosition().lat, this.getPosition().lng, spot.getTargetPosition().lat, spot.getTargetPosition().lng, false)
+          );
+          const spotDistance = this.getPosition().distanceTo(spot.getTargetPosition());
+          const midPosition = bearingAndDistanceToLatLng(this.getPosition().lat, this.getPosition().lng, spotBearing, spotDistance / 2);
 
-        // Draw the spot line
-        this.#drawSpotLine(spot, spotBearing);
+          // Draw the spot line
+          this.#drawSpotLine(spot, spotBearing);
 
-        // Draw the spot edit marker if the map is zoomed in enough
-        if (getApp().getMap().getZoom() >= SPOTS_EDIT_ZOOM_TRANSITION) {
-          // Draw the spot edit marker
-          this.#drawSpotEditMarker(spot, midPosition, spotBearing);
+          // Draw the spot edit marker if the map is zoomed in enough
+          if (getApp().getMap().getZoom() >= SPOTS_EDIT_ZOOM_TRANSITION) {
+            // Draw the spot edit marker
+            this.#drawSpotEditMarker(spot, midPosition, spotBearing);
+          }
+
+          // Draw the spot marker
+          this.#drawSpotMarker(spot);
+        } else {
+          this.#spotLines[spot.getID()]?.removeFrom(getApp().getMap());
+          this.#spotEditMarkers[spot.getID()]?.removeFrom(getApp().getMap());
+          this.#spotMarkers[spot.getID()]?.removeFrom(getApp().getMap());
         }
-
-        // Draw the spot marker
-        this.#drawSpotMarker(spot);
       }
     });
   }

@@ -20,7 +20,9 @@ export abstract class Weapon extends CustomMarker {
 
   #hidden: boolean = false;
   #detectionMethods: number[] = [];
-
+  #speedVector: number[] = [];
+  #altitude: number[] = [];
+  
   getAlive() {
     return this.#alive;
   }
@@ -86,6 +88,7 @@ export abstract class Weapon extends CustomMarker {
           break;
         case DataIndexes.speed:
           this.#speed = dataExtractor.extractFloat64();
+          this.#speedVector.push(this.#speed);
           updateMarker = true;
           break;
         case DataIndexes.heading:
@@ -116,6 +119,9 @@ export abstract class Weapon extends CustomMarker {
       getApp().getMap().addFlakMarker(this.getLatLng());
     }
     this.#alive = newAlive;
+    if (this.#speedVector.length > 0 && newAlive === false) {
+      let asd = 1;
+    }
   }
 
   belongsToCommandedCoalition() {

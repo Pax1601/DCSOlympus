@@ -242,7 +242,12 @@ void GroundUnit::AIloop()
 		if (!getHasTask()) {
 			std::ostringstream taskSS;
 			taskSS.precision(10);
-			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 100}";
+			if (targetPosition.alt == NULL) {
+				taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 100}";
+			}
+			else {
+				taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", alt = " << targetPosition.alt << ", radius = 100}";
+			}
 			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 			scheduler->appendCommand(command);
 			setHasTask(true);
@@ -437,9 +442,22 @@ void GroundUnit::AIloop()
 					taskString += "Missing on purpose. Valid target at range: " + to_string((int) round(distance)) + "m";
 
 					double correctedAimTime = aimTime;
+					double dstep = 0;
+					double vstep = muzzleVelocity;
+					double dt = 0.1;
+					double k = 0.0086;
+					double gdelta = 9.81;
+
 					/* Approximate the flight time */
-					if (muzzleVelocity != 0)
-						correctedAimTime += distance / muzzleVelocity;
+					unsigned int stepCount = 0;
+					if (muzzleVelocity != 0) {
+						while (dstep < distance && stepCount < 1000) {
+							dstep += vstep * dt;
+							vstep -= (k * vstep + gdelta) * dt;
+							stepCount++;
+						}
+						correctedAimTime += stepCount * dt;
+					}
 
 					/* If the target is in targeting range and we are in highest precision mode, target it */
 					if (distance < targetingRange && shotsScatter == ShotsScatter::LOW) {
