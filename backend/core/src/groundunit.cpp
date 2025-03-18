@@ -357,8 +357,8 @@ void GroundUnit::AIloop()
 				Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
 
 				if (flak) {
-					lat = position.lat + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 0.01;
-					lng = position.lng + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 0.01;
+					lat = position.lat + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+					lng = position.lng + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
 					barrelElevation = target->getPosition().alt + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 1000;
 					taskString += "Flak box mode.";
 				}
@@ -441,24 +441,9 @@ void GroundUnit::AIloop()
 				if (target != nullptr) {
 					taskString += "Missing on purpose. Valid target at range: " + to_string((int) round(distance)) + "m";
 
-					double correctedAimTime = aimTime;
-					double dstep = 0;
-					double vstep = muzzleVelocity;
-					double dt = 0.1;
-					double k = 0.0086;
-					double gdelta = 9.81;
-
-					/* Approximate the flight time */
-					unsigned int stepCount = 0;
-					if (muzzleVelocity != 0) {
-						while (dstep < distance && stepCount < 1000) {
-							dstep += vstep * dt;
-							vstep -= (k * vstep + gdelta) * dt;
-							stepCount++;
-						}
-						correctedAimTime += stepCount * dt;
-					}
-
+					// Very simplified algorithm ignoring drag
+					double correctedAimTime = aimTime + distance / muzzleVelocity;
+					
 					/* If the target is in targeting range and we are in highest precision mode, target it */
 					if (distance < targetingRange && shotsScatter == ShotsScatter::LOW) {
 						taskString += ". Range is less than targeting range (" + to_string((int) round(targetingRange)) + "m) and scatter is LOW, aiming at target.";
@@ -484,9 +469,9 @@ void GroundUnit::AIloop()
 						double aimAlt = target->getPosition().alt + target->getVerticalVelocity();
 
 						if (flak) {
-							aimLat += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 0.01;
-							aimLng += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 0.01;
-							aimAlt += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 1000;
+							aimLat += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+							aimLng += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+							aimAlt += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 1000;
 						}
 
 						/* Send the command */
