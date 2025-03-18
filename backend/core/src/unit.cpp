@@ -83,6 +83,11 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
 
+	if (json.has_string_field(L"radarState")) {
+		log("Unit " + to_string(json[L"unitName"]) + " has radarState: " + to_string(json[L"radarState"]));
+		setRadarState(to_string(json[L"radarState"]));
+	}
+
 	if (json.has_boolean_field(L"isHuman"))
 		setHuman(json[L"isHuman"].as_bool());
 
@@ -208,6 +213,7 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::operateAs:					updateValue(operateAs, leader->operateAs, datumIndex); break;
 					case DataIndex::shotsScatter:				updateValue(shotsScatter, leader->shotsScatter, datumIndex); break;
 					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
+					case DataIndex::radarState:					updateValue(radarState, leader->radarState, datumIndex); break;
 					}
 				}
 			}
@@ -251,6 +257,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				switch (datumIndex) {
 					case DataIndex::category:					appendString(ss, datumIndex, category); break;
 					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+					case DataIndex::radarState:					appendNumeric(ss, datumIndex, radarState); break;
 					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
 					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
 					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;

@@ -96,6 +96,12 @@ export const states: string[] = [
   UnitState.LAND_AT_POINT,
 ];
 
+export enum RADAR_STATES {
+  RED = 'red',
+  GREEN = 'green',
+  AUTO = 'auto'
+}
+
 export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
@@ -448,6 +454,7 @@ export enum DataIndexes {
   startOfData = 0,
   category,
   alive,
+  radarState,
   human,
   controlled,
   coalition,

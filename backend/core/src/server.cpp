@@ -152,7 +152,6 @@ void Server::handle_get(http_request request)
                     }
                     /* Drawings data*/
                     else if (URI.compare(DRAWINGS_URI) == 0 && drawingsByLayer.has_object_field(L"drawings")) {
-                        log("Trying to answer with drawings...");
                         answer[L"drawings"] = drawingsByLayer[L"drawings"];
                     }
                     

@@ -241,6 +241,7 @@ export class UnitsManager {
         if (datumIndex == DataIndexes.category) {
           const category = dataExtractor.extractString();
           this.addUnit(ID, category);
+          
         } else {
           /* Inconsistent data, we need to wait for a refresh */
           return updateTime;
@@ -250,6 +251,7 @@ export class UnitsManager {
       if (ID in this.#units) {
         this.#units[ID].setData(dataExtractor);
         this.#units[ID].getAlive() && updatedUnits.push(this.#units[ID]);
+        
       }
     }
 
