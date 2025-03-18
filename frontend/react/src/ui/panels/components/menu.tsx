@@ -1,46 +1,62 @@
-import { faArrowLeft, faCircleQuestion, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faCircleQuestion, faClose, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa6";
 
 export function Menu(props: {
   title: string;
   open: boolean;
   onClose: () => void;
-  canBeHidden?: boolean;
   onBack?: () => void;
   showBackButton?: boolean;
   children?: JSX.Element | JSX.Element[];
-  wiki?: () => (JSX.Element | JSX.Element[]);
+  wiki?: () => JSX.Element | JSX.Element[];
 }) {
   const [hide, setHide] = useState(true);
   const [wiki, setWiki] = useState(false);
 
   if (!props.open && hide) setHide(false);
 
+  useEffect(() => {
+    if (window.innerWidth > 640) setHide(false);
+  }, [props.open]);
+
   return (
     <div
       data-open={props.open}
       data-wiki={wiki}
       className={`
-        pointer-events-none absolute left-16 right-0 top-[58px] z-10
-        h-[calc(100vh-58px)] bg-transparent transition-all ol-panel-container
+        pointer-events-none absolute left-16 right-0 top-[58px] z-10 flex
+        h-[calc(100vh-58px)] transition-all ol-panel-container
         data-[open='false']:-translate-x-full
         data-[wiki='true']:w-[calc(100%-58px)] data-[wiki='true']:lg:w-[800px]
         sm:w-[400px]
       `}
       tabIndex={-1}
     >
+      {props.open && (
+        <div className="absolute flex h-full w-[30px]">
+          <div
+            className={`
+              pointer-events-auto my-auto flex h-[80px] w-full cursor-pointer
+              justify-center rounded-r-lg bg-olympus-800/90 backdrop-blur-lg
+              backdrop-grayscale
+              hover:bg-olympus-400/90
+            `}
+            onClick={() => setHide(!hide)}
+          >
+            <FaChevronRight className={`my-auto text-gray-400`} />
+          </div>
+        </div>
+      )}
       <div
         data-hide={hide}
-        data-canbehidden={props.canBeHidden}
         className={`
-          pointer-events-auto h-[calc(100vh-58px)] overflow-y-auto
+          pointer-events-auto h-[calc(100vh-58px)] w-full overflow-y-auto
           overflow-x-hidden backdrop-blur-lg backdrop-grayscale
           transition-transform no-scrollbar
           dark:bg-olympus-800/90
-          data-[canbehidden='true']:h-[calc(100vh-58px-2rem)]
-          data-[hide='true']:translate-y-[calc(100vh-58px)]
+          data-[hide='true']:-translate-x-full
         `}
       >
         <h5
@@ -72,6 +88,16 @@ export function Menu(props: {
             `}
           />
           <FontAwesomeIcon
+            onClick={() => setHide(true)}
+            icon={faEyeSlash}
+            className={`
+              flex cursor-pointer items-center justify-center rounded-md p-2
+              text-lg
+              dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
+              hover:bg-gray-200
+            `}
+          />
+          <FontAwesomeIcon
             onClick={props.onClose}
             icon={faClose}
             className={`
@@ -82,37 +108,27 @@ export function Menu(props: {
             `}
           />
         </h5>
-        <div className="flex h-[calc(100%-3rem)]">
-        <div data-wiki={wiki} className={`
-          w-0 overflow-hidden transition-all
-          data-[wiki='true']:w-[50%]
-        `}>
-          {props.wiki ? props.wiki() : <div className={`p-4 text-gray-200`}>Work in progress</div>}
-        </div>
-        <div data-wiki={wiki} className={`
-          w-full
-          sm:w-[400px]
-        `}>{props.children}</div>
+        <div className="flex h-[calc(100%-3rem)] w-full">
+          <div
+            data-wiki={wiki}
+            className={`
+              w-0 overflow-hidden transition-all
+              data-[wiki='true']:w-[50%]
+            `}
+          >
+            {props.wiki ? props.wiki() : <div className={`p-4 text-gray-200`}>Work in progress</div>}
+          </div>
+          <div
+            data-wiki={wiki}
+            className={`
+              min-w-full
+              sm:w-[400px]
+            `}
+          >
+            {props.children}
+          </div>
         </div>
       </div>
-      {props.canBeHidden == true && (
-        <div
-          className={`
-            pointer-events-auto flex h-8 cursor-pointer justify-center
-            bg-olympus-800/90 backdrop-blur-lg backdrop-grayscale
-            hover:bg-olympus-400/90
-          `}
-          onClick={() => setHide(!hide)}
-        >
-          {hide ? (
-            <FaChevronUp className="mx-auto my-auto text-gray-400" />
-          ) : (
-            <FaChevronDown
-              className={`mx-auto my-auto text-gray-400`}
-            />
-          )}
-        </div>
-      )}
     </div>
   );
 }

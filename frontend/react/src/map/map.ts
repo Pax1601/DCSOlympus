@@ -209,7 +209,9 @@ export class Map extends L.Map {
     this.on("selectionend", (e: any) => this.#onSelectionEnd(e));
 
     this.on("mouseup", (e: any) => this.#onMouseUp(e));
+    this.on("touchend", (e: any) => this.#onMouseUp(e));
     this.on("mousedown", (e: any) => this.#onMouseDown(e));
+    this.on("touchstart", (e: any) => this.#onMouseDown(e));
     this.on("dblclick", (e: any) => this.#onDoubleClick(e));
     this.on("click", (e: any) => e.originalEvent.preventDefault());
     this.on("contextmenu", (e: any) => e.originalEvent.preventDefault());
@@ -810,6 +812,10 @@ export class Map extends L.Map {
 
   setSelectionEnabled(selectionEnabled: boolean) {
     this.#selectionEnabled = selectionEnabled;
+
+    if (selectionEnabled) this.dragging.disable();
+    else this.dragging.enable();
+
     SelectionEnabledChangedEvent.dispatch(selectionEnabled);
   }
 
@@ -963,6 +969,9 @@ export class Map extends L.Map {
   #onSelectionEnd(e: any) {
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
 
+    // Autodisable the selection mode if touchscreen
+    if ("ontouchstart" in window) this.setSelectionEnabled(false);
+
     /* Delay the event so that any other event in the queue still sees the map in selection mode */
     window.setTimeout(() => {
       this.#isSelecting = false;
@@ -997,7 +1006,7 @@ export class Map extends L.Map {
   }
 
   #onMouseDown(e: any) {
-    if (e.originalEvent.button === 1) {
+    if (e.originalEvent?.button === 1) {
       this.dragging.disable();
     } // Disable dragging when right clicking
 

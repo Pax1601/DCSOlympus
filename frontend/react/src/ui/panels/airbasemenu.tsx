@@ -73,7 +73,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
   }
 
   return (
-    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
+    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false}>
       <div
         className={`
           flex flex-col gap-2 font-normal text-gray-800

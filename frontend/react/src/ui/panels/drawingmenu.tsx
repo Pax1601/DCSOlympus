@@ -147,7 +147,6 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
       open={props.open}
       title="Draw"
       onClose={props.onClose}
-      canBeHidden={true}
       showBackButton={appSubState !== DrawSubState.NO_SUBSTATE}
       onBack={() => {
         getApp().getCoalitionAreasManager().setSelectedArea(null);

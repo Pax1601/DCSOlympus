@@ -113,7 +113,6 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       {...props}
       title="Spawn menu"
       showBackButton={blueprint !== null || effect !== null}
-      canBeHidden={true}
       onBack={() => {
         getApp().setState(OlympusState.SPAWN);
         setBlueprint(null);

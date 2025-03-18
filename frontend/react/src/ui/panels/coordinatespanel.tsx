@@ -12,6 +12,7 @@ export function CoordinatesPanel(props: {}) {
   const [elevation, setElevation] = useState(0);
   const [bullseyes, setBullseyes] = useState(null as null | { [name: string]: Bullseye });
   const [selectedUnits, setSelectedUnits] = useState([] as Unit[]);
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     MouseMovedEvent.on((latlng, elevation) => {
@@ -27,18 +28,30 @@ export function CoordinatesPanel(props: {}) {
   return (
     <div
       className={`
-        absolute bottom-[20px] right-[310px] flex min-h-12 w-[380px] flex-col
-        items-center justify-between gap-2 rounded-lg bg-gray-200 px-3 py-3
-        text-sm backdrop-blur-lg backdrop-grayscale
+        flex w-full flex-col items-center justify-between gap-2 rounded-lg
+        bg-gray-200 px-3 py-3 text-sm backdrop-blur-lg backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
       `}
+      onClick={() => setOpen(!open)}
     >
-      {bullseyes && (
-        <div className="flex w-full items-center justify-start">
+      <div className="absolute right-[12px] top-[15px]">
+        {open ? (
+          <FaChevronDown className="cursor-pointer" />
+        ) : (
+          <FaChevronUp
+            className={`cursor-pointer`}
+          />
+        )}
+      </div>
+      {open && bullseyes && (
+        <div
+          className={`
+            flex w-full flex-col items-start justify-start gap-2
+          `}
+        >
           <div
             className={`
-              mr-[11px] flex min-w-64 max-w-64 items-center justify-between
-              gap-2
+              flex flex min-w-64 max-w-64 items-start justify-between gap-2
             `}
           >
             {bullseyes[2] && (
@@ -84,18 +97,27 @@ export function CoordinatesPanel(props: {}) {
         </div>
       )}
 
-      <div className="flex w-full items-center justify-between">
+      <div
+        className={`
+        flex w-full items-center justify-between pointer-events-all
+      `}
+      >
         <OlLocation className="!min-w-64 !max-w-64 bg-transparent !p-0" location={latlng} />
-        <span
-          className={`
-            mr-2 rounded-sm bg-white px-1 py-1 text-center font-bold
-            text-olympus-700
-          `}
-        >
-          <FaMountain />
-        </span>
-        <div className="min-w-12">{mToFt(elevation).toFixed()}ft</div>
       </div>
+
+      {open && (
+        <div className="flex w-full items-center justify-start">
+          <span
+            className={`
+              mr-2 rounded-sm bg-white px-1 py-1 text-center font-bold
+              text-olympus-700
+            `}
+          >
+            <FaMountain />
+          </span>
+          <div className="min-w-12">{mToFt(elevation).toFixed()}ft</div>
+        </div>
+      )}
     </div>
   );
 }

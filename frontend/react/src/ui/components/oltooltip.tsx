@@ -6,6 +6,12 @@ export function OlTooltip(props: {
   position?: string;
   relativeToParent?: boolean;
 }) {
+  const [isTouchscreen, setIsTouchscreen] = useState(false);
+
+  useEffect(() => {
+    setIsTouchscreen("ontouchstart" in window);
+  }, []);
+
   var contentRef = useRef(null);
 
   function setPosition(content: HTMLDivElement, button: HTMLButtonElement) {
@@ -106,7 +112,7 @@ export function OlTooltip(props: {
   });
 
   return (
-    props.content !== "" && (
+    props.content !== "" && !isTouchscreen && (
       <div
         ref={contentRef}
         className={`

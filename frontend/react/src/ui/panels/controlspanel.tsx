@@ -5,6 +5,7 @@ import { DrawSubState, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusS
 import { AppStateChangedEvent, ContextActionSetChangedEvent, MapOptionsChangedEvent, ShortcutsChangedEvent } from "../../events";
 import { ContextActionSet } from "../../unit/contextactionset";
 import { MapToolBar } from "./maptoolbar";
+import { CoordinatesPanel } from "./coordinatespanel";
 
 export function ControlsPanel(props: {}) {
   const [controls, setControls] = useState(
@@ -200,12 +201,12 @@ export function ControlsPanel(props: {}) {
       className={`
         absolute right-[0px] top-16
         ${mapOptions.showMinimap ? `bottom-[233px]` : `bottom-[65px]`}
-        pointer-events-none flex w-[310px] flex-col items-center justify-between
+        pointer-events-none flex w-[288px] flex-col items-center justify-between
         gap-1 p-3 text-sm
       `}
     >
       <MapToolBar />
-      {controls?.map((control) => {
+      {/*controls?.map((control) => {
         return (
           <div
             key={control.text}
@@ -246,7 +247,7 @@ export function ControlsPanel(props: {}) {
             </div>
           </div>
         );
-      })}
+      })*/}
     </div>
   );
 }

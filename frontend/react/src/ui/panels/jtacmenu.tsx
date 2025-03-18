@@ -60,7 +60,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
   let targetPosition = (targetUnit ? targetUnit.getPosition() : targetLocation) ?? new LatLng(0, 0);
 
   return (
-    <Menu title={"JTAC Tools"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
+    <Menu title={"JTAC Tools"} open={props.open} onClose={props.onClose} showBackButton={false}>
       <div
         className={`
           flex flex-col gap-2 p-4 font-normal text-gray-800

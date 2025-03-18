@@ -19,12 +19,10 @@ export function RadiosSummaryPanel(props: {}) {
       {audioSinks.length > 0 && (
         <div
           className={`
-            absolute bottom-[20px] right-[700px] flex w-fit flex-col
-            items-center justify-between gap-2 rounded-lg bg-transparent text-sm
-            text-gray-200
+            flex w-full gap-2 rounded-lg text-sm text-gray-200
           `}
         >
-          <div className="flex w-full items-center justify-between gap-2">
+          <div className="flex w-full flex-wrap gap-2">
             
             {audioSinks.filter((audioSinks) => audioSinks instanceof RadioSink).length > 0 &&
               audioSinks

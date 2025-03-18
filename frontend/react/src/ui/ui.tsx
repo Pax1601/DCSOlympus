@@ -111,8 +111,8 @@ export function UI() {
 
             <MiniMapPanel />
             <ControlsPanel />
-            <CoordinatesPanel />
-            <RadiosSummaryPanel />
+            
+            
 
             <SideBar />
             <InfoBar />

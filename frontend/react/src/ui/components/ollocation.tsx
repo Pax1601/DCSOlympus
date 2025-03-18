@@ -12,7 +12,14 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
           ${props.className ?? ""}
           my-auto cursor-pointer bg-olympus-400 p-2 text-white
         `}
-        onClick={props.onClick ? props.onClick : () => setReferenceSystem("LatLngDec")}
+        onClick={
+          props.onClick
+            ? props.onClick
+            : (ev) => {
+                setReferenceSystem("LatLngDec");
+                ev.stopPropagation();
+              }
+        }
       >
         <span
           className={`
@@ -32,7 +39,14 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
           my-auto flex cursor-pointer justify-between gap-2 bg-olympus-400 p-2
           text-white
         `}
-        onClick={props.onClick ? props.onClick : () => setReferenceSystem("LatLngDMS")}
+        onClick={
+          props.onClick
+            ? props.onClick
+            : (ev) => {
+                setReferenceSystem("LatLngDMS");
+                ev.stopPropagation();
+              }
+        }
       >
         <div className="flex gap-2">
           <span
@@ -64,7 +78,14 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
           my-auto flex cursor-pointer justify-between gap-2 bg-olympus-400 p-2
           text-white
         `}
-        onClick={props.onClick ? props.onClick : () => setReferenceSystem("MGRS")}
+        onClick={
+          props.onClick
+            ? props.onClick
+            : (ev) => {
+                setReferenceSystem("MGRS");
+                ev.stopPropagation();
+              }
+        }
       >
         <div className="flex gap-2">
           <span

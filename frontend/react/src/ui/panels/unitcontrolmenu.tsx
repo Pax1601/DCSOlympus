@@ -295,7 +295,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       open={props.open}
       title={selectedUnits.length > 0 ? `Units selected (x${selectedUnits.length})` : `No units selected`}
       onClose={props.onClose}
-      canBeHidden={true}
       wiki={() => {
         return (
           <div

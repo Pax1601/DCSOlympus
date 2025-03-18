@@ -102,7 +102,8 @@ export function Header() {
   return (
     <div
       className={`
-        z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3 align-center
+        relative z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3
+        align-center
         dark:border-gray-800 dark:bg-olympus-900
       `}
     >
@@ -147,6 +148,7 @@ export function Header() {
               {IP}
             </div>
           </div>
+          <div className="w-8">
           {savingSessionData ? (
             <div className="text-white">
               <FaSpinner className={`animate-spin text-2xl`} />
@@ -162,6 +164,7 @@ export function Header() {
               <FaCheck className={`absolute left-3 top-0 text-green-500`} />
             </div>
           )}
+          </div>
         </div>
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
