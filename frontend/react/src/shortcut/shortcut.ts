@@ -21,7 +21,7 @@ export class Shortcut {
     ModalEvent.on((modal) => (this.#modal = modal));
 
     /* On keyup, it is enough to check the code only, not the entire combination */
-    document.addEventListener("keyup", (ev: any) => {
+    window.addEventListener("keyup", (ev: any) => {
       if (this.#modal) return;
       if (this.#keydown && this.getOptions().code === ev.code) {
         console.log(`Keyup for shortcut ${this.#id}`);
@@ -32,7 +32,7 @@ export class Shortcut {
     });
 
     /* Forced keyup, in case the window loses focus */
-    document.addEventListener("blur", (ev: any) => {
+    window.addEventListener("blur", (ev: any) => {
       if (this.#keydown) {
         console.log(`Keyup (forced by blur) for shortcut ${this.#id}`);
         ev.preventDefault();
@@ -42,7 +42,7 @@ export class Shortcut {
     });
 
     /* On keydown, check exactly if the requested key combination is being pressed */
-    document.addEventListener("keydown", (ev: any) => {
+    window.addEventListener("keydown", (ev: any) => {
       if (this.#modal) return;
       if (
         !(this.#keydown || keyEventWasInInput(ev) || this.getOptions().code !== ev.code) &&
