@@ -620,6 +620,27 @@
   display: inline;
 }
 
+/* Unit Radar State */
+.unit-radar-state {
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  left: 35px;
+  bottom: 8px;
+}
+.unit[data-radar-state="GREEN"] .unit-radar-state {
+  border: 1px solid white;
+  background: rgb(0, 226, 0);
+}
+
+.unit[data-radar-state="RED"] .unit-radar-state {
+  border: 1px solid white;
+  background: red;
+}
+
 [todo-data-awacs-mode] [data-object|="unit"] .unit-selected-spotlight,
 [todo-data-awacs-mode] [data-object|="unit"] .unit-short-label,
 [todo-data-awacs-mode] [data-object|="unit"] .unit-state,

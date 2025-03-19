@@ -257,7 +257,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				switch (datumIndex) {
 					case DataIndex::category:					appendString(ss, datumIndex, category); break;
 					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
-					case DataIndex::radarState:					appendNumeric(ss, datumIndex, radarState); break;
+					case DataIndex::radarState:					appendString(ss, datumIndex, radarState); break;
 					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
 					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
 					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;

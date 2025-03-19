@@ -1052,6 +1052,13 @@ export abstract class Unit extends CustomMarker {
       el.append(healthIndicator);
     }
 
+    /* Radar state indicator */
+    if (this.#radarState !== '') {
+      var radarStateIcon = document.createElement("div");
+      radarStateIcon.classList.add("unit-radar-state");
+      el.append(radarStateIcon);
+    }
+
     /* Ammo indicator */
     if (iconOptions.showAmmo) {
       var ammoIndicator = document.createElement("div");
