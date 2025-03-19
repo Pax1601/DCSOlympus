@@ -41,17 +41,16 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
       }, // Specify the content type
     };
 
-    fetch(`./admin/config`, requestOptions)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(`Admin password correct`);
-          getApp().setAdminPassword(password);
-          getApp().setState(OlympusState.ADMIN)
-          return response.json();
-        } else {
-          throw new Error("Admin password incorrect");
-        }
-      })
+    fetch(`./admin/config`, requestOptions).then((response) => {
+      if (response.status === 200) {
+        console.log(`Admin password correct`);
+        getApp().setAdminPassword(password);
+        getApp().setState(OlympusState.ADMIN);
+        return response.json();
+      } else {
+        throw new Error("Admin password incorrect");
+      }
+    });
   };
 
   useEffect(() => {
@@ -215,7 +214,14 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           >
             <div className="flex flex-col gap-2">
               <div className="flex content-center gap-4">
-                <OlCoalitionToggle onClick={() => {}} coalition={mapOptions.AWACSCoalition} />
+                <OlCoalitionToggle
+                  onClick={() => {
+                    mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
+                    mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
+                    mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
+                  }}
+                  coalition={mapOptions.AWACSCoalition}
+                />
                 <span className="my-auto">Coalition of unit bullseye info</span>
               </div>
               <div className="flex gap-1 text-sm text-gray-400">
