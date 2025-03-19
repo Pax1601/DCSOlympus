@@ -10,6 +10,7 @@ export function ProtectionPromptModal(props: { open: boolean }) {
   return (
     <Modal
       open={props.open}
+      size={"sm"}
     >
       <div className="flex h-full w-full flex-col justify-between gap-12">
         <div className={`flex flex-col items-start gap-2`}>

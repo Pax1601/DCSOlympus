@@ -106,6 +106,12 @@ export function Header() {
         align-center
         dark:border-gray-800 dark:bg-olympus-900
       `}
+      onWheel={(e) => {
+        if (scrollRef.current) {
+          if (e.deltaY > 0) (scrollRef.current as HTMLElement).scrollLeft += 100;
+          else (scrollRef.current as HTMLElement).scrollLeft -= 100;
+        }
+      }}
     >
       <img src="images/icon.png" className={`my-auto h-10 w-10 rounded-md p-0`}></img>
       {!scrolledLeft && (
@@ -149,21 +155,21 @@ export function Header() {
             </div>
           </div>
           <div className="w-8">
-          {savingSessionData ? (
-            <div className="text-white">
-              <FaSpinner className={`animate-spin text-2xl`} />
-            </div>
-          ) : (
-            <div className={`relative text-white`}>
-              <FaFloppyDisk className={`absolute -top-3 text-2xl`} />
-              <FaCheck
-                className={`
+            {savingSessionData ? (
+              <div className="text-white">
+                <FaSpinner className={`animate-spin text-2xl`} />
+              </div>
+            ) : (
+              <div className={`relative text-white`}>
+                <FaFloppyDisk className={`absolute -top-3 text-2xl`} />
+                <FaCheck
+                  className={`
                   absolute left-[9px] top-[-6px] text-2xl text-olympus-900
                 `}
-              />
-              <FaCheck className={`absolute left-3 top-0 text-green-500`} />
-            </div>
-          )}
+                />
+                <FaCheck className={`absolute left-3 top-0 text-green-500`} />
+              </div>
+            )}
           </div>
         </div>
 

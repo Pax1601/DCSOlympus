@@ -96,6 +96,7 @@ export function ImportExportModal(props: { open: boolean }) {
 
   return (
     <Modal open={props.open} className={``}>
+      <div className="flex h-full w-full flex-col justify-between">
       <div className={`flex flex-col justify-between gap-2`}>
         <span
           className={`
@@ -352,6 +353,7 @@ export function ImportExportModal(props: { open: boolean }) {
         >
           Back
         </button>
+      </div>
       </div>
     </Modal>
   );

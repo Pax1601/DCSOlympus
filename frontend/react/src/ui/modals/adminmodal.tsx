@@ -76,11 +76,11 @@ export function AdminModal(props: { open: boolean }) {
 
 
   return (
-    <Modal open={props.open}>
-      <div className="flex w-full gap-4">
-        <div className="w-[40%]">
+    <Modal open={props.open} size={"full"}>
+      <div className="flex flex-col lg:flex-row w-full gap-4">
+        <div className="lg:w-[40%]">
           <div className="text-white">Groups:</div>
-          <div className="flex max-h-[300px] flex-col gap-1 overflow-auto p-2">
+          <div className="flex max-h-[calc(100vh-280px)] flex-col gap-1 overflow-auto p-2">
             {configs.groups &&
               Object.keys(configs.groups).map((group: any) => {
                 return (
@@ -142,7 +142,7 @@ export function AdminModal(props: { open: boolean }) {
               type="text"
               autoComplete="new-password"
               onChange={(ev) => {
-                setNewUserName(ev.currentTarget.value);
+                setNewGroupName(ev.currentTarget.value);
               }}
               className={`
                 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm
@@ -173,9 +173,9 @@ export function AdminModal(props: { open: boolean }) {
             </div>
           </div>
         </div>
-        <div className="flex w-[58%] flex-col gap-2">
+        <div className="flex lg:w-[58%] flex-col gap-2">
           <div className="text-white">Users:</div>
-          <div className={`flex max-h-[300px] flex-col gap-1 overflow-auto p-2`}>
+          <div className={`flex max-h-[calc(100vh-280px)] flex-col gap-1 overflow-auto p-2`}>
             {configs.users &&
               Object.keys(configs.users).map((user: any) => {
                 return (

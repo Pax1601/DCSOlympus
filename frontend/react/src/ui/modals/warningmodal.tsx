@@ -46,19 +46,12 @@ export function WarningModal(props: { open: boolean }) {
         );
         break;
       case WarningSubstate.NOT_SECURE:
-      case WarningSubstate.NOT_CHROME:
         warningText = (
           <div className="flex flex-col gap-2 text-gray-400">
             <span>Your connection to DCS Olympus is not secure.</span>
             <span>To protect your personal data some advanced DCS Olympus features like the camera plugin or the audio backend have been disabled.</span>
             <span>
-              To solve this issue, DCS Olympus should be served using the{" "}
-              <span
-                className={`italic`}
-              >
-                https
-              </span>{" "}
-              protocol.
+              To solve this issue, DCS Olympus should be served using the <span className={`italic`}>https</span> protocol.
             </span>
             <span>To do so, we suggest using a dedicated server and a reverse proxy with SSL enabled.</span>
             <div className="mt-5 flex gap-4">
@@ -73,27 +66,26 @@ export function WarningModal(props: { open: boolean }) {
           </div>
         );
         break;
-        case WarningSubstate.ERROR_UPLOADING_CONFIG:
-          warningText = (
-            <div className="flex flex-col gap-2 text-gray-400">
-              <span>An error has occurred uploading the admin configuration.</span>
-              <span></span>
-              
-            </div>
-          );
-          break;
+      case WarningSubstate.ERROR_UPLOADING_CONFIG:
+        warningText = (
+          <div className="flex flex-col gap-2 text-gray-400">
+            <span>An error has occurred uploading the admin configuration.</span>
+            <span></span>
+          </div>
+        );
+        break;
       default:
         break;
     }
   }
 
   return (
-    <Modal open={props.open}>
+    <Modal open={props.open} size={"sm"}>
       <div className="flex gap-2 text-xl text-white">
         <FaExclamationTriangle className={`my-auto text-4xl text-yellow-300`} />
         <div className="my-auto">Warning</div>
       </div>
-      <div className="mt-10 text-white">{warningText}</div>
+      <div className="text-white">{warningText}</div>
       <div className="ml-auto mt-auto flex">
         <button
           type="button"

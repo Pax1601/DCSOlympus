@@ -4,7 +4,7 @@ import { FaXmark } from "react-icons/fa6";
 import { getApp, OlympusApp } from "../../../olympusapp";
 import { OlympusState } from "../../../constants/constants";
 
-export function Modal(props: { open: boolean; children?: JSX.Element | JSX.Element[]; className?: string }) {
+export function Modal(props: { open: boolean; children?: JSX.Element | JSX.Element[]; className?: string; size?: "sm" | "md" | "lg" | "full" }) {
   const [splash, setSplash] = useState(Math.ceil(Math.random() * 7));
 
   useEffect(() => {
@@ -18,19 +18,18 @@ export function Modal(props: { open: boolean; children?: JSX.Element | JSX.Eleme
           <div className={`fixed left-0 top-0 z-30 h-full w-full bg-[#111111]/95`}></div>
           <div
             className={`
-              fixed left-[50%] top-[50%] z-40 inline-flex h-[75%] max-h-[600px]
-              w-[80%] max-w-[1100px] translate-x-[-50%] translate-y-[-50%]
-              overflow-y-auto scroll-smooth rounded-xl border-[1px] border-solid
-              border-gray-700 bg-white drop-shadow-md
-              dark:bg-olympus-800
-              max-md:h-full max-md:max-h-full max-md:w-full max-md:rounded-none
-              max-md:border-none
+              fixed left-[50%] top-[50%] z-40 inline-flex translate-x-[-50%] translate-y-[-50%]
+              overflow-y-auto scroll-smooth 
+              bg-olympus-800
+              max-md:rounded-none
+              max-md:border-none rounded-xl border-[1px] border-solid border-gray-700 drop-shadow-md
+              ${props.size === "lg" ? "h-[600px] w-[1100px] max-md:h-full max-md:w-full" : ""}
+              ${props.size === "md" ? "h-[600px] w-[950px] max-md:h-full max-md:w-full" : ""}
+              ${props.size === "sm" ? "h-[500px] w-[800px] max-md:h-full max-md:w-full" : ""}
+              ${props.size === "full" ? "h-full w-full" : ""}
             `}
           >
-            <img
-              src={`images/splash/${splash}.jpg`}
-              className={`contents-center w-full object-cover opacity-[7%]`}
-            ></img>
+            <img src={`images/splash/${splash}.jpg`} className={`contents-center w-full object-cover opacity-[4%]`}></img>
             <div className="fixed left-0 top-0 h-full w-full">
               <div
                 className={`

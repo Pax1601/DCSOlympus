@@ -61,7 +61,8 @@ export function KeybindModal(props: { open: boolean }) {
   }
 
   return (
-    <Modal open={props.open}>
+    <Modal open={props.open} size={"sm"}>
+      <div className="flex flex-col gap-4 h-full w-full">
       <div className={`flex flex-col gap-2`}>
         <span
           className={`
@@ -104,7 +105,7 @@ export function KeybindModal(props: { open: boolean }) {
           </div>
         )}
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-auto ">
         {shortcut && (
           <button
             type="button"
@@ -146,6 +147,7 @@ export function KeybindModal(props: { open: boolean }) {
         >
           Back
         </button>
+      </div>
       </div>
     </Modal>
   );
