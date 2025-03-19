@@ -10,15 +10,19 @@ export function Menu(props: {
   onBack?: () => void;
   showBackButton?: boolean;
   children?: JSX.Element | JSX.Element[];
+  autohide?: boolean;
   wiki?: () => JSX.Element | JSX.Element[];
 }) {
   const [hide, setHide] = useState(true);
   const [wiki, setWiki] = useState(false);
 
-  if (!props.open && hide) setHide(false);
-
   useEffect(() => {
-    if (window.innerWidth > 640) setHide(false);
+    if (props.autohide) {
+      if (window.innerWidth > 640) setHide(false);
+      if (!props.open) setHide(true);
+    } else {
+      setHide(false);
+    }
   }, [props.open]);
 
   return (
@@ -108,12 +112,16 @@ export function Menu(props: {
             `}
           />
         </h5>
-        <div className="flex h-[calc(100%-3rem)] w-full">
+        <div className="flex flex-col h-[calc(100%-3rem)] w-full sm:flex-row">
           <div
             data-wiki={wiki}
             className={`
               w-0 overflow-hidden transition-all
-              data-[wiki='true']:w-[50%]
+              h-0
+              data-[wiki='true']:min-h-[50%]
+              data-[wiki='true']:min-w-full
+              sm:data-[wiki='true']:min-w-[50%]
+              sm:data-[wiki='true']:min-h-full
             `}
           >
             {props.wiki ? props.wiki() : <div className={`p-4 text-gray-200`}>Work in progress</div>}
@@ -121,7 +129,6 @@ export function Menu(props: {
           <div
             data-wiki={wiki}
             className={`
-              min-w-full
               sm:w-[400px]
             `}
           >
