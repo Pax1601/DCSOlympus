@@ -66,7 +66,9 @@ export function Header() {
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
-    MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
+    MapOptionsChangedEvent.on((mapOptions) => {
+      setMapOptions({ ...mapOptions })
+  });
     MapSourceChangedEvent.on((source) => setMapSource(source));
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       // Timeout needed to make sure the map configuration has updated

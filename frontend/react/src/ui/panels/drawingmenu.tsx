@@ -92,7 +92,12 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   hover:scale-125 hover:text-gray-200
                 `}
                 onClick={() => {
-                  container.setVisibility(!container.getVisibility(), true);
+                  
+                  if (container === mainDrawingsContainer.container) {
+                    getApp().getMap().setOption("showMissionDrawings", !getApp().getMap().getOptions().showMissionDrawings);
+                  } else {
+                    container.setVisibility(!container.getVisibility(), true);
+                  }
                 }}
               />
               <div
