@@ -73,7 +73,6 @@ export function UI() {
             <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
             <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
             <ImportExportModal open={appState === OlympusState.IMPORT_EXPORT} />
-            <LoginModal open={appState === OlympusState.LOGIN} />
             <WarningModal open={appState === OlympusState.WARNING} />
             <TrainingModal open={appState === OlympusState.TRAINING} />
             <AdminModal open={appState === OlympusState.ADMIN} />
