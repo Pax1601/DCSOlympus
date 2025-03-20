@@ -377,6 +377,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	{
 		vector<CloneOptions> cloneOptions;
 		bool deleteOriginal = value[L"deleteOriginal"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+
+		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
+		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
 		for (auto unit : value[L"units"].as_array()) {
 			unsigned int ID = unit[L"ID"].as_integer();

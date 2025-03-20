@@ -124,12 +124,19 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
             <h2 className="mb-4 font-bold">Spawn menu</h2>
             <p>The spawn menu allows you to spawn new units in the current mission.</p>
             <p>Moreover, it allows you to spawn effects like smokes and explosions.</p>
-            <p className="mt-2">You can use the search bar to quickly find a specific unit. Otherwise, open the category you are interested in, and use the filters to refine your selection. </p>
-            <img src="images/training/unitfilter.png" className={`
-              mx-auto my-4 w-[80%] rounded-lg
-              drop-shadow-[0_0px_7px_rgba(255,255,255,0.07)]
-            `} />
-            <div className="mt-2">Click on a unit to enter the spawn properties menu. The menu is divided into multiple sections:
+            <p className="mt-2">
+              You can use the search bar to quickly find a specific unit. Otherwise, open the category you are interested in, and use the filters to refine your
+              selection.{" "}
+            </p>
+            <img
+              src="images/training/unitfilter.png"
+              className={`
+                mx-auto my-4 w-[80%] rounded-lg
+                drop-shadow-[0_0px_7px_rgba(255,255,255,0.07)]
+              `}
+            />
+            <div className="mt-2">
+              Click on a unit to enter the spawn properties menu. The menu is divided into multiple sections:
               <ul className="ml-4 mt-2 list-inside list-decimal">
                 <li>Unit name and short description</li>
                 <li>Quick access name </li>
@@ -139,11 +146,18 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
             </div>
             <p>To get more info on each control, hover your cursor on it.</p>
             <h2 className="my-4 font-bold">Quick access</h2>
-            <p>If you plan on reusing the same spawn multiple times during the mission, you can "star" the spawn properties. This will allow you to reuse them quickly multiple times. The starred spawn will save all settings, so you can create starred spawn with multiple variations, e.g. loadouts, or skill levels.</p>
-            <img src="images/training/starred.png" className={`
-              mx-auto my-4 w-[80%] rounded-lg
-              drop-shadow-[0_0px_7px_rgba(255,255,255,0.07)]
-            `} />
+            <p>
+              If you plan on reusing the same spawn multiple times during the mission, you can "star" the spawn properties. This will allow you to reuse them
+              quickly multiple times. The starred spawn will save all settings, so you can create starred spawn with multiple variations, e.g. loadouts, or
+              skill levels.
+            </p>
+            <img
+              src="images/training/starred.png"
+              className={`
+                mx-auto my-4 w-[80%] rounded-lg
+                drop-shadow-[0_0px_7px_rgba(255,255,255,0.07)]
+              `}
+            />
           </div>
         );
       }}
@@ -202,6 +216,9 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
+                {filteredBlueprints.filter((blueprint) => blueprint.category === "aircraft").length === 0 && (
+                  <span className={`text-gray-400`}>No aircraft available</span>
+                )}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -254,6 +271,9 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
+                {filteredBlueprints.filter((blueprint) => blueprint.category === "helicopter").length === 0 && (
+                  <span className={`text-gray-400`}>No helicopter available</span>
+                )}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -285,6 +305,9 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
+                {filteredBlueprints.filter((blueprint) => blueprint.category === "groundunit" && blueprint.type === "SAM Site").length === 0 && (
+                  <span className={`text-gray-400`}>No SAM sites available</span>
+                )}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -316,6 +339,9 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
+                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && <span className={`
+                  text-gray-400
+                `}>No AAA unit available</span>}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -371,6 +397,9 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
+                {filteredBlueprints.filter((blueprint) => blueprint.category === "groundunit" && blueprint.type !== "SAM Site").length === 0 && (
+                  <span className={`text-gray-400`}>No ground unit available</span>
+                )}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -423,41 +452,46 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
+                {filteredBlueprints.filter((blueprint) => blueprint.category === "navyunit").length === 0 && (
+                  <span className={`text-gray-400`}>No navy unit available</span>
+                )}
               </div>
             </OlAccordion>
-            <OlAccordion
-              title="Effects (smokes, explosions etc)"
-              open={openAccordion == CategoryAccordion.EFFECT}
-              onClick={() => {
-                setOpenAccordion(openAccordion === CategoryAccordion.EFFECT ? CategoryAccordion.NONE : CategoryAccordion.EFFECT);
-                setSelectedRole(null);
-                setSelectedType(null);
-              }}
-            >
-              <div
-                className={`
-                  flex max-h-[450px] flex-col gap-1 overflow-y-scroll
-                  no-scrollbar
-                `}
+            {commandModeOptions.commandMode === GAME_MASTER && (
+              <OlAccordion
+                title="Effects (smokes, explosions etc)"
+                open={openAccordion == CategoryAccordion.EFFECT}
+                onClick={() => {
+                  setOpenAccordion(openAccordion === CategoryAccordion.EFFECT ? CategoryAccordion.NONE : CategoryAccordion.EFFECT);
+                  setSelectedRole(null);
+                  setSelectedType(null);
+                }}
               >
-                <OlEffectListEntry
-                  key={"explosion"}
-                  icon={faExplosion}
-                  label={"Explosion"}
-                  onClick={() => {
-                    setEffect("explosion");
-                  }}
-                />
-                <OlEffectListEntry
-                  key={"smoke"}
-                  icon={faSmog}
-                  label={"Smoke"}
-                  onClick={() => {
-                    setEffect("smoke");
-                  }}
-                />
-              </div>
-            </OlAccordion>
+                <div
+                  className={`
+                    flex max-h-[450px] flex-col gap-1 overflow-y-scroll
+                    no-scrollbar
+                  `}
+                >
+                  <OlEffectListEntry
+                    key={"explosion"}
+                    icon={faExplosion}
+                    label={"Explosion"}
+                    onClick={() => {
+                      setEffect("explosion");
+                    }}
+                  />
+                  <OlEffectListEntry
+                    key={"smoke"}
+                    icon={faSmog}
+                    label={"Smoke"}
+                    onClick={() => {
+                      setEffect("smoke");
+                    }}
+                  />
+                </div>
+              </OlAccordion>
+            )}
           </div>
         )}
 

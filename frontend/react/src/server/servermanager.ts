@@ -28,6 +28,7 @@ import {
   TACAN,
 } from "../interfaces";
 import { MapOptionsChangedEvent, ServerStatusUpdatedEvent, WrongCredentialsEvent } from "../events";
+import { Coalition } from "../types/types";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -341,9 +342,10 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  cloneUnits(units: { ID: number; location: LatLng }[], deleteOriginal: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
+  cloneUnits(units: { ID: number; location: LatLng }[], deleteOriginal: boolean, spawnPoints: number, coalition: Coalition, callback: CallableFunction = () => {}) {
     var command = {
       units: units,
+      coalition: coalition,
       deleteOriginal: deleteOriginal,
       spawnPoints: spawnPoints,
     };
