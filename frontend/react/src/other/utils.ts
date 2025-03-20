@@ -755,3 +755,11 @@ export async function getWikipediaSummary(unitName: string): Promise<string | nu
     return null;
   }
 }
+
+export function secondsToTimeString(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+
+  return `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(secs, 2)}`;
+}

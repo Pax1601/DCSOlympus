@@ -92,7 +92,6 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   hover:scale-125 hover:text-gray-200
                 `}
                 onClick={() => {
-                  
                   if (container === mainDrawingsContainer.container) {
                     getApp().getMap().setOption("showMissionDrawings", !getApp().getMap().getOptions().showMissionDrawings);
                   } else {
@@ -156,6 +155,55 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
       onBack={() => {
         getApp().getCoalitionAreasManager().setSelectedArea(null);
         getApp().setState(OlympusState.DRAW, DrawSubState.NO_SUBSTATE);
+      }}
+      wiki={() => {
+        return (
+          <div
+            className={`
+              h-full flex-col overflow-auto p-4 text-gray-400 no-scrollbar flex
+              gap-2
+            `}
+          >
+            <h2 className="mb-4 font-bold">Drawing menu</h2>
+            <div>
+              The drawing menu allows you to create and manage custom drawings, such as polygons and circles, and to generate IADS (Integrated Air Defense
+              System) areas. Moreover, you can manage the visibility and opacity of mission drawings, i.e. drawings from the Mission Editor.
+            </div>
+            <h2 className="my-4 font-bold">Custom drawings and IADS</h2>
+            <div>
+              To create a custom drawing, click on the 'Add polygon' or 'Add circle' buttons, then click on the map to add polygons or to move the drawing.
+              Double-click on the map to finish your creation. You can then edit the drawing by clicking on it. You can also move it up or down in the list, or
+              delete it.
+            </div>
+            <div>
+              You can change the name and the coalition of the area. You can also generate an IADS area by selecting the types, eras, and ranges of units you
+              want to include in the area. You can also set the density and distribution of the IADS. If you check the 'Force coalition appropriate units' box,
+              the IADS will only include units that are appropriate for the coalition of the area (e.g. Hawk SAMs for {""}
+              <span className="text-blue-500">blue</span> and SA-6 SAMs for{" "}
+              <span
+                className={`text-red-500`}
+              >
+                red
+              </span>
+              ).
+            </div>
+            <div>
+              The IADS generator will create a random distribution of units in the area, based on the density and distribution you set. Units will be
+              concentrated around cities, and airbases that belong to the selected coalition.
+            </div>
+            <h2 className="my-4 font-bold">Mission drawings</h2>
+            <div>
+              You can manage the visibility and opacity of mission drawings by clicking on the eye icon. Moreover, you can change the opacity of the drawing by
+              using the slider. You can also hide or show all the drawings in a container.
+            </div>
+            <div>
+              You can search for a specific drawing by typing in the search bar. The search is case-insensitive and will match any part of the drawing name.
+            </div>
+            <div>
+              Any change you make is persistent and will be saved for the next time you reload Olympus, as long as the DCS mission was not restarted.
+            </div>
+          </div>
+        );
       }}
     >
       <>
@@ -301,11 +349,9 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 bg-olympus-600 p-5
               `}
             >
-              <div
-                className={`border-b-2 border-b-olympus-100 pb-4 text-gray-300`}
-              >
-                Automatic IADS generation
-              </div>
+              <div className={`
+                border-b-2 border-b-olympus-100 pb-4 text-gray-300
+              `}>Automatic IADS generation</div>
               <OlDropdown className="" label="Units types" disableAutoClose={true}>
                 {types.map((type, idx) => {
                   if (!(type in typesSelection)) {

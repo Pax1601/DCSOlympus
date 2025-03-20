@@ -12,6 +12,7 @@ export function Menu(props: {
   children?: JSX.Element | JSX.Element[];
   autohide?: boolean;
   wiki?: () => JSX.Element | JSX.Element[];
+  wikiDisabled?: boolean;
 }) {
   const [hide, setHide] = useState(true);
   const [wiki, setWiki] = useState(false);
@@ -56,9 +57,8 @@ export function Menu(props: {
       <div
         data-hide={hide}
         className={`
-          pointer-events-auto h-[calc(100vh-58px)] w-full overflow-y-auto
-          overflow-x-hidden backdrop-blur-lg backdrop-grayscale
-          transition-transform no-scrollbar
+          pointer-events-auto h-[calc(100vh-58px)] w-full backdrop-blur-lg
+          backdrop-grayscale transition-transform
           dark:bg-olympus-800/90
           data-[hide='true']:-translate-x-full
         `}
@@ -81,16 +81,18 @@ export function Menu(props: {
             />
           )}
           {props.title}
-          <FontAwesomeIcon
-            onClick={() => setWiki(!wiki)}
-            icon={faCircleQuestion}
-            className={`
-              ml-auto flex cursor-pointer items-center justify-center rounded-md
-              p-2 text-lg
-              dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
-              hover:bg-gray-200
-            `}
-          />
+          {!(props.wikiDisabled === true) && (
+            <FontAwesomeIcon
+              onClick={() => setWiki(!wiki)}
+              icon={faCircleQuestion}
+              className={`
+                ml-auto flex cursor-pointer items-center justify-center
+                rounded-md p-2 text-lg
+                dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
+                hover:bg-gray-200
+              `}
+            />
+          )}
           <FontAwesomeIcon
             onClick={() => setHide(true)}
             icon={faEyeSlash}
@@ -112,16 +114,18 @@ export function Menu(props: {
             `}
           />
         </h5>
-        <div className="flex flex-col h-[calc(100%-3rem)] w-full sm:flex-row">
+        <div
+          className={`
+            flex h-[calc(100%-3rem)] w-full flex-col
+            sm:flex-row
+          `}
+        >
           <div
             data-wiki={wiki}
             className={`
-              w-0 overflow-hidden transition-all
-              h-0
-              data-[wiki='true']:min-h-[50%]
-              data-[wiki='true']:min-w-full
-              sm:data-[wiki='true']:min-w-[50%]
-              sm:data-[wiki='true']:min-h-full
+              h-0 w-0 overflow-hidden transition-all
+              data-[wiki='true']:min-h-[50%] data-[wiki='true']:min-w-full
+              sm:data-[wiki='true']:min-h-full sm:data-[wiki='true']:min-w-[50%]
             `}
           >
             {props.wiki ? props.wiki() : <div className={`p-4 text-gray-200`}>Work in progress</div>}
@@ -129,6 +133,7 @@ export function Menu(props: {
           <div
             data-wiki={wiki}
             className={`
+              relative overflow-y-auto overflow-x-hidden no-scrollbar
               sm:w-[400px]
             `}
           >

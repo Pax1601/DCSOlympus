@@ -6,6 +6,9 @@ import { getApp } from "../../olympusapp";
 import { ServerStatus } from "../../interfaces";
 import { CommandModeOptionsChangedEvent, ServerStatusUpdatedEvent } from "../../events";
 import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ERAS_ORDER, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
+import { secondsToTimeString } from "../../other/utils";
+import { FaQuestionCircle } from "react-icons/fa";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 
 export function GameMasterMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
@@ -21,53 +24,131 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
   }, []);
 
   return (
-    <Menu title="Game Master options" open={props.open} showBackButton={false} onClose={props.onClose}>
+    <Menu title="Game Master options" open={props.open} showBackButton={false} onClose={props.onClose} wiki={() => {
+      return (
+        <div
+          className={`
+            h-full flex-col overflow-auto p-4 text-gray-400 no-scrollbar flex
+            gap-2
+          `}
+        >
+          <h2 className="mb-4 font-bold">Game Master menu</h2>
+          <div>
+            The Game Master menu allows the Game Master to set up the game session for the Real Time Strategy game mode of DCS Olympus. 
+          </div>
+          <div>
+            In this mode, commanders can play against eachother in a real-time strategy game, where they can spawn a limited amount of units. Each commander can only control units belonging to their coalition. Moreover, they can only see enemy units if detected, so proper placement of radars is crucial.
+          </div>
+          <div>
+            The Game Master can set up the game session by restricting the unit spawns, setting the setup time, and restricting the eras of the units that can be spawned. Moreover, the Game Master can set the amount of spawn points available for each coalition.
+          </div>
+          <div>
+            During the setup time, commanders can prepare the battlefield. As long as they have sufficient spawn points, they can place units anywhere on the map. After the setup time ends, the game starts and the restrictions are enforced.
+          </div>
+          <div>
+            When restrictions are enforced, commanders will no longer be able to spawn ground units, and air units can only be spawned from airfields.
+          </div>
+          <div>
+            There are multiple additional modes of play. You can disable the spawn restrictions to allow commanders to spawn units freely, but can only see detected units, or you can set the spawn points to 0 to disable unit spawns entirely and force commanders to only use the units they have at the start of the game or that you provide.
+          </div>
+        </div>
+      );
+    }}>
       <div
         className={`
           flex flex-col gap-2 p-5 font-normal text-gray-800
           dark:text-white
         `}
       >
-        You are operating as:
-        {commandModeOptions.commandMode === GAME_MASTER && (
-          <div
-            className={`
-              w-full rounded-md bg-olympus-400 p-2 text-center font-bold
-            `}
-          >
-            GAME MASTER
-          </div>
-        )}
-        {commandModeOptions.commandMode === BLUE_COMMANDER && <div className={`
-          w-full rounded-md bg-blue-600 p-2 text-center font-bold
-        `}>BLUE COMMANDER</div>}
-        {commandModeOptions.commandMode === RED_COMMANDER && <div className={`
-          w-full rounded-md bg-red-700 p-2 text-center font-bold
-        `}>RED COMMANDER</div>}
-        {serverStatus.elapsedTime > currentSetupTime && (
-          <div
-            className={`
-              w-full rounded-md bg-orange-600 p-2 text-center font-bold
-            `}
-          >
-            Setup time has ended
-          </div>
-        )}
-        {serverStatus.elapsedTime <= currentSetupTime && (
-          <div
-            className={`
-              w-full rounded-md bg-green-700 p-2 text-center font-bold
-            `}
-          >
-            SETUP ends in {(currentSetupTime - serverStatus.elapsedTime)?.toFixed()} seconds
+        {commandModeOptions.restrictSpawns ? (
+          <>
+            <div className="mb-4 flex content-center gap-4">
+              <div className="my-auto text-gray-400">
+                <FaQuestionCircle />
+              </div>
+              <div className="text-sm text-gray-400">
+                Unit spawns are restricted. During the SETUP phase, commanders can spawn units according to the settings below. After the SETUP phase ends,
+                ground/navy units and air spawns are disabled, and commanders can spawn aircraft/helicopters only from airfields.
+              </div>
+            </div>
+            <div className="flex">
+              {commandModeOptions.commandMode === GAME_MASTER && (
+                <button
+                  className={`
+                    h-10 rounded-s-lg bg-gray-100 p-3
+                    dark:bg-gray-700 dark:hover:bg-gray-600
+                    dark:focus:ring-blue-700
+                    focus:outline-none focus:ring-2 focus:ring-gray-100
+                    hover:bg-gray-200
+                  `}
+                  onClick={() => {
+                    const newCommandModeOptions = { ...commandModeOptions };
+                    newCommandModeOptions.setupTime = Math.max(serverStatus.elapsedTime, newCommandModeOptions.setupTime - 60);
+                    if (commandModeOptions.commandMode !== GAME_MASTER) return;
+                    setCommandModeOptions(newCommandModeOptions);
+                    setCurrentSetupTime(newCommandModeOptions.setupTime);
+                    getApp().getServerManager().setCommandModeOptions(newCommandModeOptions);
+                  }}
+                >
+                  <FaMinus className="my-auto" />
+                </button>
+              )}
+              <div className={`
+                relative z-[-1] flex h-10 w-[360px] bg-olympus-600
+              `}>
+                <div
+                  className={`
+                    absolute my-auto w-full text-center before
+                    before:absolute before:left-0 before:z-[-1] before:h-10
+                    before:w-full before:bg-olympus-400 before:content-['']
+                  `}
+                  style={{ width: `${Math.min(100, 100 - ((currentSetupTime - serverStatus.elapsedTime) / currentSetupTime) * 100)}%` }}
+                ></div>
+                {currentSetupTime - serverStatus.elapsedTime > 0 ? (
+                  <div className="mx-auto my-auto">SETUP ends in {secondsToTimeString(currentSetupTime - serverStatus.elapsedTime)}</div>
+                ) : (
+                  <div className="mx-auto my-auto animate-pulse">SETUP ended, restrictions active</div>
+                )}
+              </div>
+              {commandModeOptions.commandMode === GAME_MASTER && (
+                <button
+                  className={`
+                    h-10 rounded-e-lg bg-gray-100 p-3
+                    dark:bg-gray-700 dark:hover:bg-gray-600
+                    dark:focus:ring-blue-700
+                    focus:outline-none focus:ring-2 focus:ring-gray-100
+                    hover:bg-gray-200
+                  `}
+                  onClick={() => {
+                    const newCommandModeOptions = { ...commandModeOptions };
+                    newCommandModeOptions.setupTime = Math.max(serverStatus.elapsedTime + 60, newCommandModeOptions.setupTime + 60);
+                    if (commandModeOptions.commandMode !== GAME_MASTER) return;
+                    setCommandModeOptions(newCommandModeOptions);
+                    setCurrentSetupTime(newCommandModeOptions.setupTime);
+                    getApp().getServerManager().setCommandModeOptions(newCommandModeOptions);
+                  }}
+                >
+                  <FaPlus className="my-auto" />
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="flex content-center gap-4">
+            <div className="my-auto text-gray-400">
+              <FaQuestionCircle />
+            </div>
+            <div className="text-sm text-gray-400">
+              Unit spawns are NOT restricted, therefore no setup time is enforced and commanders can spawn units as desired. Only unit detection is enforced.
+            </div>
           </div>
         )}
         <span className="mt-5">Options: </span>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <div
             className={`
               group flex flex-row rounded-md justify-content cursor-pointer
-              gap-4 p-2
+              gap-4 px-2
               dark:hover:bg-olympus-400
             `}
             onClick={() => {
@@ -82,13 +163,13 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
               data-disabled={!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER}
               className={`data-[disabled='true']:text-gray-400`}
             >
-              Restrict unit spanws
+              Restrict unit spawns
             </span>
           </div>
           <div
             className={`
               group flex flex-row rounded-md justify-content cursor-pointer
-              gap-4 p-2
+              gap-4 px-2
               dark:hover:bg-olympus-400
             `}
             onClick={() => {
@@ -120,7 +201,7 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
                   key={era}
                   className={`
                     group flex flex-row rounded-md justify-content
-                    cursor-pointer gap-4 p-2
+                    cursor-pointer gap-4 px-2
                     dark:hover:bg-olympus-400
                   `}
                   onClick={() => {
@@ -223,56 +304,6 @@ export function GameMasterMenu(props: { open: boolean; onClose: () => void; chil
                 setCommandModeOptions(newCommandModeOptions);
               }}
             ></OlNumberInput>
-          </div>
-          <div
-            className={`
-              group flex flex-row rounded-md justify-content gap-4 px-4 py-2
-            `}
-          >
-            <span
-              data-disabled={!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER}
-              className={`
-                my-auto mr-auto
-                data-[disabled='true']:text-gray-400
-              `}
-            >
-              Setup time (seconds)
-            </span>
-            <OlNumberInput
-              min={0}
-              max={6000}
-              value={commandModeOptions.setupTime}
-              onChange={(e) => {
-                if (!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER) return;
-                const newCommandModeOptions = { ...commandModeOptions };
-                newCommandModeOptions.setupTime = parseInt(e.target.value);
-                setCommandModeOptions(newCommandModeOptions);
-              }}
-              onIncrease={() => {
-                if (!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER) return;
-                const newCommandModeOptions = { ...commandModeOptions };
-                newCommandModeOptions.setupTime = Math.min(newCommandModeOptions.setupTime + 10, 6000);
-                setCommandModeOptions(newCommandModeOptions);
-              }}
-              onDecrease={() => {
-                if (!commandModeOptions.restrictSpawns || commandModeOptions.commandMode !== GAME_MASTER) return;
-                const newCommandModeOptions = { ...commandModeOptions };
-                newCommandModeOptions.setupTime = Math.max(newCommandModeOptions.setupTime - 10, 0);
-                setCommandModeOptions(newCommandModeOptions);
-              }}
-            ></OlNumberInput>
-          </div>
-          <div
-            className={`
-              group flex flex-row rounded-md justify-content gap-4 px-4 py-2
-            `}
-          >
-            <span className="mr-auto">Elapsed time (seconds)</span>{" "}
-            <span
-              className={`w-32 text-center`}
-            >
-              {serverStatus.elapsedTime?.toFixed()}
-            </span>
           </div>
           {commandModeOptions.commandMode === GAME_MASTER && (
             <button
