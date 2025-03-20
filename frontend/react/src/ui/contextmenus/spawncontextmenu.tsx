@@ -306,7 +306,7 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints.length === 0 && <span className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
                         `}>No aircraft available</span>}
                       </div>
@@ -356,7 +356,7 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints.length === 0 && <span className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
                         `}>No helicopter available</span>}
                       </div>
@@ -409,7 +409,7 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints.length === 0 && <span className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
                         `}>No air defence unit available</span>}
                       </div>
@@ -462,7 +462,7 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints.length === 0 && <span className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
                         `}>No ground unit available</span>}
                       </div>
@@ -512,7 +512,7 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints.length === 0 && <span className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
                         `}>No navy unit available</span>}
                       </div>
