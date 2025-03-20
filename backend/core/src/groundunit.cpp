@@ -398,6 +398,9 @@ void GroundUnit::AIloop()
 						taskString += "Scenic AAA. No valid target.";
 					else
 						taskString += "Scenic AAA. Target outside max range: " + to_string((int)round(distance)) + "m.";
+
+					if (getHasTask())
+						resetTask();
 				}
 			}
 		}
