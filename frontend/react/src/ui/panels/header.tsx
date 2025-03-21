@@ -13,6 +13,7 @@ import {
   faWifi,
   faHourglass,
   faInfo,
+  faObjectGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
@@ -166,8 +167,8 @@ export function Header() {
                 <FaFloppyDisk className={`absolute -top-3 text-2xl`} />
                 <FaCheck
                   className={`
-                  absolute left-[9px] top-[-6px] text-2xl text-olympus-900
-                `}
+                    absolute left-[9px] top-[-6px] text-2xl text-olympus-900
+                  `}
                 />
                 <FaCheck className={`absolute left-3 top-0 text-green-500`} />
               </div>
@@ -327,6 +328,13 @@ export function Header() {
             icon={faWifi}
             className={""}
             tooltip={"Hide/show units acquisition rings"}
+          />
+          <OlRoundStateButton
+            onClick={() => getApp().getMap().setOption("clusterGroundUnits", !mapOptions.clusterGroundUnits)}
+            checked={mapOptions.clusterGroundUnits}
+            icon={faObjectGroup}
+            className={""}
+            tooltip={"Enable/disable ground unit clustering"}
           />
         </div>
 
