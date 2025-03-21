@@ -30,11 +30,17 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
             type: props.effect,
             explosionType,
           });
-        else if (props.effect === "smoke")
+        else if (props.effect === "smoke") {
+          let colorName = "white";
+          if (smokeColor === colors.BLUE) colorName = "blue";
+          else if (smokeColor === colors.RED) colorName = "red";
+          else if (smokeColor === colors.GREEN) colorName = "green";
+          else if (smokeColor === colors.ORANGE) colorName = "orange";
           getApp()?.getMap()?.setEffectRequestTable({
             type: props.effect,
-            smokeColor,
+            smokeColor: colorName,
           });
+        }
         getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_EFFECT);
       } else {
         if (appState === OlympusState.SPAWN && appSubState === SpawnSubState.SPAWN_EFFECT) getApp().setState(OlympusState.IDLE);
@@ -129,7 +135,13 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                       else if (explosionType === "White phosphorous") getApp().getServerManager().spawnExplosion(50, "phosphorous", props.latlng);
                       getApp().getMap().addExplosionMarker(props.latlng);
                     } else if (props.effect === "smoke") {
-                      getApp().getServerManager().spawnSmoke(smokeColor, props.latlng);
+                      /* Find the name of the color */
+                      let colorName = "white";
+                      if (smokeColor === colors.BLUE) colorName = "blue";
+                      else if (smokeColor === colors.RED) colorName = "red";
+                      else if (smokeColor === colors.GREEN) colorName = "green";
+                      else if (smokeColor === colors.ORANGE) colorName = "orange";
+                      getApp().getServerManager().spawnSmoke(colorName, props.latlng);
                       getApp()
                         .getMap()
                         .addSmokeMarker(props.latlng, smokeColor ?? colors.WHITE);

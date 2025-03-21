@@ -17,10 +17,12 @@ export var BoxSelect = Handler.extend({
 
   addHooks: function () {
     DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
+    DomEvent.on(this._container, "touchstart", this._onMouseDown, this);
   },
 
   removeHooks: function () {
     DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
+    DomEvent.off(this._container, "touchend", this._onMouseDown, this);
   },
 
   moved: function () {
@@ -37,7 +39,7 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseDown: function (e: any) {
-    if (this._map.getSelectionEnabled() && e.button == 0) {
+    if (this._map.getSelectionEnabled() && (e.button == 0 || e.type === "touchstart")) {
       if (this._moved) this._finish();
 
       DomUtil.disableImageDrag();
@@ -64,7 +66,7 @@ export var BoxSelect = Handler.extend({
   },
 
   _onMouseUp: function (e: any) {
-    if (e.button !== 0) return;
+    if (e.button !== 0 && e.type !== "touchend") return;
     window.setTimeout(Util.bind(this._finish, this), 0);
     if (!this._moved) return;
     var bounds = new LatLngBounds(this._map.containerPointToLatLng(this._startPoint), this._map.containerPointToLatLng(this._point));

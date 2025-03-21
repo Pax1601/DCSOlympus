@@ -29,6 +29,7 @@ import {
   TACAN,
 } from "../interfaces";
 import { MapOptionsChangedEvent, ServerStatusUpdatedEvent, WrongCredentialsEvent } from "../events";
+import { Coalition } from "../types/types";
 
 export class ServerManager {
   #connected: boolean = false;
@@ -342,9 +343,10 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  cloneUnits(units: { ID: number; location: LatLng }[], deleteOriginal: boolean, spawnPoints: number, callback: CallableFunction = () => {}) {
+  cloneUnits(units: { ID: number; location: LatLng }[], deleteOriginal: boolean, spawnPoints: number, coalition: Coalition, callback: CallableFunction = () => {}) {
     var command = {
       units: units,
+      coalition: coalition,
       deleteOriginal: deleteOriginal,
       spawnPoints: spawnPoints,
     };
@@ -558,6 +560,38 @@ export class ServerManager {
     };
 
     var data = { setAdvancedOptions: command };
+    this.PUT(data, callback);
+  }
+
+  setEngagementProperties(
+    ID: number,
+    barrelHeight: number,
+    muzzleVelocity: number,
+    aimTime: number,
+    shotsToFire: number,
+    shotsBaseInterval: number,
+    shotsBaseScatter: number,
+    engagementRange: number,
+    targetingRange: number,
+    aimMethodRange: number,
+    acquisitionRange: number,
+    callback: CallableFunction = () => {}
+  ) {
+    var command = {
+      ID: ID,
+      barrelHeight: barrelHeight,
+      muzzleVelocity: muzzleVelocity,
+      aimTime: aimTime,
+      shotsToFire: shotsToFire,
+      shotsBaseInterval: shotsBaseInterval,
+      shotsBaseScatter: shotsBaseScatter,
+      engagementRange: engagementRange,
+      targetingRange: targetingRange,
+      aimMethodRange: aimMethodRange,
+      acquisitionRange: acquisitionRange,
+    }
+
+    var data = { setEngagementProperties: command };
     this.PUT(data, callback);
   }
 

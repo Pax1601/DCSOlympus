@@ -390,6 +390,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	{
 		vector<CloneOptions> cloneOptions;
 		bool deleteOriginal = value[L"deleteOriginal"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+
+		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
+		if (!checkSpawnPoints(spawnPoints, coalition)) return;
 
 		for (auto unit : value[L"units"].as_array()) {
 			unsigned int ID = unit[L"ID"].as_integer();
@@ -536,6 +540,29 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 	}
 	/************************/
+	else if (key.compare("setEngagementProperties") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+		{
+			/* Engagement properties tasking */
+			unit->setBarrelHeight(value[L"barrelHeight"].as_number().to_double());
+			unit->setMuzzleVelocity(value[L"muzzleVelocity"].as_number().to_double());
+			unit->setAimTime(value[L"aimTime"].as_number().to_double());
+			unit->setShotsToFire(value[L"shotsToFire"].as_number().to_uint32());
+			unit->setShotsBaseInterval(value[L"shotsBaseInterval"].as_number().to_double());
+			unit->setShotsBaseScatter(value[L"shotsBaseScatter"].as_number().to_double());
+			unit->setEngagementRange(value[L"engagementRange"].as_number().to_double());
+			unit->setTargetingRange(value[L"targetingRange"].as_number().to_double());
+			unit->setAimMethodRange(value[L"aimMethodRange"].as_number().to_double());
+			unit->setAcquisitionRange(value[L"acquisitionRange"].as_number().to_double());
+			
+			log(username + " updated unit " + unit->getUnitName() + "(" + unit->getName() + ") engagementProperties", true);
+		}
+	}
+	/************************/
 	else if (key.compare("setFollowRoads") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
@@ -623,6 +650,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
+
+		if (value[L"location"].has_number_field(L"alt")) {
+			loc.alt = value[L"location"][L"alt"].as_double();
+		}
+
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);

@@ -20,7 +20,9 @@ export abstract class Weapon extends CustomMarker {
 
   #hidden: boolean = false;
   #detectionMethods: number[] = [];
-
+  #speedVector: number[] = [];
+  #altitude: number[] = [];
+  
   getAlive() {
     return this.#alive;
   }
@@ -43,6 +45,7 @@ export abstract class Weapon extends CustomMarker {
   static getConstructor(type: string) {
     if (type === "Missile") return Missile;
     if (type === "Bomb") return Bomb;
+    if (type === "Shell") return Shell;
   }
 
   constructor(ID: number) {
@@ -85,6 +88,7 @@ export abstract class Weapon extends CustomMarker {
           break;
         case DataIndexes.speed:
           this.#speed = dataExtractor.extractFloat64();
+          this.#speedVector.push(this.#speed);
           updateMarker = true;
           break;
         case DataIndexes.heading:
@@ -111,7 +115,13 @@ export abstract class Weapon extends CustomMarker {
   }
   
   setAlive(newAlive: boolean) {
+    if (this.#alive && !newAlive) {
+      getApp().getMap().addFlakMarker(this.getLatLng());
+    }
     this.#alive = newAlive;
+    if (this.#speedVector.length > 0 && newAlive === false) {
+      let asd = 1;
+    }
   }
 
   belongsToCommandedCoalition() {
@@ -305,6 +315,43 @@ export class Bomb extends Weapon {
 
   getMarkerCategory() {
     if (this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC)) return "bomb";
+    else return "aircraft";
+  }
+
+  getIconOptions() {
+    return {
+      showState: false,
+      showVvi:
+        !this.belongsToCommandedCoalition() &&
+        !this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)) &&
+        this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
+      showHealth: false,
+      showHotgroup: false,
+      showUnitIcon: this.belongsToCommandedCoalition() || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
+      showShortLabel: false,
+      showFuel: false,
+      showAmmo: false,
+      showSummary:
+        !this.belongsToCommandedCoalition() &&
+        !this.getDetectionMethods().some((value) => [VISUAL, OPTIC].includes(value)) &&
+        this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
+      showCallsign: false,
+      rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC),
+    };
+  }
+}
+
+export class Shell extends Weapon {
+  constructor(ID: number) {
+    super(ID);
+  }
+
+  getCategory() {
+    return "Shell";
+  }
+
+  getMarkerCategory() {
+    if (this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC)) return "shell";
     else return "aircraft";
   }
 

@@ -114,3 +114,9 @@ class Bomb : public Weapon
 public:
 	Bomb(json::value json, unsigned int ID);
 };
+
+class Shell : public Weapon
+{
+public:
+	Shell(json::value json, unsigned int ID);
+};

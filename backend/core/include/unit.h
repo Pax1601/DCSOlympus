@@ -62,6 +62,8 @@ public:
 	bool hasFreshData(unsigned long long time);
 	bool checkFreshness(unsigned char datumIndex, unsigned long long time);
 
+	unsigned int computeTotalAmmo();
+
 	/********** Setters **********/
 	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }
 	virtual void setAlive(bool newValue) { updateValue(alive, newValue, DataIndex::alive); }
@@ -113,6 +115,17 @@ public:
 	virtual void setRacetrackLength(double newValue) { updateValue(racetrackLength, newValue, DataIndex::racetrackLength); }
 	virtual void setRacetrackAnchor(Coords newValue) { updateValue(racetrackAnchor, newValue, DataIndex::racetrackAnchor); }
 	virtual void setRacetrackBearing(double newValue) { updateValue(racetrackBearing, newValue, DataIndex::racetrackBearing); }
+	virtual void setTimeToNextTasking(double newValue) { updateValue(timeToNextTasking, newValue, DataIndex::timeToNextTasking); }
+	virtual void setBarrelHeight(double newValue) { updateValue(barrelHeight, newValue, DataIndex::barrelHeight); }
+	virtual void setMuzzleVelocity(double newValue) { updateValue(muzzleVelocity, newValue, DataIndex::muzzleVelocity); }
+	virtual void setAimTime(double newValue) { updateValue(aimTime, newValue, DataIndex::aimTime); }
+	virtual void setShotsToFire(unsigned int newValue) { updateValue(shotsToFire, newValue, DataIndex::shotsToFire); }
+	virtual void setShotsBaseInterval(double newValue) { updateValue(shotsBaseInterval, newValue, DataIndex::shotsBaseInterval); }
+	virtual void setShotsBaseScatter(double newValue) { updateValue(shotsBaseScatter, newValue, DataIndex::shotsBaseScatter); }
+	virtual void setEngagementRange(double newValue) { updateValue(engagementRange, newValue, DataIndex::engagementRange); }
+	virtual void setTargetingRange(double newValue) { updateValue(targetingRange, newValue, DataIndex::targetingRange); }
+	virtual void setAimMethodRange(double newValue) { updateValue(aimMethodRange, newValue, DataIndex::aimMethodRange); }
+	virtual void setAcquisitionRange(double newValue) { updateValue(acquisitionRange, newValue, DataIndex::acquisitionRange); }
 	virtual void setAlarmState(string newValue) { updateValue(alarmState, newValue, DataIndex::alarmState); }
 
 	/********** Getters **********/
@@ -166,6 +179,17 @@ public:
 	virtual double getRacetrackLength() { return racetrackLength; }
 	virtual Coords getRacetrackAnchor() { return racetrackAnchor; }
 	virtual double getRacetrackBearing() { return racetrackBearing; }
+	virtual double getTimeToNextTasking() { return timeToNextTasking; }
+	virtual double getBarrelHeight() { return barrelHeight; }
+	virtual double getMuzzleVelocity() { return muzzleVelocity; }
+	virtual double getAimTime() { return aimTime; }
+	virtual unsigned int getShotsToFire() { return shotsToFire; }
+	virtual double getShotsBaseInterval() { return shotsBaseInterval; }
+	virtual double getShotsBaseScatter() { return shotsBaseScatter; }
+	virtual double getEngagementRange() { return engagementRange; }
+	virtual double getTargetingRange() { return targetingRange; }
+	virtual double getAimMethodRange() { return aimMethodRange; }
+	virtual double getAcquisitionRange() { return acquisitionRange; }
 
 protected:
 	unsigned int ID;
@@ -221,16 +245,30 @@ protected:
 	unsigned char shotsScatter = 2;
 	unsigned char shotsIntensity = 2;
 	unsigned char health = 100;
+	double timeToNextTasking = 0;
+	double barrelHeight = 0; 
+	double muzzleVelocity = 0; 
+	double aimTime = 0;
+	unsigned int shotsToFire = 0;
+	double shotsBaseInterval = 0;
+	double shotsBaseScatter = 0; 
+	double engagementRange = 0;
+	double targetingRange = 0;
+	double aimMethodRange = 0; 
+	double acquisitionRange = 0; 
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
-	unsigned int internalCounter = 0;
 	Unit* missOnPurposeTarget = nullptr;
 	bool hasTaskAssigned = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;
 	unsigned long long lastLoopTime = 0;
 	bool enableTaskFailedCheck = false;
+	unsigned long nextTaskingMilliseconds = 0;
+	unsigned int totalShellsFired = 0;
+	unsigned int shellsFiredAtTasking = 0;
+	unsigned int oldAmmo = 0;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

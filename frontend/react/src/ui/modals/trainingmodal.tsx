@@ -19,7 +19,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 0 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/olympus-500x500.png"
               className={`my-auto h-40 w-40 rounded-xl`}
@@ -74,7 +74,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 1 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step1.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -93,7 +93,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 2 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step2.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -116,7 +116,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 3 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step3.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -135,7 +135,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 4 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step4.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -154,7 +154,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 5 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step5.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -177,7 +177,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 6 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step6.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -196,7 +196,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 7 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step7.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -218,7 +218,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 8 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/step8.gif"
               className={`h-72 w-72 rounded-xl`}
@@ -238,7 +238,7 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 9 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <img
               src="images/training/unitmarker.png"
               className={`max-h-34 max-w-34 my-auto rounded-xl`}
@@ -353,11 +353,11 @@ export function TrainingModal(props: { open: boolean }) {
 
       <>
         {step === 10 && (
-          <div className="flex gap-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-16">
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>The unit marker (2 of 2)</h2>
               <p>The unit marker has a symbol showing the unit state, i.e. what instruction it is performing. These are all the possible values:</p>
-              <div className="flex max-h-40 flex-col flex-wrap gap-4">
+              <div className="flex sm:max-h-64 flex-col flex-wrap gap-4">
                 <div className="flex flex-col">
                   <p className="flex gap-2">
                     <img src="images/states/attack.svg" />
@@ -475,7 +475,7 @@ export function TrainingModal(props: { open: boolean }) {
         )}
 
         {step > 0 && (
-          <div className="my-auto flex gap-2">
+          <div className="my-auto gap-2 hidden sm:flex">
             {[...Array(MAX_STEPS).keys()].map((i) => (
               <div
                 key={i + 1}

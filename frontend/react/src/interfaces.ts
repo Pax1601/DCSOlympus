@@ -2,13 +2,9 @@ import { LatLng } from "leaflet";
 import { Coalition, MapOptions } from "./types/types";
 
 export interface OlympusConfig {
+  /* Set by user */
   frontend: {
     port: number;
-    customAuthHeaders: {
-      enabled: boolean;
-      username: string;
-      group: string;
-    };
     elevationProvider: {
       provider: string;
       username: string | null;
@@ -25,17 +21,27 @@ export interface OlympusConfig {
     mapMirrors: {
       [key: string]: string;
     };
-    autoconnectWhenLocal: boolean;
+    /* New with v2.0.0 */
+    customAuthHeaders?: {
+      enabled: boolean;
+      username: string;
+      group: string;
+    };
+    autoconnectWhenLocal?: boolean;
   };
-  audio: {
+  /* New with v2.0.0 */
+  audio?: {
     SRSPort: number;
     WSPort?: number;
     WSEndpoint?: string;
   };
-  controllers: [{ type: string; coalition: Coalition; frequency: number; modulation: number; callsign: string }];
-  local: boolean;
+  controllers?: [{ type: string; coalition: Coalition; frequency: number; modulation: number; callsign: string }];
   profiles?: { [key: string]: ProfileOptions };
+
+  /* Set by server */
+  local?: boolean;
   authentication?: {
+    // Only sent when in localhost mode for autologin
     gameMasterPassword: string;
     blueCommanderPasword: string;
     redCommanderPassword: string;
@@ -48,12 +54,12 @@ export interface SessionData {
   unitSinks?: { ID: number }[];
   connections?: any[];
   coalitionAreas?: (
-    | { type: 'circle', label: string; latlng: { lat: number; lng: number }; radius: number; coalition: Coalition }
-    | { type: 'polygon', label: string; latlngs: { lat: number; lng: number }[]; coalition: Coalition }
+    | { type: "circle"; label: string; latlng: { lat: number; lng: number }; radius: number; coalition: Coalition }
+    | { type: "polygon"; label: string; latlngs: { lat: number; lng: number }[]; coalition: Coalition }
   )[];
-  hotgroups?: {[key: string]: number[]},
-  starredSpawns?: { [key: number]: SpawnRequestTable }
-  drawings?: { [key: string]: {visibility: boolean, opacity: number, name: string, guid: string, containers: any, drawings: any} }
+  hotgroups?: { [key: string]: number[] };
+  starredSpawns?: { [key: number]: SpawnRequestTable };
+  drawings?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
 }
 
 export interface ProfileOptions {
@@ -83,7 +89,7 @@ export interface BullseyesData {
 
 export interface SpotsData {
   spots: {
-    [key: string]: { type: string, targetPosition: {lat: number; lng: number}; sourceUnitID: number; code?: number };
+    [key: string]: { active: boolean; type: string; targetPosition: { lat: number; lng: number }; sourceUnitID: number; code?: number };
   };
   sessionHash: string;
   time: number;
@@ -261,6 +267,17 @@ export interface UnitData {
   racetrackLength: number;
   racetrackAnchor: LatLng;
   racetrackBearing: number;
+  timeToNextTasking: number;
+  barrelHeight: number;
+  muzzleVelocity: number;
+  aimTime: number;
+  shotsToFire: number;
+  shotsBaseInterval: number;
+  shotsBaseScatter: number;
+  engagementRange: number;
+  targetingRange: number;
+  aimMethodRange: number;
+  acquisitionRange: number;
 }
 
 export interface LoadoutItemBlueprint {

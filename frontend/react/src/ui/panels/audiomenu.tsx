@@ -116,7 +116,82 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   const lineDistance = (paddingRight - 40) / lineCounters[lineCounters.length - 1];
 
   return (
-    <Menu title="Audio menu" open={props.open} showBackButton={false} onClose={props.onClose}>
+    <Menu
+      title="Audio menu"
+      open={props.open}
+      showBackButton={false}
+      onClose={props.onClose}
+      wiki={() => {
+        return (
+          <div
+            className={`
+              h-full flex-col overflow-auto p-4 text-gray-400 no-scrollbar flex
+              gap-2
+            `}
+          >
+            <h2 className="mb-4 font-bold">Audio menu</h2>
+            <div>
+              The audio menu allows you to add and manage audio sources, connect them to unit loudspeakers and radios, and to tune radio frequencies using the SRS integration. In other words, it allows you to communicate over SRS without the need of using the SRS client.
+            </div>
+            <div>
+              Because of the limitations of the browser, you need to enable the audio backend by clicking on the volume icon in the navigation header. Moreover, you need to allow the browser to access your microphone and speakers. It may take a couple of seconds for the audio backend to start.
+            </div>
+            <div className="text-red-500">
+              For security reasons, the audio backend will only work if the page is served over HTTPS.
+            </div>
+            <h2 className="my-4 font-bold">Managing the audio backend</h2>
+            <div>
+              You can select the input and output devices for the audio backend. The input device is the microphone that will be used to transmit your voice. The output device is the speaker that will be used to play the audio from the other players.
+            </div>
+            <div>
+              You can also select the radio coalition. This will determine the default coalition for the radios you create. If you are in command mode, you can change the radio
+              coalition by clicking on the coalition toggle button. This will have no effect if radio coalition enforcing is not enabled in the SRS server.
+            </div>
+            <h2 className="my-4 font-bold">Creating audio sources</h2>
+            <div>
+              You can add audio sources by clicking on the "Add audio source" button. By default, a microphone and a text to speech source are created, but you can add file sources as well, which allow to play audio files such as music, prerecorded messages, or background noise, such as gunfire or engine sounds.
+            </div>
+            <div>
+              The text to speech generation works using the Google Cloud speech API and by default it works in English. For it to work, a valid Google Cloud API key must be installed on the Olympus backend server machine. See the backend documentation for more information. {/* TODO: put link here */}
+            </div>
+            <div>
+              Text to speech and file sources can be set to operate in loop mode, which will make them repeat the audio indefinitely. This is useful for background noise or music. Moreover, you can set the volume of the audio sources.
+            </div>
+            <h2 className="my-4 font-bold">Creating radios and loudspeakers</h2>
+            <div>
+              By default, two radios are created, but you can add more by clicking on the "Add radio" button. Radios can be tuned to different frequencies, and they can be set to operate in AM or FM mode. You can also set the volume of the radios, and change the balance between the left and right channels.
+            </div>
+            <div>
+              When a new radio is created, it will NOT be in "listen" mode, so you will need to click on the "Tune to radio" button to start listening.
+            </div>
+            <div>
+              You have three options to transmit on the radio:
+              <div>
+                <li>By clicking on the "Talk on frequency" button on the radio panel. This will enable continuous transmission and will remain "on" until clicked again.</li>
+                <li>By clicking on the "Push to talk" button located over the mouse coordinates panel, on the bottom right corner of the map.</li>
+                <li>By using the "Push to talk" keyboard shortcuts, which can be edited in the options menu.</li>
+              </div>
+            </div>
+            <div>
+              Loudspeakers can be used to simulate environmental sounds, like 5MC calls on the carrier, or sirens. To create a loudspeaker, click on the unit that should broadcast the sound, and then click on the "Loudspeakers" button. PTT buttons for loudspeakers operate in the same way as radios.
+            </div>
+            <div className="text-red-500">
+              The loudspeakers system uses the SRS integration, so it will only work if other players' SRS clients are running and connected to the same server as Olympus. Moreover, the loudspeaker system operates using the INTERCOM radio in SRS, and for the time being it will only work for those radios that have the INTERCOM radio enabled (i.e. usually multicrew aircraft).
+            </div>
+            <h2 className="my-4 font-bold">Connecting sources and radios/loudspeakers</h2>
+            <div>
+              Each source can be connected to one or more radios or loudspeakers. To connect a source to a radio or loudspeaker, click on the "+" button on the right of the source panel, then click on the equivalent button on the desired radio/loudspeaker. To disconnect a source from a radio or loudspeaker, click on the "-" button next to the radio/loudspeaker.
+            </div>
+            <div>
+              The connection lines will show the connections between the sources and the radios/loudspeakers. The color of the line is randomly generated and will be different for each source.
+            </div>
+            <div>
+              By connecting multiple sources to the same radio/loudspeaker, you can create complex audio setups, like playing background music while transmitting on the radio.
+            </div>
+          </div>
+        );
+      }}
+    >
       <div className="flex content-center gap-4 p-4">
         <div className="my-auto text-gray-400">
           <FaQuestionCircle />

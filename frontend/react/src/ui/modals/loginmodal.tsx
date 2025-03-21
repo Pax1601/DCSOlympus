@@ -3,12 +3,12 @@ import { Modal } from "./components/modal";
 import { Card } from "./components/card";
 import { ErrorCallout } from "../components/olcallout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faCheckCircle, faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { getApp, VERSION } from "../../olympusapp";
 import { sha256 } from "js-sha256";
 import { LoginSubState, NO_SUBSTATE, OlympusState } from "../../constants/constants";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
-import { AppStateChangedEvent, EnabledCommandModesChangedEvent, MissionDataChangedEvent, WrongCredentialsEvent } from "../../events";
+import { AppStateChangedEvent, EnabledCommandModesChangedEvent, WrongCredentialsEvent } from "../../events";
 
 export function LoginModal(props: { open: boolean }) {
   const [subState, setSubState] = useState(NO_SUBSTATE);
@@ -18,6 +18,7 @@ export function LoginModal(props: { open: boolean }) {
   const [loginError, setLoginError] = useState(false);
   const [commandModes, setCommandModes] = useState(null as null | string[]);
   const [activeCommandMode, setActiveCommandMode] = useState(null as null | string);
+  const [loginByRole, setLoginByRole] = useState(true);
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -28,6 +29,11 @@ export function LoginModal(props: { open: boolean }) {
       setCheckingPassword(false);
     });
   }, []);
+
+  const updateUsername = useCallback(() => {
+    loginByRole ? setUsername("Game master") : setUsername("");
+  }, [loginByRole]);
+  useEffect(updateUsername, [loginByRole]);
 
   const usernameCallback = useCallback(() => getApp()?.getServerManager().setUsername(username), [username]);
   useEffect(usernameCallback, [username]);
@@ -80,7 +86,7 @@ export function LoginModal(props: { open: boolean }) {
   useEffect(subStateCallback, [subState]);
 
   return (
-    <Modal open={props.open}>
+    <Modal open={props.open} size="md" disableClose={true}>
       <div
         className={`
           flex w-full flex-row gap-6
@@ -95,25 +101,6 @@ export function LoginModal(props: { open: boolean }) {
         >
           {!checkingPassword ? (
             <>
-              <div className="flex flex-col items-start">
-                <div
-                  className={`
-                    pt-1 text-xs text-gray-800
-                    dark:text-gray-400
-                  `}
-                >
-                  Connect to
-                </div>
-                <div
-                  className={`
-                    flex items-center justify-center gap-2 text-gray-800 text-md
-                    font-bold
-                    dark:text-gray-200
-                  `}
-                >
-                  {window.location.toString()}
-                </div>
-              </div>
               <div
                 className={`
                   flex w-[100%] flex-row content-center items-center gap-2
@@ -147,33 +134,96 @@ export function LoginModal(props: { open: boolean }) {
                 <>
                   {subState === LoginSubState.CREDENTIALS && (
                     <>
-                      <div className={`flex flex-col items-start gap-2`}>
-                        <label
+                      <div
+                        className={`
+                          peer box-content flex h-10 w-80 cursor-pointer
+                          justify-between rounded-lg border-4 border-gray-600
+                          border-transparent bg-olympus-600
+                          hover:bg-olympus-400
+                          peer-focus:outline-none peer-focus:ring-2
+                          peer-focus:ring-blue-800
+                        `}
+                        onClick={() => setLoginByRole(!loginByRole)}
+                      >
+                        <div
+                          data-login-by-role={loginByRole}
                           className={`
-                            text-gray-800 text-md
-                            dark:text-white
+                            relative
+                            before:absolute before:h-10 before:w-40
+                            before:rounded-md before:bg-blue-500
+                            before:transition-transform before:content-['']
+                            before:data-[login-by-role='false']:translate-x-40
+                          `}
+                        ></div>
+                        <div
+                          className={`
+                            z-40 my-auto w-[50%] text-center
+                            ${loginByRole ? "text-white" : `
+                              text-gray-400 transition-colors
+                            `}
                           `}
                         >
-                          Username
-                        </label>
-                        <input
-                          type="text"
-                          autoComplete="username"
-                          onChange={(ev) => setUsername(ev.currentTarget.value)}
+                          Login by role
+                        </div>
+                        <div
                           className={`
-                            block w-full max-w-80 rounded-lg border
-                            border-gray-300 bg-gray-50 p-2.5 text-sm
-                            text-gray-900
-                            dark:border-gray-600 dark:bg-gray-700
-                            dark:text-white dark:placeholder-gray-400
-                            dark:focus:border-blue-500 dark:focus:ring-blue-500
-                            focus:border-blue-500 focus:ring-blue-500
+                            z-40 my-auto w-[50%] px-2 text-center
+                            ${!loginByRole ? "text-white" : `
+                              text-gray-400 transition-colors
+                            `}
                           `}
-                          placeholder="Enter display name"
-                          value={username}
-                          required
-                        />
+                        >
+                          Login by name
+                        </div>
+                      </div>
 
+                      <div className={`flex flex-col items-start gap-2`}>
+                        {loginByRole ? (
+                          <>
+                          <label
+                              className={`
+                                text-gray-800 text-md
+                                dark:text-white
+                              `}
+                            >
+                              Role
+                            </label>
+                          <OlDropdown label={username} className={`w-full`}>
+                            <OlDropdownItem onClick={() => {setUsername("Game master")}}>Game master</OlDropdownItem>
+                            <OlDropdownItem onClick={() => {setUsername("Blue commander")}}>Blue commander</OlDropdownItem>
+                            <OlDropdownItem onClick={() => {setUsername("Red commander")}}>Red commander</OlDropdownItem>
+                          </OlDropdown>
+                          
+                          </>
+                        ) : (
+                          <>
+                            <label
+                              className={`
+                                text-gray-800 text-md
+                                dark:text-white
+                              `}
+                            >
+                              Username
+                            </label>
+                            <input
+                              type="text"
+                              autoComplete="username"
+                              onChange={(ev) => setUsername(ev.currentTarget.value)}
+                              className={`
+                                block w-full rounded-lg border border-gray-300
+                                bg-gray-50 p-2.5 text-sm text-gray-900
+                                dark:border-gray-600 dark:bg-gray-700
+                                dark:text-white dark:placeholder-gray-400
+                                dark:focus:border-blue-500
+                                dark:focus:ring-blue-500
+                                focus:border-blue-500 focus:ring-blue-500
+                              `}
+                              placeholder="Enter username"
+                              value={username}
+                              required
+                            />
+                          </>
+                        )}
                         <label
                           className={`
                             text-gray-800 text-md
@@ -186,9 +236,8 @@ export function LoginModal(props: { open: boolean }) {
                           type="password"
                           onChange={(ev) => setPassword(ev.currentTarget.value)}
                           className={`
-                            block w-full max-w-80 rounded-lg border
-                            border-gray-300 bg-gray-50 p-2.5 text-sm
-                            text-gray-900
+                            block w-full rounded-lg border border-gray-300
+                            bg-gray-50 p-2.5 text-sm text-gray-900
                             dark:border-gray-600 dark:bg-gray-700
                             dark:text-white dark:placeholder-gray-400
                             dark:focus:border-blue-500 dark:focus:ring-blue-500
@@ -198,6 +247,7 @@ export function LoginModal(props: { open: boolean }) {
                           required
                         />
                       </div>
+
                       <div className="flex">
                         <button
                           type="button"
@@ -234,9 +284,10 @@ export function LoginModal(props: { open: boolean }) {
                         >
                           Choose your role
                         </label>
-                        <OlDropdown label={activeCommandMode ?? ""} className={`
-                          w-48
-                        `}>
+                        <OlDropdown
+                          label={activeCommandMode ?? ""}
+                          className={`w-48`}
+                        >
                           {commandModes?.map((commandMode) => {
                             return <OlDropdownItem onClick={() => setActiveCommandMode(commandMode)}>{commandMode}</OlDropdownItem>;
                           })}
@@ -266,21 +317,41 @@ export function LoginModal(props: { open: boolean }) {
               ) : (
                 <>
                   <ErrorCallout
-                    title="Server could not be reached or password is incorrect"
-                    description="The Olympus Server at this address could not be reached or the password is incorrect. Check your password. If correct, check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used."
+                    title="Server could not be reached or username/password is incorrect"
+                    description="The Olympus Server at this address could not be reached or the password is incorrect. Check your username and password. If correct, check the address is correct, restart the Olympus server or reinstall Olympus. Ensure the ports set are not already used."
                   ></ErrorCallout>
-                  <div className={`text-sm font-medium text-gray-200`}>
-                    Still having issues? See our{" "}
-                    <a
-                      href=""
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        getApp().setState(OlympusState.LOGIN, LoginSubState.CREDENTIALS);
+                        setLoginError(false);
+                      }}
                       className={`
-                        text-blue-300 underline
-                        hover:no-underline
+                        flex content-center items-center gap-2 rounded-sm
+                        bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
+                        dark:bg-blue-600 dark:hover:bg-blue-700
+                        dark:focus:ring-blue-800
+                        focus:outline-none focus:ring-4 focus:ring-blue-300
+                        hover:bg-blue-800
                       `}
                     >
-                      troubleshooting guide here
-                    </a>
-                    .
+                      <FontAwesomeIcon className={`my-auto`} icon={faArrowLeft} />
+                      Back
+                    </button>
+                    <div className={`my-auto text-sm font-medium text-gray-200`}>
+                      Still having issues? See our{" "}
+                      <a
+                        href=""
+                        className={`
+                          text-blue-300 underline
+                          hover:no-underline
+                        `}
+                      >
+                        troubleshooting guide here
+                      </a>
+                      .
+                    </div>
                   </div>
                 </>
               )}
@@ -309,6 +380,7 @@ export function LoginModal(props: { open: boolean }) {
             </div>
           )}
         </div>
+
         <div
           className={`
             flex flex-grow flex-row content-end justify-center gap-3
@@ -325,9 +397,9 @@ export function LoginModal(props: { open: boolean }) {
                 object-cover
               `}
             ></img>
-            <div
-              className={`mt-2 flex content-center items-center gap-2 font-bold`}
-            >
+            <div className={`
+              mt-2 flex content-center items-center gap-2 font-bold
+            `}>
               YouTube Video Guide
               <FontAwesomeIcon className={`my-auto text-xs text-gray-400`} icon={faExternalLink} />
             </div>
@@ -348,9 +420,9 @@ export function LoginModal(props: { open: boolean }) {
                 object-cover
               `}
             ></img>
-            <div
-              className={`mt-2 flex content-center items-center gap-2 font-bold`}
-            >
+            <div className={`
+              mt-2 flex content-center items-center gap-2 font-bold
+            `}>
               Wiki Guide
               <FontAwesomeIcon className={`my-auto text-xs text-gray-400`} icon={faExternalLink} />
             </div>

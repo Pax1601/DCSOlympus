@@ -9,15 +9,18 @@ import { BindShortcutRequestEvent, MapOptionsChangedEvent, ShortcutsChangedEvent
 import { OlAccordion } from "../components/olaccordion";
 import { Shortcut } from "../../shortcut/shortcut";
 import { OlSearchBar } from "../components/olsearchbar";
-import { FaTrash, FaXmark } from "react-icons/fa6";
+import { FaTrash, FaUserGroup, FaXmark } from "react-icons/fa6";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
-import { FaQuestionCircle } from "react-icons/fa";
+import { FaCog, FaKey, FaPlus, FaQuestionCircle } from "react-icons/fa";
+import { sha256 } from "js-sha256";
+import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 
 const enum Accordion {
   NONE,
   BINDINGS,
   MAP_OPTIONS,
   CAMERA_PLUGIN,
+  ADMIN,
 }
 
 export function OptionsMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
@@ -25,6 +28,30 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
   const [shortcuts, setShortcuts] = useState({} as { [key: string]: Shortcut });
   const [openAccordion, setOpenAccordion] = useState(Accordion.NONE);
   const [filterString, setFilterString] = useState("");
+  const [admin, setAdmin] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const checkPassword = (password: string) => {
+    var hash = sha256.create();
+
+    const requestOptions: RequestInit = {
+      method: "GET", // Specify the request method
+      headers: {
+        Authorization: "Basic " + btoa(`Admin:${hash.update(password).hex()}`),
+      }, // Specify the content type
+    };
+
+    fetch(`./admin/config`, requestOptions).then((response) => {
+      if (response.status === 200) {
+        console.log(`Admin password correct`);
+        getApp().setAdminPassword(password);
+        getApp().setState(OlympusState.ADMIN);
+        return response.json();
+      } else {
+        throw new Error("Admin password incorrect");
+      }
+    });
+  };
 
   useEffect(() => {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
@@ -186,18 +213,21 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             }}
           >
             <div className="flex flex-col gap-2">
-            <div className="flex content-center gap-4">
-            <OlCoalitionToggle onClick={() => {}} coalition={mapOptions.AWACSCoalition} />
-            <span className="my-auto">Coalition of unit bullseye info</span>
-            </div>
-            <div className="flex gap-1 text-sm text-gray-400">
-              <FaQuestionCircle className={`my-auto w-8`} />{" "}
-              <div
-                className={`my-auto ml-2`}
-              >
-                Change the coalition of the bullseye to use to provide bullseye information in the unit tooltip.
+              <div className="flex content-center gap-4">
+                <OlCoalitionToggle
+                  onClick={() => {
+                    mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
+                    mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
+                    mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
+                  }}
+                  coalition={mapOptions.AWACSCoalition}
+                />
+                <span className="my-auto">Coalition of unit bullseye info</span>
               </div>
-            </div>
+              <div className="flex gap-1 text-sm text-gray-400">
+                <FaQuestionCircle className={`my-auto w-8`} />{" "}
+                <div className={`my-auto ml-2`}>Change the coalition of the bullseye to use to provide bullseye information in the unit tooltip.</div>
+              </div>
             </div>
           </div>
         </OlAccordion>
@@ -207,12 +237,6 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           open={openAccordion === Accordion.CAMERA_PLUGIN}
           title="Camera plugin options"
         >
-          <hr
-            className={`
-              m-2 my-1 w-auto border-[1px] bg-gray-700
-              dark:border-olympus-500
-            `}
-          ></hr>
           <div
             className={`
               flex flex-col content-center items-start justify-between gap-2 p-2
@@ -270,38 +294,65 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
           </div>
         </OlAccordion>
 
-        <div className="mt-auto flex">
+        <button
+          type="button"
+          onClick={() => getApp().resetProfile()}
+          className={`
+            flex w-full content-center items-center justify-center gap-2
+            rounded-sm border-[1px] bg-blue-700 px-5 py-2.5 text-sm font-medium
+            text-white
+            dark:border-red-600 dark:bg-gray-800 dark:text-gray-400
+            dark:hover:bg-gray-700 dark:focus:ring-blue-800
+            focus:outline-none focus:ring-4 focus:ring-blue-300
+            hover:bg-blue-800
+          `}
+        >
+          Reset all settings
+          <FaXmark />
+        </button>
+
+        <div className="mt-auto flex flex-col gap-2 p-2">
+          <div className="flex content-center justify-between gap-4">
+            <label
+              className={`
+                text-gray-800 text-md my-auto text-nowrap
+                dark:text-white
+              `}
+            >
+              Admin password
+            </label>
+            <input
+              type="password"
+              onChange={(ev) => {
+                setPassword(ev.currentTarget.value);
+              }}
+              className={`
+                max-w-44 rounded-lg border border-gray-300 bg-gray-50 p-2.5
+                text-sm text-gray-900
+                dark:border-gray-600 dark:bg-gray-700 dark:text-white
+                dark:placeholder-gray-400 dark:focus:border-blue-500
+                dark:focus:ring-blue-500
+                focus:border-blue-500 focus:ring-blue-500
+              `}
+              placeholder="Enter password"
+              required
+            />
+          </div>
           <button
             type="button"
-            onClick={() => getApp().resetProfile()}
+            onClick={() => checkPassword(password)}
             className={`
-              mb-2 me-2 flex content-center items-center gap-2 rounded-sm
+              flex content-center items-center justify-center gap-2 rounded-sm
               border-[1px] bg-blue-700 px-5 py-2.5 text-sm font-medium
               text-white
-              dark:border-red-600 dark:bg-gray-800 dark:text-gray-400
+              dark:border-white dark:bg-gray-800 dark:text-gray-400
               dark:hover:bg-gray-700 dark:focus:ring-blue-800
               focus:outline-none focus:ring-4 focus:ring-blue-300
               hover:bg-blue-800
             `}
           >
-            Reset profile
-            <FaXmark />
-          </button>
-          <button
-            type="button"
-            onClick={() => getApp().resetAllProfiles()}
-            className={`
-              mb-2 me-2 flex content-center items-center gap-2 rounded-sm
-              border-[1px] bg-blue-700 px-5 py-2.5 text-sm font-medium
-              text-white
-              dark:border-red-600 dark:bg-red-800 dark:text-gray-400
-              dark:hover:bg-red-700 dark:focus:ring-blue-800
-              focus:outline-none focus:ring-4 focus:ring-blue-300
-              hover:bg-red-800
-            `}
-          >
-            Reset all profiles
-            <FaTrash />
+            Open advanced settings menu
+            <FaCog />
           </button>
         </div>
       </div>

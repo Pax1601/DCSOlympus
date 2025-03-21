@@ -22,9 +22,15 @@ module.exports = function (configLocation) {
       profiles = JSON.parse(rawdata);
     }
     if (fs.existsSync(configLocation)) {
+      /* Read the config file */
       let rawdata = fs.readFileSync(configLocation, "utf-8");
-      const local = ["127.0.0.1", "::ffff:127.0.0.1", "::1"].includes(req.connection.remoteAddress);
       const config = JSON.parse(rawdata);
+
+      /* Check if the connection is local */
+      let local = false;
+      if (config.frontend.autoconnectWhenLocal)
+        local = req.headers[config.frontend.proxyHeader] === undefined;
+
       let resConfig = {
         frontend: { ...config.frontend },
         audio: { ...(config.audio ?? {}) },
@@ -32,9 +38,11 @@ module.exports = function (configLocation) {
         profiles: { ...(profiles ?? {}) },
         local: local,
       };
+
       if (local) {
         resConfig["authentication"] = config["authentication"]
       }
+
       res.send(
         JSON.stringify(resConfig)
       );

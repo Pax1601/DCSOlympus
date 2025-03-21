@@ -122,8 +122,8 @@ export function SpawnContextMenu(props: {}) {
       setXPosition(xPosition - 60);
       setYPosition(yPosition - 40);
     }
-  }, [blueprint, translated])
-  useEffect(translateMenu, [blueprint, translated])
+  }, [blueprint, translated]);
+  useEffect(translateMenu, [blueprint, translated]);
 
   /* Filter the blueprints according to the label */
   const filteredBlueprints: UnitBlueprint[] = [];
@@ -306,6 +306,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
+                        {blueprints?.length === 0 && <span className={`
+                          text-gray-200
+                        `}>No aircraft available</span>}
                       </div>
                     </>
                   )}
@@ -353,6 +356,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
+                        {blueprints?.length === 0 && <span className={`
+                          text-gray-200
+                        `}>No helicopter available</span>}
                       </div>
                     </>
                   )}
@@ -403,6 +409,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
+                        {blueprints?.length === 0 && <span className={`
+                          text-gray-200
+                        `}>No air defence unit available</span>}
                       </div>
                     </>
                   )}
@@ -453,6 +462,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
+                        {blueprints?.length === 0 && <span className={`
+                          text-gray-200
+                        `}>No ground unit available</span>}
                       </div>
                     </>
                   )}
@@ -500,10 +512,13 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
+                        {blueprints?.length === 0 && <span className={`
+                          text-gray-200
+                        `}>No navy unit available</span>}
                       </div>
                     </>
                   )}
-                  {openAccordion === CategoryGroup.EFFECT && (
+                  {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode === GAME_MASTER  && (
                     <>
                       <div
                         className={`
@@ -529,6 +544,11 @@ export function SpawnContextMenu(props: {}) {
                         />
                       </div>
                     </>
+                  )}
+                  {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode !== GAME_MASTER  && (
+                    <div className="text-white">
+                      Not available in this mode
+                    </div>
                   )}
                   {openAccordion === CategoryGroup.SEARCH && (
                     <div className="flex flex-col gap-2">

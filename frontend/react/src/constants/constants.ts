@@ -329,7 +329,8 @@ export enum OlympusState {
   WARNING = "Warning modal",
   DATABASE_EDITOR = "Database editor",
   MEASURE = "Measure",
-  TRAINING = "Training"
+  TRAINING = "Training",
+  ADMIN = "Admin",
 }
 
 export const NO_SUBSTATE = "No substate";
@@ -385,6 +386,7 @@ export enum WarningSubstate {
   NO_SUBSTATE = "No substate",
   NOT_CHROME = "Not chrome",
   NOT_SECURE = "Not secure",
+  ERROR_UPLOADING_CONFIG = "Error uploading config",
 }
 
 export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
@@ -417,7 +419,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   AWACSCoalition: "blue",
   hideChromeWarning: false,
   hideSecureWarning: false,
-  showMissionDrawings: false
+  showMissionDrawings: false,
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
@@ -497,6 +499,17 @@ export enum DataIndexes {
   racetrackLength,
   racetrackAnchor,
   racetrackBearing,
+  timeToNextTasking,
+  barrelHeight,
+  muzzleVelocity,
+  aimTime,
+  shotsToFire,
+  shotsBaseInterval,
+  shotsBaseScatter,
+  engagementRange,
+  targetingRange,
+  aimMethodRange,
+  acquisitionRange,
   endOfData = 255,
 }
 
@@ -529,7 +542,6 @@ export enum ContextActionType {
   ENGAGE,
   DELETE,
 }
-
 
 export enum colors {
   ALICE_BLUE = "#F0F8FF",
@@ -679,7 +691,7 @@ export enum colors {
   OLYMPUS_BLUE = "#243141",
   OLYMPUS_RED = "#F05252",
   OLYMPUS_ORANGE = "#FF9900",
-  OLYMPUS_GREEN = "#8BFF63"
+  OLYMPUS_GREEN = "#8BFF63",
 }
 
 export const CONTEXT_ACTION_COLORS = [undefined, colors.WHITE, colors.GREEN, colors.PURPLE, colors.BLUE, colors.RED];
@@ -919,7 +931,9 @@ export namespace ContextActions {
     ContextActionTarget.POINT,
     (units: Unit[], _, targetPosition: LatLng | null) => {
       if (targetPosition)
-        getApp().getUnitsManager().fireInfrared(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
+        getApp()
+          .getUnitsManager()
+          .fireInfrared(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ENGAGE, code: "KeyL", ctrlKey: true, shiftKey: false }
   );

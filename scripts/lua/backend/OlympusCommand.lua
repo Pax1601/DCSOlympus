@@ -589,6 +589,7 @@ function Olympus.fireLaser(ID, code, lat, lng)
 				lat = lat,
 				lng = lng
 			},
+			active = true,
 			code = code
 		}
 	end
@@ -611,13 +612,15 @@ function Olympus.fireInfrared(ID, lat, lng)
 			targetPosition = {
 				lat = lat,
 				lng = lng
-			}
+			},
+			active = true
 		}
 	end
 end 
 
 -- Set new laser code
 function Olympus.setLaserCode(spotID, code) 
+	Olympus.debug("Olympus.setLaserCode " .. spotID .. " -> " .. code, 2)
 	local spot = Olympus.spots[spotID]
 	if spot ~= nil and spot.type == "laser" then
 		spot.object:setCode(code)
@@ -627,19 +630,21 @@ end
 
 -- Move spot to a new location
 function Olympus.moveSpot(spotID, lat, lng)
+	Olympus.debug("Olympus.moveSpot " .. spotID .. " -> (" .. lat .. ", " .. lng .. ")", 2)
 	local spot = Olympus.spots[spotID]
 	if spot ~= nil then
-		spot.object:setPoint(coord.LLtoLO(lat, lng, 0))
+		spot.object:setPoint(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)))
 		spot.targetPosition = {lat = lat, lng = lng}
 	end
 end
 
 -- Remove the spot
 function Olympus.deleteSpot(spotID)
+	Olympus.debug("Olympus.deleteSpot " .. spotID, 2)
 	local spot = Olympus.spots[spotID]
 	if spot ~= nil then
 		spot.object:destroy()
-		Olympus.spots[spotID] = nil
+		Olympus.spots[spotID]["active"] = false
 	end
 end
 
@@ -1450,6 +1455,8 @@ function Olympus.setWeaponsData(arg, time)
 						table["category"] = "Missile"
 					elseif weapon:getDesc().category == Weapon.Category.BOMB then
 						table["category"] = "Bomb"
+					--elseif weapon:getDesc().category == Weapon.Category.SHELL then
+					--	table["category"] = "Shell"	-- Useful for debugging but has no real use and has big impact on performance
 					end
 				else
 					weapons[ID] = {isAlive = false}
@@ -1560,6 +1567,7 @@ function Olympus.setMissionData(arg, time)
 			type = spot.type,
 			sourceUnitID = spot.sourceUnitID,
 			targetPosition = spot.targetPosition,
+			active = spot.active,
 		}
 
 		-- If the spot type is "laser", add the code to the spot entry
@@ -1575,7 +1583,7 @@ function Olympus.setMissionData(arg, time)
 	Olympus.missionData["spots"] = spots
 
 	Olympus.OlympusDLL.setMissionData()
-	return time + 1	-- For perfomance reasons weapons are updated once every second
+	return time + 1	-- For perfomance reasons mission data is updated once every second
 end
 
 -- Initializes the units table with all the existing ME units

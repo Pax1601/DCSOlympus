@@ -4,21 +4,22 @@
   "version": "{{OLYMPUS_VERSION_NUMBER}}",
   "scripts": {
     "build-release": "call ./scripts/build-release.bat",
-    "server": "electron . --server",
+    "server-electron": "electron . --server",
+    "server": "node ./build/www.js",
     "client": "electron .",
     "tsc": "tsc"
   },
   "private": true,
   "dependencies": {
-    "@google-cloud/speech": "^6.7.0",
-    "@google-cloud/text-to-speech": "^5.6.0",
+    "@google-cloud/speech": "^6.7.1",
+    "@google-cloud/text-to-speech": "^5.8.1",
     "appjs": "^0.0.20",
     "appjs-win32": "^0.0.19",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "debug": "~4.4.0",
     "ejs": "^3.1.10",
-    "electron": "^33.2.1",
+    "electron": "^33.4.5",
     "express": "^4.21.2",
     "express-basic-auth": "^1.2.1",
     "http-proxy-middleware": "^3.0.3",
@@ -30,14 +31,14 @@
     "sha256": "^0.2.0",
     "srtm-elevation": "^2.1.2",
     "tcp-ping-port": "^1.0.2",
-    "uuid": "^11.0.3",
-    "whatwg-url": "^14.1.0",
-    "ws": "^8.18.0",
+    "uuid": "^11.1.0",
+    "whatwg-url": "^14.2.0",
+    "ws": "^8.18.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.8.2"
   },
   "overrides": {
     "node-fetch": "^2.7.0"

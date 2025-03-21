@@ -32,7 +32,7 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
   }, []);
 
   return (
-    <Menu title={"AWACS Tools"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
+    <Menu title={"AWACS Tools"} open={props.open} onClose={props.onClose} showBackButton={false}>
       <div
         className={`
           flex flex-col gap-4 p-4 font-normal text-gray-800

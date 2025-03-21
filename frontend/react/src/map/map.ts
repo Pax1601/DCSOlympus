@@ -37,6 +37,7 @@ import "./markers/stylesheets/bullseye.css";
 import "./markers/stylesheets/units.css";
 import "./markers/stylesheets/spot.css";
 import "./markers/stylesheets/measure.css";
+import "./markers/stylesheets/navpoint.css";
 import "./stylesheets/map.css";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
@@ -67,6 +68,7 @@ import {
 import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
 import { Measure } from "./measure";
+import { FlakMarker } from "./markers/flakmarker";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -207,7 +209,9 @@ export class Map extends L.Map {
     this.on("selectionend", (e: any) => this.#onSelectionEnd(e));
 
     this.on("mouseup", (e: any) => this.#onMouseUp(e));
+    this.on("touchend", (e: any) => this.#onMouseUp(e));
     this.on("mousedown", (e: any) => this.#onMouseDown(e));
+    this.on("touchstart", (e: any) => this.#onMouseDown(e));
     this.on("dblclick", (e: any) => this.#onDoubleClick(e));
     this.on("click", (e: any) => e.originalEvent.preventDefault());
     this.on("contextmenu", (e: any) => e.originalEvent.preventDefault());
@@ -506,11 +510,6 @@ export class Map extends L.Map {
         altKey: false,
         ctrlKey: false,
       });
-
-    /* Periodically check if the camera control endpoint is available */
-    this.#cameraControlTimer = window.setInterval(() => {
-      this.#checkCameraPort();
-    }, 1000);
   }
 
   setLayerName(layerName: string) {
@@ -766,6 +765,12 @@ export class Map extends L.Map {
     return explosionMarker;
   }
 
+  addFlakMarker(latlng: L.LatLng) {
+    const explosionMarker = new FlakMarker(latlng, 10);
+    explosionMarker.addTo(this);
+    return explosionMarker;
+  }
+
   addSmokeMarker(latlng: L.LatLng, color: string) {
     const smokeMarker = new SmokeMarker(latlng, color);
     smokeMarker.addTo(this);
@@ -807,6 +812,10 @@ export class Map extends L.Map {
 
   setSelectionEnabled(selectionEnabled: boolean) {
     this.#selectionEnabled = selectionEnabled;
+
+    if (selectionEnabled) this.dragging.disable();
+    else this.dragging.enable();
+
     SelectionEnabledChangedEvent.dispatch(selectionEnabled);
   }
 
@@ -960,6 +969,9 @@ export class Map extends L.Map {
   #onSelectionEnd(e: any) {
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
 
+    // Autodisable the selection mode if touchscreen
+    if ("ontouchstart" in window) this.setSelectionEnabled(false);
+
     /* Delay the event so that any other event in the queue still sees the map in selection mode */
     window.setTimeout(() => {
       this.#isSelecting = false;
@@ -994,7 +1006,7 @@ export class Map extends L.Map {
   }
 
   #onMouseDown(e: any) {
-    if (e.originalEvent.button === 1) {
+    if (e.originalEvent?.button === 1) {
       this.dragging.disable();
     } // Disable dragging when right clicking
 
@@ -1295,33 +1307,6 @@ export class Map extends L.Map {
   #getMinimapBoundaries() {
     /* Draw the limits of the maps in the minimap*/
     return minimapBoundaries;
-  }
-
-  #setSlaveDCSCameraAvailable(newSlaveDCSCameraAvailable: boolean) {
-    this.#slaveDCSCameraAvailable = newSlaveDCSCameraAvailable;
-  }
-
-  /* Check if the camera control plugin is available. Right now this will only change the color of the button, no changes in functionality */
-  #checkCameraPort() {
-    if (this.#cameraOptionsXmlHttp?.readyState !== 4) this.#cameraOptionsXmlHttp?.abort();
-
-    this.#cameraOptionsXmlHttp = new XMLHttpRequest();
-
-    /* Using 127.0.0.1 instead of localhost because the LuaSocket version used in DCS only listens to IPv4. This avoids the lag caused by the
-        browser if it first tries to send the request on the IPv6 address for localhost */
-    this.#cameraOptionsXmlHttp.open("OPTIONS", `http://127.0.0.1:${this.#cameraControlPort}`);
-    this.#cameraOptionsXmlHttp.onload = (res: any) => {
-      if (this.#cameraOptionsXmlHttp !== null && this.#cameraOptionsXmlHttp.status == 204) this.#setSlaveDCSCameraAvailable(true);
-      else this.#setSlaveDCSCameraAvailable(false);
-    };
-    this.#cameraOptionsXmlHttp.onerror = (res: any) => {
-      this.#setSlaveDCSCameraAvailable(false);
-    };
-    this.#cameraOptionsXmlHttp.ontimeout = (res: any) => {
-      this.#setSlaveDCSCameraAvailable(false);
-    };
-    this.#cameraOptionsXmlHttp.timeout = 500;
-    this.#cameraOptionsXmlHttp.send("");
   }
 
   #drawIPToTargetLine() {

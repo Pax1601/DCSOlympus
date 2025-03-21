@@ -230,6 +230,23 @@ export class SessionDataChangedEvent {
 export class SessionDataSavedEvent extends SessionDataChangedEvent {}
 export class SessionDataLoadedEvent extends SessionDataChangedEvent {}
 
+export class AdminPasswordChangedEvent {
+  static on(callback: (password: string) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail.password);
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(password: string) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { password } }));
+    console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 /************** Map events ***************/
 export class MouseMovedEvent {
   static on(callback: (latlng: LatLng, elevation: number) => void, singleShot = false) {

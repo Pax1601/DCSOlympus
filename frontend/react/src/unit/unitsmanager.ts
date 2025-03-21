@@ -13,7 +13,7 @@ import {
   msToKnots,
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
-import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState, alarmStates } from "../constants/constants";
+import { BLUE_COMMANDER, DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, RED_COMMANDER, UnitControlSubState, alarmStates } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
@@ -39,6 +39,7 @@ import {
 import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
 import { PathMarker } from "../map/markers/pathmarker";
+import { Coalition } from "../types/types";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -548,6 +549,7 @@ export class UnitsManager {
     units = units.filter((unit) => !unit.getHuman());
 
     let callback = (units: Unit[]) => {
+      onExecution();
       for (let idx in units) {
         getApp().getServerManager().addDestination(units[idx].ID, []);
       }
@@ -842,16 +844,24 @@ export class UnitsManager {
   }
 
   /** Set the advanced options for the selected units
-   * 
+   *
    * @param isActiveTanker If true, the unit will be a tanker
    * @param isActiveAWACS If true, the unit will be an AWACS
    * @param TACAN TACAN settings
    * @param radio Radio settings
    * @param generalSettings General settings
    * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
-   * @param onExecution Function to execute after the operation is completed 
-  */
-  setAdvancedOptions(isActiveTanker: boolean, isActiveAWACS: boolean, TACAN: TACAN, radio: Radio, generalSettings: GeneralSettings, units: Unit[] | null = null, onExecution: () => void = () => {}) {
+   * @param onExecution Function to execute after the operation is completed
+   */
+  setAdvancedOptions(
+    isActiveTanker: boolean,
+    isActiveAWACS: boolean,
+    TACAN: TACAN,
+    radio: Radio,
+    generalSettings: GeneralSettings,
+    units: Unit[] | null = null,
+    onExecution: () => void = () => {}
+  ) {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
     let callback = (units) => {
@@ -859,7 +869,49 @@ export class UnitsManager {
       units.forEach((unit: Unit) => unit.setAdvancedOptions(isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings));
       this.#showActionMessage(units, `advanced options set`);
     };
-    
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
+  //TODO
+  setEngagementProperties(
+    barrelHeight: number,
+    muzzleVelocity: number,
+    aimTime: number,
+    shotsToFire: number,
+    shotsBaseInterval: number,
+    shotsBaseScatter: number,
+    engagementRange: number,
+    targetingRange: number,
+    aimMethodRange: number,
+    acquisitionRange: number,
+    units: Unit[] | null = null,
+    onExecution: () => void = () => {}
+  ) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+    let callback = (units) => {
+      onExecution();
+      units.forEach((unit: Unit) =>
+        unit.setEngagementProperties(
+          barrelHeight,
+          muzzleVelocity,
+          aimTime,
+          shotsToFire,
+          shotsBaseInterval,
+          shotsBaseScatter,
+          engagementRange,
+          targetingRange,
+          aimMethodRange,
+          acquisitionRange
+        )
+      );
+      this.#showActionMessage(units, `engagement parameters set`);
+    };
+
     if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
       this.#protectionCallback = callback;
@@ -1229,12 +1281,20 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
+    // TODO: maybe check units are all of same coalition?
+
     let callback = (units) => {
       onExecution();
       if (this.getUnitsCategories(units).length == 1) {
         var unitsData: { ID: number; location: LatLng }[] = [];
         units.forEach((unit: Unit) => unitsData.push({ ID: unit.ID, location: unit.getPosition() }));
-        getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */);
+
+        /* Determine the coalition */
+        let coalition = "all";
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode === BLUE_COMMANDER) coalition = "blue";
+        else if (getApp().getMissionManager().getCommandModeOptions().commandMode === RED_COMMANDER) coalition = "red";
+
+        getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */, coalition as Coalition);
         this.#showActionMessage(units, `created a group`);
       } else {
         getApp().addInfoMessage(`Groups can only be created from units of the same category`);
@@ -1441,9 +1501,13 @@ export class UnitsManager {
           units.push({ ID: unit.ID, location: position });
         });
 
+        let coalition = "all";
+        if (getApp().getMissionManager().getCommandModeOptions().commandMode === BLUE_COMMANDER) coalition = "blue";
+        else if (getApp().getMissionManager().getCommandModeOptions().commandMode === RED_COMMANDER) coalition = "red";
+
         getApp()
           .getServerManager()
-          .cloneUnits(units, false, spawnPoints, (res: any) => {
+          .cloneUnits(units, false, getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: spawnPoints, coalition as Coalition, (res: any) => {
             if (res !== undefined) {
               markers.forEach((marker: TemporaryUnitMarker) => {
                 marker.setCommandHash(res);
@@ -1627,7 +1691,7 @@ export class UnitsManager {
         getApp().addInfoMessage("Aircrafts can be air spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
+      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
         return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
@@ -1636,7 +1700,7 @@ export class UnitsManager {
         getApp().addInfoMessage("Helicopters can be air spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
+      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
         return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
@@ -1645,7 +1709,7 @@ export class UnitsManager {
         getApp().addInfoMessage("Ground units can be spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
+      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
         return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
@@ -1654,7 +1718,7 @@ export class UnitsManager {
         getApp().addInfoMessage("Navy units can be spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = units.reduce((points: number, unit: UnitSpawnTable) => {
+      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
         return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
       }, 0);
       spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);

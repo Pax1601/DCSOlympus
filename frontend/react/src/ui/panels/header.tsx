@@ -50,6 +50,8 @@ import {
 import { OlympusConfig } from "../../interfaces";
 import { FaCheck, FaQuestionCircle, FaSave, FaSpinner } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
+import { ftToM } from "../../other/utils";
+import { LatLng } from "leaflet";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -64,7 +66,9 @@ export function Header() {
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
-    MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
+    MapOptionsChangedEvent.on((mapOptions) => {
+      setMapOptions({ ...mapOptions })
+  });
     MapSourceChangedEvent.on((source) => setMapSource(source));
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       // Timeout needed to make sure the map configuration has updated
@@ -100,9 +104,16 @@ export function Header() {
   return (
     <div
       className={`
-        z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3 align-center
+        relative z-10 flex w-full gap-4 border-gray-200 bg-gray-300 px-3
+        align-center
         dark:border-gray-800 dark:bg-olympus-900
       `}
+      onWheel={(e) => {
+        if (scrollRef.current) {
+          if (e.deltaY > 0) (scrollRef.current as HTMLElement).scrollLeft += 100;
+          else (scrollRef.current as HTMLElement).scrollLeft -= 100;
+        }
+      }}
     >
       <img src="images/icon.png" className={`my-auto h-10 w-10 rounded-md p-0`}></img>
       {!scrolledLeft && (
@@ -145,21 +156,23 @@ export function Header() {
               {IP}
             </div>
           </div>
-          {savingSessionData ? (
-            <div className="text-white">
-              <FaSpinner className={`animate-spin text-2xl`} />
-            </div>
-          ) : (
-            <div className={`relative text-white`}>
-              <FaFloppyDisk className={`absolute -top-3 text-2xl`} />
-              <FaCheck
-                className={`
+          <div className="w-8">
+            {savingSessionData ? (
+              <div className="text-white">
+                <FaSpinner className={`animate-spin text-2xl`} />
+              </div>
+            ) : (
+              <div className={`relative text-white`}>
+                <FaFloppyDisk className={`absolute -top-3 text-2xl`} />
+                <FaCheck
+                  className={`
                   absolute left-[9px] top-[-6px] text-2xl text-olympus-900
                 `}
-              />
-              <FaCheck className={`absolute left-3 top-0 text-green-500`} />
-            </div>
-          )}
+                />
+                <FaCheck className={`absolute left-3 top-0 text-green-500`} />
+              </div>
+            )}
+          </div>
         </div>
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (

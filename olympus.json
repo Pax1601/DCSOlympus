@@ -1,25 +1,52 @@
 {
+	"_comment1": "These are the address and port of the backend server, i.e. the server run by the Olympus dll mod.", 
+	"_comment2": "localhost should be used if the backend is running on the same machine as the frontend server, which is usually the case.",
+	"_comment3": "If a direct connection is desired, e.g. for API usage, use '*' as address.",
+	"_comment4": "The desired port should be available and not used by other processes.",
 	"backend": {
 		"address": "localhost",
 		"port": 4512
 	},
+
+	"_comment5": "These are the sha256 hashed passwords for the game master, the two commanders, and the admin. They are used to authenticate the users.",
 	"authentication": {
-		"gameMasterPassword": "4b8823ed9e5c2392ab4a791913bb8ce41956ea32e308b760eefb97536746dd33",
-		"blueCommanderPassword": "b0ea4230c1558c5313165eda1bdb7fced008ca7f2ca6b823fb4d26292f309098",
-		"redCommanderPassword": "302bcbaf2a3fdcf175b689bf102d6cdf9328f68a13d4096101bba806482bfed9"
+		"gameMasterPassword": "",
+		"blueCommanderPassword": "",
+		"redCommanderPassword": "",
+		"admin": ""
 	},
+
+	"_comment6": "These are the settings for the frontend server, i.e. the server which hosts the Olympus GUI web interface.",
+	"_comment7": "The port should be available and not used by other processes and is used to load the interface.",
 	"frontend": {
 		"port": 3000,
+
+		"_comment8": "These are the custom headers used for authentication. They are used to authenticate the users and skip the login page",
+		"_comment9": "If enabled, the frontend server will look for the specified headers in the request and use them to authenticate the user.",
+		"_comment10": "The username header should contain the username and the group header should contain the group of the user.",
+		"_comment11": "If the headers are not present or the user is not authenticated, the user will be redirected to the login page.",
+		"_comment12": "This is useful for integrating Olympus with other systems, e.g. a SSO provider",
+		"_comment13": "The group should be one of the groups defined using the admin page on the web interface",
+		"_comment14": "If the user is by default authorized to more than one command mode, x-command-mode header can be used to specify the default command mode",
+		"_comment15": "Otherwise, the login page will be skipped, but a command more selection page will still be shown",
 		"customAuthHeaders": {
 			"enabled": false,
 			"username": "X-Authorized",
 			"group": "X-Group"
 		},
+
+		"_comment16": "The elevation provider is used to fetch elevation data for the map. It should be a URL with {lat} and {lng} placeholders.",
 		"elevationProvider": {
 			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
 			"username": null,
 			"password": null
 		},
+
+
+		"_comment17": "These are the map layers used by the frontend server. They are used to display the map in the interface.",
+		"_comment18": "The urlTemplate should be a URL with {z}, {x}, and {y} placeholders for the zoom level and tile coordinates.",
+		"_comment19": "The minZoom and maxZoom define the zoom levels at which the layer is visible.",
+		"_comment20": "The attribution is the text displayed in the bottom right corner of the map.",
 		"mapLayers": {
 			"ArcGIS Satellite": {
 				"urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -34,13 +61,28 @@
 				"attribution": "OpenStreetMap contributors"
 			}
 		},
+
+		"_comment21": "These are the map mirrors used by the frontend server. They are used to load the map tiles from different sources.",
+		"_comment22": "The key is the name of the mirror and the value is the URL of the mirror.",
 		"mapMirrors": {
 			"DCS Map (Official)": "https://maps.dcsolympus.com/maps",
 			"DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
 		},
-		"autoconnectWhenLocal": true
+
+		"_comment3": "If autoconnectWhenLocal is true, the frontend server will automatically connect to the backend server when running on the same machine.",
+		"_comment4": "If a proxy is used, the proxyHeader should be set to the header used to forward the client IP address to the backend server.",
+		"_comment5": "This is useful when running the frontend server behind a reverse proxy, e.g. nginx, allowing to skip login when connecting locally but still authenticate when connecting remotely.",
+		"autoconnectWhenLocal": true,
+        "proxyHeader": "x-forwarded-for"
 	},
+
+	"_comment23": "These are the settings for the audio backend, i.e. the service which handles direct connection of Olympus to a SRS server.",
+	"_comment24": "The SRSPort is the port used to connect to the SRS server and should be set to be the same as the value in SRS (5002 by default).",
+	"_comment25": "The WSPort is the port used by the web interface to connect to the audio backend WebSocket. It should be available and not used by other processes.",
+	"_comment26": "The WSEndpoint is the endpoint used by the web interface to connect to the audio backend WebSocket when using a reverse proxy. A websocket proxy should be set up to forward requests from this endpoint to WSPort.",
+
 	"audio": {
+		
 		"SRSPort": 5002,
 		"WSPort": 4000,
 		"WSEndpoint": "audio"

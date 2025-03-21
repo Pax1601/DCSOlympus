@@ -159,6 +159,7 @@ class Manager {
                 if (this.getActiveInstance()) {
                     this.setPort('frontend', this.getActiveInstance().frontendPort);
                     this.setPort('backend', this.getActiveInstance().backendPort);
+                    this.expertSettingsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
                 }
             }
 
@@ -332,8 +333,10 @@ class Manager {
     async onInstallTypeClicked(type) {
         this.typePage.getElement().querySelector(`.singleplayer`).classList.toggle("selected", type === 'singleplayer');
         this.typePage.getElement().querySelector(`.multiplayer`).classList.toggle("selected", type === 'multiplayer');
-        if (this.getActiveInstance())
+        if (this.getActiveInstance()) {
             this.getActiveInstance().installationType = type;
+            this.getActiveInstance().autoconnectWhenLocal = type === 'singleplayer';
+        }
         else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
         }
@@ -399,6 +402,7 @@ class Manager {
                     this.activePage.hide();
                     this.connectionsPage.show();
                     (this.getMode() === 'basic' ? this.connectionsPage : this.expertSettingsPage).getElement().querySelector(".backend-address .checkbox").classList.toggle("checked", this.getActiveInstance().backendAddress === '*')
+                    (this.getMode() === 'basic' ? this.passwordsPage : this.expertSettingsPage).getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
                 }
             } else {
                 showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
@@ -472,7 +476,7 @@ class Manager {
     }
 
     async onGameMasterPasswordChanged(value) {
-        for (let input of this.activePage.getElement().querySelectorAll("input[type='password']")) {
+        for (let input of this.activePage.getElement().querySelectorAll("input[type='password'].unique")) {
             input.placeholder = "";
         }
 
@@ -483,7 +487,7 @@ class Manager {
     }
 
     async onBlueCommanderPasswordChanged(value) {
-        for (let input of this.activePage.getElement().querySelectorAll("input[type='password']")) {
+        for (let input of this.activePage.getElement().querySelectorAll("input[type='password'].unique")) {
             input.placeholder = "";
         }
 
@@ -494,12 +498,19 @@ class Manager {
     }
 
     async onRedCommanderPasswordChanged(value) {
-        for (let input of this.activePage.getElement().querySelectorAll("input[type='password']")) {
+        for (let input of this.activePage.getElement().querySelectorAll("input[type='password'].unique")) {
             input.placeholder = "";
         }
 
         if (this.getActiveInstance())
             this.getActiveInstance().setRedCommanderPassword(value);
+        else
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
+    }
+
+    async onAdminPasswordChanged(value) {
+        if (this.getActiveInstance())
+            this.getActiveInstance().setAdminPassword(value);
         else
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
     }
@@ -512,6 +523,11 @@ class Manager {
     /* When the backend port input value is changed */
     async onBackendPortChanged(value) {
         this.setPort('backend', Number(value));
+    }
+
+    /* When the srs port input value is changed */
+    async onSRSPortChanged(value) {
+        this.getActiveInstance().SRSPort = Number(value);
     }
 
     /* When the "Enable API connection" checkbox is clicked */
@@ -542,6 +558,19 @@ class Manager {
                 this.getActiveInstance().installCameraPlugin = 'install';
             }
             this.expertSettingsPage.getElement().querySelector(".camera-plugin .checkbox").classList.toggle("checked", this.getActiveInstance().installCameraPlugin === 'install')
+        } else {
+            showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
+        }
+    }
+
+    async onEnableAutoconnectClicked() {
+        if (this.getActiveInstance()) {
+            if (this.getActiveInstance().autoconnectWhenLocal) {
+                this.getActiveInstance().autoconnectWhenLocal = false;
+            } else {
+                this.getActiveInstance().autoconnectWhenLocal = true;
+            }
+            this.expertSettingsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
         } else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
         }

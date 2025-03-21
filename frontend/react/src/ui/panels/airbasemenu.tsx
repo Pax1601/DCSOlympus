@@ -73,7 +73,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
   }
 
   return (
-    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false} canBeHidden={true}>
+    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false}>
       <div
         className={`
           flex flex-col gap-2 font-normal text-gray-800
@@ -117,10 +117,9 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                   <div key={idx}>
                     {Object.keys(runway.headings[0]).map((runwayName) => {
                       return (
-                        <div
-                          key={`${idx}-${runwayName}`}
-                          className={`flex w-full justify-between`}
-                        >
+                        <div key={`${idx}-${runwayName}`} className={`
+                          flex w-full justify-between
+                        `}>
                           <span>
                             {" "}
                             <span className="text-gray-400">RWY</span> {runwayName}
@@ -213,6 +212,9 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                           />
                         );
                       })}
+                    {filteredBlueprints.filter((blueprint) => blueprint.category === "aircraft").length === 0 && (
+                      <span className={`text-gray-400`}>No aircraft available</span>
+                    )}
                   </div>
                 </OlAccordion>
                 <OlAccordion
@@ -264,6 +266,9 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                           />
                         );
                       })}
+                    {filteredBlueprints.filter((blueprint) => blueprint.category === "helicopter").length === 0 && (
+                      <span className={`text-gray-400`}>No helicopter available</span>
+                    )}
                   </div>
                 </OlAccordion>
               </div>
