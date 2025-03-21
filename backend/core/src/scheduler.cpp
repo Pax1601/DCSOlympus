@@ -114,6 +114,19 @@ json::value Scheduler::getCommandModeOptions() {
 	return json;
 }
 
+/* Convert from string to alarm state enum value */
+ALARM_STATE::ALARM_STATEs stringToAlarmState(const std::wstring& state) {
+    if (state == L"red") {
+        return ALARM_STATE::RED;
+    } else if (state == L"green") {
+        return ALARM_STATE::GREEN;
+    } else if (state == L"auto") {
+        return ALARM_STATE::AUTO;
+    } else {
+        throw invalid_argument("Stato non valido: " + std::string(state.begin(), state.end()));
+    }
+}
+
 bool Scheduler::checkSpawnPoints(int spawnPoints, string coalition)
 {
 	if (!getRestrictSpawns()) return true;
@@ -400,6 +413,20 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unsigned char ROE = value[L"ROE"].as_number().to_uint32();
 			unit->setROE(ROE);
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") ROE to " + to_string(ROE), true);
+		}
+	}
+	else if (key.compare("commandAlarmState") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unsigned char alarmState = value[L"alarmState"].as_integer();
+			log(username + " is trying to set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
+			unit->commandAlarmState(alarmState);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
+		} else {
+			log("Error while setting commandAlarmState. Unit does not exist.");
 		}
 	}
 	/************************/

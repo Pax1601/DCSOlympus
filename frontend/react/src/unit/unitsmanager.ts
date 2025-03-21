@@ -13,11 +13,11 @@ import {
   msToKnots,
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
-import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState } from "../constants/constants";
+import { DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, UnitControlSubState, alarmStates } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
-import { Contact, GeneralSettings, Radio, TACAN, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
+import { AlarmState, Contact, GeneralSettings, Radio, TACAN, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
 import { Group } from "./group";
 import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
 import { ContextActionSet } from "./contextactionset";
@@ -712,6 +712,27 @@ export class UnitsManager {
       onExecution();
       units.forEach((unit: Unit) => unit.setROE(ROE));
       this.#showActionMessage(units, `ROE set to ${ROE}`);
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
+  /** Set a specific Alarm State to all the selected units
+   *
+   * @param AlarmState Value to set, see constants for acceptable values
+   * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
+   */
+  setAlarmState(alarmState: number, units: Unit[] | null = null, onExecution: () => void = () => {}) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units) => {
+      onExecution();
+      units.forEach((unit: Unit) => unit.commandAlarmState(alarmState));
+      this.#showActionMessage(units, `Alarm State set to ${alarmState.toString()}`);
     };
 
     if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {

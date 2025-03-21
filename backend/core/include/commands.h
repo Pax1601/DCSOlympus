@@ -18,6 +18,7 @@ namespace SetCommandType {
 		FORMATION = 5,
 		RTB_ON_BINGO = 6,
 		SILENCE = 7,
+		ALARM_STATE = 9,
 		RTB_ON_OUT_OF_AMMO = 10,
 		ECM_USING = 13,
 		PROHIBIT_AA = 14,
@@ -42,6 +43,14 @@ namespace ROE {
 		OPEN_FIRE = 2,
 		RETURN_FIRE = 3,
 		WEAPON_HOLD = 4,
+	};
+}
+
+namespace ALARM_STATE {
+	enum ALARM_STATEs {
+		AUTO   = 0,
+		GREEN  = 1,
+		RED    = 2,
 	};
 }
 

@@ -96,6 +96,7 @@ public:
 	virtual void setTargetID(unsigned int newValue) { updateValue(targetID, newValue, DataIndex::targetID); }
 	virtual void setTargetPosition(Coords newValue) { updateValue(targetPosition, newValue, DataIndex::targetPosition); }
 	virtual void setROE(unsigned char newValue, bool force = false);
+	virtual void commandAlarmState(unsigned char newValue, bool force = false);
 	virtual void setReactionToThreat(unsigned char newValue, bool force = false);
 	virtual void setEmissionsCountermeasures(unsigned char newValue, bool force = false);
 	virtual void setTACAN(DataTypes::TACAN newValue, bool force = false);
@@ -112,12 +113,12 @@ public:
 	virtual void setRacetrackLength(double newValue) { updateValue(racetrackLength, newValue, DataIndex::racetrackLength); }
 	virtual void setRacetrackAnchor(Coords newValue) { updateValue(racetrackAnchor, newValue, DataIndex::racetrackAnchor); }
 	virtual void setRacetrackBearing(double newValue) { updateValue(racetrackBearing, newValue, DataIndex::racetrackBearing); }
-	virtual void setRadarState(string newValue) { updateValue(radarState, newValue, DataIndex::radarState); }
+	virtual void setAlarmState(string newValue) { updateValue(alarmState, newValue, DataIndex::alarmState); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
 	virtual bool getAlive() { return alive; }
-	virtual string getRadarState() { return radarState; }
+	virtual string getAlarmState() { return alarmState; }
 	virtual bool getHuman() { return human; }
 	virtual bool getControlled() { return controlled; }
 	virtual unsigned char getCoalition() { return coalition; }
@@ -180,7 +181,7 @@ protected:
 	string callsign = "";
 	string groupName = "";
 	unsigned char state = State::NONE;
-	string radarState = "";
+	string alarmState = "";
 	string task = "";
 	bool hasTask = false;
 	Coords position = Coords(NULL);

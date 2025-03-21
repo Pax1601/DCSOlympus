@@ -492,17 +492,17 @@ export abstract class Unit extends CustomMarker {
           this.setAlive(dataExtractor.extractBool());
           updateMarker = true;
           break;
-        case DataIndexes.radarState:
+        case DataIndexes.alarmState:
           let stringAlarmState = dataExtractor.extractString();
           switch (stringAlarmState) {
             case 'RED':
-              this.setRadarState(AlarmState.RED);    
+              this.setAlarmState(AlarmState.RED);    
               break;
             case 'GREEN':
-              this.setRadarState(AlarmState.GREEN);    
+              this.setAlarmState(AlarmState.GREEN);    
               break;
             case '':
-              this.setRadarState(AlarmState.AUTO);    
+              this.setAlarmState(AlarmState.AUTO);    
             default:
               break;
           }
@@ -785,11 +785,10 @@ export abstract class Unit extends CustomMarker {
     }
   }
 
-  setRadarState(newRadarState: AlarmState) {
-    if (newRadarState != this.#alarmState) {
-      this.#alarmState = newRadarState;
-      // TODO: check if an event is needed -- surely yes to update the UI
-      console.log('----radar state updated: ', this.#alarmState);
+  setAlarmState(newAlarmState: AlarmState) {
+    if (newAlarmState != this.#alarmState) {
+      this.#alarmState = newAlarmState;
+      console.log('---- alarm state updated: ', this.#alarmState);
       this.#updateMarker();
     }
   }
@@ -1070,9 +1069,9 @@ export abstract class Unit extends CustomMarker {
 
     /* Radar state indicator */
     if (this.#alarmState) {
-      var radarStateIcon = document.createElement("div");
-      radarStateIcon.classList.add("unit-radar-state");
-      el.append(radarStateIcon);
+      var alarmStateIcon = document.createElement("div");
+      alarmStateIcon.classList.add("unit-radar-state");
+      el.append(alarmStateIcon);
     }
 
     /* Ammo indicator */
@@ -1293,6 +1292,10 @@ export abstract class Unit extends CustomMarker {
 
   setROE(ROE: string) {
     if (!this.#human) getApp().getServerManager().setROE(this.ID, ROE);
+  }
+
+  commandAlarmState(alarmState: number) {
+    if (!this.#human) getApp().getServerManager().setAlarmState(this.ID, alarmState);
   }
 
   setReactionToThreat(reactionToThreat: string) {

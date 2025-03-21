@@ -17,6 +17,7 @@ import {
 } from "../constants/constants";
 import {
   AirbasesData,
+  AlarmState,
   BullseyesData,
   CommandModeOptions,
   GeneralSettings,
@@ -407,6 +408,12 @@ export class ServerManager {
   setROE(ID: number, ROE: string, callback: CallableFunction = () => {}) {
     var command = { ID: ID, ROE: ROEs.indexOf(ROE) };
     var data = { setROE: command };
+    this.PUT(data, callback);
+  }
+
+  setAlarmState(ID: number, alarmState: number, callback: CallableFunction = () => {}) {
+    var command = { ID: ID, alarmState: alarmState };
+    var data = { commandAlarmState: command };
     this.PUT(data, callback);
   }
 

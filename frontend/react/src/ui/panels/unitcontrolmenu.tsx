@@ -843,12 +843,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 <div className="flex flex-col gap-2 px-2">
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
-                                      my-auto min-w-8 text-white
-                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
-                                  </div>
-                                  <div className="flex content-center gap-2">
-                                    {" "}
                                     <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
                                       my-auto min-w-8 text-white
                                     `} />{" "}
@@ -856,6 +850,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       {" "}
                                       Auto: The unit will use its sensors to engage based on its ROE.
                                     </div>
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
@@ -876,15 +876,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             <OlButtonGroupItem
                               key={idx}
                               onClick={() => {
-                                // TODO: set alarm state
-                                // getApp()
-                                //   .getUnitsManager()
-                                //   .setROE(ROEs[convertROE(idx)], null, () =>
-                                //     setForcedUnitsData({
-                                //       ...forcedUnitsData,
-                                //       ROE: ROEs[convertROE(idx)],
-                                //     })
-                                //   );
+                                getApp()
+                                  .getUnitsManager()
+                                  .setAlarmState(idx, null, () =>
+                                    setForcedUnitsData({
+                                      ...forcedUnitsData,
+                                      alarmState: Object.values(AlarmState)[idx],
+                                    })
+                                  );
                               }}
                               active={selectedUnitsData.alarmState === alarmStates[idx]}
                               icon={icon}

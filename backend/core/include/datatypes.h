@@ -7,7 +7,7 @@ namespace DataIndex {
 		startOfData = 0,
 		category,
 		alive,
-		radarState,
+		alarmState,
 		human,
 		controlled,
 		coalition,
