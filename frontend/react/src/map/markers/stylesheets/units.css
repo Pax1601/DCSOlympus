@@ -631,12 +631,12 @@
   left: 35px;
   bottom: 8px;
 }
-.unit[data-radar-state="GREEN"] .unit-radar-state {
+.unit[data-radar-state="green"] .unit-radar-state {
   border: 1px solid white;
   background: rgb(0, 226, 0);
 }
 
-.unit[data-radar-state="RED"] .unit-radar-state {
+.unit[data-radar-state="red"] .unit-radar-state {
   border: 1px solid white;
   background: red;
 }

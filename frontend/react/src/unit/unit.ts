@@ -51,7 +51,7 @@ import {
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
-import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
+import { AlarmState, Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from "./group";
 import { ContextActionSet } from "./contextactionset";
@@ -83,7 +83,7 @@ export abstract class Unit extends CustomMarker {
 
   /* Data controlled directly by the backend. No setters are provided to avoid misalignments */
   #alive: boolean = false;
-  #radarState: string = '';
+  #alarmState: AlarmState | undefined = undefined;
   #human: boolean = false;
   #controlled: boolean = false;
   #coalition: string = "neutral";
@@ -333,6 +333,9 @@ export abstract class Unit extends CustomMarker {
   getRaceTrackBearing() {
     return this.#racetrackBearing;
   }
+  getAlarmState() {
+    return this.#alarmState;
+  }
 
   static getConstructor(type: string) {
     if (type === "GroundUnit") return GroundUnit;
@@ -490,7 +493,19 @@ export abstract class Unit extends CustomMarker {
           updateMarker = true;
           break;
         case DataIndexes.radarState:
-          this.setRadarState(dataExtractor.extractString());
+          let stringAlarmState = dataExtractor.extractString();
+          switch (stringAlarmState) {
+            case 'RED':
+              this.setRadarState(AlarmState.RED);    
+              break;
+            case 'GREEN':
+              this.setRadarState(AlarmState.GREEN);    
+              break;
+            case '':
+              this.setRadarState(AlarmState.AUTO);    
+            default:
+              break;
+          }
           updateMarker = true;
           break;
         case DataIndexes.human:
@@ -755,6 +770,7 @@ export abstract class Unit extends CustomMarker {
       racetrackLength: this.#racetrackLength,
       racetrackAnchor: this.#racetrackAnchor,
       racetrackBearing: this.#racetrackBearing,
+      alarmState: this.#alarmState
     };
   }
 
@@ -769,11 +785,11 @@ export abstract class Unit extends CustomMarker {
     }
   }
 
-  setRadarState(newRadarState: string) {
-    if (newRadarState != this.#radarState) {
-      this.#radarState = newRadarState;
+  setRadarState(newRadarState: AlarmState) {
+    if (newRadarState != this.#alarmState) {
+      this.#alarmState = newRadarState;
       // TODO: check if an event is needed -- surely yes to update the UI
-      console.log('----radar state updated: ', this.#radarState);
+      console.log('----radar state updated: ', this.#alarmState);
       this.#updateMarker();
     }
   }
@@ -1053,7 +1069,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     /* Radar state indicator */
-    if (this.#radarState !== '') {
+    if (this.#alarmState) {
       var radarStateIcon = document.createElement("div");
       radarStateIcon.classList.add("unit-radar-state");
       el.append(radarStateIcon);
@@ -1587,7 +1603,7 @@ export abstract class Unit extends CustomMarker {
       element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
       /* Set RED/GREEN state*/
-      if (this.#radarState !== '') element.querySelector(".unit")?.setAttribute("data-radar-state", this.#radarState);
+      if (this.#alarmState) element.querySelector(".unit")?.setAttribute("data-radar-state", this.#alarmState);
 
       /* Set current unit state */
       if (this.#human) {

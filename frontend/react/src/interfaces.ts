@@ -213,6 +213,7 @@ export interface UnitData {
   markerCategory: string;
   ID: number;
   alive: boolean;
+  alarmState: AlarmState | undefined;
   human: boolean;
   controlled: boolean;
   coalition: string;
@@ -395,4 +396,10 @@ export interface Drawing {
   hiddenOnPlanner?: boolean;
   file?: string;
   scale?: number;
+}
+
+export enum AlarmState {
+  AUTO = 'auto',
+  GREEN = 'green',
+  RED = 'red'
 }

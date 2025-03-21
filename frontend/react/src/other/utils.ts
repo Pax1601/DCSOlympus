@@ -547,7 +547,7 @@ export function roundToNearestFive(number) {
   return Math.round(number / 5) * 5;
 }
 
-export function toDCSFormationOffset(offset: {x: number, y: number, z: number}) {
+export function toDCSFormationOffset(offset: { x: number, y: number, z: number }) {
   // X: front-rear, positive front
   // Y: top-bottom, positive top
   // Z: left-right, positive right
@@ -555,7 +555,7 @@ export function toDCSFormationOffset(offset: {x: number, y: number, z: number}) 
   return { x: -offset.y, y: offset.z, z: offset.x };
 }
 
-export function fromDCSFormationOffset(offset: {x: number, y: number, z: number}) {
+export function fromDCSFormationOffset(offset: { x: number, y: number, z: number }) {
   return { x: offset.z, y: -offset.x, z: offset.y };
 }
 
@@ -649,10 +649,10 @@ export function normalizeAngle(angle: number): number {
 }
 
 export function decimalToRGBA(decimal: number): string {
-  const r = (decimal >>> 24) & 0xff; 
-  const g = (decimal >>> 16) & 0xff; 
-  const b = (decimal >>> 8) & 0xff;  
-  const a = (decimal & 0xff) / 255;  
+  const r = (decimal >>> 24) & 0xff;
+  const g = (decimal >>> 16) & 0xff;
+  const b = (decimal >>> 8) & 0xff;
+  const a = (decimal & 0xff) / 255;
 
   return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
 }

@@ -8,6 +8,7 @@ import { OlButtonGroup, OlButtonGroupItem } from "../components/olbuttongroup";
 import { OlCheckbox } from "../components/olcheckbox";
 import {
   ROEs,
+  alarmStates,
   altitudeIncrements,
   emissionsCountermeasures,
   maxAltitudeValues,
@@ -53,7 +54,7 @@ import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlNumberInput } from "../components/olnumberinput";
-import { GeneralSettings, Radio, TACAN } from "../../interfaces";
+import { AlarmState, GeneralSettings, Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
@@ -85,6 +86,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       radio: undefined as undefined | Radio,
       TACAN: undefined as undefined | TACAN,
       generalSettings: undefined as undefined | GeneralSettings,
+      alarmState: undefined as undefined | AlarmState
     };
   }
 
@@ -165,6 +167,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       onOff: (unit: Unit) => unit.getOnOff(),
       radio: (unit: Unit) => unit.getRadio(),
       TACAN: (unit: Unit) => unit.getTACAN(),
+      alarmState: (unit: Unit) => unit.getAlarmState(),
       generalSettings: (unit: Unit) => unit.getGeneralSettings(),
       isAudioSink: (unit: Unit) => {
         return (
@@ -818,6 +821,82 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     </div>
                   )}
                   {/* ============== Rules of Engagement END ============== */}
+
+                  {/* ============== Alarm state selector START ============== */}
+                  {selectedUnitsData.alarmState && 
+                    <div className="flex flex-col gap-2">
+                      <span
+                        className={`
+                          my-auto font-normal
+                          dark:text-white
+                        `}
+                      >
+                        Alarm State
+                      </span> 
+                      <OlButtonGroup
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Alarm State"
+                            content={
+                              <div className="flex flex-col gap-2">
+                                <div>Sets the alarm state of the unit, in order:</div>
+                                <div className="flex flex-col gap-2 px-2">
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
+                                      my-auto min-w-8 text-white
+                                    `} />{" "}
+                                    <div>
+                                      {" "}
+                                      Auto: The unit will use its sensors to engage based on its ROE.
+                                    </div>
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeHold} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Red: The unit will be actively searching for target with its sensors. For some units, this will deploy
+                                    the radar and make the unit not able to move.
+                                  </div>
+                                </div>
+                              </div>
+                            }
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
+                        {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated].map((icon, idx) => {
+                          return (
+                            <OlButtonGroupItem
+                              key={idx}
+                              onClick={() => {
+                                // TODO: set alarm state
+                                // getApp()
+                                //   .getUnitsManager()
+                                //   .setROE(ROEs[convertROE(idx)], null, () =>
+                                //     setForcedUnitsData({
+                                //       ...forcedUnitsData,
+                                //       ROE: ROEs[convertROE(idx)],
+                                //     })
+                                //   );
+                              }}
+                              active={selectedUnitsData.alarmState === alarmStates[idx]}
+                              icon={icon}
+                            />
+                          );
+                        })}
+                      </OlButtonGroup>
+                    </div>
+                  }
+                  {/* ============== Alarm state selector END ============== */}
+
+                  
                   {selectedCategories.every((category) => {
                     return ["Aircraft", "Helicopter"].includes(category);
                   }) && (
