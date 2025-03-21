@@ -480,7 +480,7 @@
   color: var(--secondary-red-text);
 }
 
-[data-object|="unit"][data-coalition="red"][data-is-selected] path {
+[data-object|="unit"][data-coalition="red"][data-is-selected] path:nth-child(1) {
   fill: var(--secondary-red-text);
 }
 
