@@ -84,7 +84,6 @@ void Unit::update(json::value json, double dt)
 		setAlive(json[L"isAlive"].as_bool());
 
 	if (json.has_string_field(L"alarmState")) {
-		// log("Unit " + to_string(json[L"unitName"]) + " has alarmState: " + to_string(json[L"alarmState"]));
 		setAlarmState(to_string(json[L"alarmState"]));
 	}
 

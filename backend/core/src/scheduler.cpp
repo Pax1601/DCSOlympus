@@ -413,7 +413,6 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unsigned char alarmState = value[L"alarmState"].as_integer();
-			log(username + " is trying to set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
 			unit->commandAlarmState(alarmState);
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
 		} else {

@@ -626,8 +626,6 @@ export class ServerManager {
   loadEnvResources() {
     /* Load the drawings */
     this.getDrawings((drawingsData: { drawings: Record<string, Record<string, any>> }) => {
-      console.log('---- drawings: ', drawingsData);
-      
       if (drawingsData) {
         getApp().getDrawingsManager()?.initDrawings(drawingsData);
       }

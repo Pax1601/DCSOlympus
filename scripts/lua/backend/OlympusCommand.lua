@@ -1077,27 +1077,6 @@ function Olympus.setOnOff(groupName, onOff)
 	end
 end
 
--- Disable the AI of a group on or off entirely
-function Olympus.setRedGreenAuto(groupName, redGreenAuto)
-	Olympus.debug("Olympus.setRedGreenAuto " .. groupName .. " " .. tostring(redGreenAuto), 2)
-	local group = Group.getByName(groupName)
-	if group ~= nil then
-
-		if redGreenAuto == 'RED' then
-			group:getController():setOption(AI.Option.Ground.id.ALARM_STATE, AI.Option.Ground.val.ALARM_STATE.RED)
-		end
-
-		if redGreenAuto == 'GREEN' then
-			group:getController():setOption(AI.Option.Ground.id.ALARM_STATE, AI.Option.Ground.val.ALARM_STATE.GREEN)
-		end
-
-		if redGreenAuto == 'AUTO' then
-			group:getController():setOption(AI.Option.Ground.id.ALARM_STATE, AI.Option.Ground.val.ALARM_STATE.AUTO)
-		end
-		Olympus.debug("Olympus.setRedGreenAuto completed successfully", 2)
-	end
-end
-
 function getUnitDescription(unit) 
 	return unit:getDescr()
 end
