@@ -770,3 +770,7 @@ export function secondsToTimeString(seconds: number) {
 
   return `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(secs, 2)}`;
 }
+
+export function isTrustedEnvironment() {
+  return window.location.protocol === "https:";
+}

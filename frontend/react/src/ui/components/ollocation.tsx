@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LatLng } from "leaflet";
 import { ConvertDDToDMS, DDToDDM, latLngToMGRS, latLngToUTM, zeroAppend } from "../../other/utils";
 
-export function OlLocation(props: { location: LatLng; className?: string; referenceSystem?: string; onClick?: () => void }) {
+export function OlLocation(props: { location: LatLng; className?: string; referenceSystem?: string; onClick?: () => void; onRefSystemChange?: (refSystem: string) => any }) {
   const [referenceSystem, setReferenceSystem] = props.referenceSystem ? [props.referenceSystem, () => {}] : useState("LatLngDec");
   const MGRS = latLngToMGRS(props.location.lat, props.location.lng, 6);
   if (referenceSystem === "MGRS") {
@@ -17,6 +17,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
             ? props.onClick
             : (ev) => {
                 setReferenceSystem("LatLngDec");
+                props.onRefSystemChange ? props.onRefSystemChange("LatLngDec") : null;
                 ev.stopPropagation();
               }
         }
@@ -44,6 +45,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
             ? props.onClick
             : (ev) => {
                 setReferenceSystem("LatLngDMS");
+                props.onRefSystemChange ? props.onRefSystemChange("LatLngDMS") : null;
                 ev.stopPropagation();
               }
         }
@@ -83,6 +85,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
             ? props.onClick
             : (ev) => {
                 setReferenceSystem("LatLngDDM");
+                props.onRefSystemChange ? props.onRefSystemChange("LatLngDDM") : null;
                 ev.stopPropagation();
               }
         }
@@ -122,6 +125,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
             ? props.onClick
             : (ev) => {
                 setReferenceSystem("MGRS");
+                props.onRefSystemChange ? props.onRefSystemChange("MGRS") : null;
                 ev.stopPropagation();
               }
         }

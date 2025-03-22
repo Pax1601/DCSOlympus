@@ -892,3 +892,19 @@ export class WeaponsRefreshedEvent {
     if (DEBUG) console.log(`Event ${this.name} dispatched`);
   }
 }
+
+export class CoordinatesFreezeEvent {
+  static on(callback: () => void) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback();
+      }
+    )
+  }
+
+  static dispatch() {
+    document.dispatchEvent(new CustomEvent(this.name));
+    if (DEBUG) console.log(`Event ${this.name} dispatched`);
+  }
+}

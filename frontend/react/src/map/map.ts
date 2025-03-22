@@ -49,6 +49,7 @@ import {
   ConfigLoadedEvent,
   ContextActionChangedEvent,
   ContextActionSetChangedEvent,
+  CoordinatesFreezeEvent,
   HiddenTypesChangedEvent,
   MapContextMenuRequestEvent,
   MapOptionsChangedEvent,
@@ -509,7 +510,7 @@ export class Map extends L.Map {
         code: "ShiftLeft",
         altKey: false,
         ctrlKey: false,
-      });
+      })
   }
 
   setLayerName(layerName: string) {
@@ -1031,6 +1032,7 @@ export class Map extends L.Map {
   }
 
   #onLeftShortClick(e: L.LeafletMouseEvent) {
+    CoordinatesFreezeEvent.dispatch();
     if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) {
       this.#debounceTimeout = window.setTimeout(() => {
         if (!this.#isSelecting) {
