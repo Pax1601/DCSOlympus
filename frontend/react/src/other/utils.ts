@@ -83,6 +83,13 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
   else return zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
 }
 
+export function DDToDDM(decimalDegrees) {
+  const degrees = Math.trunc(decimalDegrees);
+  const minutes = Math.abs((decimalDegrees - degrees) * 60);
+
+  return `${Math.abs(degrees)}° ${minutes.toFixed(4)}'`;
+}
+
 export function deg2rad(deg: number) {
   var pi = Math.PI;
   return deg * (pi / 180);
