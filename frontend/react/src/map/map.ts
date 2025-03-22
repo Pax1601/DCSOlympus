@@ -779,7 +779,7 @@ export class Map extends L.Map {
 
   setOption(key, value) {
     this.#options[key] = value;
-    MapOptionsChangedEvent.dispatch(this.#options);
+    MapOptionsChangedEvent.dispatch(this.#options, key);
   }
 
   setOptions(options) {

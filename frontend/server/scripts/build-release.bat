@@ -1,6 +1,7 @@
 call npm run tsc
 
 echo D|xcopy /Y /S /E .\public ..\..\build\frontend\public 
+echo D|xcopy /Y /S /E .\databases ..\..\build\frontend\public\databases 
 echo D|xcopy /Y /S /E .\views ..\..\build\frontend\cert 
 echo D|xcopy /Y /S /E .\build ..\..\build\frontend\build 
 

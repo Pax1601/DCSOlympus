@@ -1,6 +1,6 @@
-import { LatLng, LatLngBounds } from "leaflet";
+import { DomEvent, DomUtil, LatLng, LatLngBounds } from "leaflet";
 import { getApp } from "../olympusapp";
-import { AirUnit, Unit } from "./unit";
+import { AirUnit, GroundUnit, NavyUnit, Unit } from "./unit";
 import {
   areaContains,
   bearingAndDistanceToLatLng,
@@ -13,7 +13,17 @@ import {
   msToKnots,
 } from "../other/utils";
 import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
-import { BLUE_COMMANDER, DELETE_CYCLE_TIME, DELETE_SLOW_THRESHOLD, DataIndexes, GAME_MASTER, IADSDensities, OlympusState, RED_COMMANDER, UnitControlSubState, alarmStates } from "../constants/constants";
+import {
+  BLUE_COMMANDER,
+  DELETE_CYCLE_TIME,
+  DELETE_SLOW_THRESHOLD,
+  DataIndexes,
+  GAME_MASTER,
+  IADSDensities,
+  OlympusState,
+  RED_COMMANDER,
+  UnitControlSubState, alarmStates,
+} from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { citiesDatabase } from "./databases/citiesdatabase";
 import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
@@ -40,6 +50,7 @@ import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
 import { PathMarker } from "../map/markers/pathmarker";
 import { Coalition } from "../types/types";
+import { ClusterMarker } from "../map/markers/clustermarker";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -354,8 +365,51 @@ export class UnitsManager {
       });
     }
 
-    /* Compute the base clusters */
-    this.#clusters = this.computeClusters();
+    /* Compute the base air unit clusters */
+    this.#clusters = this.computeClusters(AirUnit);
+
+    /* Compute the base ground unit clusters */
+    Object.values(this.#units).forEach((unit: Unit) => unit.setIsClusterLeader(true));
+    if (getApp().getMap().getOptions().clusterGroundUnits) {
+      /* Get a list of all existing ground unit types */
+      let groundUnitTypes: string[] = [];
+      Object.values(this.#units)
+        .filter((unit) => unit.getAlive())
+        .forEach((unit: Unit) => {
+          if (unit.getCategory() === "GroundUnit" && !groundUnitTypes.includes(unit.getType())) groundUnitTypes.push(unit.getType());
+        });
+
+      ["blue", "red", "neutral"].forEach((coalition: string) => {
+        groundUnitTypes.forEach((type: string) => {
+          let clusters = this.computeClusters(
+            GroundUnit,
+            (unit: Unit) => {
+              if (getApp().getMap().getOptions().hideGroupMembers) return unit.getType() === type && unit.getIsLeader();
+              else return unit.getType() === type;
+            },
+            2,
+            coalition as Coalition,
+            5
+          );
+
+          /* Find the unit closest to the cluster center */
+          Object.values(clusters).forEach((clusterUnits: Unit[]) => {
+            const clusterCenter = turf.center(
+              turf.featureCollection(clusterUnits.map((unit: Unit) => turf.point([unit.getPosition().lng, unit.getPosition().lat])))
+            );
+            const clusterCenterCoords = clusterCenter.geometry.coordinates;
+            const clusterCenterLatLng = new LatLng(clusterCenterCoords[1], clusterCenterCoords[0]);
+
+            const closestUnit = clusterUnits.reduce((prev, current) => {
+              return prev.getPosition().distanceTo(clusterCenterLatLng) < current.getPosition().distanceTo(clusterCenterLatLng) ? prev : current;
+            });
+
+            clusterUnits.forEach((unit: Unit) => unit.setIsClusterLeader(unit === closestUnit));
+            closestUnit.setClusterUnits(clusterUnits);
+          });
+        });
+      });
+    }
 
     if (fullUpdate) UnitsRefreshedEvent.dispatch(Object.values(this.#units));
     else UnitsUpdatedEvent.dispatch(updatedUnits);
@@ -1294,7 +1348,9 @@ export class UnitsManager {
         if (getApp().getMissionManager().getCommandModeOptions().commandMode === BLUE_COMMANDER) coalition = "blue";
         else if (getApp().getMissionManager().getCommandModeOptions().commandMode === RED_COMMANDER) coalition = "red";
 
-        getApp().getServerManager().cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */, coalition as Coalition);
+        getApp()
+          .getServerManager()
+          .cloneUnits(unitsData, true, 0 /* No spawn points, we delete the original units */, coalition as Coalition);
         this.#showActionMessage(units, `created a group`);
       } else {
         getApp().addInfoMessage(`Groups can only be created from units of the same category`);
@@ -1507,13 +1563,19 @@ export class UnitsManager {
 
         getApp()
           .getServerManager()
-          .cloneUnits(units, false, getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: spawnPoints, coalition as Coalition, (res: any) => {
-            if (res !== undefined) {
-              markers.forEach((marker: TemporaryUnitMarker) => {
-                marker.setCommandHash(res);
-              });
+          .cloneUnits(
+            units,
+            false,
+            getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER ? 0 : spawnPoints,
+            coalition as Coalition,
+            (res: any) => {
+              if (res !== undefined) {
+                markers.forEach((marker: TemporaryUnitMarker) => {
+                  marker.setCommandHash(res);
+                });
+              }
             }
-          });
+          );
       }
       getApp().addInfoMessage(`${this.#copiedUnits.length} units pasted`);
     } else {
@@ -1691,36 +1753,48 @@ export class UnitsManager {
         getApp().addInfoMessage("Aircrafts can be air spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
-      }, 0);
+      spawnPoints =
+        getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER
+          ? 0
+          : units.reduce((points: number, unit: UnitSpawnTable) => {
+              return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
+            }, 0);
       spawnFunction = () => getApp().getServerManager().spawnAircrafts(units, coalition, airbase, country, immediate, spawnPoints, callback);
     } else if (category === "helicopter") {
       if (airbase == "" && spawnsRestricted) {
         getApp().addInfoMessage("Helicopters can be air spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
-      }, 0);
+      spawnPoints =
+        getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER
+          ? 0
+          : units.reduce((points: number, unit: UnitSpawnTable) => {
+              return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
+            }, 0);
       spawnFunction = () => getApp().getServerManager().spawnHelicopters(units, coalition, airbase, country, immediate, spawnPoints, callback);
     } else if (category === "groundunit") {
       if (spawnsRestricted) {
         getApp().addInfoMessage("Ground units can be spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
-      }, 0);
+      spawnPoints =
+        getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER
+          ? 0
+          : units.reduce((points: number, unit: UnitSpawnTable) => {
+              return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
+            }, 0);
       spawnFunction = () => getApp().getServerManager().spawnGroundUnits(units, coalition, country, immediate, spawnPoints, callback);
     } else if (category === "navyunit") {
       if (spawnsRestricted) {
         getApp().addInfoMessage("Navy units can be spawned during the SETUP phase only");
         return false;
       }
-      spawnPoints = getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER? 0: units.reduce((points: number, unit: UnitSpawnTable) => {
-        return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
-      }, 0);
+      spawnPoints =
+        getApp().getMissionManager().getCommandModeOptions().commandMode === GAME_MASTER
+          ? 0
+          : units.reduce((points: number, unit: UnitSpawnTable) => {
+              return points + this.getDatabase().getSpawnPointsByName(unit.unitType);
+            }, 0);
       spawnFunction = () => getApp().getServerManager().spawnNavyUnits(units, coalition, country, immediate, spawnPoints, callback);
     }
 
@@ -1751,20 +1825,32 @@ export class UnitsManager {
     return this.#AWACSReference;
   }
 
-  computeClusters(filter: (unit: Unit) => boolean = (unit) => true, distance: number = 5 /* km */) {
+  computeClusters(
+    unitType: typeof AirUnit | typeof GroundUnit | typeof NavyUnit,
+    filter: (unit: Unit) => boolean = (unit) => true,
+    distance: number = 5 /* km */,
+    coalition?: Coalition,
+    minPoints?: number
+  ) {
     let units = Object.values(this.#units)
-      .filter((unit) => unit.getAlive() && unit instanceof AirUnit)
+      .filter((unit) => unit.getAlive() && unit instanceof unitType)
       .filter(filter);
+
+    if (coalition !== undefined) {
+      units = units.filter((unit) => unit.getCoalition() === coalition);
+    }
 
     var geojson = turf.featureCollection(units.map((unit) => turf.point([unit.getPosition().lng, unit.getPosition().lat])));
 
     //@ts-ignore
-    var clustered = turf.clustersDbscan(geojson, distance, { minPoints: 1 });
+    var clustered = turf.clustersDbscan(geojson, distance, { minPoints: minPoints ?? 1 });
 
     let clusters: { [key: number]: Unit[] } = {};
     clustered.features.forEach((feature, idx) => {
-      if (clusters[feature.properties.cluster] === undefined) clusters[feature.properties.cluster] = [] as Unit[];
-      clusters[feature.properties.cluster].push(units[idx]);
+      if (feature.properties.cluster !== undefined) {
+        if (clusters[feature.properties.cluster] === undefined) clusters[feature.properties.cluster] = [] as Unit[];
+        clusters[feature.properties.cluster].push(units[idx]);
+      }
     });
 
     return clusters;

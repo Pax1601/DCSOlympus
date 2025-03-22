@@ -216,7 +216,7 @@ export class ServerManager {
   }
 
   getUnits(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
-    this.GET(callback, errorCallback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, "arraybuffer", refresh);
+    this.GET(callback, errorCallback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, "arraybuffer", false);
   }
 
   getWeapons(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
@@ -343,7 +343,13 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
-  cloneUnits(units: { ID: number; location: LatLng }[], deleteOriginal: boolean, spawnPoints: number, coalition: Coalition, callback: CallableFunction = () => {}) {
+  cloneUnits(
+    units: { ID: number; location: LatLng }[],
+    deleteOriginal: boolean,
+    spawnPoints: number,
+    coalition: Coalition,
+    callback: CallableFunction = () => {}
+  ) {
     var command = {
       units: units,
       coalition: coalition,
@@ -589,7 +595,7 @@ export class ServerManager {
       targetingRange: targetingRange,
       aimMethodRange: aimMethodRange,
       acquisitionRange: acquisitionRange,
-    }
+    };
 
     var data = { setEngagementProperties: command };
     this.PUT(data, callback);
@@ -625,11 +631,16 @@ export class ServerManager {
 
   loadEnvResources() {
     /* Load the drawings */
-    this.getDrawings((drawingsData: { drawings: Record<string, Record<string, any>> }) => {
-      if (drawingsData) {
-        getApp().getDrawingsManager()?.initDrawings(drawingsData);
-      }
-    }, () => {});
+    this.getDrawings(
+      (drawingsData: { drawings: Record<string, Record<string, any>> }) => {
+        if (drawingsData) {
+          getApp().getDrawingsManager()?.initDrawings(drawingsData);
+        }
+      },
+      () => {}
+    );
+
+    // TODO: load navPoints
   }
 
   startUpdate() {
@@ -795,10 +806,12 @@ export class ServerManager {
       return time;
     }, true);
 
-    this.getUnits((buffer: ArrayBuffer) => {
-      var time = getApp().getUnitsManager()?.update(buffer, true);
-      return time;
-    }, true);
+    window.setInterval(() => {
+      this.getUnits((buffer: ArrayBuffer) => {
+        var time = getApp().getUnitsManager()?.update(buffer, true);
+        return time;
+      }, true);
+    }, 500);
   }
 
   checkSessionHash(newSessionHash: string) {

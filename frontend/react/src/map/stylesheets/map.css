@@ -277,3 +277,34 @@ path.leaflet-interactive:focus {
 .ol-arrow-icon svg path {
   fill: #ffffff;
 }
+
+.ol-cluster-icon {
+  height: 100%;
+  width: 100%;
+
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
+.ol-cluster-icon.neutral {
+  background-image: url("/images/markers/cluster-neutral.svg");;
+}
+
+.ol-cluster-icon.blue {
+  background-image: url("/images/markers/cluster-blue.svg");;
+}
+
+.ol-cluster-icon.red {
+   background-image: url("/images/markers/cluster-red.svg");;
+}
+
+.ol-cluster-number {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  font-weight: 700;
+  color: #272727;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
