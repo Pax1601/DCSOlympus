@@ -103,15 +103,13 @@ export function UI() {
             <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <UnitExplosionMenu
               open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
-              onClose={() => getApp().setState(OlympusState.IDLE)}
+              onClose={() => {}}
             />
             {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AWACSMenu open={appState === OlympusState.AWACS} onClose={() => getApp().setState(OlympusState.IDLE)} />{*/}
 
             <MiniMapPanel />
             <ControlsPanel />
-            
-            
 
             <SideBar />
             <InfoBar />
@@ -131,15 +129,15 @@ export function UI() {
             backdrop-blur-sm
           `}
         >
-          <div className={`
-            flex w-[400px] flex-col items-center justify-center gap-4
-          `}>
+          <div
+            className={`
+              flex w-[400px] flex-col items-center justify-center gap-4
+            `}
+          >
             <div className="bouncing-ball">
-              <img
-                src="images/olympus-500x500.png"
-                alt="Olympus Logo"
-                className={`ball-logo`}
-              />
+              <img src="images/olympus-500x500.png" alt="Olympus Logo" className={`
+                ball-logo
+              `} />
             </div>
             {!connectedOnce && <div>Establishing connection</div>}
             {connectedOnce && <div>Connection lost</div>}
