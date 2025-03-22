@@ -62,7 +62,7 @@ export function KeybindModal(props: { open: boolean }) {
 
   return (
     <Modal open={props.open} size={"sm"}>
-      <div className="flex flex-col gap-4 h-full w-full">
+      <div className="flex h-full w-full flex-col gap-4">
       <div className={`flex flex-col gap-2`}>
         <span
           className={`
@@ -97,7 +97,7 @@ export function KeybindModal(props: { open: boolean }) {
                 className={`flex flex-wrap gap-2 font-bold text-orange-600`}
               >
                 {inUseShortcuts.map((shortcut) => (
-                  <span>{shortcut.getOptions().label}</span>
+                  <span key={shortcut.getId()}>{shortcut.getOptions().label}</span>
                 ))}
               </div>
             </div>
@@ -105,7 +105,7 @@ export function KeybindModal(props: { open: boolean }) {
           </div>
         )}
       </div>
-      <div className="flex justify-end mt-auto ">
+      <div className="mt-auto flex justify-end">
         {shortcut && (
           <button
             type="button"

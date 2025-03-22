@@ -60,6 +60,7 @@ import * as turf from "@turf/turf";
 import { Carrier } from "../mission/carrier";
 import {
   ContactsUpdatedEvent,
+  CoordinatesFreezeEvent,
   HiddenTypesChangedEvent,
   MapOptionsChangedEvent,
   UnitContextMenuRequestEvent,
@@ -1611,6 +1612,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onLeftShortClick(e: any) {
+    CoordinatesFreezeEvent.dispatch();
     DomEvent.stop(e);
     DomEvent.preventDefault(e);
     e.originalEvent.stopImmediatePropagation();

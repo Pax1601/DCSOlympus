@@ -98,6 +98,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
               onClick={() => {
                 if (referenceSystem === "MGRS") setReferenceSystem("LatLngDec");
                 else if (referenceSystem === "LatLngDec") setReferenceSystem("LatLngDMS");
+                else if (referenceSystem === "LatLngDMS") setReferenceSystem("LatLngDDM");
                 else setReferenceSystem("MGRS");
               }}
               referenceSystem={referenceSystem}
@@ -133,6 +134,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
               onClick={() => {
                 if (referenceSystem === "MGRS") setReferenceSystem("LatLngDec");
                 else if (referenceSystem === "LatLngDec") setReferenceSystem("LatLngDMS");
+                else if (referenceSystem === "LatLngDMS") setReferenceSystem("LatLngDDM");
                 else setReferenceSystem("MGRS");
               }}
               referenceSystem={referenceSystem}
@@ -168,6 +170,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
               onClick={() => {
                 if (referenceSystem === "MGRS") setReferenceSystem("LatLngDec");
                 else if (referenceSystem === "LatLngDec") setReferenceSystem("LatLngDMS");
+                else if (referenceSystem === "LatLngDMS") setReferenceSystem("LatLngDDM");
                 else setReferenceSystem("MGRS");
               }}
               referenceSystem={referenceSystem}
