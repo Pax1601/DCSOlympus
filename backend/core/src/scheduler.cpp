@@ -114,19 +114,6 @@ json::value Scheduler::getCommandModeOptions() {
 	return json;
 }
 
-/* Convert from string to alarm state enum value */
-ALARM_STATE::ALARM_STATEs stringToAlarmState(const std::wstring& state) {
-    if (state == L"red") {
-        return ALARM_STATE::RED;
-    } else if (state == L"green") {
-        return ALARM_STATE::GREEN;
-    } else if (state == L"auto") {
-        return ALARM_STATE::AUTO;
-    } else {
-        throw invalid_argument("Stato non valido: " + std::string(state.begin(), state.end()));
-    }
-}
-
 bool Scheduler::checkSpawnPoints(int spawnPoints, string coalition)
 {
 	if (!getRestrictSpawns()) return true;
