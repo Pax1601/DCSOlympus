@@ -48,6 +48,7 @@ import {
   colors,
   UnitState,
   SPOTS_EDIT_ZOOM_TRANSITION,
+  CLUSTERING_ZOOM_TRANSITION,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -190,6 +191,8 @@ export abstract class Unit extends CustomMarker {
   #acquisitionRange: number = 0;
   #totalAmmo: number = 0;
   #previousTotalAmmo: number = 0;
+  #isClusterLeader: boolean = false;
+  #clusterUnits: Unit[] = [];
 
   /* Inputs timers */
   #debounceTimeout: number | null = null;
@@ -473,8 +476,16 @@ export abstract class Unit extends CustomMarker {
     });
 
     /* Update the marker when the options change */
-    MapOptionsChangedEvent.on(() => {
-      this.#redrawMarker();
+    MapOptionsChangedEvent.on((mapOptions, key) => {
+      if (
+        key === undefined ||
+        key === "hideGroupMembers" ||
+        key === "clusterGroundUnits" ||
+        key === "showUnitLabels" ||
+        key === "AWACSMode" ||
+        key === "AWACSCoalition"
+      )
+        this.#redrawMarker();
 
       /* Circles don't like to be updated when the map is zooming */
       if (!getApp().getMap().isZooming()) this.#drawRanges();
@@ -880,10 +891,21 @@ export abstract class Unit extends CustomMarker {
 
       /* When the group leader is selected, if grouping is active, all the other group members are also selected */
       if (this.getCategory() === "GroundUnit" && getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION) {
-        if (this.#isLeader) {
+        if (this.#isLeader && this.getGroupMembers().length > 0) {
           /* Redraw the marker in case the leader unit was replaced by a group marker, like for SAM Sites */
           this.#redrawMarker();
           this.getGroupMembers().forEach((unit: Unit) => unit.setSelected(selected));
+        } else {
+          this.#updateMarker();
+        }
+      }
+
+      /* When the group leader is selected, if clustering is active, all the other group members are also selected */
+      if (this.getCategory() === "GroundUnit" && getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION) {
+        if (this.#isClusterLeader && this.#clusterUnits.length > 0) {
+          /* Redraw the marker in case the leader unit was replaced by a group marker, like for SAM Sites */
+          this.#redrawMarker();
+          this.#clusterUnits.forEach((unit: Unit) => unit.setSelected(selected));
         } else {
           this.#updateMarker();
         }
@@ -1078,6 +1100,17 @@ export abstract class Unit extends CustomMarker {
       el.append(hotgroup);
     }
 
+    /* Cluster indicator */
+    if (iconOptions.showCluster) {
+      var cluster = document.createElement("div");
+      cluster.classList.add("unit-cluster");
+      cluster.classList.add(this.getCoalition());
+      var clusterId = document.createElement("div");
+      clusterId.classList.add("unit-cluster-id");
+      cluster.appendChild(clusterId);
+      el.append(cluster);
+    }
+
     /* Main icon */
     if (iconOptions.showUnitIcon) {
       var unitIcon = document.createElement("div");
@@ -1191,6 +1224,13 @@ export abstract class Unit extends CustomMarker {
         !this.getSelected() &&
         this.getCategory() == "GroundUnit" &&
         getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION &&
+        (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0))) ||
+      /* Hide the unit if clustering is activated, the unit is in a cluster, it is not selected, and the zoom is higher than the clustering threshold */
+      (getApp().getMap().getOptions().clusterGroundUnits &&
+        !this.#isClusterLeader &&
+        !this.getSelected() &&
+        this.getCategory() == "GroundUnit" &&
+        getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
         (this.belongsToCommandedCoalition() || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0)));
 
     /* Force dead units to be hidden */
@@ -1249,6 +1289,14 @@ export abstract class Unit extends CustomMarker {
 
   getLeader() {
     return getApp().getUnitsManager().getUnitByID(this.#leaderID);
+  }
+
+  setClusterUnits(clusterUnits: Unit[]) {
+    this.#clusterUnits = clusterUnits;
+  }
+
+  setIsClusterLeader(clusterLeader: boolean) {
+    this.#isClusterLeader = clusterLeader;
   }
 
   canFulfillRole(roles: string | string[]) {
@@ -1749,6 +1797,22 @@ export abstract class Unit extends CustomMarker {
         if (this.#hotgroup) {
           const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
           if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
+        }
+
+        /* Draw the cluster element */
+        element
+          .querySelector(".unit")
+          ?.toggleAttribute(
+            "data-is-cluster-leader",
+            this.#isClusterLeader &&
+              this.#clusterUnits.length > 1 &&
+              getApp().getMap().getOptions().clusterGroundUnits &&
+              getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
+              !this.getSelected()
+          );
+        if (this.#isClusterLeader && this.#clusterUnits.length > 1) {
+          const clusterEl = element.querySelector(".unit-cluster-id") as HTMLElement;
+          if (clusterEl) clusterEl.innerText = String(this.#clusterUnits.length);
         }
 
         /* Set bullseyes positions */
@@ -2318,6 +2382,7 @@ export abstract class AirUnit extends Unit {
       showSummary: belongsToCommandedCoalition || this.getDetectionMethods().some((value) => [VISUAL, OPTIC, RADAR, IRST, DLINK].includes(value)),
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
+      showCluster: false,
     } as ObjectIconOptions;
   }
 
@@ -2405,6 +2470,7 @@ export class GroundUnit extends Unit {
       showSummary: false,
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
+      showCluster: true,
     } as ObjectIconOptions;
   }
 
@@ -2433,6 +2499,7 @@ export class GroundUnit extends Unit {
   checkZoomRedraw(): boolean {
     return (
       this.getIsLeader() &&
+      this.getGroupMembers().length > 0 &&
       (getApp().getMap().getOptions().hideGroupMembers as boolean) &&
       ((getApp().getMap().getZoom() >= GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() < GROUPING_ZOOM_TRANSITION) ||
         (getApp().getMap().getZoom() < GROUPING_ZOOM_TRANSITION && getApp().getMap().getPreviousZoom() >= GROUPING_ZOOM_TRANSITION))
@@ -2470,6 +2537,7 @@ export class NavyUnit extends Unit {
       showSummary: false,
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
+      showCluster: false,
     } as ObjectIconOptions;
   }
 

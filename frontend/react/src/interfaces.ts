@@ -172,6 +172,7 @@ export interface ObjectIconOptions {
   showSummary: boolean;
   showCallsign: boolean;
   rotateToHeading: boolean;
+  showCluster: boolean;
 }
 
 export interface GeneralSettings {
