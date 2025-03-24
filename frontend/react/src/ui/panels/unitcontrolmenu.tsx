@@ -19,6 +19,9 @@ import {
 import { OlToggle } from "../components/oltoggle";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import {
+  olButtonsAlarmstateAuto,
+  olButtonsAlarmstateGreen,
+  olButtonsAlarmstateRed,
   olButtonsEmissionsAttack,
   olButtonsEmissionsDefend,
   olButtonsEmissionsFree,
@@ -54,7 +57,7 @@ import { OlSearchBar } from "../components/olsearchbar";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlNumberInput } from "../components/olnumberinput";
-import { GeneralSettings, Radio, TACAN } from "../../interfaces";
+import { AlarmState, GeneralSettings, Radio, TACAN } from "../../interfaces";
 import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
@@ -87,6 +90,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       radio: undefined as undefined | Radio,
       TACAN: undefined as undefined | TACAN,
       generalSettings: undefined as undefined | GeneralSettings,
+      alarmState: undefined as undefined | AlarmState
     };
   }
 
@@ -130,7 +134,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
   const [activeRadioSettings, setActiveRadioSettings] = useState(null as null | { radio: Radio; TACAN: TACAN });
   const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | GeneralSettings);
   const [lastUpdateTime, setLastUpdateTime] = useState(0);
-  const [showScenicModes, setShowScenicModes] = useState(true);
+  const [showScenicModes, setShowScenicModes] = useState(false);
   const [showEngagementSettings, setShowEngagementSettings] = useState(false);
   const [barrelHeight, setBarrelHeight] = useState(0);
   const [muzzleVelocity, setMuzzleVelocity] = useState(0);
@@ -178,6 +182,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       onOff: (unit: Unit) => unit.getOnOff(),
       radio: (unit: Unit) => unit.getRadio(),
       TACAN: (unit: Unit) => unit.getTACAN(),
+      alarmState: (unit: Unit) => unit.getAlarmState(),
       generalSettings: (unit: Unit) => unit.getGeneralSettings(),
       isAudioSink: (unit: Unit) => {
         return (
@@ -885,6 +890,82 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     </div>
                   )}
                   {/* ============== Rules of Engagement END ============== */}
+
+                  {/* ============== Alarm state selector START ============== */}
+                  {
+                    <div className="flex flex-col gap-2">
+                      <span
+                        className={`
+                          my-auto font-normal
+                          dark:text-white
+                        `}
+                      >
+                        Alarm State
+                      </span> 
+                      <OlButtonGroup
+                        tooltip={() => (
+                          <OlExpandingTooltip
+                            title="Alarm State"
+                            content={
+                              <div className="flex flex-col gap-2">
+                                <div>Sets the alarm state of the unit, in order:</div>
+                                <div className="flex flex-col gap-2 px-2">
+                                <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateGreen} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
+                                  </div>
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateAuto} className={`
+                                      my-auto min-w-8 text-white
+                                    `} />{" "}
+                                    <div>
+                                      {" "}
+                                      Auto: The unit will use its sensors to engage based on its ROE.
+                                    </div>
+                                  </div>
+                                 
+                                  <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateRed} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Red: The unit will be actively searching for target with its sensors. For some units, this will deploy
+                                    the radar and make the unit not able to move.
+                                  </div>
+                                </div>
+                              </div>
+                            }
+                          />
+                        )}
+                        tooltipRelativeToParent={true}
+                      >
+                        {[olButtonsAlarmstateGreen, olButtonsAlarmstateAuto, olButtonsAlarmstateRed].map((icon, idx) => {
+                          return (
+                            <OlButtonGroupItem
+                              key={idx}
+                              onClick={() => {
+                                getApp()
+                                  .getUnitsManager()
+                                  .setAlarmState([1, 0, 2][idx], null, () =>
+                                    setForcedUnitsData({
+                                      ...forcedUnitsData,
+                                      alarmState: [AlarmState.GREEN, AlarmState.AUTO, AlarmState.RED][idx],
+                                    })
+                                  );
+                              }}
+                              active={selectedUnitsData.alarmState === [AlarmState.GREEN, AlarmState.AUTO, AlarmState.RED][idx]}
+                              icon={icon}
+                            />
+                          );
+                        })}
+                      </OlButtonGroup>
+                    </div>
+                  }
+                  {/* ============== Alarm state selector END ============== */}
+
+                  
                   {selectedCategories.every((category) => {
                     return ["Aircraft", "Helicopter"].includes(category);
                   }) && (
@@ -1340,7 +1421,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             {/* ============== Miss on purpose toggle END ============== */}
                             <div className="flex gap-4">
                               {/* ============== Shots scatter START ============== */}
-                              <div className={`flex flex-col gap-2`}>
+                              <div className={`flex w-full justify-between gap-2`}>
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1373,7 +1454,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               </div>
                               {/* ============== Shots scatter END ============== */}
                               {/* ============== Shots intensity START ============== */}
-                              <div className="flex flex-col gap-2">
+                              {/*<div className="flex flex-col gap-2">
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1405,12 +1486,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 </OlButtonGroup>
                               </div>
                               {/* ============== Shots intensity END ============== */}
-                              <OlStateButton
+                              {/*<OlStateButton
                                 className="mt-auto"
                                 checked={showEngagementSettings}
                                 onClick={() => setShowEngagementSettings(!showEngagementSettings)}
                                 icon={faCog}
                               ></OlStateButton>
+                              */}
                             </div>
                             {/* ============== Operate as toggle START ============== */}
                             {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (

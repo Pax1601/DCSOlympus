@@ -67,6 +67,7 @@ public:
 	/********** Setters **********/
 	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }
 	virtual void setAlive(bool newValue) { updateValue(alive, newValue, DataIndex::alive); }
+	virtual void setAlarmState(unsigned char newValue, bool force = false);
 	virtual void setHuman(bool newValue) { updateValue(human, newValue, DataIndex::human); }
 	virtual void setControlled(bool newValue) { updateValue(controlled, newValue, DataIndex::controlled); }
 	virtual void setCoalition(unsigned char newValue) { updateValue(coalition, newValue, DataIndex::coalition); }
@@ -125,10 +126,12 @@ public:
 	virtual void setTargetingRange(double newValue) { updateValue(targetingRange, newValue, DataIndex::targetingRange); }
 	virtual void setAimMethodRange(double newValue) { updateValue(aimMethodRange, newValue, DataIndex::aimMethodRange); }
 	virtual void setAcquisitionRange(double newValue) { updateValue(acquisitionRange, newValue, DataIndex::acquisitionRange); }
+	virtual void setRadarState(bool newValue) { updateValue(radarState, newValue, DataIndex::radarState); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
 	virtual bool getAlive() { return alive; }
+	virtual unsigned char getAlarmState() { return alarmState; }
 	virtual bool getHuman() { return human; }
 	virtual bool getControlled() { return controlled; }
 	virtual unsigned char getCoalition() { return coalition; }
@@ -187,6 +190,7 @@ public:
 	virtual double getTargetingRange() { return targetingRange; }
 	virtual double getAimMethodRange() { return aimMethodRange; }
 	virtual double getAcquisitionRange() { return acquisitionRange; }
+	virtual bool getRadarState() { return radarState; }
 
 protected:
 	unsigned int ID;
@@ -202,6 +206,8 @@ protected:
 	string callsign = "";
 	string groupName = "";
 	unsigned char state = State::NONE;
+	unsigned char alarmState = AlarmState::AUTO;
+	bool radarState = false;
 	string task = "";
 	bool hasTask = false;
 	Coords position = Coords(NULL);

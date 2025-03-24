@@ -173,6 +173,7 @@ export interface ObjectIconOptions {
   showCallsign: boolean;
   rotateToHeading: boolean;
   showCluster: boolean;
+  showAlarmState: boolean;
 }
 
 export interface GeneralSettings {
@@ -220,6 +221,7 @@ export interface UnitData {
   markerCategory: string;
   ID: number;
   alive: boolean;
+  alarmState: AlarmState;
   human: boolean;
   controlled: boolean;
   coalition: string;
@@ -413,4 +415,10 @@ export interface Drawing {
   hiddenOnPlanner?: boolean;
   file?: string;
   scale?: number;
+}
+
+export enum AlarmState {
+  RED = 'red',
+  GREEN = 'green',
+  AUTO = 'auto'
 }

@@ -609,7 +609,7 @@ string GroundUnit::aimAtPoint(Coords aimTarget) {
 		Geodesic::WGS84().Direct(position.lat, position.lng, bearing1, r, lat, lng);
 
 		taskString = +"Barrel elevation: " + to_string((int) round(barrelElevation)) + "m, bearing: " + to_string((int) round(bearing1)) + "deg";
-		log(unitName + "(" + name + ")" + " shooting with aim at point method. Barrel elevation: " + to_string(barrelElevation) + "m, bearing: " + to_string(bearing1) + "°");
+		log(unitName + "(" + name + ")" + " shooting with aim at point method. Barrel elevation: " + to_string(barrelElevation) + "m, bearing: " + to_string(bearing1) + "ï¿½");
 
 		std::ostringstream taskSS;
 		taskSS.precision(10);

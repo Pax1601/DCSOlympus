@@ -1,36 +1,14 @@
-import { DomEvent, DomUtil, LatLng, LatLngBounds } from "leaflet";
-import { getApp } from "../olympusapp";
-import { AirUnit, GroundUnit, NavyUnit, Unit } from "./unit";
-import {
-  areaContains,
-  bearingAndDistanceToLatLng,
-  deepCopyTable,
-  deg2rad,
-  getGroundElevation,
-  latLngToMercator,
-  mToFt,
-  mercatorToLatLng,
-  msToKnots,
-} from "../other/utils";
-import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
+import * as turf from "@turf/turf";
+import { DomEvent, LatLng, LatLngBounds } from "leaflet";
 import {
   BLUE_COMMANDER,
-  DELETE_CYCLE_TIME,
-  DELETE_SLOW_THRESHOLD,
   DataIndexes,
   GAME_MASTER,
   IADSDensities,
   OlympusState,
   RED_COMMANDER,
-  UnitControlSubState,
+  UnitControlSubState
 } from "../constants/constants";
-import { DataExtractor } from "../server/dataextractor";
-import { citiesDatabase } from "./databases/citiesdatabase";
-import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
-import { Contact, GeneralSettings, Radio, TACAN, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
-import { Group } from "./group";
-import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
-import { ContextActionSet } from "./contextactionset";
 import {
   AWACSReferenceChangedEvent,
   CommandModeOptionsChangedEvent,
@@ -46,10 +24,31 @@ import {
   UnitsRefreshedEvent,
   UnitsUpdatedEvent,
 } from "../events";
-import { UnitDatabase } from "./databases/unitdatabase";
-import * as turf from "@turf/turf";
+import { Contact, GeneralSettings, Radio, TACAN, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
+import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
+import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { PathMarker } from "../map/markers/pathmarker";
+import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
+import { getApp } from "../olympusapp";
+import {
+  areaContains,
+  bearingAndDistanceToLatLng,
+  deepCopyTable,
+  deg2rad,
+  getGroundElevation,
+  latLngToMercator,
+  mToFt,
+  mercatorToLatLng,
+  msToKnots,
+} from "../other/utils";
+import { DataExtractor } from "../server/dataextractor";
 import { Coalition } from "../types/types";
+import { ContextActionSet } from "./contextactionset";
+import { citiesDatabase } from "./databases/citiesdatabase";
+import { UnitDatabase } from "./databases/unitdatabase";
+import { Group } from "./group";
+import { AirUnit, GroundUnit, NavyUnit, Unit } from "./unit";
+
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -252,6 +251,7 @@ export class UnitsManager {
         if (datumIndex == DataIndexes.category) {
           const category = dataExtractor.extractString();
           this.addUnit(ID, category);
+          
         } else {
           /* Inconsistent data, we need to wait for a refresh */
           return updateTime;
@@ -261,6 +261,7 @@ export class UnitsManager {
       if (ID in this.#units) {
         this.#units[ID].setData(dataExtractor);
         this.#units[ID].getAlive() && updatedUnits.push(this.#units[ID]);
+        
       }
     }
 
@@ -772,6 +773,27 @@ export class UnitsManager {
       onExecution();
       units.forEach((unit: Unit) => unit.setROE(ROE));
       this.#showActionMessage(units, `ROE set to ${ROE}`);
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
+  /** Set a specific Alarm State to all the selected units
+   *
+   * @param AlarmState Value to set, see constants for acceptable values
+   * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
+   */
+  setAlarmState(alarmState: number, units: Unit[] | null = null, onExecution: () => void = () => {}) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units) => {
+      onExecution();
+      units.forEach((unit: Unit) => unit.setAlarmState(alarmState));
+      this.#showActionMessage(units, `Alarm State set to ${alarmState.toString()}`);
     };
 
     if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
