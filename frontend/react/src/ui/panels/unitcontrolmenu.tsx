@@ -8,7 +8,6 @@ import { OlButtonGroup, OlButtonGroupItem } from "../components/olbuttongroup";
 import { OlCheckbox } from "../components/olcheckbox";
 import {
   ROEs,
-  alarmStates,
   UnitState,
   altitudeIncrements,
   emissionsCountermeasures,
@@ -20,6 +19,9 @@ import {
 import { OlToggle } from "../components/oltoggle";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import {
+  olButtonsAlarmstateAuto,
+  olButtonsAlarmstateGreen,
+  olButtonsAlarmstateRed,
   olButtonsEmissionsAttack,
   olButtonsEmissionsDefend,
   olButtonsEmissionsFree,
@@ -890,7 +892,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   {/* ============== Rules of Engagement END ============== */}
 
                   {/* ============== Alarm state selector START ============== */}
-                  {selectedUnitsData.alarmState && 
+                  {
                     <div className="flex flex-col gap-2">
                       <span
                         className={`
@@ -908,9 +910,15 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <div className="flex flex-col gap-2">
                                 <div>Sets the alarm state of the unit, in order:</div>
                                 <div className="flex flex-col gap-2 px-2">
+                                <div className="flex content-center gap-2">
+                                    {" "}
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateGreen} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
+                                  </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateAuto} className={`
                                       my-auto min-w-8 text-white
                                     `} />{" "}
                                     <div>
@@ -918,15 +926,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       Auto: The unit will use its sensors to engage based on its ROE.
                                     </div>
                                   </div>
+                                 
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
-                                      my-auto min-w-8 text-white
-                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
-                                  </div>
-                                  <div className="flex content-center gap-2">
-                                    {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeHold} className={`
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateRed} className={`
                                       my-auto min-w-8 text-white
                                     `} /> Red: The unit will be actively searching for target with its sensors. For some units, this will deploy
                                     the radar and make the unit not able to move.
@@ -938,33 +941,21 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         )}
                         tooltipRelativeToParent={true}
                       >
-                        {[olButtonsRoeHold, olButtonsRoeReturn, olButtonsRoeDesignated].map((icon, idx) => {
-
-                          const getAlarmStateByIdx = (idx) => {
-                            switch (idx) {
-                              case 0:
-                                return AlarmState.AUTO;
-                              case 1:
-                                return AlarmState.GREEN;
-                              case 2: 
-                                return AlarmState.RED;
-                            }
-                          }
-
+                        {[olButtonsAlarmstateGreen, olButtonsAlarmstateAuto, olButtonsAlarmstateRed].map((icon, idx) => {
                           return (
                             <OlButtonGroupItem
                               key={idx}
                               onClick={() => {
                                 getApp()
                                   .getUnitsManager()
-                                  .setAlarmState(idx, null, () =>
+                                  .setAlarmState([1, 0, 2][idx], null, () =>
                                     setForcedUnitsData({
                                       ...forcedUnitsData,
-                                      alarmState: getAlarmStateByIdx(idx),
+                                      alarmState: [AlarmState.GREEN, AlarmState.AUTO, AlarmState.RED][idx],
                                     })
                                   );
                               }}
-                              active={selectedUnitsData.alarmState === getAlarmStateByIdx(idx)}
+                              active={selectedUnitsData.alarmState === [AlarmState.GREEN, AlarmState.AUTO, AlarmState.RED][idx]}
                               icon={icon}
                             />
                           );
@@ -1430,7 +1421,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             {/* ============== Miss on purpose toggle END ============== */}
                             <div className="flex gap-4">
                               {/* ============== Shots scatter START ============== */}
-                              <div className={`flex flex-col gap-2`}>
+                              <div className={`flex w-full justify-between gap-2`}>
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1463,7 +1454,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               </div>
                               {/* ============== Shots scatter END ============== */}
                               {/* ============== Shots intensity START ============== */}
-                              <div className="flex flex-col gap-2">
+                              {/*<div className="flex flex-col gap-2">
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1495,12 +1486,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 </OlButtonGroup>
                               </div>
                               {/* ============== Shots intensity END ============== */}
-                              <OlStateButton
+                              {/*<OlStateButton
                                 className="mt-auto"
                                 checked={showEngagementSettings}
                                 onClick={() => setShowEngagementSettings(!showEngagementSettings)}
                                 icon={faCog}
                               ></OlStateButton>
+                              */}
                             </div>
                             {/* ============== Operate as toggle START ============== */}
                             {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (

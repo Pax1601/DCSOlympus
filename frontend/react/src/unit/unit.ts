@@ -1190,10 +1190,10 @@ export abstract class Unit extends CustomMarker {
       el.append(healthIndicator);
     }
 
-    /* Radar state indicator */
-    if (this.#alarmState) {
+    /* Alarm state indicator */
+    if (iconOptions.showAlarmState) {
       var alarmStateIcon = document.createElement("div");
-      alarmStateIcon.classList.add("unit-radar-state");
+      alarmStateIcon.classList.add("unit-alarm-state");
       el.append(alarmStateIcon);
     }
 
@@ -1774,8 +1774,7 @@ export abstract class Unit extends CustomMarker {
       element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
       /* Set radar state*/
-      // if (this.#radarState !== undefined) element.querySelector(".unit")?.setAttribute("data-radar-state", (this.#radarState === true ? 'on' : 'off'));
-      if (this.#alarmState !== AlarmState.AUTO) element.querySelector(".unit")?.setAttribute("data-alarm-state", (this.#alarmState === AlarmState.RED ? 'red' : 'green'));
+      element.querySelector(".unit")?.setAttribute("data-alarm-state", this.#alarmState);
 
       /* Set current unit state */
       if (this.#human) {
@@ -2423,6 +2422,7 @@ export abstract class AirUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: false,
+      showAlarmState: false
     } as ObjectIconOptions;
   }
 
@@ -2511,6 +2511,7 @@ export class GroundUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: true,
+      showAlarmState: true,
     } as ObjectIconOptions;
   }
 
@@ -2578,6 +2579,7 @@ export class NavyUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: false,
+      showAlarmState: true
     } as ObjectIconOptions;
   }
 

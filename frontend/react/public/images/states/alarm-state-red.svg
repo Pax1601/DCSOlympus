@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="alarmStateRed.svg"
+   width="16"
+   height="16"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="36.65625"
+     inkscape:cx="17.009378"
+     inkscape:cy="10.980392"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+  <path
+     d="m 8.3545299,3.3811696 c -0.300221,0 -0.542773,0.247612 -0.542773,0.554097 v 0.332456 c -1.238204,0.25627 -2.171098,1.374849 -2.171098,2.715068 v 0.32553 c 0,0.813829 -0.293438,1.599952 -0.822642,2.209456 l -0.125517,0.143718 c -0.142479,0.162766 -0.176403,0.3965254 -0.0899,0.5956544 0.0865,0.199127 0.281565,0.327261 0.495283,0.327261 h 6.5132921 c 0.213718,0 0.407082,-0.128134 0.495281,-0.327261 0.0882,-0.199129 0.05258,-0.4328884 -0.0899,-0.5956544 L 11.89104,9.5177766 c -0.529204,-0.609504 -0.822641,-1.393896 -0.822641,-2.209456 v -0.32553 c 0,-1.340219 -0.932895,-2.458798 -2.1710981,-2.715068 v -0.332456 c 0,-0.306485 -0.242553,-0.554097 -0.542776,-0.554097 z m 0.768367,8.5417264 c 0.203539,-0.207784 0.317182,-0.490027 0.317182,-0.78439 h -1.085549 -1.085547 c 0,0.294363 0.113643,0.576606 0.317183,0.78439 0.203541,0.207786 0.480016,0.323801 0.768364,0.323801 0.288349,0 0.564825,-0.116015 0.768367,-0.323801 z"
+     id="path1"
+     style="fill:#ff5858;fill-opacity:1;stroke:#272727;stroke-width:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+</svg>
