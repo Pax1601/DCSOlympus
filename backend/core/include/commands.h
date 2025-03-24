@@ -48,9 +48,9 @@ namespace ROE {
 
 namespace ALARM_STATE {
 	enum ALARM_STATEs {
-		AUTO   = 0,
+		AUTO   = 2,
 		GREEN  = 1,
-		RED    = 2,
+		RED    = 0,
 	};
 }
 

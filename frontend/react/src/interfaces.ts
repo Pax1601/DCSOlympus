@@ -220,7 +220,7 @@ export interface UnitData {
   markerCategory: string;
   ID: number;
   alive: boolean;
-  alarmState: AlarmState | undefined;
+  alarmState: AlarmState;
   human: boolean;
   controlled: boolean;
   coalition: string;
@@ -417,7 +417,7 @@ export interface Drawing {
 }
 
 export enum AlarmState {
-  AUTO = 'auto',
+  RED = 'red',
   GREEN = 'green',
-  RED = 'red'
+  AUTO = 'auto'
 }

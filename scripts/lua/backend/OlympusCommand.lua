@@ -1263,16 +1263,10 @@ function Olympus.setUnitsData(arg, time)
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 
 					if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
-						-- Olympus.log:info("Unit Has Sensor Radar " .. tostring(unit:hasSensors(Unit.SensorType.RADAR)));
-
-						table["alarmState"] = "AUTO"
-						
 						if unit:getRadar() then
-							-- Olympus.log:info("alarmState: unit active and getRadar is true, setting RED.")
-							table["alarmState"] = "RED"
+							table["radarState"] = true
 						else
-							-- Olympus.log:info("alarmState: unit active and getRadar is false, setting GREEN.")
-							table["alarmState"] = "GREEN"
+							table["radarState"] = false
 						end	
 					end
 					

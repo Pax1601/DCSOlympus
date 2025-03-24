@@ -18,7 +18,7 @@ extern UnitsManager* unitsManager;
 Unit::Unit(json::value json, unsigned int ID) :
 	ID(ID)
 {
-	log("Creating unit with ID: " + to_string(ID));
+	// log("Creating unit with ID: " + to_string(ID));
 }
 
 Unit::~Unit()
@@ -83,8 +83,8 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
 
-	if (json.has_string_field(L"alarmState")) {
-		setAlarmState(to_string(json[L"alarmState"]));
+	if (json.has_boolean_field(L"radarState")) {
+		setRadarState(json[L"radarState"].as_bool());
 	}
 
 	if (json.has_boolean_field(L"isHuman"))
@@ -154,7 +154,7 @@ void Unit::update(json::value json, double dt)
 
 void Unit::setDefaults(bool force)
 {
-
+	setAlarmState(ALARM_STATE::AUTO, force);
 }
 
 void Unit::runAILoop() {
@@ -256,7 +256,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				switch (datumIndex) {
 					case DataIndex::category:					appendString(ss, datumIndex, category); break;
 					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
-					case DataIndex::alarmState:					appendString(ss, datumIndex, alarmState); break;
+					case DataIndex::alarmState:					appendNumeric(ss, datumIndex, alarmState); break;
+					case DataIndex::radarState:					appendNumeric(ss, datumIndex, radarState); break;
 					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
 					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
 					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
@@ -473,7 +474,7 @@ void Unit::setROE(unsigned char newROE, bool force)
 	}
 }
 
-void Unit::commandAlarmState(unsigned char newAlarmState, bool force)
+void Unit::setAlarmState(unsigned char newAlarmState, bool force)
 {
 		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ALARM_STATE, static_cast<unsigned int>(newAlarmState)));
 		scheduler->appendCommand(command);

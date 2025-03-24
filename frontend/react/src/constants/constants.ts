@@ -97,7 +97,6 @@ export const states: string[] = [
 ];
 
 export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
-export const alarmStates: string[] = ["auto", "green", "red"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
@@ -453,6 +452,7 @@ export enum DataIndexes {
   category,
   alive,
   alarmState,
+  radarState,
   human,
   controlled,
   coalition,

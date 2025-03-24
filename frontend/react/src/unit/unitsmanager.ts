@@ -1,36 +1,14 @@
-import { DomEvent, DomUtil, LatLng, LatLngBounds } from "leaflet";
-import { getApp } from "../olympusapp";
-import { AirUnit, GroundUnit, NavyUnit, Unit } from "./unit";
-import {
-  areaContains,
-  bearingAndDistanceToLatLng,
-  deepCopyTable,
-  deg2rad,
-  getGroundElevation,
-  latLngToMercator,
-  mToFt,
-  mercatorToLatLng,
-  msToKnots,
-} from "../other/utils";
-import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
+import * as turf from "@turf/turf";
+import { LatLng, LatLngBounds } from "leaflet";
 import {
   BLUE_COMMANDER,
-  DELETE_CYCLE_TIME,
-  DELETE_SLOW_THRESHOLD,
   DataIndexes,
   GAME_MASTER,
   IADSDensities,
   OlympusState,
   RED_COMMANDER,
-  UnitControlSubState, alarmStates,
+  UnitControlSubState
 } from "../constants/constants";
-import { DataExtractor } from "../server/dataextractor";
-import { citiesDatabase } from "./databases/citiesdatabase";
-import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
-import { AlarmState, Contact, GeneralSettings, Radio, TACAN, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
-import { Group } from "./group";
-import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
-import { ContextActionSet } from "./contextactionset";
 import {
   AWACSReferenceChangedEvent,
   CommandModeOptionsChangedEvent,
@@ -46,11 +24,30 @@ import {
   UnitsRefreshedEvent,
   UnitsUpdatedEvent,
 } from "../events";
-import { UnitDatabase } from "./databases/unitdatabase";
-import * as turf from "@turf/turf";
+import { Contact, GeneralSettings, Radio, TACAN, UnitBlueprint, UnitData, UnitSpawnTable } from "../interfaces";
+import { CoalitionCircle } from "../map/coalitionarea/coalitioncircle";
+import { CoalitionPolygon } from "../map/coalitionarea/coalitionpolygon";
 import { PathMarker } from "../map/markers/pathmarker";
+import { TemporaryUnitMarker } from "../map/markers/temporaryunitmarker";
+import { getApp } from "../olympusapp";
+import {
+  areaContains,
+  bearingAndDistanceToLatLng,
+  deepCopyTable,
+  deg2rad,
+  getGroundElevation,
+  latLngToMercator,
+  mToFt,
+  mercatorToLatLng,
+  msToKnots,
+} from "../other/utils";
+import { DataExtractor } from "../server/dataextractor";
 import { Coalition } from "../types/types";
-import { ClusterMarker } from "../map/markers/clustermarker";
+import { ContextActionSet } from "./contextactionset";
+import { citiesDatabase } from "./databases/citiesdatabase";
+import { UnitDatabase } from "./databases/unitdatabase";
+import { Group } from "./group";
+import { AirUnit, GroundUnit, NavyUnit, Unit } from "./unit";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -787,7 +784,7 @@ export class UnitsManager {
 
     let callback = (units) => {
       onExecution();
-      units.forEach((unit: Unit) => unit.commandAlarmState(alarmState));
+      units.forEach((unit: Unit) => unit.setAlarmState(alarmState));
       this.#showActionMessage(units, `Alarm State set to ${alarmState.toString()}`);
     };
 

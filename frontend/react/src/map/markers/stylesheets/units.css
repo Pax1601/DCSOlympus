@@ -660,7 +660,7 @@
 }
 
 /* Unit Radar State */
-.unit-radar-state {
+.unit-alarm-state {
   height: 10px;
   width: 10px;
   position: absolute;
@@ -670,12 +670,12 @@
   left: 35px;
   bottom: 8px;
 }
-.unit[data-radar-state="green"] .unit-radar-state {
+.unit[data-alarm-state="green"] .unit-alarm-state {
   border: 1px solid white;
   background: rgb(0, 226, 0);
 }
 
-.unit[data-radar-state="red"] .unit-radar-state {
+.unit[data-alarm-state="red"] .unit-alarm-state {
   border: 1px solid white;
   background: red;
 }

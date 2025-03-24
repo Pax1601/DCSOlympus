@@ -1,7 +1,7 @@
 import { Circle, LatLng, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
-import { DateAndTime } from "../interfaces";
+import { AlarmState, DateAndTime } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { featureCollection } from "turf";
@@ -273,6 +273,19 @@ export function enumToState(state: number) {
 export function enumToROE(ROE: number) {
   if (ROE < ROEs.length) return ROEs[ROE];
   else return ROEs[0];
+}
+
+export function enumToAlarmState(alarmState: number) {
+  switch (alarmState) {
+    case 0:
+      return AlarmState.RED;
+    case 1:
+      return AlarmState.GREEN;
+    case 2:
+      return AlarmState.AUTO;
+    default:
+      return AlarmState.AUTO;
+  }
 }
 
 export function convertROE(idx: number) {

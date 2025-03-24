@@ -421,7 +421,7 @@ export class ServerManager {
 
   setAlarmState(ID: number, alarmState: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, alarmState: alarmState };
-    var data = { commandAlarmState: command };
+    var data = { setAlarmState: command };
     this.PUT(data, callback);
   }
 

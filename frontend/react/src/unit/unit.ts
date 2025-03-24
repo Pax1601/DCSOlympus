@@ -18,6 +18,7 @@ import {
   computeBearingRangeString,
   adjustBrightness,
   bearingAndDistanceToLatLng,
+  enumToAlarmState,
 } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
@@ -84,7 +85,8 @@ export abstract class Unit extends CustomMarker {
 
   /* Data controlled directly by the backend. No setters are provided to avoid misalignments */
   #alive: boolean = false;
-  #alarmState: AlarmState | undefined = undefined;
+  #alarmState: AlarmState = AlarmState.AUTO;
+  #radarState: boolean | undefined = undefined;
   #human: boolean = false;
   #controlled: boolean = false;
   #coalition: string = "neutral";
@@ -352,6 +354,9 @@ export abstract class Unit extends CustomMarker {
   getAlarmState() {
     return this.#alarmState;
   }
+  getRadarState() {
+    return this.#radarState;
+  }
   getTimeToNextTasking() {
     return this.#timeToNextTasking;
   }
@@ -541,6 +546,7 @@ export abstract class Unit extends CustomMarker {
     var datumIndex = 0;
     while (datumIndex != DataIndexes.endOfData) {
       datumIndex = dataExtractor.extractUInt8();
+
       switch (datumIndex) {
         case DataIndexes.category:
           dataExtractor.extractString();
@@ -549,20 +555,8 @@ export abstract class Unit extends CustomMarker {
           this.setAlive(dataExtractor.extractBool());
           updateMarker = true;
           break;
-        case DataIndexes.alarmState:
-          let stringAlarmState = dataExtractor.extractString();
-          switch (stringAlarmState) {
-            case 'RED':
-              this.setAlarmState(AlarmState.RED);    
-              break;
-            case 'GREEN':
-              this.setAlarmState(AlarmState.GREEN);    
-              break;
-            case '':
-              this.setAlarmState(AlarmState.AUTO);    
-            default:
-              break;
-          }
+        case DataIndexes.radarState:
+          this.#radarState = dataExtractor.extractBool();
           updateMarker = true;
           break;
         case DataIndexes.human:
@@ -669,6 +663,9 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.ROE:
           this.#ROE = enumToROE(dataExtractor.extractUInt8());
+          break;
+        case DataIndexes.alarmState:
+          this.#alarmState = enumToAlarmState(dataExtractor.extractUInt8());
           break;
         case DataIndexes.reactionToThreat:
           this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8());
@@ -890,10 +887,9 @@ export abstract class Unit extends CustomMarker {
     }
   }
 
-  setAlarmState(newAlarmState: AlarmState) {
-    if (newAlarmState != this.#alarmState) {
-      this.#alarmState = newAlarmState;
-      console.log('---- alarm state updated: ', this.#alarmState);
+  setRadarState(newRadarState: boolean) {
+    if (newRadarState != this.#radarState) {
+      this.#radarState = newRadarState;
       this.#updateMarker();
     }
   }
@@ -1436,7 +1432,7 @@ export abstract class Unit extends CustomMarker {
     if (!this.#human) getApp().getServerManager().setROE(this.ID, ROE);
   }
 
-  commandAlarmState(alarmState: number) {
+  setAlarmState(alarmState: number) {
     if (!this.#human) getApp().getServerManager().setAlarmState(this.ID, alarmState);
   }
 
@@ -1755,7 +1751,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     if (this.getHidden()) return; // We won't draw the marker if the unit is hidden
-    
+
     /* Draw the marker */
     if (this.getLatLng().lat !== this.#position.lat || this.getLatLng().lng !== this.#position.lng) {
       this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
@@ -1777,8 +1773,9 @@ export abstract class Unit extends CustomMarker {
       /* Set dead/alive flag */
       element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
-      /* Set RED/GREEN state*/
-      if (this.#alarmState) element.querySelector(".unit")?.setAttribute("data-radar-state", this.#alarmState);
+      /* Set radar state*/
+      // if (this.#radarState !== undefined) element.querySelector(".unit")?.setAttribute("data-radar-state", (this.#radarState === true ? 'on' : 'off'));
+      if (this.#alarmState !== AlarmState.AUTO) element.querySelector(".unit")?.setAttribute("data-alarm-state", (this.#alarmState === AlarmState.RED ? 'red' : 'green'));
 
       /* Set current unit state */
       if (this.#human) {
@@ -1836,28 +1833,28 @@ export abstract class Unit extends CustomMarker {
       if (hasFox3 != newHasFox3) element.querySelector(".unit")?.toggleAttribute("data-has-fox-3", newHasFox3);
       if (hasOtherAmmo != newHasOtherAmmo) element.querySelector(".unit")?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
 
-        /* Draw the hotgroup element */
-        element.querySelector(".unit")?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
-        if (this.#hotgroup) {
-          const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
-          if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
-        }
+      /* Draw the hotgroup element */
+      element.querySelector(".unit")?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
+      if (this.#hotgroup) {
+        const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
+        if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
+      }
 
-        /* Draw the cluster element */
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute(
-            "data-is-cluster-leader",
-            this.#isClusterLeader &&
-              this.#clusterUnits.length > 1 &&
-              getApp().getMap().getOptions().clusterGroundUnits &&
-              getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
-              !this.getSelected()
-          );
-        if (this.#isClusterLeader && this.#clusterUnits.length > 1) {
-          const clusterEl = element.querySelector(".unit-cluster-id") as HTMLElement;
-          if (clusterEl) clusterEl.innerText = String(this.#clusterUnits.length);
-        }
+      /* Draw the cluster element */
+      element
+        .querySelector(".unit")
+        ?.toggleAttribute(
+          "data-is-cluster-leader",
+          this.#isClusterLeader &&
+          this.#clusterUnits.length > 1 &&
+          getApp().getMap().getOptions().clusterGroundUnits &&
+          getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
+          !this.getSelected()
+        );
+      if (this.#isClusterLeader && this.#clusterUnits.length > 1) {
+        const clusterEl = element.querySelector(".unit-cluster-id") as HTMLElement;
+        if (clusterEl) clusterEl.innerText = String(this.#clusterUnits.length);
+      }
 
       /* Set bullseyes positions */
       const bullseyes = getApp().getMissionManager().getBullseyes();

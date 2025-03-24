@@ -8,6 +8,7 @@ namespace DataIndex {
 		category,
 		alive,
 		alarmState,
+		radarState,
 		human,
 		controlled,
 		coalition,
