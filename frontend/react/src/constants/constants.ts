@@ -451,6 +451,8 @@ export enum DataIndexes {
   startOfData = 0,
   category,
   alive,
+  alarmState,
+  radarState,
   human,
   controlled,
   coalition,

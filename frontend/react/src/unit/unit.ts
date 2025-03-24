@@ -18,6 +18,7 @@ import {
   computeBearingRangeString,
   adjustBrightness,
   bearingAndDistanceToLatLng,
+  enumToAlarmState,
 } from "../other/utils";
 import { CustomMarker } from "../map/markers/custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
@@ -52,7 +53,7 @@ import {
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
-import { Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
+import { AlarmState, Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from "./group";
 import { ContextActionSet } from "./contextactionset";
@@ -85,6 +86,8 @@ export abstract class Unit extends CustomMarker {
 
   /* Data controlled directly by the backend. No setters are provided to avoid misalignments */
   #alive: boolean = false;
+  #alarmState: AlarmState = AlarmState.AUTO;
+  #radarState: boolean | undefined = undefined;
   #human: boolean = false;
   #controlled: boolean = false;
   #coalition: string = "neutral";
@@ -349,6 +352,12 @@ export abstract class Unit extends CustomMarker {
   getRaceTrackBearing() {
     return this.#racetrackBearing;
   }
+  getAlarmState() {
+    return this.#alarmState;
+  }
+  getRadarState() {
+    return this.#radarState;
+  }
   getTimeToNextTasking() {
     return this.#timeToNextTasking;
   }
@@ -538,12 +547,17 @@ export abstract class Unit extends CustomMarker {
     var datumIndex = 0;
     while (datumIndex != DataIndexes.endOfData) {
       datumIndex = dataExtractor.extractUInt8();
+
       switch (datumIndex) {
         case DataIndexes.category:
           dataExtractor.extractString();
           break;
         case DataIndexes.alive:
           this.setAlive(dataExtractor.extractBool());
+          updateMarker = true;
+          break;
+        case DataIndexes.radarState:
+          this.#radarState = dataExtractor.extractBool();
           updateMarker = true;
           break;
         case DataIndexes.human:
@@ -650,6 +664,9 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.ROE:
           this.#ROE = enumToROE(dataExtractor.extractUInt8());
+          break;
+        case DataIndexes.alarmState:
+          this.#alarmState = enumToAlarmState(dataExtractor.extractUInt8());
           break;
         case DataIndexes.reactionToThreat:
           this.#reactionToThreat = enumToReactionToThreat(dataExtractor.extractUInt8());
@@ -845,6 +862,7 @@ export abstract class Unit extends CustomMarker {
       racetrackLength: this.#racetrackLength,
       racetrackAnchor: this.#racetrackAnchor,
       racetrackBearing: this.#racetrackBearing,
+      alarmState: this.#alarmState,
       timeToNextTasking: this.#timeToNextTasking,
       barrelHeight: this.#barrelHeight,
       muzzleVelocity: this.#muzzleVelocity,
@@ -867,6 +885,13 @@ export abstract class Unit extends CustomMarker {
     if (newAlive != this.#alive) {
       this.#alive = newAlive;
       UnitDeadEvent.dispatch(this);
+    }
+  }
+
+  setRadarState(newRadarState: boolean) {
+    if (newRadarState != this.#radarState) {
+      this.#radarState = newRadarState;
+      this.#updateMarker();
     }
   }
 
@@ -1166,6 +1191,13 @@ export abstract class Unit extends CustomMarker {
       el.append(healthIndicator);
     }
 
+    /* Alarm state indicator */
+    if (iconOptions.showAlarmState) {
+      var alarmStateIcon = document.createElement("div");
+      alarmStateIcon.classList.add("unit-alarm-state");
+      el.append(alarmStateIcon);
+    }
+
     /* Ammo indicator */
     if (iconOptions.showAmmo) {
       var ammoIndicator = document.createElement("div");
@@ -1399,6 +1431,10 @@ export abstract class Unit extends CustomMarker {
 
   setROE(ROE: string) {
     if (!this.#human) getApp().getServerManager().setROE(this.ID, ROE);
+  }
+
+  setAlarmState(alarmState: number) {
+    if (!this.#human) getApp().getServerManager().setAlarmState(this.ID, alarmState);
   }
 
   setReactionToThreat(reactionToThreat: string) {
@@ -1725,165 +1761,168 @@ export abstract class Unit extends CustomMarker {
       }
     }
 
+    if (this.getHidden()) return; // We won't draw the marker if the unit is hidden
+
     /* Draw the marker */
-    if (!this.getHidden()) {
-      if (this.getLatLng().lat !== this.#position.lat || this.getLatLng().lng !== this.#position.lng) {
-        this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
-      }
+    if (this.getLatLng().lat !== this.#position.lat || this.getLatLng().lng !== this.#position.lng) {
+      this.setLatLng(new LatLng(this.#position.lat, this.#position.lng));
+    }
 
-      var element = this.getElement();
-      if (element != null) {
-        /* Draw the velocity vector */
-        element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
+    var element = this.getElement();
+    if (element != null) {
+      /* Draw the velocity vector */
+      element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
 
-        /* Set fuel data */
-        element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);
-        element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
+      /* Set fuel data */
+      element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);
+      element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
 
-        /* Set health data */
-        element.querySelector(".unit-health-level")?.setAttribute("style", `width: ${this.#health}%`);
-        element.querySelector(".unit")?.toggleAttribute("data-has-low-health", this.#health < 20);
+      /* Set health data */
+      element.querySelector(".unit-health-level")?.setAttribute("style", `width: ${this.#health}%`);
+      element.querySelector(".unit")?.toggleAttribute("data-has-low-health", this.#health < 20);
 
-        /* Set dead/alive flag */
-        element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
+      /* Set dead/alive flag */
+      element.querySelector(".unit")?.toggleAttribute("data-is-dead", !this.#alive);
 
-        /* Set current unit state */
-        if (this.#human) {
-          // Unit is human
-          element.querySelector(".unit")?.setAttribute("data-state", "human");
-        } else if (!this.#controlled) {
-          // Unit is under DCS control (not Olympus)
-          element.querySelector(".unit")?.setAttribute("data-state", "dcs");
-        } else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask) {
-          element.querySelector(".unit")?.setAttribute("data-state", "no-task");
-        } else {
-          // Unit is under Olympus control
-          if (this.#onOff) {
-            if (this.#isActiveTanker) element.querySelector(".unit")?.setAttribute("data-state", "tanker");
-            else if (this.#isActiveAWACS) element.querySelector(".unit")?.setAttribute("data-state", "AWACS");
-            else element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
-          } else {
-            element.querySelector(".unit")?.setAttribute("data-state", "off");
-          }
-        }
+      /* Set radar state*/
+      element.querySelector(".unit")?.setAttribute("data-alarm-state", this.#alarmState);
 
-        /* Set altitude and speed */
-        if (element.querySelector(".unit-altitude"))
-          (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
-        if (element.querySelector(".unit-speed"))
-          (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
-
-        /* Rotate elements according to heading */
-        element.querySelectorAll("[data-rotate-to-heading]").forEach((el) => {
-          const headingDeg = rad2deg(this.#track);
-          let currentStyle = el.getAttribute("style") || "";
-          el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
-        });
-
-        /* Turn on ammo indicators */
-        var hasFox1 = element.querySelector(".unit")?.hasAttribute("data-has-fox-1");
-        var hasFox2 = element.querySelector(".unit")?.hasAttribute("data-has-fox-2");
-        var hasFox3 = element.querySelector(".unit")?.hasAttribute("data-has-fox-3");
-        var hasOtherAmmo = element.querySelector(".unit")?.hasAttribute("data-has-other-ammo");
-
-        var newHasFox1 = false;
-        var newHasFox2 = false;
-        var newHasFox3 = false;
-        var newHasOtherAmmo = false;
-        Object.values(this.#ammo).forEach((ammo: Ammo) => {
-          if (ammo.category == 1 && ammo.missileCategory == 1) {
-            if (ammo.guidance == 4 || ammo.guidance == 5) newHasFox1 = true;
-            else if (ammo.guidance == 2) newHasFox2 = true;
-            else if (ammo.guidance == 3) newHasFox3 = true;
-          } else newHasOtherAmmo = true;
-        });
-
-        if (hasFox1 != newHasFox1) element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", newHasFox1);
-        if (hasFox2 != newHasFox2) element.querySelector(".unit")?.toggleAttribute("data-has-fox-2", newHasFox2);
-        if (hasFox3 != newHasFox3) element.querySelector(".unit")?.toggleAttribute("data-has-fox-3", newHasFox3);
-        if (hasOtherAmmo != newHasOtherAmmo) element.querySelector(".unit")?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
-
-        /* Draw the hotgroup element */
-        element.querySelector(".unit")?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
-        if (this.#hotgroup) {
-          const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
-          if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
-        }
-
-        /* Draw the cluster element */
-        element
-          .querySelector(".unit")
-          ?.toggleAttribute(
-            "data-is-cluster-leader",
-            this.#isClusterLeader &&
-              this.#clusterUnits.length > 1 &&
-              getApp().getMap().getOptions().clusterGroundUnits &&
-              getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
-              !this.getSelected()
-          );
-        if (this.#isClusterLeader && this.#clusterUnits.length > 1) {
-          const clusterEl = element.querySelector(".unit-cluster-id") as HTMLElement;
-          if (clusterEl) clusterEl.innerText = String(this.#clusterUnits.length);
-        }
-
-        /* Set bullseyes positions */
-        const bullseyes = getApp().getMissionManager().getBullseyes();
-        if (Object.keys(bullseyes).length > 0) {
-          const bullseye = `${computeBearingRangeString(bullseyes[coalitionToEnum(getApp().getMap().getOptions().AWACSCoalition)].getLatLng(), this.getPosition())}`;
-          if (element.querySelector(".unit-bullseye")) (<HTMLElement>element.querySelector(".unit-bullseye")).innerText = `${bullseye}`;
-        }
-
-        /* Set BRAA */
-        const reference = getApp().getUnitsManager().getAWACSReference();
-        if (reference && reference !== this && reference.getAlive()) {
-          const BRAA = `${computeBearingRangeString(reference.getPosition(), this.getPosition())}`;
-          if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = `${BRAA}`;
-        } else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
-
-        /* Set operate as */
-        element
-          .querySelector(".unit")
-          ?.setAttribute(
-            "data-operate-as",
-            this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT
-              ? this.#operateAs
-              : "neutral"
-          );
-      }
-
-      /* Set vertical offset for altitude stacking */
-      var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
-      this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
-
-      /* Get the cluster this unit is in to position the label correctly */
-      let cluster = Object.values(getApp().getUnitsManager().getClusters()).find((cluster) => cluster.includes(this));
-      if (cluster && cluster.length > 1) {
-        let clusterMean = turf.centroid(turf.featureCollection(cluster.map((unit) => turf.point([unit.getPosition().lng, unit.getPosition().lat]))));
-        let bearingFromCluster = bearing(
-          clusterMean.geometry.coordinates[1],
-          clusterMean.geometry.coordinates[0],
-          this.getPosition().lat,
-          this.getPosition().lng,
-          false
-        );
-
-        if (bearingFromCluster < 0) bearingFromCluster += 360;
-        let trackIndex = Math.round(bearingFromCluster / 45);
-
-        for (let idx = 0; idx < bearingStrings.length; idx++) element?.querySelector(".unit-summary")?.classList.remove("cluster-" + bearingStrings[idx]);
-        element?.querySelector(".unit-summary")?.classList.add("cluster-" + bearingStrings[trackIndex]);
+      /* Set current unit state */
+      if (this.#human) {
+        // Unit is human
+        element.querySelector(".unit")?.setAttribute("data-state", "human");
+      } else if (!this.#controlled) {
+        // Unit is under DCS control (not Olympus)
+        element.querySelector(".unit")?.setAttribute("data-state", "dcs");
+      } else if ((this.getCategory() == "Aircraft" || this.getCategory() == "Helicopter") && !this.#hasTask) {
+        element.querySelector(".unit")?.setAttribute("data-state", "no-task");
       } else {
-        for (let idx = 0; idx < bearingStrings.length; idx++) element?.querySelector(".unit-summary")?.classList.remove("cluster-" + bearingStrings[idx]);
-        element?.querySelector(".unit-summary")?.classList.add("cluster-north-east");
+        // Unit is under Olympus control
+        if (this.#onOff) {
+          if (this.#isActiveTanker) element.querySelector(".unit")?.setAttribute("data-state", "tanker");
+          else if (this.#isActiveAWACS) element.querySelector(".unit")?.setAttribute("data-state", "AWACS");
+          else element.querySelector(".unit")?.setAttribute("data-state", this.#state.toLowerCase());
+        } else {
+          element.querySelector(".unit")?.setAttribute("data-state", "off");
+        }
       }
 
-      /* Draw the contact trail */
-      if (/*TODO getApp().getMap().getOptions().AWACSMode*/ false) {
-        this.#trailPolylines = this.#trailPositions.map(
-          (latlng, idx) => new Polyline([latlng, latlng], { color: colors.WHITE, opacity: 1 - (idx + 1) / TRAIL_LENGTH })
-        );
-        this.#trailPolylines.forEach((polyline) => polyline.addTo(getApp().getMap()));
+      /* Set altitude and speed */
+      if (element.querySelector(".unit-altitude"))
+        (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
+      if (element.querySelector(".unit-speed"))
+        (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
+
+      /* Rotate elements according to heading */
+      element.querySelectorAll("[data-rotate-to-heading]").forEach((el) => {
+        const headingDeg = rad2deg(this.#track);
+        let currentStyle = el.getAttribute("style") || "";
+        el.setAttribute("style", currentStyle + `transform:rotate(${headingDeg}deg);`);
+      });
+
+      /* Turn on ammo indicators */
+      var hasFox1 = element.querySelector(".unit")?.hasAttribute("data-has-fox-1");
+      var hasFox2 = element.querySelector(".unit")?.hasAttribute("data-has-fox-2");
+      var hasFox3 = element.querySelector(".unit")?.hasAttribute("data-has-fox-3");
+      var hasOtherAmmo = element.querySelector(".unit")?.hasAttribute("data-has-other-ammo");
+
+      var newHasFox1 = false;
+      var newHasFox2 = false;
+      var newHasFox3 = false;
+      var newHasOtherAmmo = false;
+      Object.values(this.#ammo).forEach((ammo: Ammo) => {
+        if (ammo.category == 1 && ammo.missileCategory == 1) {
+          if (ammo.guidance == 4 || ammo.guidance == 5) newHasFox1 = true;
+          else if (ammo.guidance == 2) newHasFox2 = true;
+          else if (ammo.guidance == 3) newHasFox3 = true;
+        } else newHasOtherAmmo = true;
+      });
+
+      if (hasFox1 != newHasFox1) element.querySelector(".unit")?.toggleAttribute("data-has-fox-1", newHasFox1);
+      if (hasFox2 != newHasFox2) element.querySelector(".unit")?.toggleAttribute("data-has-fox-2", newHasFox2);
+      if (hasFox3 != newHasFox3) element.querySelector(".unit")?.toggleAttribute("data-has-fox-3", newHasFox3);
+      if (hasOtherAmmo != newHasOtherAmmo) element.querySelector(".unit")?.toggleAttribute("data-has-other-ammo", newHasOtherAmmo);
+
+      /* Draw the hotgroup element */
+      element.querySelector(".unit")?.toggleAttribute("data-is-in-hotgroup", this.#hotgroup != null);
+      if (this.#hotgroup) {
+        const hotgroupEl = element.querySelector(".unit-hotgroup-id") as HTMLElement;
+        if (hotgroupEl) hotgroupEl.innerText = String(this.#hotgroup);
       }
+
+      /* Draw the cluster element */
+      element
+        .querySelector(".unit")
+        ?.toggleAttribute(
+          "data-is-cluster-leader",
+          this.#isClusterLeader &&
+          this.#clusterUnits.length > 1 &&
+          getApp().getMap().getOptions().clusterGroundUnits &&
+          getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
+          !this.getSelected()
+        );
+      if (this.#isClusterLeader && this.#clusterUnits.length > 1) {
+        const clusterEl = element.querySelector(".unit-cluster-id") as HTMLElement;
+        if (clusterEl) clusterEl.innerText = String(this.#clusterUnits.length);
+      }
+
+      /* Set bullseyes positions */
+      const bullseyes = getApp().getMissionManager().getBullseyes();
+      if (Object.keys(bullseyes).length > 0) {
+        const bullseye = `${computeBearingRangeString(bullseyes[coalitionToEnum(getApp().getMap().getOptions().AWACSCoalition)].getLatLng(), this.getPosition())}`;
+        if (element.querySelector(".unit-bullseye")) (<HTMLElement>element.querySelector(".unit-bullseye")).innerText = `${bullseye}`;
+      }
+
+      /* Set BRAA */
+      const reference = getApp().getUnitsManager().getAWACSReference();
+      if (reference && reference !== this && reference.getAlive()) {
+        const BRAA = `${computeBearingRangeString(reference.getPosition(), this.getPosition())}`;
+        if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = `${BRAA}`;
+      } else if (element.querySelector(".unit-braa")) (<HTMLElement>element.querySelector(".unit-braa")).innerText = ``;
+
+      /* Set operate as */
+      element
+        .querySelector(".unit")
+        ?.setAttribute(
+          "data-operate-as",
+          this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT
+            ? this.#operateAs
+            : "neutral"
+        );
+    }
+
+    /* Set vertical offset for altitude stacking */
+    var pos = getApp().getMap().latLngToLayerPoint(this.getLatLng()).round();
+    this.setZIndexOffset(1000 + Math.floor(this.#position.alt as number) - pos.y + (this.#highlighted || this.#selected ? 5000 : 0));
+
+    /* Get the cluster this unit is in to position the label correctly */
+    let cluster = Object.values(getApp().getUnitsManager().getClusters()).find((cluster) => cluster.includes(this));
+    if (cluster && cluster.length > 1) {
+      let clusterMean = turf.centroid(turf.featureCollection(cluster.map((unit) => turf.point([unit.getPosition().lng, unit.getPosition().lat]))));
+      let bearingFromCluster = bearing(
+        clusterMean.geometry.coordinates[1],
+        clusterMean.geometry.coordinates[0],
+        this.getPosition().lat,
+        this.getPosition().lng,
+        false
+      );
+
+      if (bearingFromCluster < 0) bearingFromCluster += 360;
+      let trackIndex = Math.round(bearingFromCluster / 45);
+
+      for (let idx = 0; idx < bearingStrings.length; idx++) element?.querySelector(".unit-summary")?.classList.remove("cluster-" + bearingStrings[idx]);
+      element?.querySelector(".unit-summary")?.classList.add("cluster-" + bearingStrings[trackIndex]);
+    } else {
+      for (let idx = 0; idx < bearingStrings.length; idx++) element?.querySelector(".unit-summary")?.classList.remove("cluster-" + bearingStrings[idx]);
+      element?.querySelector(".unit-summary")?.classList.add("cluster-north-east");
+    }
+
+    /* Draw the contact trail */
+    if (/*TODO getApp().getMap().getOptions().AWACSMode*/ false) {
+      this.#trailPolylines = this.#trailPositions.map(
+        (latlng, idx) => new Polyline([latlng, latlng], { color: colors.WHITE, opacity: 1 - (idx + 1) / TRAIL_LENGTH })
+      );
+      this.#trailPolylines.forEach((polyline) => polyline.addTo(getApp().getMap()));
     }
   }
 
@@ -2394,6 +2433,7 @@ export abstract class AirUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: false,
+      showAlarmState: false
     } as ObjectIconOptions;
   }
 
@@ -2482,6 +2522,7 @@ export class GroundUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: true,
+      showAlarmState: true,
     } as ObjectIconOptions;
   }
 
@@ -2549,6 +2590,7 @@ export class NavyUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: false,
+      showAlarmState: true
     } as ObjectIconOptions;
   }
 

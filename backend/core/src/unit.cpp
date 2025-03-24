@@ -83,6 +83,9 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
 
+	if (json.has_boolean_field(L"radarState")) 
+		setRadarState(json[L"radarState"].as_bool());
+
 	if (json.has_boolean_field(L"isHuman"))
 		setHuman(json[L"isHuman"].as_bool());
 
@@ -150,7 +153,7 @@ void Unit::update(json::value json, double dt)
 
 void Unit::setDefaults(bool force)
 {
-
+	setAlarmState(AlarmState::AUTO, force);
 }
 
 void Unit::runAILoop() {
@@ -208,6 +211,7 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::operateAs:					updateValue(operateAs, leader->operateAs, datumIndex); break;
 					case DataIndex::shotsScatter:				updateValue(shotsScatter, leader->shotsScatter, datumIndex); break;
 					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
+					case DataIndex::alarmState:					updateValue(alarmState, leader->alarmState, datumIndex); break;
 					}
 				}
 			}
@@ -251,6 +255,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				switch (datumIndex) {
 					case DataIndex::category:					appendString(ss, datumIndex, category); break;
 					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+					case DataIndex::alarmState:					appendNumeric(ss, datumIndex, alarmState); break;
+					case DataIndex::radarState:					appendNumeric(ss, datumIndex, radarState); break;
 					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
 					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
 					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
@@ -464,6 +470,17 @@ void Unit::setROE(unsigned char newROE, bool force)
 		scheduler->appendCommand(command);
 
 		triggerUpdate(DataIndex::ROE);
+	}
+}
+
+void Unit::setAlarmState(unsigned char newAlarmState, bool force)
+{
+	if (alarmState != newAlarmState || force) {
+		alarmState = newAlarmState;
+		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ALARM_STATE, static_cast<unsigned int>(newAlarmState)));
+		scheduler->appendCommand(command);
+
+		triggerUpdate(DataIndex::alarmState);
 	}
 }
 

@@ -406,6 +406,19 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") ROE to " + to_string(ROE), true);
 		}
 	}
+	else if (key.compare("setAlarmState") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unsigned char alarmState = value[L"alarmState"].as_number().to_uint32();
+			unit->setAlarmState(alarmState);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
+		} else {
+			log("Error while setting setAlarmState. Unit does not exist.");
+		}
+	}
 	/************************/
 	else if (key.compare("setReactionToThreat") == 0)
 	{

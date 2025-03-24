@@ -1,12 +1,12 @@
 import { Circle, LatLng, Polygon } from "leaflet";
 import * as turf from "@turf/turf";
 import { ROEs, emissionsCountermeasures, reactionsToThreat, states } from "../constants/constants";
-import { DateAndTime } from "../interfaces";
+import { AlarmState, DateAndTime } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { featureCollection } from "turf";
 import MagVar from "magvar";
-import axios from 'axios';
+import axios from "axios";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number, magnetic = true) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -58,19 +58,19 @@ export function midpoint(lat1: number, lon1: number, lat2: number, lon2: number,
   const λ2 = deg2rad(lon2); // Convert longitude of point 2 from degrees to radians
 
   // Convert point 1 to Mercator projection coordinates
-  const x1 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI + λ1);
-  const y1 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI - Math.log(Math.tan(Math.PI / 4 + φ1 / 2)));
+  const x1 = (1 / (2 * Math.PI)) * Math.pow(2, zoom) * (Math.PI + λ1);
+  const y1 = (1 / (2 * Math.PI)) * Math.pow(2, zoom) * (Math.PI - Math.log(Math.tan(Math.PI / 4 + φ1 / 2)));
 
   // Convert point 2 to Mercator projection coordinates
-  const x2 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI + λ2);
-  const y2 = 1 / (2 * Math.PI) * Math.pow(2, zoom) * (Math.PI - Math.log(Math.tan(Math.PI / 4 + φ2 / 2)));
+  const x2 = (1 / (2 * Math.PI)) * Math.pow(2, zoom) * (Math.PI + λ2);
+  const y2 = (1 / (2 * Math.PI)) * Math.pow(2, zoom) * (Math.PI - Math.log(Math.tan(Math.PI / 4 + φ2 / 2)));
 
   // Calculate the midpoint in Mercator projection coordinates
   const mx = (x1 + x2) / 2;
   const my = (y1 + y2) / 2;
 
   // Convert the midpoint back to latitude and longitude
-  const λ = (2 * Math.PI * mx / Math.pow(2, zoom)) - Math.PI;
+  const λ = (2 * Math.PI * mx) / Math.pow(2, zoom) - Math.PI;
   const φ = 2 * Math.atan(Math.exp(Math.PI - (2 * Math.PI * my) / Math.pow(2, zoom))) - Math.PI / 2;
 
   // Return the midpoint as a LatLng object
@@ -284,6 +284,19 @@ export function enumToState(state: number) {
 export function enumToROE(ROE: number) {
   if (ROE < ROEs.length) return ROEs[ROE];
   else return ROEs[0];
+}
+
+export function enumToAlarmState(alarmState: number) {
+  switch (alarmState) {
+    case 2:
+      return AlarmState.RED;
+    case 1:
+      return AlarmState.GREEN;
+    case 0:
+      return AlarmState.AUTO;
+    default:
+      return AlarmState.AUTO;
+  }
 }
 
 export function convertROE(idx: number) {
@@ -522,7 +535,7 @@ export function computeStandardFormationOffset(formation, idx) {
       var xl = xr * Math.cos(Math.PI / 4) - yr * Math.sin(Math.PI / 4);
       var yl = xr * Math.sin(Math.PI / 4) + yr * Math.cos(Math.PI / 4);
       offset = { x: xl * 50, y: yl * 50, z: 0 };
-      offset.z = -Math.sqrt(offset.x * offset.x + offset.y * offset.y) * 0.1
+      offset.z = -Math.sqrt(offset.x * offset.x + offset.y * offset.y) * 0.1;
       if (yr == 0) {
         layer++;
         xr = 0;
@@ -558,7 +571,7 @@ export function roundToNearestFive(number) {
   return Math.round(number / 5) * 5;
 }
 
-export function toDCSFormationOffset(offset: {x: number, y: number, z: number}) {
+export function toDCSFormationOffset(offset: { x: number; y: number; z: number }) {
   // X: front-rear, positive front
   // Y: top-bottom, positive top
   // Z: left-right, positive right
@@ -566,7 +579,7 @@ export function toDCSFormationOffset(offset: {x: number, y: number, z: number}) 
   return { x: -offset.y, y: offset.z, z: offset.x };
 }
 
-export function fromDCSFormationOffset(offset: {x: number, y: number, z: number}) {
+export function fromDCSFormationOffset(offset: { x: number; y: number; z: number }) {
   return { x: offset.z, y: -offset.x, z: offset.y };
 }
 
@@ -579,7 +592,7 @@ export function fromDCSFormationOffset(offset: {x: number, y: number, z: number}
 export function adjustBrightness(color, percent) {
   // Ensure the color is in the correct format
   if (!/^#[0-9A-F]{6}$/i.test(color)) {
-    throw new Error('Invalid color format. Use #RRGGBB.');
+    throw new Error("Invalid color format. Use #RRGGBB.");
   }
 
   // Parse the color components
@@ -605,12 +618,12 @@ export function adjustBrightness(color, percent) {
 export function setOpacity(color, opacity) {
   // Ensure the color is in the correct format
   if (!/^#[0-9A-F]{6}$/i.test(color)) {
-    throw new Error('Invalid color format. Use #RRGGBB.');
+    throw new Error("Invalid color format. Use #RRGGBB.");
   }
 
   // Ensure the opacity is within the valid range
   if (opacity < 0 || opacity > 1) {
-    throw new Error('Opacity must be between 0 and 1.');
+    throw new Error("Opacity must be between 0 and 1.");
   }
 
   // Parse the color components
@@ -630,7 +643,7 @@ export function setOpacity(color, opacity) {
 export function computeBrightness(color) {
   // Ensure the color is in the correct format
   if (!/^#[0-9A-F]{6}$/i.test(color)) {
-    throw new Error('Invalid color format. Use #RRGGBB.');
+    throw new Error("Invalid color format. Use #RRGGBB.");
   }
 
   // Parse the color components
@@ -660,10 +673,10 @@ export function normalizeAngle(angle: number): number {
 }
 
 export function decimalToRGBA(decimal: number): string {
-  const r = (decimal >>> 24) & 0xff; 
-  const g = (decimal >>> 16) & 0xff; 
-  const b = (decimal >>> 8) & 0xff;  
-  const a = (decimal & 0xff) / 255;  
+  const r = (decimal >>> 24) & 0xff;
+  const g = (decimal >>> 16) & 0xff;
+  const b = (decimal >>> 8) & 0xff;
+  const a = (decimal & 0xff) / 255;
 
   return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
 }
@@ -671,18 +684,18 @@ export function decimalToRGBA(decimal: number): string {
 export async function getWikipediaImage(unitName: string): Promise<string | null> {
   try {
     // Search for the unit name on Wikipedia
-    const searchResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+    const searchResponse = await axios.get("https://en.wikipedia.org/w/api.php", {
       params: {
-        action: 'query',
-        list: 'search',
+        action: "query",
+        list: "search",
         srsearch: unitName,
-        format: 'json',
-        origin: '*'
-      }
+        format: "json",
+        origin: "*",
+      },
     });
 
     if (searchResponse.data.query.search.length === 0) {
-      console.error('No search results found for the unit name.');
+      console.error("No search results found for the unit name.");
       return null;
     }
 
@@ -690,15 +703,15 @@ export async function getWikipediaImage(unitName: string): Promise<string | null
     const pageTitle = searchResponse.data.query.search[0].title;
 
     // Get the page content to find the image
-    const pageResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+    const pageResponse = await axios.get("https://en.wikipedia.org/w/api.php", {
       params: {
-        action: 'query',
+        action: "query",
         titles: pageTitle,
-        prop: 'pageimages',
+        prop: "pageimages",
         pithumbsize: 500,
-        format: 'json',
-        origin: '*'
-      }
+        format: "json",
+        origin: "*",
+      },
     });
 
     const pages = pageResponse.data.query.pages;
@@ -708,11 +721,11 @@ export async function getWikipediaImage(unitName: string): Promise<string | null
     if (page.thumbnail && page.thumbnail.source) {
       return page.thumbnail.source;
     } else {
-      console.error('No image found for the unit name.');
+      console.error("No image found for the unit name.");
       return null;
     }
   } catch (error) {
-    console.error('Error fetching data from Wikipedia:', error);
+    console.error("Error fetching data from Wikipedia:", error);
     return null;
   }
 }
@@ -720,18 +733,18 @@ export async function getWikipediaImage(unitName: string): Promise<string | null
 export async function getWikipediaSummary(unitName: string): Promise<string | null> {
   try {
     // Search for the unit name on Wikipedia
-    const searchResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+    const searchResponse = await axios.get("https://en.wikipedia.org/w/api.php", {
       params: {
-        action: 'query',
-        list: 'search',
+        action: "query",
+        list: "search",
         srsearch: unitName,
-        format: 'json',
-        origin: '*'
-      }
+        format: "json",
+        origin: "*",
+      },
     });
 
     if (searchResponse.data.query.search.length === 0) {
-      console.error('No search results found for the unit name.');
+      console.error("No search results found for the unit name.");
       return null;
     }
 
@@ -739,16 +752,16 @@ export async function getWikipediaSummary(unitName: string): Promise<string | nu
     const pageTitle = searchResponse.data.query.search[0].title;
 
     // Get the page content to find the summary
-    const pageResponse = await axios.get('https://en.wikipedia.org/w/api.php', {
+    const pageResponse = await axios.get("https://en.wikipedia.org/w/api.php", {
       params: {
-        action: 'query',
-        prop: 'extracts',
+        action: "query",
+        prop: "extracts",
         exintro: true,
         explaintext: true,
         titles: pageTitle,
-        format: 'json',
-        origin: '*'
-      }
+        format: "json",
+        origin: "*",
+      },
     });
 
     const pages = pageResponse.data.query.pages;
@@ -758,11 +771,11 @@ export async function getWikipediaSummary(unitName: string): Promise<string | nu
     if (page.extract) {
       return page.extract;
     } else {
-      console.error('No summary found for the unit name.');
+      console.error("No summary found for the unit name.");
       return null;
     }
   } catch (error) {
-    console.error('Error fetching data from Wikipedia:', error);
+    console.error("Error fetching data from Wikipedia:", error);
     return null;
   }
 }
