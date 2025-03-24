@@ -22,6 +22,10 @@ export function bearing(lat1: number, lon1: number, lat2: number, lon2: number, 
   return brng;
 }
 
+export function getMagvar(lat: number, lon: number) {
+  return MagVar.get(lat, lon);
+}
+
 export function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371e3; // metres
   const φ1 = deg2rad(lat1); // φ, λ in radians

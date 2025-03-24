@@ -16,13 +16,13 @@ export var BoxSelect = Handler.extend({
   },
 
   addHooks: function () {
-    DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.on(this._container, "touchstart", this._onMouseDown, this);
+    if ("ontouchstart" in window) DomEvent.on(this._container, "touchend", this._onMouseDown, this);
+    else DomEvent.on(this._container, "mousedown", this._onMouseDown, this);
   },
 
   removeHooks: function () {
-    DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
-    DomEvent.off(this._container, "touchend", this._onMouseDown, this);
+    if ("ontouchstart" in window) DomEvent.off(this._container, "touchstart", this._onMouseDown, this);
+    else DomEvent.off(this._container, "mousedown", this._onMouseDown, this);
   },
 
   moved: function () {
@@ -48,18 +48,29 @@ export var BoxSelect = Handler.extend({
       if (e.type === "touchstart") this._startPoint = this._map.mouseEventToContainerPoint(e.touches[0]);
       else this._startPoint = this._map.mouseEventToContainerPoint(e);
 
-      DomEvent.on(
-        //@ts-ignore
-        document,
-        {
-          contextmenu: DomEvent.stop,
-          touchmove: this._onMouseMove,
-          touchend: this._onMouseUp,
-          mousemove: this._onMouseMove,
-          mouseup: this._onMouseUp,
-        },
-        this
-      );
+      if ("ontouchstart" in window) {
+        DomEvent.on(
+          //@ts-ignore
+          document,
+          {
+            contextmenu: DomEvent.stop,
+            touchmove: this._onMouseMove,
+            touchend: this._onMouseUp,
+          },
+          this
+        );
+      } else {
+        DomEvent.on(
+          //@ts-ignore
+          document,
+          {
+            contextmenu: DomEvent.stop,
+            mousemove: this._onMouseMove,
+            mouseup: this._onMouseUp,
+          },
+          this
+        );
+      }
     } else {
       return false;
     }
@@ -109,18 +120,29 @@ export var BoxSelect = Handler.extend({
     DomUtil.enableImageDrag();
     this._map.dragging.enable();
 
-    DomEvent.off(
-      //@ts-ignore
-      document,
-      {
-        contextmenu: DomEvent.stop,
-        touchmove: this._onMouseMove,
-        touchend: this._onMouseUp,
-        mousemove: this._onMouseMove,
-        mouseup: this._onMouseUp,
-      },
-      this
-    );
+    if ("ontouchstart" in window) {
+      DomEvent.off(
+        //@ts-ignore
+        document,
+        {
+          contextmenu: DomEvent.stop,
+          touchmove: this._onMouseMove,
+          touchend: this._onMouseUp,
+        },
+        this
+      );
+    } else {
+      DomEvent.off(
+        //@ts-ignore
+        document,
+        {
+          contextmenu: DomEvent.stop,
+          mousemove: this._onMouseMove,
+          mouseup: this._onMouseUp,
+        },
+        this
+      );
+    }
 
     this._resetState();
   },

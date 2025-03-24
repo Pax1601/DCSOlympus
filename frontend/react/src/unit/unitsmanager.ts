@@ -50,7 +50,6 @@ import { UnitDatabase } from "./databases/unitdatabase";
 import * as turf from "@turf/turf";
 import { PathMarker } from "../map/markers/pathmarker";
 import { Coalition } from "../types/types";
-import { ClusterMarker } from "../map/markers/clustermarker";
 
 /** The UnitsManager handles the creation, update, and control of units. Data is strictly updated by the server ONLY. This means that any interaction from the user will always and only
  * result in a command to the server, executed by means of a REST PUT request. Any subsequent change in data will be reflected only when the new data is sent back by the server. This strategy allows
@@ -340,10 +339,16 @@ export class UnitsManager {
       pathMarkersCoordinates.forEach((latlng: LatLng) => {
         if (!this.#pathMarkers.some((pathMarker: PathMarker) => pathMarker.getLatLng().equals(latlng))) {
           const pathMarker = new PathMarker(latlng);
-
+          pathMarker.on("mousedown", (event) => {
+            DomEvent.stopPropagation(event);
+          });
+          pathMarker.on("mouseup", (event) => {
+            DomEvent.stopPropagation(event);
+          });
           pathMarker.on("dragstart", (event) => {
             event.target.options["freeze"] = true;
             event.target.options["originalPosition"] = event.target.getLatLng();
+            DomEvent.stopPropagation(event);
           });
           pathMarker.on("dragend", (event) => {
             event.target.options["freeze"] = false;
@@ -355,6 +360,7 @@ export class UnitsManager {
                 getApp().getServerManager().addDestination(unit.ID, path);
               }
             });
+            DomEvent.stopPropagation(event);
           });
 
           pathMarker.addTo(getApp().getMap());

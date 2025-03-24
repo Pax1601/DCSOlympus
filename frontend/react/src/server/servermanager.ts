@@ -121,6 +121,7 @@ export class ServerManager {
     /* If provided, set the credentials */
     xmlHttp.setRequestHeader("Authorization", "Basic " + btoa(`${this.#username ?? ""}:${this.#password ?? ""}`));
     xmlHttp.setRequestHeader("X-Command-Mode", this.#activeCommandMode);
+    xmlHttp.timeout = 2000;
 
     /* If specified, set the response type */
     if (responseType) xmlHttp.responseType = responseType as XMLHttpRequestResponseType;
@@ -215,7 +216,7 @@ export class ServerManager {
   }
 
   getUnits(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
-    this.GET(callback, errorCallback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, "arraybuffer", false);
+    this.GET(callback, errorCallback, UNITS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[UNITS_URI] }, "arraybuffer", refresh);
   }
 
   getWeapons(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {

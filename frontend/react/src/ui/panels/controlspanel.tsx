@@ -91,14 +91,14 @@ export function ControlsPanel(props: {}) {
         target: faFighterJet,
         text: "Show unit actions",
       });
-      controls.push({
-        actions: shortcuts["toggleRelativePositions"]?.toActions(),
-        text: "Activate group movement",
-      });
-      controls.push({
-        actions: [...shortcuts["toggleRelativePositions"]?.toActions(), "Wheel"],
-        text: "Rotate formation",
-      });
+      //controls.push({
+      //  actions: shortcuts["toggleRelativePositions"]?.toActions(),
+      //  text: "Activate group movement",
+      //});
+      //controls.push({
+      //  actions: [...shortcuts["toggleRelativePositions"]?.toActions(), "Wheel"],
+      //  text: "Rotate formation",
+      //});
     } else if (appState === OlympusState.SPAWN) {
       controls = [
         {

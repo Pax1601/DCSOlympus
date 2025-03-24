@@ -1593,6 +1593,9 @@ export abstract class Unit extends CustomMarker {
 
       this.#isLeftMouseDown = true;
       this.#leftMouseDownEpoch = Date.now();
+      this.#leftMouseDownTimeout = window.setTimeout(() => {
+        this.#onLeftLongClick(e);
+      }, SHORT_PRESS_MILLISECONDS);
     } else if (e.originalEvent?.button === 2) {
       if (
         getApp().getState() === OlympusState.IDLE ||
@@ -1617,6 +1620,8 @@ export abstract class Unit extends CustomMarker {
     DomEvent.preventDefault(e);
     e.originalEvent.stopImmediatePropagation();
 
+    window.clearTimeout(this.#leftMouseDownTimeout);
+
     if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
     this.#debounceTimeout = window.setTimeout(() => {
       console.log(`Left short click on ${this.getUnitName()}`);
@@ -1631,20 +1636,8 @@ export abstract class Unit extends CustomMarker {
     }, SHORT_PRESS_MILLISECONDS);
   }
 
-  #onRightShortClick(e: any) {
-    console.log(`Right short click on ${this.getUnitName()}`);
-
-    window.clearTimeout(this.#rightMouseDownTimeout);
-    if (
-      getApp().getState() === OlympusState.UNIT_CONTROL &&
-      getApp().getMap().getDefaultContextAction() &&
-      getApp().getMap().getDefaultContextAction()?.getTarget() === ContextActionTarget.POINT
-    )
-      getApp().getMap().executeDefaultContextAction(null, this.getPosition(), e.originalEvent);
-  }
-
-  #onRightLongClick(e: any) {
-    console.log(`Right long click on ${this.getUnitName()}`);
+  #onLeftLongClick(e: any) {
+    console.log(`Left long click on ${this.getUnitName()}`);
 
     if (getApp().getState() === OlympusState.IDLE) {
       this.setSelected(!this.getSelected());
@@ -1667,6 +1660,22 @@ export abstract class Unit extends CustomMarker {
       getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.UNIT_CONTEXT_MENU);
       UnitContextMenuRequestEvent.dispatch(this);
     }
+  }
+
+  #onRightShortClick(e: any) {
+    console.log(`Right short click on ${this.getUnitName()}`);
+
+    window.clearTimeout(this.#rightMouseDownTimeout);
+    if (
+      getApp().getState() === OlympusState.UNIT_CONTROL &&
+      getApp().getMap().getDefaultContextAction() &&
+      getApp().getMap().getDefaultContextAction()?.getTarget() === ContextActionTarget.POINT
+    )
+      getApp().getMap().executeDefaultContextAction(null, this.getPosition(), e.originalEvent);
+  }
+
+  #onRightLongClick(e: any) {
+    console.log(`Right long click on ${this.getUnitName()}`);
   }
 
   #onDoubleClick(e: any) {

@@ -21,9 +21,10 @@ export function InfoBar(props: {}) {
           <div
             key={idx}
             className={`
-              absolute w-fit translate-x-[-50%] gap-2 text-nowrap rounded-full
+              absolute w-[250px] translate-x-[-50%] gap-2 rounded-full
               bg-olympus-800/90 px-4 py-2 text-center text-sm text-white
               shadow-md backdrop-blur-lg backdrop-grayscale
+              sm:w-fit sm:text-nowrap
             `}
             style={{ top: `${idx * 20}px` }}
           >

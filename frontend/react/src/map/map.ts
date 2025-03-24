@@ -3,7 +3,7 @@ import { getApp } from "../olympusapp";
 import { BoxSelect } from "./boxselect";
 import { Airbase } from "../mission/airbase";
 import { Unit } from "../unit/unit";
-import { areaContains, deepCopyTable, deg2rad, getGroundElevation } from "../other/utils";
+import { areaContains, deepCopyTable, deg2rad, getGroundElevation, getMagvar, rad2deg } from "../other/utils";
 import { TemporaryUnitMarker } from "./markers/temporaryunitmarker";
 import { ClickableMiniMap } from "./clickableminimap";
 import {
@@ -70,6 +70,7 @@ import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
 import { Measure } from "./measure";
 import { FlakMarker } from "./markers/flakmarker";
+import { MapMouseHandler } from "./mapMouseHandler";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -110,14 +111,8 @@ export class Map extends L.Map {
   #isDragging: boolean = false;
   #isSelecting: boolean = false;
 
-  #originalMouseClickLatLng: L.LatLng | null = null;
-  #debounceTimeout: number | null = null;
-  #isLeftMouseDown: boolean = false;
-  #isRightMouseDown: boolean = false;
-  #leftMouseDownEpoch: number = 0;
-  #rightMouseDownEpoch: number = 0;
-  #leftMouseDownTimeout: number = 0;
-  #rightMouseDownTimeout: number = 0;
+  #mouseHandler: MapMouseHandler = new MapMouseHandler(this);
+
   #lastMousePosition: L.Point = new L.Point(0, 0);
   #lastMouseCoordinates: L.LatLng = new L.LatLng(0, 0);
   #previousZoom: number = 0;
@@ -139,7 +134,7 @@ export class Map extends L.Map {
   #destinationPreviewMarkers: { [key: number]: TemporaryUnitMarker | TargetMarker } = {};
   #destinationRotation: number = 0;
   #isRotatingDestination: boolean = false;
-  #destionationWasRotated: boolean = false;
+  #destinationRotationCenter: L.LatLng = new L.LatLng(0, 0);
 
   /* Unit context actions */
   #contextActionSet: null | ContextActionSet = null;
@@ -209,22 +204,20 @@ export class Map extends L.Map {
     this.on("selectionstart", (e: any) => this.#onSelectionStart(e));
     this.on("selectionend", (e: any) => this.#onSelectionEnd(e));
 
-    this.on("mouseup", (e: any) => this.#onMouseUp(e));
-    this.on("touchend", (e: any) => this.#onMouseUp(e));
-    this.on("mousedown", (e: any) => this.#onMouseDown(e));
-    this.on("touchstart", (e: any) => this.#onMouseDown(e));
-    this.on("dblclick", (e: any) => this.#onDoubleClick(e));
-    this.on("click", (e: any) => e.originalEvent.preventDefault());
-    this.on("contextmenu", (e: any) => e.originalEvent.preventDefault());
-
-    this.on("mousemove", (e: any) => this.#onMouseMove(e));
-
     this.on("move", (e: any) => this.#onMapMove(e));
 
-    /* Custom touch events for touchscreen support */
-    L.DomEvent.on(this.getContainer(), "touchstart", this.#onMouseDown, this);
-    L.DomEvent.on(this.getContainer(), "touchend", this.#onMouseUp, this);
-    L.DomEvent.on(this.getContainer(), "wheel", this.#onMouseWheel, this);
+    this.#mouseHandler.leftMousePressed = (e: L.LeafletMouseEvent) => this.#onLeftMousePressed(e);
+    this.#mouseHandler.leftMouseReleased = (e: L.LeafletMouseEvent) => this.#onLeftMouseReleased(e);
+    this.#mouseHandler.rightMousePressed = (e: L.LeafletMouseEvent) => this.#onRightMousePressed(e);
+    this.#mouseHandler.rightMouseReleased = (e: L.LeafletMouseEvent) => this.#onRightMouseReleased(e);
+    this.#mouseHandler.mouseWheelPressed = (e: L.LeafletMouseEvent) => this.#onMouseWheelPressed(e);
+    this.#mouseHandler.mouseWheelReleased = (e: L.LeafletMouseEvent) => this.#onMouseWheelReleased(e);
+    this.#mouseHandler.leftMouseShortClick = (e: L.LeafletMouseEvent) => this.#onLeftMouseShortClick(e);
+    this.#mouseHandler.rightMouseShortClick = (e: L.LeafletMouseEvent) => this.#onRightMouseShortClick(e);
+    this.#mouseHandler.leftMouseLongClick = (e: L.LeafletMouseEvent) => this.#onLeftMouseLongClick(e);
+    this.#mouseHandler.rightMouseLongClick = (e: L.LeafletMouseEvent) => this.#onRightMouseLongClick(e);
+    this.#mouseHandler.leftMouseDoubleClick = (e: L.LeafletMouseEvent) => this.#onLeftMouseDoubleClick(e);
+    this.#mouseHandler.mouseMove = (e: L.LeafletMouseEvent) => this.#onMouseMove(e);
 
     /* Event listeners */
     AppStateChangedEvent.on((state, subState) => this.#onStateChanged(state, subState));
@@ -405,14 +398,14 @@ export class Map extends L.Map {
         altKey: false,
         ctrlKey: false,
       })
-      .addShortcut("toggleRelativePositions", {
-        label: "Toggle group movement mode",
-        keyUpCallback: () => this.setKeepRelativePositions(false),
-        keyDownCallback: () => this.setKeepRelativePositions(true),
-        code: "AltLeft",
-        shiftKey: false,
-        ctrlKey: false,
-      })
+      //.addShortcut("toggleRelativePositions", {
+      //  label: "Toggle group movement mode",
+      //  keyUpCallback: () => this.setKeepRelativePositions(false),
+      //  keyDownCallback: () => this.setKeepRelativePositions(true),
+      //  code: "AltLeft",
+      //  shiftKey: false,
+      //  ctrlKey: false,
+      //})
       .addShortcut("toggleSelectionEnabled", {
         label: "Toggle box selection",
         keyUpCallback: () => this.setSelectionEnabled(false),
@@ -510,7 +503,7 @@ export class Map extends L.Map {
         code: "ShiftLeft",
         altKey: false,
         ctrlKey: false,
-      })
+      });
   }
 
   setLayerName(layerName: string) {
@@ -803,8 +796,6 @@ export class Map extends L.Map {
   setKeepRelativePositions(keepRelativePositions: boolean) {
     this.#keepRelativePositions = keepRelativePositions;
     this.#updateDestinationPreviewMarkers();
-    if (keepRelativePositions) this.scrollWheelZoom.disable();
-    else this.scrollWheelZoom.enable();
   }
 
   getKeepRelativePositions() {
@@ -960,7 +951,10 @@ export class Map extends L.Map {
   }
 
   #onDragEnd(e: any) {
-    this.#isDragging = false;
+    /* Delay the drag end event so that any other event in the queue still sees the map in dragging mode */
+    window.setTimeout(() => {
+      this.#isDragging = false;
+    }, SHORT_PRESS_MILLISECONDS + 100);
   }
 
   #onSelectionStart(e: any) {
@@ -976,201 +970,219 @@ export class Map extends L.Map {
     /* Delay the event so that any other event in the queue still sees the map in selection mode */
     window.setTimeout(() => {
       this.#isSelecting = false;
-    }, 300);
+    }, SHORT_PRESS_MILLISECONDS + 100);
   }
 
-  #onMouseUp(e: any) {
+  #onLeftMouseReleased(e: any) {
     this.dragging.enable();
 
-    if (e.originalEvent?.button === 0) {
-      if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onLeftShortClick(e);
-      this.#isLeftMouseDown = false;
-    } else if (e.originalEvent?.button === 2) {
-      if (Date.now() - this.#rightMouseDownEpoch < SHORT_PRESS_MILLISECONDS) this.#onRightShortClick(e);
-      this.#isRightMouseDown = false;
-    } else if (e.originalEvent?.button === 1) {
-      getApp().setState(getApp().getState() === OlympusState.MEASURE ? OlympusState.IDLE : OlympusState.MEASURE);
-      if (getApp().getState() === OlympusState.MEASURE) {
-        const newMeasure = new Measure(this);
-        const previousMeasure = this.#measures[this.#measures.length - 1];
-        this.#measures.push(newMeasure);
-        newMeasure.onClick(e.latlng);
-        if (previousMeasure && previousMeasure.isActive()) {
-          previousMeasure.finish();
-          previousMeasure.hideEndMarker();
-          newMeasure.onMarkerMoved = (startLatLng, endLatLng) => {
-            previousMeasure.moveMarkers(null, startLatLng);
-          };
-        }
+    if (this.#isRotatingDestination && getApp().getState() === OlympusState.UNIT_CONTROL && this.getContextAction() !== null) {
+      this.executeContextAction(null, this.#destinationRotationCenter, e.originalEvent);
+    }
+    this.#isRotatingDestination = false;
+    this.setKeepRelativePositions(false);
+
+    /* Delay the event so that any other event in the queue still sees the map in selection mode */
+    window.setTimeout(() => {
+      this.setSelectionEnabled(false);
+      this.#isSelecting = false;
+    }, SHORT_PRESS_MILLISECONDS + 100);
+  }
+
+  #onMouseWheelReleased(e: any) {
+    this.dragging.enable();
+
+    getApp().setState(getApp().getState() === OlympusState.MEASURE ? OlympusState.IDLE : OlympusState.MEASURE);
+    if (getApp().getState() === OlympusState.MEASURE) {
+      const newMeasure = new Measure(this);
+      const previousMeasure = this.#measures[this.#measures.length - 1];
+      this.#measures.push(newMeasure);
+      newMeasure.onClick(e.latlng);
+      if (previousMeasure && previousMeasure.isActive()) {
+        previousMeasure.finish();
+        previousMeasure.hideEndMarker();
+        newMeasure.onMarkerMoved = (startLatLng, endLatLng) => {
+          previousMeasure.moveMarkers(null, startLatLng);
+        };
       }
     }
   }
 
-  #onMouseDown(e: any) {
-    if (e.originalEvent?.button === 1) {
-      this.dragging.disable();
-    } // Disable dragging when right clicking
+  #onRightMouseReleased(e: any) {
+    this.dragging.enable();
 
-    this.#originalMouseClickLatLng = e.latlng;
-    if (e.originalEvent?.button === 0) {
-      this.#isLeftMouseDown = true;
-      this.#leftMouseDownEpoch = Date.now();
-    } else if (e.originalEvent?.button === 2) {
-      this.#isRightMouseDown = true;
-      this.#rightMouseDownEpoch = Date.now();
-      this.#rightMouseDownTimeout = window.setTimeout(() => {
-        this.#onRightLongClick(e);
-      }, SHORT_PRESS_MILLISECONDS);
+    if (this.#isRotatingDestination && getApp().getState() === OlympusState.UNIT_CONTROL) {
+      this.executeDefaultContextAction(null, this.#destinationRotationCenter, e.originalEvent);
+    }
+    this.#isRotatingDestination = false;
+    this.setKeepRelativePositions(false);
+  }
+
+  #onLeftMousePressed(e: any) {
+    if (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getSubState() === UnitControlSubState.MAP_CONTEXT_MENU) {
+      getApp().setState(OlympusState.UNIT_CONTROL);
     }
   }
 
-  #onMouseWheel(e: any) {
-    if (this.#keepRelativePositions) {
-      this.#destinationRotation += e.deltaY / 20;
-      this.#moveDestinationPreviewMarkers();
-    }
+  #onMouseWheelPressed(e: any) {}
+
+  #onRightMousePressed(e: any) {
+    this.dragging.disable();
   }
 
-  #onLeftShortClick(e: L.LeafletMouseEvent) {
+  #onLeftMouseShortClick(e: L.LeafletMouseEvent) {
     CoordinatesFreezeEvent.dispatch();
-    if (Date.now() - this.#leftMouseDownEpoch < SHORT_PRESS_MILLISECONDS) {
-      this.#debounceTimeout = window.setTimeout(() => {
-        if (!this.#isSelecting) {
-          console.log(`Left short click at ${e.latlng}`);
 
-          if (this.#pasteEnabled) {
-            getApp().getUnitsManager().paste(e.latlng);
-          }
+    if (this.#isDragging || this.#isSelecting) return;
+    console.log(`Left short click at ${e.latlng}`);
 
-          /* Execute the short click action */
-          if (getApp().getState() === OlympusState.IDLE) {
-            /* Do nothing */
-          } else if (getApp().getState() === OlympusState.SPAWN) {
-            if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
-              if (this.#spawnRequestTable !== null) {
-                this.#spawnRequestTable.unit.location = e.latlng;
-                this.#spawnRequestTable.unit.heading = deg2rad(this.#spawnHeading);
-                getApp()
-                  .getUnitsManager()
-                  .spawnUnits(
-                    this.#spawnRequestTable.category,
-                    Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit),
-                    this.#spawnRequestTable.coalition,
-                    false,
-                    undefined,
-                    undefined,
-                    (hash) => {
-                      this.addTemporaryMarker(
-                        e.latlng,
-                        this.#spawnRequestTable?.unit.unitType ?? "unknown",
-                        this.#spawnRequestTable?.coalition ?? "blue",
-                        false,
-                        hash
-                      );
-                    }
-                  );
+    if (this.#pasteEnabled) {
+      getApp().getUnitsManager().paste(e.latlng);
+    }
+
+    /* Execute the short click action */
+    if (getApp().getState() === OlympusState.IDLE) {
+      /* Do nothing */
+    } else if (getApp().getState() === OlympusState.SPAWN) {
+      if (getApp().getSubState() === SpawnSubState.SPAWN_UNIT) {
+        if (this.#spawnRequestTable !== null) {
+          this.#spawnRequestTable.unit.location = e.latlng;
+          this.#spawnRequestTable.unit.heading = deg2rad(this.#spawnHeading);
+          getApp()
+            .getUnitsManager()
+            .spawnUnits(
+              this.#spawnRequestTable.category,
+              Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit),
+              this.#spawnRequestTable.coalition,
+              false,
+              undefined,
+              undefined,
+              (hash) => {
+                this.addTemporaryMarker(
+                  e.latlng,
+                  this.#spawnRequestTable?.unit.unitType ?? "unknown",
+                  this.#spawnRequestTable?.coalition ?? "blue",
+                  false,
+                  hash
+                );
               }
-            } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
-              if (this.#effectRequestTable !== null) {
-                if (this.#effectRequestTable.type === "explosion") {
-                  if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", e.latlng);
-                  else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", e.latlng);
-                  else if (this.#effectRequestTable.explosionType === "White phosphorous")
-                    getApp().getServerManager().spawnExplosion(50, "phosphorous", e.latlng);
+            );
+        }
+      } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
+        if (this.#effectRequestTable !== null) {
+          if (this.#effectRequestTable.type === "explosion") {
+            if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", e.latlng);
+            else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", e.latlng);
+            else if (this.#effectRequestTable.explosionType === "White phosphorous") getApp().getServerManager().spawnExplosion(50, "phosphorous", e.latlng);
 
-                  this.addExplosionMarker(e.latlng);
-                } else if (this.#effectRequestTable.type === "smoke") {
-                  getApp()
-                    .getServerManager()
-                    .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", e.latlng);
-                  this.addSmokeMarker(e.latlng, this.#effectRequestTable.smokeColor ?? "white");
-                }
-              }
-            }
-          } else if (getApp().getState() === OlympusState.DRAW) {
-            getApp().getCoalitionAreasManager().onLeftShortClick(e);
-          } else if (getApp().getState() === OlympusState.JTAC) {
-            // TODO less redundant way to do this
-            if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
-              if (!this.#targetPoint) {
-                this.#targetPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
-                this.#targetPoint.addTo(this);
-                this.#targetPoint.on("dragstart", (event) => {
-                  event.target.options["freeze"] = true;
-                });
-                this.#targetPoint.on("dragend", (event) => {
-                  getApp().setState(OlympusState.JTAC);
-                  event.target.options["freeze"] = false;
-                });
-                this.#targetPoint.on("click", (event) => {
-                  getApp().setState(OlympusState.JTAC);
-                });
-              } else this.#targetPoint.setLatLng(e.latlng);
-            } else if (getApp().getSubState() === JTACSubState.SELECT_ECHO_POINT) {
-              if (!this.#ECHOPoint) {
-                this.#ECHOPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
-                this.#ECHOPoint.addTo(this);
-                this.#ECHOPoint.on("dragstart", (event) => {
-                  event.target.options["freeze"] = true;
-                });
-                this.#ECHOPoint.on("dragend", (event) => {
-                  getApp().setState(OlympusState.JTAC);
-                  event.target.options["freeze"] = false;
-                });
-                this.#ECHOPoint.on("click", (event) => {
-                  getApp().setState(OlympusState.JTAC);
-                });
-              } else this.#ECHOPoint.setLatLng(e.latlng);
-            } else if (getApp().getSubState() === JTACSubState.SELECT_IP) {
-              if (!this.#IPPoint) {
-                this.#IPPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
-                this.#IPPoint.addTo(this);
-                this.#IPPoint.on("dragstart", (event) => {
-                  event.target.options["freeze"] = true;
-                });
-                this.#IPPoint.on("dragend", (event) => {
-                  getApp().setState(OlympusState.JTAC);
-                  event.target.options["freeze"] = false;
-                });
-                this.#IPPoint.on("click", (event) => {
-                  getApp().setState(OlympusState.JTAC);
-                });
-              } else this.#IPPoint.setLatLng(e.latlng);
-            }
-            getApp().setState(OlympusState.JTAC);
-            this.#drawIPToTargetLine();
-          } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-            if (this.#contextAction !== null) this.executeContextAction(null, e.latlng, e.originalEvent);
-            else if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
-            else getApp().setState(OlympusState.UNIT_CONTROL);
-          } else if (getApp().getState() === OlympusState.MEASURE) {
-            const newMeasure = new Measure(this);
-            const previousMeasure = this.#measures[this.#measures.length - 1];
-            this.#measures.push(newMeasure);
-            newMeasure.onClick(e.latlng);
-            if (previousMeasure && previousMeasure.isActive()) {
-              previousMeasure.finish();
-              previousMeasure.hideEndMarker();
-              newMeasure.onMarkerMoved = (startLatLng, endLatLng) => {
-                previousMeasure.moveMarkers(null, startLatLng);
-              };
-            }
-          } else {
-            if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
-            else getApp().setState(OlympusState.UNIT_CONTROL);
+            this.addExplosionMarker(e.latlng);
+          } else if (this.#effectRequestTable.type === "smoke") {
+            getApp()
+              .getServerManager()
+              .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", e.latlng);
+            this.addSmokeMarker(e.latlng, this.#effectRequestTable.smokeColor ?? "white");
           }
         }
-
-        if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
-        this.#debounceTimeout = null;
-      }, DEBOUNCE_MILLISECONDS);
+      }
+    } else if (getApp().getState() === OlympusState.DRAW) {
+      getApp().getCoalitionAreasManager().onLeftShortClick(e);
+    } else if (getApp().getState() === OlympusState.JTAC) {
+      // TODO less redundant way to do this
+      if (getApp().getSubState() === JTACSubState.SELECT_TARGET) {
+        if (!this.#targetPoint) {
+          this.#targetPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+          this.#targetPoint.addTo(this);
+          this.#targetPoint.on("dragstart", (event) => {
+            event.target.options["freeze"] = true;
+          });
+          this.#targetPoint.on("dragend", (event) => {
+            getApp().setState(OlympusState.JTAC);
+            event.target.options["freeze"] = false;
+          });
+          this.#targetPoint.on("click", (event) => {
+            getApp().setState(OlympusState.JTAC);
+          });
+        } else this.#targetPoint.setLatLng(e.latlng);
+      } else if (getApp().getSubState() === JTACSubState.SELECT_ECHO_POINT) {
+        if (!this.#ECHOPoint) {
+          this.#ECHOPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+          this.#ECHOPoint.addTo(this);
+          this.#ECHOPoint.on("dragstart", (event) => {
+            event.target.options["freeze"] = true;
+          });
+          this.#ECHOPoint.on("dragend", (event) => {
+            getApp().setState(OlympusState.JTAC);
+            event.target.options["freeze"] = false;
+          });
+          this.#ECHOPoint.on("click", (event) => {
+            getApp().setState(OlympusState.JTAC);
+          });
+        } else this.#ECHOPoint.setLatLng(e.latlng);
+      } else if (getApp().getSubState() === JTACSubState.SELECT_IP) {
+        if (!this.#IPPoint) {
+          this.#IPPoint = new TextMarker(e.latlng, "BP", "rgb(37 99 235)", { interactive: true, draggable: true });
+          this.#IPPoint.addTo(this);
+          this.#IPPoint.on("dragstart", (event) => {
+            event.target.options["freeze"] = true;
+          });
+          this.#IPPoint.on("dragend", (event) => {
+            getApp().setState(OlympusState.JTAC);
+            event.target.options["freeze"] = false;
+          });
+          this.#IPPoint.on("click", (event) => {
+            getApp().setState(OlympusState.JTAC);
+          });
+        } else this.#IPPoint.setLatLng(e.latlng);
+      }
+      getApp().setState(OlympusState.JTAC);
+      this.#drawIPToTargetLine();
+    } else if (getApp().getState() === OlympusState.UNIT_CONTROL) {
+      if (this.#contextAction !== null) this.executeContextAction(null, e.latlng, e.originalEvent);
+      else if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
+      else getApp().setState(OlympusState.UNIT_CONTROL);
+    } else if (getApp().getState() === OlympusState.MEASURE) {
+      const newMeasure = new Measure(this);
+      const previousMeasure = this.#measures[this.#measures.length - 1];
+      this.#measures.push(newMeasure);
+      newMeasure.onClick(e.latlng);
+      if (previousMeasure && previousMeasure.isActive()) {
+        previousMeasure.finish();
+        previousMeasure.hideEndMarker();
+        newMeasure.onMarkerMoved = (startLatLng, endLatLng) => {
+          previousMeasure.moveMarkers(null, startLatLng);
+        };
+      }
+    } else {
+      if (getApp().getSubState() === NO_SUBSTATE) getApp().setState(OlympusState.IDLE);
+      else getApp().setState(OlympusState.UNIT_CONTROL);
     }
   }
 
-  #onRightShortClick(e: L.LeafletMouseEvent) {
-    console.log(`Right short click at ${e.latlng}`);
+  #onLeftMouseLongClick(e: any) {
+    if (this.#isDragging || this.#isSelecting) return;
+    console.log(`Left long click at ${e.latlng}`);
 
-    window.clearTimeout(this.#rightMouseDownTimeout);
+    if (getApp().getState() === OlympusState.UNIT_CONTROL) {
+      if (!this.getContextAction()) {
+        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
+        MapContextMenuRequestEvent.dispatch(e.latlng);
+      } else {
+        this.#destinationRotationCenter = e.latlng;
+        this.#isRotatingDestination = true;
+        this.setKeepRelativePositions(true);
+        this.dragging.disable();
+      }
+    } else {
+      getApp().setState(OlympusState.IDLE);
+      this.setSelectionEnabled(true);
+
+      //@ts-ignore We force the boxselect to enter in selection mode
+      this.boxSelect._onMouseDown(e.originalEvent);
+    }
+  }
+
+  #onRightMouseShortClick(e: L.LeafletMouseEvent) {
+    console.log(`Right short click at ${e.latlng}`);
 
     if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.SPAWN_CONTEXT) {
       SpawnContextMenuRequestEvent.dispatch(e.latlng);
@@ -1180,21 +1192,16 @@ export class Map extends L.Map {
     }
   }
 
-  #onRightLongClick(e: L.LeafletMouseEvent) {
+  #onRightMouseLongClick(e: L.LeafletMouseEvent) {
     console.log(`Right long click at ${e.latlng}`);
 
-    if (getApp().getState() === OlympusState.UNIT_CONTROL) {
-      if (!this.getContextAction()) {
-        getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.MAP_CONTEXT_MENU);
-        MapContextMenuRequestEvent.dispatch(e.latlng);
-      }
-    }
+    this.#destinationRotationCenter = e.latlng;
+    this.#isRotatingDestination = true;
+    this.setKeepRelativePositions(true);
   }
 
-  #onDoubleClick(e: L.LeafletMouseEvent) {
+  #onLeftMouseDoubleClick(e: L.LeafletMouseEvent) {
     console.log(`Double click at ${e.latlng}`);
-
-    if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
 
     this.setPasteEnabled(false);
 
@@ -1211,7 +1218,6 @@ export class Map extends L.Map {
 
   #onMouseMove(e: any) {
     if (!this.#isRotatingDestination) {
-      this.#destionationWasRotated = false;
       this.#lastMousePosition.x = e.originalEvent.x;
       this.#lastMousePosition.y = e.originalEvent.y;
       this.#lastMouseCoordinates = e.latlng;
@@ -1225,18 +1231,33 @@ export class Map extends L.Map {
         if (this.#currentSpawnMarker) this.#currentSpawnMarker.setLatLng(e.latlng);
         if (this.#currentEffectMarker) this.#currentEffectMarker.setLatLng(e.latlng);
       } else if (getApp().getState() === OlympusState.MEASURE) {
-        if (this.#debounceTimeout === null) {
-          this.#measures[this.#measures.length - 1]?.onMouseMove(e.latlng);
-          let totalLength = 0;
-          this.#measures.forEach((measure) => {
-            measure.setTotalDistance(totalLength);
-            totalLength += measure.getDistance();
-          });
-        }
+        //if (this.#debounceTimeout === null) {
+        this.#measures[this.#measures.length - 1]?.onMouseMove(e.latlng);
+        let totalLength = 0;
+        this.#measures.forEach((measure) => {
+          measure.setTotalDistance(totalLength);
+          totalLength += measure.getDistance();
+        });
+        //}
       }
     } else {
-      this.#destionationWasRotated = true;
-      this.#destinationRotation -= e.originalEvent.movementX;
+      if (this.#destinationRotationCenter) {
+        /* Compute the average heading of the units */
+        const selectedUnits = getApp()
+          .getUnitsManager()
+          .getSelectedUnits()
+          .filter((unit) => !unit.getHuman());
+
+        let averageHeading = 0;
+        selectedUnits.forEach((unit) => {
+          averageHeading += unit.getHeading();
+        });
+        averageHeading /= selectedUnits.length;
+
+        /* Compute the rotation of the destination */
+        let angle = Math.atan2(e.latlng.lng - this.#destinationRotationCenter.lng, e.latlng.lat - this.#destinationRotationCenter.lat);
+        this.#destinationRotation = -(rad2deg(angle) - getMagvar(e.latlng.lat, e.latlng.lng) - rad2deg(averageHeading));
+      }
     }
 
     if (getApp().getState() === OlympusState.DRAW && (getApp().getSubState() === DrawSubState.NO_SUBSTATE || getApp().getSubState() === DrawSubState.EDIT)) {
@@ -1345,7 +1366,7 @@ export class Map extends L.Map {
 
   #moveDestinationPreviewMarkers() {
     if (this.#keepRelativePositions) {
-      Object.entries(getApp().getUnitsManager().computeGroupDestination(this.#lastMouseCoordinates, this.#destinationRotation)).forEach(([ID, latlng]) => {
+      Object.entries(getApp().getUnitsManager().computeGroupDestination(this.#destinationRotationCenter, this.#destinationRotation)).forEach(([ID, latlng]) => {
         this.#destinationPreviewMarkers[ID]?.setLatLng(latlng);
       });
     } else {

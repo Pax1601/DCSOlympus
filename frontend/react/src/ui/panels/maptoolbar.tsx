@@ -140,12 +140,16 @@ export function MapToolBar(props: {}) {
           {!scrolledTop && (
             <FaChevronUp
               className={`
-                absolute top-0 h-6 w-full rounded-lg px-3.5 py-1 text-gray-200
+                absolute top-0 h-6 w-full rounded-lg bg-red-500 px-3.5 py-1
+                text-gray-200
                 dark:bg-olympus-900
               `}
             />
           )}
-          <div className={`flex flex-col gap-2 overflow-y-auto no-scrollbar p-2`} onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
+          <div className={`
+            pointer-events-auto flex flex-col gap-2 overflow-y-auto no-scrollbar
+            p-2
+          `} onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
             <>
               <div className="flex flex-col gap-1">
                 <OlStateButton
