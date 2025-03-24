@@ -33,19 +33,41 @@ export class PlaybackPipeline {
 
     /* Connect to the device audio output */
     this.#gainNode = getApp().getAudioManager().getAudioContext().createGain();
+	this.#gainNode.gain.value = 40;// apply gain to get clipping
+	
+	const volumeNode = getApp().getAudioManager().getAudioContext().createGain();
+	volumeNode.gain.value = 0.1; // Lower output volume to prevent feedback
+	
     this.#pannerNode = getApp().getAudioManager().getAudioContext().createStereoPanner();
     let splitter = getApp().getAudioManager().getAudioContext().createChannelSplitter();
-    let bandpass = new Filter(getApp().getAudioManager().getAudioContext(), "banpass", 600, 10);
-    bandpass.setup();
 
-    mediaStreamSource.connect(this.#gainNode);
-    this.#gainNode.connect(bandpass.input);
-    bandpass.output.connect(splitter);
-    splitter.connect(this.#pannerNode);
+    // Bandpass filter for low frequency cutoff at 520 Hz same as SRS
+    let bandpassLow = new Filter(getApp().getAudioManager().getAudioContext(), "bandpass", 520, 0.25);
+    bandpassLow.setup();
 
+    // Bandpass filter for high frequency cutoff at 4130 Hz same as SRS
+    let bandpassHigh = new Filter(getApp().getAudioManager().getAudioContext(), "bandpass", 5000, 0.3);
+    bandpassHigh.setup();
+
+    // Distortion effect
+    let distortion = getApp().getAudioManager().getAudioContext().createWaveShaper();
+    distortion.curve = this.#createDistortionCurve(2); // Customize curve for harshness
+    distortion.oversample = '4x';
+	
+
+/*     // Connect the media stream source to the filters and distortion
+	mediaStreamSource.connect(this.#gainNode);
+	this.#gainNode.connect(this.#pannerNode);
+	this.#pannerNode.pan.setValueAtTime(0, getApp().getAudioManager().getAudioContext().currentTime); */
+	
+	mediaStreamSource.connect(this.#gainNode);
+	this.#gainNode.connect(bandpassHigh.input);
+	//bandpassLow.output.connect(bandpassHigh.input);
+	bandpassHigh.output.connect(volumeNode); // Control volume to prevent feedback
+	volumeNode.connect(this.#pannerNode); // Route to panner
     this.#pannerNode.pan.setValueAtTime(0, getApp().getAudioManager().getAudioContext().currentTime);
 
-    let noise = new Noise(getApp().getAudioManager().getAudioContext(), 0.01);
+    let noise = new Noise(getApp().getAudioManager().getAudioContext(), 0.02); // Slightly louder static
     noise.init();
     noise.connect(this.#gainNode);
   }
@@ -60,8 +82,8 @@ export class PlaybackPipeline {
     };
     //@ts-ignore //TODO Typings?
     let encodedAudioChunk = new EncodedAudioChunk(init);
-
-    this.#decoder.decode(encodedAudioChunk);
+    
+    this.#decoder.decode(encodedAudioChunk); 
   }
 
   setEnabled(enabled) {
@@ -82,5 +104,16 @@ export class PlaybackPipeline {
     this.#writer.ready.then(() => {
       this.#writer.write(audioData);
     });
+  }
+
+  #createDistortionCurve(amount) {
+    let n_samples = 44100;
+    let curve = new Float32Array(n_samples);
+    let deg = Math.PI / 180;
+    for (let i = 0; i < n_samples; ++i) {
+      let x = (i * 2) / n_samples - 1;
+      curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+    }
+    return curve;
   }
 }
