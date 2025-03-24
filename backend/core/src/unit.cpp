@@ -18,7 +18,7 @@ extern UnitsManager* unitsManager;
 Unit::Unit(json::value json, unsigned int ID) :
 	ID(ID)
 {
-	// log("Creating unit with ID: " + to_string(ID));
+	log("Creating unit with ID: " + to_string(ID));
 }
 
 Unit::~Unit()
@@ -83,9 +83,8 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
 
-	if (json.has_boolean_field(L"radarState")) {
+	if (json.has_boolean_field(L"radarState")) 
 		setRadarState(json[L"radarState"].as_bool());
-	}
 
 	if (json.has_boolean_field(L"isHuman"))
 		setHuman(json[L"isHuman"].as_bool());
