@@ -67,6 +67,7 @@ public:
 	/********** Setters **********/
 	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }
 	virtual void setAlive(bool newValue) { updateValue(alive, newValue, DataIndex::alive); }
+	virtual void setAlarmState(unsigned char newValue, bool force = false);
 	virtual void setHuman(bool newValue) { updateValue(human, newValue, DataIndex::human); }
 	virtual void setControlled(bool newValue) { updateValue(controlled, newValue, DataIndex::controlled); }
 	virtual void setCoalition(unsigned char newValue) { updateValue(coalition, newValue, DataIndex::coalition); }
@@ -98,7 +99,6 @@ public:
 	virtual void setTargetID(unsigned int newValue) { updateValue(targetID, newValue, DataIndex::targetID); }
 	virtual void setTargetPosition(Coords newValue) { updateValue(targetPosition, newValue, DataIndex::targetPosition); }
 	virtual void setROE(unsigned char newValue, bool force = false);
-	virtual void setAlarmState(unsigned char newValue, bool force = false);
 	virtual void setReactionToThreat(unsigned char newValue, bool force = false);
 	virtual void setEmissionsCountermeasures(unsigned char newValue, bool force = false);
 	virtual void setTACAN(DataTypes::TACAN newValue, bool force = false);
@@ -206,7 +206,7 @@ protected:
 	string callsign = "";
 	string groupName = "";
 	unsigned char state = State::NONE;
-	unsigned char alarmState = ALARM_STATE::AUTO;
+	unsigned char alarmState = AlarmState::AUTO;
 	bool radarState = false;
 	string task = "";
 	bool hasTask = false;

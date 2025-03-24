@@ -154,7 +154,7 @@ void Unit::update(json::value json, double dt)
 
 void Unit::setDefaults(bool force)
 {
-	setAlarmState(ALARM_STATE::AUTO, force);
+	setAlarmState(AlarmState::AUTO, force);
 }
 
 void Unit::runAILoop() {
@@ -476,9 +476,13 @@ void Unit::setROE(unsigned char newROE, bool force)
 
 void Unit::setAlarmState(unsigned char newAlarmState, bool force)
 {
+	if (alarmState != newAlarmState || force) {
+		alarmState = newAlarmState;
 		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ALARM_STATE, static_cast<unsigned int>(newAlarmState)));
 		scheduler->appendCommand(command);
-		triggerUpdate(DataIndex::alarmState);	
+
+		triggerUpdate(DataIndex::alarmState);
+	}
 }
 
 void Unit::setReactionToThreat(unsigned char newReactionToThreat, bool force)
