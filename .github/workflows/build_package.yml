@@ -23,7 +23,7 @@ jobs:
         vcpkg integrate install
 
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
         
     - name: Build
       working-directory: .
@@ -41,5 +41,6 @@ jobs:
       with:
         name: zip_only_package
         path: ./zip
+        include-hidden-files: true 
       
       

@@ -659,7 +659,7 @@ end
 	-- lat: (number)
 	-- lng: (number)
 	-- alt: (number, optional) only for air units
-	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua
+	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua or mods.lua
 	-- payload: (table, optional) overrides loadout, specifies directly the loadout of the unit
 	-- liveryID: (string, optional)
 function Olympus.spawnUnits(spawnTable) 
@@ -731,6 +731,8 @@ function Olympus.generateAirUnitsTable(units)
 		if payload == nil then
 			if loadout ~= nil and loadout ~= "" and Olympus.unitPayloads[unit.unitType] and Olympus.unitPayloads[unit.unitType][loadout] then
 				payload = { ["pylons"] = Olympus.unitPayloads[unit.unitType][loadout], ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
+			elseif loadout ~= nil and loadout ~= "" and Olympus.modsUnitPayloads ~= nil and Olympus.modsUnitPayloads[unit.unitType] and Olympus.modsUnitPayloads[unit.unitType][loadout] then
+				payload = { ["pylons"] = Olympus.modsUnitPayloads[unit.unitType][loadout], ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
 			else
 				payload = { ["pylons"] = {}, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
 			end

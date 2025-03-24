@@ -60,6 +60,7 @@ async function installHooks(folder) {
  */
 
 async function installMod(folder, name) {
+    /* Timestamp string */
     logger.log(`Installing mod in ${folder}`)
 
     await fsp.cp(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
@@ -241,6 +242,11 @@ async function deleteMod(folder, name) {
             await fsp.cp(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
         else
             logger.warn(`No mods.lua found in ${folder}, skipping backup...`)
+
+        if (await exists(path.join(folder, "Mods", "Services", "Olympus", "scripts", "unitPayloads.lua")))
+            await fsp.cp(path.join(folder, "Mods", "Services", "Olympus", "scripts", "unitPayloads.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "unitPayloads.lua"));
+        else
+            logger.warn(`No unitPayloads.lua found in ${folder}, skipping backup...`)
 
         /* Remove the mod folder */
         await fsp.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true })

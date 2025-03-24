@@ -22,6 +22,10 @@ export function bearing(lat1: number, lon1: number, lat2: number, lon2: number, 
   return brng;
 }
 
+export function getMagvar(lat: number, lon: number) {
+  return MagVar.get(lat, lon);
+}
+
 export function distance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371e3; // metres
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -81,6 +85,13 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
   var sec = Math.floor(sec);
   if (lng) return zeroPad(deg, 3) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
   else return zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
+}
+
+export function DDToDDM(decimalDegrees) {
+  const degrees = Math.trunc(decimalDegrees);
+  const minutes = Math.abs((decimalDegrees - degrees) * 60);
+
+  return `${Math.abs(degrees)}° ${minutes.toFixed(4)}'`;
 }
 
 export function deg2rad(deg: number) {
@@ -775,4 +786,8 @@ export function secondsToTimeString(seconds: number) {
   const secs = Math.floor(seconds % 60);
 
   return `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}:${zeroPad(secs, 2)}`;
+}
+
+export function isTrustedEnvironment() {
+  return window.location.protocol === "https:";
 }

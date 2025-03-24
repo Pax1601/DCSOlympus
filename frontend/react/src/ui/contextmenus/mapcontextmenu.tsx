@@ -37,12 +37,14 @@ export function MapContextMenu(props: {}) {
     });
     ContextActionSetChangedEvent.on((contextActionSet) => setcontextActionSet(contextActionSet));
     MapContextMenuRequestEvent.on((latlng) => {
+      setUnit(null);
       setLatLng(latlng);
       const containerPoint = getApp().getMap().latLngToContainerPoint(latlng);
       setXPosition(getApp().getMap().getContainer().offsetLeft + containerPoint.x);
       setYPosition(getApp().getMap().getContainer().offsetTop + containerPoint.y);
     });
     UnitContextMenuRequestEvent.on((unit) => {
+      setLatLng(null);
       setUnit(unit);
       const containerPoint = getApp().getMap().latLngToContainerPoint(unit.getPosition());
       setXPosition(getApp().getMap().getContainer().offsetLeft + containerPoint.x);
@@ -100,8 +102,8 @@ export function MapContextMenu(props: {}) {
             <div
               ref={contentRef}
               className={`
-            absolute flex min-w-80 gap-2 rounded-md bg-olympus-600
-          `}
+                absolute flex min-w-80 gap-2 rounded-md bg-olympus-600
+              `}
             >
               <div
                 className={`
