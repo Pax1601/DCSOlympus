@@ -1159,7 +1159,7 @@ export class Map extends L.Map {
   }
 
   #onLeftMouseLongClick(e: any) {
-    if (this.#isDragging || this.#isSelecting) return;
+    if (this.#isDragging || this.#isSelecting || this.#isZooming) return;
     console.log(`Left long click at ${e.latlng}`);
 
     if (getApp().getState() === OlympusState.UNIT_CONTROL) {

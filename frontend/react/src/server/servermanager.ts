@@ -17,7 +17,6 @@ import {
 } from "../constants/constants";
 import {
   AirbasesData,
-  AlarmState,
   BullseyesData,
   CommandModeOptions,
   GeneralSettings,
@@ -816,6 +815,7 @@ export class ServerManager {
   }
 
   checkSessionHash(newSessionHash: string) {
+    console.log(`Checking session hash: ${newSessionHash}`);
     if (this.#sessionHash != null) {
       if (newSessionHash !== this.#sessionHash) location.reload();
     } else {

@@ -34,18 +34,16 @@ module.exports = function (configLocation) {
       let resConfig = {
         frontend: { ...config.frontend },
         audio: { ...(config.audio ?? {}) },
-        controllers: { ...(config.controllers  ?? {}) },
+        controllers: { ...(config.controllers ?? {}) },
         profiles: { ...(profiles ?? {}) },
         local: local,
       };
 
       if (local) {
-        resConfig["authentication"] = config["authentication"]
+        resConfig["authentication"] = config["authentication"];
       }
 
-      res.send(
-        JSON.stringify(resConfig)
-      );
+      res.send(JSON.stringify(resConfig));
       res.end();
     } else {
       res.sendStatus(404);
@@ -136,11 +134,14 @@ module.exports = function (configLocation) {
       req.body.sessionData === undefined
     )
       res.sendStatus(400);
+
+      console.log(`Saving sessionData for ${req.params.profileName} with hash ${sessionHash}`);
     let thisSessionHash = req.body.sessionHash;
     if (thisSessionHash !== sessionHash) {
       sessionHash = thisSessionHash;
       sessionData = {};
     }
+
     sessionData[req.params.profileName] = req.body.sessionData;
     res.end();
   });
@@ -148,10 +149,12 @@ module.exports = function (configLocation) {
   router.put("/sessiondata/load/:profileName", function (req, res, next) {
     if (req.body.sessionHash === undefined) res.sendStatus(400);
     let thisSessionHash = req.body.sessionHash;
+    console.log(`Returning sessionData for ${req.params.profileName} with hash ${sessionHash}`);
     if (thisSessionHash !== sessionHash) {
       sessionHash = thisSessionHash;
       sessionData = {};
-      res.sendStatus(404);
+      res.send(sessionData);
+      res.end();
     } else {
       res.send(sessionData[req.params.profileName] ?? {});
       res.end();
