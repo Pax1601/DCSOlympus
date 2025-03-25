@@ -3,7 +3,7 @@ import { OlLocation } from "../components/ollocation";
 import { LatLng } from "leaflet";
 import { FaBullseye, FaChevronDown, FaChevronUp, FaJetFighter, FaMountain, FaCopy, FaXmark } from "react-icons/fa6";
 import { BullseyesDataChangedEvent, CoordinatesFreezeEvent, MouseMovedEvent, SelectedUnitsChangedEvent, SelectionClearedEvent } from "../../events";
-import { computeBearingRangeString, ConvertDDToDMS, DDToDDM, isTrustedEnvironment, latLngToMGRS, mToFt, zeroAppend } from "../../other/utils";
+import { computeBearingRangeString, ConvertDDToDMS, DDToDDM, latLngToMGRS, mToFt, zeroAppend } from "../../other/utils";
 import { Bullseye } from "../../mission/bullseye";
 import { Unit } from "../../unit/unit";
 import { getApp } from "../../olympusapp";
@@ -50,7 +50,7 @@ export function CoordinatesPanel(props: {}) {
         break;
     }
 
-    returnString += ` Elevation: ${Math.round(elevation)}`;
+    returnString += ` Elevation: ${Math.round(elevation)}ft`;
 
     return returnString;
   };
@@ -152,15 +152,17 @@ export function CoordinatesPanel(props: {}) {
             className="ml-auto flex w-[50%]"
             onClick={async (evt) => {
               evt.stopPropagation();
-              setCopyCoordsOpen(true);
-
-              if (isTrustedEnvironment()) {
+              
+              if (isSecureContext && navigator.clipboard) {
                 try {
                   await navigator.clipboard.writeText(copyableCoordinates);
                   getApp().addInfoMessage(`Coordinates copied to clipboard: ${copyableCoordinates}`);
                 } catch (err) {
+                  setCopyCoordsOpen(true);
                   console.error('Failed to copy text: ', err);
                 }
+              } else {
+                setCopyCoordsOpen(true);
               }
             }}
           >
@@ -172,18 +174,21 @@ export function CoordinatesPanel(props: {}) {
             >
               <FaCopy />
             </span>
-            <div className="min-w-12">Copy Coords</div>
+            <div className="min-w-12">Copy last click</div>
           </div>
         </div>,
 
         open && copyCoordsOpen && (
           <div
             className={`
-              relative mt-4 flex w-full min-w-64 items-center justify-between
+              relative mt-2 flex w-full min-w-64 items-center justify-between
             `}
             onClick={(evt) => evt.stopPropagation()}
           >
-            <textarea readOnly={true} className="resize-none p-2 text-black" name="coordsTextArea" id="coordsTextArea" cols={25} rows={2} value={copyableCoordinates}></textarea>
+            <textarea readOnly={true} className={`
+              resize-none rounded-md border-2 border-gray-600 bg-olympus-600 p-2
+              text-gray-200
+            `} name="coordsTextArea" id="coordsTextArea" cols={25} rows={2} value={copyableCoordinates}></textarea>
 
             <div className="absolute right-[0] top-[0px] background-transparent" onClick={() => setCopyCoordsOpen(false)}>
               <FaXmark className="cursor-pointer" />

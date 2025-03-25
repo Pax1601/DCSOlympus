@@ -32,6 +32,7 @@ export type MapOptions = {
   hideSecureWarning: boolean;
   showMissionDrawings: boolean;
   clusterGroundUnits: boolean;
+  showUnitCallsigns: boolean;
 };
 
 export type MapHiddenTypes = {

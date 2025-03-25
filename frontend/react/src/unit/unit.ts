@@ -1773,6 +1773,9 @@ export abstract class Unit extends CustomMarker {
       /* Draw the velocity vector */
       element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
 
+      /* Set the unit name or callsign */
+      if (element.querySelector(".unit-callsign")) (element.querySelector(".unit-callsign") as HTMLElement).innerText = getApp().getMap().getOptions().showUnitCallsigns? this.#callsign: this.#unitName;
+
       /* Set fuel data */
       element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);
       element.querySelector(".unit")?.toggleAttribute("data-has-low-fuel", this.#fuel < 20);
@@ -1809,9 +1812,9 @@ export abstract class Unit extends CustomMarker {
 
       /* Set altitude and speed */
       if (element.querySelector(".unit-altitude"))
-        (<HTMLElement>element.querySelector(".unit-altitude")).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
+        (element.querySelector(".unit-altitude") as HTMLElement).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
       if (element.querySelector(".unit-speed"))
-        (<HTMLElement>element.querySelector(".unit-speed")).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
+        (element.querySelector(".unit-speed") as HTMLElement).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
 
       /* Rotate elements according to heading */
       element.querySelectorAll("[data-rotate-to-heading]").forEach((el) => {
@@ -1856,10 +1859,10 @@ export abstract class Unit extends CustomMarker {
         ?.toggleAttribute(
           "data-is-cluster-leader",
           this.#isClusterLeader &&
-          this.#clusterUnits.length > 1 &&
-          getApp().getMap().getOptions().clusterGroundUnits &&
-          getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
-          !this.getSelected()
+            this.#clusterUnits.length > 1 &&
+            getApp().getMap().getOptions().clusterGroundUnits &&
+            getApp().getMap().getZoom() < CLUSTERING_ZOOM_TRANSITION &&
+            !this.getSelected()
         );
       if (this.#isClusterLeader && this.#clusterUnits.length > 1) {
         const clusterEl = element.querySelector(".unit-cluster-id") as HTMLElement;
@@ -2433,7 +2436,7 @@ export abstract class AirUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: false,
-      showAlarmState: false
+      showAlarmState: false,
     } as ObjectIconOptions;
   }
 
@@ -2590,7 +2593,7 @@ export class NavyUnit extends Unit {
       showCallsign: belongsToCommandedCoalition && /*TODO !getApp().getMap().getOptions().AWACSMode || */ this.getHuman(),
       rotateToHeading: false,
       showCluster: false,
-      showAlarmState: true
+      showAlarmState: true,
     } as ObjectIconOptions;
   }
 

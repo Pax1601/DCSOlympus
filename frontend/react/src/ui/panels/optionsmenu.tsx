@@ -127,6 +127,17 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
               gap-4 rounded-md p-2
               dark:hover:bg-olympus-400
             `}
+            onClick={() => getApp().getMap().setOption("showUnitCallsigns", !mapOptions.showUnitCallsigns)}
+          >
+            <OlCheckbox checked={mapOptions.showUnitCallsigns} onChange={() => {}}></OlCheckbox>
+            <span className="my-auto">Show unit Mission Editor callsigns</span>
+          </div>
+          <div
+            className={`
+              group flex cursor-pointer flex-row content-center justify-start
+              gap-4 rounded-md p-2
+              dark:hover:bg-olympus-400
+            `}
             onClick={() => getApp().getMap().setOption("showUnitsEngagementRings", !mapOptions.showUnitsEngagementRings)}
           >
             <OlCheckbox checked={mapOptions.showUnitsEngagementRings} onChange={() => {}}></OlCheckbox>
@@ -149,9 +160,9 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
               gap-4 rounded-md p-2
               dark:hover:bg-olympus-400
             `}
-            onClick={() => getApp().getMap().setOption("showUnitTargets", !mapOptions.showUnitTargets)}
+            onClick={() => getApp().getMap().setOption("showUnitContacts", !mapOptions.showUnitContacts)}
           >
-            <OlCheckbox checked={mapOptions.showUnitTargets} onChange={() => {}}></OlCheckbox>
+            <OlCheckbox checked={mapOptions.showUnitContacts} onChange={() => {}}></OlCheckbox>
             <span className="my-auto">Show detection lines</span>
           </div>
           <div
