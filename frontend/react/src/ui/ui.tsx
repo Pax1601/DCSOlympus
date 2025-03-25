@@ -141,7 +141,7 @@ export function UI() {
             </div>
             {!connectedOnce && <div>Establishing connection</div>}
             {connectedOnce && <div>Connection lost</div>}
-            {!connectedOnce && <div className="text-gray-400">Trying to connect with the server, please wait...</div>}
+            {!connectedOnce && <div className="text-gray-400">Trying to connect to the server, please wait...</div>}
             {connectedOnce && (
               <div className="text-gray-400">
                 Try reloading this page. However, this usually means that you internet connection is down, or that the server is offline, paused, or loading a

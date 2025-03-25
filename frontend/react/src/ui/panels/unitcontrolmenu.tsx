@@ -90,7 +90,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
       radio: undefined as undefined | Radio,
       TACAN: undefined as undefined | TACAN,
       generalSettings: undefined as undefined | GeneralSettings,
-      alarmState: undefined as undefined | AlarmState
+      alarmState: undefined as undefined | AlarmState,
     };
   }
 
@@ -207,11 +207,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     Object.entries(getters).forEach(([key, getter]) => {
       let newDatum = getApp()?.getUnitsManager()?.getSelectedUnitsVariable(getter);
       if (forcedUnitsData[key] !== undefined) {
-        if (newDatum === updatedData[key]) {
+        if (newDatum === forcedUnitsData[key]) {
           anyForcedDataUpdated = true;
-          forcedUnitsData[key] === undefined;
+          forcedUnitsData[key] = undefined;
         }
-        updatedData[key] = forcedUnitsData[key];
+        else updatedData[key] = forcedUnitsData[key];
       } else updatedData[key] = newDatum;
     });
     setSelectedUnitsData(updatedData as typeof selectedUnitsData);
@@ -420,12 +420,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       return (
                         <tr key={idx}>
                           <td className="flex gap-2 text-lg text-gray-200">
-                            <FontAwesomeIcon icon={entry[1][0] as IconDefinition} />{" "}
-                            <div
-                              className={`text-sm text-gray-400`}
-                            >
-                              {entry[1][1] as string}
-                            </div>
+                            <FontAwesomeIcon icon={entry[1][0] as IconDefinition} /> <div className={`
+                              text-sm text-gray-400
+                            `}>{entry[1][1] as string}</div>
                           </td>
                           {["blue", "neutral", "red"].map((coalition) => {
                             return (
@@ -800,65 +797,53 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 <div className="flex flex-col gap-2 px-2">
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsRoeHold}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
-                                    Hold fire: The unit will not shoot in any circumstance
+                                    <FontAwesomeIcon icon={olButtonsRoeHold} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Hold fire: The unit will not shoot in
+                                    any circumstance
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsRoeReturn}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
-                                    Return fire: The unit will not fire unless fired upon
+                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Return fire: The unit will not fire
+                                    unless fired upon
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsRoeDesignated}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
+                                      my-auto min-w-8 text-white
+                                    `} />{" "}
                                     <div>
                                       {" "}
-                                      Fire on target: The unit will not fire unless fired upon{" "}
-                                      <p
-                                        className={`inline font-bold`}
-                                      >
-                                        or
-                                      </p>{" "}
-                                      ordered to do so{" "}
+                                      Fire on target: The unit will not fire unless fired upon <p className={`
+                                        inline font-bold
+                                      `}>or</p> ordered to do so{" "}
                                     </div>
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsRoeFree}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
-                                    Free: The unit will fire at any detected enemy in range
+                                    <FontAwesomeIcon icon={olButtonsRoeFree} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Free: The unit will fire at any
+                                    detected enemy in range
                                   </div>
                                 </div>
                                 <div className="flex gap-4">
                                   <div className="my-auto">
-                                    <FaExclamationCircle
-                                      className={`animate-bounce text-xl`}
-                                    />
+                                    <FaExclamationCircle className={`
+                                      animate-bounce text-xl
+                                    `} />
                                   </div>
                                   <div>
                                     Currently, DCS blue and red ground units do not respect{" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsRoeReturn}
-                                      className={`my-auto text-white`}
-                                    />{" "}
-                                    and{" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsRoeDesignated}
-                                      className={`my-auto text-white`}
-                                    />{" "}
-                                    rules of engagement, so be careful, they may start shooting when you don't want them to. Use neutral units for finer
-                                    control.
+                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
+                                      my-auto text-white
+                                    `} /> and{" "}
+                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
+                                      my-auto text-white
+                                    `} /> rules of engagement, so be careful, they
+                                    may start shooting when you don't want them to. Use neutral units for finer control.
                                   </div>
                                 </div>
                               </div>
@@ -901,7 +886,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         `}
                       >
                         Alarm State
-                      </span> 
+                      </span>
                       <OlButtonGroup
                         tooltip={() => (
                           <OlExpandingTooltip
@@ -910,29 +895,37 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               <div className="flex flex-col gap-2">
                                 <div>Sets the alarm state of the unit, in order:</div>
                                 <div className="flex flex-col gap-2 px-2">
-                                <div className="flex content-center gap-2">
+                                  <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsAlarmstateGreen} className={`
+                                    <FontAwesomeIcon
+                                      icon={olButtonsAlarmstateGreen}
+                                      className={`
                                       my-auto min-w-8 text-white
-                                    `} /> Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
+                                    `}
+                                    />{" "}
+                                    Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsAlarmstateAuto} className={`
+                                    <FontAwesomeIcon
+                                      icon={olButtonsAlarmstateAuto}
+                                      className={`
                                       my-auto min-w-8 text-white
-                                    `} />{" "}
-                                    <div>
-                                      {" "}
-                                      Auto: The unit will use its sensors to engage based on its ROE.
-                                    </div>
+                                    `}
+                                    />{" "}
+                                    <div> Auto: The unit will use its sensors to engage based on its ROE.</div>
                                   </div>
-                                 
+
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsAlarmstateRed} className={`
+                                    <FontAwesomeIcon
+                                      icon={olButtonsAlarmstateRed}
+                                      className={`
                                       my-auto min-w-8 text-white
-                                    `} /> Red: The unit will be actively searching for target with its sensors. For some units, this will deploy
-                                    the radar and make the unit not able to move.
+                                    `}
+                                    />{" "}
+                                    Red: The unit will be actively searching for target with its sensors. For some units, this will deploy the radar and make
+                                    the unit not able to move.
                                   </div>
                                 </div>
                               </div>
@@ -965,7 +958,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                   }
                   {/* ============== Alarm state selector END ============== */}
 
-                  
                   {selectedCategories.every((category) => {
                     return ["Aircraft", "Helicopter"].includes(category);
                   }) && (
@@ -990,35 +982,31 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <div className="flex flex-col gap-2 px-2">
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsThreatNone}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      No reaction: The unit will not react in any circumstance
+                                      <FontAwesomeIcon icon={olButtonsThreatNone} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> No reaction: The unit will not
+                                      react in any circumstance
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsThreatPassive}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Passive: The unit will use counter-measures, but will not alter its course
+                                      <FontAwesomeIcon icon={olButtonsThreatPassive} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Passive: The unit will use
+                                      counter-measures, but will not alter its course
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsThreatManoeuvre}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Manouevre: The unit will try to evade the threat using manoeuvres, but no counter-measures
+                                      <FontAwesomeIcon icon={olButtonsThreatManoeuvre} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Manouevre: The unit will try
+                                      to evade the threat using manoeuvres, but no counter-measures
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsThreatEvade}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Full evasion: the unit will try to evade the threat both manoeuvering and using counter-measures
+                                      <FontAwesomeIcon icon={olButtonsThreatEvade} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Full evasion: the unit will try
+                                      to evade the threat both manoeuvering and using counter-measures
                                     </div>
                                   </div>
                                 </div>
@@ -1069,35 +1057,31 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <div className="flex flex-col gap-2 px-2">
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsEmissionsSilent}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Radio silence: No radar or ECM will be used
+                                      <FontAwesomeIcon icon={olButtonsEmissionsSilent} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Radio silence: No radar or
+                                      ECM will be used
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsEmissionsDefend}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Defensive: The unit will turn radar and ECM on only when threatened
+                                      <FontAwesomeIcon icon={olButtonsEmissionsDefend} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Defensive: The unit will turn
+                                      radar and ECM on only when threatened
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsEmissionsAttack}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Attack: The unit will use radar and ECM when engaging other units
+                                      <FontAwesomeIcon icon={olButtonsEmissionsAttack} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Attack: The unit will use
+                                      radar and ECM when engaging other units
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon
-                                        icon={olButtonsEmissionsFree}
-                                        className={`my-auto min-w-8 text-white`}
-                                      />{" "}
-                                      Free: the unit will use the radar and ECM all the time
+                                      <FontAwesomeIcon icon={olButtonsEmissionsFree} className={`
+                                        my-auto min-w-8 text-white
+                                      `} /> Free: the unit will use the
+                                      radar and ECM all the time
                                     </div>
                                   </div>
                                 </div>
@@ -1315,9 +1299,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             >
                               <div className="flex gap-4">
                                 <div className="my-auto">
-                                  <FaExclamationCircle
-                                    className={`animate-bounce text-xl`}
-                                  />
+                                  <FaExclamationCircle className={`
+                                    animate-bounce text-xl
+                                  `} />
                                 </div>
                                 <div>
                                   Currently, DCS blue and red ground units do not respect their rules of engagement, so be careful, they may start shooting when
@@ -1348,7 +1332,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       .stop(null, () =>
                                         setForcedUnitsData({
                                           ...forcedUnitsData,
-                                          missOnPurpose: false,
                                           scenicAAA: false,
                                         })
                                       );
@@ -1358,7 +1341,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       .scenicAAA(null, () =>
                                         setForcedUnitsData({
                                           ...forcedUnitsData,
-                                          missOnPurpose: false,
                                           scenicAAA: true,
                                         })
                                       );
@@ -1393,7 +1375,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       .stop(null, () =>
                                         setForcedUnitsData({
                                           ...forcedUnitsData,
-                                          scenicAAA: false,
                                           missOnPurpose: false,
                                         })
                                       );
@@ -1403,7 +1384,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       .missOnPurpose(null, () =>
                                         setForcedUnitsData({
                                           ...forcedUnitsData,
-                                          scenicAAA: false,
                                           missOnPurpose: true,
                                         })
                                       );
@@ -1496,9 +1476,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             </div>
                             {/* ============== Operate as toggle START ============== */}
                             {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (
-                              <div
-                                className={`flex content-center justify-between`}
-                              >
+                              <div className={`
+                                flex content-center justify-between
+                              `}>
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1538,11 +1518,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 `}
                               >
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Barrel height:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Barrel height: </div>
                                   <OlNumberInput
                                     decimalPlaces={1}
                                     className={`ml-auto`}
@@ -1559,18 +1535,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setBarrelHeight(barrelHeight - 0.1);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    m
-                                  </div>
+                                  <div className={`my-auto`}>m</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Muzzle velocity:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Muzzle velocity: </div>
                                   <OlNumberInput
                                     decimalPlaces={0}
                                     className={`ml-auto`}
@@ -1587,18 +1555,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setMuzzleVelocity(muzzleVelocity - 10);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    m/s
-                                  </div>
+                                  <div className={`my-auto`}>m/s</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Aim time:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Aim time: </div>
                                   <OlNumberInput
                                     decimalPlaces={2}
                                     className={`ml-auto`}
@@ -1615,18 +1575,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setAimTime(aimTime - 0.1);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    s
-                                  </div>
+                                  <div className={`my-auto`}>s</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Shots to fire:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Shots to fire: </div>
                                   <OlNumberInput
                                     className={`ml-auto`}
                                     value={shotsToFire}
@@ -1644,11 +1596,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   ></OlNumberInput>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Shots base interval:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Shots base interval: </div>
                                   <OlNumberInput
                                     decimalPlaces={2}
                                     className={`ml-auto`}
@@ -1665,18 +1613,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setShotsBaseInterval(shotsBaseInterval - 0.1);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    s
-                                  </div>
+                                  <div className={`my-auto`}>s</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Shots base scatter:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Shots base scatter: </div>
                                   <OlNumberInput
                                     decimalPlaces={2}
                                     className={`ml-auto`}
@@ -1693,18 +1633,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setShotsBaseScatter(shotsBaseScatter - 0.1);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    deg
-                                  </div>
+                                  <div className={`my-auto`}>deg</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Engagement range:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Engagement range: </div>
                                   <OlNumberInput
                                     className={`ml-auto`}
                                     value={engagementRange}
@@ -1720,18 +1652,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setEngagementRange(engagementRange - 100);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    m
-                                  </div>
+                                  <div className={`my-auto`}>m</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Targeting range:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Targeting range: </div>
                                   <OlNumberInput
                                     className={`ml-auto`}
                                     value={targetingRange}
@@ -1747,18 +1671,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setTargetingRange(targetingRange - 100);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    m
-                                  </div>
+                                  <div className={`my-auto`}>m</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Aim method range:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Aim method range: </div>
                                   <OlNumberInput
                                     className={`ml-auto`}
                                     value={aimMethodRange}
@@ -1774,18 +1690,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setAimMethodRange(aimMethodRange - 100);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    m
-                                  </div>
+                                  <div className={`my-auto`}>m</div>
                                 </div>
                                 <div className="flex align-center gap-2">
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    Acquisition range:{" "}
-                                  </div>
+                                  <div className={`my-auto`}>Acquisition range: </div>
                                   <OlNumberInput
                                     className={`ml-auto`}
                                     value={acquisitionRange}
@@ -1801,11 +1709,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                       setAcquisitionRange(acquisitionRange - 100);
                                     }}
                                   ></OlNumberInput>
-                                  <div
-                                    className={`my-auto`}
-                                  >
-                                    m
-                                  </div>
+                                  <div className={`my-auto`}>m</div>
                                 </div>
                                 <button
                                   className={`
@@ -2069,10 +1973,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeRadioSettings ? activeRadioSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown
-                      label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"}
-                      className={`my-auto w-20`}
-                    >
+                    <OlDropdown label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"} className={`
+                      my-auto w-20
+                    `}>
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -2305,11 +2208,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         className={`
                           flex content-center gap-2 rounded-full
                           ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                          ${
-                            selectedUnits[0].getFuel() > 10 &&
-                            selectedUnits[0].getFuel() <= 40 &&
-                            `bg-yellow-700`
-                          }
+                          ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
+                            bg-yellow-700
+                          `}
                           ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                           px-2 py-1 text-sm font-bold text-white
                         `}
@@ -2327,9 +2228,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     )}
 
                     <div className="flex content-center gap-2">
-                      <OlLocation location={selectedUnits[0].getPosition()} className={`
-                        w-[280px] text-sm
-                      `} />
+                      <OlLocation
+                        location={selectedUnits[0].getPosition()}
+                        className={`w-[280px] text-sm`}
+                      />
                       <div className="my-auto text-gray-200">{Math.round(mToFt(selectedUnits[0].getPosition().alt ?? 0))} ft</div>
                     </div>
                   </div>

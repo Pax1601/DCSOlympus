@@ -100,13 +100,14 @@ export class ServerManager {
   ) {
     var xmlHttp = new XMLHttpRequest();
 
+    /* V2: commented out because we now use timeouts */
     /* If a request on this uri is still pending (meaning it's not done or did not yet fail), skip the request, to avoid clogging the TCP workers */
     /* If we are forcing the request we don't care if one already exists, just send it. CAREFUL: this makes sense only for low frequency requests, like refreshes, when we
             are reasonably confident any previous request will be done before we make a new one on the same URI. */
-    if (uri in this.#requests && this.#requests[uri].readyState !== 4 && !force) {
-      //console.warn(`GET request on ${uri} URI still pending, skipping...`);
-      return;
-    }
+    //if (uri in this.#requests && this.#requests[uri].readyState !== 4 && !force) {
+    //  //console.warn(`GET request on ${uri} URI still pending, skipping...`);
+    //  //return;
+    //}
 
     if (!force) this.#requests[uri] = xmlHttp;
 
@@ -806,7 +807,7 @@ export class ServerManager {
       return time;
     }, true);
 
-    window.setInterval(() => {
+    window.setTimeout(() => {
       this.getUnits((buffer: ArrayBuffer) => {
         var time = getApp().getUnitsManager()?.update(buffer, true);
         return time;
@@ -815,7 +816,6 @@ export class ServerManager {
   }
 
   checkSessionHash(newSessionHash: string) {
-    console.log(`Checking session hash: ${newSessionHash}`);
     if (this.#sessionHash != null) {
       if (newSessionHash !== this.#sessionHash) location.reload();
     } else {
@@ -826,11 +826,7 @@ export class ServerManager {
 
   setConnected(newConnected: boolean) {
     if (this.#connected != newConnected) {
-      newConnected ? getApp().addInfoMessage("Connected to DCS Olympus server") : getApp().addInfoMessage("Disconnected from DCS Olympus server");
-      if (newConnected) {
-        document.getElementById("splash-screen")?.classList.add("hide");
-        document.getElementById("gray-out")?.classList.add("hide");
-      }
+      //newConnected ? getApp().addInfoMessage("Connected to DCS Olympus server") : getApp().addInfoMessage("Disconnected from DCS Olympus server");
     }
 
     this.#connected = newConnected;
