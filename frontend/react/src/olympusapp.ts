@@ -20,7 +20,7 @@ import { WeaponsManager } from "./weapon/weaponsmanager";
 import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
-import { GAME_MASTER, LoginSubState, NO_SUBSTATE, OlympusState, OlympusSubState, WarningSubstate } from "./constants/constants";
+import { GAME_MASTER, LoginSubState, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, WarningSubstate } from "./constants/constants";
 import { AdminPasswordChangedEvent, AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
@@ -305,7 +305,7 @@ export class OlympusApp {
     const username = this.getServerManager().getUsername();
     const profile = this.getProfile();
     if (username && profile) {
-      this.#map?.setOptions(profile.mapOptions);
+      this.#map?.setOptions( {...profile.mapOptions, ...MAP_OPTIONS_DEFAULTS});
       this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
       this.addInfoMessage("Profile loaded correctly");
       console.log(`Profile for ${username} loaded correctly`);

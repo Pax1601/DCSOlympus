@@ -9,11 +9,10 @@ import { BindShortcutRequestEvent, MapOptionsChangedEvent, ShortcutsChangedEvent
 import { OlAccordion } from "../components/olaccordion";
 import { Shortcut } from "../../shortcut/shortcut";
 import { OlSearchBar } from "../components/olsearchbar";
-import { FaTrash, FaUserGroup, FaXmark } from "react-icons/fa6";
+import { FaXmark } from "react-icons/fa6";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
-import { FaCog, FaKey, FaPlus, FaQuestionCircle } from "react-icons/fa";
+import { FaCog, FaQuestionCircle } from "react-icons/fa";
 import { sha256 } from "js-sha256";
-import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 
 const enum Accordion {
   NONE,
