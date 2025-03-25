@@ -402,7 +402,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   hideUnitsShortRangeRings: true,
   showUnitContacts: true,
   showUnitPaths: true,
-  showUnitTargets: false,
+  showUnitTargets: true,
   showUnitLabels: true,
   showUnitsEngagementRings: true,
   showUnitsAcquisitionRings: true,

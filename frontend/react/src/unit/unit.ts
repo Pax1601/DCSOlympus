@@ -2355,7 +2355,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawTarget() {
-    if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getOptions().showUnitPaths) {
+    if (this.#targetPosition.lat != 0 && this.#targetPosition.lng != 0 && getApp().getMap().getOptions().showUnitTargets) {
       this.#drawTargetPosition(this.#targetPosition);
     } else if (this.#targetID != 0 && getApp().getMap().getOptions().showUnitTargets) {
       const target = getApp().getUnitsManager().getUnitByID(this.#targetID);

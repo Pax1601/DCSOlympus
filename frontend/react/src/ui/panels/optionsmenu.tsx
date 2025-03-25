@@ -161,6 +161,17 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
               gap-4 rounded-md p-2
               dark:hover:bg-olympus-400
             `}
+            onClick={() => getApp().getMap().setOption("showUnitTargets", !mapOptions.showUnitTargets)}
+          >
+            <OlCheckbox checked={mapOptions.showUnitTargets} onChange={() => {}}></OlCheckbox>
+            <span className="my-auto">Show unit targets</span>
+          </div>
+          <div
+            className={`
+              group flex cursor-pointer flex-row content-center justify-start
+              gap-4 rounded-md p-2
+              dark:hover:bg-olympus-400
+            `}
             onClick={() => getApp().getMap().setOption("hideUnitsShortRangeRings", !mapOptions.hideUnitsShortRangeRings)}
           >
             <OlCheckbox checked={mapOptions.hideUnitsShortRangeRings} onChange={() => {}}></OlCheckbox>
