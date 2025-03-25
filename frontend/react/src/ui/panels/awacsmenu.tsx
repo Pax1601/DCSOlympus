@@ -46,7 +46,7 @@ export function AWACSMenu(props: { open: boolean; onClose: () => void; children?
             />
             <div className="flex flex-col gap-1 text-sm text-gray-500">
               <p>1 Use the coalition toggle to change your coalition as AWACS.</p>
-              <p>2 Optionally, set a friendly unit as reference by right clicking on it and selecting "Set AWACS reference" to create tactical calls.</p>
+              <p>2 Optionally, set a friendly unit as reference by left clicking and holding on it and selecting "Set AWACS reference" to create tactical calls.</p>
             </div>
           </div>
           <div className="flex gap-4">

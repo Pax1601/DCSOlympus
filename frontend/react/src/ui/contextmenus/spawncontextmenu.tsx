@@ -20,6 +20,14 @@ import {
   olButtonsVisibilityGroundunitSam,
   olButtonsVisibilityHelicopter,
   olButtonsVisibilityNavyunit,
+  olIconsApc,
+  olIconsArtillery,
+  olIconsEwr,
+  olIconsInfantry,
+  olIconsRadar,
+  olIconsTactical,
+  olIconsTank,
+  olIconsTruck,
 } from "../components/olicons";
 import { OlUnitListEntry } from "../components/olunitlistentry";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -306,9 +314,15 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`
                           text-gray-200
-                        `}>No aircraft available</span>}
+                        `}
+                          >
+                            No aircraft available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -356,9 +370,15 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`
                           text-gray-200
-                        `}>No helicopter available</span>}
+                        `}
+                          >
+                            No helicopter available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -409,9 +429,15 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`
                           text-gray-200
-                        `}>No air defence unit available</span>}
+                        `}
+                          >
+                            No air defence unit available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -454,7 +480,21 @@ export function SpawnContextMenu(props: {}) {
                             return (
                               <OlUnitListEntry
                                 key={blueprint.name}
-                                icon={olButtonsVisibilityGroundunit}
+                                icon={
+                                  {
+                                    Infantry: olIconsInfantry,
+                                    APC: olIconsApc,
+                                    Artillery: olIconsArtillery,
+                                    Radar: olIconsRadar,
+                                    "Radar (EWR)": olIconsEwr,
+                                    Tank: olIconsTank,
+                                    "Tactical Vehicle": olIconsTactical,
+                                    None: olButtonsVisibilityGroundunit,
+                                    Unarmed: olIconsTruck,
+                                    AAA: olButtonsVisibilityGroundunitSam,
+                                    "SAM Site Parts": olButtonsVisibilityGroundunitSam,
+                                  }[blueprint.type ?? "None"]
+                                }
                                 blueprint={blueprint}
                                 onClick={() => setBlueprint(blueprint)}
                                 showCost={showCost}
@@ -462,9 +502,15 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`
                           text-gray-200
-                        `}>No ground unit available</span>}
+                        `}
+                          >
+                            No ground unit available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -512,13 +558,19 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`
                           text-gray-200
-                        `}>No navy unit available</span>}
+                        `}
+                          >
+                            No navy unit available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
-                  {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode === GAME_MASTER  && (
+                  {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode === GAME_MASTER && (
                     <>
                       <div
                         className={`
@@ -545,10 +597,8 @@ export function SpawnContextMenu(props: {}) {
                       </div>
                     </>
                   )}
-                  {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode !== GAME_MASTER  && (
-                    <div className="text-white">
-                      Not available in this mode
-                    </div>
+                  {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode !== GAME_MASTER && (
+                    <div className="text-white">Not available in this mode</div>
                   )}
                   {openAccordion === CategoryGroup.SEARCH && (
                     <div className="flex flex-col gap-2">

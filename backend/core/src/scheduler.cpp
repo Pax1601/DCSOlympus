@@ -194,7 +194,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
-		if (!checkSpawnPoints(spawnPoints, coalition)) return;
+		if (!checkSpawnPoints(spawnPoints, coalition)) {
+			log(username + " insufficient spawn points ", true);
+			return;
+		}
 
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
@@ -228,7 +231,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string country = to_string(value[L"country"]);
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
-		if (!checkSpawnPoints(spawnPoints, coalition)) return;
+		if (!checkSpawnPoints(spawnPoints, coalition)) {
+			log(username + " insufficient spawn points ", true);
+			return;
+		}
 
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
@@ -380,7 +386,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string coalition = to_string(value[L"coalition"]);
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
-		if (!checkSpawnPoints(spawnPoints, coalition)) return;
+		if (coalition.compare("all") != 0 && !checkSpawnPoints(spawnPoints, coalition)) {
+			log(username + " insufficient spawn points ", true);
+			return;
+		}
 
 		for (auto unit : value[L"units"].as_array()) {
 			unsigned int ID = unit[L"ID"].as_integer();

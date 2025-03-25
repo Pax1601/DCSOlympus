@@ -34,7 +34,6 @@ export var IP = window.location.toString();
 
 export class OlympusApp {
   /* Global data */
-  #latestVersion: string | undefined = undefined;
   #config: OlympusConfig;
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
@@ -134,25 +133,6 @@ export class OlympusApp {
     this.#controllerManager = new ControllerManager();
     this.#coalitionAreasManager = new CoalitionAreasManager();
     this.#drawingsManager = new DrawingsManager();
-
-    /* Check if we are running the latest version */
-    const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
-    fetch(request)
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          throw new Error("Error connecting to Github to retrieve latest version");
-        }
-      })
-      .then((res) => {
-        this.#latestVersion = res["version"];
-        const latestVersionSpan = document.getElementById("latest-version") as HTMLElement;
-        if (latestVersionSpan) {
-          latestVersionSpan.innerHTML = this.#latestVersion ?? "Unknown";
-          latestVersionSpan.classList.toggle("new-version", this.#latestVersion !== VERSION);
-        }
-      });
 
     /* Load the config file from the server */
     const configRequest = new Request("./resources/config", {

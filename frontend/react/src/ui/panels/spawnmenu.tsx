@@ -7,11 +7,17 @@ import { OlUnitListEntry } from "../components/olunitlistentry";
 import { UnitSpawnMenu } from "./unitspawnmenu";
 import { SpawnRequestTable, UnitBlueprint } from "../../interfaces";
 import {
-  olButtonsVisibilityAircraft,
   olButtonsVisibilityGroundunit,
   olButtonsVisibilityGroundunitSam,
-  olButtonsVisibilityHelicopter,
   olButtonsVisibilityNavyunit,
+  olIconsApc,
+  olIconsArtillery,
+  olIconsEwr,
+  olIconsInfantry,
+  olIconsRadar,
+  olIconsTactical,
+  olIconsTank,
+  olIconsTruck,
 } from "../components/olicons";
 import { faExplosion, faSmog } from "@fortawesome/free-solid-svg-icons";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
@@ -98,6 +104,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       if (blueprint.enabled && (filterString === "" || blueprint.label.toLowerCase().includes(filterString.toLowerCase()))) filteredBlueprints.push(blueprint);
     });
   }
+
+  filteredBlueprints.sort((a, b) => a.label.localeCompare(b.label));
 
   useEffect(() => {
     if (!props.open) {
@@ -263,7 +271,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                     return (
                       <OlUnitListEntry
                         key={blueprint.name}
-                        icon={olButtonsVisibilityHelicopter}
+                        silhouette={blueprint.filename}
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}
@@ -339,9 +347,13 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
-                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && <span className={`
-                  text-gray-400
-                `}>No AAA unit available</span>}
+                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && (
+                  <span
+                    className={`text-gray-400`}
+                  >
+                    No AAA unit available
+                  </span>
+                )}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -389,7 +401,21 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                     return (
                       <OlUnitListEntry
                         key={blueprint.name}
-                        icon={olButtonsVisibilityGroundunit}
+                        icon={
+                          {
+                            Infantry: olIconsInfantry,
+                            APC: olIconsApc,
+                            Artillery: olIconsArtillery,
+                            Radar: olIconsRadar,
+                            "Radar (EWR)": olIconsEwr,
+                            Tank: olIconsTank,
+                            "Tactical Vehicle": olIconsTactical,
+                            None: olButtonsVisibilityGroundunit,
+                            Unarmed: olIconsTruck,
+                            AAA: olButtonsVisibilityGroundunitSam,
+                            "SAM Site Parts": olButtonsVisibilityGroundunitSam,
+                          }[blueprint.type ?? "None"]
+                        }
                         blueprint={blueprint}
                         onClick={() => setBlueprint(blueprint)}
                         showCost={showCost}

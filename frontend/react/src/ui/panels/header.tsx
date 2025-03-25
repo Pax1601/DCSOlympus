@@ -1,23 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import {
-  faSkull,
-  faCamera,
-  faFlag,
-  faVolumeHigh,
-  faDownload,
-  faUpload,
-  faDrawPolygon,
-  faCircle,
-  faTriangleExclamation,
-  faWifi,
-  faHourglass,
-  faInfo,
-  faObjectGroup,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSkull, faCamera, faFlag, faVolumeHigh, faDrawPolygon, faTriangleExclamation, faWifi, faObjectGroup } from "@fortawesome/free-solid-svg-icons";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
 import { OlLabelToggle } from "../components/ollabeltoggle";
-import { getApp, IP } from "../../olympusapp";
+import { getApp, IP, VERSION } from "../../olympusapp";
 import {
   olButtonsVisibilityAirbase,
   olButtonsVisibilityAircraft,
@@ -39,20 +25,10 @@ import {
   SessionDataChangedEvent,
   SessionDataSavedEvent,
 } from "../../events";
-import {
-  BLUE_COMMANDER,
-  COMMAND_MODE_OPTIONS_DEFAULTS,
-  ImportExportSubstate,
-  MAP_HIDDEN_TYPES_DEFAULTS,
-  MAP_OPTIONS_DEFAULTS,
-  OlympusState,
-  RED_COMMANDER,
-} from "../../constants/constants";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
-import { FaCheck, FaQuestionCircle, FaSave, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaSpinner } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
-import { ftToM } from "../../other/utils";
-import { LatLng } from "leaflet";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -64,12 +40,16 @@ export function Header() {
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
   const [savingSessionData, setSavingSessionData] = useState(false);
+  const [latestVersion, setLatestVersion] = useState("");
+  const [isLatestVersion, setIsLatestVersion] = useState(false);
+  const [isBetaVersion, setIsBetaVersion] = useState(false);
+  const [isDevVersion, setIsDevVersion] = useState(false);
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
     MapOptionsChangedEvent.on((mapOptions) => {
-      setMapOptions({ ...mapOptions })
-  });
+      setMapOptions({ ...mapOptions });
+    });
     MapSourceChangedEvent.on((source) => setMapSource(source));
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       // Timeout needed to make sure the map configuration has updated
@@ -83,6 +63,48 @@ export function Header() {
     });
     SessionDataChangedEvent.on(() => setSavingSessionData(true));
     SessionDataSavedEvent.on(() => setSavingSessionData(false));
+
+    /* Check if we are running the latest version */
+    const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
+    fetch(request)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error("Error connecting to Github to retrieve latest version");
+        }
+      })
+      .then((res) => {
+        setLatestVersion(res["version"]);
+
+        if (VERSION === "{{OLYMPUS_VERSION_NUMBER}}") {
+          console.log("OLYMPUS_VERSION_NUMBER is not set. Skipping version check.");
+          setIsDevVersion(true);
+          return;
+        }
+
+        /* Check if the new version is newer than the current one */
+        /* Extract the version numbers */
+        const currentVersion = VERSION.replace("v", "").split(".");
+        const newVersion = res["version"].replace("v", "").split(".");
+
+        setIsBetaVersion(true);
+        setIsLatestVersion(true);
+
+        /* Compare the version numbers */
+        for (var i = 0; i < currentVersion.length; i++) {
+          if (parseInt(newVersion[i]) > parseInt(currentVersion[i])) {
+            setIsLatestVersion(false);
+          }
+        }
+
+        /* Check if this is a beta version checking if this version is newer */
+        for (var i = 0; i < currentVersion.length; i++) {
+          if (parseInt(newVersion[i]) < parseInt(currentVersion[i])) {
+            setIsBetaVersion(false);
+          }
+        }
+      });
   }, []);
 
   /* Initialize the "scroll" position of the element */
@@ -174,6 +196,20 @@ export function Header() {
               </div>
             )}
           </div>
+          {isDevVersion ? (
+            <div className={`text-gray-400`}>Development build</div>
+          ) : (
+            <>
+              <div>
+                {!isLatestVersion && (
+                  <div className={`animate-pulse text-gray-400`}>
+                    <span className={`font-bold`}>New version available:</span> {latestVersion}
+                  </div>
+                )}
+              </div>
+              <div>{!isBetaVersion && <div className={`text-gray-400`}>beta version</div>}</div>
+            </>
+          )}
         </div>
 
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
