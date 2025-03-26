@@ -1,4 +1,4 @@
-import { DivIcon, LatLng } from "leaflet";
+import { DivIcon, DomEvent, LatLng } from "leaflet";
 import { CustomMarker } from "../markers/custommarker";
 
 export class DraggableHandle extends CustomMarker {
@@ -7,6 +7,22 @@ export class DraggableHandle extends CustomMarker {
 
     this.on("add", (e) => {
       this.getElement()?.addEventListener("touchstart", (e) => e.stopPropagation());
+    });
+
+    this.on("mousedown", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("mouseup", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragstart", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragend", (e) => {
+      DomEvent.stopPropagation(e);
     });
   }
 
