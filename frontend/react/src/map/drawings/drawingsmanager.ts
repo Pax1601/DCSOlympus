@@ -103,20 +103,20 @@ export class DCSPolygon extends DCSDrawing {
       case "circle":
         // Example circle:
         /*
-					colorString: 4278190335
-					fillColorString: 4278190127
-					lat: 27.65469131156049
-					layer: "Blue"
-					layerName: "Blue"
-					lng: 54.33075915954884
-					name: "SA11-2 + SA6-3"
-					points: {0: {…}, x: 166867.07767244, y: -187576.93134045}
-					polygonMode: "circle"
-					primitiveType: "Polygon"
-					radius: 36651.296128911
-					style: "dash"
-					thickness: 16
-					visible: true*/
+          colorString: 4278190335
+          fillColorString: 4278190127
+          lat: 27.65469131156049
+          layer: "Blue"
+          layerName: "Blue"
+          lng: 54.33075915954884
+          name: "SA11-2 + SA6-3"
+          points: {0: {…}, x: 166867.07767244, y: -187576.93134045}
+          polygonMode: "circle"
+          primitiveType: "Polygon"
+          radius: 36651.296128911
+          style: "dash"
+          thickness: 16
+          visible: true*/
 
         this.#polygon = new Circle([drawingData.lat, drawingData.lng], {
           radius: Math.round(drawingData.radius),
@@ -131,7 +131,7 @@ export class DCSPolygon extends DCSDrawing {
 
       case "arrow":
         let weight = this.getWeight();
-        
+
         if (!weight || weight < 1) {
           weight = 1;
         }
@@ -160,44 +160,44 @@ export class DCSPolygon extends DCSDrawing {
 
       case "rect":
         /** Rectangle Example:
-					 * {
-						"angle": 68.579040048342,
-						"colorString": 255,
-						"fillColorString": 4294901888,
-						"height": 11100,
-						"lat": 27.5547706075188,
-						"layer": "Author",
-						"layerName": "Author",
-						"lng": 57.22438242806247,
-						"mapX": 152970.68262179,
-						"mapY": 97907.892121675,
-						"name": "FLOT BUFFER EAST",
-						"points": {
-							"1": {
-								"lat": 27.417344649833286,
-								"lng": 57.34472624501578
-							},
-							"2": {
-								"lat": 27.38096510320196,
-								"lng": 57.24010993680159
-							},
-							"3": {
-								"lat": 27.69209116201148,
-								"lng": 57.1037392116416
-							},
-							"4": {
-								"lat": 27.728570135811577,
-								"lng": 57.20860735951096
-							}
-						},
-						"polygonMode": "rect",
-						"primitiveType": "Polygon",
-						"style": "dot",
-						"thickness": 16,
-						"visible": true,
-						"width": 37000
-					}
-					*/
+           * {
+            "angle": 68.579040048342,
+            "colorString": 255,
+            "fillColorString": 4294901888,
+            "height": 11100,
+            "lat": 27.5547706075188,
+            "layer": "Author",
+            "layerName": "Author",
+            "lng": 57.22438242806247,
+            "mapX": 152970.68262179,
+            "mapY": 97907.892121675,
+            "name": "FLOT BUFFER EAST",
+            "points": {
+              "1": {
+                "lat": 27.417344649833286,
+                "lng": 57.34472624501578
+              },
+              "2": {
+                "lat": 27.38096510320196,
+                "lng": 57.24010993680159
+              },
+              "3": {
+                "lat": 27.69209116201148,
+                "lng": 57.1037392116416
+              },
+              "4": {
+                "lat": 27.728570135811577,
+                "lng": 57.20860735951096
+              }
+            },
+            "polygonMode": "rect",
+            "primitiveType": "Polygon",
+            "style": "dot",
+            "thickness": 16,
+            "visible": true,
+            "width": 37000
+          }
+          */
         const bounds = [
           [drawingData.points["1"].lat, drawingData.points["1"].lng],
           [drawingData.points["2"].lat, drawingData.points["2"].lng],
@@ -217,42 +217,42 @@ export class DCSPolygon extends DCSDrawing {
 
       case "oval":
         /**
-					 * Example:
-					 * {
-						"angle": 270,
-						"colorString": 255,
-						"fillColorString": 4278190080,
-						"lat": 25.032272009407105,
-						"layer": "Blue",
-						"layerName": "Blue",
-						"lng": 55.36597899137401,
-						"mapX": -125416.92956726,
-						"mapY": -89103.936896595,
-						"name": "AM OTP",
-						"points": {
-							"1": {
-								"lat": 25.03332743167039,
-								"lng": 55.34689257576858
-							},
-							"2": {
-								"lat": 25.034529398092356,
-								"lng": 55.348849087588164
-							},
-							...
-							"24": {
-								"lat": 25.032053589358366,
-								"lng": 55.34623694782629
-							}
-						},
-						"polygonMode": "oval",
-						"primitiveType": "Polygon",
-						"r1": 1992.4714734497,
-						"r2": 541.99904672895,
-						"style": "dot",
-						"thickness": 10,
-						"visible": true
-					}
-					 */
+           * Example:
+           * {
+            "angle": 270,
+            "colorString": 255,
+            "fillColorString": 4278190080,
+            "lat": 25.032272009407105,
+            "layer": "Blue",
+            "layerName": "Blue",
+            "lng": 55.36597899137401,
+            "mapX": -125416.92956726,
+            "mapY": -89103.936896595,
+            "name": "AM OTP",
+            "points": {
+              "1": {
+                "lat": 25.03332743167039,
+                "lng": 55.34689257576858
+              },
+              "2": {
+                "lat": 25.034529398092356,
+                "lng": 55.348849087588164
+              },
+              ...
+              "24": {
+                "lat": 25.032053589358366,
+                "lng": 55.34623694782629
+              }
+            },
+            "polygonMode": "oval",
+            "primitiveType": "Polygon",
+            "r1": 1992.4714734497,
+            "r2": 541.99904672895,
+            "style": "dot",
+            "thickness": 10,
+            "visible": true
+          }
+           */
         const points: [number, number][] = Object.values(drawingData.points as Record<string, { lat: number; lng: number }>).map((p) => [p.lat, p.lng]);
 
         this.#polygon = new Polygon(points, {
@@ -276,8 +276,8 @@ export class DCSPolygon extends DCSDrawing {
           dashArray: dashArray,
         });
         break;
-      
-        default:
+
+      default:
         break;
     }
 
@@ -374,21 +374,21 @@ export class DCSTextBox extends DCSDrawing {
     super(drawingData, parent);
 
     /* Example textbox "ABC625": 
-			  angle: 0
-			  borderThickness: 1
-			  colorString: 4294967295
-			  fillColorString: 8421504
-			  font: "DejaVuLGCSansCondensed.ttf"
-			  fontSize: 10
-			  layer: "Common"
-			  layerName: "Common"
-			  mapX: -261708.68309463
-			  mapY: -217863.03743212
-			  name: "ABC625"
-			  primitiveType: "TextBox"
-			  text: "ABC625"
-			  visible: true 
-			*/
+        angle: 0
+        borderThickness: 1
+        colorString: 4294967295
+        fillColorString: 8421504
+        font: "DejaVuLGCSansCondensed.ttf"
+        fontSize: 10
+        layer: "Common"
+        layerName: "Common"
+        mapX: -261708.68309463
+        mapY: -217863.03743212
+        name: "ABC625"
+        primitiveType: "TextBox"
+        text: "ABC625"
+        visible: true 
+      */
     const customIcon = new DivIcon({
       html: `
 				<div style="
@@ -527,9 +527,6 @@ export class DCSDrawingsContainer {
   initFromData(drawingsData) {
     let hasContainers = false;
     Object.keys(drawingsData).forEach((layerName: string) => {
-      if (layerName === 'navpoints') {
-        return;
-      }
       if (drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined) {
         const newContainer = new DCSDrawingsContainer(layerName, this);
         this.addSubContainer(newContainer);
@@ -585,11 +582,11 @@ export class DCSDrawingsContainer {
     if (othersContainer.getDrawings().length === 0) this.removeSubContainer(othersContainer); // Remove empty container
   }
 
-  initNavpoints(drawingsData) {
-    const newContainer = new DCSDrawingsContainer('Navpoints', this);
-    this.addSubContainer(newContainer);
-    newContainer.initFromData(drawingsData);
-  }
+  // initNavpoints(drawingsData) {
+  //   const newContainer = new DCSDrawingsContainer('Navpoints', this);
+  //   this.addSubContainer(newContainer);
+  //   newContainer.initFromData(drawingsData);
+  // }
 
   getLayerGroup() {
     return this.#layerGroup;
@@ -703,6 +700,7 @@ export class DCSDrawingsContainer {
 
 export class DrawingsManager {
   #drawingsContainer: DCSDrawingsContainer;
+  #navpointsContainer: DCSDrawingsContainer;
   #updateEventRequested: boolean = false;
   #sessionDataDrawings = {};
   #initialized: boolean = false;
@@ -711,6 +709,7 @@ export class DrawingsManager {
     const drawingsLayerGroup = new LayerGroup();
     drawingsLayerGroup.addTo(getApp().getMap());
     this.#drawingsContainer = new DCSDrawingsContainer("Mission drawings", drawingsLayerGroup);
+    this.#navpointsContainer = new DCSDrawingsContainer("Navpoints", drawingsLayerGroup);
 
     MapOptionsChangedEvent.on((mapOptions: MapOptions) => {
       this.#drawingsContainer.setVisibility(mapOptions.showMissionDrawings);
@@ -718,18 +717,24 @@ export class DrawingsManager {
 
     SessionDataLoadedEvent.on((sessionData) => {
       this.#sessionDataDrawings = sessionData.drawings ?? {};
-      if (this.#initialized) if (this.#sessionDataDrawings["Mission drawings"]) this.#drawingsContainer.fromJSON(this.#sessionDataDrawings["Mission drawings"]);
+      if (this.#initialized) {
+        if (this.#sessionDataDrawings["Mission drawings"]) this.#drawingsContainer.fromJSON(this.#sessionDataDrawings["Mission drawings"]);
+        if (this.#sessionDataDrawings["Navpoints"]) this.#navpointsContainer.fromJSON(this.#sessionDataDrawings["Navpoints"]);
+      }
       this.#drawingsContainer.setVisibility(getApp().getMap().getOptions().showMissionDrawings);
     });
   }
 
   initDrawings(data: { drawings: Record<string, Record<string, any>> }): boolean {
     if (data && data.drawings) {
+      if (data.drawings.navpoints) {
+        this.#navpointsContainer.initFromData(data.drawings.navpoints);
+        delete data.drawings.navpoints;
+      }
       this.#drawingsContainer.initFromData(data.drawings);
-      if (data.drawings.navpoints) this.#drawingsContainer.initNavpoints(data.drawings.navpoints);
       if (this.#sessionDataDrawings["Mission drawings"]) this.#drawingsContainer.fromJSON(this.#sessionDataDrawings["Mission drawings"]);
       this.#drawingsContainer.setVisibility(getApp().getMap().getOptions().showMissionDrawings);
-      DrawingsInitEvent.dispatch(this.#drawingsContainer);
+      DrawingsInitEvent.dispatch(this.#drawingsContainer, this.#navpointsContainer);
       this.#initialized = true;
       return true;
     } else {
@@ -740,6 +745,10 @@ export class DrawingsManager {
 
   getDrawingsContainer() {
     return this.#drawingsContainer;
+  }
+
+  getNavpointsContainer() {
+    return this.#navpointsContainer;
   }
 
   requestUpdateEventDispatch() {

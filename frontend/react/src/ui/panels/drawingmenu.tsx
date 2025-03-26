@@ -14,7 +14,7 @@ import { OlRangeSlider } from "../components/olrangeslider";
 import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
 import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
 import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent, DrawingsInitEvent, DrawingsUpdatedEvent } from "../../events";
-import { FaXmark } from "react-icons/fa6";
+import { FaCopy, FaPencil, FaRegCompass, FaXmark } from "react-icons/fa6";
 import { deepCopyTable } from "../../other/utils";
 import { DCSDrawingsContainer, DCSEmptyLayer } from "../../map/drawings/drawingsmanager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,6 +35,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
   const [openContainers, setOpenContainers] = useState([] as DCSDrawingsContainer[]);
   const [mainDrawingsContainer, setDrawingsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
+  const [navpointsContainer, setNavpointsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
   const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
@@ -42,11 +43,13 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
       setAppState(state);
       setAppSubState(subState);
     });
-    DrawingsInitEvent.on((drawingContainer) => {
+    DrawingsInitEvent.on((drawingContainer, navpointsContainer) => {
       setDrawingsContainer({ container: drawingContainer });
+      setNavpointsContainer({ container: navpointsContainer });
     });
     DrawingsUpdatedEvent.on(() => {
       setDrawingsContainer({ container: getApp().getDrawingsManager().getDrawingsContainer() });
+      setNavpointsContainer({ container: getApp().getDrawingsManager().getNavpointsContainer() });
     });
   }, []);
 
@@ -179,12 +182,9 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               You can change the name and the coalition of the area. You can also generate an IADS area by selecting the types, eras, and ranges of units you
               want to include in the area. You can also set the density and distribution of the IADS. If you check the 'Force coalition appropriate units' box,
               the IADS will only include units that are appropriate for the coalition of the area (e.g. Hawk SAMs for {""}
-              <span className="text-blue-500">blue</span> and SA-6 SAMs for{" "}
-              <span
-                className={`text-red-500`}
-              >
-                red
-              </span>
+              <span className="text-blue-500">blue</span> and SA-6 SAMs for <span className={`
+                text-red-500
+              `}>red</span>
               ).
             </div>
             <div>
@@ -199,9 +199,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
             <div>
               You can search for a specific drawing by typing in the search bar. The search is case-insensitive and will match any part of the drawing name.
             </div>
-            <div>
-              Any change you make is persistent and will be saved for the next time you reload Olympus, as long as the DCS mission was not restarted.
-            </div>
+            <div>Any change you make is persistent and will be saved for the next time you reload Olympus, as long as the DCS mission was not restarted.</div>
           </div>
         );
       }}
@@ -279,9 +277,39 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
             <div>
               <div className="flex flex-col gap-2 p-6">
-                <div className="text-sm text-gray-400">Mission drawings</div>
+                <div
+                  className={`flex flex-row items-center text-sm text-gray-400`}
+                >
+                  <span
+                    className={`
+                      mr-2 px-1 py-1 text-center font-bold text-olympus-700
+                      text-white
+                    `}
+                  >
+                    <FaPencil />
+                  </span>
+                  Mission drawings
+                </div>
                 <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
                 <div className="flex flex-col gap-2">{mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container)}</div>
+              </div>
+
+              <div className="flex flex-col gap-2 p-6">
+                <div
+                  className={`flex flex-row items-center text-sm text-gray-400`}
+                >
+                  <span
+                    className={`
+                      mr-2 px-1 py-1 text-center font-bold text-olympus-700
+                      text-white
+                    `}
+                  >
+                    <FaRegCompass />
+                  </span>
+                  Navpoints
+                </div>
+                <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
+                <div className="flex flex-col gap-2">{navpointsContainer.container && renderDrawingsContainerControls(navpointsContainer.container)}</div>
               </div>
             </div>
           </div>
@@ -349,9 +377,11 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 bg-olympus-600 p-5
               `}
             >
-              <div className={`
-                border-b-2 border-b-olympus-100 pb-4 text-gray-300
-              `}>Automatic IADS generation</div>
+              <div
+                className={`border-b-2 border-b-olympus-100 pb-4 text-gray-300`}
+              >
+                Automatic IADS generation
+              </div>
               <OlDropdown className="" label="Units types" disableAutoClose={true}>
                 {types.map((type, idx) => {
                   if (!(type in typesSelection)) {

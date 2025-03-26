@@ -648,17 +648,17 @@ export class AWACSReferenceChangedEvent {
 }
 
 export class DrawingsInitEvent {
-  static on(callback: (drawingsData: any /*TODO*/) => void, singleShot = false) {
+  static on(callback: (drawingsData: any, navpointData: any /*TODO*/) => void, singleShot = false) {
     document.addEventListener(
       this.name,
       (ev: CustomEventInit) => {
-        callback(ev.detail);
+        callback(ev.detail.drawingsData, ev.detail.navpointData);
       },
       { once: singleShot }
     );
   }
 
-  static dispatch(drawingsData: any  /*TODO*/) {
+  static dispatch(drawingsData: any, navpointData?: any  /*TODO*/) {
     document.dispatchEvent(new CustomEvent(this.name, {detail: drawingsData}));
     if (DEBUG) console.log(`Event ${this.name} dispatched`);
   }
