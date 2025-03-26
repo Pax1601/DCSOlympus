@@ -285,7 +285,7 @@ export class OlympusApp {
     const username = this.getServerManager().getUsername();
     const profile = this.getProfile();
     if (username && profile) {
-      this.#map?.setOptions( {...profile.mapOptions, ...MAP_OPTIONS_DEFAULTS});
+      this.#map?.setOptions( {...MAP_OPTIONS_DEFAULTS, ...profile.mapOptions});
       this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
       this.addInfoMessage("Profile loaded correctly");
       console.log(`Profile for ${username} loaded correctly`);
@@ -293,11 +293,6 @@ export class OlympusApp {
       this.addInfoMessage("Profile not found, creating new profile");
       console.log(`Error loading profile`);
     }
-  }
-
-  setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {
-    this.#state = state;
-    this.#subState = subState;
 
     if (this.#state === OlympusState.IDLE && !this.#startupWarningsShown) {
       window.setTimeout(() => {
@@ -308,6 +303,11 @@ export class OlympusApp {
 
       this.#startupWarningsShown = true;
     }
+  }
+
+  setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {
+    this.#state = state;
+    this.#subState = subState;
 
     console.log(`App state set to ${state}, substate ${subState}`);
     AppStateChangedEvent.dispatch(state, subState);
