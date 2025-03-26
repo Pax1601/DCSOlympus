@@ -69,6 +69,23 @@ export class MapMouseHandler {
     this.#state = state;
   }
 
+  stopEvents() {
+    if (this.#leftMouseDownTimeout) {
+      clearTimeout(this.#leftMouseDownTimeout);
+      this.#leftMouseDownTimeout = null;
+    }
+    if (this.#rightMouseDownTimeout) {
+      clearTimeout(this.#rightMouseDownTimeout);
+      this.#rightMouseDownTimeout = null;
+    }
+    if (this.#debounceTimeout) {
+      clearTimeout(this.#debounceTimeout);
+      this.#debounceTimeout = null;
+    }
+
+    this.setState(MapMouseHandlerState.IDLE);
+  }
+
   #onMouseDown = (e: LeafletMouseEvent) => {
     if (e.originalEvent.button === 0) {
       this.leftMousePressed(e);

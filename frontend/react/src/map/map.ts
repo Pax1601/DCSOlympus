@@ -948,29 +948,25 @@ export class Map extends L.Map {
 
   #onDragStart(e: any) {
     this.#isDragging = true;
+
+    this.#mouseHandler.stopEvents();
   }
 
   #onDragEnd(e: any) {
-    /* Delay the drag end event so that any other event in the queue still sees the map in dragging mode */
-    window.setTimeout(() => {
-      this.#isDragging = false;
-    }, SHORT_PRESS_MILLISECONDS + 100);
+    this.#isDragging = false;
   }
 
   #onSelectionStart(e: any) {
     this.#isSelecting = true;
+
+    this.#mouseHandler.stopEvents();
   }
 
   #onSelectionEnd(e: any) {
     getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
 
-    // Autodisable the selection mode if touchscreen
-    if ("ontouchstart" in window) this.setSelectionEnabled(false);
-
-    /* Delay the event so that any other event in the queue still sees the map in selection mode */
-    window.setTimeout(() => {
-      this.#isSelecting = false;
-    }, SHORT_PRESS_MILLISECONDS + 100);
+    this.setSelectionEnabled(false);
+    this.#isSelecting = false;
   }
 
   #onLeftMouseReleased(e: any) {
@@ -981,12 +977,6 @@ export class Map extends L.Map {
     }
     this.#isRotatingDestination = false;
     this.setKeepRelativePositions(false);
-
-    /* Delay the event so that any other event in the queue still sees the map in selection mode */
-    window.setTimeout(() => {
-      this.setSelectionEnabled(false);
-      this.#isSelecting = false;
-    }, SHORT_PRESS_MILLISECONDS + 100);
   }
 
   #onMouseWheelReleased(e: any) {
@@ -1280,6 +1270,8 @@ export class Map extends L.Map {
     this.#previousZoom = this.getZoom();
     if (this.#centeredUnit != null) this.#panToUnit(this.#centeredUnit);
     this.#isZooming = true;
+
+    this.#mouseHandler.stopEvents();
   }
 
   #onZoom(e: any) {
