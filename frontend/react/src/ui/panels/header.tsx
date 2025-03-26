@@ -80,28 +80,29 @@ export function Header() {
         if (VERSION === "{{OLYMPUS_VERSION_NUMBER}}") {
           console.log("OLYMPUS_VERSION_NUMBER is not set. Skipping version check.");
           setIsDevVersion(true);
-          return;
-        }
+        } else {
+          setIsDevVersion(false);
 
-        /* Check if the new version is newer than the current one */
-        /* Extract the version numbers */
-        const currentVersion = VERSION.replace("v", "").split(".");
-        const newVersion = res["version"].replace("v", "").split(".");
+          /* Check if the new version is newer than the current one */
+          /* Extract the version numbers */
+          const currentVersion = VERSION.replace("v", "").split(".");
+          const newVersion = res["version"].replace("v", "").split(".");
 
-        setIsBetaVersion(true);
-        setIsLatestVersion(true);
+          setIsBetaVersion(true);
+          setIsLatestVersion(true);
 
-        /* Compare the version numbers */
-        for (var i = 0; i < currentVersion.length; i++) {
-          if (parseInt(newVersion[i]) > parseInt(currentVersion[i])) {
-            setIsLatestVersion(false);
+          /* Compare the version numbers */
+          for (var i = 0; i < currentVersion.length; i++) {
+            if (parseInt(newVersion[i]) > parseInt(currentVersion[i])) {
+              setIsLatestVersion(false);
+            }
           }
-        }
 
-        /* Check if this is a beta version checking if this version is newer */
-        for (var i = 0; i < currentVersion.length; i++) {
-          if (parseInt(newVersion[i]) < parseInt(currentVersion[i])) {
-            setIsBetaVersion(false);
+          /* Check if this is a beta version checking if this version is newer */
+          for (var i = 0; i < currentVersion.length; i++) {
+            if (parseInt(newVersion[i]) < parseInt(currentVersion[i])) {
+              setIsBetaVersion(false);
+            }
           }
         }
       });
