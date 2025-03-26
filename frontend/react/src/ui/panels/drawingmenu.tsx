@@ -127,7 +127,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
           {openContainers.includes(container) &&
             container.getDrawings().map((drawing, index) => {
               if (drawing instanceof DCSEmptyLayer) return <></>;
-              if (!drawing.getName().includes(containerSearchString)) return <></>;
+              if (!drawing.getName().toLowerCase().includes(containerSearchString.toLowerCase())) return <></>;
               return (
                 <div className="ml-4 flex justify-start gap-2" key={index}>
                   <FontAwesomeIcon
