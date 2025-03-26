@@ -69,6 +69,12 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
   function renderDrawingsContainerControls(container: DCSDrawingsContainer, containerSearchString: string) {
     if (container.hasSearchString(containerSearchString)) {
+      /* The following snippet automatically open containers that contains searched drawings */
+      if (!openContainers.includes(container) && containerSearchString != "") {
+        openContainers.push(container);
+        setOpenContainers([...openContainers]);
+      }
+
       return (
         <div className="ml-2 flex flex-col gap-2" key={container.getGuid()}>
           <div className="flex flex-col gap-2">
@@ -149,8 +155,8 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                       hover:scale-125
                     `}
                     onClick={() => {
-                      const latLng = drawing.getLayer()['getLatLng'] && drawing.getLayer()['getLatLng']();
-                      const bounds = drawing.getLayer()['getBounds'] && drawing.getLayer()['getBounds']();
+                      const latLng = drawing.getLayer()["getLatLng"] && drawing.getLayer()["getLatLng"]();
+                      const bounds = drawing.getLayer()["getBounds"] && drawing.getLayer()["getBounds"]();
                       latLng && getApp().getMap().setView(latLng, 14);
                       bounds && getApp().getMap().fitBounds(bounds);
                     }}
@@ -306,7 +312,16 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   </span>
                   Mission drawings
                 </div>
-                <OlSearchBar key="main-search" onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
+                <OlSearchBar
+                  key="main-search"
+                  onChange={(search) => {
+                    setSearchString(search);
+                    if (search === "") {
+                      setOpenContainers([]);
+                    }
+                  }}
+                  text={searchString || ""}
+                ></OlSearchBar>
                 <div className="flex flex-col gap-2">
                   {mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container, searchString)}
                 </div>
@@ -326,7 +341,16 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   </span>
                   Navpoints
                 </div>
-                <OlSearchBar key="navpoint-search" onChange={(search) => setNavpointSearchString(search)} text={navpointSearchString || ""}></OlSearchBar>
+                <OlSearchBar
+                  key="navpoint-search"
+                  onChange={(search) => {
+                    setNavpointSearchString(search);
+                    if (search === "") {
+                      setOpenContainers([]);
+                    }
+                  }}
+                  text={navpointSearchString || ""}
+                ></OlSearchBar>
                 <div className="flex flex-col gap-2">
                   {navpointsContainer.container && renderDrawingsContainerControls(navpointsContainer.container, navpointSearchString)}
                 </div>
