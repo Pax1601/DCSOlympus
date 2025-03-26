@@ -3,7 +3,7 @@ import { Menu } from "./components/menu";
 import { FaArrowDown, FaArrowUp, FaChevronRight, FaTrash } from "react-icons/fa";
 import { getApp } from "../../olympusapp";
 import { OlStateButton } from "../components/olstatebutton";
-import { faDrawPolygon, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faDrawPolygon, faEye, faEyeSlash, faMapLocation } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
 import { CoalitionPolygon } from "../../map/coalitionarea/coalitionpolygon";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
@@ -37,6 +37,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
   const [mainDrawingsContainer, setDrawingsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
   const [navpointsContainer, setNavpointsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
   const [searchString, setSearchString] = useState("");
+  const [navpointSearchString, setNavpointSearchString] = useState("");
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -66,8 +67,8 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
     CoalitionAreasChangedEvent.on((coalitionAreas) => setCoalitionAreas([...coalitionAreas]));
   }, []);
 
-  function renderDrawingsContainerControls(container: DCSDrawingsContainer) {
-    if (container.hasSearchString(searchString)) {
+  function renderDrawingsContainerControls(container: DCSDrawingsContainer, containerSearchString: string) {
+    if (container.hasSearchString(containerSearchString)) {
       return (
         <div className="ml-2 flex flex-col gap-2" key={container.getGuid()}>
           <div className="flex flex-col gap-2">
@@ -121,10 +122,12 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               ></OlRangeSlider>
             </div>
           </div>
-          {openContainers.includes(container) && container.getSubContainers().map((container) => renderDrawingsContainerControls(container))}
+          {openContainers.includes(container) &&
+            container.getSubContainers().map((container) => renderDrawingsContainerControls(container, containerSearchString))}
           {openContainers.includes(container) &&
             container.getDrawings().map((drawing, index) => {
               if (drawing instanceof DCSEmptyLayer) return <></>;
+              if (!drawing.getName().includes(containerSearchString)) return <></>;
               return (
                 <div className="ml-4 flex justify-start gap-2" key={index}>
                   <FontAwesomeIcon
@@ -139,6 +142,19 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                     }}
                   />
                   <div className={`overflow-hidden text-ellipsis text-nowrap`}>{drawing.getName()}</div>
+                  <FontAwesomeIcon
+                    icon={faMapLocation}
+                    className={`
+                      ml-auto cusor-pointer transition-transform
+                      hover:scale-125
+                    `}
+                    onClick={() => {
+                      const latLng = drawing.getLayer()['getLatLng'] && drawing.getLayer()['getLatLng']();
+                      const bounds = drawing.getLayer()['getBounds'] && drawing.getLayer()['getBounds']();
+                      latLng && getApp().getMap().setView(latLng, 14);
+                      bounds && getApp().getMap().fitBounds(bounds);
+                    }}
+                  />
                 </div>
               );
             })}
@@ -290,8 +306,10 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   </span>
                   Mission drawings
                 </div>
-                <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
-                <div className="flex flex-col gap-2">{mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container)}</div>
+                <OlSearchBar key="main-search" onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
+                <div className="flex flex-col gap-2">
+                  {mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container, searchString)}
+                </div>
               </div>
 
               <div className="flex flex-col gap-2 p-6">
@@ -308,8 +326,10 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   </span>
                   Navpoints
                 </div>
-                {/* <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar> */}
-                <div className="flex flex-col gap-2">{navpointsContainer.container && renderDrawingsContainerControls(navpointsContainer.container)}</div>
+                <OlSearchBar key="navpoint-search" onChange={(search) => setNavpointSearchString(search)} text={navpointSearchString || ""}></OlSearchBar>
+                <div className="flex flex-col gap-2">
+                  {navpointsContainer.container && renderDrawingsContainerControls(navpointsContainer.container, navpointSearchString)}
+                </div>
               </div>
             </div>
           </div>
