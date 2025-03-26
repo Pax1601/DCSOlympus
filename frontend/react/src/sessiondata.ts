@@ -134,8 +134,10 @@ export class SessionDataManager {
         });
 
         DrawingsUpdatedEvent.on(() => {
-          let container = getApp().getDrawingsManager().getDrawingsContainer();
-          this.#sessionData.drawings = {"Mission drawings": container.toJSON()};
+          let mainDrawingsContainer = getApp().getDrawingsManager().getDrawingsContainer();
+          let navpointsContainer = getApp().getDrawingsManager().getNavpointsContainer();
+          this.#sessionData.drawings = {"Mission drawings": mainDrawingsContainer.toJSON()};
+          this.#sessionData.navpoints = {"Navpoints": navpointsContainer.toJSON()};
           this.#saveSessionData();
         });
       }, 200);

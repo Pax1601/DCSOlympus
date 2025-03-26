@@ -703,6 +703,7 @@ export class DrawingsManager {
   #navpointsContainer: DCSDrawingsContainer;
   #updateEventRequested: boolean = false;
   #sessionDataDrawings = {};
+  #sessionDataNavpoints = {};
   #initialized: boolean = false;
 
   constructor() {
@@ -717,9 +718,10 @@ export class DrawingsManager {
 
     SessionDataLoadedEvent.on((sessionData) => {
       this.#sessionDataDrawings = sessionData.drawings ?? {};
+      this.#sessionDataNavpoints = sessionData.navpoints ?? {};
       if (this.#initialized) {
         if (this.#sessionDataDrawings["Mission drawings"]) this.#drawingsContainer.fromJSON(this.#sessionDataDrawings["Mission drawings"]);
-        if (this.#sessionDataDrawings["Navpoints"]) this.#navpointsContainer.fromJSON(this.#sessionDataDrawings["Navpoints"]);
+        if (this.#sessionDataNavpoints["Navpoints"]) this.#navpointsContainer.fromJSON(this.#sessionDataNavpoints["Navpoints"]);
       }
       this.#drawingsContainer.setVisibility(getApp().getMap().getOptions().showMissionDrawings);
     });

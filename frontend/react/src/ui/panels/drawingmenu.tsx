@@ -308,7 +308,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   </span>
                   Navpoints
                 </div>
-                <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
+                {/* <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar> */}
                 <div className="flex flex-col gap-2">{navpointsContainer.container && renderDrawingsContainerControls(navpointsContainer.container)}</div>
               </div>
             </div>

@@ -60,6 +60,7 @@ export interface SessionData {
   hotgroups?: { [key: string]: number[] };
   starredSpawns?: { [key: number]: SpawnRequestTable };
   drawings?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
+  navpoints?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
 }
 
 export interface ProfileOptions {
