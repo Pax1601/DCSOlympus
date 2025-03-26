@@ -3,7 +3,7 @@ import { Menu } from "./components/menu";
 import { FaArrowDown, FaArrowUp, FaChevronRight, FaTrash } from "react-icons/fa";
 import { getApp } from "../../olympusapp";
 import { OlStateButton } from "../components/olstatebutton";
-import { faDrawPolygon, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faDrawPolygon, faEye, faEyeSlash, faMapLocation } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
 import { CoalitionPolygon } from "../../map/coalitionarea/coalitionpolygon";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
@@ -14,7 +14,7 @@ import { OlRangeSlider } from "../components/olrangeslider";
 import { CoalitionCircle } from "../../map/coalitionarea/coalitioncircle";
 import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
 import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent, DrawingsInitEvent, DrawingsUpdatedEvent } from "../../events";
-import { FaXmark } from "react-icons/fa6";
+import { FaCopy, FaPencil, FaRegCompass, FaXmark } from "react-icons/fa6";
 import { deepCopyTable } from "../../other/utils";
 import { DCSDrawing, DCSDrawingsContainer, DCSEmptyLayer } from "../../map/drawings/drawingsmanager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,18 +35,22 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
   const [openContainers, setOpenContainers] = useState([] as DCSDrawingsContainer[]);
   const [mainDrawingsContainer, setDrawingsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
+  const [navpointsContainer, setNavpointsContainer] = useState({ container: null } as { container: null | DCSDrawingsContainer });
   const [searchString, setSearchString] = useState("");
+  const [navpointSearchString, setNavpointSearchString] = useState("");
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
       setAppState(state);
       setAppSubState(subState);
     });
-    DrawingsInitEvent.on((drawingContainer) => {
+    DrawingsInitEvent.on((drawingContainer, navpointsContainer) => {
       setDrawingsContainer({ container: drawingContainer });
+      setNavpointsContainer({ container: navpointsContainer });
     });
     DrawingsUpdatedEvent.on(() => {
       setDrawingsContainer({ container: getApp().getDrawingsManager().getDrawingsContainer() });
+      setNavpointsContainer({ container: getApp().getDrawingsManager().getNavpointsContainer() });
     });
   }, []);
 
@@ -67,8 +71,14 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
     return drawing.getVisibility() ? `text-gray-200` : `text-gray-600`;
   }
 
-  function renderDrawingsContainerControls(container: DCSDrawingsContainer) {
-    if (container.hasSearchString(searchString)) {
+  function renderDrawingsContainerControls(container: DCSDrawingsContainer, containerSearchString: string) {
+    if (container.hasSearchString(containerSearchString)) {
+      /* The following snippet automatically open containers that contains searched drawings */
+      if (!openContainers.includes(container) && containerSearchString != "") {
+        openContainers.push(container);
+        setOpenContainers([...openContainers]);
+      }
+
       return (
         <div className="ml-2 flex flex-col gap-2" key={container.getGuid()}>
           <div className="flex flex-col gap-2">
@@ -126,10 +136,12 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               ></OlRangeSlider>
             </div>
           </div>
-          {openContainers.includes(container) && container.getSubContainers().map((container) => renderDrawingsContainerControls(container))}
+          {openContainers.includes(container) &&
+            container.getSubContainers().map((container) => renderDrawingsContainerControls(container, containerSearchString))}
           {openContainers.includes(container) &&
             container.getDrawings().map((drawing, index) => {
               if (drawing instanceof DCSEmptyLayer) return <></>;
+              if (!drawing.getName().toLowerCase().includes(containerSearchString.toLowerCase())) return <></>;
               return (
                 <div className="ml-4 flex justify-start gap-2" key={index}>
                   <FontAwesomeIcon
@@ -149,6 +161,19 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                     ${getDrawingLabelColor(drawing)}
                     text-ellipsis text-nowrap
                   `}>{drawing.getName()}</div>
+                  <FontAwesomeIcon
+                    icon={faMapLocation}
+                    className={`
+                      ml-auto cusor-pointer transition-transform
+                      hover:scale-125
+                    `}
+                    onClick={() => {
+                      const latLng = drawing.getLayer()["getLatLng"] && drawing.getLayer()["getLatLng"]();
+                      const bounds = drawing.getLayer()["getBounds"] && drawing.getLayer()["getBounds"]();
+                      latLng && getApp().getMap().setView(latLng, 14);
+                      bounds && getApp().getMap().fitBounds(bounds);
+                    }}
+                  />
                 </div>
               );
             })}
@@ -192,12 +217,9 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               You can change the name and the coalition of the area. You can also generate an IADS area by selecting the types, eras, and ranges of units you
               want to include in the area. You can also set the density and distribution of the IADS. If you check the 'Force coalition appropriate units' box,
               the IADS will only include units that are appropriate for the coalition of the area (e.g. Hawk SAMs for {""}
-              <span className="text-blue-500">blue</span> and SA-6 SAMs for{" "}
-              <span
-                className={`text-red-500`}
-              >
-                red
-              </span>
+              <span className="text-blue-500">blue</span> and SA-6 SAMs for <span className={`
+                text-red-500
+              `}>red</span>
               ).
             </div>
             <div>
@@ -212,9 +234,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
             <div>
               You can search for a specific drawing by typing in the search bar. The search is case-insensitive and will match any part of the drawing name.
             </div>
-            <div>
-              Any change you make is persistent and will be saved for the next time you reload Olympus, as long as the DCS mission was not restarted.
-            </div>
+            <div>Any change you make is persistent and will be saved for the next time you reload Olympus, as long as the DCS mission was not restarted.</div>
           </div>
         );
       }}
@@ -292,9 +312,61 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
 
             <div>
               <div className="flex flex-col gap-2 p-6">
-                <div className="text-sm text-gray-400">Mission drawings</div>
-                <OlSearchBar onChange={(search) => setSearchString(search)} text={searchString || ""}></OlSearchBar>
-                <div className="flex flex-col gap-2">{mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container)}</div>
+                <div
+                  className={`flex flex-row items-center text-sm text-gray-400`}
+                >
+                  <span
+                    className={`
+                      mr-2 px-1 py-1 text-center font-bold text-olympus-700
+                      text-white
+                    `}
+                  >
+                    <FaPencil />
+                  </span>
+                  Mission drawings
+                </div>
+                <OlSearchBar
+                  key="main-search"
+                  onChange={(search) => {
+                    setSearchString(search);
+                    if (search === "") {
+                      setOpenContainers([]);
+                    }
+                  }}
+                  text={searchString || ""}
+                ></OlSearchBar>
+                <div className="flex flex-col gap-2">
+                  {mainDrawingsContainer.container && renderDrawingsContainerControls(mainDrawingsContainer.container, searchString)}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 p-6">
+                <div
+                  className={`flex flex-row items-center text-sm text-gray-400`}
+                >
+                  <span
+                    className={`
+                      mr-2 px-1 py-1 text-center font-bold text-olympus-700
+                      text-white
+                    `}
+                  >
+                    <FaRegCompass />
+                  </span>
+                  Navpoints
+                </div>
+                <OlSearchBar
+                  key="navpoint-search"
+                  onChange={(search) => {
+                    setNavpointSearchString(search);
+                    if (search === "") {
+                      setOpenContainers([]);
+                    }
+                  }}
+                  text={navpointSearchString || ""}
+                ></OlSearchBar>
+                <div className="flex flex-col gap-2">
+                  {navpointsContainer.container && renderDrawingsContainerControls(navpointsContainer.container, navpointSearchString)}
+                </div>
               </div>
             </div>
           </div>
@@ -362,9 +434,11 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                 bg-olympus-600 p-5
               `}
             >
-              <div className={`
-                border-b-2 border-b-olympus-100 pb-4 text-gray-300
-              `}>Automatic IADS generation</div>
+              <div
+                className={`border-b-2 border-b-olympus-100 pb-4 text-gray-300`}
+              >
+                Automatic IADS generation
+              </div>
               <OlDropdown className="" label="Units types" disableAutoClose={true}>
                 {types.map((type, idx) => {
                   if (!(type in typesSelection)) {
