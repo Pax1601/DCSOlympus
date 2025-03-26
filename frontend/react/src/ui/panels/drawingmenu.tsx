@@ -16,7 +16,7 @@ import { DrawSubState, ERAS_ORDER, IADSTypes, NO_SUBSTATE, OlympusState, Olympus
 import { AppStateChangedEvent, CoalitionAreasChangedEvent, CoalitionAreaSelectedEvent, DrawingsInitEvent, DrawingsUpdatedEvent } from "../../events";
 import { FaCopy, FaPencil, FaRegCompass, FaXmark } from "react-icons/fa6";
 import { deepCopyTable } from "../../other/utils";
-import { DCSDrawingsContainer, DCSEmptyLayer } from "../../map/drawings/drawingsmanager";
+import { DCSDrawing, DCSDrawingsContainer, DCSEmptyLayer } from "../../map/drawings/drawingsmanager";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlSearchBar } from "../components/olsearchbar";
 
@@ -67,6 +67,10 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
     CoalitionAreasChangedEvent.on((coalitionAreas) => setCoalitionAreas([...coalitionAreas]));
   }, []);
 
+  function getDrawingLabelColor(drawing: DCSDrawingsContainer | DCSDrawing) {
+    return drawing.getVisibility() ? `text-gray-200` : `text-gray-600`;
+  }
+
   function renderDrawingsContainerControls(container: DCSDrawingsContainer, containerSearchString: string) {
     if (container.hasSearchString(containerSearchString)) {
       /* The following snippet automatically open containers that contains searched drawings */
@@ -98,8 +102,10 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               <FontAwesomeIcon
                 icon={container.getVisibility() ? faEye : faEyeSlash}
                 className={`
-                  my-auto w-6 cursor-pointer text-gray-400 transition-transform
-                  hover:scale-125 hover:text-gray-200
+                  my-auto w-6 cursor-pointer
+                  ${getDrawingLabelColor(container)}
+                  transition-transform
+                  hover:scale-125 hover:text-gray-50
                 `}
                 onClick={() => {
                   if (container === mainDrawingsContainer.container) {
@@ -111,7 +117,9 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
               />
               <div
                 className={`
-                  w-40 w-max-40 overflow-hidden text-ellipsis text-nowrap bg-
+                  w-40
+                  ${getDrawingLabelColor(container)}
+                  w-max-40 overflow-hidden text-ellipsis text-nowrap bg-
                 `}
               >
                 {container.getName()}
@@ -139,15 +147,20 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   <FontAwesomeIcon
                     icon={drawing.getVisibility() ? faEye : faEyeSlash}
                     className={`
-                      my-auto w-6 cursor-pointer text-gray-400
+                      my-auto w-6 cursor-pointer
+                      ${getDrawingLabelColor(drawing)}
                       transition-transform
-                      hover:scale-125 hover:text-gray-200
+                      hover:scale-125 hover:text-gray-50
                     `}
                     onClick={() => {
                       drawing.setVisibility(!drawing.getVisibility());
                     }}
                   />
-                  <div className={`overflow-hidden text-ellipsis text-nowrap`}>{drawing.getName()}</div>
+                  <div className={`
+                    overflow-hidden
+                    ${getDrawingLabelColor(drawing)}
+                    text-ellipsis text-nowrap
+                  `}>{drawing.getName()}</div>
                   <FontAwesomeIcon
                     icon={faMapLocation}
                     className={`

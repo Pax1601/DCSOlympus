@@ -5,7 +5,7 @@ import { OlNumberInput } from "../components/olnumberinput";
 import { getApp } from "../../olympusapp";
 import { ServerStatus } from "../../interfaces";
 import { CommandModeOptionsChangedEvent, ServerStatusUpdatedEvent } from "../../events";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, ERAS_ORDER, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
+import { COMMAND_MODE_OPTIONS_DEFAULTS, ERAS_ORDER, GAME_MASTER } from "../../constants/constants";
 import { secondsToTimeString } from "../../other/utils";
 import { FaQuestionCircle } from "react-icons/fa";
 import { FaMinus, FaPlus } from "react-icons/fa6";

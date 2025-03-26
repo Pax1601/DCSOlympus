@@ -19,15 +19,25 @@ import { FaChevronLeft, FaChevronRight, FaFloppyDisk } from "react-icons/fa6";
 import {
   CommandModeOptionsChangedEvent,
   ConfigLoadedEvent,
+  EnabledCommandModesChangedEvent,
   HiddenTypesChangedEvent,
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
   SessionDataChangedEvent,
   SessionDataSavedEvent,
 } from "../../events";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, MAP_HIDDEN_TYPES_DEFAULTS, MAP_OPTIONS_DEFAULTS, RED_COMMANDER } from "../../constants/constants";
+import {
+  BLUE_COMMANDER,
+  COMMAND_MODE_OPTIONS_DEFAULTS,
+  GAME_MASTER,
+  LoginSubState,
+  MAP_HIDDEN_TYPES_DEFAULTS,
+  MAP_OPTIONS_DEFAULTS,
+  OlympusState,
+  RED_COMMANDER,
+} from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
-import { FaCheck, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaRedo, FaSpinner } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
 
 export function Header() {
@@ -44,6 +54,8 @@ export function Header() {
   const [isLatestVersion, setIsLatestVersion] = useState(false);
   const [isBetaVersion, setIsBetaVersion] = useState(false);
   const [isDevVersion, setIsDevVersion] = useState(false);
+  const [enabledCommandModes, setEnabledCommandModes] = useState([] as string[]);
+  const [loadingNewCommandMode, setLoadingNewCommandMode] = useState(false);
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
@@ -60,9 +72,11 @@ export function Header() {
     });
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {
       setCommandModeOptions(commandModeOptions);
+      setLoadingNewCommandMode(false);
     });
     SessionDataChangedEvent.on(() => setSavingSessionData(true));
     SessionDataSavedEvent.on(() => setSavingSessionData(false));
+    EnabledCommandModesChangedEvent.on((enabledCommandModes) => setEnabledCommandModes(enabledCommandModes));
 
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
@@ -213,14 +227,79 @@ export function Header() {
           )}
         </div>
 
+        {commandModeOptions.commandMode === GAME_MASTER && (
+          <div
+            className={`
+              flex h-full cursor-pointer rounded-md border-2 border-transparent
+              bg-olympus-600 px-4 text-gray-200
+              hover:bg-olympus-400
+            `}
+            onClick={() => {
+              if (enabledCommandModes.length > 0) {
+                let blueCommandModeIndex = enabledCommandModes.indexOf(BLUE_COMMANDER);
+                let redCommandModeIndex = enabledCommandModes.indexOf(RED_COMMANDER);
+                if (blueCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(BLUE_COMMANDER);
+                else if (redCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(RED_COMMANDER);
+                setLoadingNewCommandMode(true);
+              }
+            }}
+          >
+            <span className="my-auto font-bold">Game Master</span>
+            {enabledCommandModes.length > 0 && (
+              <>{loadingNewCommandMode ? <FaSpinner className={`
+                my-auto ml-2 animate-spin text-white
+              `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}</>
+            )}
+          </div>
+        )}
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
-          <div className={`flex h-full rounded-md bg-blue-600 px-4 text-white`}>
-            <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
+          <div
+            className={`
+              flex h-full cursor-pointer rounded-md border-2 border-transparent
+              bg-blue-600 px-4 text-gray-200
+              hover:bg-blue-400
+            `}
+            onClick={() => {
+              if (enabledCommandModes.length > 0) {
+                let gameMasterCommandModeIndex = enabledCommandModes.indexOf(GAME_MASTER);
+                let redCommandModeIndex = enabledCommandModes.indexOf(RED_COMMANDER);
+                if (redCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(RED_COMMANDER);
+                else if (gameMasterCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(GAME_MASTER);
+                setLoadingNewCommandMode(true);
+              }
+            }}
+          >
+            <span className="my-auto font-bold">BLUE Commander</span>
+            {enabledCommandModes.length > 0 && (
+              <>{loadingNewCommandMode ? <FaSpinner className={`
+                my-auto ml-2 animate-spin text-gray-200
+              `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}</>
+            )}
           </div>
         )}
         {commandModeOptions.commandMode === RED_COMMANDER && (
-          <div className={`flex h-full rounded-md bg-red-600 px-4 text-white`}>
-            <span className="my-auto font-bold">BLUE Commander ({commandModeOptions.spawnPoints.blue} points)</span>
+          <div
+            className={`
+              flex h-full cursor-pointer rounded-md border-2 border-transparent
+              bg-red-600 px-4 text-gray-200
+              hover:bg-red-500
+            `}
+            onClick={() => {
+              if (enabledCommandModes.length > 0) {
+                let gameMasterCommandModeIndex = enabledCommandModes.indexOf(GAME_MASTER);
+                let blueCommandModeIndex = enabledCommandModes.indexOf(BLUE_COMMANDER);
+                if (gameMasterCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(GAME_MASTER);
+                else if (blueCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(BLUE_COMMANDER);
+                setLoadingNewCommandMode(true);
+              }
+            }}
+          >
+            <span className="my-auto font-bold">RED Commander</span>
+            {enabledCommandModes.length > 0 && (
+              <>{loadingNewCommandMode ? <FaSpinner className={`
+                my-auto ml-2 animate-spin text-gray-200
+              `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}</>
+            )}
           </div>
         )}
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>

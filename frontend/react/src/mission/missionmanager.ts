@@ -275,11 +275,9 @@ export class MissionManager {
     var requestRefresh = false;
     if (this.#commandModeOptions.commandMode === NONE && commandModeOptions.commandMode !== NONE) requestRefresh = true;
 
-    /* Refresh the page if we have lost Game Master priviledges */
-    if (this.#commandModeOptions.commandMode === GAME_MASTER && commandModeOptions.commandMode !== GAME_MASTER) location.reload();
-
     /* Check if any option has changed */
     var commandModeOptionsChanged =
+      commandModeOptions.commandMode !== this.getCommandModeOptions().commandMode ||
       !commandModeOptions.eras.every((value: string, idx: number) => {
         return value === this.getCommandModeOptions().eras[idx];
       }) ||
