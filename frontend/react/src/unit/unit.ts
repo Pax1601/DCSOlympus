@@ -1947,9 +1947,6 @@ export abstract class Unit extends CustomMarker {
         points.push(new LatLng(destination.lat, destination.lng));
       }
 
-      /* Add racetrack anchor to the path, but only if we are an active tanker or AWACS */
-      if (this.getState() !== UnitState.IDLE && (this.getIsActiveAWACS() || this.getIsActiveTanker())) points.push(this.#racetrackAnchor);
-
       this.#pathPolyline.setLatLngs(points);
 
       if (points.length == 1) this.#clearPath();

@@ -154,8 +154,8 @@ void AirUnit::AIloop()
 {
 	srand(static_cast<unsigned int>(time(NULL)) + ID);
 
-	/* Reset the anchor, but only if the unit is not a tanker or a AWACS */
-	if (state != State::IDLE && !isActiveTanker && !isActiveAWACS) {
+	/* Reset the anchor */
+	if (state != State::IDLE) {
 		setRacetrackAnchor(Coords(NULL));
 		setRacetrackBearing(NULL);
 		setRacetrackLength(NULL);
