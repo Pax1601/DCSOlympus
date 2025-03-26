@@ -13,7 +13,7 @@
 		"gameMasterPassword": "",
 		"blueCommanderPassword": "",
 		"redCommanderPassword": "",
-		"admin": ""
+		"adminPassword": ""
 	},
 
 	"_comment6": "These are the settings for the frontend server, i.e. the server which hosts the Olympus GUI web interface.",

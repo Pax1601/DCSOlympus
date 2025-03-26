@@ -81,18 +81,18 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
         </p>
       </div>
       <div className="flex flex-row gap-1 px-2">
-        {props.blueprint.abilities?.split(" ").map((tag) => {
-          return (
+        {props.blueprint.abilities?.split(" ").map((ability) => {
+          return <>{ ability.replaceAll(" ", "") !== "" &&
             <div
-              key={tag}
+              key={ability}
               className={`
                 rounded-full bg-olympus-800 px-2 py-0.5 text-xs font-bold
                 dark:text-olympus-50
               `}
             >
-              {tag}
+              {ability}
             </div>
-          );
+           }</>
         })}
 
         <div

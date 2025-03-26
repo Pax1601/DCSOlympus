@@ -66,6 +66,7 @@ export function SpawnContextMenu(props: {}) {
   const [blueprints, setBlueprints] = useState([] as UnitBlueprint[]);
   const [roles, setRoles] = useState({ aircraft: [] as string[], helicopter: [] as string[] });
   const [types, setTypes] = useState({ groundunit: [] as string[], navyunit: [] as string[] });
+  const [tags, setTags] = useState({ aircraft: [] as string[], helicopter: [] as string[], groundunit: [] as string[], navyunit: [] as string[] });
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
   const [showCost, setShowCost] = useState(false);
   const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
@@ -101,6 +102,25 @@ export function SpawnContextMenu(props: {}) {
           ?.getUnitsManager()
           .getDatabase()
           .getTypes((unit) => unit.category === "navyunit"),
+      });
+
+      setTags({
+        aircraft: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getTags((unit) => unit.category === "aircraft"),
+        helicopter: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getTags((unit) => unit.category === "helicopter"),
+        groundunit: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getTags((unit) => unit.category === "groundunit"),
+        navyunit: getApp()
+          ?.getUnitsManager()
+          .getDatabase()
+          .getTags((unit) => unit.category === "navyunit"),
       });
     });
 
@@ -314,15 +334,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && (
-                          <span
-                            className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
-                        `}
-                          >
-                            No aircraft available
-                          </span>
-                        )}
+                        `}>No aircraft available</span>}
                       </div>
                     </>
                   )}
@@ -370,15 +384,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && (
-                          <span
-                            className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
-                        `}
-                          >
-                            No helicopter available
-                          </span>
-                        )}
+                        `}>No helicopter available</span>}
                       </div>
                     </>
                   )}
@@ -429,15 +437,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && (
-                          <span
-                            className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
-                        `}
-                          >
-                            No air defence unit available
-                          </span>
-                        )}
+                        `}>No air defence unit available</span>}
                       </div>
                     </>
                   )}
@@ -447,6 +449,29 @@ export function SpawnContextMenu(props: {}) {
                         {types.groundunit
                           .sort()
                           ?.filter((type) => type !== "SAM Site" && type !== "AAA")
+                          .map((type) => {
+                            return (
+                              <div
+                                key={type}
+                                data-selected={selectedType === type}
+                                className={`
+                                  cursor-pointer rounded-full bg-olympus-900
+                                  px-2 py-0.5 text-xs font-bold text-olympus-50
+                                  data-[selected='true']:bg-blue-500
+                                  data-[selected='true']:text-gray-200
+                                `}
+                                onClick={() => {
+                                  selectedType === type ? setSelectedType(null) : setSelectedType(type);
+                                }}
+                              >
+                                {type}
+                              </div>
+                            );
+                          })}
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {tags.groundunit
+                          .sort()
                           .map((type) => {
                             return (
                               <div
@@ -502,15 +527,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && (
-                          <span
-                            className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
-                        `}
-                          >
-                            No ground unit available
-                          </span>
-                        )}
+                        `}>No ground unit available</span>}
                       </div>
                     </>
                   )}
@@ -558,15 +577,9 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && (
-                          <span
-                            className={`
+                        {blueprints?.length === 0 && <span className={`
                           text-gray-200
-                        `}
-                          >
-                            No navy unit available
-                          </span>
-                        )}
+                        `}>No navy unit available</span>}
                       </div>
                     </>
                   )}

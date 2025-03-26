@@ -192,7 +192,7 @@ class DCSInstance {
                 /* Read the new configurations added in v2.0.0 */
                 if (config["frontend"]["autoconnectWhenLocal"] !== undefined)
                     this.autoconnectWhenLocal = config["frontend"]["autoconnectWhenLocal"];
-                if (config["frontend"]["audio"] !== undefined && config["frontend"]["audio"]["SRSPort"] !== undefined)
+                if (config["audio"] !== undefined && config["audio"]["SRSPort"] !== undefined)
                     this.SRSPort = config["audio"]["SRSPort"];
 
                 this.gameMasterPasswordEdited = false;

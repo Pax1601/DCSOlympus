@@ -110,6 +110,22 @@ export class UnitDatabase {
     return types;
   }
 
+  /* Returns a list of all tags in a database */
+  getTags(unitFilter?: (unit: UnitBlueprint) => boolean) {
+    var filteredBlueprints = this.getBlueprints();
+    var tags: string[] = [];
+    for (let unit of filteredBlueprints) {
+      if (typeof unitFilter === "function" && !unitFilter(unit)) continue;
+      let unitTags = unit.tags?.split(" ");
+      if (unitTags) {
+        for (let tag of unitTags) {
+          if (tag.replaceAll(" ", "") !== "" && !tags.includes(tag)) tags.push(tag);
+        }
+      }
+    }
+    return tags;
+  }
+
   /* Returns a list of all possible eras in a database */
   getEras(unitFilter?: (unit: UnitBlueprint) => boolean) {
     var filteredBlueprints = this.getBlueprints();

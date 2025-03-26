@@ -19,13 +19,17 @@ export function OlUnitListEntry(props: {
     if (["aircraft", "helicopter"].includes(props.blueprint.category)) {
       let roles = props.blueprint.loadouts?.flatMap((loadout) => loadout.roles).filter((role) => role !== "No task");
       if (roles !== undefined) {
-        let uniqueRoles = roles?.reduce((acc, current) => {if (!acc.includes(current)) {acc.push(current)} return acc}, [] as string[])
+        let uniqueRoles = roles?.reduce((acc, current) => {
+          if (!acc.includes(current)) {
+            acc.push(current);
+          }
+          return acc;
+        }, [] as string[]);
         let mainRole = mode(roles);
         pillString = uniqueRoles.length > 6 ? "Multirole" : mainRole;
       }
     } else {
-      if (props.blueprint.category)
-      pillString = props.blueprint.type;
+      if (props.blueprint.category) pillString = props.blueprint.type;
     }
   }
   return (
@@ -39,14 +43,15 @@ export function OlUnitListEntry(props: {
     >
       {props.icon && <FontAwesomeIcon icon={props.icon} className="text-sm"></FontAwesomeIcon>}
       {props.silhouette && (
-        <div className={`
-          mr-2 flex h-6 w-6 rotate-90 content-center justify-center opacity-50
-          invert
-        `}>
-        <img
-          src={`./images/units/${props.silhouette}`}
-          className="my-auto max-h-full max-w-full"
-        />
+        <div
+          className={`
+            mr-2 flex h-6 w-6 rotate-90 content-center justify-center opacity-50
+            invert
+          `}
+        >
+          <img src={`./images/units/${props.silhouette}`} className={`
+            my-auto max-h-full max-w-full
+          `} />
         </div>
       )}
       <div className="flex-1 px-2 text-left font-normal">{props.blueprint.label}</div>

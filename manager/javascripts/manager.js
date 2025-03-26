@@ -175,8 +175,10 @@ class Manager {
 
             /* Reset default radio buttons */
             this.typePage.options.onShow = () => {
-                if (this.getActiveInstance())
+                if (this.getActiveInstance()) {
                     this.getActiveInstance().installationType = 'singleplayer';
+                    this.getActiveInstance().autoconnectWhenLocal = true;
+                }
                 else {
                     showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
                 }
@@ -335,7 +337,7 @@ class Manager {
         this.typePage.getElement().querySelector(`.multiplayer`).classList.toggle("selected", type === 'multiplayer');
         if (this.getActiveInstance()) {
             this.getActiveInstance().installationType = type;
-            this.getActiveInstance().autoconnectWhenLocal = type === 'singleplayer';
+            this.getActiveInstance().autoconnectWhenLocal = (type === 'singleplayer');
         }
         else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`);
@@ -570,7 +572,11 @@ class Manager {
             } else {
                 this.getActiveInstance().autoconnectWhenLocal = true;
             }
-            this.expertSettingsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal)
+            if (this.getMode() === 'basic') {
+                this.passwordsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal);
+            } else {
+                this.expertSettingsPage.getElement().querySelector(".autoconnect .checkbox").classList.toggle("checked", this.getActiveInstance().autoconnectWhenLocal);
+            }
         } else {
             showErrorPopup(`<div class='main-message'>A critical error occurred! </div><div class='sub-message'> Check ${this.getLogLocation()} for more info. </div>`)
         }
