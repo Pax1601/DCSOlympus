@@ -1,6 +1,7 @@
 import express = require("express");
 import fs = require("fs");
 import path = require("path");
+import { connectionIsLocal as checkConnectionIsLocal } from "../utils";
 
 const router = express.Router();
 
@@ -26,10 +27,7 @@ module.exports = function (configLocation) {
       let rawdata = fs.readFileSync(configLocation, "utf-8");
       const config = JSON.parse(rawdata);
 
-      /* Check if the connection is local */
-      let local = false;
-      if (config.frontend.autoconnectWhenLocal)
-        local = req.headers[config.frontend.proxyHeader] === undefined;
+      const local = checkConnectionIsLocal(config, req);
 
       let resConfig = {
         frontend: { ...config.frontend },

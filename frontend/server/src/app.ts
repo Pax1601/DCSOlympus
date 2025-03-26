@@ -10,42 +10,7 @@ import expressBasicAuth from "express-basic-auth";
 
 /* Load the proxy middleware plugin */
 import httpProxyMiddleware = require("http-proxy-middleware");
-
-function checkCustomHeaders(config, usersConfig, groupsConfig, req) {
-  let user = req.auth?.user ?? null;
-  let group = null;
-
-  /* Check if custom authorization headers are enabled */
-  if (
-    "customAuthHeaders" in config["frontend"] &&
-    config["frontend"]["customAuthHeaders"]["enabled"]
-  ) {
-    /* If so, check that the custom headers are indeed present */
-    if (
-      config["frontend"]["customAuthHeaders"]["username"].toLowerCase() in
-        req.headers &&
-      config["frontend"]["customAuthHeaders"]["group"].toLowerCase() in
-        req.headers
-    ) {
-      /* If they are, assign the group */
-      group =
-        req.headers[
-          config["frontend"]["customAuthHeaders"]["group"].toLowerCase()
-        ];
-
-      /* Check that the user is in an existing group */
-      if (group in groupsConfig) {
-        user =
-          req.headers[
-            config["frontend"]["customAuthHeaders"]["username"].toLowerCase()
-          ];
-        usersConfig[user] = { password: null, roles: groupsConfig[group] };
-      }
-    }
-  }
-
-  return user;
-}
+import { getUserFromCustomHeaders, connectionIsLocal } from "./utils";
 
 module.exports = function (configLocation, viteProxy) {
   /* Config specific routers */
@@ -53,41 +18,25 @@ module.exports = function (configLocation, viteProxy) {
   const resourcesRouter = require("./routes/resources")(configLocation);
   const adminRouter = require("./routes/admin")(configLocation);
 
+  /* Database routers */
+  const databasesLocation = path.join(path.dirname(configLocation), "..", "Mods", "Services", "Olympus", "databases");
+  const databasesRouter = require("./routes/api/databases")(databasesLocation);
+
   /* Default routers */
   const airbasesRouter = require("./routes/api/airbases");
-  const databasesRouter = require("./routes/api/databases")(
-    path.join(
-      path.dirname(configLocation),
-      "..",
-      "Mods",
-      "Services",
-      "Olympus",
-      "databases"
-    )
-  );
   const speechRouter = require("./routes/api/speech")();
 
   /* Read the users configuration file */
   let usersConfig = {};
-  if (
-    fs.existsSync(path.join(path.dirname(configLocation), "olympusUsers.json"))
-  ) {
-    let rawdata = fs.readFileSync(
-      path.join(path.dirname(configLocation), "olympusUsers.json"),
-      { encoding: "utf-8" }
-    );
+  if (fs.existsSync(path.join(path.dirname(configLocation), "olympusUsers.json"))) {
+    let rawdata = fs.readFileSync(path.join(path.dirname(configLocation), "olympusUsers.json"), { encoding: "utf-8" });
     usersConfig = JSON.parse(rawdata);
   }
 
   /* Read the groups configuration file */
   let groupsConfig = {};
-  if (
-    fs.existsSync(path.join(path.dirname(configLocation), "olympusGroups.json"))
-  ) {
-    let rawdata = fs.readFileSync(
-      path.join(path.dirname(configLocation), "olympusGroups.json"),
-      { encoding: "utf-8" }
-    );
+  if (fs.existsSync(path.join(path.dirname(configLocation), "olympusGroups.json"))) {
+    let rawdata = fs.readFileSync(path.join(path.dirname(configLocation), "olympusGroups.json"), { encoding: "utf-8" });
     groupsConfig = JSON.parse(rawdata);
   }
 
@@ -109,23 +58,21 @@ module.exports = function (configLocation, viteProxy) {
   const app = express();
 
   /* Define the authentication */
-  const defaultUsers = {
+  const commandRoles = {
     "Game master": config["authentication"]["gameMasterPassword"],
     "Blue commander": config["authentication"]["blueCommanderPassword"],
     "Red commander": config["authentication"]["redCommanderPassword"],
   };
   if (config["authentication"]["adminPassword"]) {
-    defaultUsers["Admin"] = config["authentication"]["adminPassword"];
+    commandRoles["Admin"] = config["authentication"]["adminPassword"];
   }
   let users = {};
-  Object.keys(usersConfig).forEach(
-    (user) => (users[user] = usersConfig[user].password)
-  );
+  Object.keys(usersConfig).forEach((user) => (users[user] = usersConfig[user].password));
   const auth = expressBasicAuth({
-    users: { ...defaultUsers, ...users },
+    users: { ...commandRoles, ...users },
   });
 
-  /* Define middleware */
+  /* Define logging middleware */
   app.use(
     logger("dev", {
       skip: function (req, res) {
@@ -135,28 +82,18 @@ module.exports = function (configLocation, viteProxy) {
   );
 
   /* Authorization middleware */
-  if (
-    "customAuthHeaders" in config["frontend"] &&
-    config["frontend"]["customAuthHeaders"]["enabled"]
-  ) {
+  if ("customAuthHeaders" in config["frontend"] && config["frontend"]["customAuthHeaders"]["enabled"]) {
     /* Custom authorization will be used */
     app.use("/", async (req, res, next) => {
-      const user = checkCustomHeaders(config, usersConfig, groupsConfig, req);
+      const user = getUserFromCustomHeaders(config, usersConfig, groupsConfig, req);
+
+      const customHeadersUsername = config["frontend"]["customAuthHeaders"]["username"].toLowerCase();
+      const customHeadersGroup = config["frontend"]["customAuthHeaders"]["group"].toLowerCase();
 
       if (user) {
         /* If the user is preauthorized, set the authorization headers to the response */
-        res.set(
-          config["frontend"]["customAuthHeaders"]["username"],
-          req.headers[
-            config["frontend"]["customAuthHeaders"]["username"].toLowerCase()
-          ]
-        );
-        res.set(
-          config["frontend"]["customAuthHeaders"]["group"],
-          req.headers[
-            config["frontend"]["customAuthHeaders"]["group"].toLowerCase()
-          ]
-        );
+        res.set(customHeadersUsername, req.headers[customHeadersUsername]);
+        res.set(customHeadersGroup, req.headers[customHeadersGroup]);
       }
 
       next();
@@ -169,10 +106,7 @@ module.exports = function (configLocation, viteProxy) {
   /* Define the middleware to replace the authorization header for the olympus backend */
   app.use("/olympus", async (req, res, next) => {
     /* Check if custom authorization headers are being used */
-    const user =
-      //@ts-ignore
-      req.auth?.user ??
-      checkCustomHeaders(config, usersConfig, groupsConfig, req);
+    const user = req.auth?.user ?? getUserFromCustomHeaders(config, usersConfig, groupsConfig, req);
 
     /* If either simple authentication or custom authentication has succeded */
     if (user) {
@@ -185,12 +119,10 @@ module.exports = function (configLocation, viteProxy) {
           /* Check that the user is authorized to that role */
           if (userConfig.roles.includes(req.headers["x-command-mode"])) {
             /* Check that the role is valid */
-            //@ts-ignore
-            if (req.headers["x-command-mode"] in defaultUsers) {
+            if (req.headers["x-command-mode"] in commandRoles) {
               /* Apply the authorization headers */
               req.headers.authorization = `Basic ${btoa(
-                //@ts-ignore
-                user + ":" + defaultUsers[req.headers["x-command-mode"]]
+                user + ":" + commandRoles[req.headers["x-command-mode"]]
               )}`;
             } else {
               res.sendStatus(401); // Unauthorized
@@ -201,23 +133,33 @@ module.exports = function (configLocation, viteProxy) {
         } else {
           /* No role has been specified, continue with the highest role */
           /* Check that the role is valid */
-          if (userConfig.roles[0] in defaultUsers) {
+          if (userConfig.roles[0] in commandRoles) {
             /* Apply the authorization headers */
-            req.headers.authorization = `Basic ${btoa(
-              userConfig.roles[0] + ":" + defaultUsers[userConfig.roles[0]]
-            )}`;
+            req.headers.authorization = `Basic ${btoa(userConfig.roles[0] + ":" + commandRoles[userConfig.roles[0]])}`;
           } else {
             res.sendStatus(401); // Unauthorized
           }
         }
       } else {
-        if (!(user in defaultUsers)) res.sendStatus(401); // Unauthorized
+        if (!(user in commandRoles)) res.sendStatus(401); // Unauthorized
       }
 
       /* Send back the roles that the user is enabled to */
-      if (userConfig) res.set("X-Enabled-Command-Modes", `${userConfig.roles}`);
-      else if (user in defaultUsers)
-        res.set("X-Enabled-Command-Modes", `${user}`);
+      if (connectionIsLocal(config, req)) {
+        /* If the connection is local, all roles are enabled */
+        res.set("X-Enabled-Command-Modes", "Game master,Blue commander,Red commander");
+        if (req.headers["x-command-mode"]) {
+          const commandMode = req.headers["x-command-mode"];
+          /* Apply the authorization headers */
+          if (commandMode in commandRoles) {
+            req.headers.authorization = `Basic ${btoa(commandMode + ":" + commandRoles[commandMode])}`;
+          }
+        }
+      } else {
+        /* If the connection is not local, only the roles that the user is enabled to are enabled */
+        if (userConfig) res.set("X-Enabled-Command-Modes", `${userConfig.roles}`);
+        else if (user in commandRoles) res.set("X-Enabled-Command-Modes", `${user}`);
+      }
       next();
     } else {
       res.sendStatus(401); // Unauthorized
@@ -225,28 +167,27 @@ module.exports = function (configLocation, viteProxy) {
   });
 
   /* Proxy middleware */
+  /* If a port is defined we assume the backend is of the type IP:port */
   if (config["backend"]["port"]) {
     app.use(
       "/olympus",
       httpProxyMiddleware.createProxyMiddleware({
-        target: `http://${
-          backendAddress === "*" ? "localhost" : backendAddress
-        }:${config["backend"]["port"]}/olympus`,
+        target: `http://${backendAddress === "*" ? "localhost" : backendAddress}:${config["backend"]["port"]}/olympus`,
         changeOrigin: true,
       })
     );
   } else {
+    /* Otherwise we assume it is a url */
     app.use(
       "/olympus",
       httpProxyMiddleware.createProxyMiddleware({
-        target: `https://${
-          backendAddress === "*" ? "localhost" : backendAddress
-        }/olympus`,
+        target: `https://${backendAddress === "*" ? "localhost" : backendAddress}/olympus`,
         changeOrigin: true,
       })
     );
   }
 
+  /* More middleware */
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
   app.use(express.static(path.join(__dirname, "..", "public")));
@@ -259,10 +200,12 @@ module.exports = function (configLocation, viteProxy) {
   app.use("/api/speech", speechRouter);
   app.use("/resources", resourcesRouter);
 
+  /* Admin routers */
   app.use("/admin", auth);
   app.use("/admin", adminRouter);
 
   /* Set default index */
+  /* If we are in Vite mode, proxy the requests to the vite server */
   if (viteProxy) {
     app.use(
       "/",
@@ -272,6 +215,7 @@ module.exports = function (configLocation, viteProxy) {
       })
     );
   } else {
+    /* Otherwise serve the static files */
     app.get("/", function (req, res) {
       res.sendFile(path.join(__dirname, "..", "public", "index.html"));
     });
@@ -279,10 +223,7 @@ module.exports = function (configLocation, viteProxy) {
 
   /* Start the audio backend */
   if (config["audio"]) {
-    let audioBackend = new AudioBackend(
-      config["audio"]["SRSPort"],
-      config["audio"]["WSPort"]
-    );
+    let audioBackend = new AudioBackend(config["audio"]["SRSPort"], config["audio"]["WSPort"]);
     audioBackend.start();
   }
 

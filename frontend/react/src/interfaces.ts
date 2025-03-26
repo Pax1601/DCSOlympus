@@ -43,7 +43,7 @@ export interface OlympusConfig {
   authentication?: {
     // Only sent when in localhost mode for autologin
     gameMasterPassword: string;
-    blueCommanderPasword: string;
+    blueCommanderPassword: string;
     redCommanderPassword: string;
   };
 }
