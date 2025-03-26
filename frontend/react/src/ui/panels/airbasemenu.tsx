@@ -72,6 +72,8 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
     });
   }
 
+  filteredBlueprints.sort((a, b) => a.label.localeCompare(b.label));
+
   return (
     <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false}>
       <div
@@ -204,7 +206,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                         return (
                           <OlUnitListEntry
                             key={blueprint.name}
-                            icon={olButtonsVisibilityAircraft}
+                            silhouette={blueprint.filename}
                             blueprint={blueprint}
                             onClick={() => setBlueprint(blueprint)}
                             showCost={showCost}
@@ -258,7 +260,7 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
                         return (
                           <OlUnitListEntry
                             key={blueprint.name}
-                            icon={olButtonsVisibilityHelicopter}
+                            silhouette={blueprint.filename}
                             blueprint={blueprint}
                             onClick={() => setBlueprint(blueprint)}
                             showCost={showCost}
