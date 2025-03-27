@@ -469,29 +469,7 @@ export function SpawnContextMenu(props: {}) {
                             );
                           })}
                       </div>
-                      <div className="flex flex-wrap gap-1">
-                        {tags.groundunit
-                          .sort()
-                          .map((type) => {
-                            return (
-                              <div
-                                key={type}
-                                data-selected={selectedType === type}
-                                className={`
-                                  cursor-pointer rounded-full bg-olympus-900
-                                  px-2 py-0.5 text-xs font-bold text-olympus-50
-                                  data-[selected='true']:bg-blue-500
-                                  data-[selected='true']:text-gray-200
-                                `}
-                                onClick={() => {
-                                  selectedType === type ? setSelectedType(null) : setSelectedType(type);
-                                }}
-                              >
-                                {type}
-                              </div>
-                            );
-                          })}
-                      </div>
+
                       <div
                         className={`
                           flex max-h-[350px] flex-col gap-1 overflow-y-scroll
