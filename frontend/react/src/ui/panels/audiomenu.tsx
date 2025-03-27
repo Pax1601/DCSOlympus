@@ -27,7 +27,6 @@ import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { Coalition, SRSClientData } from "../../types/types";
 import { AudioManagerState, GAME_MASTER, NONE } from "../../constants/constants";
-import { AudioManager } from "../../audio/audiomanager";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [devices, setDevices] = useState([] as MediaDeviceInfo[]);
