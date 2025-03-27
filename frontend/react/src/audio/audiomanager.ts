@@ -1,4 +1,4 @@
-import { AudioMessageType, BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../constants/constants";
+import { AudioManagerState, AudioMessageType, BLUE_COMMANDER, GAME_MASTER, OlympusState, RED_COMMANDER } from "../constants/constants";
 import { MicrophoneSource } from "./microphonesource";
 import { RadioSink } from "./radiosink";
 import { getApp } from "../olympusapp";
@@ -16,6 +16,7 @@ import {
   AudioManagerInputChangedEvent,
   AudioManagerOutputChangedEvent,
   AudioManagerStateChangedEvent,
+  AudioOptionsChangedEvent,
   AudioSinksChangedEvent,
   AudioSourcesChangedEvent,
   CommandModeOptionsChangedEvent,
@@ -24,13 +25,14 @@ import {
 } from "../events";
 import { CommandModeOptions, OlympusConfig } from "../interfaces";
 import { TextToSpeechSource } from "./texttospeechsource";
-import { Coalition } from "../types/types";
+import { AudioOptions, Coalition, SRSClientData } from "../types/types";
 
 export class AudioManager {
   #audioContext: AudioContext;
   #devices: MediaDeviceInfo[] = [];
   #input: MediaDeviceInfo;
   #output: MediaDeviceInfo;
+  #options: AudioOptions = { input: "", output: "" };
 
   /* The audio sinks used to transmit the audio stream to the SRS backend */
   #sinks: AudioSink[] = [];
@@ -40,17 +42,19 @@ export class AudioManager {
 
   /* The audio backend must be manually started so that the browser can detect the user is enabling audio.
   Otherwise, no playback will be performed. */
-  #running: boolean = false;
+  #state: string = AudioManagerState.STOPPED;
   #port: number;
   #endpoint: string;
   #socket: WebSocket | null = null;
   #guid: string = makeID(22);
-  #SRSClientUnitIDs: number[] = [];
+  #SRSClientsData: SRSClientData[] = [];
   #syncInterval: number;
   #speechRecognition: boolean = true;
   #internalTextToSpeechSource: TextToSpeechSource;
   #coalition: Coalition = "blue";
   #commandMode: string = BLUE_COMMANDER;
+  #connectionCheckTimeout: number;
+  #receivedPackets: number = 0;
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
@@ -86,14 +90,23 @@ export class AudioManager {
   }
 
   start() {
+    if (this.#state === AudioManagerState.ERROR) {
+      console.error("The audio backend is in error state, cannot start");
+      getApp().addInfoMessage("The audio backend is in error state, cannot start");
+      return;
+    }
+
+    if (this.#state === AudioManagerState.RUNNING) {
+      console.error("The audio backend is already running, cannot start again");
+    }
+
+    getApp().addInfoMessage("Starting audio backend, please wait");
+
     this.#syncInterval = window.setInterval(() => {
       this.#syncRadioSettings();
     }, 1000);
 
     this.#audioContext = new AudioContext({ sampleRate: 16000 });
-
-    //@ts-ignore
-    if (this.#output) this.#audioContext.setSinkId(this.#output.deviceId);
 
     /* Connect the audio websocket */
     let res = location.toString().match(/(?:http|https):\/\/(.+):/);
@@ -122,11 +135,77 @@ export class AudioManager {
 
     /* Log any websocket errors */
     this.#socket.addEventListener("error", (event) => {
-      console.log("An error occurred while connecting the WebSocket: " + event);
+      console.log("An error occurred while connecting to the audio backend WebSocket");
+      getApp().addInfoMessage("An error occurred while connecting to the audio backend WebSocket");
+      this.error();
     });
 
     /* Handle the reception of a new message */
     this.#socket.addEventListener("message", (event) => {
+      this.#receivedPackets++;
+
+      /* Extract the clients data */
+      event.data.arrayBuffer().then((packetArray) => {
+        const packetUint8Array = new Uint8Array(packetArray);
+        if (packetUint8Array[0] === MessageType.clientsData) {
+          const newSRSClientsData = JSON.parse(new TextDecoder().decode(packetUint8Array.slice(1))).clientsData;
+
+          /* Check if anything has changed with the SRSClients */
+          let clientsDataChanged = false;
+          /* Check if the length of the clients data has changed */
+          if (newSRSClientsData.length !== this.#SRSClientsData.length) {
+            clientsDataChanged = true;
+          } else {
+            newSRSClientsData.forEach((newClientData) => {
+              /* Check if the length is the same, but the clients names have changed */
+              let clientData = this.#SRSClientsData.find((clientData) => newClientData.name === clientData.name);
+              if (clientData === undefined) clientsDataChanged = true;
+              else {
+                /* Check if any of the data has changed */
+                if (
+                  clientData.coalition !== newClientData.coalition ||
+                  clientData.unitID !== newClientData.unitID ||
+                  Object.keys(clientData.iff).find((key) => clientData.iff[key] !== newClientData.iff[key]) !== undefined ||
+                  clientData.radios.find(
+                    (radio, idx) => radio.frequency !== newClientData.radios[idx].frequency || radio.modulation !== newClientData.radios[idx].modulation
+                  ) !== undefined
+                )
+                  clientsDataChanged = true;
+              }
+            });
+          }
+
+          /* If the clients data has changed, dispatch the event */
+          if (clientsDataChanged) {
+            this.#SRSClientsData = newSRSClientsData;
+            SRSClientsChangedEvent.dispatch(this.#SRSClientsData);
+          }
+
+          /* Update the number of connected clients for each radio */
+          this.#sinks
+            .filter((sink) => sink instanceof RadioSink)
+            .forEach((radio) => {
+              let connectedClients = 0;
+              /* Check if any of the radios of this client is tuned to the same frequency, has the same modulation, and is of the same coalition */
+              this.#SRSClientsData.forEach((clientData: SRSClientData) => {
+                let clientConnected = false;
+                clientData.radios.forEach((radioData) => {
+                  if (
+                    clientData.coalition === coalitionToEnum(this.#coalition) &&
+                    radioData.frequency === radio.getFrequency() &&
+                    radioData.modulation === radio.getModulation()
+                  )
+                    clientConnected = true;
+                });
+                if (clientConnected) connectedClients++;
+              });
+
+              radio.setConnectedClients(connectedClients);
+            });
+        }
+      });
+
+      /* Iterate over the radios. We iterate over the radios first so that a new copy of the audio packet is created for each pipeline */
       this.#sinks.forEach(async (sink) => {
         if (sink instanceof RadioSink) {
           /* Extract the audio data as array */
@@ -151,100 +230,135 @@ export class AudioManager {
                 sink.playBuffer(dst);
               }
             });
-          } else {
-            this.#SRSClientUnitIDs = JSON.parse(new TextDecoder().decode(packetUint8Array.slice(1))).unitIDs;
-            SRSClientsChangedEvent.dispatch();
           }
         }
       });
     });
 
-    /* Add the microphone source and connect it directly to the radio */
-    const microphoneSource = new MicrophoneSource(this.#input);
-    microphoneSource.initialize().then(() => {
-      this.#sinks.forEach((sink) => {
-        if (sink instanceof RadioSink) microphoneSource.connect(sink);
-      });
-      this.#sources.push(microphoneSource);
-      AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      this.#devices = devices;
+      AudioManagerDevicesChangedEvent.dispatch(devices);
 
-      let sessionRadios = getApp().getSessionDataManager().getSessionData().radios;
-      if (sessionRadios) {
-        /* Load session radios */
-        sessionRadios.forEach((options) => {
+      if (this.#options.input) {
+        let newInput = this.#devices.find((device) => device.deviceId === this.#options.input);
+        if (newInput) {
+          this.#input = newInput;
+          AudioManagerInputChangedEvent.dispatch(newInput);
+        }
+      }
+
+      if (this.#options.output) {
+        let newOutput = this.#devices.find((device) => device.deviceId === this.#options.output);
+        if (newOutput) {
+          this.#output = newOutput;
+          AudioManagerOutputChangedEvent.dispatch(newOutput);
+        }
+      }
+
+      /* Add the microphone source and connect it directly to the radio */
+      const microphoneSource = new MicrophoneSource(this.#input);
+      microphoneSource.initialize().then(() => {
+        this.#sinks.forEach((sink) => {
+          if (sink instanceof RadioSink) microphoneSource.connect(sink);
+        });
+        this.#sources.push(microphoneSource);
+        AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());
+
+        let sessionRadios = getApp().getSessionDataManager().getSessionData().radios;
+        if (sessionRadios) {
+          /* Load session radios */
+          sessionRadios.forEach((options) => {
+            let newRadio = this.addRadio();
+            newRadio?.setFrequency(options.frequency);
+            newRadio?.setModulation(options.modulation);
+            newRadio?.setPan(options.pan);
+          });
+        } else {
+          /* Add two default radios and connect to the microphone*/
           let newRadio = this.addRadio();
-          newRadio?.setFrequency(options.frequency);
-          newRadio?.setModulation(options.modulation);
-          newRadio?.setPan(options.pan);
-        });
-      } else {
-        /* Add two default radios and connect to the microphone*/
-        let newRadio = this.addRadio();
-        this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
-        this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
-        newRadio.setPan(-1);
+          newRadio.setPan(-1);
 
-        newRadio = this.addRadio();
-        this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
-        this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
-        newRadio.setPan(1);
-      }
+          newRadio = this.addRadio();
+          newRadio.setPan(1);
+        }
 
-      let sessionFileSources = getApp().getSessionDataManager().getSessionData().fileSources;
-      if (sessionFileSources) {
-        /* Load file sources */
-        sessionFileSources.forEach((options) => {
-          this.addFileSource();
-        });
-      }
+        let sessionFileSources = getApp().getSessionDataManager().getSessionData().fileSources;
+        if (sessionFileSources) {
+          /* Load file sources */
+          sessionFileSources.forEach((options) => {
+            this.addFileSource();
+          });
+        }
 
-      let sessionUnitSinks = getApp().getSessionDataManager().getSessionData().unitSinks;
-      if (sessionUnitSinks) {
-        /* Load unit sinks */
-        sessionUnitSinks.forEach((options) => {
-          let unit = getApp().getUnitsManager().getUnitByID(options.ID);
-          if (unit) {
-            this.addUnitSink(unit);
-          }
-        });
-      }
+        let sessionUnitSinks = getApp().getSessionDataManager().getSessionData().unitSinks;
+        if (sessionUnitSinks) {
+          /* Load unit sinks */
+          sessionUnitSinks.forEach((options) => {
+            let unit = getApp().getUnitsManager().getUnitByID(options.ID);
+            if (unit) {
+              this.addUnitSink(unit);
+            }
+          });
+        }
 
-      let sessionConnections = getApp().getSessionDataManager().getSessionData().connections;
-      if (sessionConnections) {
-        sessionConnections.forEach((connection) => {
-          if (connection[0] < this.#sources.length && connection[1] < this.#sinks.length) this.#sources[connection[0]]?.connect(this.#sinks[connection[1]]);
-        });
-      }
+        let sessionConnections = getApp().getSessionDataManager().getSessionData().connections;
+        if (sessionConnections) {
+          sessionConnections.forEach((connection) => {
+            if (connection[0] < this.#sources.length && connection[1] < this.#sinks.length) this.#sources[connection[0]]?.connect(this.#sinks[connection[1]]);
+          });
+        }
 
-      this.#running = true;
-      AudioManagerStateChangedEvent.dispatch(this.#running);
+        if (this.#state !== AudioManagerState.ERROR) {
+          this.#state = AudioManagerState.RUNNING;
+          AudioManagerStateChangedEvent.dispatch(this.#state);
+        }
+      });
+
+      //@ts-ignore
+      if (this.#output) this.#audioContext.setSinkId(this.#output.deviceId);
     });
 
     const textToSpeechSource = new TextToSpeechSource();
     this.#sources.push(textToSpeechSource);
 
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      this.#devices = devices;
-      AudioManagerDevicesChangedEvent.dispatch(devices);
-    });
-
     this.#internalTextToSpeechSource = new TextToSpeechSource();
+
+    /* Check if the audio backend is receiving updates from the backend every 10 seconds */
+    this.#connectionCheckTimeout = window.setTimeout(() => {
+      if (this.#receivedPackets === 0) {
+        console.error("The audio backend is not receiving any data from the backend, stopping the audio backend");
+        getApp().addInfoMessage("The audio backend is not receiving any data from the backend, stopping the audio backend");
+        this.error();
+      }
+    }, 10000);
   }
 
   stop() {
     /* Stop everything and send update event */
-    this.#running = false;
     this.#sources.forEach((source) => source.disconnect());
     this.#sinks.forEach((sink) => sink.disconnect());
     this.#sources = [];
     this.#sinks = [];
     this.#socket?.close();
 
+    window.clearInterval(this.#connectionCheckTimeout);
+
     window.clearInterval(this.#syncInterval);
 
     AudioSourcesChangedEvent.dispatch(this.#sources);
     AudioSinksChangedEvent.dispatch(this.#sinks);
-    AudioManagerStateChangedEvent.dispatch(this.#running);
+
+    if (this.#state !== AudioManagerState.ERROR) {
+      this.#state = AudioManagerState.STOPPED;
+      AudioManagerStateChangedEvent.dispatch(this.#state);
+    }
+  }
+
+  error() {
+    this.stop();
+
+    this.#state = AudioManagerState.ERROR;
+    AudioManagerStateChangedEvent.dispatch(this.#state);
   }
 
   setPort(port) {
@@ -288,8 +402,22 @@ export class AudioManager {
     this.#sinks.push(newRadio);
     /* Set radio name by default to be incremental number */
     newRadio.setName(`Radio ${this.#sinks.length}`);
+
+    this.#sources.find((source) => source instanceof MicrophoneSource)?.connect(newRadio);
+    this.#sources.find((source) => source instanceof TextToSpeechSource)?.connect(newRadio);
+
     AudioSinksChangedEvent.dispatch(this.#sinks);
     return newRadio;
+  }
+
+  tuneNewRadio(frequency, modulation) {
+    /* Check if a radio with the same frequency and modulation already exists */
+    let radio = this.#sinks.find((sink) => sink instanceof RadioSink && sink.getFrequency() === frequency && sink.getModulation() === modulation);
+    if (radio === undefined) {
+      let newRadio = this.addRadio();
+      newRadio.setFrequency(frequency);
+      newRadio.setModulation(modulation);
+    }
   }
 
   getSinks() {
@@ -325,12 +453,12 @@ export class AudioManager {
     return this.#audioContext;
   }
 
-  getSRSClientsUnitIDs() {
-    return this.#SRSClientUnitIDs;
+  getSRSClientsData() {
+    return this.#SRSClientsData;
   }
 
   isRunning() {
-    return this.#running;
+    return this.#state;
   }
 
   setInput(input: MediaDeviceInfo) {
@@ -339,6 +467,8 @@ export class AudioManager {
       AudioManagerInputChangedEvent.dispatch(input);
       this.stop();
       this.start();
+      this.#options.input = input.deviceId;
+      AudioOptionsChangedEvent.dispatch(this.#options);
     } else {
       console.error("Requested input device is not in devices list");
     }
@@ -350,6 +480,8 @@ export class AudioManager {
       AudioManagerOutputChangedEvent.dispatch(output);
       this.stop();
       this.start();
+      this.#options.output = output.deviceId;
+      AudioOptionsChangedEvent.dispatch(this.#options);
     } else {
       console.error("Requested output device is not in devices list");
     }
@@ -380,6 +512,14 @@ export class AudioManager {
 
   getCoalition() {
     return this.#coalition;
+  }
+
+  setOptions(options: AudioOptions) {
+    this.#options = options;
+  }
+
+  getOptions() {
+    return this.#options;
   }
 
   #syncRadioSettings() {

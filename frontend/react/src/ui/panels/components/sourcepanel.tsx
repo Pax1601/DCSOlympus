@@ -3,7 +3,7 @@ import { OlStateButton } from "../../components/olstatebutton";
 import { faHourglass, faPause, faPlay, faRepeat, faStop } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../../olympusapp";
 import { AudioSource } from "../../../audio/audiosource";
-import { FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
 import { OlRangeSlider } from "../../components/olrangeslider";
 import { FileSource } from "../../../audio/filesource";
 import { MicrophoneSource } from "../../../audio/microphonesource";
@@ -40,10 +40,10 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
             setExpanded(!expanded);
           }}
         >
-          <FaChevronUp
+          <FaChevronDown
             className={`
               text-gray-500 transition-transform
-              data-[expanded='false']:rotate-180
+              data-[expanded='false']:-rotate-90
             `}
             data-expanded={expanded}
           />

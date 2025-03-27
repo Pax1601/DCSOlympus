@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AudioSinksChangedEvent } from "../../events";
 import { AudioSink } from "../../audio/audiosink";
 import { RadioSink } from "../../audio/radiosink";
-import { FaJetFighter, FaRadio, FaVolumeHigh } from "react-icons/fa6";
+import { FaRadio, FaVolumeHigh } from "react-icons/fa6";
 import { OlStateButton } from "../components/olstatebutton";
 import { UnitSink } from "../../audio/unitsink";
 import { colors } from "../../constants/constants";
@@ -18,12 +18,9 @@ export function RadiosSummaryPanel(props: {}) {
     <>
       {audioSinks.length > 0 && (
         <div
-          className={`
-            flex w-full gap-2 rounded-lg text-sm text-gray-200
-          `}
+          className={`flex w-full gap-2 rounded-lg text-sm text-gray-200`}
         >
           <div className="flex w-full flex-wrap gap-2">
-            
             {audioSinks.filter((audioSinks) => audioSinks instanceof RadioSink).length > 0 &&
               audioSinks
                 .filter((audioSinks) => audioSinks instanceof RadioSink)
@@ -43,9 +40,12 @@ export function RadiosSummaryPanel(props: {}) {
                       buttonColor={radioSink.getReceiving() ? colors.WHITE : undefined}
                       className="min-h-12 min-w-12"
                     >
-                      <span className={`text-gray-200`}><FaRadio className={`
-                        -translate-x-2 translate-y-1
-                      `} /> <div className="translate-x-2 font-bold">{idx + 1}</div></span>
+                      <span className={`text-gray-200`}>
+                        <FaRadio
+                          className={`-translate-x-2 translate-y-1`}
+                        />{" "}
+                        <div className="translate-x-2 font-bold">{idx + 1}</div>
+                      </span>
                     </OlStateButton>
                   );
                 })}
@@ -67,9 +67,12 @@ export function RadiosSummaryPanel(props: {}) {
                       tooltip="Click to talk"
                       className="min-h-12 min-w-12"
                     >
-                      <span className={`text-gray-200`}><FaVolumeHigh className={`
-                        -translate-x-2 translate-y-1
-                      `} /> <div className="translate-x-2 font-bold">{idx + 1}</div></span>
+                      <span className={`text-gray-200`}>
+                        <FaVolumeHigh
+                          className={`-translate-x-2 translate-y-1`}
+                        />{" "}
+                        <div className="translate-x-2 font-bold">{idx + 1}</div>
+                      </span>
                     </OlStateButton>
                   );
                 })}

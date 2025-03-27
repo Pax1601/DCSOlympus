@@ -17,6 +17,7 @@ import {
 } from "../components/olicons";
 import { FaChevronLeft, FaChevronRight, FaFloppyDisk } from "react-icons/fa6";
 import {
+  AudioManagerStateChangedEvent,
   CommandModeOptionsChangedEvent,
   ConfigLoadedEvent,
   EnabledCommandModesChangedEvent,
@@ -27,6 +28,7 @@ import {
   SessionDataSavedEvent,
 } from "../../events";
 import {
+  AudioManagerState,
   BLUE_COMMANDER,
   COMMAND_MODE_OPTIONS_DEFAULTS,
   GAME_MASTER,
@@ -39,6 +41,7 @@ import {
 import { OlympusConfig } from "../../interfaces";
 import { FaCheck, FaRedo, FaSpinner } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
+import { stat } from "fs";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -47,7 +50,7 @@ export function Header() {
   const [mapSources, setMapSources] = useState([] as string[]);
   const [scrolledLeft, setScrolledLeft] = useState(true);
   const [scrolledRight, setScrolledRight] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [audioState, setAudioState] = useState(AudioManagerState.STOPPED);
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
   const [savingSessionData, setSavingSessionData] = useState(false);
   const [latestVersion, setLatestVersion] = useState("");
@@ -77,6 +80,7 @@ export function Header() {
     SessionDataChangedEvent.on(() => setSavingSessionData(true));
     SessionDataSavedEvent.on(() => setSavingSessionData(false));
     EnabledCommandModesChangedEvent.on((enabledCommandModes) => setEnabledCommandModes(enabledCommandModes));
+    AudioManagerStateChangedEvent.on((state) => setAudioState(state as AudioManagerState));
 
     /* Check if we are running the latest version */
     const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
@@ -246,9 +250,15 @@ export function Header() {
           >
             <span className="my-auto font-bold">Game Master</span>
             {enabledCommandModes.length > 0 && (
-              <>{loadingNewCommandMode ? <FaSpinner className={`
-                my-auto ml-2 animate-spin text-white
-              `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}</>
+              <>
+                {loadingNewCommandMode ? (
+                  <FaSpinner
+                    className={`my-auto ml-2 animate-spin text-white`}
+                  />
+                ) : (
+                  <FaRedo className={`my-auto ml-2 text-gray-200`} />
+                )}
+              </>
             )}
           </div>
         )}
@@ -271,9 +281,15 @@ export function Header() {
           >
             <span className="my-auto font-bold">BLUE Commander</span>
             {enabledCommandModes.length > 0 && (
-              <>{loadingNewCommandMode ? <FaSpinner className={`
-                my-auto ml-2 animate-spin text-gray-200
-              `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}</>
+              <>
+                {loadingNewCommandMode ? (
+                  <FaSpinner
+                    className={`my-auto ml-2 animate-spin text-gray-200`}
+                  />
+                ) : (
+                  <FaRedo className={`my-auto ml-2 text-gray-200`} />
+                )}
+              </>
             )}
           </div>
         )}
@@ -296,9 +312,15 @@ export function Header() {
           >
             <span className="my-auto font-bold">RED Commander</span>
             {enabledCommandModes.length > 0 && (
-              <>{loadingNewCommandMode ? <FaSpinner className={`
-                my-auto ml-2 animate-spin text-gray-200
-              `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}</>
+              <>
+                {loadingNewCommandMode ? (
+                  <FaSpinner
+                    className={`my-auto ml-2 animate-spin text-gray-200`}
+                  />
+                ) : (
+                  <FaRedo className={`my-auto ml-2 text-gray-200`} />
+                )}
+              </>
             )}
           </div>
         )}
@@ -325,11 +347,13 @@ export function Header() {
             )}
           />
           <OlRoundStateButton
-            checked={audioEnabled}
+            checked={audioState === AudioManagerState.RUNNING}
             onClick={() => {
-              audioEnabled ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
-              setAudioEnabled(!audioEnabled);
+              audioState === AudioManagerState.RUNNING ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
             }}
+            className={audioState === AudioManagerState.ERROR ? `
+              animate-pulse !border-red-500 !text-red-500
+            ` : ""}
             tooltip={() => (
               <OlExpandingTooltip
                 title="Enable/disable audio"

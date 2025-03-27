@@ -1,9 +1,9 @@
 import React, { ForwardedRef, forwardRef, useEffect, useState } from "react";
-import { FaChevronUp, FaXmark } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
 import { getApp } from "../../../olympusapp";
 import { UnitSink } from "../../../audio/unitsink";
 import { OlStateButton } from "../../components/olstatebutton";
-import { faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
+import { faMicrophoneLines, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { OlRangeSlider } from "../../components/olrangeslider";
 
 export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKeys: string[]; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
@@ -28,10 +28,10 @@ export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKeys: 
             setExpanded(!expanded);
           }}
         >
-          <FaChevronUp
+          <FaChevronDown
             className={`
               text-gray-500 transition-transform
-              data-[expanded='false']:rotate-180
+              data-[expanded='false']:-rotate-90
             `}
             data-expanded={expanded}
           />
@@ -66,7 +66,7 @@ export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKeys: 
       </div>
       {expanded && (
         <div className="flex flex-row gap-2">
-          <span className="my-auto">Near</span>
+          <FaVolumeHigh className="my-auto w-8 text-xl" />
           <OlRangeSlider
             value={((props.sink.getMaxDistance() - 100) / (1852 - 100)) * 100}
             min={0}
@@ -76,14 +76,13 @@ export const UnitSinkPanel = forwardRef((props: { sink: UnitSink; shortcutKeys: 
             }}
             className="my-auto h-16"
           />
-          <span className="my-auto">Far</span>
           <OlStateButton
             checked={props.sink.getPtt()}
-            icon={faMicrophoneLines}
+            icon={faVolumeHigh}
             onClick={() => {
               props.sink.setPtt(!props.sink.getPtt());
             }}
-            tooltip="Talk on frequency"
+            tooltip="Click to enable the loudspeaker"
           ></OlStateButton>
         </div>
       )}

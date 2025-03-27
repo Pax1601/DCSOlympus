@@ -35,6 +35,11 @@ export type MapOptions = {
   showUnitCallsigns: boolean;
 };
 
+export type AudioOptions = {
+  input: string;
+  output: string;
+}
+
 export type MapHiddenTypes = {
   human: boolean;
   olympus: boolean;
@@ -64,4 +69,23 @@ export type MGRS = {
 };
 
 export type Coalition = "blue" | "neutral" | "red" | "all";
+
+export type SRSClientData = {
+  name: string;
+  unitID: number;
+  iff: {
+    control: number;
+    mode1: number;
+    mode2: number;
+    mode3: number;
+    mode4: boolean;
+    mic: number;
+    status: number;
+  },
+  coalition: number;
+  radios: {
+    frequency: number;
+    modulation: number;
+  }[];
+};
 

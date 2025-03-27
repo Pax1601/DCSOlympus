@@ -9,8 +9,8 @@ import { AudioSink } from "../../audio/audiosink";
 import { RadioSink } from "../../audio/radiosink";
 import { UnitSinkPanel } from "./components/unitsinkpanel";
 import { UnitSink } from "../../audio/unitsink";
-import { FaMinus, FaVolumeHigh } from "react-icons/fa6";
-import { getRandomColor } from "../../other/utils";
+import { FaMinus, FaPerson, FaVolumeHigh } from "react-icons/fa6";
+import { enumToCoalition, getRandomColor, zeroAppend } from "../../other/utils";
 import {
   AudioManagerCoalitionChangedEvent,
   AudioManagerDevicesChangedEvent,
@@ -21,11 +21,13 @@ import {
   AudioSourcesChangedEvent,
   CommandModeOptionsChangedEvent,
   ShortcutsChangedEvent,
+  SRSClientsChangedEvent,
 } from "../../events";
 import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
-import { Coalition } from "../../types/types";
-import { GAME_MASTER, NONE } from "../../constants/constants";
+import { Coalition, SRSClientData } from "../../types/types";
+import { AudioManagerState, GAME_MASTER, NONE } from "../../constants/constants";
+import { AudioManager } from "../../audio/audiomanager";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [devices, setDevices] = useState([] as MediaDeviceInfo[]);
@@ -39,6 +41,8 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   const [output, setOutput] = useState(undefined as undefined | MediaDeviceInfo);
   const [coalition, setCoalition] = useState("blue" as Coalition);
   const [commandMode, setCommandMode] = useState(NONE as string);
+  const [clientsData, setClientsData] = useState([] as SRSClientData[]);
+  const [connectedClientsOpen, setConnectedClientsOpen] = useState(false);
 
   /* Preallocate 128 references for the source and sink panels. If the number of references changes, React will give an error */
   const sourceRefs = Array(128)
@@ -76,7 +80,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
     });
 
     AudioManagerStateChangedEvent.on(() => {
-      setAudioManagerEnabled(getApp().getAudioManager().isRunning());
+      setAudioManagerEnabled(getApp().getAudioManager().isRunning() === AudioManagerState.RUNNING);
     });
 
     ShortcutsChangedEvent.on((shortcuts) => setShortcuts(shortcuts));
@@ -86,6 +90,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
     AudioManagerOutputChangedEvent.on((output) => setOutput(output));
     AudioManagerCoalitionChangedEvent.on((coalition) => setCoalition(coalition));
     CommandModeOptionsChangedEvent.on((options) => setCommandMode(options.commandMode));
+    SRSClientsChangedEvent.on((clientsData) => setClientsData(clientsData));
   }, []);
 
   /* When the sinks or sources change, use the count state to force a rerender to update the connection lines */
@@ -131,62 +136,78 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
           >
             <h2 className="mb-4 font-bold">Audio menu</h2>
             <div>
-              The audio menu allows you to add and manage audio sources, connect them to unit loudspeakers and radios, and to tune radio frequencies using the SRS integration. In other words, it allows you to communicate over SRS without the need of using the SRS client.
+              The audio menu allows you to add and manage audio sources, connect them to unit loudspeakers and radios, and to tune radio frequencies using the
+              SRS integration. In other words, it allows you to communicate over SRS without the need of using the SRS client.
             </div>
             <div>
-              Because of the limitations of the browser, you need to enable the audio backend by clicking on the volume icon in the navigation header. Moreover, you need to allow the browser to access your microphone and speakers. It may take a couple of seconds for the audio backend to start.
+              Because of the limitations of the browser, you need to enable the audio backend by clicking on the volume icon in the navigation header. Moreover,
+              you need to allow the browser to access your microphone and speakers. It may take a couple of seconds for the audio backend to start.
             </div>
-            <div className="text-red-500">
-              For security reasons, the audio backend will only work if the page is served over HTTPS.
-            </div>
+            <div className="text-red-500">For security reasons, the audio backend will only work if the page is served over HTTPS.</div>
             <h2 className="my-4 font-bold">Managing the audio backend</h2>
             <div>
-              You can select the input and output devices for the audio backend. The input device is the microphone that will be used to transmit your voice. The output device is the speaker that will be used to play the audio from the other players.
+              You can select the input and output devices for the audio backend. The input device is the microphone that will be used to transmit your voice.
+              The output device is the speaker that will be used to play the audio from the other players.
             </div>
             <div>
-              You can also select the radio coalition. This will determine the default coalition for the radios you create. If you are in command mode, you can change the radio
-              coalition by clicking on the coalition toggle button. This will have no effect if radio coalition enforcing is not enabled in the SRS server.
+              You can also select the radio coalition. This will determine the default coalition for the radios you create. If you are in command mode, you can
+              change the radio coalition by clicking on the coalition toggle button. This will have no effect if radio coalition enforcing is not enabled in the
+              SRS server.
             </div>
             <h2 className="my-4 font-bold">Creating audio sources</h2>
             <div>
-              You can add audio sources by clicking on the "Add audio source" button. By default, a microphone and a text to speech source are created, but you can add file sources as well, which allow to play audio files such as music, prerecorded messages, or background noise, such as gunfire or engine sounds.
+              You can add audio sources by clicking on the "Add audio source" button. By default, a microphone and a text to speech source are created, but you
+              can add file sources as well, which allow to play audio files such as music, prerecorded messages, or background noise, such as gunfire or engine
+              sounds.
             </div>
             <div>
-              The text to speech generation works using the Google Cloud speech API and by default it works in English. For it to work, a valid Google Cloud API key must be installed on the Olympus backend server machine. See the backend documentation for more information. {/* TODO: put link here */}
+              The text to speech generation works using the Google Cloud speech API and by default it works in English. For it to work, a valid Google Cloud API
+              key must be installed on the Olympus backend server machine. See the backend documentation for more information. {/* TODO: put link here */}
             </div>
             <div>
-              Text to speech and file sources can be set to operate in loop mode, which will make them repeat the audio indefinitely. This is useful for background noise or music. Moreover, you can set the volume of the audio sources.
+              Text to speech and file sources can be set to operate in loop mode, which will make them repeat the audio indefinitely. This is useful for
+              background noise or music. Moreover, you can set the volume of the audio sources.
             </div>
             <h2 className="my-4 font-bold">Creating radios and loudspeakers</h2>
             <div>
-              By default, two radios are created, but you can add more by clicking on the "Add radio" button. Radios can be tuned to different frequencies, and they can be set to operate in AM or FM mode. You can also set the volume of the radios, and change the balance between the left and right channels.
+              By default, two radios are created, but you can add more by clicking on the "Add radio" button. Radios can be tuned to different frequencies, and
+              they can be set to operate in AM or FM mode. You can also set the volume of the radios, and change the balance between the left and right
+              channels.
             </div>
-            <div>
-              When a new radio is created, it will NOT be in "listen" mode, so you will need to click on the "Tune to radio" button to start listening.
-            </div>
+            <div>When a new radio is created, it will NOT be in "listen" mode, so you will need to click on the "Tune to radio" button to start listening.</div>
             <div>
               You have three options to transmit on the radio:
               <div>
-                <li>By clicking on the "Talk on frequency" button on the radio panel. This will enable continuous transmission and will remain "on" until clicked again.</li>
+                <li>
+                  By clicking on the "Talk on frequency" button on the radio panel. This will enable continuous transmission and will remain "on" until clicked
+                  again.
+                </li>
                 <li>By clicking on the "Push to talk" button located over the mouse coordinates panel, on the bottom right corner of the map.</li>
                 <li>By using the "Push to talk" keyboard shortcuts, which can be edited in the options menu.</li>
               </div>
             </div>
             <div>
-              Loudspeakers can be used to simulate environmental sounds, like 5MC calls on the carrier, or sirens. To create a loudspeaker, click on the unit that should broadcast the sound, and then click on the "Loudspeakers" button. PTT buttons for loudspeakers operate in the same way as radios.
+              Loudspeakers can be used to simulate environmental sounds, like 5MC calls on the carrier, or sirens. To create a loudspeaker, click on the unit
+              that should broadcast the sound, and then click on the "Loudspeakers" button. PTT buttons for loudspeakers operate in the same way as radios.
             </div>
             <div className="text-red-500">
-              The loudspeakers system uses the SRS integration, so it will only work if other players' SRS clients are running and connected to the same server as Olympus. Moreover, the loudspeaker system operates using the INTERCOM radio in SRS, and for the time being it will only work for those radios that have the INTERCOM radio enabled (i.e. usually multicrew aircraft).
+              The loudspeakers system uses the SRS integration, so it will only work if other players' SRS clients are running and connected to the same server
+              as Olympus. Moreover, the loudspeaker system operates using the INTERCOM radio in SRS, and for the time being it will only work for those radios
+              that have the INTERCOM radio enabled (i.e. usually multicrew aircraft).
             </div>
             <h2 className="my-4 font-bold">Connecting sources and radios/loudspeakers</h2>
             <div>
-              Each source can be connected to one or more radios or loudspeakers. To connect a source to a radio or loudspeaker, click on the "+" button on the right of the source panel, then click on the equivalent button on the desired radio/loudspeaker. To disconnect a source from a radio or loudspeaker, click on the "-" button next to the radio/loudspeaker.
+              Each source can be connected to one or more radios or loudspeakers. To connect a source to a radio or loudspeaker, click on the "+" button on the
+              right of the source panel, then click on the equivalent button on the desired radio/loudspeaker. To disconnect a source from a radio or
+              loudspeaker, click on the "-" button next to the radio/loudspeaker.
             </div>
             <div>
-              The connection lines will show the connections between the sources and the radios/loudspeakers. The color of the line is randomly generated and will be different for each source.
+              The connection lines will show the connections between the sources and the radios/loudspeakers. The color of the line is randomly generated and
+              will be different for each source.
             </div>
             <div>
-              By connecting multiple sources to the same radio/loudspeaker, you can create complex audio setups, like playing background music while transmitting on the radio.
+              By connecting multiple sources to the same radio/loudspeaker, you can create complex audio setups, like playing background music while
+              transmitting on the radio.
             </div>
           </div>
         );
@@ -224,17 +245,78 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
           </div>
         )}
       </>
+      <>
+        {audioManagerEnabled && (
+          <>
+            <div className={`mb-4 flex flex-col content-center bg-olympus-500`}>
+              <div
+                className={`
+                  flex cursor-pointer content-center gap-2 px-5 py-2
+                  text-gray-200
+                  hover:underline hover:underline-offset-4
+                  hover:underline-gray-700
+                `}
+                onClick={() => setConnectedClientsOpen(!connectedClientsOpen)}
+              >
+                Connected clients <FaPerson className="my-auto ml-auto" /> <div className={``}>{clientsData.length}</div>
+                <svg
+                  data-open={connectedClientsOpen}
+                  className={`
+                    my-auto h-3 w-3 shrink-0 -rotate-180 transition-transform
+                    dark:text-olympus-50
+                    data-[open='false']:-rotate-90
+                  `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                </svg>
+              </div>
 
-      <div className="flex flex-col gap-3">
-        <div
-          className={`
-            flex flex-col gap-2 px-5 font-normal text-gray-800
-            dark:text-white
-          `}
-          style={{ paddingRight: `${paddingRight}px` }}
-        >
-          {audioManagerEnabled && (
-            <>
+              {connectedClientsOpen && (
+                <div className={`flex flex-col text-gray-200`}>
+                  {clientsData.map((clientData, idx) => {
+                    return (
+                      <div
+                        data-coalition={enumToCoalition(clientData.coalition)}
+                        key={idx}
+                        className={`
+                          flex gap-2 border-l-4 px-4 py-2
+                          data-[coalition='blue']:border-blue-500
+                          data-[coalition='neutral']:border-gray-500
+                          data-[coalition='red']:border-red-500
+                        `}
+                      >
+                        <div className="text-gray-400">{clientData.name}</div>
+                        <div
+                          className={`
+                            ml-auto cursor-pointer gap-2 rounded-md
+                            bg-olympus-600 px-3 py-1 text-sm
+                            hover:bg-olympus-400
+                          `}
+                          onClick={() => getApp().getAudioManager().tuneNewRadio(clientData.radios[0].frequency, clientData.radios[0].modulation)}
+                        >
+                          {`${zeroAppend(clientData.radios[0].frequency / 1e6, 3, true, 3)} ${clientData.radios[0].modulation ? "FM" : "AM"}`}{" "}
+                        </div>
+                        <div
+                          className={`
+                            cursor-pointer gap-2 rounded-md bg-olympus-600 px-3
+                            py-1 text-sm
+                            hover:bg-olympus-400
+                          `}
+                          onClick={() => getApp().getAudioManager().tuneNewRadio(clientData.radios[1].frequency, clientData.radios[1].modulation)}
+                        >
+                          {`${zeroAppend(clientData.radios[1].frequency / 1e6, 3, true, 3)} ${clientData.radios[1].modulation ? "FM" : "AM"}`}{" "}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="my-4 flex flex-col gap-2 px-5 text-gray-200">
               {commandMode === GAME_MASTER && (
                 <div className="flex justify-between">
                   <div>Radio coalition </div>
@@ -254,23 +336,18 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
               )}
 
               <span>Input</span>
-
               <OlDropdown label={input ? input.label : "Default"}>
                 {devices
                   .filter((device) => device.kind === "audioinput")
                   .map((device, idx) => {
                     return (
                       <OlDropdownItem onClick={() => getApp().getAudioManager().setInput(device)}>
-                        <div className="w-full truncate">{device.label}</div>
+                        <div className="w-full truncate text-left">{device.label}</div>
                       </OlDropdownItem>
                     );
                   })}
               </OlDropdown>
-            </>
-          )}
-          {audioManagerEnabled && (
-            <>
-              {" "}
+
               <span>Output</span>
               <OlDropdown label={output ? output.label : "Default"}>
                 {devices
@@ -278,13 +355,24 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
                   .map((device, idx) => {
                     return (
                       <OlDropdownItem onClick={() => getApp().getAudioManager().setOutput(device)}>
-                        <div className="w-full truncate">{device.label}</div>
+                        <div className="w-full truncate text-left">{device.label}</div>
                       </OlDropdownItem>
                     );
                   })}
               </OlDropdown>
-            </>
-          )}
+            </div>
+          </>
+        )}
+      </>
+
+      <div className="flex flex-col gap-3">
+        <div
+          className={`
+            flex flex-col gap-2 px-5 font-normal text-gray-800
+            dark:text-white
+          `}
+          style={{ paddingRight: `${paddingRight}px` }}
+        >
           {audioManagerEnabled && <span>Audio sources</span>}
           <>
             {sources.map((source, idx) => {
@@ -328,7 +416,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
             if (sink instanceof RadioSink)
               return (
                 <RadioSinkPanel
-                  shortcutKeys={shortcuts[`PTT${idx}Active`].toActions()}
+                  shortcutKeys={shortcuts[`PTT${idx}Active`]?.toActions() ?? []}
                   key={sink.getName()}
                   radio={sink}
                   onExpanded={() => {
@@ -366,7 +454,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
             if (sink instanceof UnitSink)
               return (
                 <UnitSinkPanel
-                  shortcutKeys={shortcuts[`PTT${idx}Active`].toActions()}
+                  shortcutKeys={shortcuts[`PTT${idx}Active`]?.toActions() ?? []}
                   key={sink.getName()}
                   sink={sink}
                   ref={sinkRefs[idx]}

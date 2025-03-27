@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { Coalition, MapOptions } from "./types/types";
+import { AudioOptions, Coalition, MapOptions } from "./types/types";
 
 export interface OlympusConfig {
   /* Set by user */
@@ -64,8 +64,9 @@ export interface SessionData {
 }
 
 export interface ProfileOptions {
-  mapOptions: MapOptions;
-  shortcuts: { [key: string]: ShortcutOptions };
+  mapOptions?: MapOptions;
+  shortcuts?: { [key: string]: ShortcutOptions };
+  audioOptions?: AudioOptions;
 }
 
 export interface ContextMenuOption {

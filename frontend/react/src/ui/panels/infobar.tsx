@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { AppStateChangedEvent, ContextActionChangedEvent, InfoPopupEvent } from "../../events";
-import { OlympusState } from "../../constants/constants";
-import { ContextAction } from "../../unit/contextaction";
+import { InfoPopupEvent } from "../../events";
+
 
 export function InfoBar(props: {}) {
   const [messages, setMessages] = useState([] as string[]);
-  const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
-  const [contextAction, setContextAction] = useState(null as ContextAction | null);
 
   useEffect(() => {
     InfoPopupEvent.on((messages) => setMessages([...messages]));
-    AppStateChangedEvent.on((state, subState) => setAppState(state));
-    ContextActionChangedEvent.on((contextAction) => setContextAction(contextAction));
   }, []);
 
   return (

@@ -26,8 +26,6 @@ import { GameMasterMenu } from "./panels/gamemastermenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
 import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
-import { CoordinatesPanel } from "./panels/coordinatespanel";
-import { RadiosSummaryPanel } from "./panels/radiossummarypanel";
 import { ServerOverlay } from "./serveroverlay";
 import { ImportExportModal } from "./modals/importexportmodal";
 import { WarningModal } from "./modals/warningmodal";

@@ -7,7 +7,7 @@ var packetID = 0;
 export enum MessageType {
   audio,
   settings,
-  unitIDs
+  clientsData
 }
 
 export class AudioPacket {

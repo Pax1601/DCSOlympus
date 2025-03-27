@@ -25,6 +25,7 @@ export class RadioSink extends AudioSink {
   #transmittingUnit: Unit | undefined;
   #pan: number = 0;
   #playbackPipeline: PlaybackPipeline;
+  #connectedClients: number;
   speechDataAvailable: (blob: Blob) => void = (blob) => {};
 
   constructor() {
@@ -189,5 +190,16 @@ export class RadioSink extends AudioSink {
 
   playBuffer(arrayBuffer) {
     this.#playbackPipeline.playBuffer(arrayBuffer);
+  }
+
+  setConnectedClients(clientsNumber: number) {
+    if (this.#connectedClients !== clientsNumber) {
+      this.#connectedClients = clientsNumber;
+      AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
+    }
+  }
+
+  getConnectedClients() {
+    return this.#connectedClients;
   }
 }

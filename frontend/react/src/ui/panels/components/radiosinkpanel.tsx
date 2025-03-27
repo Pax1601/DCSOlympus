@@ -1,12 +1,13 @@
 import React, { ForwardedRef, forwardRef, useEffect, useState } from "react";
 import { OlFrequencyInput } from "../../components/olfrequencyinput";
-import { FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaPerson, FaVolumeHigh, FaXmark } from "react-icons/fa6";
 import { OlLabelToggle } from "../../components/ollabeltoggle";
 import { OlStateButton } from "../../components/olstatebutton";
 import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
 import { RadioSink } from "../../../audio/radiosink";
 import { getApp } from "../../../olympusapp";
 import { OlRangeSlider } from "../../components/olrangeslider";
+import { zeroAppend } from "../../../other/utils";
 
 export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKeys: string[]; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
   const [expanded, setExpanded] = useState(false);
@@ -24,21 +25,23 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
         data-[receiving='true']:border-white
       `}
       ref={ref}
-      
     >
-      <div className="flex cursor-pointer content-center justify-between gap-2" onClick={() => {
-        setExpanded(!expanded);
-      }}>
+      <div
+        className="flex cursor-pointer content-center justify-between gap-2"
+        onClick={() => {
+          setExpanded(!expanded);
+        }}
+      >
         <div
           className={`h-fit w-fit cursor-pointer rounded-sm py-2`}
           onClick={() => {
             setExpanded(!expanded);
           }}
         >
-          <FaChevronUp
+          <FaChevronDown
             className={`
               text-gray-500 transition-transform
-              data-[expanded='false']:rotate-180
+              data-[expanded='false']:-rotate-90
             `}
             data-expanded={expanded}
           />
@@ -56,14 +59,18 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
             </kbd>
           </>
         )}
-        <span className="my-auto w-full">{!expanded && `${props.radio.getFrequency() / 1e6} MHz ${props.radio.getModulation() ? "FM" : "AM"}`}</span>
+        <div className="my-auto flex w-full">
+          {!expanded && `${zeroAppend(props.radio.getFrequency() / 1e6, 3, true, 3)} ${props.radio.getModulation() ? "FM" : "AM"}`}
+          <FaPerson className="my-auto ml-auto" /> {props.radio.getConnectedClients()}
+        </div>
         <div
           className={`
             mb-auto ml-auto aspect-square cursor-pointer rounded-md p-2
             hover:bg-white/10
           `}
-          onClick={() => {
+          onClick={(ev) => {
             getApp().getAudioManager().removeSink(props.radio);
+            ev.stopPropagation();
           }}
         >
           <FaXmark className={`my-auto text-gray-500`}></FaXmark>
@@ -71,14 +78,18 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
       </div>
       {expanded && (
         <>
-          <OlFrequencyInput
-            value={props.radio.getFrequency()}
-            onChange={(value) => {
-              props.radio.setFrequency(value);
-            }}
-          />
+          <div className="mt-2 flex w-full justify-center">
+            <OlFrequencyInput
+              value={props.radio.getFrequency()}
+              onChange={(value) => {
+                props.radio.setFrequency(value);
+              }}
+            />
+          </div>
           <div className="flex content-center gap-2 p-2">
-            <div><FaVolumeHigh className="text-xl"/></div>
+            <div>
+              <FaVolumeHigh className="text-xl" />
+            </div>
             <OlRangeSlider
               value={props.radio.getVolume() * 100}
               onChange={(ev) => {
@@ -89,14 +100,14 @@ export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKey
           </div>
           <div className="flex content-center gap-2 p-2">
             <div>Left</div>
-          <OlRangeSlider
-            value={props.radio.getPan() * 50 + 50}
-            onChange={(ev) => {
-              props.radio.setPan((Number(ev.currentTarget.value) - 50) / 50);
-            }}
-            className="my-auto"
-          ></OlRangeSlider>
-          <div>Right</div>
+            <OlRangeSlider
+              value={props.radio.getPan() * 50 + 50}
+              onChange={(ev) => {
+                props.radio.setPan((Number(ev.currentTarget.value) - 50) / 50);
+              }}
+              className="my-auto"
+            ></OlRangeSlider>
+            <div>Right</div>
           </div>
           <div className="flex flex-row gap-2">
             <OlLabelToggle

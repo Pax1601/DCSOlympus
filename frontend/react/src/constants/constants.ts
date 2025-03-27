@@ -1,5 +1,5 @@
 import { LatLng, LatLngBounds } from "leaflet";
-import { Coalition, MapOptions } from "../types/types";
+import { MapOptions } from "../types/types";
 import { CommandModeOptions } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 import {
@@ -980,4 +980,11 @@ export namespace ContextActions {
     },
     { type: ContextActionType.ADMIN, code: "KeyC", ctrlKey: false, shiftKey: false, altKey: false }
   );
+}
+
+
+export enum AudioManagerState {
+  STOPPED = "Stopped",
+  RUNNING = "Running",
+  ERROR = "Error"
 }

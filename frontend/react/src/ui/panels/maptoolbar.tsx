@@ -18,7 +18,7 @@ import {
   SelectionEnabledChangedEvent,
   ShortcutsChangedEvent,
 } from "../../events";
-import { faCopy, faEraser, faObjectGroup, faPaste, faTape } from "@fortawesome/free-solid-svg-icons";
+import { faCopy, faEraser, faMinus, faObjectGroup, faPaste, faPlus, faTape } from "@fortawesome/free-solid-svg-icons";
 import { Shortcut } from "../../shortcut/shortcut";
 import { ShortcutOptions, UnitData } from "../../interfaces";
 import { Unit } from "../../unit/unit";
@@ -146,12 +146,36 @@ export function MapToolBar(props: {}) {
               `}
             />
           )}
-          <div className={`
-            pointer-events-auto flex flex-col gap-2 overflow-y-auto no-scrollbar
-            p-2
-          `} onScroll={(ev) => onScroll(ev.target)} ref={scrollRef}>
+          <div
+            className={`
+              pointer-events-auto flex flex-col gap-2 overflow-y-auto
+              no-scrollbar p-2
+            `}
+            onScroll={(ev) => onScroll(ev.target)}
+            ref={scrollRef}
+          >
             <>
               <div className="flex flex-col gap-1">
+                <OlStateButton
+                  key={"select"}
+                  checked={false}
+                  icon={faPlus}
+                  tooltip={() => <div>Zoom map in</div>}
+                  tooltipPosition="side"
+                  onClick={() => {
+                    getApp().getMap().zoomIn();
+                  }}
+                />
+                <OlStateButton
+                  key={"select"}
+                  checked={false}
+                  icon={faMinus}
+                  tooltip={() => <div>Zoom map out</div>}
+                  tooltipPosition="side"
+                  onClick={() => {
+                    getApp().getMap().zoomOut();
+                  }}
+                />
                 <OlStateButton
                   key={"select"}
                   checked={selectionEnabled}
@@ -220,39 +244,39 @@ export function MapToolBar(props: {}) {
                 </div>
               )}
               <div className="flex flex-col gap-1">
-                  <OlStateButton
-                    key={"measure"}
-                    checked={appState === OlympusState.MEASURE}
-                    icon={faTape}
-                    tooltip={() => (
-                      <div className="flex content-center gap-2">
-                        {shortcutCombination(shortcuts["measure"]?.getOptions())}
-                        <div className="my-auto">Enter measure mode</div>
-                      </div>
-                    )}
-                    tooltipPosition="side"
-                    onClick={() => {
-                      getApp().setState(appState === OlympusState.MEASURE? OlympusState.IDLE : OlympusState.MEASURE);
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <OlStateButton
-                    key={"clearMeasures"}
-                    checked={false}
-                    icon={faEraser}
-                    tooltip={() => (
-                      <div className="flex content-center gap-2">
-                        {shortcutCombination(shortcuts["clearMeasures"]?.getOptions())}
-                        <div className="my-auto">Clear all measures</div>
-                      </div>
-                    )}
-                    tooltipPosition="side"
-                    onClick={() => {
-                      getApp().getMap().clearMeasures();
-                    }}
-                  />
-                </div>
+                <OlStateButton
+                  key={"measure"}
+                  checked={appState === OlympusState.MEASURE}
+                  icon={faTape}
+                  tooltip={() => (
+                    <div className="flex content-center gap-2">
+                      {shortcutCombination(shortcuts["measure"]?.getOptions())}
+                      <div className="my-auto">Enter measure mode</div>
+                    </div>
+                  )}
+                  tooltipPosition="side"
+                  onClick={() => {
+                    getApp().setState(appState === OlympusState.MEASURE ? OlympusState.IDLE : OlympusState.MEASURE);
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <OlStateButton
+                  key={"clearMeasures"}
+                  checked={false}
+                  icon={faEraser}
+                  tooltip={() => (
+                    <div className="flex content-center gap-2">
+                      {shortcutCombination(shortcuts["clearMeasures"]?.getOptions())}
+                      <div className="my-auto">Clear all measures</div>
+                    </div>
+                  )}
+                  tooltipPosition="side"
+                  onClick={() => {
+                    getApp().getMap().clearMeasures();
+                  }}
+                />
+              </div>
             </>
 
             {reorderedActions.map((contextActionIt: ContextAction) => {

@@ -7,7 +7,7 @@ import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
 import { Bullseye } from "./mission/bullseye";
 import { Shortcut } from "./shortcut/shortcut";
-import { Coalition, MapHiddenTypes, MapOptions } from "./types/types";
+import { AudioOptions, Coalition, MapHiddenTypes, MapOptions, SRSClientData } from "./types/types";
 import { ContextAction } from "./unit/contextaction";
 import { ContextActionSet } from "./unit/contextactionset";
 import { Unit } from "./unit/unit";
@@ -195,6 +195,22 @@ export class BindShortcutRequestEvent {
   }
 }
 
+export class AudioOptionsChangedEvent {
+  static on(callback: (audioOptions: AudioOptions) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail.audioOptions);
+      },
+      { once: singleShot }
+    );
+  }
+  static dispatch(audioOptions: AudioOptions) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { audioOptions } }));
+    if (DEBUG) console.log(`Event ${this.name} dispatched`);
+  }
+}
+
 export class ModalEvent {
   static on(callback: (modal: boolean) => void, singleShot = false) {
     document.addEventListener(
@@ -295,7 +311,7 @@ export class MapOptionsChangedEvent {
     );
   }
 
-  static dispatch(mapOptions: MapOptions, key?: (keyof MapOptions) | undefined) {
+  static dispatch(mapOptions: MapOptions, key?: keyof MapOptions | undefined) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { mapOptions, key: key } }));
     if (DEBUG) console.log(`Event ${this.name} dispatched`);
   }
@@ -658,8 +674,8 @@ export class DrawingsInitEvent {
     );
   }
 
-  static dispatch(drawingsData: any, navpointData?: any  /*TODO*/) {
-    document.dispatchEvent(new CustomEvent(this.name, {detail: drawingsData}));
+  static dispatch(drawingsData: any, navpointData?: any /*TODO*/) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: drawingsData }));
     if (DEBUG) console.log(`Event ${this.name} dispatched`);
   }
 }
@@ -722,24 +738,24 @@ export class AudioSinksChangedEvent {
 }
 
 export class SRSClientsChangedEvent {
-  static on(callback: () => void, singleShot = false) {
+  static on(callback: (clientsData: SRSClientData[]) => void, singleShot = false) {
     document.addEventListener(
       this.name,
       (ev: CustomEventInit) => {
-        callback();
+        callback(ev.detail.clientsData);
       },
       { once: singleShot }
     );
   }
 
-  static dispatch() {
-    document.dispatchEvent(new CustomEvent(this.name));
+  static dispatch(clientsData: SRSClientData[]) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: { clientsData } }));
     // Logging disabled since periodic
   }
 }
 
 export class AudioManagerStateChangedEvent {
-  static on(callback: (state: boolean) => void, singleShot = false) {
+  static on(callback: (state: string) => void, singleShot = false) {
     document.addEventListener(
       this.name,
       (ev: CustomEventInit) => {
@@ -749,7 +765,7 @@ export class AudioManagerStateChangedEvent {
     );
   }
 
-  static dispatch(state: boolean) {
+  static dispatch(state: string) {
     document.dispatchEvent(new CustomEvent(this.name, { detail: { state } }));
     if (DEBUG) console.log(`Event ${this.name} dispatched`);
   }
@@ -895,12 +911,9 @@ export class WeaponsRefreshedEvent {
 
 export class CoordinatesFreezeEvent {
   static on(callback: () => void) {
-    document.addEventListener(
-      this.name,
-      (ev: CustomEventInit) => {
-        callback();
-      }
-    )
+    document.addEventListener(this.name, (ev: CustomEventInit) => {
+      callback();
+    });
   }
 
   static dispatch() {

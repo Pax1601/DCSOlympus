@@ -58,22 +58,31 @@ export class SRSHandler {
             if (error) console.log(`Error pinging SRS server on UDP: ${error}`);
           });
 
-        if (this.tcp.readyState == "open")
-          this.tcp.write(`${JSON.stringify(SYNC)}\n`);
+        if (this.tcp.readyState == "open") this.tcp.write(`${JSON.stringify(SYNC)}\n`);
         else clearInterval(this.syncInterval);
 
         let unitsBuffer = Buffer.from(
           JSON.stringify({
-            unitIDs: this.clients.map((client) => {
-              return client.RadioInfo.unitId;
+            clientsData: this.clients.map((client) => {
+              return {
+                name: client.Name,
+                unitID: client.RadioInfo.unitId,
+                iff: client.RadioInfo.iff,
+                coalition: client.Coalition,
+                radios: client.RadioInfo.radios.map((radio) => {
+                  return {
+                    frequency: radio.freq,
+                    modulation: radio.modulation,
+                    
+                  };
+                }),
+              };
             }),
           }),
           "utf-8"
         );
 
-        this.ws.send(
-          ([] as number[]).concat([MessageType.unitIDs], [...unitsBuffer])
-        );
+        this.ws.send(([] as number[]).concat([MessageType.clientsData], [...unitsBuffer]));
       }, 1000);
     });
 
@@ -96,10 +105,7 @@ export class SRSHandler {
     });
 
     this.udp.on("message", (message, remote) => {
-      if (this.ws && message.length > 22)
-        this.ws.send(
-          ([] as number[]).concat([MessageType.audio], [...message])
-        );
+      if (this.ws && message.length > 22) this.ws.send(([] as number[]).concat([MessageType.audio], [...message]));
     });
   }
 
@@ -115,6 +121,14 @@ export class SRSHandler {
         let message = JSON.parse(data.slice(1));
         this.data.ClientGuid = message.guid;
         this.data.Coalition = message.coalition;
+
+        /* First reset all the radios to default values */
+        this.data.RadioInfo.radios.forEach((radio) => {
+          radio.freq = defaultSRSData.RadioInfo.radios[0].freq;
+          radio.modulation = defaultSRSData.RadioInfo.radios[0].modulation;
+        });
+
+        /* Then update the radios with the new settings */
         message.settings.forEach((setting, idx) => {
           this.data.RadioInfo.radios[idx].freq = setting.frequency;
           this.data.RadioInfo.radios[idx].modulation = setting.modulation;

@@ -21,7 +21,7 @@ import { ServerManager } from "./server/servermanager";
 import { AudioManager } from "./audio/audiomanager";
 
 import { GAME_MASTER, LoginSubState, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusState, OlympusSubState, WarningSubstate } from "./constants/constants";
-import { AdminPasswordChangedEvent, AppStateChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
+import { AdminPasswordChangedEvent, AppStateChangedEvent, AudioOptionsChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
 import { ControllerManager } from "./controllers/controllermanager";
@@ -64,8 +64,9 @@ export class OlympusApp {
       else this.getState() === OlympusState.UNIT_CONTROL && this.setState(OlympusState.IDLE);
     });
 
-    MapOptionsChangedEvent.on((options) => getApp().saveProfile());
-    ShortcutsChangedEvent.on((options) => getApp().saveProfile());
+    MapOptionsChangedEvent.on(() => getApp().saveProfile());
+    ShortcutsChangedEvent.on(() => getApp().saveProfile());
+    AudioOptionsChangedEvent.on(() => getApp().saveProfile());
   }
 
   getMap() {
@@ -212,6 +213,7 @@ export class OlympusApp {
       let profile = {};
       profile["mapOptions"] = this.#map?.getOptions();
       profile["shortcuts"] = this.#shortcutManager?.getShortcutsOptions();
+      profile["audioOptions"] = this.#audioManager?.getOptions();
 
       const requestOptions = {
         method: "PUT", // Specify the request method
@@ -285,8 +287,10 @@ export class OlympusApp {
     const username = this.getServerManager().getUsername();
     const profile = this.getProfile();
     if (username && profile) {
-      this.#map?.setOptions( {...MAP_OPTIONS_DEFAULTS, ...profile.mapOptions});
-      this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
+      if (profile.mapOptions) this.#map?.setOptions( {...MAP_OPTIONS_DEFAULTS, ...profile.mapOptions});
+      if (profile.shortcuts) this.#shortcutManager?.setShortcutsOptions(profile.shortcuts);
+      if (profile.audioOptions) this.#audioManager?.setOptions(profile.audioOptions);
+      
       this.addInfoMessage("Profile loaded correctly");
       console.log(`Profile for ${username} loaded correctly`);
     } else {
@@ -333,6 +337,10 @@ export class OlympusApp {
   setAdminPassword(newAdminPassword: string) {
     this.#adminPassword = newAdminPassword;
     AdminPasswordChangedEvent.dispatch(newAdminPassword);
+  }
+
+  getAdminPassword() {
+    return this.#adminPassword;
   }
 
   startServerMode() {

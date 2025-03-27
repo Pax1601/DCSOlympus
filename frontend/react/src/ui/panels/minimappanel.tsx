@@ -57,7 +57,7 @@ export function MiniMapPanel(props: {}) {
         absolute right-[10px]
         ${mapOptions.showMinimap ? `bottom-[188px]` : `bottom-[20px]`}
         flex w-[288px] cursor-pointer flex-col items-center justify-between
-        gap-2 text-sm backdrop-blur-lg
+        gap-2 text-sm
       `}
       
     >
@@ -65,7 +65,7 @@ export function MiniMapPanel(props: {}) {
       <CoordinatesPanel />
       <div className={`
         flex h-12 w-full items-center justify-between gap-2 px-3
-        backdrop-grayscale
+        backdrop-blur-lg backdrop-grayscale
         dark:bg-olympus-800/90 dark:text-gray-200
         ${mapOptions.showMinimap ? `rounded-t-lg` : `rounded-lg`}
       `}
