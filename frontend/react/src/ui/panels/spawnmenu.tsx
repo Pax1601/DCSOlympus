@@ -19,11 +19,14 @@ import {
   olIconsTank,
   olIconsTruck,
 } from "../components/olicons";
-import { faExplosion, faSmog } from "@fortawesome/free-solid-svg-icons";
+import { faExplosion, faSmog, faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
 import { EffectSpawnMenu } from "./effectspawnmenu";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState } from "../../constants/constants";
+import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState, SpawnSubState } from "../../constants/constants";
 import { AppStateChangedEvent, CommandModeOptionsChangedEvent, StarredSpawnsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { OlDropdownItem } from "../components/oldropdown";
+import { FaXmark } from "react-icons/fa6";
 
 enum CategoryAccordion {
   NONE,
@@ -34,6 +37,7 @@ enum CategoryAccordion {
   GROUND_UNIT,
   NAVY_UNIT,
   EFFECT,
+  STARRED,
 }
 
 export function SpawnMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
@@ -347,13 +351,9 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
-                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && (
-                  <span
-                    className={`text-gray-400`}
-                  >
-                    No AAA unit available
-                  </span>
-                )}
+                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && <span className={`
+                  text-gray-400
+                `}>No AAA unit available</span>}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -518,6 +518,64 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                 </div>
               </OlAccordion>
             )}
+            <OlAccordion
+              title={`Starred Spawns`}
+              open={openAccordion == CategoryAccordion.STARRED}
+              onClick={() => {
+                setOpenAccordion(openAccordion === CategoryAccordion.NONE ? CategoryAccordion.STARRED : CategoryAccordion.NONE);
+                setSelectedRole(null);
+                setSelectedType(null);
+              }}
+            >
+              <div
+                className={`
+                  flex max-h-[450px] flex-col gap-1 overflow-y-scroll
+                  no-scrollbar
+                `}
+              >
+                {Object.values(starredSpawns).length > 0 ? (
+                  Object.keys(starredSpawns).map((key) => {
+                    const spawnRequestTable = starredSpawns[key];
+                    return (
+                      <OlDropdownItem
+                        className={`
+                          flex w-full content-center gap-2 text-sm text-white
+                        `}
+                        onClick={() => {
+                          getApp().getMap().setSpawnRequestTable(spawnRequestTable);
+                          getApp().setState(OlympusState.SPAWN, SpawnSubState.SPAWN_UNIT);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          data-coalition={spawnRequestTable.coalition}
+                          className={`
+                            my-auto
+                            data-[coalition='blue']:text-blue-500
+                            data-[coalition='neutral']:text-gay-500
+                            data-[coalition='red']:text-red-500
+                          `}
+                          icon={faStar}
+                        />
+                        <div>
+                          {getApp().getUnitsManager().getDatabase().getByName(spawnRequestTable.unit.unitType)?.label} ({spawnRequestTable.quickAccessName})
+                        </div>
+                        <FaXmark className={`
+                          my-auto ml-auto min-h-4 min-w-4 text-gray-400
+                          hover:text-white
+                        `} onClick={
+                          (ev) => {
+                            getApp().getMap().removeStarredSpawnRequestTable(key);
+                            ev.stopPropagation();
+                          }
+                        }/>
+                      </OlDropdownItem>
+                    );
+                  })
+                ) : (
+                  <div className="p-2 text-sm text-white">No starred spawns, use the spawn menu to create a quick access spawn</div>
+                )}
+              </div>
+            </OlAccordion>
           </div>
         )}
 

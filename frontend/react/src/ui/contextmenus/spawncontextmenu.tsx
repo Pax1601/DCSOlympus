@@ -37,6 +37,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { Coalition } from "../../types/types";
 import { spawn } from "child_process";
+import { FaXmark } from "react-icons/fa6";
 
 enum CategoryGroup {
   NONE,
@@ -334,9 +335,13 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
-                          text-gray-200
-                        `}>No aircraft available</span>}
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`text-gray-200`}
+                          >
+                            No aircraft available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -384,9 +389,13 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
-                          text-gray-200
-                        `}>No helicopter available</span>}
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`text-gray-200`}
+                          >
+                            No helicopter available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -437,9 +446,13 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
-                          text-gray-200
-                        `}>No air defence unit available</span>}
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`text-gray-200`}
+                          >
+                            No air defence unit available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -505,9 +518,13 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
-                          text-gray-200
-                        `}>No ground unit available</span>}
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`text-gray-200`}
+                          >
+                            No ground unit available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -555,9 +572,13 @@ export function SpawnContextMenu(props: {}) {
                               />
                             );
                           })}
-                        {blueprints?.length === 0 && <span className={`
-                          text-gray-200
-                        `}>No navy unit available</span>}
+                        {blueprints?.length === 0 && (
+                          <span
+                            className={`text-gray-200`}
+                          >
+                            No navy unit available
+                          </span>
+                        )}
                       </div>
                     </>
                   )}
@@ -624,7 +645,8 @@ export function SpawnContextMenu(props: {}) {
                   {openAccordion === CategoryGroup.STARRED && (
                     <div className="flex flex-col gap-2">
                       {Object.values(starredSpawns).length > 0 ? (
-                        Object.values(starredSpawns).map((spawnRequestTable) => {
+                        Object.keys(starredSpawns).map((key) => {
+                          const spawnRequestTable = starredSpawns[key];
                           return (
                             <OlDropdownItem
                               className={`
@@ -660,6 +682,16 @@ export function SpawnContextMenu(props: {}) {
                                 {getApp().getUnitsManager().getDatabase().getByName(spawnRequestTable.unit.unitType)?.label} (
                                 {spawnRequestTable.quickAccessName})
                               </div>
+                              <FaXmark
+                                className={`
+                                  my-auto ml-auto min-h-4 min-w-4 text-gray-400
+                                  hover:text-white
+                                `}
+                                onClick={(ev) => {
+                                  getApp().getMap().removeStarredSpawnRequestTable(key);
+                                  ev.stopPropagation();
+                                }}
+                              />
                             </OlDropdownItem>
                           );
                         })

@@ -248,7 +248,7 @@ export function Header() {
               }
             }}
           >
-            <span className="my-auto font-bold">Game Master</span>
+            <span className="my-auto text-nowrap font-bold">Game Master</span>
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
@@ -279,7 +279,7 @@ export function Header() {
               }
             }}
           >
-            <span className="my-auto font-bold">BLUE Commander</span>
+            <span className="my-auto text-nowrap font-bold">BLUE Commander</span>
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
@@ -310,7 +310,7 @@ export function Header() {
               }
             }}
           >
-            <span className="my-auto font-bold">RED Commander</span>
+            <span className="my-auto text-nowrap font-bold">RED Commander</span>
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
