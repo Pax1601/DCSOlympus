@@ -20,7 +20,8 @@ class Manager {
         IP: undefined,
         logLocation: path.join(__dirname, "..", "manager.log"),
         mode: 'basic',
-        state: 'IDLE'
+        state: 'IDLE',
+        forceBeta: false
     };
 
     /* Manager pages */
