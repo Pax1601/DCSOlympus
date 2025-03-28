@@ -170,7 +170,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                     onClick={() => {
                       const latLng = drawing.getLayer()["getLatLng"] && drawing.getLayer()["getLatLng"]();
                       const bounds = drawing.getLayer()["getBounds"] && drawing.getLayer()["getBounds"]();
-                      latLng && getApp().getMap().setView(latLng, 14);
+                      latLng && getApp().getMap().setView(latLng, 10);
                       bounds && getApp().getMap().fitBounds(bounds);
                     }}
                   />
