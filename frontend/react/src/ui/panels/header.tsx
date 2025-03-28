@@ -1,21 +1,17 @@
+import { faCompass } from "@fortawesome/free-regular-svg-icons";
+import { faCamera, faDrawPolygon, faFlag, faObjectGroup, faSkull, faTriangleExclamation, faVolumeHigh, faWifi } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useRef, useState } from "react";
-import { OlRoundStateButton, OlStateButton, OlLockStateButton } from "../components/olstatebutton";
-import { faSkull, faCamera, faFlag, faVolumeHigh, faDrawPolygon, faTriangleExclamation, faWifi, faObjectGroup } from "@fortawesome/free-solid-svg-icons";
-import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
-import { OlLabelToggle } from "../components/ollabeltoggle";
-import { getApp, IP, VERSION } from "../../olympusapp";
-import {
-  olButtonsVisibilityAirbase,
-  olButtonsVisibilityAircraft,
-  olButtonsVisibilityDcs,
-  olButtonsVisibilityGroundunit,
-  olButtonsVisibilityGroundunitSam,
-  olButtonsVisibilityHelicopter,
-  olButtonsVisibilityHuman,
-  olButtonsVisibilityNavyunit,
-  olButtonsVisibilityOlympus,
-} from "../components/olicons";
+import { FaCheck, FaRedo, FaSpinner } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight, FaFloppyDisk } from "react-icons/fa6";
+import {
+  AudioManagerState,
+  BLUE_COMMANDER,
+  COMMAND_MODE_OPTIONS_DEFAULTS,
+  GAME_MASTER,
+  MAP_HIDDEN_TYPES_DEFAULTS,
+  MAP_OPTIONS_DEFAULTS,
+  RED_COMMANDER,
+} from "../../constants/constants";
 import {
   AudioManagerStateChangedEvent,
   CommandModeOptionsChangedEvent,
@@ -27,21 +23,23 @@ import {
   SessionDataChangedEvent,
   SessionDataSavedEvent,
 } from "../../events";
-import {
-  AudioManagerState,
-  BLUE_COMMANDER,
-  COMMAND_MODE_OPTIONS_DEFAULTS,
-  GAME_MASTER,
-  LoginSubState,
-  MAP_HIDDEN_TYPES_DEFAULTS,
-  MAP_OPTIONS_DEFAULTS,
-  OlympusState,
-  RED_COMMANDER,
-} from "../../constants/constants";
 import { OlympusConfig } from "../../interfaces";
-import { FaCheck, FaRedo, FaSpinner } from "react-icons/fa";
+import { getApp, IP, VERSION } from "../../olympusapp";
+import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
-import { stat } from "fs";
+import {
+  olButtonsVisibilityAirbase,
+  olButtonsVisibilityAircraft,
+  olButtonsVisibilityDcs,
+  olButtonsVisibilityGroundunit,
+  olButtonsVisibilityGroundunitSam,
+  olButtonsVisibilityHelicopter,
+  olButtonsVisibilityHuman,
+  olButtonsVisibilityNavyunit,
+  olButtonsVisibilityOlympus,
+} from "../components/olicons";
+import { OlLabelToggle } from "../components/ollabeltoggle";
+import { OlLockStateButton, OlRoundStateButton, OlStateButton } from "../components/olstatebutton";
 
 export function Header() {
   const [mapHiddenTypes, setMapHiddenTypes] = useState(MAP_HIDDEN_TYPES_DEFAULTS);
@@ -251,13 +249,9 @@ export function Header() {
             <span className="my-auto text-nowrap font-bold">Game Master</span>
             {enabledCommandModes.length > 0 && (
               <>
-                {loadingNewCommandMode ? (
-                  <FaSpinner
-                    className={`my-auto ml-2 animate-spin text-white`}
-                  />
-                ) : (
-                  <FaRedo className={`my-auto ml-2 text-gray-200`} />
-                )}
+                {loadingNewCommandMode ? <FaSpinner className={`
+                  my-auto ml-2 animate-spin text-white
+                `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}
               </>
             )}
           </div>
@@ -283,9 +277,9 @@ export function Header() {
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner
-                    className={`my-auto ml-2 animate-spin text-gray-200`}
-                  />
+                  <FaSpinner className={`
+                    my-auto ml-2 animate-spin text-gray-200
+                  `} />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -314,9 +308,9 @@ export function Header() {
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner
-                    className={`my-auto ml-2 animate-spin text-gray-200`}
-                  />
+                  <FaSpinner className={`
+                    my-auto ml-2 animate-spin text-gray-200
+                  `} />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -351,9 +345,11 @@ export function Header() {
             onClick={() => {
               audioState === AudioManagerState.RUNNING ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
             }}
-            className={audioState === AudioManagerState.ERROR ? `
-              animate-pulse !border-red-500 !text-red-500
-            ` : ""}
+            className={
+              audioState === AudioManagerState.ERROR
+                ? `animate-pulse !border-red-500 !text-red-500`
+                : ""
+            }
             tooltip={() => (
               <OlExpandingTooltip
                 title="Enable/disable audio"
@@ -452,6 +448,19 @@ export function Header() {
               <OlExpandingTooltip
                 title="Hide/Show mission drawings"
                 content="To filter the visibile drawings and change their opacity, use the drawings menu on the left sidebar."
+              />
+            )}
+          />
+          <OlRoundStateButton
+            icon={faCompass}
+            checked={mapOptions.showMissionNavpoints}
+            onClick={() => {
+              getApp().getMap().setOption("showMissionNavpoints", !mapOptions.showMissionNavpoints);
+            }}
+            tooltip={() => (
+              <OlExpandingTooltip
+                title="Hide/Show mission Navpoints"
+                content="To filter the visibile Navpoints and change their opacity, use the Navpoints section of the Mission Drawings menu on the left sidebar."
               />
             )}
           />

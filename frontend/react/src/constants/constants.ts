@@ -419,6 +419,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   hideChromeWarning: false,
   hideSecureWarning: false,
   showMissionDrawings: false,
+  showMissionNavpoints: false,
   clusterGroundUnits: true,
   showUnitCallsigns: true,
 };
