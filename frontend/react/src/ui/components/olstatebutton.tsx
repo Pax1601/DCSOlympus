@@ -100,7 +100,7 @@ export function OlRoundStateButton(props: {
   icon: IconProp;
   tooltip?: string | (() => JSX.Element | JSX.Element[]);
   tooltipPosition?: string;
-  onClick: () => void;
+  onClick: (event) => void;
 }) {
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
@@ -123,8 +123,8 @@ export function OlRoundStateButton(props: {
     <>
       <button
         ref={buttonRef}
-        onClick={() => {
-          props.onClick();
+        onClick={(event) => {
+          props.onClick(event);
           setHover(false);
         }}
         data-checked={props.checked}
