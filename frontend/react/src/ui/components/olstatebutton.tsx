@@ -21,6 +21,7 @@ export function OlStateButton(props: {
 }) {
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
+  const [isMouseHovering, setIsMouseHovering] = useState(false);
   var buttonRef = useRef(null);
 
   const className =
@@ -48,11 +49,12 @@ export function OlStateButton(props: {
         style={{
           border: props.buttonColor ? "2px solid " + props.buttonColor : "0px solid transparent",
           background: setOpacity(
-            props.checked || hover ? (props.buttonColor ? props.buttonColor : colors.OLYMPUS_LIGHT_BLUE) : colors.OLYMPUS_BLUE,
-            !props.checked && hover ? 0.3 : 1
+            props.checked || isMouseHovering ? (props.buttonColor ? props.buttonColor : colors.OLYMPUS_LIGHT_BLUE) : colors.OLYMPUS_BLUE,
+            !props.checked && isMouseHovering ? 0.3 : 1
           ),
         }}
         onMouseEnter={() => {
+          setIsMouseHovering(true);
           setHoverTimeout(
             window.setTimeout(() => {
               setHover(true);
@@ -61,6 +63,7 @@ export function OlStateButton(props: {
           );
         }}
         onMouseLeave={() => {
+          setIsMouseHovering(false);
           setHover(false);
           if (hoverTimeout) {
             window.clearTimeout(hoverTimeout);
