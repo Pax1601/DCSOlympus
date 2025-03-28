@@ -1,10 +1,32 @@
+v2.0.1 ====================
+Changes:
+feat: Added starred spawns to spawn menu and ability to remove starred spawns
+feat: Added selection tools to unit list in unit control menu
+fix: Removed accidental development feature in unit spawn men
+feat: Added nightly link to manager to update without github account
+feat: Multiple improvements to audio backend
+feat: Added ability to change command mode, improved local connection detection
+fix: Drawings filtering utility made case insensitive
+feat: Added drawings filtering by string and go to drawing feature
+feat: Navpoints settings saved in session data
+feat: Navpoints separated from Drawings
+refactor: Changed styles for visible / hidden drawing layers
+feat: Added + and - buttons to control map zoom level
+fix: "Don't show again" tickbox not being respected
+fix: Manager not respecting autoconnectwhentrue and srsport settings
+fix: Aligned airbase spawn menu to other menus
+fix: Context menu shown when dragging handles
+fix: Aligned tanker orbit behaviour
+fix: Quick box selection causes units to be immediately deselected
+fix: Unable to clone units if game master with spawn restrictions on
+feat: Added support for callsigns
+
 v2.0.0 ====================
 Changes:
 1) completely redone UI using React
 2) added audio backend for SRS integration
 3) added Mission Editor drawings in DCS
 4) multiple enhancements to control scheme
-
 
 v1.0.4 ====================
 Changes:

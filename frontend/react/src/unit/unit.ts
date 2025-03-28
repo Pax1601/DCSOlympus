@@ -70,7 +70,7 @@ import {
   UnitSelectedEvent,
   UnitUpdatedEvent,
 } from "../events";
-import { DraggableHandle } from "../map/coalitionarea/coalitionareahandle";
+import { DraggableHandle } from "../map/markers/draggablehandle";
 import { ArrowMarker } from "../map/markers/arrowmarker";
 import { Spot } from "../mission/spot";
 import { SpotEditMarker } from "../map/markers/spoteditmarker";

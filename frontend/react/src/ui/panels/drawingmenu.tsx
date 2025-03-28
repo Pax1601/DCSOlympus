@@ -164,7 +164,7 @@ export function DrawingMenu(props: { open: boolean; onClose: () => void }) {
                   <FontAwesomeIcon
                     icon={faMapLocation}
                     className={`
-                      ml-auto cusor-pointer transition-transform
+                      ml-auto cursor-pointer transition-transform
                       hover:scale-125
                     `}
                     onClick={() => {

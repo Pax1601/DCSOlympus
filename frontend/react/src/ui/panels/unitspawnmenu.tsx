@@ -22,6 +22,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaQuestionCircle } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
 
+enum OpenAccordion {
+  NONE,
+  LOADOUT,
+  UNIT_SUMMARY,
+  ADVANCED_OPTIONS,
+}
+
 export function UnitSpawnMenu(props: {
   visible: boolean;
   compact: boolean;
@@ -49,12 +56,12 @@ export function UnitSpawnMenu(props: {
   const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
   const [spawnLiveryID, setSpawnLiveryID] = useState("");
   const [spawnSkill, setSpawnSkill] = useState("High");
-  const [showLoadout, setShowLoadout] = useState(false);
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
-  const [showUnitSummary, setShowUnitSummary] = useState(false);
   const [quickAccessName, setQuickAccessName] = useState("Preset 1");
   const [key, setKey] = useState("");
   const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
+
+  const [openAccordion, setOpenAccordion] = useState(OpenAccordion.NONE);
+  const [showLoadout, setShowLoadout] = useState(false);
 
   useEffect(() => {
     setAppState(getApp()?.getState());
@@ -391,9 +398,9 @@ export function UnitSpawnMenu(props: {
                 )}
                 <OlAccordion
                   onClick={() => {
-                    setShowAdvancedOptions(!showAdvancedOptions);
+                    setOpenAccordion(openAccordion === OpenAccordion.ADVANCED_OPTIONS ? OpenAccordion.NONE : OpenAccordion.ADVANCED_OPTIONS);
                   }}
-                  open={showAdvancedOptions}
+                  open={openAccordion === OpenAccordion.ADVANCED_OPTIONS}
                   title="Advanced options"
                 >
                   <div className="flex flex-col gap-2">
@@ -441,9 +448,10 @@ export function UnitSpawnMenu(props: {
                                     `}
                                   >
                                     {props.blueprint?.liveries && props.blueprint?.liveries[id].countries.length == 1 && (
-                                      <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
-                                        h-6
-                                      `} />
+                                      <img
+                                        src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
+                                        className={`h-6`}
+                                      />
                                     )}
 
                                     <div className="my-auto truncate">
@@ -509,9 +517,12 @@ export function UnitSpawnMenu(props: {
                     <div className="my-auto flex flex-col gap-2">
                       <span>Spawn heading</span>
                       <div className="flex gap-1 text-sm text-gray-400">
-                        <FaQuestionCircle className={`my-auto`} /> <div className={`
-                          my-auto
-                        `}>Drag to change</div>
+                        <FaQuestionCircle className={`my-auto`} />{" "}
+                        <div
+                          className={`my-auto`}
+                        >
+                          Drag to change
+                        </div>
                       </div>
                     </div>
 
@@ -558,9 +569,9 @@ export function UnitSpawnMenu(props: {
               </div>
               <OlAccordion
                 onClick={() => {
-                  setShowUnitSummary(!showUnitSummary);
+                  setOpenAccordion(openAccordion === OpenAccordion.UNIT_SUMMARY ? OpenAccordion.NONE : OpenAccordion.UNIT_SUMMARY);
                 }}
-                open={showUnitSummary}
+                open={openAccordion === OpenAccordion.UNIT_SUMMARY}
                 title="Unit summary"
               >
                 {props.blueprint ? <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} /> : <span></span>}
@@ -568,9 +579,9 @@ export function UnitSpawnMenu(props: {
               {spawnLoadout && spawnLoadout.items.length > 0 && (
                 <OlAccordion
                   onClick={() => {
-                    setShowLoadout(!showLoadout);
+                    setOpenAccordion(openAccordion === OpenAccordion.LOADOUT ? OpenAccordion.NONE : OpenAccordion.LOADOUT);
                   }}
-                  open={showLoadout}
+                  open={openAccordion === OpenAccordion.LOADOUT}
                   title="Loadout"
                 >
                   {spawnLoadout.items.map((item) => {
@@ -897,10 +908,9 @@ export function UnitSpawnMenu(props: {
                                 `}
                               >
                                 {props.blueprint?.liveries && props.blueprint?.liveries[id].countries.length == 1 && (
-                                  <img
-                                    src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
-                                    className={`h-6`}
-                                  />
+                                  <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
+                                    h-6
+                                  `} />
                                 )}
 
                                 <div className="my-auto truncate">
@@ -966,9 +976,12 @@ export function UnitSpawnMenu(props: {
                   <div className="my-auto flex flex-col gap-2">
                     <span className="text-white">Spawn heading</span>
                     <div className="flex gap-1 text-sm text-gray-400">
-                      <FaQuestionCircle className={`my-auto`} /> <div className={`
-                        my-auto
-                      `}>Drag to change</div>
+                      <FaQuestionCircle className={`my-auto`} />{" "}
+                      <div
+                        className={`my-auto`}
+                      >
+                        Drag to change
+                      </div>
                     </div>
                   </div>
 

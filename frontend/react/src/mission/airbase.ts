@@ -40,17 +40,15 @@ export class Airbase extends CustomMarker {
         (this.getElement()?.querySelector(".airbase-icon") as HTMLElement).dataset.selected = `${this.#selected}`;
     });
 
-    this.addEventListener("mousedown", (ev) => {
+    this.on("mousedown", (ev) => {
       if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.AIRBASE) {
         DomEvent.stop(ev);
-        ev.originalEvent.stopImmediatePropagation();
       }
     });
 
-    this.addEventListener("mouseup", (ev) => {
+    this.on("mouseup", (ev) => {
       if (getApp().getState() === OlympusState.IDLE || getApp().getState() === OlympusState.AIRBASE) {
         DomEvent.stop(ev);
-        ev.originalEvent.stopImmediatePropagation();
         getApp().setState(OlympusState.AIRBASE);
         AirbaseSelectedEvent.dispatch(this);
       }

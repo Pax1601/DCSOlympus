@@ -1,6 +1,6 @@
 import { LatLng, LatLngExpression, Map, Point, Polygon, PolylineOptions, DivIcon, Marker } from "leaflet";
 import { getApp } from "../../olympusapp";
-import { DraggableHandle } from "./coalitionareahandle";
+import { DraggableHandle } from "../markers/draggablehandle";
 import { CoalitionAreaMiddleHandle } from "./coalitionareamiddlehandle";
 import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";

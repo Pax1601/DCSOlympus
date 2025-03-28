@@ -1,4 +1,4 @@
-import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
+import { DivIcon, DomEvent, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 
 export class SpotMarker extends CustomMarker {
@@ -7,6 +7,22 @@ export class SpotMarker extends CustomMarker {
     this.options.interactive = true;
     this.options.draggable = true;
     this.setZIndexOffset(9999);
+
+    this.on("mousedown", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("mouseup", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragstart", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragend", (e) => {
+      DomEvent.stopPropagation(e);
+    });
   }
 
   createIcon() {

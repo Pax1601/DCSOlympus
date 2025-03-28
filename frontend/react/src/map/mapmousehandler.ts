@@ -46,8 +46,8 @@ export class MapMouseHandler {
 
     /* Events for touchscreen and mouse */
     if ("ontouchstart" in window) {
-      DomEvent.on(this.#map.getContainer(), "touchstart", (e: any) => this.#onTouchDown(e), this);
-      DomEvent.on(this.#map.getContainer(), "touchend", (e: any) => this.#onTouchUp(e), this);
+      DomEvent.on(this.#map.getContainer(), "touchstart", (e: any) => this.#onTouchStart(e), this);
+      DomEvent.on(this.#map.getContainer(), "touchend", (e: any) => this.#onTouchEnd(e), this);
       DomEvent.on(this.#map.getContainer(), "touchmove", (e: any) => this.#onTouchMove(e), this);
     } else {
       this.#map.on("mouseup", (e: any) => this.#onMouseUp(e));
@@ -162,7 +162,7 @@ export class MapMouseHandler {
     this.mouseWheel(e);
   };
 
-  #onTouchDown = (e: TouchEvent) => {
+  #onTouchStart = (e: TouchEvent) => {
     let newEvent = {
       latlng: this.#map.containerPointToLatLng(this.#map.mouseEventToContainerPoint(e.changedTouches[0] as unknown as MouseEvent)),
       originalEvent: e,
@@ -177,7 +177,7 @@ export class MapMouseHandler {
     }, 300);
   };
 
-  #onTouchUp = (e: TouchEvent) => {
+  #onTouchEnd = (e: TouchEvent) => {
     let newEvent = {
       latlng: this.#map.containerPointToLatLng(this.#map.mouseEventToContainerPoint(e.changedTouches[0] as unknown as MouseEvent)),
       originalEvent: e,

@@ -1,6 +1,6 @@
 import { LatLngExpression, Map, Circle, DivIcon, Marker, CircleOptions, LatLng } from "leaflet";
 import { getApp } from "../../olympusapp";
-import { DraggableHandle } from "./coalitionareahandle";
+import { DraggableHandle } from "../markers/draggablehandle";
 import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
 import { Coalition } from "../../types/types";
 import * as turf from "@turf/turf";

@@ -1,14 +1,29 @@
-import { DivIcon, LatLngExpression, MarkerOptions } from "leaflet";
+import { DivIcon, DomEvent, LatLngExpression, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 
 export class MeasureStartMarker extends CustomMarker {
-
-  constructor(latlng: LatLngExpression,  options?: MarkerOptions) {
+  constructor(latlng: LatLngExpression, options?: MarkerOptions) {
     super(latlng, options);
     this.options.interactive = true;
     this.options.draggable = true;
     this.setZIndexOffset(9999);
+
+    this.on("mousedown", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("mouseup", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragstart", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragend", (e) => {
+      DomEvent.stopPropagation(e);
+    });
   }
 
   createIcon() {

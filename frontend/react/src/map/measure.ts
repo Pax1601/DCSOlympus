@@ -1,11 +1,9 @@
-import { LatLng, LeafletMouseEvent, Polyline } from "leaflet";
+import { LatLng, Polyline } from "leaflet";
 import { Map } from "./map";
 import { MeasureMarker } from "./markers/measuremarker";
 import { MeasureStartMarker } from "./markers/measurestartmarker";
 import { MeasureEndMarker } from "./markers/measureendmarker";
 import { bearing, deg2rad, midpoint, mToFt, mToNm, nmToM, rad2deg } from "../other/utils";
-import { AppStateChangedEvent } from "../events";
-import { OlympusState } from "../constants/constants";
 
 export class Measure {
   #active: boolean = false;
@@ -76,6 +74,7 @@ export class Measure {
 
   finish() {
     this.#active = false;
+    this.#endMarker.setMoving(false);
   }
 
   isActive() {

@@ -1,15 +1,32 @@
-import { DivIcon, LatLngExpression, Map, MarkerOptions } from "leaflet";
+import { DivIcon, DomEvent, LatLngExpression, Map, MarkerOptions } from "leaflet";
 import { CustomMarker } from "./custommarker";
 import { SVGInjector } from "@tanem/svg-injector";
 
 export class MeasureEndMarker extends CustomMarker {
   #rotationAngle: number = 0;
+  #moving: boolean = true;
 
   constructor(latlng: LatLngExpression, options?: MarkerOptions) {
     super(latlng, options);
     this.options.interactive = true;
     this.options.draggable = true;
     this.setZIndexOffset(9999);
+
+    this.on("mousedown", (e) => {
+      if (!this.#moving) DomEvent.stopPropagation(e);
+    });
+
+    this.on("mouseup", (e) => {
+      if (!this.#moving) DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragstart", (e) => {
+      DomEvent.stopPropagation(e);
+    });
+
+    this.on("dragend", (e) => {
+      DomEvent.stopPropagation(e);
+    });
   }
 
   createIcon() {
@@ -27,7 +44,7 @@ export class MeasureEndMarker extends CustomMarker {
     img.onload = () => {
       SVGInjector(img);
       this.#applyRotation();
-    }
+    };
     el.appendChild(img);
     this.getElement()?.appendChild(el);
   }
@@ -45,6 +62,14 @@ export class MeasureEndMarker extends CustomMarker {
     super.onAdd(map);
     this.#applyRotation();
     return this;
+  }
+
+  setMoving(moving: boolean) {
+    this.#moving = moving;
+  }
+
+  getMoving() {
+    return this.#moving;
   }
 
   #applyRotation() {
