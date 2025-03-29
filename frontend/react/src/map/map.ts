@@ -310,6 +310,12 @@ export class Map extends L.Map {
         this.#starredSpawnRequestTables = localSessionData.starredSpawns;
         StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
       }
+      
+      setTimeout(() => {
+        if (sessionData.mapSource?.id) {
+          this.setLayerName(sessionData.mapSource.id);
+        }
+      }, 500);
     });
 
     window.addEventListener("blur", () => {
@@ -1014,7 +1020,7 @@ export class Map extends L.Map {
     }
   }
 
-  #onMouseWheelPressed(e: any) {}
+  #onMouseWheelPressed(e: any) { }
 
   #onRightMousePressed(e: any) {
     this.dragging.disable();

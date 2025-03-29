@@ -157,7 +157,7 @@ export function MapToolBar(props: {}) {
             <>
               <div className="flex flex-col gap-1">
                 <OlStateButton
-                  key={"select"}
+                  key={"zoomin"}
                   checked={false}
                   icon={faPlus}
                   tooltip={() => <div>Zoom map in</div>}
@@ -167,7 +167,7 @@ export function MapToolBar(props: {}) {
                   }}
                 />
                 <OlStateButton
-                  key={"select"}
+                  key={"zoomout"}
                   checked={false}
                   icon={faMinus}
                   tooltip={() => <div>Zoom map out</div>}

@@ -61,6 +61,7 @@ export interface SessionData {
   starredSpawns?: { [key: number]: SpawnRequestTable };
   drawings?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
   navpoints?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
+  mapSource?: { id: string };
 }
 
 export interface ProfileOptions {

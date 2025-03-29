@@ -25,6 +25,7 @@ import {
   MapOptionsChangedEvent,
   MapSourceChangedEvent,
   SessionDataChangedEvent,
+  SessionDataLoadedEvent,
   SessionDataSavedEvent,
 } from "../../events";
 import {
@@ -65,7 +66,9 @@ export function Header() {
     MapOptionsChangedEvent.on((mapOptions) => {
       setMapOptions({ ...mapOptions });
     });
-    MapSourceChangedEvent.on((source) => setMapSource(source));
+    MapSourceChangedEvent.on((source) => {
+      setMapSource(source);
+    });
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       // Timeout needed to make sure the map configuration has updated
       window.setTimeout(() => {
@@ -79,6 +82,9 @@ export function Header() {
     });
     SessionDataChangedEvent.on(() => setSavingSessionData(true));
     SessionDataSavedEvent.on(() => setSavingSessionData(false));
+    SessionDataLoadedEvent.on((sessionData) => {
+      sessionData.mapSource && setMapSource(sessionData.mapSource.id);
+    })
     EnabledCommandModesChangedEvent.on((enabledCommandModes) => setEnabledCommandModes(enabledCommandModes));
     AudioManagerStateChangedEvent.on((state) => setAudioState(state as AudioManagerState));
 
