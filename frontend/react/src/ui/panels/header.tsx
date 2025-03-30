@@ -61,6 +61,16 @@ export function Header() {
   const [enabledCommandModes, setEnabledCommandModes] = useState([] as string[]);
   const [loadingNewCommandMode, setLoadingNewCommandMode] = useState(false);
 
+  const unitViewTypesFilter = {
+    aircraft: olButtonsVisibilityAircraft,
+    helicopter: olButtonsVisibilityHelicopter,
+    "groundunit-sam": olButtonsVisibilityGroundunitSam,
+    groundunit: olButtonsVisibilityGroundunit,
+    navyunit: olButtonsVisibilityNavyunit,
+    airbase: olButtonsVisibilityAirbase,
+    dead: faSkull,
+  }
+
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
     MapOptionsChangedEvent.on((mapOptions) => {
@@ -424,24 +434,25 @@ export function Header() {
         </div>
         <div className={`h-8 w-0 border-l-[2px] border-gray-700`}></div>
         <div className={`flex h-fit flex-row items-center justify-start gap-1`}>
-          {Object.entries({
-            aircraft: olButtonsVisibilityAircraft,
-            helicopter: olButtonsVisibilityHelicopter,
-            "groundunit-sam": olButtonsVisibilityGroundunitSam,
-            groundunit: olButtonsVisibilityGroundunit,
-            navyunit: olButtonsVisibilityNavyunit,
-            airbase: olButtonsVisibilityAirbase,
-            dead: faSkull,
-          }).map((entry) => {
+          {Object.entries(unitViewTypesFilter).map((entry) => {
             return (
               <OlRoundStateButton
                 key={entry[0]}
-                onClick={() => {
-                  getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
+                onClick={(event) => {
+                  if (event.ctrlKey) {
+                    Object.entries(unitViewTypesFilter)
+                    .map(ut => ut[0])
+                    .filter(utName => utName !== entry[0])
+                    .forEach(utName => getApp().getMap().setHiddenType(utName, true));
+
+                    getApp().getMap().setHiddenType(entry[0], false);
+                  } else {
+                    getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
+                  }
                 }}
                 checked={!mapHiddenTypes[entry[0]]}
                 icon={entry[1]}
-                tooltip={"Hide/show " + entry[0] + " units"}
+                tooltip={"Hide/show " + entry[0] + " units. Tip: holding ctrl key while clicking will hide other unit categories."}
               />
             );
           })}

@@ -46,7 +46,7 @@ export function CoordinatesPanel(props: {}) {
         returnString = `${latlng.lat >= 0 ? "N" : "S"} ${DDToDDM(latlng.lat)}, ${latlng.lng >= 0 ? "E" : "W"} ${DDToDDM(latlng.lng)}`;
         break;
       case "MGRS":
-        returnString = latLngToMGRS(latlng.lat, latlng.lng, 6)?.string || "Error";
+        returnString = latLngToMGRS(latlng.lat, latlng.lng, 6)?.groups.join(" ") || "Error";
         break;
     }
 

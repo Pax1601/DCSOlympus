@@ -29,7 +29,7 @@ export function OlLocation(props: { location: LatLng; className?: string; refere
         >
           MGRS
         </span>
-        {MGRS ? MGRS.string : "Error"}
+        {MGRS ? MGRS.groups.join(" ") : "Error"}
       </div>
     );
   } else if (referenceSystem === "LatLngDec") {
