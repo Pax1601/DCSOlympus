@@ -10,6 +10,7 @@ import {
   CoalitionAreasChangedEvent,
   DrawingsUpdatedEvent,
   HotgroupsChangedEvent,
+  MapSourceChangedEvent,
   SessionDataChangedEvent,
   SessionDataLoadedEvent,
   SessionDataSavedEvent,
@@ -136,8 +137,13 @@ export class SessionDataManager {
         DrawingsUpdatedEvent.on(() => {
           let mainDrawingsContainer = getApp().getDrawingsManager().getDrawingsContainer();
           let navpointsContainer = getApp().getDrawingsManager().getNavpointsContainer();
-          this.#sessionData.drawings = {"Mission drawings": mainDrawingsContainer.toJSON()};
-          this.#sessionData.navpoints = {"Navpoints": navpointsContainer.toJSON()};
+          this.#sessionData.drawings = { "Mission drawings": mainDrawingsContainer.toJSON() };
+          this.#sessionData.navpoints = { "Navpoints": navpointsContainer.toJSON() };
+          this.#saveSessionData();
+        });
+
+        MapSourceChangedEvent.on((source) => {
+          this.#sessionData.mapSource = { id: source };
           this.#saveSessionData();
         });
       }, 200);
