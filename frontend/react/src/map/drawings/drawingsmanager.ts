@@ -714,6 +714,7 @@ export class DrawingsManager {
 
     MapOptionsChangedEvent.on((mapOptions: MapOptions) => {
       this.#drawingsContainer.setVisibility(mapOptions.showMissionDrawings);
+      this.#navpointsContainer.setVisibility(mapOptions.showMissionNavpoints);
     });
 
     SessionDataLoadedEvent.on((sessionData) => {
@@ -724,6 +725,7 @@ export class DrawingsManager {
         if (this.#sessionDataNavpoints["Navpoints"]) this.#navpointsContainer.fromJSON(this.#sessionDataNavpoints["Navpoints"]);
       }
       this.#drawingsContainer.setVisibility(getApp().getMap().getOptions().showMissionDrawings);
+      this.#navpointsContainer.setVisibility(getApp().getMap().getOptions().showMissionNavpoints);
     });
   }
 

@@ -31,6 +31,7 @@ export type MapOptions = {
   hideChromeWarning: boolean;
   hideSecureWarning: boolean;
   showMissionDrawings: boolean;
+  showMissionNavpoints: boolean;
   clusterGroundUnits: boolean;
   showUnitCallsigns: boolean;
 };
