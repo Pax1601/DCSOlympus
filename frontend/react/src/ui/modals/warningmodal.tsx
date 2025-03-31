@@ -51,7 +51,9 @@ export function WarningModal(props: { open: boolean }) {
             <span>Your connection to DCS Olympus is not secure.</span>
             <span>To protect your personal data some advanced DCS Olympus features like the camera plugin or the audio backend have been disabled.</span>
             <span>
-              To solve this issue, DCS Olympus should be served using the <span className={`italic`}>https</span> protocol.
+              To solve this issue, DCS Olympus should be served using the <span className={`
+                italic
+              `}>https</span> protocol.
             </span>
             <span>To do so, we suggest using a dedicated server and a reverse proxy with SSL enabled.</span>
             <div className="mt-5 flex gap-4">

@@ -47,6 +47,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
         getApp().setState(OlympusState.ADMIN);
         return response.json();
       } else {
+        getApp().addInfoMessage(`Admin password incorrect!`);
         throw new Error("Admin password incorrect");
       }
     });

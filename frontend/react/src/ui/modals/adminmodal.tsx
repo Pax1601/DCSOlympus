@@ -74,20 +74,38 @@ export function AdminModal(props: { open: boolean }) {
       });
   }, [adminPassword, configs]);
 
-
   return (
     <Modal open={props.open} size={"full"}>
-      <div className="flex flex-col lg:flex-row w-full gap-4">
-        <div className="lg:w-[40%]">
+      <h2 className="text-2xl font-bold text-gray-200">User admin panel</h2>
+      <div
+        className={`
+          flex w-full flex-col gap-4 p-4
+          lg:flex-row
+        `}
+      >
+        
+        <div
+          className={`
+            flex flex-col gap-2 rounded-lg border-2 border-gray-500
+            bg-olympus-600/50 p-4
+            lg:w-[40%]
+          `}
+        >
           <div className="text-white">Groups:</div>
-          <div className="flex max-h-[calc(100vh-280px)] flex-col gap-1 overflow-auto p-2">
+          <div
+            className={`
+              flex h-[calc(100vh-450px)] flex-col gap-1 overflow-auto p-2
+            `}
+          >
             {configs.groups &&
-              Object.keys(configs.groups).map((group: any) => {
+              Object.keys(configs.groups).map((group: any, idx: number) => {
                 return (
                   <div
                     key={group}
                     className={`
-                      flex justify-between gap-4 text-sm text-gray-200
+                      flex justify-between gap-4 bg-white/5 p-2 text-sm
+                      text-gray-200
+                      ${idx % 2 === 0 ? "bg-black/5" : ""}
                     `}
                   >
                     <div className="my-auto">{group}</div>
@@ -121,7 +139,7 @@ export function AdminModal(props: { open: boolean }) {
                         hover:bg-red-400
                       `}
                       onClick={() => {
-                        delete configs["users"][group];
+                        delete configs["groups"][group];
                       }}
                     >
                       <FaTrash className={`text-gray-50`}></FaTrash>
@@ -173,75 +191,96 @@ export function AdminModal(props: { open: boolean }) {
             </div>
           </div>
         </div>
-        <div className="flex lg:w-[58%] flex-col gap-2">
+        <div
+          className={`
+            flex flex-col gap-2 rounded-lg border-2 border-gray-500
+            bg-olympus-600/50 p-4
+            lg:w-[58%]
+          `}
+        >
           <div className="text-white">Users:</div>
-          <div className={`flex max-h-[calc(100vh-280px)] flex-col gap-1 overflow-auto p-2`}>
+          <div
+            className={`
+              flex h-[calc(100vh-450px)] flex-col gap-1 overflow-auto p-2
+            `}
+          >
             {configs.users &&
-              Object.keys(configs.users).map((user: any) => {
+              Object.keys(configs.users).map((user: any, idx: number) => {
                 return (
                   <div
                     key={user.id}
                     className={`
-                      flex justify-between gap-2 text-sm text-gray-200
+                      flex flex-col gap-2 bg-white/5 p-2 text-sm text-gray-200
+                      lg:flex-row
+                      ${idx % 2 === 0 ? "bg-black/5" : ""}
                     `}
                   >
-                    <div className="my-auto">{user}</div>
-
-                    <OlDropdown
-                      label="Enabled roles"
-                      className={`my-auto ml-auto min-w-48`}
-                      disableAutoClose={true}
-                    >
-                      {["Game master", "Blue commander", "Red commander"].map((role: any) => {
-                        return (
-                          <div key={role} className="flex gap-2 p-2">
-                            <OlCheckbox
-                              checked={configs["users"][user].roles.includes(role)}
-                              onChange={(ev) => {
-                                if (ev.target.checked) {
-                                  configs["users"][user].roles.push(role);
-                                } else {
-                                  configs["users"][user].roles = configs["users"][user].roles.filter((r: any) => r !== role);
-                                }
-                                setConfigs({ ...configs });
-                              }}
-                            ></OlCheckbox>
-                            {role}
-                          </div>
-                        );
-                      })}
-                    </OlDropdown>
-
-                    <input
-                      type="password"
-                      autoComplete="new-password"
-                      onChange={(ev) => {
-                        var hash = sha256.create();
-                        configs["users"][user].password = hash.update(ev.currentTarget.value).hex();
-                        setConfigs({ ...configs });
-                      }}
-                      className={`
-                        max-w-44 rounded-lg border border-gray-300 bg-gray-50
-                        p-2.5 text-sm text-gray-900
-                        dark:border-gray-600 dark:bg-gray-700 dark:text-white
-                        dark:placeholder-gray-400 dark:focus:border-blue-500
-                        dark:focus:ring-blue-500
-                        focus:border-blue-500 focus:ring-blue-500
-                      `}
-                      placeholder="Change password"
-                      required
-                    />
                     <div
                       className={`
-                        my-auto cursor-pointer rounded-md bg-red-600 p-2
-                        hover:bg-red-400
+                        flex w-full content-center justify-between gap-4
                       `}
-                      onClick={() => {
-                        delete configs["users"][user];
-                        setConfigs({ ...configs });
-                      }}
                     >
-                      <FaTrash className={`text-gray-50`}></FaTrash>
+                      <div className="my-auto">{user}</div>
+
+                      <OlDropdown
+                        label="Enabled roles"
+                        className={`my-auto ml-auto min-w-48`}
+                        disableAutoClose={true}
+                      >
+                        {["Game master", "Blue commander", "Red commander"].map((role: any) => {
+                          return (
+                            <div key={role} className="flex gap-2 p-2">
+                              <OlCheckbox
+                                checked={configs["users"][user].roles.includes(role)}
+                                onChange={(ev) => {
+                                  if (ev.target.checked) {
+                                    configs["users"][user].roles.push(role);
+                                  } else {
+                                    configs["users"][user].roles = configs["users"][user].roles.filter((r: any) => r !== role);
+                                  }
+                                  setConfigs({ ...configs });
+                                }}
+                              ></OlCheckbox>
+                              {role}
+                            </div>
+                          );
+                        })}
+                      </OlDropdown>
+                    </div>
+
+                    <div className="flex content-center justify-between gap-4">
+                      <input
+                        type="password"
+                        autoComplete="new-password"
+                        onChange={(ev) => {
+                          var hash = sha256.create();
+                          configs["users"][user].password = hash.update(ev.currentTarget.value).hex();
+                          setConfigs({ ...configs });
+                        }}
+                        className={`
+                          w-full rounded-lg border border-gray-300 bg-gray-50
+                          p-2.5 text-sm text-gray-900
+                          dark:border-gray-600 dark:bg-gray-700 dark:text-white
+                          dark:placeholder-gray-400 dark:focus:border-blue-500
+                          dark:focus:ring-blue-500
+                          focus:border-blue-500 focus:ring-blue-500
+                          lg:max-w-92
+                        `}
+                        placeholder="Change password"
+                        required
+                      />
+                      <div
+                        className={`
+                          my-auto cursor-pointer rounded-md bg-red-600 p-2
+                          hover:bg-red-400
+                        `}
+                        onClick={() => {
+                          delete configs["users"][user];
+                          setConfigs({ ...configs });
+                        }}
+                      >
+                        <FaTrash className={`text-gray-50`}></FaTrash>
+                      </div>
                     </div>
                   </div>
                 );
@@ -291,7 +330,12 @@ export function AdminModal(props: { open: boolean }) {
           </div>
         </div>
       </div>
-      <div className="mt-auto flex justify-between">
+      <div
+        className={`
+          mt-auto flex flex-col justify-between gap-4
+          lg:flex-row
+        `}
+      >
         <div className="my-auto flex gap-4 text-sm text-gray-400">
           <div className="my-auto">Reset all user preferences, use with caution</div>
           <div>
@@ -318,10 +362,10 @@ export function AdminModal(props: { open: boolean }) {
           type="button"
           onClick={() => {
             uploadNewConfig();
-            getApp().setState(OlympusState.IDLE)}
-          }
+            getApp().setState(OlympusState.IDLE);
+          }}
           className={`
-            my-auto flex content-center items-center gap-2 rounded-sm
+            my-auto ml-auto flex content-center items-center gap-2 rounded-sm
             bg-blue-700 px-5 py-2.5 text-sm font-medium text-white
             dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
             focus:outline-none focus:ring-4 focus:ring-blue-300

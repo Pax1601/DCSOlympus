@@ -27,9 +27,8 @@ export function Modal(props: {
           <div
             className={`
               fixed left-[50%] top-[50%] z-40 inline-flex translate-x-[-50%]
-              translate-y-[-50%] overflow-y-auto scroll-smooth rounded-xl
-              border-[1px] border-solid border-gray-700 bg-olympus-800
-              drop-shadow-md
+              translate-y-[-50%] rounded-xl border-[1px] border-solid
+              border-gray-700 bg-olympus-800 drop-shadow-md
               max-md:rounded-none max-md:border-none
               ${
                 props.size === "lg"
@@ -77,9 +76,10 @@ export function Modal(props: {
               ></div>
               <div
                 className={`
-                  absolute flex h-full w-full flex-col gap-8 p-16
+                  absolute flex h-full max-h-full w-full flex-col gap-8
+                  overflow-y-auto scroll-smooth p-16
                   max-lg:p-8
-                `}
+                `} 
               >
                 {props.children}
                 {!props.disableClose && (
