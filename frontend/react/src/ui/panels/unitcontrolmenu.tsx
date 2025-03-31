@@ -420,9 +420,12 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       return (
                         <tr key={idx}>
                           <td className="flex gap-2 text-lg text-gray-200">
-                            <FontAwesomeIcon icon={entry[1][0] as IconDefinition} /> <div className={`
-                              text-sm text-gray-400
-                            `}>{entry[1][1] as string}</div>
+                            <FontAwesomeIcon icon={entry[1][0] as IconDefinition} />{" "}
+                            <div
+                              className={`text-sm text-gray-400`}
+                            >
+                              {entry[1][1] as string}
+                            </div>
                           </td>
                           {["blue", "neutral", "red"].map((coalition) => {
                             return (
@@ -576,25 +579,38 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
         {selectedUnits.length > 0 && (
           <>
             {Object.keys(unitOccurences["blue"]).length + Object.keys(unitOccurences["neutral"]).length + Object.keys(unitOccurences["red"]).length > 1 && (
-              <div className="flex gap-4 p-2 px-5 text-sm text-gray-400">
+              <div className="mb-2 flex gap-4 p-2 px-5 text-sm text-gray-400">
                 {" "}
-                <FaQuestionCircle
-                  className={`my-auto min-w-6 text-base`}
-                />{" "}
+                <FaQuestionCircle className={`my-auto min-w-6 text-base`} />{" "}
                 <div className="flex flex-col gap-0.5">
                   <div>Click: keep as only selection </div>
-                  <div><kbd className={`
-                    my-auto ml-auto text-nowrap rounded-lg border
-                    border-gray-200 bg-gray-100 px-2 py-0.5 text-xs
-                    font-semibold text-gray-800
-                    dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
-                  `}> ctrl</kbd> + click: deselect </div> 
-                  <div><kbd className={`
-                    my-auto ml-auto text-nowrap rounded-lg border
-                    border-gray-200 bg-gray-100 px-2 py-0.5 text-xs
-                    font-semibold text-gray-800
-                    dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
-                  `}>shift</kbd> + click: keep only units of coalition</div>
+                  <div>
+                    <kbd
+                      className={`
+                        my-auto ml-auto text-nowrap rounded-lg border
+                        border-gray-200 bg-gray-100 px-2 py-0.5 text-xs
+                        font-semibold text-gray-800
+                        dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+                      `}
+                    >
+                      {" "}
+                      ctrl
+                    </kbd>{" "}
+                    + click: deselect{" "}
+                  </div>
+                  <div>
+                    <kbd
+                      className={`
+                        my-auto ml-auto text-nowrap rounded-lg border
+                        border-gray-200 bg-gray-100 px-2 py-0.5 text-xs
+                        font-semibold text-gray-800
+                        dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+                      `}
+                    >
+                      shift
+                    </kbd>{" "}
+                    + click: keep only units of coalition
+                  </div>
                 </div>{" "}
               </div>
             )}
@@ -622,31 +638,34 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                               data-[coalition='red']:border-red-500
                               hover:bg-white/5
                             `}
-                            onClick = {(ev) => {
+                            onClick={(ev) => {
                               if (ev.ctrlKey) {
                                 getApp()
                                   .getUnitsManager()
-                                  .getSelectedUnits().forEach((unit) => {
+                                  .getSelectedUnits()
+                                  .forEach((unit) => {
                                     if (unit.getName() === name && unit.getCoalition() === coalition) {
                                       unit.setSelected(false);
                                     }
-                                  })
+                                  });
                               } else if (ev.shiftKey) {
                                 getApp()
                                   .getUnitsManager()
-                                  .getSelectedUnits().forEach((unit) => {
+                                  .getSelectedUnits()
+                                  .forEach((unit) => {
                                     if (unit.getCoalition() !== coalition) {
                                       unit.setSelected(false);
                                     }
-                                  })
+                                  });
                               } else {
                                 getApp()
                                   .getUnitsManager()
-                                  .getSelectedUnits().forEach((unit) => {
+                                  .getSelectedUnits()
+                                  .forEach((unit) => {
                                     if (unit.getName() !== name || unit.getCoalition() !== coalition) {
                                       unit.setSelected(false);
                                     }
-                                  })
+                                  });
                               }
                             }}
                           >
@@ -848,53 +867,65 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 <div className="flex flex-col gap-2 px-2">
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeHold} className={`
-                                      my-auto min-w-8 text-white
-                                    `} /> Hold fire: The unit will not shoot in
-                                    any circumstance
+                                    <FontAwesomeIcon
+                                      icon={olButtonsRoeHold}
+                                      className={`my-auto min-w-8 text-white`}
+                                    />{" "}
+                                    Hold fire: The unit will not shoot in any circumstance
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
-                                      my-auto min-w-8 text-white
-                                    `} /> Return fire: The unit will not fire
-                                    unless fired upon
+                                    <FontAwesomeIcon
+                                      icon={olButtonsRoeReturn}
+                                      className={`my-auto min-w-8 text-white`}
+                                    />{" "}
+                                    Return fire: The unit will not fire unless fired upon
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
-                                      my-auto min-w-8 text-white
-                                    `} />{" "}
+                                    <FontAwesomeIcon
+                                      icon={olButtonsRoeDesignated}
+                                      className={`my-auto min-w-8 text-white`}
+                                    />{" "}
                                     <div>
                                       {" "}
-                                      Fire on target: The unit will not fire unless fired upon <p className={`
-                                        inline font-bold
-                                      `}>or</p> ordered to do so{" "}
+                                      Fire on target: The unit will not fire unless fired upon{" "}
+                                      <p
+                                        className={`inline font-bold`}
+                                      >
+                                        or
+                                      </p>{" "}
+                                      ordered to do so{" "}
                                     </div>
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeFree} className={`
-                                      my-auto min-w-8 text-white
-                                    `} /> Free: The unit will fire at any
-                                    detected enemy in range
+                                    <FontAwesomeIcon
+                                      icon={olButtonsRoeFree}
+                                      className={`my-auto min-w-8 text-white`}
+                                    />{" "}
+                                    Free: The unit will fire at any detected enemy in range
                                   </div>
                                 </div>
                                 <div className="flex gap-4">
                                   <div className="my-auto">
-                                    <FaExclamationCircle className={`
-                                      animate-bounce text-xl
-                                    `} />
+                                    <FaExclamationCircle
+                                      className={`animate-bounce text-xl`}
+                                    />
                                   </div>
                                   <div>
                                     Currently, DCS blue and red ground units do not respect{" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeReturn} className={`
-                                      my-auto text-white
-                                    `} /> and{" "}
-                                    <FontAwesomeIcon icon={olButtonsRoeDesignated} className={`
-                                      my-auto text-white
-                                    `} /> rules of engagement, so be careful, they
-                                    may start shooting when you don't want them to. Use neutral units for finer control.
+                                    <FontAwesomeIcon
+                                      icon={olButtonsRoeReturn}
+                                      className={`my-auto text-white`}
+                                    />{" "}
+                                    and{" "}
+                                    <FontAwesomeIcon
+                                      icon={olButtonsRoeDesignated}
+                                      className={`my-auto text-white`}
+                                    />{" "}
+                                    rules of engagement, so be careful, they may start shooting when you don't want them to. Use neutral units for finer
+                                    control.
                                   </div>
                                 </div>
                               </div>
@@ -948,29 +979,25 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                 <div className="flex flex-col gap-2 px-2">
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsAlarmstateGreen}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
-                                    Green: The unit will not engage with its sensors in any circumstances. The unit will be able to move.
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateGreen} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Green: The unit will not engage
+                                    with its sensors in any circumstances. The unit will be able to move.
                                   </div>
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsAlarmstateAuto}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateAuto} className={`
+                                      my-auto min-w-8 text-white
+                                    `} />{" "}
                                     <div> Auto: The unit will use its sensors to engage based on its ROE.</div>
                                   </div>
 
                                   <div className="flex content-center gap-2">
                                     {" "}
-                                    <FontAwesomeIcon
-                                      icon={olButtonsAlarmstateRed}
-                                      className={`my-auto min-w-8 text-white`}
-                                    />{" "}
-                                    Red: The unit will be actively searching for target with its sensors. For some units, this will deploy the radar and make
-                                    the unit not able to move.
+                                    <FontAwesomeIcon icon={olButtonsAlarmstateRed} className={`
+                                      my-auto min-w-8 text-white
+                                    `} /> Red: The unit will be actively
+                                    searching for target with its sensors. For some units, this will deploy the radar and make the unit not able to move.
                                   </div>
                                 </div>
                               </div>
@@ -1027,31 +1054,35 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <div className="flex flex-col gap-2 px-2">
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsThreatNone} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> No reaction: The unit will not
-                                      react in any circumstance
+                                      <FontAwesomeIcon
+                                        icon={olButtonsThreatNone}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      No reaction: The unit will not react in any circumstance
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsThreatPassive} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Passive: The unit will use
-                                      counter-measures, but will not alter its course
+                                      <FontAwesomeIcon
+                                        icon={olButtonsThreatPassive}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Passive: The unit will use counter-measures, but will not alter its course
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsThreatManoeuvre} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Manouevre: The unit will try
-                                      to evade the threat using manoeuvres, but no counter-measures
+                                      <FontAwesomeIcon
+                                        icon={olButtonsThreatManoeuvre}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Manouevre: The unit will try to evade the threat using manoeuvres, but no counter-measures
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsThreatEvade} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Full evasion: the unit will try
-                                      to evade the threat both manoeuvering and using counter-measures
+                                      <FontAwesomeIcon
+                                        icon={olButtonsThreatEvade}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Full evasion: the unit will try to evade the threat both manoeuvering and using counter-measures
                                     </div>
                                   </div>
                                 </div>
@@ -1102,31 +1133,35 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                   <div className="flex flex-col gap-2 px-2">
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsEmissionsSilent} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Radio silence: No radar or
-                                      ECM will be used
+                                      <FontAwesomeIcon
+                                        icon={olButtonsEmissionsSilent}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Radio silence: No radar or ECM will be used
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsEmissionsDefend} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Defensive: The unit will turn
-                                      radar and ECM on only when threatened
+                                      <FontAwesomeIcon
+                                        icon={olButtonsEmissionsDefend}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Defensive: The unit will turn radar and ECM on only when threatened
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsEmissionsAttack} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Attack: The unit will use
-                                      radar and ECM when engaging other units
+                                      <FontAwesomeIcon
+                                        icon={olButtonsEmissionsAttack}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Attack: The unit will use radar and ECM when engaging other units
                                     </div>
                                     <div className="flex content-center gap-2">
                                       {" "}
-                                      <FontAwesomeIcon icon={olButtonsEmissionsFree} className={`
-                                        my-auto min-w-8 text-white
-                                      `} /> Free: the unit will use the
-                                      radar and ECM all the time
+                                      <FontAwesomeIcon
+                                        icon={olButtonsEmissionsFree}
+                                        className={`my-auto min-w-8 text-white`}
+                                      />{" "}
+                                      Free: the unit will use the radar and ECM all the time
                                     </div>
                                   </div>
                                 </div>
@@ -1344,9 +1379,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             >
                               <div className="flex gap-4">
                                 <div className="my-auto">
-                                  <FaExclamationCircle className={`
-                                    animate-bounce text-xl
-                                  `} />
+                                  <FaExclamationCircle
+                                    className={`animate-bounce text-xl`}
+                                  />
                                 </div>
                                 <div>
                                   Currently, DCS blue and red ground units do not respect their rules of engagement, so be careful, they may start shooting when
@@ -1446,9 +1481,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             {/* ============== Miss on purpose toggle END ============== */}
                             <div className="flex gap-4">
                               {/* ============== Shots scatter START ============== */}
-                              <div className={`
-                                flex w-full justify-between gap-2
-                              `}>
+                              <div
+                                className={`flex w-full justify-between gap-2`}
+                              >
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1523,9 +1558,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             </div>
                             {/* ============== Operate as toggle START ============== */}
                             {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (
-                              <div className={`
-                                flex content-center justify-between
-                              `}>
+                              <div
+                                className={`flex content-center justify-between`}
+                              >
                                 <span
                                   className={`
                                     my-auto font-normal
@@ -1793,37 +1828,39 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         )}
                       </div>
                       {/* ============== Follow roads toggle START ============== */}
-                      <div className="flex content-center justify-between">
-                        <span
-                          className={`
-                            my-auto font-normal
-                            dark:text-white
-                          `}
-                        >
-                          Follow roads
-                        </span>
-                        <OlToggle
-                          toggled={selectedUnitsData.followRoads}
-                          onClick={() => {
-                            getApp()
-                              .getUnitsManager()
-                              .setFollowRoads(!selectedUnitsData.followRoads, null, () =>
-                                setForcedUnitsData({
-                                  ...forcedUnitsData,
-                                  followRoads: !selectedUnitsData.followRoads,
-                                })
-                              );
-                          }}
-                          tooltip={() => (
-                            <OlExpandingTooltip
-                              title="Follow roads when moving"
-                              content="If enabled, this option will force the unit to stay on roads when moving to a new location. This can be useful to simulate convoys or to make the unit follow a specific path."
-                            />
-                          )}
-                          tooltipRelativeToParent={true}
-                          tooltipPosition="above"
-                        />
-                      </div>
+                      {selectedCategories.every((category) => category === "GroundUnit") && (
+                        <div className="flex content-center justify-between">
+                          <span
+                            className={`
+                              my-auto font-normal
+                              dark:text-white
+                            `}
+                          >
+                            Follow roads
+                          </span>
+                          <OlToggle
+                            toggled={selectedUnitsData.followRoads}
+                            onClick={() => {
+                              getApp()
+                                .getUnitsManager()
+                                .setFollowRoads(!selectedUnitsData.followRoads, null, () =>
+                                  setForcedUnitsData({
+                                    ...forcedUnitsData,
+                                    followRoads: !selectedUnitsData.followRoads,
+                                  })
+                                );
+                            }}
+                            tooltip={() => (
+                              <OlExpandingTooltip
+                                title="Follow roads when moving"
+                                content="If enabled, this option will force the unit to stay on roads when moving to a new location. This can be useful to simulate convoys or to make the unit follow a specific path."
+                              />
+                            )}
+                            tooltipRelativeToParent={true}
+                            tooltipPosition="above"
+                          />
+                        </div>
+                      )}
                       {/* ============== Follow roads toggle END ============== */}
                       {/* ============== Unit active toggle START ============== */}
                       <div className="flex content-center justify-between">
@@ -2021,9 +2058,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                       value={activeRadioSettings ? activeRadioSettings.TACAN.channel : 1}
                     ></OlNumberInput>
 
-                    <OlDropdown label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"} className={`
-                      my-auto w-20
-                    `}>
+                    <OlDropdown
+                      label={activeRadioSettings ? activeRadioSettings.TACAN.XY : "X"}
+                      className={`my-auto w-20`}
+                    >
                       <OlDropdownItem
                         key={"X"}
                         onClick={() => {
@@ -2256,9 +2294,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                         className={`
                           flex content-center gap-2 rounded-full
                           ${selectedUnits[0].getFuel() > 40 && `bg-green-700`}
-                          ${selectedUnits[0].getFuel() > 10 && selectedUnits[0].getFuel() <= 40 && `
-                            bg-yellow-700
-                          `}
+                          ${
+                            selectedUnits[0].getFuel() > 10 &&
+                            selectedUnits[0].getFuel() <= 40 &&
+                            `bg-yellow-700`
+                          }
                           ${selectedUnits[0].getFuel() <= 10 && `bg-red-700`}
                           px-2 py-1 text-sm font-bold text-white
                         `}
@@ -2278,10 +2318,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     )*/}
 
                     <div className="flex content-center gap-2">
-                      <OlLocation
-                        location={selectedUnits[0].getPosition()}
-                        className={`w-[280px] text-sm`}
-                      />
+                      <OlLocation location={selectedUnits[0].getPosition()} className={`
+                        w-[280px] text-sm
+                      `} />
                       <div className="my-auto text-gray-200">{Math.round(mToFt(selectedUnits[0].getPosition().alt ?? 0))} ft</div>
                     </div>
                   </div>
