@@ -1,5 +1,5 @@
 import { CustomMarker } from "./custommarker";
-import { DivIcon, LatLng } from "leaflet";
+import { DivIcon, LatLng, LatLngExpression } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
 import { getApp } from "../../olympusapp";
 import { adjustBrightness, normalizeAngle, rad2deg } from "../../other/utils";
@@ -41,6 +41,14 @@ export class TemporaryUnitMarker extends CustomMarker {
           }, this.#commandHash);
       }
     }, 1000);
+  }
+
+  setLatLng(latlng: LatLngExpression): this {
+    super.setLatLng(latlng);
+    if (this.#acquisitionCircle) this.#acquisitionCircle.setLatLng(latlng);
+    if (this.#engagementCircle) this.#engagementCircle.setLatLng(latlng);
+
+    return this;
   }
 
   createIcon() {
