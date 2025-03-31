@@ -1123,10 +1123,19 @@ end
 
 -- This function is periodically called to collect the data of all the existing drawings in the mission to be transmitted to the olympus.dll
 function Olympus.initializeDrawings()
+	local function extract_custom_layer_name(str)
+		if str:match("^%[LYR:(.-)%]") then
+			return str:match("^%[LYR:(.-)%]")
+		elseif str:match("^%[(.-)%]") then
+			return str:match("^%[(.-)%]")
+		end
+		return nil
+	end
+
 	local drawings = {}
 	if mist.DBs.drawingByName ~= nil then
 		for drawingName, drawingData in pairs(mist.DBs.drawingByName) do
-			local customLayer = drawingData.name:match("^%[LYR:(.-)%]")
+			local customLayer = extract_custom_layer_name(drawingName)
 
 			-- Let's convert DCS coords to lat lon
 			local vec3 = { x = drawingData['mapX'], y = 0, z = drawingData['mapY'] }
@@ -1163,10 +1172,10 @@ function Olympus.initializeDrawings()
 
 			-- Let's put the drawing in the correct layer
 			if customLayer then
-				-- Let's remove the tag from the drawing name
+				-- Let's remove the m from the drawing name
 				local cleanDrawingName = string.match(drawingName, "%] (.+)")
 				drawingData.name = cleanDrawingName
-				-- The drawing has the custom layer tag
+				-- The drawing has the custom layer m
 				drawings[drawingData.layerName][customLayer][cleanDrawingName] = drawingData
 			else
 				-- The drawing is a standard drawing

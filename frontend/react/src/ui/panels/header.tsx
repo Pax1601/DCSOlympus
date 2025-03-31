@@ -67,7 +67,7 @@ export function Header() {
     navyunit: olButtonsVisibilityNavyunit,
     airbase: olButtonsVisibilityAirbase,
     dead: faSkull,
-  }
+  };
 
   useEffect(() => {
     HiddenTypesChangedEvent.on((hiddenTypes) => setMapHiddenTypes({ ...hiddenTypes }));
@@ -92,7 +92,7 @@ export function Header() {
     SessionDataSavedEvent.on(() => setSavingSessionData(false));
     SessionDataLoadedEvent.on((sessionData) => {
       sessionData.mapSource && setMapSource(sessionData.mapSource.id);
-    })
+    });
     EnabledCommandModesChangedEvent.on((enabledCommandModes) => setEnabledCommandModes(enabledCommandModes));
     AudioManagerStateChangedEvent.on((state) => setAudioState(state as AudioManagerState));
 
@@ -155,6 +155,30 @@ export function Header() {
 
     sr < 1 && !scrolledRight && setScrolledRight(true);
     sr > 1 && scrolledRight && setScrolledRight(false);
+  }
+
+  function unitTypeFilterClickHandler(event: MouseEvent, entryName: string) {
+    if (event.ctrlKey) {
+      const hiddenTypes = getApp().getMap().getHiddenTypes();
+      const isAnyTypeHidden = Object.keys(unitViewTypesFilter).some((entryName) => hiddenTypes[entryName] === true);
+
+      if (isAnyTypeHidden && !mapHiddenTypes[entryName]) {
+        // If we ctrl+click an already displayed unit type, we show every unit type
+        Object.keys(unitViewTypesFilter).forEach((entryName) => {
+          getApp().getMap().setHiddenType(entryName, false);
+        });
+        return;
+      }
+
+      Object.entries(unitViewTypesFilter)
+        .map((ut) => ut[0])
+        .filter((utName) => utName !== entryName)
+        .forEach((utName) => getApp().getMap().setHiddenType(utName, true));
+
+      getApp().getMap().setHiddenType(entryName, false);
+    } else {
+      getApp().getMap().setHiddenType(entryName, !mapHiddenTypes[entryName]);
+    }
   }
 
   return (
@@ -265,9 +289,13 @@ export function Header() {
             <span className="my-auto text-nowrap font-bold">Game Master</span>
             {enabledCommandModes.length > 0 && (
               <>
-                {loadingNewCommandMode ? <FaSpinner className={`
-                  my-auto ml-2 animate-spin text-white
-                `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}
+                {loadingNewCommandMode ? (
+                  <FaSpinner
+                    className={`my-auto ml-2 animate-spin text-white`}
+                  />
+                ) : (
+                  <FaRedo className={`my-auto ml-2 text-gray-200`} />
+                )}
               </>
             )}
           </div>
@@ -293,9 +321,9 @@ export function Header() {
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner className={`
-                    my-auto ml-2 animate-spin text-gray-200
-                  `} />
+                  <FaSpinner
+                    className={`my-auto ml-2 animate-spin text-gray-200`}
+                  />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -324,9 +352,9 @@ export function Header() {
             {enabledCommandModes.length > 0 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner className={`
-                    my-auto ml-2 animate-spin text-gray-200
-                  `} />
+                  <FaSpinner
+                    className={`my-auto ml-2 animate-spin text-gray-200`}
+                  />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -361,11 +389,9 @@ export function Header() {
             onClick={() => {
               audioState === AudioManagerState.RUNNING ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
             }}
-            className={
-              audioState === AudioManagerState.ERROR
-                ? `animate-pulse !border-red-500 !text-red-500`
-                : ""
-            }
+            className={audioState === AudioManagerState.ERROR ? `
+              animate-pulse !border-red-500 !text-red-500
+            ` : ""}
             tooltip={() => (
               <OlExpandingTooltip
                 title="Enable/disable audio"
@@ -434,21 +460,10 @@ export function Header() {
             return (
               <OlRoundStateButton
                 key={entry[0]}
-                onClick={(event) => {
-                  if (event.ctrlKey) {
-                    Object.entries(unitViewTypesFilter)
-                    .map(ut => ut[0])
-                    .filter(utName => utName !== entry[0])
-                    .forEach(utName => getApp().getMap().setHiddenType(utName, true));
-
-                    getApp().getMap().setHiddenType(entry[0], false);
-                  } else {
-                    getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
-                  }
-                }}
+                onClick={(event) => unitTypeFilterClickHandler(event, entry[0])}
                 checked={!mapHiddenTypes[entry[0]]}
                 icon={entry[1]}
-                tooltip={"Hide/show " + entry[0] + " units. Tip: holding ctrl key while clicking will hide other unit categories."}
+                tooltip={"Hide/show " + entry[0] + " units. Tip: holding ctrl key while clicking will hide other unit categories. To show all units again, hold ctrl while clicking a displayed unit category."}
               />
             );
           })}
