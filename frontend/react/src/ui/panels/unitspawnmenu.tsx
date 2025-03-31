@@ -346,6 +346,7 @@ export function UnitSpawnMenu(props: {
                                 setSpawnLoadoutName("");
                               }}
                               className={`w-full`}
+                              key={role}
                             >
                               {role}
                             </OlDropdownItem>
@@ -380,6 +381,7 @@ export function UnitSpawnMenu(props: {
                                 setSpawnLoadoutName(loadout.name);
                               }}
                               className={`w-full`}
+                              key={loadout.name}
                             >
                               <span
                                 className={`
@@ -439,6 +441,7 @@ export function UnitSpawnMenu(props: {
                                     setSpawnLiveryID(id);
                                   }}
                                   className={`w-full`}
+                                  key={id}
                                 >
                                   <span
                                     className={`
@@ -497,6 +500,7 @@ export function UnitSpawnMenu(props: {
                                 setSpawnSkill(skill);
                               }}
                               className={`w-full`}
+                              key={skill}
                             >
                               <span
                                 className={`
@@ -584,9 +588,9 @@ export function UnitSpawnMenu(props: {
                   open={openAccordion === OpenAccordion.LOADOUT}
                   title="Loadout"
                 >
-                  {spawnLoadout.items.map((item) => {
+                  {spawnLoadout.items.map((item, idx) => {
                     return (
-                      <div className="flex content-center gap-2">
+                      <div className="flex content-center gap-2" key={idx}>
                         <div
                           className={`
                             my-auto w-6 min-w-6 rounded-full py-0.5 text-center

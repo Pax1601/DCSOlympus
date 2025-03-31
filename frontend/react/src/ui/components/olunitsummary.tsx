@@ -85,7 +85,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
       <div className="flex flex-row gap-1 px-2">
         {props.blueprint.abilities?.split(" ").map((ability) => {
           return (
-            <>
+            <div key={ability}>
               {ability.replaceAll(" ", "") !== "" && (
                 <div
                   key={ability}
@@ -97,7 +97,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
                   {ability}
                 </div>
               )}
-            </>
+            </div>
           );
         })}
 
