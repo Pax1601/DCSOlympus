@@ -89,8 +89,8 @@ export function LoginModal(props: { open: boolean }) {
     <Modal open={props.open} size="md" disableClose={true}>
       <div
         className={`
-          flex w-full flex-row gap-6
-          max-lg:flex-col
+          flex w-full flex-col gap-6
+          lg:flex-row
         `}
       >
         <div
@@ -177,7 +177,7 @@ export function LoginModal(props: { open: boolean }) {
                         </div>
                       </div>
 
-                      <div className={`flex flex-col items-start gap-2`}>
+                      <div className={`flex flex-col items-start gap-1`}>
                         {loginByRole ? (
                           <>
                           <label

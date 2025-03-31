@@ -33,8 +33,8 @@ export function Modal(props: {
               ${
                 props.size === "lg"
                   ? `
-                    h-[600px] w-[1100px]
-                    max-md:h-full max-md:w-full
+                    h-[700px] w-[1100px]
+                    max-xl:h-full max-xl:w-full
                   `
                   : ""
               }
@@ -42,7 +42,7 @@ export function Modal(props: {
                 props.size === "md"
                   ? `
                     h-[600px] w-[950px]
-                    max-md:h-full max-md:w-full
+                    max-lg:h-full max-lg:w-full
                   `
                   : ""
               }

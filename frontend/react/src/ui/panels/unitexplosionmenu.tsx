@@ -19,7 +19,7 @@ export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; c
         <span className="text-white">Explosion type</span>
 
         <OlDropdown label={explosionType} className="w-full">
-          {["High explosive", "Napalm", "White phosphorous"].map((optionExplosionType) => {
+          {["High explosive", "Napalm", "White phosphorous", "Fire"].map((optionExplosionType) => {
             return (
               <OlDropdownItem
                 key={optionExplosionType}
