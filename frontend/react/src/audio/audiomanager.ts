@@ -120,7 +120,8 @@ export class AudioManager {
       return;
     }
 
-    this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
+    //this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
+    this.#socket = new WebSocket(`wss://refugees.dcsolympus.com/audio`);
     if (!this.#socket) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
 
     if (!this.#socket) {

@@ -95,7 +95,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   /* When the sinks or sources change, use the count state to force a rerender to update the connection lines */
   useEffect(() => {
     setCount(count + 1);
-  }, [sinks, sources]);
+  }, [sinks, sources, connectedClientsOpen]);
 
   /* List all the connections between the sinks and the sources */
   const connections = [] as any[];
@@ -276,38 +276,39 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
               {connectedClientsOpen && (
                 <div className={`flex flex-col text-gray-200`}>
                   {clientsData.map((clientData, idx) => {
+                    if (!clientData.radios) return null;
+                    if (clientData.radios.length === 0) return null;
+
+                    /* Count how many radios have a non null frequency */
+                    const activeRadios = clientData.radios.reduce((acc, radio) => {
+                      if (radio.frequency > 10) acc++;
+                      return acc;
+                    }, 0);
+
                     return (
                       <div
                         data-coalition={enumToCoalition(clientData.coalition)}
                         key={idx}
                         className={`
-                          flex gap-2 border-l-4 px-4 py-2
+                          flex justify-between gap-2 border-l-4 px-4 py-2
                           data-[coalition='blue']:border-blue-500
                           data-[coalition='neutral']:border-gray-500
                           data-[coalition='red']:border-red-500
                         `}
                       >
-                        <div className="text-gray-400">{clientData.name}</div>
-                        <div
-                          className={`
-                            ml-auto cursor-pointer gap-2 rounded-md
-                            bg-olympus-600 px-3 py-1 text-sm
-                            hover:bg-olympus-400
-                          `}
-                          onClick={() => getApp().getAudioManager().tuneNewRadio(clientData.radios[0].frequency, clientData.radios[0].modulation)}
-                        >
-                          {`${zeroAppend(clientData.radios[0].frequency / 1e6, 3, true, 3)} ${clientData.radios[0].modulation ? "FM" : "AM"}`}{" "}
-                        </div>
-                        <div
-                          className={`
-                            cursor-pointer gap-2 rounded-md bg-olympus-600 px-3
-                            py-1 text-sm
-                            hover:bg-olympus-400
-                          `}
-                          onClick={() => getApp().getAudioManager().tuneNewRadio(clientData.radios[1].frequency, clientData.radios[1].modulation)}
-                        >
-                          {`${zeroAppend(clientData.radios[1].frequency / 1e6, 3, true, 3)} ${clientData.radios[1].modulation ? "FM" : "AM"}`}{" "}
-                        </div>
+                        <div className="my-auto truncate text-gray-400">{clientData.name}</div>
+                        <OlDropdown label={"Tuned radios: " + activeRadios}>
+                          {clientData.radios.map((radio, idx) => {
+                            return radio.frequency > 10 ?
+                             (
+                              <OlDropdownItem key={idx}>
+                                <div className="flex gap-2 text-white">
+                                  {`${zeroAppend(radio.frequency / 1e6, 3, true, 3)} ${radio.modulation ? "FM" : "AM"}`}
+                                </div>
+                              </OlDropdownItem>
+                            ): <></>
+                          })}
+                        </OlDropdown>
                       </div>
                     );
                   })}
