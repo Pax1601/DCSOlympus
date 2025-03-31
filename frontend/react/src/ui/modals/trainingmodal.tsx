@@ -98,12 +98,13 @@ export function TrainingModal(props: { open: boolean }) {
                     Commander mode
                   </div>
                 </div>
-                <div className="flex gap-2">
+                {/* TODO <div className="flex gap-2">
                   <FaLink className="my-auto" />
                   <div className={`cursor-pointer text-blue-400`} onClick={() => {}}>
                     Advanced topics
                   </div>
                 </div>
+                } */}
               </div>
               <div>
                 Every panel has a dedicated integrated wiki. Click on the{" "}
@@ -130,9 +131,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step1.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step1.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Main navbar</h2>
               <p>
@@ -154,9 +156,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step2.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step2.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Spawning units (1 of 3)</h2>
               <p>
@@ -182,9 +185,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step3.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step3.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Spawning units (2 of 3)</h2>
               <p>
@@ -193,9 +197,10 @@ export function TrainingModal(props: { open: boolean }) {
               </p>
               <p>You can edit the unit properties like in the previous method. Remember you can open the unit summary section to get more info on the unit.</p>
               <div className="flex gap-4">
-                <img src="images/training/step3.1.gif" className={`
-                  h-32 w-32 rounded-xl
-                `} />
+                <img
+                  src="images/training/step3.1.gif"
+                  className={`h-32 w-32 rounded-xl`}
+                />
                 You can change the spawn heading of the unit by dragging the arrow on the map. This will also change the spawn heading in the unit properties.
               </div>
             </div>
@@ -212,9 +217,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step4.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step4.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Spawning units (3 of 3)</h2>
               <p>
@@ -236,9 +242,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step5.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step5.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (1 of 4)</h2>
               <p>
@@ -251,9 +258,10 @@ export function TrainingModal(props: { open: boolean }) {
                 destinations will be shared between them.
               </p>
               <div className="flex gap-4">
-                <img src="images/training/step4.1.gif" className={`
-                  h-40 w-40 rounded-xl
-                `} />
+                <img
+                  src="images/training/step4.1.gif"
+                  className={`h-40 w-40 rounded-xl`}
+                />
                 Holding down the right mouse button enters "group movement" mode. The units will hold their relative positions and move as a formation. Move the
                 mouse to choose the formation heading. Ctrl can be pressed to create a path.
               </div>
@@ -271,9 +279,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step6.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step6.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (2 of 4)</h2>
               <p>
@@ -305,9 +314,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step7.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step7.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (3 of 4)</h2>
               <p>
@@ -333,9 +343,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step8.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step8.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (4 of 4)</h2>
               <p>
@@ -367,9 +378,12 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src={`images/training/unitmarker${markerComponent ? markerComponent : ""}.png`} className={`
+            <img
+              src={`images/training/unitmarker${markerComponent ? markerComponent : ""}.png`}
+              className={`
               max-h-34 max-w-34 mx-auto my-auto rounded-xl
-            `} />
+            `}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>The unit marker (1 of 2)</h2>
               <p>
@@ -671,9 +685,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step12.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step12.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Interacting with the map (2 of 2)</h2>
               <p>
@@ -685,9 +700,10 @@ export function TrainingModal(props: { open: boolean }) {
                   flex w-full flex-col content-center justify-center gap-4
                 `}
               >
-                <img src="images/training/step12.1.png" className={`
-                  mx-auto w-40 rounded-xl
-                `} />
+                <img
+                  src="images/training/step12.1.png"
+                  className={`mx-auto w-40 rounded-xl`}
+                />
                 On the bottom right corner of the map, you can find the coordinates panel, providing the coordinates of the mouse cursor, as well as its
                 bullseye position and the ground elevation. Click on the coordinates to rotate format.
               </div>
@@ -705,10 +721,9 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img
-              src="images/training/step13.png"
-              className={`mx-auto h-96 rounded-xl`}
-            />
+            <img src="images/training/step13.png" className={`
+              mx-auto h-96 rounded-xl
+            `} />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Mission drawings</h2>
               <p>
@@ -737,10 +752,9 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img
-              src="images/training/step14.png"
-              className={`mx-auto h-96 rounded-xl`}
-            />
+            <img src="images/training/step14.png" className={`
+              mx-auto h-96 rounded-xl
+            `} />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>The audio backend</h2>
               <p>
@@ -837,11 +851,9 @@ export function TrainingModal(props: { open: boolean }) {
                 key={i + 1}
                 className={`
                   h-4 w-4 rounded-full
-                  ${
-                    i + 1 === step
-                      ? "bg-blue-700 shadow-white"
-                      : `bg-gray-300/10`
-                  }
+                  ${i + 1 === step ? "bg-blue-700 shadow-white" : `
+                    bg-gray-300/10
+                  `}
                 `}
               />
             ))}
