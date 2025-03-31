@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { zeroAppend } from "../../other/utils";
 import { OlTooltip } from "./oltooltip";
 
@@ -19,6 +19,12 @@ export function OlNumberInput(props: {
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
 
   return (
     <div

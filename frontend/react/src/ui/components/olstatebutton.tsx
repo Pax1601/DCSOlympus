@@ -1,7 +1,7 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faLock, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { OlTooltip } from "./oltooltip";
 import { computeBrightness, setOpacity } from "../../other/utils";
 import { colors } from "../../constants/constants";
@@ -23,6 +23,12 @@ export function OlStateButton(props: {
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   const [isMouseHovering, setIsMouseHovering] = useState(false);
   var buttonRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
 
   const className =
     (props.className ?? "") +
@@ -109,6 +115,12 @@ export function OlRoundStateButton(props: {
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
 
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
+
   const className =
     (props.className ?? "") +
     `
@@ -168,6 +180,12 @@ export function OlLockStateButton(props: {
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
 
   const className =
     (props.className ?? "") +

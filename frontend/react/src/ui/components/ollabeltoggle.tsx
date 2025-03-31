@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { OlTooltip } from "./oltooltip";
 
 export function OlLabelToggle(props: {
@@ -13,6 +13,12 @@ export function OlLabelToggle(props: {
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
   var buttonRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
 
   return (
     <>

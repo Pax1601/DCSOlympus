@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UnitBlueprint } from "../../interfaces";
 import { Coalition } from "../../types/types";
-import { getWikipediaImage, getWikipediaSummary } from "../../other/utils";
-import { OlStateButton } from "./olstatebutton";
-import { faImage } from "@fortawesome/free-solid-svg-icons";
+import { getWikipediaImage } from "../../other/utils";
 import { FaQuestionCircle } from "react-icons/fa";
 
 export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coalition }) {
@@ -11,6 +9,12 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
   const [summary, setSummary] = useState(null as string | null);
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
 
   useEffect(() => {
     getWikipediaImage(props.blueprint.label).then((url) => {
@@ -63,9 +67,7 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
         </div>
         {imageUrl && (
           <div className="flex w-full min-w-0 gap-1 text-sm text-gray-500">
-            <FaQuestionCircle
-              className={`my-auto min-w-4`}
-            />
+            <FaQuestionCircle className={`my-auto min-w-4`} />
             <div className={`my-auto max-w-full truncate`}>Hover to show image</div>
           </div>
         )}
@@ -82,17 +84,21 @@ export function OlUnitSummary(props: { blueprint: UnitBlueprint; coalition: Coal
       </div>
       <div className="flex flex-row gap-1 px-2">
         {props.blueprint.abilities?.split(" ").map((ability) => {
-          return <>{ ability.replaceAll(" ", "") !== "" &&
-            <div
-              key={ability}
-              className={`
-                rounded-full bg-olympus-800 px-2 py-0.5 text-xs font-bold
-                dark:text-olympus-50
-              `}
-            >
-              {ability}
-            </div>
-           }</>
+          return (
+            <>
+              {ability.replaceAll(" ", "") !== "" && (
+                <div
+                  key={ability}
+                  className={`
+                    rounded-full bg-olympus-800 px-2 py-0.5 text-xs font-bold
+                    dark:text-olympus-50
+                  `}
+                >
+                  {ability}
+                </div>
+              )}
+            </>
+          );
         })}
 
         <div

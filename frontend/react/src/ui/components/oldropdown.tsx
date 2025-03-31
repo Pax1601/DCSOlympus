@@ -22,6 +22,12 @@ export function OlDropdown(props: {
   var contentRef = useRef(null);
   var buttonRef = props.buttonRef !== undefined ? props.buttonRef : useRef(null);
 
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setHover(false);
+    });
+  }, []);
+
   function setPosition(content: HTMLDivElement, button: HTMLButtonElement) {
     /* Reset the position of the content */
     content.style.left = "0px";
@@ -126,12 +132,9 @@ export function OlDropdown(props: {
               }
             }}
           >
-            {props.leftIcon && (
-              <FontAwesomeIcon
-                icon={props.leftIcon}
-                className={`mr-3`}
-              />
-            )}
+            {props.leftIcon && <FontAwesomeIcon icon={props.leftIcon} className={`
+              mr-3
+            `} />}
             <span className="overflow-hidden text-ellipsis text-nowrap">{props.label ?? ""}</span>
             <svg
               className={`
