@@ -1970,7 +1970,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawRacetrack() {
-    if (getApp().getMap().getOptions().showRacetracks) {
+    if (getApp().getMap().getOptions().showRacetracks && this.getAirborne()) {
       let groundspeed = this.#speed;
 
       // Determine racetrack length
