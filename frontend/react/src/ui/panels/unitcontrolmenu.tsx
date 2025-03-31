@@ -2269,11 +2269,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     </div>
 
                     <div className="my-auto text-sm text-gray-400">{selectedUnits[0].getTask()}</div>
-                    {([UnitState.SIMULATE_FIRE_FIGHT, UnitState.MISS_ON_PURPOSE, UnitState.SCENIC_AAA] as string[]).includes(selectedUnits[0].getState()) && (
+                    {/* Useful for debugging but very data hungry
+                    
+                    ([UnitState.SIMULATE_FIRE_FIGHT, UnitState.MISS_ON_PURPOSE, UnitState.SCENIC_AAA] as string[]).includes(selectedUnits[0].getState()) && (
                       <div className="my-auto text-sm text-gray-400">
                         Time to next tasking: {zeroAppend(selectedUnits[0].getTimeToNextTasking(), 0, true, 2)}s
                       </div>
-                    )}
+                    )*/}
 
                     <div className="flex content-center gap-2">
                       <OlLocation

@@ -373,7 +373,7 @@ void GroundUnit::AIloop()
 						lat = position.lat + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
 						lng = position.lng + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
 						barrelElevation = target->getPosition().alt + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 1000;
-						taskString += "Flak box mode.";
+						taskString += "Flak box mode";
 					}
 					else {
 						taskString += "Scenic AAA. Bearing: " + to_string((int)round(randomBearing)) + "deg";

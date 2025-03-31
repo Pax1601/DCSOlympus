@@ -127,6 +127,7 @@ public:
 	virtual void setAimMethodRange(double newValue) { updateValue(aimMethodRange, newValue, DataIndex::aimMethodRange); }
 	virtual void setAcquisitionRange(double newValue) { updateValue(acquisitionRange, newValue, DataIndex::acquisitionRange); }
 	virtual void setRadarState(bool newValue) { updateValue(radarState, newValue, DataIndex::radarState); }
+	virtual void setAirborne(bool newValue) { updateValue(airborne, newValue, DataIndex::airborne); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -191,6 +192,7 @@ public:
 	virtual double getAimMethodRange() { return aimMethodRange; }
 	virtual double getAcquisitionRange() { return acquisitionRange; }
 	virtual bool getRadarState() { return radarState; }
+	virtual bool getAirborne() { return airborne; }
 
 protected:
 	unsigned int ID;
@@ -258,6 +260,7 @@ protected:
 	double targetingRange = 0;
 	double aimMethodRange = 0; 
 	double acquisitionRange = 0; 
+	bool airborne = false;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

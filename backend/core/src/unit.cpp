@@ -148,6 +148,9 @@ void Unit::update(json::value json, double dt)
 	if (json.has_number_field(L"health"))
 		setHealth(static_cast<unsigned char>(json[L"health"].as_number().to_uint32()));
 
+	if (json.has_boolean_field(L"airborne"))
+		setAirborne(json[L"airborne"].as_bool());
+
 	runAILoop();
 }
 
@@ -304,7 +307,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
 					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
 					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
-					case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;
+					//case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	Useful for debugging, but useless in production and very data hungry
 					case DataIndex::barrelHeight:				appendNumeric(ss, datumIndex, barrelHeight); break;
 					case DataIndex::muzzleVelocity:				appendNumeric(ss, datumIndex, muzzleVelocity); break;
 					case DataIndex::aimTime:					appendNumeric(ss, datumIndex, aimTime); break;
@@ -315,6 +318,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::targetingRange:				appendNumeric(ss, datumIndex, targetingRange); break;
 					case DataIndex::aimMethodRange:				appendNumeric(ss, datumIndex, aimMethodRange); break;
 					case DataIndex::acquisitionRange:			appendNumeric(ss, datumIndex, acquisitionRange); break;
+					case DataIndex::airborne:					appendNumeric(ss, datumIndex, airborne); break;
 				}
 			}
 		}
