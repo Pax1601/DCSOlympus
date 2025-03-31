@@ -67,6 +67,7 @@ namespace DataIndex {
 		targetingRange, 
 		aimMethodRange,
 		acquisitionRange,
+		airborne,
 		lastIndex,
 		endOfData = 255
 	};

@@ -1236,6 +1236,7 @@ function Olympus.setUnitsData(arg, time)
 					local position = unit:getPosition()
 					local heading = math.atan2( position.x.z, position.x.x )
 					local velocity = unit:getVelocity();
+					local airborne = unit:inAir()
 					
 					-- Fill the data table
 					table["name"] = unit:getTypeName()
@@ -1248,6 +1249,7 @@ function Olympus.setUnitsData(arg, time)
 					table["horizontalVelocity"] =  math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z)
 					table["verticalVelocity"] = velocity.y
 					table["heading"] = heading 
+					table["airborne"] = airborne
 
 					-- Track angles are wrong because of weird reference systems, approximate it using latitude and longitude differences
 					if (table["horizontalVelocity"] > 1) then

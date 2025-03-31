@@ -154,6 +154,7 @@ export abstract class Unit extends CustomMarker {
   #racetrackLength: number = 0;
   #racetrackAnchor: LatLng = new LatLng(0, 0);
   #racetrackBearing: number = 0;
+  #airborne: boolean = false;
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
   #blueprint: UnitBlueprint | null = null;
@@ -390,6 +391,9 @@ export abstract class Unit extends CustomMarker {
   }
   getAcquisitionRange() {
     return this.#acquisitionRange;
+  }
+  getAirborne() {
+    return this.#airborne;
   }
 
   static getConstructor(type: string) {
@@ -754,6 +758,9 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.acquisitionRange:
           this.#acquisitionRange = dataExtractor.extractFloat64();
           break;
+        case DataIndexes.airborne:
+          this.#airborne = dataExtractor.extractBool();
+          break;
         default:
           break;
       }
@@ -874,6 +881,7 @@ export abstract class Unit extends CustomMarker {
       targetingRange: this.#targetingRange,
       aimMethodRange: this.#aimMethodRange,
       acquisitionRange: this.#acquisitionRange,
+      airborne: this.#airborne
     };
   }
 
@@ -1962,7 +1970,7 @@ export abstract class Unit extends CustomMarker {
   }
 
   #drawRacetrack() {
-    if (getApp().getMap().getOptions().showRacetracks) {
+    if (getApp().getMap().getOptions().showRacetracks && this.getAirborne()) {
       let groundspeed = this.#speed;
 
       // Determine racetrack length

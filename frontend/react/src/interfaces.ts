@@ -283,6 +283,7 @@ export interface UnitData {
   targetingRange: number;
   aimMethodRange: number;
   acquisitionRange: number;
+  airborne: boolean;
 }
 
 export interface LoadoutItemBlueprint {
