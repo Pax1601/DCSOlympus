@@ -85,19 +85,21 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                     );
                   })}
                 </OlDropdown>
-                <div className="flex content-center gap-4 p-4">
-                  <div className="mt-8 text-gray-400">
-                    <FaQuestionCircle />
+                {!props.compact && (
+                  <div className="flex content-center gap-4 p-4">
+                    <div className="mt-8 text-gray-400">
+                      <FaQuestionCircle />
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      Click on the map to generate an explosion effect. The type of explosion will be the one selected above. The possible explosion effects
+                      are:
+                      <li>High explosive: a normal explosion, like the one from a conventional bomb;</li>
+                      <li>Napalm: an explosion with a longer lasting fire effect;</li>
+                      <li>White phosphorous: an explosion with multiple white flares ejecting from the blast;</li>
+                      <li>Fire: a long lasting static fire.</li>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-400">
-                    Click on the map to generate an explosion effect. The type of explosion will be the one selected above.
-                    The possible explosion effects are:
-                    <li>High explosive: a normal explosion, like the one from a conventional bomb;</li>
-                    <li>Napalm: an explosion with a longer lasting fire effect;</li>
-                    <li>White phosphorous: an explosion with multiple white flares ejecting from the blast;</li>
-                    <li>Fire: a long lasting static fire.</li>
-                  </div>
-                </div>
+                )}
               </>
             )}
             {props.effect === "smoke" && (
@@ -136,9 +138,11 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                   <div className="my-auto text-gray-400">
                     <FaQuestionCircle />
                   </div>
-                  <div className="text-sm text-gray-400">
-                    Click on the map to generate a colored smoke effect. The color of the smoke will be the one selected above.
-                  </div>
+                  {!props.compact && (
+                    <div className="text-sm text-gray-400">
+                      Click on the map to generate a colored smoke effect. The color of the smoke will be the one selected above.
+                    </div>
+                  )}
                 </div>
               </>
             )}
