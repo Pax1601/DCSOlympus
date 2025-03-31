@@ -101,6 +101,7 @@ export function Menu(props: {
               text-lg
               dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white
               hover:bg-gray-200
+              ${props.wikiDisabled ? "ml-auto" : ""}
             `}
           />
           <FontAwesomeIcon

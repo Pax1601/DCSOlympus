@@ -75,7 +75,31 @@ export function AirbaseMenu(props: { open: boolean; onClose: () => void; childre
   filteredBlueprints.sort((a, b) => a.label.localeCompare(b.label));
 
   return (
-    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false}>
+    <Menu title={airbase?.getName() ?? "No airbase selected"} open={props.open} onClose={props.onClose} showBackButton={false}
+    wiki={() => {
+      return (
+        <div
+          className={`
+            h-full flex-col overflow-auto p-4 text-gray-400 no-scrollbar flex
+            gap-2
+          `}
+        >
+          <h2 className="mb-4 font-bold">Airbase menu</h2>
+          <div>
+            In the airbase menu, you can see the details of the selected airbase, including its ICAO name, elevation, runways, and TACAN (if present). You can also spawn units at the airbase.
+          </div>
+          <div>
+            The options available to you will be the same as in a normal spawn menu, but you will be able to only spawn aircraft or helicopters. Airplanes are spawned at available parking spots or on the runway, depending on the selected airbase. Not all aircraft can be spawned, so make sure the airbase is big enough.
+          </div>
+          <div>
+            You will only be able to spawn units that are of the same coalition as the airbase. If you are playing in commander mode and the airbase does not belong to your coalition, you will not be able to spawn units.
+          </div>
+          <div>
+            The coalition of an airbase depends on what ground units control it. A way to change the coalition of an airbase is to spawn a ground unit of the desired coalition at the airbase. The airbase will then change its coalition to the one of the unit.
+          </div>
+        </div>
+      );
+    }}>
       <div
         className={`
           flex flex-col gap-2 font-normal text-gray-800

@@ -59,7 +59,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
   }, []);
 
   return (
-    <Menu title="User preferences" open={props.open} showBackButton={false} onClose={props.onClose}>
+    <Menu title="User preferences" open={props.open} showBackButton={false} onClose={props.onClose} wikiDisabled={true}>
       <div
         className={`
           flex h-full flex-col justify-end gap-2 p-5 font-normal text-gray-800

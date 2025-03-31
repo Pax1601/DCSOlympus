@@ -7,7 +7,7 @@ import { ImportExportSubstate, OlympusState } from "../../constants/constants";
 
 export function MainMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   return (
-    <Menu title="Main Menu" open={props.open} showBackButton={false} onClose={props.onClose}>
+    <Menu title="Main Menu" open={props.open} showBackButton={false} onClose={props.onClose} wikiDisabled={true}>
       <div
         className={`
           flex flex-col gap-1 p-5 font-normal text-gray-900
