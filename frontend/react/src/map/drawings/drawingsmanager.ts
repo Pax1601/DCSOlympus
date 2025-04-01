@@ -528,7 +528,9 @@ export class DCSDrawingsContainer {
   initFromData(drawingsData) {
     let hasContainers = false;
     Object.keys(drawingsData).forEach((layerName: string) => {
-      if (drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined) {
+      const layerIsAContainer = drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined;
+      const layerIsNotEmpty = Object.keys(drawingsData[layerName]).length > 0;
+      if (layerIsAContainer && layerIsNotEmpty) {
         const newContainer = new DCSDrawingsContainer(layerName, this);
         this.addSubContainer(newContainer);
         newContainer.initFromData(drawingsData[layerName]);
@@ -580,7 +582,10 @@ export class DCSDrawingsContainer {
       else this.addDrawing(newDrawing);
     });
 
-    if (othersContainer.getDrawings().length === 0) this.removeSubContainer(othersContainer); // Remove empty container
+    if (othersContainer.getDrawings().length === 0) {
+      this.removeSubContainer(othersContainer); // Remove empty container 
+      // FIXME: it's not working for main containers.
+    }
   }
 
   getLayerGroup() {
