@@ -187,6 +187,12 @@ export class SessionDataManager {
     return this.#sessionData;
   }
 
+  setSessionData(sessionData: SessionData) {
+    this.#sessionData = sessionData;
+    
+    this.#saveSessionData();
+  }
+
   #saveSessionData() {
     if (getApp().getState() === OlympusState.SERVER) return;
 

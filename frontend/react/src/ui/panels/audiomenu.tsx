@@ -281,7 +281,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
 
                     /* Count how many radios have a non null frequency */
                     const activeRadios = clientData.radios.reduce((acc, radio) => {
-                      if (radio.frequency > 10) acc++;
+                      if (radio.frequency > 1000) acc++;
                       return acc;
                     }, 0);
 
@@ -299,10 +299,23 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
                         <div className="my-auto truncate text-gray-400">{clientData.name}</div>
                         <OlDropdown label={"Tuned radios: " + activeRadios}>
                           {clientData.radios.map((radio, idx) => {
-                            return radio.frequency > 10 ?
+                            return radio.frequency > 1000 ?
                              (
                               <OlDropdownItem key={idx}>
-                                <div className="flex gap-2 text-white">
+                                <div className="flex gap-2 text-white" onClick={() => {
+                                  // Find if any radio is already tuned to this frequency
+                                  const alreadyTuned = sinks.find((sink) => {
+                                    if (sink instanceof RadioSink) {
+                                      return sink.getFrequency() === radio.frequency && sink.getModulation() === radio.modulation;
+                                    }
+                                    return false;
+                                  });
+                                  if (!alreadyTuned) {
+                                    let newRadio = getApp().getAudioManager().addRadio();
+                                    newRadio.setFrequency(radio.frequency);
+                                    newRadio.setModulation(radio.modulation);
+                                  }
+                                }}>
                                   {`${zeroAppend(radio.frequency / 1e6, 3, true, 3)} ${radio.modulation ? "FM" : "AM"}`}
                                 </div>
                               </OlDropdownItem>
