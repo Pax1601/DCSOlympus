@@ -460,7 +460,7 @@ export class DCSNavpoint extends DCSDrawing {
   constructor(drawingData, parent) {
     super(drawingData, parent);
 
-    this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment);
+    this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment, drawingData.tag);
 
     this.setVisibility(true);
   }
