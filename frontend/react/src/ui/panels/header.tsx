@@ -296,17 +296,9 @@ export function Header() {
             <span className="my-auto text-nowrap font-bold">Game Master</span>
             {enabledCommandModes.length > 1 && (
               <>
-                {loadingNewCommandMode ? (
-                  <FaSpinner
-                    className={`
+                {loadingNewCommandMode ? <FaSpinner className={`
                   my-auto ml-2 animate-spin text-white
-                `}
-                  />
-                ) : (
-                  <FaRedo
-                    className={`my-auto ml-2 text-gray-200`}
-                  />
-                )}
+                `} /> : <FaRedo className={`my-auto ml-2 text-gray-200`} />}
               </>
             )}
           </div>
@@ -339,7 +331,9 @@ export function Header() {
             {enabledCommandModes.length > 1 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner className={`my-auto ml-2 animate-spin text-gray-200`} />
+                  <FaSpinner className={`
+                    my-auto ml-2 animate-spin text-gray-200
+                  `} />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -411,9 +405,11 @@ export function Header() {
             onClick={() => {
               audioState === AudioManagerState.RUNNING ? getApp().getAudioManager().stop() : getApp().getAudioManager().start();
             }}
-            className={audioState === AudioManagerState.ERROR ? `
-              animate-pulse !border-red-500 !text-red-500
-            ` : ""}
+            className={
+              audioState === AudioManagerState.ERROR
+                ? `animate-pulse !border-red-500 !text-red-500`
+                : ""
+            }
             tooltip={() => (
               <OlExpandingTooltip
                 title="Enable/disable audio"
@@ -485,11 +481,19 @@ export function Header() {
                 onClick={(event) => unitTypeFilterClickHandler(event, entry[0])}
                 checked={!mapHiddenTypes[entry[0]]}
                 icon={entry[1]}
-                tooltip={
-                  "Hide/show " +
-                  entry[0] +
-                  " units. Tip: holding ctrl key while clicking will hide other unit categories. To show all units again, hold ctrl while clicking a displayed unit category."
-                }
+                tooltip={() => {
+                  return (
+                    <OlExpandingTooltip
+                      title={"Hide/show " + entry[0] + " units."}
+                      content={
+                        <>
+                          <p>Tip: holding ctrl key while clicking will hide other unit categories.</p>
+                          <p>To show all units again, hold ctrl while clicking a displayed unit category.</p>
+                        </>
+                      }
+                    />
+                  );
+                }}
               />
             );
           })}
