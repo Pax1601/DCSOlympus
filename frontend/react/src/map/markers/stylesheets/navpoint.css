@@ -5,11 +5,7 @@
     gap: 10px;
 }
 .ol-navpoint-marker>.navpoint>.navpoint-icon {
-    height: 8px;
-    width: 8px;
-    background: white;
-    flex: none;
-    transform: rotate3d(0, 0, 1, 45deg);
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 1));
 }
 
 .ol-navpoint-marker>.navpoint>.navpoint-main-label {
@@ -17,6 +13,8 @@
     flex-direction: column;
     font-size: 10px;
     color: white;
+    text-shadow: -1px -1px 2px rgb(113, 113, 113), 1px -1px 2px rgb(113, 113, 113), -1px 1px 2px rgb(113, 113, 113), 1px 1px 2px rgb(113, 113, 113);
+
 }
 
 .ol-navpoint-marker .navpoint-comment-box {
@@ -24,4 +22,6 @@
     font-style: italic;
     color: white;
     max-width: 50px;
+    text-shadow: -1px -1px 2px rgb(113, 113, 113), 1px -1px 2px rgb(113, 113, 113), -1px 1px 2px rgb(113, 113, 113), 1px 1px 2px rgb(113, 113, 113);
+
 }
