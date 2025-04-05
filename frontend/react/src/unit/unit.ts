@@ -60,6 +60,7 @@ import { ContextActionSet } from "./contextactionset";
 import * as turf from "@turf/turf";
 import { Carrier } from "../mission/carrier";
 import {
+  CommandModeOptionsChangedEvent,
   ContactsUpdatedEvent,
   CoordinatesFreezeEvent,
   HiddenTypesChangedEvent,
@@ -510,6 +511,10 @@ export abstract class Unit extends CustomMarker {
 
       if (this.getSelected()) this.drawLines();
     });
+
+    CommandModeOptionsChangedEvent.on((commandModeOptions) => {
+      this.#redrawMarker();
+    });
   }
 
   /********************** Abstract methods  *************************/
@@ -881,7 +886,7 @@ export abstract class Unit extends CustomMarker {
       targetingRange: this.#targetingRange,
       aimMethodRange: this.#aimMethodRange,
       acquisitionRange: this.#acquisitionRange,
-      airborne: this.#airborne
+      airborne: this.#airborne,
     };
   }
 
@@ -1782,7 +1787,8 @@ export abstract class Unit extends CustomMarker {
       element.querySelector(".unit-vvi")?.setAttribute("style", `height: ${15 + this.#speed / 5}px;`);
 
       /* Set the unit name or callsign */
-      if (element.querySelector(".unit-callsign")) (element.querySelector(".unit-callsign") as HTMLElement).innerText = getApp().getMap().getOptions().showUnitCallsigns? this.#callsign: this.#unitName;
+      if (element.querySelector(".unit-callsign"))
+        (element.querySelector(".unit-callsign") as HTMLElement).innerText = getApp().getMap().getOptions().showUnitCallsigns ? this.#callsign : this.#unitName;
 
       /* Set fuel data */
       element.querySelector(".unit-fuel-level")?.setAttribute("style", `width: ${this.#fuel}%`);

@@ -2,7 +2,7 @@ import { AudioManagerState, AudioMessageType, BLUE_COMMANDER, GAME_MASTER, Olymp
 import { MicrophoneSource } from "./microphonesource";
 import { RadioSink } from "./radiosink";
 import { getApp } from "../olympusapp";
-import { coalitionToEnum, makeID } from "../other/utils";
+import { coalitionToEnum, deepCopyTable, makeID } from "../other/utils";
 import { FileSource } from "./filesource";
 import { AudioSource } from "./audiosource";
 import { Buffer } from "buffer";
@@ -465,7 +465,9 @@ export class AudioManager {
     if (this.#devices.includes(input)) {
       this.#input = input;
       AudioManagerInputChangedEvent.dispatch(input);
+      let sessionData = deepCopyTable(getApp().getSessionDataManager().getSessionData());
       this.stop();
+      getApp().getSessionDataManager().setSessionData(sessionData);
       this.start();
       this.#options.input = input.deviceId;
       AudioOptionsChangedEvent.dispatch(this.#options);
@@ -478,8 +480,11 @@ export class AudioManager {
     if (this.#devices.includes(output)) {
       this.#input = output;
       AudioManagerOutputChangedEvent.dispatch(output);
+      let sessionData = deepCopyTable(getApp().getSessionDataManager().getSessionData());
       this.stop();
+      getApp().getSessionDataManager().setSessionData(sessionData);
       this.start();
+      
       this.#options.output = output.deviceId;
       AudioOptionsChangedEvent.dispatch(this.#options);
     } else {

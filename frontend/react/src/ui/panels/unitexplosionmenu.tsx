@@ -14,12 +14,12 @@ export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; c
   }, [])
 
   return (
-    <Menu title="Unit explosion menu" open={props.open} showBackButton={false} onClose={props.onClose}>
+    <Menu title="Unit explosion menu" open={props.open} showBackButton={false} onClose={props.onClose} wikiDisabled={true}>
       <div className="flex h-full flex-col gap-4 p-4">
         <span className="text-white">Explosion type</span>
 
         <OlDropdown label={explosionType} className="w-full">
-          {["High explosive", "Napalm", "White phosphorous"].map((optionExplosionType) => {
+          {["High explosive", "Napalm", "White phosphorous", "Fire"].map((optionExplosionType) => {
             return (
               <OlDropdownItem
                 key={optionExplosionType}

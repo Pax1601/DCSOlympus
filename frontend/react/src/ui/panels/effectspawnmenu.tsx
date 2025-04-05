@@ -7,6 +7,7 @@ import { faArrowLeft, faSmog } from "@fortawesome/free-solid-svg-icons";
 import { LatLng } from "leaflet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AppStateChangedEvent } from "../../events";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; effect: string | null; latlng?: LatLng | null; onBack?: () => void }) {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -71,7 +72,7 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                   <span className="my-auto text-white">Explosion type</span>
                 </div>
                 <OlDropdown label={explosionType} className="w-full">
-                  {["High explosive", "Napalm", "White phosphorous"].map((optionExplosionType) => {
+                  {["High explosive", "Napalm", "White phosphorous", "Fire"].map((optionExplosionType) => {
                     return (
                       <OlDropdownItem
                         key={optionExplosionType}
@@ -84,6 +85,21 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                     );
                   })}
                 </OlDropdown>
+                {!props.compact && (
+                  <div className="flex content-center gap-4 p-4">
+                    <div className="mt-8 text-gray-400">
+                      <FaQuestionCircle />
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      Click on the map to generate an explosion effect. The type of explosion will be the one selected above. The possible explosion effects
+                      are:
+                      <li>High explosive: a normal explosion, like the one from a conventional bomb;</li>
+                      <li>Napalm: an explosion with a longer lasting fire effect;</li>
+                      <li>White phosphorous: an explosion with multiple white flares ejecting from the blast;</li>
+                      <li>Fire: a long lasting static fire.</li>
+                    </div>
+                  </div>
+                )}
               </>
             )}
             {props.effect === "smoke" && (
@@ -117,6 +133,17 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                     );
                   })}
                 </div>
+
+                <div className="flex content-center gap-4 p-4">
+                  <div className="my-auto text-gray-400">
+                    <FaQuestionCircle />
+                  </div>
+                  {!props.compact && (
+                    <div className="text-sm text-gray-400">
+                      Click on the map to generate a colored smoke effect. The color of the smoke will be the one selected above.
+                    </div>
+                  )}
+                </div>
               </>
             )}
             {props.compact && (
@@ -133,6 +160,7 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                       if (explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", props.latlng);
                       else if (explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", props.latlng);
                       else if (explosionType === "White phosphorous") getApp().getServerManager().spawnExplosion(50, "phosphorous", props.latlng);
+                      else if (explosionType === "Fire") getApp().getServerManager().spawnExplosion(50, "fire", props.latlng);
                       getApp().getMap().addExplosionMarker(props.latlng);
                     } else if (props.effect === "smoke") {
                       /* Find the name of the color */

@@ -9,6 +9,7 @@ const MAX_STEPS = 15;
 
 export function TrainingModal(props: { open: boolean }) {
   const [step, setStep] = useState(0);
+  const [markerComponent, setMarkerComponent] = useState(null as number | null);
 
   return (
     <Modal open={props.open} size="lg">
@@ -43,10 +44,12 @@ export function TrainingModal(props: { open: boolean }) {
                 Welcome to the Olympus quick start guide! This tour will guide you through the basics of DCS Olympus. You can navigate through the steps using
                 the "Next" and "Previous" buttons at the bottom of the screen, or select a topic from the list below.
               </p>
-              <div className={`
-                flex w-fit flex-col flex-wrap gap-2
-                md:h-32
-              `}>
+              <div
+                className={`
+                  flex w-fit flex-col flex-wrap gap-2
+                  md:h-32
+                `}
+              >
                 <div className="flex gap-2">
                   <FaLink className="my-auto" />
                   <div className={`cursor-pointer text-blue-400`} onClick={() => setStep(1)}>
@@ -92,15 +95,16 @@ export function TrainingModal(props: { open: boolean }) {
                 <div className="flex gap-2">
                   <FaLink className="my-auto" />
                   <div className={`cursor-pointer text-blue-400`} onClick={() => setStep(15)}>
-                    Game master mode
+                    Commander mode
                   </div>
                 </div>
-                <div className="flex gap-2">
+                {/* TODO <div className="flex gap-2">
                   <FaLink className="my-auto" />
                   <div className={`cursor-pointer text-blue-400`} onClick={() => {}}>
                     Advanced topics
                   </div>
                 </div>
+                } */}
               </div>
               <div>
                 Every panel has a dedicated integrated wiki. Click on the{" "}
@@ -127,9 +131,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step1.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step1.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Main navbar</h2>
               <p>
@@ -151,9 +156,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step2.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step2.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Spawning units (1 of 3)</h2>
               <p>
@@ -179,9 +185,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step3.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step3.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Spawning units (2 of 3)</h2>
               <p>
@@ -190,9 +197,10 @@ export function TrainingModal(props: { open: boolean }) {
               </p>
               <p>You can edit the unit properties like in the previous method. Remember you can open the unit summary section to get more info on the unit.</p>
               <div className="flex gap-4">
-                <img src="images/training/step3.1.gif" className={`
-                  h-32 w-32 rounded-xl
-                `} />
+                <img
+                  src="images/training/step3.1.gif"
+                  className={`h-32 w-32 rounded-xl`}
+                />
                 You can change the spawn heading of the unit by dragging the arrow on the map. This will also change the spawn heading in the unit properties.
               </div>
             </div>
@@ -209,9 +217,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step4.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step4.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Spawning units (3 of 3)</h2>
               <p>
@@ -233,9 +242,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step5.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step5.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (1 of 4)</h2>
               <p>
@@ -248,9 +258,10 @@ export function TrainingModal(props: { open: boolean }) {
                 destinations will be shared between them.
               </p>
               <div className="flex gap-4">
-                <img src="images/training/step4.1.gif" className={`
-                  h-40 w-40 rounded-xl
-                `} />
+                <img
+                  src="images/training/step4.1.gif"
+                  className={`h-40 w-40 rounded-xl`}
+                />
                 Holding down the right mouse button enters "group movement" mode. The units will hold their relative positions and move as a formation. Move the
                 mouse to choose the formation heading. Ctrl can be pressed to create a path.
               </div>
@@ -268,9 +279,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step6.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step6.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (2 of 4)</h2>
               <p>
@@ -302,9 +314,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step7.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step7.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (3 of 4)</h2>
               <p>
@@ -330,9 +343,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step8.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step8.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Controlling units (4 of 4)</h2>
               <p>
@@ -364,9 +378,12 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/unitmarker.png" className={`
-              max-h-34 max-w-34 my-auto rounded-xl
-            `} />
+            <img
+              src={`images/training/unitmarker${markerComponent ? markerComponent : ""}.png`}
+              className={`
+              max-h-34 max-w-34 mx-auto my-auto rounded-xl
+            `}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>The unit marker (1 of 2)</h2>
               <p>
@@ -374,7 +391,12 @@ export function TrainingModal(props: { open: boolean }) {
                 players only). It has the following parts:
               </p>
               <div className="flex flex-wrap gap-4">
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(1)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(1)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -387,7 +409,12 @@ export function TrainingModal(props: { open: boolean }) {
                     <p className="my-auto">Unit short label or type symbol</p>
                   </p>
                 </div>
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(2)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(2)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -400,7 +427,12 @@ export function TrainingModal(props: { open: boolean }) {
                     <p className="my-auto">Flight level</p>
                   </p>
                 </div>
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(3)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(3)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -413,7 +445,12 @@ export function TrainingModal(props: { open: boolean }) {
                     <p className="my-auto">Ground speed (knots)</p>
                   </p>
                 </div>
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(4)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(4)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -426,7 +463,12 @@ export function TrainingModal(props: { open: boolean }) {
                     <p className="my-auto">Bullseye position</p>
                   </p>
                 </div>
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(5)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(5)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -439,7 +481,12 @@ export function TrainingModal(props: { open: boolean }) {
                     <p className="my-auto">Fuel state (% of internal)</p>
                   </p>
                 </div>
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(6)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(6)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -452,7 +499,12 @@ export function TrainingModal(props: { open: boolean }) {
                     <p className="my-auto">A/A weapons (Fox 1/2/3 & guns)</p>
                   </p>
                 </div>
-                <div className="flex flex-col">
+                <div
+                  className="flex cursor-pointer flex-col"
+                  onMouseEnter={() => setMarkerComponent(7)}
+                  onMouseLeave={() => setMarkerComponent(null)}
+                  onClick={() => setMarkerComponent(7)}
+                >
                   <p className="flex gap-4">
                     <div
                       className={`
@@ -466,6 +518,7 @@ export function TrainingModal(props: { open: boolean }) {
                   </p>
                 </div>
               </div>
+              <p className="font-bold">Hover your cursor or click on the components to see them highlighted in the image.</p>
               <p>
                 Most of these information is only available for air units. Ground units will show the type symbol, the name, and the coalition, and the fuel
                 level is replace by the unit's health (%).
@@ -632,9 +685,10 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step12.gif" className={`
-              h-96 w-96 rounded-xl
-            `} />
+            <img
+              src="images/training/step12.gif"
+              className={`h-96 w-96 rounded-xl`}
+            />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Interacting with the map (2 of 2)</h2>
               <p>
@@ -646,9 +700,10 @@ export function TrainingModal(props: { open: boolean }) {
                   flex w-full flex-col content-center justify-center gap-4
                 `}
               >
-                <img src="images/training/step12.1.png" className={`
-                  mx-auto w-40 rounded-xl
-                `} />
+                <img
+                  src="images/training/step12.1.png"
+                  className={`mx-auto w-40 rounded-xl`}
+                />
                 On the bottom right corner of the map, you can find the coordinates panel, providing the coordinates of the mouse cursor, as well as its
                 bullseye position and the ground elevation. Click on the coordinates to rotate format.
               </div>
@@ -666,13 +721,23 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
-            <img src="images/training/step13.png" className={`h-96 rounded-xl`} />
+            <img src="images/training/step13.png" className={`
+              mx-auto h-96 rounded-xl
+            `} />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>Mission drawings</h2>
-              <p>Mission drawings are useful to provide information from the mission creator. They can define borders, Areas of Operation, navigational points and more. </p>
-              <p>Mission drawings are automatically imported from the mission and can be shown using the drawing menu. You can enable or disable different sections, change the opacity, and look for specific drawings or navpoint using the shearch bar.</p>
+              <p>
+                Mission drawings are useful to provide information from the mission creator. They can define borders, Areas of Operation, navigational points
+                and more.{" "}
+              </p>
+              <p>
+                Mission drawings are automatically imported from the mission and can be shown using the drawing menu. You can enable or disable different
+                sections, change the opacity, and look for specific drawings or navpoint using the shearch bar.
+              </p>
               <p>You can also define your own drawings, which can be useful as reference, or as a way to automatically create IADS.</p>
-              <p>Use the <FaQuestionCircle className="inline"/> button on the upper right of the drawings panel for more info. </p>
+              <p>
+                Use the <FaQuestionCircle className="inline" /> button on the upper right of the drawings panel for more info.{" "}
+              </p>
             </div>
           </div>
         )}
@@ -687,10 +752,30 @@ export function TrainingModal(props: { open: boolean }) {
               sm:gap-16
             `}
           >
+            <img src="images/training/step14.png" className={`
+              mx-auto h-96 rounded-xl
+            `} />
             <div className="flex flex-col gap-4 text-gray-400">
               <h2 className={`text-xl font-semibold text-white`}>The audio backend</h2>
-              <p></p>
-              <p></p>
+              <p>
+                The audio backend is, for all intents and purposes, a client for the great open source mod{" "}
+                <a className={`text-blue-500`} href="http://dcssimpleradio.com/" target="_blank">
+                  DCS-SRS
+                </a>{" "}
+                baked directly into DCS Olympus.
+              </p>
+              <p>
+                It allows you to talk on frequency with players operating in the mission, as well as other Olympus operators. Moreover, it allows to create fake
+                "loudspeakers", i.e. sound sources in game that people will only be able to hear if close enough.
+              </p>
+              <p>
+                The audio backend allows you to perform useful operations on audio sources: you can mix your microphone with one or multiple fire sources (e.g.
+                to play a background noise like a firefight sound), or you can play files directly, e.g. for playing METAR files, or to blast music for your
+                friends.{" "}
+              </p>
+              <p>
+                Use the <FaQuestionCircle className="inline" /> button on the upper right of the audio backend panel for more info.{" "}
+              </p>
             </div>
           </div>
         )}
@@ -706,9 +791,29 @@ export function TrainingModal(props: { open: boolean }) {
             `}
           >
             <div className="flex flex-col gap-4 text-gray-400">
-              <h2 className={`text-xl font-semibold text-white`}>Game master mode</h2>
-              <p></p>
-              <p></p>
+              <h2 className={`text-xl font-semibold text-white`}>Commander mode</h2>
+              <p>
+                The Commander mode is a special way of operation of Olympus that forces some limitations to the operator in order to create a more challenging
+                environment. This can be used to create "games" where players in DCS play against the operators, forcing them to carefully place and control
+                their units.
+              </p>
+              <p>
+                These limitations are of two types:
+                <li>
+                  Spawning limitations: if enabled, spawning limitations force operators by proving an initial points "budget". Every unit costs a certain
+                  amount of points, and once all points are used, no more units can be spawned. Moreover, the game is divided into two phases, the "setup" phase
+                  and the "combat" phase. During the setup phase, operators can freely spawn units in the air and on the ground. Once the combat phase starts,
+                  ground units can no longer be spawned, and aircraft/helicopters can only be spawned at airbases.{" "}
+                </li>
+                <li>
+                  Detection limitations: always enabled, this mode forces operators to use the same detection methods as players. This means that units will not
+                  be able to see each other unless they are in visual range, or if they are using a radar or other sensor. This is useful to create a more
+                  realistic environment, where units have to rely on their sensors and must be placed with caution.{" "}
+                </li>{" "}
+              </p>
+              <p>
+                Use the <FaQuestionCircle className="inline" /> button on the upper right of the game master option panel for more info.{" "}
+              </p>
             </div>
           </div>
         )}
@@ -746,11 +851,9 @@ export function TrainingModal(props: { open: boolean }) {
                 key={i + 1}
                 className={`
                   h-4 w-4 rounded-full
-                  ${
-                    i + 1 === step
-                      ? "bg-blue-700 shadow-white"
-                      : `bg-gray-300/10`
-                  }
+                  ${i + 1 === step ? "bg-blue-700 shadow-white" : `
+                    bg-gray-300/10
+                  `}
                 `}
               />
             ))}

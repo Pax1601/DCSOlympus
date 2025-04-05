@@ -1,9 +1,10 @@
 import { decimalToRGBA } from "../../other/utils";
 import { getApp } from "../../olympusapp";
-import { DrawingsInitEvent, DrawingsUpdatedEvent, MapOptionsChangedEvent, SessionDataLoadedEvent } from "../../events";
+import { CommandModeOptionsChangedEvent, DrawingsInitEvent, DrawingsUpdatedEvent, MapOptionsChangedEvent, SessionDataLoadedEvent } from "../../events";
 import { MapOptions } from "../../types/types";
 import { Circle, DivIcon, Layer, LayerGroup, layerGroup, Marker, Polygon, Polyline } from "leaflet";
 import { NavpointMarker } from "../markers/navpointmarker";
+import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../../constants/constants";
 
 export abstract class DCSDrawing {
   #name: string;
@@ -459,7 +460,7 @@ export class DCSNavpoint extends DCSDrawing {
   constructor(drawingData, parent) {
     super(drawingData, parent);
 
-    this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment);
+    this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment, drawingData.tag);
 
     this.setVisibility(true);
   }
@@ -527,7 +528,9 @@ export class DCSDrawingsContainer {
   initFromData(drawingsData) {
     let hasContainers = false;
     Object.keys(drawingsData).forEach((layerName: string) => {
-      if (drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined) {
+      const layerIsAContainer = drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined;
+      const layerIsNotEmpty = Object.keys(drawingsData[layerName]).length > 0;
+      if (layerIsAContainer && layerIsNotEmpty) {
         const newContainer = new DCSDrawingsContainer(layerName, this);
         this.addSubContainer(newContainer);
         newContainer.initFromData(drawingsData[layerName]);
@@ -579,14 +582,11 @@ export class DCSDrawingsContainer {
       else this.addDrawing(newDrawing);
     });
 
-    if (othersContainer.getDrawings().length === 0) this.removeSubContainer(othersContainer); // Remove empty container
+    if (othersContainer.getDrawings().length === 0) {
+      this.removeSubContainer(othersContainer); // Remove empty container 
+      // FIXME: it's not working for main containers.
+    }
   }
-
-  // initNavpoints(drawingsData) {
-  //   const newContainer = new DCSDrawingsContainer('Navpoints', this);
-  //   this.addSubContainer(newContainer);
-  //   newContainer.initFromData(drawingsData);
-  // }
 
   getLayerGroup() {
     return this.#layerGroup;
@@ -705,6 +705,7 @@ export class DrawingsManager {
   #sessionDataDrawings = {};
   #sessionDataNavpoints = {};
   #initialized: boolean = false;
+  #hiddenContainers: Record<string, { parent: DCSDrawingsContainer, container: DCSDrawingsContainer }> = {};
 
   constructor() {
     const drawingsLayerGroup = new LayerGroup();
@@ -727,6 +728,13 @@ export class DrawingsManager {
       this.#drawingsContainer.setVisibility(getApp().getMap().getOptions().showMissionDrawings);
       this.#navpointsContainer.setVisibility(getApp().getMap().getOptions().showMissionNavpoints);
     });
+
+    CommandModeOptionsChangedEvent.on((commandOptions) => {
+      if (commandOptions.commandMode !== GAME_MASTER) {
+        this.restrictCoalitionLayers(commandOptions.commandMode)
+      }
+      this.restoreHiddenLayers(commandOptions.commandMode);
+    })
   }
 
   initDrawings(data: { drawings: Record<string, Record<string, any>> }): boolean {
@@ -745,6 +753,49 @@ export class DrawingsManager {
       console.error("Error while initializing drawings, empty data");
       return false;
     }
+  }
+
+  private restrictContainer(containerName: string, targetContainer: any, hiddenKey: string) {
+    const container = targetContainer.getSubContainers().find(c => c.getName().toLowerCase() === containerName.toLowerCase());
+    if (container) {
+      this.#hiddenContainers[hiddenKey] = {
+        parent: container['#parent'],
+        container: container
+      };
+      container.setVisibility(false);
+      targetContainer.removeSubContainer(container);
+    }
+  }
+
+  restrictCoalitionLayers(playerRole: string) {
+    if (playerRole === RED_COMMANDER) {
+      this.restrictContainer('Blue', this.#drawingsContainer, 'blue_drawings');
+      this.restrictContainer('blue', this.#navpointsContainer, 'blue_navpoints');
+    } else {
+      this.restrictContainer('Red', this.#drawingsContainer, 'red_drawings');
+      this.restrictContainer('red', this.#navpointsContainer, 'red_navpoints');
+    }
+  }
+
+  private restoreContainer(key: string, targetContainer: any) {
+    if (this.#hiddenContainers[key]) {
+      const container = this.#hiddenContainers[key].container;
+      targetContainer.addSubContainer(container);
+      container.setVisibility(true);
+    }
+  }
+
+  restoreHiddenLayers(playerRole: string) {
+    const roleContainers: Record<string, string[]> = {
+      [RED_COMMANDER]: ['red_drawings', 'red_navpoints'],
+      [BLUE_COMMANDER]: ['blue_drawings', 'blue_navpoints'],
+      [GAME_MASTER]: ['red_drawings', 'red_navpoints', 'blue_drawings', 'blue_navpoints']
+    };
+
+    roleContainers[playerRole]?.forEach((key) => {
+      const targetContainer = key.includes('drawings') ? this.#drawingsContainer : this.#navpointsContainer;
+      this.restoreContainer(key, targetContainer);
+    });
   }
 
   getDrawingsContainer() {

@@ -1,5 +1,4 @@
-import { OlympusState } from "../constants/constants";
-import { AppStateChangedEvent, ModalEvent, ShortcutChangedEvent, ShortcutsChangedEvent } from "../events";
+import { ModalEvent } from "../events";
 import { ShortcutOptions } from "../interfaces";
 import { keyEventWasInInput } from "../other/utils";
 

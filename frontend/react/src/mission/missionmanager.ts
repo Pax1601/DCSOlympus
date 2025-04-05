@@ -291,6 +291,17 @@ export class MissionManager {
     this.setSpentSpawnPoints(0);
     this.refreshSpawnPoints();
 
+    if (commandModeOptions.commandMode === BLUE_COMMANDER && getApp().getMap().getOptions().AWACSCoalition !== "blue") {
+      getApp()
+        .getMap()
+        .setOption("AWACSCoalition", "blue" as Coalition);
+    }
+    else if (commandModeOptions.commandMode === RED_COMMANDER && getApp().getMap().getOptions().AWACSCoalition !== "red") {
+      getApp()
+        .getMap()
+        .setOption("AWACSCoalition", "red" as Coalition);
+    }
+
     if (commandModeOptionsChanged) {
       CommandModeOptionsChangedEvent.dispatch(this.#commandModeOptions);
     }

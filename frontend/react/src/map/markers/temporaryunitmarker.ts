@@ -1,10 +1,12 @@
 import { CustomMarker } from "./custommarker";
-import { DivIcon, LatLng } from "leaflet";
+import { DivIcon, LatLng, LatLngExpression } from "leaflet";
 import { SVGInjector } from "@tanem/svg-injector";
 import { getApp } from "../../olympusapp";
-import { UnitBlueprint } from "../../interfaces";
-import { deg2rad, normalizeAngle, rad2deg } from "../../other/utils";
+import { adjustBrightness, normalizeAngle, rad2deg } from "../../other/utils";
 import { SpawnHeadingChangedEvent } from "../../events";
+import { RangeCircle } from "../rangecircle";
+import { Map } from "../map";
+import { colors } from "../../constants/constants";
 
 export class TemporaryUnitMarker extends CustomMarker {
   #name: string;
@@ -12,6 +14,8 @@ export class TemporaryUnitMarker extends CustomMarker {
   #commandHash: string | undefined = undefined;
   #timer: number = 0;
   #headingHandle: boolean;
+  #acquisitionCircle: RangeCircle | undefined = undefined;
+  #engagementCircle: RangeCircle | undefined = undefined;
 
   constructor(latlng: LatLng, name: string, coalition: string, headingHandle: boolean, commandHash?: string) {
     super(latlng, { interactive: false });
@@ -39,6 +43,14 @@ export class TemporaryUnitMarker extends CustomMarker {
     }, 1000);
   }
 
+  setLatLng(latlng: LatLngExpression): this {
+    super.setLatLng(latlng);
+    if (this.#acquisitionCircle) this.#acquisitionCircle.setLatLng(latlng);
+    if (this.#engagementCircle) this.#engagementCircle.setLatLng(latlng);
+
+    return this;
+  }
+
   createIcon() {
     const blueprint = getApp().getUnitsManager().getDatabase().getByName(this.#name);
 
@@ -50,6 +62,58 @@ export class TemporaryUnitMarker extends CustomMarker {
         iconSize: [50, 50],
       });
       this.setIcon(icon);
+
+      if (blueprint.acquisitionRange) {
+        this.#acquisitionCircle = new RangeCircle(this.getLatLng(), {
+          radius: blueprint.acquisitionRange,
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0,
+          dashArray: "8 12",
+          interactive: false,
+          bubblingMouseEvents: false,
+        });
+
+        switch (this.#coalition) {
+          case "red":
+            this.#acquisitionCircle.options.color = adjustBrightness(colors.RED_COALITION, -20);
+            break;
+          case "blue":
+            this.#acquisitionCircle.options.color = adjustBrightness(colors.BLUE_COALITION, -20);
+            break;
+          default:
+            this.#acquisitionCircle.options.color = adjustBrightness(colors.NEUTRAL_COALITION, -20);
+            break;
+        }
+
+        getApp().getMap().addLayer(this.#acquisitionCircle);
+      }
+
+      if (blueprint.engagementRange) {
+        this.#engagementCircle = new RangeCircle(this.getLatLng(), {
+          radius: blueprint.engagementRange,
+          weight: 4,
+          opacity: 1,
+          fillOpacity: 0,
+          dashArray: "4 8",
+          interactive: false,
+          bubblingMouseEvents: false,
+        });
+
+        switch (this.#coalition) {
+          case "red":
+            this.#engagementCircle.options.color = colors.RED_COALITION;
+            break;
+          case "blue":
+            this.#engagementCircle.options.color = colors.BLUE_COALITION
+            break;
+          default:
+            this.#engagementCircle.options.color = colors.NEUTRAL_COALITION;
+            break;
+        }
+
+        getApp().getMap().addLayer(this.#engagementCircle);
+      }
 
       var el = document.createElement("div");
       el.classList.add("unit");
@@ -89,8 +153,7 @@ export class TemporaryUnitMarker extends CustomMarker {
         const rotateHandle = (heading) => {
           el.style.transform = `rotate(${heading}deg)`;
           unitIcon.style.transform = `rotate(-${heading}deg)`;
-          if (shortLabel)
-            shortLabel.style.transform = `rotate(-${heading}deg)`;
+          if (shortLabel) shortLabel.style.transform = `rotate(-${heading}deg)`;
         };
 
         SpawnHeadingChangedEvent.on((heading) => rotateHandle(heading));
@@ -123,5 +186,14 @@ export class TemporaryUnitMarker extends CustomMarker {
       this.getElement()?.appendChild(el);
       this.getElement()?.classList.add("ol-temporary-marker");
     }
+  }
+
+  onRemove(map: Map): this {
+    super.onRemove(map);
+
+    if (this.#acquisitionCircle) map.removeLayer(this.#acquisitionCircle);
+    if (this.#engagementCircle) map.removeLayer(this.#engagementCircle);
+
+    return this;
   }
 }
