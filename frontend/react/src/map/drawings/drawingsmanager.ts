@@ -779,8 +779,6 @@ export class DrawingsManager {
 
   private restoreContainer(key: string, targetContainer: any) {
     if (this.#hiddenContainers[key]) {
-      console.log('this.#hiddenContainers[key] esiste ', this.#hiddenContainers);
-
       const container = this.#hiddenContainers[key].container;
       targetContainer.addSubContainer(container);
       container.setVisibility(true);
@@ -788,8 +786,6 @@ export class DrawingsManager {
   }
 
   restoreHiddenLayers(playerRole: string) {
-    console.log('--- restoring hidden layers for role ', playerRole);
-
     const roleContainers: Record<string, string[]> = {
       [RED_COMMANDER]: ['red_drawings', 'red_navpoints'],
       [BLUE_COMMANDER]: ['blue_drawings', 'blue_navpoints'],
