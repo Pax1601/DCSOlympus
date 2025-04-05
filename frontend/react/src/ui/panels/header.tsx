@@ -272,12 +272,19 @@ export function Header() {
         {commandModeOptions.commandMode === GAME_MASTER && (
           <div
             className={`
-              flex h-full cursor-pointer rounded-md border-2 border-transparent
-              bg-olympus-600 px-4 text-gray-200
-              hover:bg-olympus-400
+              flex h-full rounded-md border-2 border-transparent bg-olympus-600
+              px-4 text-gray-200
+              ${
+                enabledCommandModes.length > 1
+                  ? `
+                    cursor-pointer
+                    hover:bg-olympus-400
+                  `
+                  : ""
+              }
             `}
             onClick={() => {
-              if (enabledCommandModes.length > 0) {
+              if (enabledCommandModes.length > 1) {
                 let blueCommandModeIndex = enabledCommandModes.indexOf(BLUE_COMMANDER);
                 let redCommandModeIndex = enabledCommandModes.indexOf(RED_COMMANDER);
                 if (blueCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(BLUE_COMMANDER);
@@ -287,14 +294,18 @@ export function Header() {
             }}
           >
             <span className="my-auto text-nowrap font-bold">Game Master</span>
-            {enabledCommandModes.length > 0 && (
+            {enabledCommandModes.length > 1 && (
               <>
                 {loadingNewCommandMode ? (
                   <FaSpinner
-                    className={`my-auto ml-2 animate-spin text-white`}
+                    className={`
+                  my-auto ml-2 animate-spin text-white
+                `}
                   />
                 ) : (
-                  <FaRedo className={`my-auto ml-2 text-gray-200`} />
+                  <FaRedo
+                    className={`my-auto ml-2 text-gray-200`}
+                  />
                 )}
               </>
             )}
@@ -303,12 +314,19 @@ export function Header() {
         {commandModeOptions.commandMode === BLUE_COMMANDER && (
           <div
             className={`
-              flex h-full cursor-pointer rounded-md border-2 border-transparent
-              bg-blue-600 px-4 text-gray-200
-              hover:bg-blue-400
+              ${
+                enabledCommandModes.length > 1
+                  ? `
+                    cursor-pointer
+                    hover:bg-blue-500
+                  `
+                  : ""
+              }
+              flex h-full rounded-md border-2 border-transparent bg-blue-600
+              px-4 text-gray-200
             `}
             onClick={() => {
-              if (enabledCommandModes.length > 0) {
+              if (enabledCommandModes.length > 1) {
                 let gameMasterCommandModeIndex = enabledCommandModes.indexOf(GAME_MASTER);
                 let redCommandModeIndex = enabledCommandModes.indexOf(RED_COMMANDER);
                 if (redCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(RED_COMMANDER);
@@ -318,12 +336,10 @@ export function Header() {
             }}
           >
             <span className="my-auto text-nowrap font-bold">BLUE Commander</span>
-            {enabledCommandModes.length > 0 && (
+            {enabledCommandModes.length > 1 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner
-                    className={`my-auto ml-2 animate-spin text-gray-200`}
-                  />
+                  <FaSpinner className={`my-auto ml-2 animate-spin text-gray-200`} />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -334,12 +350,20 @@ export function Header() {
         {commandModeOptions.commandMode === RED_COMMANDER && (
           <div
             className={`
-              flex h-full cursor-pointer rounded-md border-2 border-transparent
-              bg-red-600 px-4 text-gray-200
-              hover:bg-red-500
+              flex h-full
+              ${
+                enabledCommandModes.length > 1
+                  ? `
+                    cursor-pointer
+                    hover:bg-red-500
+                  `
+                  : ""
+              }
+              rounded-md border-2 border-transparent bg-red-600 px-4
+              text-gray-200
             `}
             onClick={() => {
-              if (enabledCommandModes.length > 0) {
+              if (enabledCommandModes.length > 1) {
                 let gameMasterCommandModeIndex = enabledCommandModes.indexOf(GAME_MASTER);
                 let blueCommandModeIndex = enabledCommandModes.indexOf(BLUE_COMMANDER);
                 if (gameMasterCommandModeIndex >= 0) getApp().getServerManager().setActiveCommandMode(GAME_MASTER);
@@ -349,12 +373,10 @@ export function Header() {
             }}
           >
             <span className="my-auto text-nowrap font-bold">RED Commander</span>
-            {enabledCommandModes.length > 0 && (
+            {enabledCommandModes.length > 1 && (
               <>
                 {loadingNewCommandMode ? (
-                  <FaSpinner
-                    className={`my-auto ml-2 animate-spin text-gray-200`}
-                  />
+                  <FaSpinner className={`my-auto ml-2 animate-spin text-gray-200`} />
                 ) : (
                   <FaRedo className={`my-auto ml-2 text-gray-200`} />
                 )}
@@ -463,7 +485,11 @@ export function Header() {
                 onClick={(event) => unitTypeFilterClickHandler(event, entry[0])}
                 checked={!mapHiddenTypes[entry[0]]}
                 icon={entry[1]}
-                tooltip={"Hide/show " + entry[0] + " units. Tip: holding ctrl key while clicking will hide other unit categories. To show all units again, hold ctrl while clicking a displayed unit category."}
+                tooltip={
+                  "Hide/show " +
+                  entry[0] +
+                  " units. Tip: holding ctrl key while clicking will hide other unit categories. To show all units again, hold ctrl while clicking a displayed unit category."
+                }
               />
             );
           })}

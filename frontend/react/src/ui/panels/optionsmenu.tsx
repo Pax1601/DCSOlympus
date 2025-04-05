@@ -4,8 +4,8 @@ import { OlCheckbox } from "../components/olcheckbox";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { OlNumberInput } from "../components/olnumberinput";
 import { getApp } from "../../olympusapp";
-import { MAP_OPTIONS_DEFAULTS, OlympusState, OptionsSubstate } from "../../constants/constants";
-import { BindShortcutRequestEvent, MapOptionsChangedEvent, ShortcutsChangedEvent } from "../../events";
+import { COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, MAP_OPTIONS_DEFAULTS, OlympusState, OptionsSubstate } from "../../constants/constants";
+import { BindShortcutRequestEvent, CommandModeOptionsChangedEvent, MapOptionsChangedEvent, ShortcutsChangedEvent } from "../../events";
 import { OlAccordion } from "../components/olaccordion";
 import { Shortcut } from "../../shortcut/shortcut";
 import { OlSearchBar } from "../components/olsearchbar";
@@ -29,6 +29,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
   const [filterString, setFilterString] = useState("");
   const [admin, setAdmin] = useState(false);
   const [password, setPassword] = useState("");
+  const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
 
   const checkPassword = (password: string) => {
     var hash = sha256.create();
@@ -56,6 +57,10 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
   useEffect(() => {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
     ShortcutsChangedEvent.on((shortcuts) => setShortcuts({ ...shortcuts }));
+
+    CommandModeOptionsChangedEvent.on((commandModeOptions) => {
+      setCommandModeOptions(commandModeOptions);
+    });
   }, []);
 
   return (
@@ -222,36 +227,40 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             <OlCheckbox checked={mapOptions.showRacetracks} onChange={() => {}}></OlCheckbox>
             <span className="my-auto">Show racetracks</span>
           </div>
-          <div
-            className={`
-              group flex cursor-pointer flex-row content-center justify-start
-              gap-4 rounded-md p-2
-              dark:hover:bg-olympus-400
-            `}
-            onClick={() => {
-              mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
-              mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
-              mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
-            }}
-          >
-            <div className="flex flex-col gap-2">
-              <div className="flex content-center gap-4">
-                <OlCoalitionToggle
-                  onClick={() => {
-                    mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
-                    mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
-                    mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
-                  }}
-                  coalition={mapOptions.AWACSCoalition}
-                />
-                <span className="my-auto">Coalition of unit bullseye info</span>
+          <>
+            {commandModeOptions.commandMode === GAME_MASTER && (
+              <div
+                className={`
+                  group flex cursor-pointer flex-row content-center
+                  justify-start gap-4 rounded-md p-2
+                  dark:hover:bg-olympus-400
+                `}
+                onClick={() => {
+                  mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
+                  mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
+                  mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
+                }}
+              >
+                <div className="flex flex-col gap-2">
+                  <div className="flex content-center gap-4">
+                    <OlCoalitionToggle
+                      onClick={() => {
+                        mapOptions.AWACSCoalition === "blue" && getApp().getMap().setOption("AWACSCoalition", "neutral");
+                        mapOptions.AWACSCoalition === "neutral" && getApp().getMap().setOption("AWACSCoalition", "red");
+                        mapOptions.AWACSCoalition === "red" && getApp().getMap().setOption("AWACSCoalition", "blue");
+                      }}
+                      coalition={mapOptions.AWACSCoalition}
+                    />
+                    <span className="my-auto">Coalition of unit bullseye info</span>
+                  </div>
+                  <div className="flex gap-1 text-sm text-gray-400">
+                    <FaQuestionCircle className={`my-auto w-8`} />{" "}
+                    <div className={`my-auto ml-2`}>Change the coalition of the bullseye to use to provide bullseye information in the unit tooltip.</div>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-1 text-sm text-gray-400">
-                <FaQuestionCircle className={`my-auto w-8`} />{" "}
-                <div className={`my-auto ml-2`}>Change the coalition of the bullseye to use to provide bullseye information in the unit tooltip.</div>
-              </div>
-            </div>
-          </div>
+            )}
+          </>
         </OlAccordion>
 
         <OlAccordion
