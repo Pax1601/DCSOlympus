@@ -1105,6 +1105,7 @@ function Olympus.getNavPoints()
 				navpointDrawingData['lat'] = lat
 				navpointDrawingData['lng'] = lng
 				navpointDrawingData['coalition'] = coalitionName
+				navpointDrawingData['tag'] = navpointCustomLayer
 
 				if navpointCustomLayer ~= nil then
 					if navpoints[coalitionName][navpointCustomLayer] == nil then
