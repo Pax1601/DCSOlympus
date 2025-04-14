@@ -50,6 +50,7 @@ import {
   UnitState,
   SPOTS_EDIT_ZOOM_TRANSITION,
   CLUSTERING_ZOOM_TRANSITION,
+  SpawnSubState,
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
@@ -1615,6 +1616,9 @@ export abstract class Unit extends CustomMarker {
 
   /***********************************************/
   #onMouseUp(e: any) {
+    if ((getApp().getState() === OlympusState.SPAWN && getApp().getSubState() !== SpawnSubState.NO_SUBSTATE) || getApp().getState() === OlympusState.MEASURE)
+      return;
+
     if (e.originalEvent?.button === 0) {
       DomEvent.stop(e);
       DomEvent.preventDefault(e);
@@ -1635,6 +1639,9 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onMouseDown(e: any) {
+    if ((getApp().getState() === OlympusState.SPAWN && getApp().getSubState() !== SpawnSubState.NO_SUBSTATE) || getApp().getState() === OlympusState.MEASURE)
+      return;
+
     if (e.originalEvent?.button === 0) {
       DomEvent.stop(e);
       DomEvent.preventDefault(e);

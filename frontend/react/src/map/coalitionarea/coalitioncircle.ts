@@ -1,4 +1,4 @@
-import { LatLngExpression, Map, Circle, DivIcon, Marker, CircleOptions, LatLng } from "leaflet";
+import { LatLngExpression, Map, Circle, DivIcon, Marker, CircleOptions, LatLng, DomEvent } from "leaflet";
 import { getApp } from "../../olympusapp";
 import { DraggableHandle } from "../markers/draggablehandle";
 import { BLUE_COMMANDER, colors, RED_COMMANDER } from "../../constants/constants";
@@ -121,6 +121,13 @@ export class CoalitionCircle extends Circle {
     super.setLatLng(latlng);
     this.#setRadiusHandle();
     this.#drawLabel();
+
+    if (this.#updateTimeout) window.clearTimeout(this.#updateTimeout);
+    this.#updateTimeout = window.setTimeout(() => {
+      CoalitionAreaChangedEvent.dispatch(this);
+      this.#updateTimeout = null;
+    }, 500);
+
     return this;
   }
 
@@ -144,13 +151,19 @@ export class CoalitionCircle extends Circle {
       this.#radiusHandle.addTo(getApp().getMap());
       this.#radiusHandle.on("drag", (e: any) => {
         this.setRadius(this.getLatLng().distanceTo(e.latlng));
+
+        if (this.#updateTimeout) window.clearTimeout(this.#updateTimeout);
+        this.#updateTimeout = window.setTimeout(() => {
+          CoalitionAreaChangedEvent.dispatch(this);
+          this.#updateTimeout = null;
+        }, 500);
       });
     }
   }
 
   #drawLabel() {
     this.#label?.removeFrom(this._map);
-    
+
     this.#label = new Marker(this.getLatLng(), {
       icon: new DivIcon({
         className: "label",

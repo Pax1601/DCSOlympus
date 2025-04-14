@@ -22,8 +22,6 @@ import {
   ContextActionTarget,
   ContextActionType,
   ContextActions,
-  SHORT_PRESS_MILLISECONDS,
-  DEBOUNCE_MILLISECONDS,
   DrawSubState,
   colors,
 } from "../constants/constants";
@@ -183,6 +181,14 @@ export class Map extends L.Map {
     });
     this.setView([37.23, -115.8], 10);
 
+    (document.getElementById(ID) as HTMLElement).onkeydown = function (e) {
+      // TODO Find a way to fix the bug where the map is zoomed out when pressing the "6" key
+      //if (e.code == "Digit6") {
+      //  // 6
+      //  e.stopPropagation();
+      //}
+    };
+
     /* Minimap */
     var minimapLayer = new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
       minZoom: 0,
@@ -310,7 +316,7 @@ export class Map extends L.Map {
         this.#starredSpawnRequestTables = localSessionData.starredSpawns;
         StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
       }
-      
+
       setTimeout(() => {
         if (sessionData.mapSource?.id) {
           this.setLayerName(sessionData.mapSource.id);
@@ -898,6 +904,7 @@ export class Map extends L.Map {
     ["white", "blue", "red", "green", "orange"].forEach((color) => this.getContainer().classList.remove(`smoke-${color}-cursor`));
     this.getContainer().classList.remove(`plus-cursor`);
     this.getContainer().classList.remove(`measure-cursor`);
+    this.getContainer().classList.remove(`pointer-cursor`);
 
     /* Clear the last measure if the state is changed */
     if (this.#previousAppState === OlympusState.MEASURE) {
@@ -1020,7 +1027,7 @@ export class Map extends L.Map {
     }
   }
 
-  #onMouseWheelPressed(e: any) { }
+  #onMouseWheelPressed(e: any) {}
 
   #onRightMousePressed(e: any) {
     this.dragging.disable();
@@ -1169,8 +1176,10 @@ export class Map extends L.Map {
         this.dragging.disable();
       }
     } else {
-      getApp().setState(OlympusState.IDLE);
-      this.setSelectionEnabled(true);
+      if (getApp().getState() !== OlympusState.DRAW) {
+        getApp().setState(OlympusState.IDLE);
+        this.setSelectionEnabled(true);
+      }
 
       //@ts-ignore We force the boxselect to enter in selection mode
       this.boxSelect._onMouseDown(e.originalEvent);
