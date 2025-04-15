@@ -170,6 +170,7 @@ export abstract class Unit extends CustomMarker {
   #contactsPolylines: Polyline[] = [];
   #engagementCircle: RangeCircle;
   #acquisitionCircle: RangeCircle;
+  #temporaryEngagementCircle: RangeCircle;
   #miniMapMarker: CircleMarker | null = null;
   #targetPositionMarker: TargetMarker;
   #targetPositionPolyline: Polyline;
@@ -442,6 +443,17 @@ export abstract class Unit extends CustomMarker {
       interactive: false,
       bubblingMouseEvents: false,
     });
+    this.#temporaryEngagementCircle = new RangeCircle(this.getPosition(), {
+      radius: 0,
+      weight: 3,
+      opacity: 0.8,
+      fillOpacity: 0.02,
+      dashArray: "4 8",
+      interactive: false,
+      bubblingMouseEvents: false,
+      color: '#f6b13b',
+      stroke: true
+    });
 
     this.#racetrackPolylines = [
       new Polyline([], { color: colors.WHITE, weight: 3, smoothFactor: 1, dashArray: "5, 5" }),
@@ -511,6 +523,10 @@ export abstract class Unit extends CustomMarker {
         });
 
       if (this.getSelected()) this.drawLines();
+
+      if (mapOptions.showUnitsEngagementRings || mapOptions.showUnitsAcquisitionRings) {
+        this.hideTemporaryEngagementRing();
+      }
     });
 
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {
@@ -921,12 +937,14 @@ export abstract class Unit extends CustomMarker {
       /* If selected, update the marker to show the selected effects, else clear all the drawings that are only shown for selected units. */
       if (selected) {
         this.#updateMarker();
+        this.showTemporaryEngagementRing();
       } else {
         this.#clearContacts();
         this.#clearPath();
         this.#clearTargetPosition();
         this.#clearRacetrack();
         this.#clearSpots();
+        this.hideTemporaryEngagementRing();
       }
 
       /* When the group leader is selected, if grouping is active, all the other group members are also selected */
@@ -1602,6 +1620,25 @@ export abstract class Unit extends CustomMarker {
 
   setRacetrack(length: number, anchor: LatLng, bearing: number, callback: () => void) {
     if (!this.#human) getApp().getServerManager().setRacetrack(this.ID, length, anchor, bearing, callback);
+  }
+
+  /** Show temporary engagement ring when unit is selected */
+  showTemporaryEngagementRing() {
+    console.log(`Show temporary engagement ring for ${this.getUnitName()}, engagement range: ${this.#engagementRange}`);
+    
+    
+    if (!getApp().getMap().getOptions().showUnitsEngagementRings 
+    && !getApp().getMap().getOptions().showUnitsAcquisitionRings 
+    && this.#engagementRange > 0) {
+      this.#temporaryEngagementCircle.setLatLng(this.getPosition());
+      this.#temporaryEngagementCircle.setRadius(this.#engagementRange);
+      this.#temporaryEngagementCircle.addTo(getApp().getMap());
+    }
+  }
+
+  /** Hide temporary engagement ring */
+  hideTemporaryEngagementRing() {
+    this.#temporaryEngagementCircle.removeFrom(getApp().getMap());
   }
 
   /***********************************************/
