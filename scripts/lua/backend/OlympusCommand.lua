@@ -1276,13 +1276,14 @@ function Olympus.setUnitsData(arg, time)
 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 
-					if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
+					--[[ COMMENTING OUT BECAUSE OF CRASHES -- TO BE INVESTIGATED LATER ON ]]--
+					--[[ if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
 						if unit:getRadar() then
 							table["radarState"] = true
 						else
 							table["radarState"] = false
 						end	
-					end
+					end ]]
 					
 					local group = unit:getGroup()
 					if group ~= nil then
