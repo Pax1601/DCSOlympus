@@ -406,6 +406,7 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   showUnitLabels: true,
   showUnitsEngagementRings: true,
   showUnitsAcquisitionRings: true,
+  showUnitsTemporaryEngagementRings: true,
   showRacetracks: true,
   fillSelectedRing: false,
   showMinimap: false,

@@ -1644,6 +1644,7 @@ export abstract class Unit extends CustomMarker {
   showTemporaryEngagementRing() {
     if (!getApp().getMap().getOptions().showUnitsEngagementRings 
     && !getApp().getMap().getOptions().showUnitsAcquisitionRings 
+    && getApp().getMap().getOptions().showUnitsTemporaryEngagementRings 
     && this.#engagementRange > 0) {
       this.#temporaryEngagementCircle.setLatLng(this.getPosition());
       this.#temporaryEngagementCircle.setRadius(this.#engagementRange);

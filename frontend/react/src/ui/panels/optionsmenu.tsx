@@ -166,6 +166,17 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
               gap-4 rounded-md p-2
               dark:hover:bg-olympus-400
             `}
+            onClick={() => getApp().getMap().setOption("showUnitsTemporaryEngagementRings", !mapOptions.showUnitsTemporaryEngagementRings)}
+          >
+            <OlCheckbox checked={mapOptions.showUnitsTemporaryEngagementRings} onChange={() => {}}></OlCheckbox>
+            <span className="my-auto">Show temporary engagement rings</span>
+          </div>
+          <div
+            className={`
+              group flex cursor-pointer flex-row content-center justify-start
+              gap-4 rounded-md p-2
+              dark:hover:bg-olympus-400
+            `}
             onClick={() => getApp().getMap().setOption("showUnitContacts", !mapOptions.showUnitContacts)}
           >
             <OlCheckbox checked={mapOptions.showUnitContacts} onChange={() => {}}></OlCheckbox>
