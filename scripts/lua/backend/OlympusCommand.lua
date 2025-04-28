@@ -1249,6 +1249,7 @@ function Olympus.setUnitsData(arg, time)
 					local airborne = unit:inAir()
 					
 					-- Fill the data table
+					table["unitID"] = unit:getID()
 					table["name"] = unit:getTypeName()
 					table["coalitionID"] = unit:getCoalition()
 					table["position"] = {}
@@ -1276,13 +1277,14 @@ function Olympus.setUnitsData(arg, time)
 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 
-					if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
+					--[[ COMMENTING OUT BECAUSE OF CRASHES -- TO BE INVESTIGATED LATER ON ]]--
+					--[[ if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
 						if unit:getRadar() then
 							table["radarState"] = true
 						else
 							table["radarState"] = false
 						end	
-					end
+					end ]]
 					
 					local group = unit:getGroup()
 					if group ~= nil then
@@ -1322,6 +1324,7 @@ function Olympus.setUnitsData(arg, time)
 							end
 							-- In case of AI units the callSign and the unitName will be the same
 							table["callsign"] = unit:getName()
+							table["groupID"] = group:getID()
 							table["groupName"] = group:getName()
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()

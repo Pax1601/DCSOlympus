@@ -97,6 +97,8 @@ export abstract class Unit extends CustomMarker {
   #name: string = "";
   #unitName: string = "";
   #callsign: string = "";
+  #unitID: number = 0;
+  #groupID: number = 0;
   #groupName: string = "";
   #state: string = states[0];
   #task: string = "";
@@ -235,6 +237,12 @@ export abstract class Unit extends CustomMarker {
   }
   getCallsign() {
     return this.#callsign;
+  }
+  getUnitID() {
+    return this.#unitID;
+  }
+  getGroupID() {
+    return this.#groupID;
   }
   getGroupName() {
     return this.#groupName;
@@ -611,6 +619,14 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.callsign:
           this.#callsign = dataExtractor.extractString();
           break;
+        case DataIndexes.unitID:
+          this.#unitID = dataExtractor.extractUInt8();
+          updateMarker = true;
+          break;
+        case DataIndexes.groupID:
+          this.#groupID = dataExtractor.extractUInt8();
+          updateMarker = true;
+          break;
         case DataIndexes.groupName:
           this.#groupName = dataExtractor.extractString();
           updateMarker = true;
@@ -851,6 +867,8 @@ export abstract class Unit extends CustomMarker {
       name: this.#name,
       unitName: this.#unitName,
       callsign: this.#callsign,
+      unitID: this.#unitID,
+      groupID: this.#groupID,
       groupName: this.#groupName,
       state: this.#state,
       task: this.#task,
@@ -1624,9 +1642,6 @@ export abstract class Unit extends CustomMarker {
 
   /** Show temporary engagement ring when unit is selected */
   showTemporaryEngagementRing() {
-    console.log(`Show temporary engagement ring for ${this.getUnitName()}, engagement range: ${this.#engagementRange}`);
-    
-    
     if (!getApp().getMap().getOptions().showUnitsEngagementRings 
     && !getApp().getMap().getOptions().showUnitsAcquisitionRings 
     && this.#engagementRange > 0) {
@@ -1717,8 +1732,6 @@ export abstract class Unit extends CustomMarker {
 
     if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
     this.#debounceTimeout = window.setTimeout(() => {
-      console.log(`Left short click on ${this.getUnitName()}`);
-
       if (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getMap().getContextAction()) {
         if (getApp().getMap().getContextAction()?.getTarget() === ContextActionTarget.UNIT) getApp().getMap().executeContextAction(this, null, e.originalEvent);
         else getApp().getMap().executeContextAction(null, this.getPosition(), e.originalEvent);
@@ -1730,8 +1743,6 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onLeftLongClick(e: any) {
-    console.log(`Left long click on ${this.getUnitName()}`);
-
     if (getApp().getState() === OlympusState.IDLE) {
       this.setSelected(!this.getSelected());
 
@@ -1756,8 +1767,6 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onRightShortClick(e: any) {
-    console.log(`Right short click on ${this.getUnitName()}`);
-
     window.clearTimeout(this.#rightMouseDownTimeout);
     if (
       getApp().getState() === OlympusState.UNIT_CONTROL &&
@@ -1768,15 +1777,13 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onRightLongClick(e: any) {
-    console.log(`Right long click on ${this.getUnitName()}`);
+    // console.log(`Right long click on ${this.getUnitName()}`);
   }
 
   #onDoubleClick(e: any) {
     DomEvent.stop(e);
     DomEvent.preventDefault(e);
     e.originalEvent.stopImmediatePropagation();
-
-    console.log(`Double click on ${this.getUnitName()}`);
 
     if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
 

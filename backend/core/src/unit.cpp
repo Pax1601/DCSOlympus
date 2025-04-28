@@ -41,6 +41,11 @@ void Unit::update(json::value json, double dt)
 	if (json.has_string_field(L"unitName"))
 		setUnitName(to_string(json[L"unitName"]));
 
+	if (json.has_number_field(L"groupID"))
+		setGroupID(json[L"groupID"].as_number().to_int32());
+	if (json.has_number_field(L"unitID"))
+		setUnitID(json[L"unitID"].as_number().to_int32());
+
 	if (json.has_string_field(L"groupName"))
 		setGroupName(to_string(json[L"groupName"]));
 
@@ -49,8 +54,8 @@ void Unit::update(json::value json, double dt)
 
 	if (json.has_number_field(L"coalitionID"))
 		setCoalition(json[L"coalitionID"].as_number().to_int32());
-	//if (json.has_number_field(L"Country"))
-	//	setCountry(json[L"Country"].as_number().to_int32());
+	if (json.has_number_field(L"country"))
+		setCountry(json[L"country"].as_number().to_int32());
 	
 	/* All units which contain the name "Olympus" are automatically under AI control */
 	if (getUnitName().find("Olympus") != string::npos)
@@ -267,6 +272,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::name:						appendString(ss, datumIndex, name); break;
 					case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
 					case DataIndex::callsign:					appendString(ss, datumIndex, callsign); break;
+					case DataIndex::unitID:						appendNumeric(ss, datumIndex, unitID); break;
+					case DataIndex::groupID:					appendNumeric(ss, datumIndex, groupID); break;
 					case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
 					case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
 					case DataIndex::task:						appendString(ss, datumIndex, task); break;

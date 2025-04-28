@@ -462,6 +462,8 @@ export enum DataIndexes {
   name,
   unitName,
   callsign,
+  unitID,
+  groupID,
   groupName,
   state,
   task,
