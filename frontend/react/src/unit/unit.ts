@@ -453,14 +453,12 @@ export abstract class Unit extends CustomMarker {
     });
     this.#temporaryEngagementCircle = new RangeCircle(this.getPosition(), {
       radius: 0,
-      weight: 3,
-      opacity: 0.8,
-      fillOpacity: 0.02,
+      weight: 4,
+      opacity: 1,
+      fillOpacity: 0,
       dashArray: "4 8",
       interactive: false,
       bubblingMouseEvents: false,
-      color: '#f6b13b',
-      stroke: true
     });
 
     this.#racetrackPolylines = [
@@ -1648,6 +1646,17 @@ export abstract class Unit extends CustomMarker {
     && this.#engagementRange > 0) {
       this.#temporaryEngagementCircle.setLatLng(this.getPosition());
       this.#temporaryEngagementCircle.setRadius(this.#engagementRange);
+      switch (this.getCoalition()) {
+        case "red":
+          this.#temporaryEngagementCircle.options.color = adjustBrightness(colors.RED_COALITION, -20);
+          break;
+        case "blue":
+          this.#temporaryEngagementCircle.options.color = adjustBrightness(colors.BLUE_COALITION, -20);
+          break;
+        default:
+          this.#temporaryEngagementCircle.options.color = adjustBrightness(colors.NEUTRAL_COALITION, -20);
+          break;
+      }
       this.#temporaryEngagementCircle.addTo(getApp().getMap());
     }
   }
