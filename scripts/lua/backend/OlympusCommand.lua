@@ -1249,6 +1249,7 @@ function Olympus.setUnitsData(arg, time)
 					local airborne = unit:inAir()
 					
 					-- Fill the data table
+					table["unitID"] = unit:getID()
 					table["name"] = unit:getTypeName()
 					table["coalitionID"] = unit:getCoalition()
 					table["position"] = {}
@@ -1323,6 +1324,7 @@ function Olympus.setUnitsData(arg, time)
 							end
 							-- In case of AI units the callSign and the unitName will be the same
 							table["callsign"] = unit:getName()
+							table["groupID"] = group:getID()
 							table["groupName"] = group:getName()
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()

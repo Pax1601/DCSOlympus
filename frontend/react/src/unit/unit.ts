@@ -97,6 +97,8 @@ export abstract class Unit extends CustomMarker {
   #name: string = "";
   #unitName: string = "";
   #callsign: string = "";
+  #unitID: number = 0;
+  #groupID: number = 0;
   #groupName: string = "";
   #state: string = states[0];
   #task: string = "";
@@ -170,6 +172,7 @@ export abstract class Unit extends CustomMarker {
   #contactsPolylines: Polyline[] = [];
   #engagementCircle: RangeCircle;
   #acquisitionCircle: RangeCircle;
+  #temporaryEngagementCircle: RangeCircle;
   #miniMapMarker: CircleMarker | null = null;
   #targetPositionMarker: TargetMarker;
   #targetPositionPolyline: Polyline;
@@ -234,6 +237,12 @@ export abstract class Unit extends CustomMarker {
   }
   getCallsign() {
     return this.#callsign;
+  }
+  getUnitID() {
+    return this.#unitID;
+  }
+  getGroupID() {
+    return this.#groupID;
   }
   getGroupName() {
     return this.#groupName;
@@ -442,6 +451,15 @@ export abstract class Unit extends CustomMarker {
       interactive: false,
       bubblingMouseEvents: false,
     });
+    this.#temporaryEngagementCircle = new RangeCircle(this.getPosition(), {
+      radius: 0,
+      weight: 4,
+      opacity: 1,
+      fillOpacity: 0,
+      dashArray: "4 8",
+      interactive: false,
+      bubblingMouseEvents: false,
+    });
 
     this.#racetrackPolylines = [
       new Polyline([], { color: colors.WHITE, weight: 3, smoothFactor: 1, dashArray: "5, 5" }),
@@ -511,6 +529,10 @@ export abstract class Unit extends CustomMarker {
         });
 
       if (this.getSelected()) this.drawLines();
+
+      if (mapOptions.showUnitsEngagementRings || mapOptions.showUnitsAcquisitionRings) {
+        this.hideTemporaryEngagementRing();
+      }
     });
 
     CommandModeOptionsChangedEvent.on((commandModeOptions) => {
@@ -594,6 +616,14 @@ export abstract class Unit extends CustomMarker {
           break;
         case DataIndexes.callsign:
           this.#callsign = dataExtractor.extractString();
+          break;
+        case DataIndexes.unitID:
+          this.#unitID = dataExtractor.extractUInt8();
+          updateMarker = true;
+          break;
+        case DataIndexes.groupID:
+          this.#groupID = dataExtractor.extractUInt8();
+          updateMarker = true;
           break;
         case DataIndexes.groupName:
           this.#groupName = dataExtractor.extractString();
@@ -835,6 +865,8 @@ export abstract class Unit extends CustomMarker {
       name: this.#name,
       unitName: this.#unitName,
       callsign: this.#callsign,
+      unitID: this.#unitID,
+      groupID: this.#groupID,
       groupName: this.#groupName,
       state: this.#state,
       task: this.#task,
@@ -921,12 +953,14 @@ export abstract class Unit extends CustomMarker {
       /* If selected, update the marker to show the selected effects, else clear all the drawings that are only shown for selected units. */
       if (selected) {
         this.#updateMarker();
+        this.showTemporaryEngagementRing();
       } else {
         this.#clearContacts();
         this.#clearPath();
         this.#clearTargetPosition();
         this.#clearRacetrack();
         this.#clearSpots();
+        this.hideTemporaryEngagementRing();
       }
 
       /* When the group leader is selected, if grouping is active, all the other group members are also selected */
@@ -1604,6 +1638,34 @@ export abstract class Unit extends CustomMarker {
     if (!this.#human) getApp().getServerManager().setRacetrack(this.ID, length, anchor, bearing, callback);
   }
 
+  /** Show temporary engagement ring when unit is selected */
+  showTemporaryEngagementRing() {
+    if (!getApp().getMap().getOptions().showUnitsEngagementRings 
+    && !getApp().getMap().getOptions().showUnitsAcquisitionRings 
+    && getApp().getMap().getOptions().showUnitsTemporaryEngagementRings 
+    && this.#engagementRange > 0) {
+      this.#temporaryEngagementCircle.setLatLng(this.getPosition());
+      this.#temporaryEngagementCircle.setRadius(this.#engagementRange);
+      switch (this.getCoalition()) {
+        case "red":
+          this.#temporaryEngagementCircle.options.color = adjustBrightness(colors.RED_COALITION, -20);
+          break;
+        case "blue":
+          this.#temporaryEngagementCircle.options.color = adjustBrightness(colors.BLUE_COALITION, -20);
+          break;
+        default:
+          this.#temporaryEngagementCircle.options.color = adjustBrightness(colors.NEUTRAL_COALITION, -20);
+          break;
+      }
+      this.#temporaryEngagementCircle.addTo(getApp().getMap());
+    }
+  }
+
+  /** Hide temporary engagement ring */
+  hideTemporaryEngagementRing() {
+    this.#temporaryEngagementCircle.removeFrom(getApp().getMap());
+  }
+
   /***********************************************/
   onAdd(map: Map): this {
     super.onAdd(map);
@@ -1680,8 +1742,6 @@ export abstract class Unit extends CustomMarker {
 
     if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
     this.#debounceTimeout = window.setTimeout(() => {
-      console.log(`Left short click on ${this.getUnitName()}`);
-
       if (getApp().getState() === OlympusState.UNIT_CONTROL && getApp().getMap().getContextAction()) {
         if (getApp().getMap().getContextAction()?.getTarget() === ContextActionTarget.UNIT) getApp().getMap().executeContextAction(this, null, e.originalEvent);
         else getApp().getMap().executeContextAction(null, this.getPosition(), e.originalEvent);
@@ -1693,8 +1753,6 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onLeftLongClick(e: any) {
-    console.log(`Left long click on ${this.getUnitName()}`);
-
     if (getApp().getState() === OlympusState.IDLE) {
       this.setSelected(!this.getSelected());
 
@@ -1719,8 +1777,6 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onRightShortClick(e: any) {
-    console.log(`Right short click on ${this.getUnitName()}`);
-
     window.clearTimeout(this.#rightMouseDownTimeout);
     if (
       getApp().getState() === OlympusState.UNIT_CONTROL &&
@@ -1731,15 +1787,13 @@ export abstract class Unit extends CustomMarker {
   }
 
   #onRightLongClick(e: any) {
-    console.log(`Right long click on ${this.getUnitName()}`);
+    // console.log(`Right long click on ${this.getUnitName()}`);
   }
 
   #onDoubleClick(e: any) {
     DomEvent.stop(e);
     DomEvent.preventDefault(e);
     e.originalEvent.stopImmediatePropagation();
-
-    console.log(`Double click on ${this.getUnitName()}`);
 
     if (this.#debounceTimeout) window.clearTimeout(this.#debounceTimeout);
 

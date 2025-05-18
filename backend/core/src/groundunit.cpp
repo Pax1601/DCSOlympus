@@ -40,16 +40,6 @@ GroundUnit::GroundUnit(json::value json, unsigned int ID) : Unit(json, ID)
 
 void GroundUnit::setDefaults(bool force)
 {
-	if (!getAlive() || !getControlled() || getHuman() || !getIsLeader()) return;
-
-	/* Set the default IDLE state */
-	setState(State::IDLE);
-
-	/* Set the default options */
-	setROE(ROE::WEAPON_FREE, force);
-	setOnOff(onOff, force);
-	setFollowRoads(followRoads, force);
-
 	/* Load gun values from database */
 	if (database.has_object_field(to_wstring(name))) {
 		json::value databaseEntry = database[to_wstring(name)];
@@ -74,6 +64,16 @@ void GroundUnit::setDefaults(bool force)
 		if (databaseEntry.has_number_field(L"acquisitionRange"))
 			setAcquisitionRange(databaseEntry[L"acquisitionRange"].as_number().to_double());
 	}
+	
+	if (!getAlive() || !getControlled() || getHuman() || !getIsLeader()) return;
+
+	/* Set the default IDLE state */
+	setState(State::IDLE);
+
+	/* Set the default options */
+	setROE(ROE::WEAPON_FREE, force);
+	setOnOff(onOff, force);
+	setFollowRoads(followRoads, force);	
 }
 
 void GroundUnit::setState(unsigned char newState)

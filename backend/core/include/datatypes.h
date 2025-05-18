@@ -16,6 +16,8 @@ namespace DataIndex {
 		name,
 		unitName,
 		callsign,
+		unitID,
+		groupID,
 		groupName,
 		state,
 		task,

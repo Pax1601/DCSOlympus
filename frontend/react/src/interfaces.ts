@@ -232,6 +232,8 @@ export interface UnitData {
   name: string;
   unitName: string;
   callsign: string;
+  unitID: number;
+  groupID: number;
   groupName: string;
   state: string;
   task: string;
