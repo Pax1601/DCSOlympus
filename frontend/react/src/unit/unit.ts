@@ -618,11 +618,11 @@ export abstract class Unit extends CustomMarker {
           this.#callsign = dataExtractor.extractString();
           break;
         case DataIndexes.unitID:
-          this.#unitID = dataExtractor.extractUInt8();
+          this.#unitID = dataExtractor.extractUInt32();
           updateMarker = true;
           break;
         case DataIndexes.groupID:
-          this.#groupID = dataExtractor.extractUInt8();
+          this.#groupID = dataExtractor.extractUInt32();
           updateMarker = true;
           break;
         case DataIndexes.groupName:
