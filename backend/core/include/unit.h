@@ -75,8 +75,8 @@ public:
 	virtual void setName(string newValue) { updateValue(name, newValue, DataIndex::name); }
 	virtual void setUnitName(string newValue) { updateValue(unitName, newValue, DataIndex::unitName); }
 	virtual void setCallsign(string newValue) { updateValue(callsign, newValue, DataIndex::callsign); }
-	virtual void setUnitID(unsigned char newValue) { updateValue(unitID, newValue, DataIndex::unitID); }
-	virtual void setGroupID(unsigned char newValue) { updateValue(groupID, newValue, DataIndex::groupID); }
+	virtual void setUnitID(unsigned int newValue) { updateValue(unitID, newValue, DataIndex::unitID); }
+	virtual void setGroupID(unsigned int newValue) { updateValue(groupID, newValue, DataIndex::groupID); }
 	virtual void setGroupName(string newValue) { updateValue(groupName, newValue, DataIndex::groupName); }
 	virtual void setState(unsigned char newValue) { updateValue(state, newValue, DataIndex::state); };
 	virtual void setTask(string newValue) { updateValue(task, newValue, DataIndex::task); }
@@ -143,8 +143,8 @@ public:
 	virtual string getCallsign() { return callsign; }
 	virtual string getUnitName() { return unitName; }
 	virtual string getGroupName() { return groupName; }
-	virtual unsigned char getUnitID() { return unitID; }
-	virtual unsigned char getGroupID() { return groupID; }
+	virtual unsigned int getUnitID() { return unitID; }
+	virtual unsigned int getGroupID() { return groupID; }
 	virtual unsigned char getState() { return state; }
 	virtual string getTask() { return task; }
 	virtual bool getHasTask() { return hasTask; }
@@ -210,8 +210,8 @@ protected:
 	string name = "";
 	string unitName = "";
 	string callsign = "";
-	unsigned char unitID = NULL;
-	unsigned char groupID = NULL;
+	unsigned int unitID = NULL;
+	unsigned int groupID = NULL;
 	string groupName = "";
 	unsigned char state = State::NONE;
 	unsigned char alarmState = AlarmState::AUTO;

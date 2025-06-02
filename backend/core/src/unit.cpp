@@ -42,9 +42,9 @@ void Unit::update(json::value json, double dt)
 		setUnitName(to_string(json[L"unitName"]));
 
 	if (json.has_number_field(L"groupID"))
-		setGroupID(json[L"groupID"].as_number().to_int32());
+		setGroupID(json[L"groupID"].as_number().to_uint32());
 	if (json.has_number_field(L"unitID"))
-		setUnitID(json[L"unitID"].as_number().to_int32());
+		setUnitID(json[L"unitID"].as_number().to_uint32());
 
 	if (json.has_string_field(L"groupName"))
 		setGroupName(to_string(json[L"groupName"]));
@@ -255,6 +255,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 		appendString(ss, datumIndex, category);
 		datumIndex = DataIndex::alive;
 		appendNumeric(ss, datumIndex, alive);
+		datumIndex = DataIndex::unitID;
+		appendNumeric(ss, datumIndex, unitID);
 	}
 	else {
 		for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
