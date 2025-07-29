@@ -164,7 +164,8 @@ export class ServerManager {
     xmlHttp.onreadystatechange = (res) => {
       if (xmlHttp.readyState == 4 && xmlHttp.status === 0) {
         console.error("An error occurred during the XMLHttpRequest");
-        this.setConnected(false);
+        if (this.#failedRequestEpoch === null) this.#failedRequestEpoch = Date.now();
+        else if (Date.now() - this.#failedRequestEpoch > 10000) this.setConnected(false);
         errorCallback && errorCallback(xmlHttp.status);
       }
     };
