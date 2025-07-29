@@ -179,10 +179,9 @@ void GroundUnit::AIloop()
 
 	double currentAmmo = computeTotalAmmo();
 	/* Out of ammo */
-	if (currentAmmo <= shotsToFire && state != State::IDLE) {
+	if (shotsToFire > 0 && currentAmmo < shotsToFire && state != State::IDLE && state != State::REACH_DESTINATION) 
 		setState(State::IDLE);
-	}
-
+	
 	/* Account for unit reloading */
 	if (currentAmmo < oldAmmo)
 		totalShellsFired += oldAmmo - currentAmmo;
