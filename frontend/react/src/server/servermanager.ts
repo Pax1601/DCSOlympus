@@ -44,6 +44,7 @@ export class ServerManager {
   #requests: { [key: string]: XMLHttpRequest } = {};
   #updateMode = "normal"; // normal or awacs
   #activeCommandMode = "";
+  #failedRequestEpoch: number | null = null;
 
   constructor() {
     this.#lastUpdateTimes[UNITS_URI] = Date.now();
@@ -131,6 +132,7 @@ export class ServerManager {
       if (xmlHttp.status == 200) {
         /* Success */
         this.setConnected(true);
+        this.#failedRequestEpoch = null;
         if (xmlHttp.responseType == "arraybuffer") this.#lastUpdateTimes[uri] = callback(xmlHttp.response);
         else {
           /* Check if the response headers contain the enabled command modes and set them */
@@ -153,8 +155,9 @@ export class ServerManager {
         WrongCredentialsEvent.dispatch();
         errorCallback && errorCallback(xmlHttp.status);
       } else {
-        /* Failure, probably disconnected */
-        this.setConnected(false);
+        /* Failure, probably disconnected. If not a single good message has been received in 10 seconds assume the connection is down */
+        if (this.#failedRequestEpoch === null) this.#failedRequestEpoch = Date.now();
+        else if (Date.now() - this.#failedRequestEpoch > 10000) this.setConnected(false);
         errorCallback && errorCallback(xmlHttp.status);
       }
     };
