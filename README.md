@@ -30,8 +30,6 @@ Read through the [Installation Guide](https://github.com/Pax1601/DCSOlympus/wiki
 
 Read through [Setup Troubleshooting](https://github.com/Pax1601/DCSOlympus/wiki/Setup-Troubleshooting) for common issues and solutions.
 
-Read through the [Olympus User Guide](https://github.com/Pax1601/DCSOlympus/wiki/2.-User-Guide) to learn how to use Olympus.
-
 If you're still having issues after trying the steps above, please post in the ⁠community-support channel with the following:
 
 A detailed description of your issue
