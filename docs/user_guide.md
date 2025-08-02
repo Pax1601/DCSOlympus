@@ -1,25 +1,3 @@
-# Contents
-See GitHub Contents on the right of the page.
-<!--- [Introduction](#introduction)
-  - [What is Olympus?](#what-is-olympus)
-  - [The Team](#the-team)
-- [Basics](#basics)
-  - [Installing Olympus](#installing-olympus)
-  - [Running Olympus](#running-olympus)
-- [User Interface](#user-interface)
-  - [Overview](#overview)
-    - [Map Options](#map-options)
-    - [Show/hide options](#showhide-options)
-    - [Game Master Options](#game-master-options)
-    - [Airfields](#airfields)
-    - [Cursor Location Info](#cursor-location-info)
-    - [Connection Status](#connection-status)
-  - [Selected unit Information](#selected-unit-information)
-    - [Selected Units Window](#selected-units-window)
-    - [Selected Unit](#selected-unit)
-- [Using the Map](#using-the-map)
-- [Spawning Units](#spawning-units)-->
-
 # Introduction
 
 ## What is Olympus?
@@ -45,86 +23,13 @@ The user interface is key to this experience, and we have done our best to make 
 
 # Basics
 
-## Installing Olympus
-
-**NOTE: the installation process has been greatly modified in version v1.0.4. These instructions are NOT applicable to v1.0.3. Users are suggested to update to the latest version.**
-
-**NOTE: Olympus is offered in two different packages: an autoinstaller package and an archive package. The autoinstaller package is marked with the prefix ```autoinstaller_```. THESE INSTRUCTION ARE ONLY APPLICABLE TO THE AUTOINSTALLER VERSION. The archived version is intended for automatic tools like [SpecialK's Server Bot](https://github.com/Special-K-s-Flightsim-Bots/DCSServerBot).**
-
-Download the latest release autoinstaller package from the [Github releases page](https://github.com/Pax1601/DCSOlympus/releases). After downloading the package, unpack it and follow these steps: 
-
-1) **Close any applications which may interfere with installation**, including Digital Combat Simulator (DCS) and previous versions of Olympus.
-<br>
-2) **If you DO NOT have Olympus v1.0.3 already installed, SKIP THIS STEP. If you have already installed Olympus v1.0.3, do the following**:
-NOTE: If you made any changes to your unit databases or mods.lua file (e.g. to support a third party mod) make a backup of the edited files before proceeding or changes will be lost;
-a) **If you installed DCS Olympus v1.0.3 using the installer**, simply remove it using Windows's "Add or remove programs" application. 
-b) **If you installed DCS Olympus v1.0.3 using the archived version**, remove it by deleting the "...<DCS Saved Games folder>\Mods\Services\Olympus" folder. Do this for every DCS instance you installed Olympus in. 
-    Remember to delete any shortcuts you created. Don't worry, they will be created automatically again by the installation script provided in this package.
-<br>
-3) **Create a folder named "DCS Olympus"** in your "Saved Games" directory and **extract all the contents of the downloaded package into it**.
-	NOTE:
-    	a) Do not extract the contents of the package directly in your Saved Games folder or in your DCS Saved Games folder. 
-        b) Unlike previous version of Olympus, it is no longer necessary to copy the packaged files into each DCS instance folder.
-<br>
-4) **Execute the "installer.bat"** script by double-clicking on it. It is located in the folder you created in step 3. Wait for the installation script to complete. **Installation may take a couple of minutes, after which the Manager will start automatically**.
-	NOTE: depending on your Windows configuration, the script may be called "installer" (without .bat at the end).
-<br>
-5) The Olympus Manager will open. This will allow you to add/remove Olympus to individual DCS instances.
-	**Use the Olympus Manager and follow the instructions to install and setup Olympus** (see the dedicated section below for more information).
-<br>
-6) **Start DCS and run a mission. Make sure it is UNPAUSED**.
-<br>
-7) **Open Olympus via the shortcut and login using any username and the Game Master password set using the Manager. (NOTE: not your DCS server password)**.
-Local installation: run the client from the provided desktop shortcut. 
-Dedicated server: users must first start the Olympus server from the provided desktop shortcut or using the "Expert view" mode of the Manager. 
-Then log in using any browser and visiting ```http:\\server_IP:frontend_port``` (frontend port is 3000 by default, but can be edited using the Manager)
-<br>
-8) You can use the manager at any time to change the ports and/or passwords. If you do, **REMEMBER TO RESTART OLYMPUS AND DCS**.
-
-NOTES:
-a) when launching the Manager you will be prompted to allow Electron to create a firewall rule. This is optional and can be denied without effect on the operation of the Manager;
-b) if you are using Olympus on a dedicated server with a router, you must enable port forwarding on the frontend port (3000 by default);
-c) unlike Olympus v1.0.3, **running the netsh command is no longer required. It is also no longer required to create firewall rules or port forwarding for the backend port. (Optional) If you already performed this steps in the past you can delete the firewall and netsh rules**.
-
-
-Once you have installed Olympus, it will run whenever you are playing a DCS local mission or hosting a multiplayer server. To control the action, open the Olympus client via the icon on your desktop or start menu.
-
-## Using the Manager
-The Olympus Manager is used to install, update, and configure your Olympus installation. If you own a dedicated server and run multiple Olympus instances at the same time, the Manager allows you to conveniently handle them from a single location.
-
-**REMEMBER, after installing Olympus with step 4) of the installation process above, you will still need to add it to your DCS instance!**
-
-When you start the Manager for the first time, it will allow to choose between Basic and Expert mode. Basic mode is suggested for local only users, while Expert mode is tailored for dedicated server owners. You can change the mode at any time with the link in the toolbar at the top of the manager. Note that the choice of the Manager mode has no impact on the functionality of Olympus. Server owners can use Basic mode, or vice versa.
-
-### Basic mode
-
-Basic mode gives you access to an installation Wizard. To start it, click on "Add Olympus". If you have more than one DCS instance installed, the Wizard will allow you to select the one you want to add Olympus to. If only one instance is detected, this step will be skipped. 
-
-**Should the Wizard fail at detecting your DCS instance, you can manually add it. To do so, open the ```<Olympus installation folder>\manager\options.json``` file and add the location of your DCS instance, between double quotes, in ```additionalDCSInstances```. Multiple values should be separated by a comma. Use double backslashes as separators**
-
-Once the DCS instance is selected, you will be prompted with a series of questions which will allow you configure your installation. The meaning of all the questions and the options is explained in the Manager itself, move your mouse cursor on the info icons for more information.
-
-### Expert mode
-
-Expert mode operates more as a dashboard rather than a Wizard. All DCS instances are presented to the user, and you will be able to install/configure/remove Olympus from a single page.
-
-The meaning of all the options is also explained by moving your mouse cursor on the info icon. 
-
-In Expert mode, users are also capable of starting the Olympus client and server directly from the Manager. This is convenient if you have multiple installations. Once a client/server instance is running, the Manager allows you to monitor its state directly from the Expert view.
-
-## Updating Olympus
-
-The Manager allows you to update Olympus automatically. When the Manager is started, it checks if a new version is available. If that is the case, you will be given the option to automatically update Olympus. The new package will be downloaded and installed without requiring any inputs from the user.
-
-The Manager will be closed and reopened after the process is completed. Once this is done, you will presented with a warning: just like installing Olympus will not automatically add it to your DCS instance, updating it will not update it in your DCS instance. By clicking on "Accept", all your Olympus instances will be automatically updated.
-
 ## Logging into Olympus
 
 To login to Olympus, you need to enter a username and password.
 
 **The username field is used for logging purposes only and can be anything you choose. The password is the one you set during the installation.**
 
-If you forget a password or need to change them for security purposes, use the manager to configure it again, then restart the Olympus client\server and DCS mission.
+If you forget a password or need to change them for security purposes, use ```configurator.exe``` in ```DCS.openbeta/Mods/Services/Olympus```, then restart the Olympus client and DCS mission.
 
 Please note that at the moment, ```configurator.exe``` is a feature which is not present in local installations created via the installer, but is present when Olympus is installed via any of the other methods. In order to reset the Olympus client passwords for local installations, you will need to reinstall Olympus. This will be addressed in a future update.
 
