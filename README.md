@@ -28,7 +28,7 @@ Check the [Wiki](https://github.com/Pax1601/DCSOlympus/wiki) for installation in
 ### I need troubleshooting guidance, please help? ###
 Read through the [Installation Guide](https://github.com/Pax1601/DCSOlympus/wiki) to ensure you have setup Olympus correctly.
 
-Read through [Setup Troubleshooting](https://github.com/Pax1601/DCSOlympus/wiki/Setup-Troubleshooting) for common issues and solutions.
+Read through [Setup Troubleshooting](https://github.com/Pax1601/DCSOlympus/wiki/3.-Setup-FAQ-and-Troubleshooting) for common issues and solutions.
 
 If you're still having issues after trying the steps above, please post in the ⁠community-support channel with the following:
 
