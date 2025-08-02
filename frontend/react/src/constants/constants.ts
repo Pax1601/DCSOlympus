@@ -268,6 +268,14 @@ export const minimapBoundaries = {
     new LatLng(54.724620, 16.413574),
     new LatLng(54.724620, 5.570068),
   ],
+  Iraq: [
+    // Iraq
+    new LatLng(36.672825, 39.413452),
+    new LatLng(29.798943, 39.413452),
+    new LatLng(29.798943, 53.201294),
+    new LatLng(36.672825, 53.201294),
+    new LatLng(36.672825, 39.413452),
+  ]
 };
 
 export const mapBounds = {
@@ -305,7 +313,8 @@ export const mapBounds = {
     zoom: 4,
   },
   Afghanistan: { bounds: new LatLngBounds([36.22, 61.21], [30.42, 68.05]), zoom: 5 },
-  GermanyCW: { bounds: new LatLngBounds([54.724620, 5.570068], [49.282140, 16.413574]), zoom: 4 }
+  GermanyCW: { bounds: new LatLngBounds([54.724620, 5.570068], [49.282140, 16.413574]), zoom: 4 },
+  Iraq: { bounds: new LatLngBounds([36.672825, 39.413452], [29.798943, 53.201294]), zoom: 4 },
 };
 
 export const defaultMapMirrors = {};
