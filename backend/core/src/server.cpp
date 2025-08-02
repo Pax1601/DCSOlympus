@@ -17,6 +17,7 @@ extern UnitsManager* unitsManager;
 extern WeaponsManager* weaponsManager;
 extern Scheduler* scheduler;
 extern json::value missionData;
+extern json::value drawingsByLayer;
 extern mutex mutexLock;
 extern string sessionHash;
 extern string instancePath;
@@ -128,6 +129,9 @@ void Server::handle_get(http_request request)
                     /* Bullseyes data */
                     else if (URI.compare(BULLSEYE_URI) == 0 && missionData.has_object_field(L"bullseyes")) 
                         answer[L"bullseyes"] = missionData[L"bullseyes"];
+                    /* Spots (laser/IR) data */
+                    else if (URI.compare(SPOTS_URI) == 0 && missionData.has_object_field(L"spots"))
+                        answer[L"spots"] = missionData[L"spots"];
                     /* Mission data */
                     else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
                         answer[L"mission"] = missionData[L"mission"];
@@ -145,6 +149,10 @@ void Server::handle_get(http_request request)
                     }
                     else if (URI.compare(COMMANDS_URI) == 0 && query.find(L"commandHash") != query.end()) {
                         answer[L"commandExecuted"] = json::value(scheduler->isCommandExecuted(to_string(query[L"commandHash"])));
+                    }
+                    /* Drawings data*/
+                    else if (URI.compare(DRAWINGS_URI) == 0 && drawingsByLayer.has_object_field(L"drawings")) {
+                        answer[L"drawings"] = drawingsByLayer[L"drawings"];
                     }
                     
                     /* Common data */

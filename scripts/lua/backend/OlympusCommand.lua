@@ -13,6 +13,7 @@ Olympus.log = mist.Logger:new("Olympus", 'info')
 Olympus.missionData = {}
 Olympus.unitsData = {}
 Olympus.weaponsData = {}
+Olympus.drawingsByLayer = {}
 
 -- Units data structures
 Olympus.unitCounter = 1			-- Counter to generate unique names
@@ -25,6 +26,10 @@ Olympus.unitsInitialLife = {}	-- getLife0 returns 0 for ships, so we need to sto
 Olympus.weaponIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS			
 Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
 Olympus.weapons = {}			-- Table holding references to all the currently existing weapons
+
+-- Spots (laser/IR) data
+Olympus.spots = {}
+Olympus.spotsCounter = 1
 
 -- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
@@ -180,6 +185,16 @@ function Olympus.buildTask(groupName, options)
 					pattern = options['pattern'] or "Circle"
 				} 
 			}
+
+			if options['pattern'] == 'Race-Track' then
+				local heading = options['heading'] or 0
+				local length = options['length'] or 20000
+				if group ~= nil then
+					local groupPos = mist.getLeadPos(group)
+					task['params']['point'] = {x = groupPos.x, y = groupPos.z}
+					task['params']['point2'] = {x = groupPos.x + math.cos(heading) * length, y = groupPos.z + math.sin(heading) * length}
+				end
+			end
 
 			-- Compute the altitude depending on the altitude type 
 			if options['altitude'] then
@@ -381,25 +396,50 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			end
 			Olympus.debug("Olympus.move executed successfully on Helicopter", 2)
 		elseif category == "GroundUnit" then
-			local startPoint = mist.getLeadPos(group)
 			local endPoint = coord.LLtoLO(lat, lng, 0) 
-			local bearing = math.atan2(endPoint.z - startPoint.z, endPoint.x - startPoint.x)
 
-			vars = {
-				group = group, 
-				point = endPoint,
-				heading = bearing,
-				speed = speed
-			}
-
+			local action = "Off Road"
+			local disableRoads = true
 			if taskOptions and taskOptions['id'] == 'FollowRoads' and taskOptions['value'] == true then
-				vars["disableRoads"] = false
-			else
-				vars["form"] = "Off Road"
-				vars["disableRoads"] = true
+				action = "On Road"
+				disableRoads = false
 			end
-
-			mist.groupToRandomPoint(vars)
+			
+			missionTask = { 
+				id = 'Mission', 
+				params = { 
+					route = { 
+						points = { 
+							[1] = { 
+								type = "Turning Point",
+								action = action,
+								disableRoads = disableRoads,
+								x = endPoint.x, 
+								y = endPoint.z, 
+								speed = speed, 
+								speed_locked = false, 
+								ETA_locked = false, 
+								name = 'Mission1', 
+							},
+							[2] = { 
+								type = "Turning Point",
+								action = action,
+								disableRoads = disableRoads,
+								x = endPoint.x, 
+								y = endPoint.z, 
+								speed = speed, 
+								speed_locked = false, 
+								ETA_locked = false, 
+								name = 'Mission1', 
+							}, 
+						} 
+					}, 
+				} 
+			} 
+			local groupCon = group:getController()
+			if groupCon then
+				groupCon:setTask(missionTask)
+			end
 			Olympus.debug("Olympus.move executed successfully on GroundUnit", 2)
 		elseif category == "NavyUnit" then
 			local startPoint = mist.getLeadPos(group)
@@ -531,6 +571,83 @@ function Olympus.randomDebries(vec3)
 	end
 end
 
+-- Shines a laser from a unit to a point
+function Olympus.fireLaser(ID, code, lat, lng)
+    Olympus.debug("Olympus.fireLaser " .. ID .. " -> (" .. lat .. ", " .. lng .. ") code " .. code, 2)
+
+	local vec3 = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng))
+
+	local unit = Olympus.getUnitByID(ID)
+	if unit ~= nil and unit:isExist() then
+		local spot = Spot.createLaser(unit, {x = 0, y = 1, z = 0}, vec3, code)
+		Olympus.spotsCounter = Olympus.spotsCounter + 1
+		Olympus.spots[Olympus.spotsCounter] = {
+			type = "laser",
+			object = spot,
+			sourceUnitID = ID,
+			targetPosition = {
+				lat = lat,
+				lng = lng
+			},
+			active = true,
+			code = code
+		}
+	end
+end  
+
+-- Shines a infrared light from a unit to a point
+function Olympus.fireInfrared(ID, lat, lng)
+    Olympus.debug("Olympus.fireInfrared " .. ID .. " -> (" .. lat .. ", " .. lng .. ")", 2)
+
+	local vec3 = mist.utils.makeVec3GL(coord.LLtoLO(lat, lng))
+
+	local unit = Olympus.getUnitByID(ID)
+	if unit ~= nil and unit:isExist() then
+		local spot = Spot.createInfraRed(unit, {x = 0, y = 1, z = 0}, vec3)
+		Olympus.spotsCounter = Olympus.spotsCounter + 1
+		Olympus.spots[Olympus.spotsCounter] = {
+			type = "infrared",
+			object = spot,
+			sourceUnitID = ID,
+			targetPosition = {
+				lat = lat,
+				lng = lng
+			},
+			active = true
+		}
+	end
+end 
+
+-- Set new laser code
+function Olympus.setLaserCode(spotID, code) 
+	Olympus.debug("Olympus.setLaserCode " .. spotID .. " -> " .. code, 2)
+	local spot = Olympus.spots[spotID]
+	if spot ~= nil and spot.type == "laser" then
+		spot.object:setCode(code)
+		spot.code = code
+	end
+end
+
+-- Move spot to a new location
+function Olympus.moveSpot(spotID, lat, lng)
+	Olympus.debug("Olympus.moveSpot " .. spotID .. " -> (" .. lat .. ", " .. lng .. ")", 2)
+	local spot = Olympus.spots[spotID]
+	if spot ~= nil then
+		spot.object:setPoint(mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)))
+		spot.targetPosition = {lat = lat, lng = lng}
+	end
+end
+
+-- Remove the spot
+function Olympus.deleteSpot(spotID)
+	Olympus.debug("Olympus.deleteSpot " .. spotID, 2)
+	local spot = Olympus.spots[spotID]
+	if spot ~= nil then
+		spot.object:destroy()
+		Olympus.spots[spotID]["active"] = false
+	end
+end
+
 -- Spawns a new unit or group
 -- Spawn table contains the following parameters
 -- category: (string), either Aircraft, Helicopter, GroundUnit or NavyUnit
@@ -542,7 +659,7 @@ end
 	-- lat: (number)
 	-- lng: (number)
 	-- alt: (number, optional) only for air units
-	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua
+	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua or mods.lua
 	-- payload: (table, optional) overrides loadout, specifies directly the loadout of the unit
 	-- liveryID: (string, optional)
 function Olympus.spawnUnits(spawnTable) 
@@ -614,6 +731,8 @@ function Olympus.generateAirUnitsTable(units)
 		if payload == nil then
 			if loadout ~= nil and loadout ~= "" and Olympus.unitPayloads[unit.unitType] and Olympus.unitPayloads[unit.unitType][loadout] then
 				payload = { ["pylons"] = Olympus.unitPayloads[unit.unitType][loadout], ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
+			elseif loadout ~= nil and loadout ~= "" and Olympus.modsUnitPayloads ~= nil and Olympus.modsUnitPayloads[unit.unitType] and Olympus.modsUnitPayloads[unit.unitType][loadout] then
+				payload = { ["pylons"] = Olympus.modsUnitPayloads[unit.unitType][loadout], ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
 			else
 				payload = { ["pylons"] = {}, ["fuel"] = 999999, ["flare"] = 60, ["ammo_type"] = 1, ["chaff"] = 60, ["gun"] = 100 } 
 			end
@@ -964,6 +1083,123 @@ function getUnitDescription(unit)
 	return unit:getDescr()
 end
 
+-- This function gets the navpoints from the DCS mission
+function Olympus.getNavPoints() 	
+	local function extract_tag(str)
+		return str:match("^%[(.-)%]")
+	end
+
+	local navpoints = {}
+	if mist.DBs.navPoints ~= nil then
+		for coalitionName, coalitionNavpoints in pairs(mist.DBs.navPoints) do
+			if navpoints[coalitionName] == nil then
+				navpoints[coalitionName] = {}
+			end
+
+			for index, navpointDrawingData in pairs(coalitionNavpoints) do
+				local navpointCustomLayer = extract_tag(navpointDrawingData['callsignStr']);
+
+				-- Let's convert DCS coords to lat lon
+				local vec3 = { x = navpointDrawingData['x'], y = 0, z = navpointDrawingData['y'] }
+				local lat, lng = coord.LOtoLL(vec3)
+				navpointDrawingData['lat'] = lat
+				navpointDrawingData['lng'] = lng
+				navpointDrawingData['coalition'] = coalitionName
+				navpointDrawingData['tag'] = navpointCustomLayer
+
+				if navpointCustomLayer ~= nil then
+					if navpoints[coalitionName][navpointCustomLayer] == nil then
+						navpoints[coalitionName][navpointCustomLayer] = {}
+					end
+					navpoints[coalitionName][navpointCustomLayer][navpointDrawingData['callsignStr']] = navpointDrawingData
+				else
+					navpoints[coalitionName][navpointDrawingData['callsignStr']] = navpointDrawingData
+				end
+			end
+		end
+	end
+
+	return navpoints
+end
+
+-- This function is periodically called to collect the data of all the existing drawings in the mission to be transmitted to the olympus.dll
+function Olympus.initializeDrawings()
+	local function extract_custom_layer_name(str)
+		if str:match("^%[LYR:(.-)%]") then
+			return str:match("^%[LYR:(.-)%]")
+		elseif str:match("^%[(.-)%]") then
+			return str:match("^%[(.-)%]")
+		end
+		return nil
+	end
+
+	local drawings = {}
+	if mist.DBs.drawingByName ~= nil then
+		for drawingName, drawingData in pairs(mist.DBs.drawingByName) do
+			local customLayer = extract_custom_layer_name(drawingName)
+
+			-- Let's convert DCS coords to lat lon
+			local vec3 = { x = drawingData['mapX'], y = 0, z = drawingData['mapY'] }
+			local lat, lng = coord.LOtoLL(vec3)
+			drawingData['lat'] = lat
+			drawingData['lng'] = lng
+
+			-- If the drawing has points, we have to convert those too
+			if drawingData['points'] ~= nil then
+				if drawingData['points']['x'] ~= nil then
+					-- In this case we have only one point
+					local point = { x = drawingData['points']['x'], y = 0, z = drawingData['points']['y'] }
+					local pointLat, pointLng = coord.LOtoLL(point)
+					drawingData['points'][0] = { lat = pointLat, lng = pointLng }
+				else
+					-- In this case we have multiple points indexed by number
+					for pointNumber, pointLOCoords in pairs(drawingData['points']) do
+						local point = { x = pointLOCoords['x'], y = 0, z = pointLOCoords['y'] }
+						local pointLat, pointLng = coord.LOtoLL(point)
+
+						drawingData['points'][pointNumber] = { lat = pointLat, lng = pointLng }
+					end
+				end
+			end
+
+			-- Let's initialize the layers
+			if drawings[drawingData.layerName] == nil then
+				drawings[drawingData.layerName] = {}
+			end
+
+			if customLayer and drawings[drawingData.layerName][customLayer] == nil then
+				drawings[drawingData.layerName][customLayer] = {}
+			end
+
+			-- Let's put the drawing in the correct layer
+			if customLayer then
+				-- Let's remove the m from the drawing name
+				local cleanDrawingName = string.match(drawingName, "%] (.+)")
+				drawingData.name = cleanDrawingName
+				-- The drawing has the custom layer m
+				drawings[drawingData.layerName][customLayer][cleanDrawingName] = drawingData
+			else
+				-- The drawing is a standard drawing
+				drawings[drawingData.layerName][drawingName] = drawingData
+			end
+		end
+
+		local navpoints = Olympus.getNavPoints()
+
+		drawings['navpoints'] = navpoints
+
+		Olympus.drawingsByLayer["drawings"] = drawings
+
+		-- Send the drawings to the DLL
+		Olympus.OlympusDLL.setDrawingsData()
+
+		Olympus.notify("Olympus drawings initialized", 2)
+	else
+		Olympus.debug("MIST DBs not ready", 2)
+		timer.scheduleFunction(Olympus.initializeDrawings, {}, timer.getTime() + 1)
+	end
+end
+
 -- This function is periodically called to collect the data of all the existing units in the mission to be transmitted to the olympus.dll
 function Olympus.setUnitsData(arg, time)
 	-- Units data
@@ -1010,8 +1246,10 @@ function Olympus.setUnitsData(arg, time)
 					local position = unit:getPosition()
 					local heading = math.atan2( position.x.z, position.x.x )
 					local velocity = unit:getVelocity();
+					local airborne = unit:inAir()
 					
 					-- Fill the data table
+					table["unitID"] = unit:getID()
 					table["name"] = unit:getTypeName()
 					table["coalitionID"] = unit:getCoalition()
 					table["position"] = {}
@@ -1022,6 +1260,7 @@ function Olympus.setUnitsData(arg, time)
 					table["horizontalVelocity"] =  math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z)
 					table["verticalVelocity"] = velocity.y
 					table["heading"] = heading 
+					table["airborne"] = airborne
 
 					-- Track angles are wrong because of weird reference systems, approximate it using latitude and longitude differences
 					if (table["horizontalVelocity"] > 1) then
@@ -1037,6 +1276,15 @@ function Olympus.setUnitsData(arg, time)
 					end
 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
+
+					--[[ COMMENTING OUT BECAUSE OF CRASHES -- TO BE INVESTIGATED LATER ON ]]--
+					--[[ if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
+						if unit:getRadar() then
+							table["radarState"] = true
+						else
+							table["radarState"] = false
+						end	
+					end ]]
 					
 					local group = unit:getGroup()
 					if group ~= nil then
@@ -1074,6 +1322,9 @@ function Olympus.setUnitsData(arg, time)
 							else
 								table["unitName"] = unit:getName()
 							end
+							-- In case of AI units the callSign and the unitName will be the same
+							table["callsign"] = unit:getName()
+							table["groupID"] = group:getID()
 							table["groupName"] = group:getName()
 							table["isHuman"] = (unit:getPlayerName() ~= nil)
 							table["hasTask"] = controller:hasTask()
@@ -1194,6 +1445,8 @@ function Olympus.setWeaponsData(arg, time)
 						table["category"] = "Missile"
 					elseif weapon:getDesc().category == Weapon.Category.BOMB then
 						table["category"] = "Bomb"
+					--elseif weapon:getDesc().category == Weapon.Category.SHELL then
+					--	table["category"] = "Shell"	-- Useful for debugging but has no real use and has big impact on performance
 					end
 				else
 					weapons[ID] = {isAlive = false}
@@ -1293,13 +1546,34 @@ function Olympus.setMissionData(arg, time)
 		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
 	end
 
+	-- Spots 
+	-- Initialize an empty table to store spots
+	local spots = {}
+
+	-- Iterate over each spot in Olympus.spots
+	for ID, spot in pairs(Olympus.spots) do 
+		-- Create a new entry in the spots table with the same ID
+		spots[ID] = {
+			type = spot.type,
+			sourceUnitID = spot.sourceUnitID,
+			targetPosition = spot.targetPosition,
+			active = spot.active,
+		}
+
+		-- If the spot type is "laser", add the code to the spot entry
+		if spot.type == "laser" then
+			spots[ID]["code"] = spot.code 
+		end
+	end
+
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
 	Olympus.missionData["airbases"] = airbases
 	Olympus.missionData["mission"] = mission
+	Olympus.missionData["spots"] = spots
 
 	Olympus.OlympusDLL.setMissionData()
-	return time + 1	-- For perfomance reasons weapons are updated once every second
+	return time + 1	-- For perfomance reasons mission data is updated once every second
 end
 
 -- Initializes the units table with all the existing ME units
@@ -1426,6 +1700,9 @@ timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 
 -- Initialize the ME units
 Olympus.initializeUnits()
+
+-- Initialize the Drawings
+Olympus.initializeDrawings()
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
 

@@ -1,0 +1,121 @@
+/* Container for the spot input marker */
+.leaflet-spot-input-marker {
+  text-align: center;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Delete button styles */
+.leaflet-spot-input-marker .delete {
+  background-color: darkred;
+  color: #fffd;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  font-weight: bold;
+  align-content: center;
+}
+
+/* Delete button hover effect */
+.leaflet-spot-input-marker .delete:hover {
+  background-color: lightcoral;
+}
+
+/* Container for the spot input marker content */
+.leaflet-spot-input-marker .container {
+  width: fit-content;
+  display: flex;
+  transform-origin: center;
+  background-color: var(--background-steel);
+  color: white;
+  border-radius: 999px;
+  font-size: 13px;
+  column-gap: 6px;
+  align-content: center;
+  border: 2px solid transparent;
+}
+
+/* Text inside the spot input marker */
+.leaflet-spot-input-marker .text {
+  margin-left: 12px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Input field inside the spot input marker */
+.leaflet-spot-input-marker .input {
+  display: none;
+  color: white;
+  appearance: none; /* Remove default appearance */
+  background-color: #333; /* Dark background */
+  border-radius: 8px; /* Rounded borders */
+  border: 1px solid #555; /* Border color */
+  padding: 4px 8px; /* Padding for better appearance */
+  outline: none; /* Remove default outline */
+  font-size: 13px;
+  width: 80px;
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+}
+
+/* Input field focus effect */
+.leaflet-spot-input-marker .input:focus {
+  border-color: #777; /* Border color on focus */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Shadow on focus */
+}
+
+/* Hide input field inside the container */
+.leaflet-spot-input-marker .container .input {
+  display: none;
+}
+
+/* Hide text in edit mode */
+.leaflet-spot-input-marker .container .text.edit-mode {
+  display: none;
+}
+
+/* Error flash animation for input field */
+.leaflet-spot-input-marker .input.error-flash {
+  animation: error-flash 0.3s;
+}
+
+/* Keyframes for error flash animation */
+@keyframes error-flash {
+  0% {
+    border-color: #555;
+  }
+  50% {
+    border-color: red;
+  }
+  100% {
+    border-color: #555;
+  }
+}
+
+/* Edit mode styles for delete button */
+.leaflet-spot-input-marker .delete.edit-mode {
+  background-color: green;
+}
+
+/* Edit mode hover effect for delete button */
+.leaflet-spot-input-marker .delete.edit-mode:hover {
+  background-color: lightgreen;
+}
+
+/* Success flash animation for container */
+.leaflet-spot-input-marker .container.success-flash {
+  animation: success-flash 0.3s 3;
+}
+
+/* Keyframes for success flash animation */
+@keyframes success-flash {
+  0%, 100% {
+    border-color: transparent;
+  }
+  33%, 66% {
+    border-color: green;
+  }
+}

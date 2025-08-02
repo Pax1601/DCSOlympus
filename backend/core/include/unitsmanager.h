@@ -23,8 +23,8 @@ public:
 	void deleteUnit(unsigned int ID, bool explosion, string explosionType, bool immediate);
 	void acquireControl(unsigned int ID);
 	void loadDatabases();
-	Unit* getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance);
-	map<Unit*, double> getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range);
+	Unit* getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance, bool airborneOnly = true);
+	map<Unit*, double> getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range, bool airborneOnly = true);
 
 private:
 	map<unsigned int, Unit*> units;

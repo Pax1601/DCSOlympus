@@ -18,6 +18,7 @@ namespace SetCommandType {
 		FORMATION = 5,
 		RTB_ON_BINGO = 6,
 		SILENCE = 7,
+		ALARM_STATE = 9,
 		RTB_ON_OUT_OF_AMMO = 10,
 		ECM_USING = 13,
 		PROHIBIT_AA = 14,
@@ -42,6 +43,14 @@ namespace ROE {
 		OPEN_FIRE = 2,
 		RETURN_FIRE = 3,
 		WEAPON_HOLD = 4,
+	};
+}
+
+namespace AlarmState {
+	enum AlarmStates {
+		AUTO   = 0,
+		GREEN  = 1,
+		RED    = 2,
 	};
 }
 
@@ -429,4 +438,99 @@ private:
 	const Coords location;
 	const unsigned int intensity;
 	const string explosionType;
+};
+
+/* Shine a laser with a specific code */
+class FireLaser : public Command
+{
+public:
+	FireLaser(unsigned int ID, unsigned int code, Coords destination, function<void(void)> callback = []() {}) :
+		Command(callback),
+		ID(ID),
+		destination(destination),
+		code(code)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int ID;
+	const unsigned int code;
+	const Coords destination;
+};
+
+/* Shine a infrared light */
+class FireInfrared : public Command
+{
+public:
+	FireInfrared(unsigned int ID, Coords destination, function<void(void)> callback = []() {}) :
+		Command(callback),
+		ID(ID),
+		destination(destination)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int ID;
+	const Coords destination;
+};
+
+/* Change a laser code */
+class SetLaserCode : public Command
+{
+public:
+	SetLaserCode(unsigned int spotID, unsigned int code, function<void(void)> callback = []() {}) :
+		Command(callback),
+		spotID(spotID),
+		code(code)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int spotID;
+	const unsigned int code;
+};
+
+/* Delete a spot code */
+class DeleteSpot : public Command
+{
+public:
+	DeleteSpot(unsigned int spotID, function<void(void)> callback = []() {}) :
+		Command(callback),
+		spotID(spotID)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int spotID;
+};
+
+/* Move spot to a new target */
+class MoveSpot : public Command
+{
+public:
+	MoveSpot(unsigned int spotID, Coords destination, function<void(void)> callback = []() {}) :
+		Command(callback),
+		spotID(spotID),
+		destination(destination)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int spotID;
+	const Coords destination;
 };

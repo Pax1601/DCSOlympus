@@ -37,13 +37,38 @@ NavyUnit::NavyUnit(json::value json, unsigned int ID) : Unit(json, ID)
 
 void NavyUnit::setDefaults(bool force)
 {
+	/* Load gun values from database */
+	if (database.has_object_field(to_wstring(name))) {
+		json::value databaseEntry = database[to_wstring(name)];
+		if (databaseEntry.has_number_field(L"barrelHeight"))
+			setBarrelHeight(databaseEntry[L"barrelHeight"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"muzzleVelocity"))
+			setMuzzleVelocity(databaseEntry[L"muzzleVelocity"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"aimTime"))
+			setAimTime(databaseEntry[L"aimTime"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"shotsToFire"))
+			setShotsToFire(databaseEntry[L"shotsToFire"].as_number().to_uint32());
+		if (databaseEntry.has_number_field(L"engagementRange"))
+			setEngagementRange(databaseEntry[L"engagementRange"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"shotsBaseInterval"))
+			setShotsBaseInterval(databaseEntry[L"shotsBaseInterval"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"shotsBaseScatter"))
+			setShotsBaseScatter(databaseEntry[L"shotsBaseScatter"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"targetingRange"))
+			setTargetingRange(databaseEntry[L"targetingRange"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"aimMethodRange"))
+			setAimMethodRange(databaseEntry[L"aimMethodRange"].as_number().to_double());
+		if (databaseEntry.has_number_field(L"acquisitionRange"))
+			setAcquisitionRange(databaseEntry[L"acquisitionRange"].as_number().to_double());
+	}
+	
 	if (!getAlive() || !getControlled() || getHuman() || !getIsLeader()) return;
 
 	/* Set the default IDLE state */
 	setState(State::IDLE);
 
 	/* Set the default options */
-	setROE(ROE::WEAPON_FREE, force);
+	setROE(ROE::OPEN_FIRE_WEAPON_FREE, force);
 	setOnOff(onOff, force);
 	setFollowRoads(followRoads, force);
 }

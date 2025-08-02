@@ -1,3 +1,52 @@
+v2.0.2 ====================
+feat: Added more docs to ingame wiki
+feat: Added threat rings to spawn tool
+feat: Added unit ranges on spawn menu
+fix: Removed incorrect help string in compact effect spawn menu
+fix: Added missing fire effect
+feat: Added error message if admin password wrong
+fix: Radio menu names being squashed when too long
+fix: Added callback to close all tooltips on click
+fix: "Follow roads" toggle available for navy units
+fix: Not airborne units no longer targeted, racetracks not drawn for airborne units
+feat: Added airborne variable
+feat: Session data is now saving selected map source
+fix: MGRS are now separed properly
+fix: State buttons hovering styles will be applied instantly
+feature: Added ability to exclusively show unit types
+feat: Added header button to quick toggle navpoints drawing
+refactor: Reduced the zoom of the go to drawing feature
+
+v2.0.1 ====================
+Changes:
+feat: Added starred spawns to spawn menu and ability to remove starred spawns
+feat: Added selection tools to unit list in unit control menu
+fix: Removed accidental development feature in unit spawn men
+feat: Added nightly link to manager to update without github account
+feat: Multiple improvements to audio backend
+feat: Added ability to change command mode, improved local connection detection
+fix: Drawings filtering utility made case insensitive
+feat: Added drawings filtering by string and go to drawing feature
+feat: Navpoints settings saved in session data
+feat: Navpoints separated from Drawings
+refactor: Changed styles for visible / hidden drawing layers
+feat: Added + and - buttons to control map zoom level
+fix: "Don't show again" tickbox not being respected
+fix: Manager not respecting autoconnectwhentrue and srsport settings
+fix: Aligned airbase spawn menu to other menus
+fix: Context menu shown when dragging handles
+fix: Aligned tanker orbit behaviour
+fix: Quick box selection causes units to be immediately deselected
+fix: Unable to clone units if game master with spawn restrictions on
+feat: Added support for callsigns
+
+v2.0.0 ====================
+Changes:
+1) completely redone UI using React
+2) added audio backend for SRS integration
+3) added Mission Editor drawings in DCS
+4) multiple enhancements to control scheme
+
 v1.0.4 ====================
 Changes:
 1) Added Olympus Manager for unified configuration management;

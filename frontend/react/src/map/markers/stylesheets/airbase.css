@@ -1,0 +1,39 @@
+.airbase-icon {
+  align-items: center;
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow( 3px 3px 3px rgba(0, 0, 0, .4));
+}
+
+.airbase-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.airbase-icon[data-coalition="red"] svg * {
+  stroke: var(--unit-background-red);
+}
+
+.airbase-icon[data-coalition="blue"] svg * {
+  stroke: var(--unit-background-blue);
+}
+
+.airbase-icon[data-coalition="neutral"] svg * {
+  stroke: var(--unit-background-neutral);
+}
+
+.airbase-icon[data-selected="true"] {
+  filter: drop-shadow(0px 2px 0px white) drop-shadow(0px -2px 0px white) drop-shadow(2px 0px 0px white) drop-shadow(-2px 0px 0px white);
+}
+
+[todo-todo-data-awacs-mode] .airbase-icon svg * {
+  fill: transparent !important;
+}
+
+#map-container .leaflet-airbase-marker.airbase-disable-pointer-events {
+  pointer-events: none;
+}

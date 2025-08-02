@@ -114,3 +114,10 @@ Bomb::Bomb(json::value json, unsigned int ID) : Weapon(json, ID)
 	log("New Bomb created with ID: " + to_string(ID));
 	setCategory("Bomb");
 };
+
+/* Shell */
+Shell::Shell(json::value json, unsigned int ID) : Weapon(json, ID)
+{
+	log("New Shell created with ID: " + to_string(ID));
+	setCategory("Shell");
+};

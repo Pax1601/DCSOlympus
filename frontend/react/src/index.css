@@ -1,0 +1,51 @@
+@import "../node_modules/leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-weight: 400;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "slnt" 0;
+}
+
+.z-ui-0 {
+  z-index: 2000;
+}
+
+.z-ui-1 {
+  z-index: 2001;
+}
+
+.z-ui-2 {
+  z-index: 2002;
+}
+
+.z-ui-3 {
+  z-index: 2003;
+}
+
+.z-ui-4 {
+  z-index: 2004;
+}
+
+.z-ui-5 {
+  z-index: 2005;
+}
+
+.z-ui-6 {
+  z-index: 2006;
+}
+
+.vertical-slider {
+  writing-mode: vertical-lr !important; 
+  direction: rtl !important;
+}
+
+.range-circle {
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.8));
+}
+

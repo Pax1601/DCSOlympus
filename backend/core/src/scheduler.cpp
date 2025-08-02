@@ -194,7 +194,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
-		if (!checkSpawnPoints(spawnPoints, coalition)) return;
+		if (!checkSpawnPoints(spawnPoints, coalition)) {
+			log(username + " insufficient spawn points ", true);
+			return;
+		}
 
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
@@ -202,12 +205,16 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
 			double alt = unit[L"altitude"].as_double();
+			double heading = 0;
+			if (unit.has_number_field(L"heading"))
+				heading = unit[L"heading"].as_double();
+
 			Coords location; location.lat = lat; location.lng = lng; location.alt = alt;
 			string loadout = to_string(unit[L"loadout"]);
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 
-			spawnOptions.push_back({unitType, location, loadout, skill, liveryID});
+			spawnOptions.push_back({unitType, location, loadout, skill, liveryID, heading});
 			log(username + " spawned a " + coalition + " " + unitType , true);
 		}
 
@@ -224,18 +231,25 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string country = to_string(value[L"country"]);
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
-		if (!checkSpawnPoints(spawnPoints, coalition)) return;
+		if (!checkSpawnPoints(spawnPoints, coalition)) {
+			log(username + " insufficient spawn points ", true);
+			return;
+		}
 
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
+			double heading = 0;
+			if (unit.has_number_field(L"heading"))
+				heading = unit[L"heading"].as_double();
+
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 			
-			spawnOptions.push_back({ unitType, location, "", skill, liveryID});
+			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
@@ -345,12 +359,37 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
 			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") altitude type: " + to_string(value[L"altitudeType"]), true);
 		}
+	}/************************/
+	else if (key.compare("setRacetrack") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unit->setRacetrackLength(value[L"length"].as_double());
+
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords location; location.lat = lat; location.lng = lng;
+			unit->setRacetrackAnchor(location);
+
+			unit->setRacetrackBearing(value[L"bearing"].as_double());
+
+			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ")  racetrack length: " + to_string(value[L"length"].as_double()) + " racetrack bearing: " + to_string(value[L"bearing"].as_double()), true);
+		}
 	}
 	/************************/
 	else if (key.compare("cloneUnits") == 0)
 	{
 		vector<CloneOptions> cloneOptions;
 		bool deleteOriginal = value[L"deleteOriginal"].as_bool();
+		string coalition = to_string(value[L"coalition"]);
+
+		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
+		if (coalition.compare("all") != 0 && !checkSpawnPoints(spawnPoints, coalition)) {
+			log(username + " insufficient spawn points ", true);
+			return;
+		}
 
 		for (auto unit : value[L"units"].as_array()) {
 			unsigned int ID = unit[L"ID"].as_integer();
@@ -374,6 +413,19 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unsigned char ROE = value[L"ROE"].as_number().to_uint32();
 			unit->setROE(ROE);
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") ROE to " + to_string(ROE), true);
+		}
+	}
+	else if (key.compare("setAlarmState") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unsigned char alarmState = value[L"alarmState"].as_number().to_uint32();
+			unit->setAlarmState(alarmState);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
+		} else {
+			log("Error while setting setAlarmState. Unit does not exist.");
 		}
 	}
 	/************************/
@@ -483,6 +535,29 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 	}
 	/************************/
+	else if (key.compare("setEngagementProperties") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+		{
+			/* Engagement properties tasking */
+			unit->setBarrelHeight(value[L"barrelHeight"].as_number().to_double());
+			unit->setMuzzleVelocity(value[L"muzzleVelocity"].as_number().to_double());
+			unit->setAimTime(value[L"aimTime"].as_number().to_double());
+			unit->setShotsToFire(value[L"shotsToFire"].as_number().to_uint32());
+			unit->setShotsBaseInterval(value[L"shotsBaseInterval"].as_number().to_double());
+			unit->setShotsBaseScatter(value[L"shotsBaseScatter"].as_number().to_double());
+			unit->setEngagementRange(value[L"engagementRange"].as_number().to_double());
+			unit->setTargetingRange(value[L"targetingRange"].as_number().to_double());
+			unit->setAimMethodRange(value[L"aimMethodRange"].as_number().to_double());
+			unit->setAcquisitionRange(value[L"acquisitionRange"].as_number().to_double());
+			
+			log(username + " updated unit " + unit->getUnitName() + "(" + unit->getName() + ") engagementProperties", true);
+		}
+	}
+	/************************/
 	else if (key.compare("setFollowRoads") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
@@ -570,6 +645,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
+
+		if (value[L"location"].has_number_field(L"alt")) {
+			loc.alt = value[L"location"][L"alt"].as_double();
+		}
+
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setTargetPosition(loc);
@@ -667,6 +747,65 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setShotsIntensity(shotsIntensity);
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots intensity to " + to_string(shotsIntensity), true);
 		}
+	}
+	/************************/
+	else if (key.compare("fireLaser") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords loc; loc.lat = lat; loc.lng = lng;
+			unsigned int code = value[L"code"].as_integer();
+
+			log("Firing laser with code " + to_string(code) + " from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+
+			command = dynamic_cast<Command*>(new FireLaser(ID, code, loc));
+		}
+	}
+	/************************/
+	else if (key.compare("fireInfrared") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords loc; loc.lat = lat; loc.lng = lng;
+
+			log("Firing infrared from unit " + unit->getUnitName() + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+
+			command = dynamic_cast<Command*>(new FireInfrared(ID, loc));
+		}
+	}
+	/************************/
+	else if (key.compare("setLaserCode") == 0)
+	{
+		unsigned int spotID = value[L"spotID"].as_integer();
+		unsigned int code = value[L"code"].as_integer();
+
+		log("Setting laser code " + to_string(code) + " to spot with ID " + to_string(spotID));
+		command = dynamic_cast<Command*>(new SetLaserCode(spotID, code));
+	}
+	/************************/
+	else if (key.compare("moveSpot") == 0)
+	{
+		unsigned int spotID = value[L"spotID"].as_integer();
+
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+
+		log("Moving spot with ID " + to_string(spotID) + " to (" + to_string(lat) + ", " + to_string(lng) + ")");
+		command = dynamic_cast<Command*>(new MoveSpot(spotID, loc));
+	}
+	/************************/
+	else if (key.compare("deleteSpot") == 0)
+	{
+		unsigned int spotID = value[L"spotID"].as_integer();
+		log("Deleting spot with ID " + to_string(spotID));
+		command = dynamic_cast<Command*>(new DeleteSpot(spotID));
 	}
 	/************************/
 	else if (key.compare("setCommandModeOptions") == 0) 

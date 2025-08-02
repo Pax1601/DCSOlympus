@@ -7,12 +7,17 @@ namespace DataIndex {
 		startOfData = 0,
 		category,
 		alive,
+		alarmState,
+		radarState,
 		human,
 		controlled,
 		coalition,
 		country,
 		name,
 		unitName,
+		callsign,
+		unitID,
+		groupID,
 		groupName,
 		state,
 		task,
@@ -50,6 +55,21 @@ namespace DataIndex {
 		shotsScatter,
 		shotsIntensity,
 		health,
+		racetrackLength,
+		racetrackAnchor,
+		racetrackBearing,
+		timeToNextTasking,
+		barrelHeight, 
+		muzzleVelocity,
+		aimTime, 
+		shotsToFire,
+		shotsBaseInterval, 
+		shotsBaseScatter, 
+		engagementRange, 
+		targetingRange, 
+		aimMethodRange,
+		acquisitionRange,
+		airborne,
 		lastIndex,
 		endOfData = 255
 	};
@@ -154,6 +174,7 @@ struct SpawnOptions {
 	string loadout;
 	string skill;
 	string liveryID;
+	double heading;
 };
 
 struct CloneOptions {

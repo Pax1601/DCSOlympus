@@ -23,7 +23,7 @@ jobs:
         vcpkg integrate install
 
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
         
     - name: Build
       working-directory: .
@@ -31,15 +31,16 @@ jobs:
       shell: cmd
 
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4.6.1
       with:
         name: development_build_not_a_release
         path: ./package
 
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4.6.1
       with:
         name: zip_only_package
         path: ./zip
+        include-hidden-files: true 
       
       

@@ -19,19 +19,25 @@
                 <span>Game Master Password<img src="./icons/circle-info-solid.svg"
                         title="This password is used to access Olympus as Game Master with full privileges.">
                 </span>
-                <input type="password" minlength="8" onchange="signal('onGameMasterPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["gameMasterPasswordEdited"]? '': 'Keep old password'%>">
+                <input type="password" class="unique" minlength="8" onchange="signal('onGameMasterPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["gameMasterPasswordEdited"]? '': 'Keep old password'%>">
             </div>
             <div class="input-group blue-commander">
                 <span>Blue Commander Password<img src="./icons/circle-info-solid.svg"
                         title="This password is used to access Olympus as blue coalition Commander.">
                 </span>
-                <input type="password" minlength="8" onchange="signal('onBlueCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["blueCommanderPasswordEdited"]? '': 'Keep old password'%>">
+                <input type="password" class="unique" minlength="8" onchange="signal('onBlueCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["blueCommanderPasswordEdited"]? '': 'Keep old password'%>">
             </div>
             <div class="input-group red-commander">
                 <span>Red Commander Password<img src="./icons/circle-info-solid.svg"
                         title="This password is used to access Olympus as red coalition Commander.">
                 </span>
-                <input type="password" minlength="8" onchange="signal('onRedCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["redCommanderPasswordEdited"]? '': 'Keep old password'%>">
+                <input type="password" class="unique" minlength="8" onchange="signal('onRedCommanderPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["redCommanderPasswordEdited"]? '': 'Keep old password'%>">
+            </div>
+            <div class="input-group admin-password">
+                <span>Admin Password<img src="./icons/circle-info-solid.svg"
+                    title="This password is used to set global Olympus configurations, like user access privileges.">
+                </span>
+                <input type="password" minlength="8" onchange="signal('onAdminPasswordChanged', this.value)" placeholder="<%= !activeInstance["installed"] || activeInstance["adminPasswordEdited"]? '': 'Keep old password'%>">
             </div>
             <div class="<%= activeInstance["installed"]? '': 'hide' %>" style="color: var(--offwhite); font-size: var(--normal); color: var(--lightgray);">
                 Note: to keep the old passwords, click <b>Next</b> without editing any value. 
@@ -66,6 +72,16 @@
                     </div>
                 </div>
             </div>
+            <div class="input-group srs-port port-input">
+                <span>SRS port
+                    <img src="./icons/circle-info-solid.svg"
+                        title="This port is used by Olympus to communicate with SRS server. Unless you run multiple servers, the default value should be ok, otherwise edit it to be equal to your SRS server port.">
+                </span>
+                <div>
+                    <input type="number" min="1024" max="65535" value="<%= activeInstance["SRSPort"] %>"
+                    onchange="signal('onSRSPortChanged', this.value)">
+                </div>
+            </div>
             <div class="input-group backend-address">
                 <span onclick="signal('onEnableAPIClicked')">
                     <div class="checkbox"></div> Enable direct backend API connection
@@ -78,6 +94,13 @@
                     <div class="checkbox checked"></div> Enable camera control plugin
                     <img src="./icons/circle-info-solid.svg"
                         title="Install the camera control plugin, which allows direct control of the DCS camera from Olympus. It is necessary even to control the camera even if Olympus is being used remotely using a browser.">
+                </span>
+            </div>
+            <div class="input-group autoconnect">
+                <span onclick="signal('onEnableAutoconnectClicked')">
+                    <div class="checkbox"></div> Autoconnect when local
+                    <img src="./icons/circle-info-solid.svg"
+                        title="Autoconnect as Game Master when running Olympus on the same computer as DCS.">
                 </span>
             </div>
         </div>

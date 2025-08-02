@@ -28,25 +28,6 @@ Unit::~Unit()
 
 void Unit::initialize(json::value json)
 {
-	if (json.has_string_field(L"name"))
-		setName(to_string(json[L"name"]));
-
-	if (json.has_string_field(L"unitName"))
-		setUnitName(to_string(json[L"unitName"]));
-
-	if (json.has_string_field(L"groupName"))
-		setGroupName(to_string(json[L"groupName"]));
-
-	if (json.has_number_field(L"coalitionID"))
-		setCoalition(json[L"coalitionID"].as_number().to_int32());
-
-	//if (json.has_number_field(L"Country"))
-	//	setCountry(json[L"Country"].as_number().to_int32());
-
-	/* All units which contain the name "Olympus" are automatically under AI control */
-	if (getUnitName().find("Olympus") != string::npos)
-		setControlled(true);
-
 	update(json, 0);
 	setDefaults();
 }
@@ -54,6 +35,32 @@ void Unit::initialize(json::value json)
 
 void Unit::update(json::value json, double dt)
 {
+	if (json.has_string_field(L"name"))
+		setName(to_string(json[L"name"]));
+
+	if (json.has_string_field(L"unitName"))
+		setUnitName(to_string(json[L"unitName"]));
+
+	if (json.has_number_field(L"groupID"))
+		setGroupID(json[L"groupID"].as_number().to_uint32());
+	if (json.has_number_field(L"unitID"))
+		setUnitID(json[L"unitID"].as_number().to_uint32());
+
+	if (json.has_string_field(L"groupName"))
+		setGroupName(to_string(json[L"groupName"]));
+
+	if (json.has_string_field(L"callsign"))
+		setCallsign(to_string(json[L"callsign"]));
+
+	if (json.has_number_field(L"coalitionID"))
+		setCoalition(json[L"coalitionID"].as_number().to_int32());
+	if (json.has_number_field(L"country"))
+		setCountry(json[L"country"].as_number().to_int32());
+	
+	/* All units which contain the name "Olympus" are automatically under AI control */
+	if (getUnitName().find("Olympus") != string::npos)
+		setControlled(true);
+
 	if (json.has_object_field(L"position"))
 	{
 		setPosition({
@@ -80,6 +87,9 @@ void Unit::update(json::value json, double dt)
 
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
+
+	if (json.has_boolean_field(L"radarState")) 
+		setRadarState(json[L"radarState"].as_bool());
 
 	if (json.has_boolean_field(L"isHuman"))
 		setHuman(json[L"isHuman"].as_bool());
@@ -143,12 +153,15 @@ void Unit::update(json::value json, double dt)
 	if (json.has_number_field(L"health"))
 		setHealth(static_cast<unsigned char>(json[L"health"].as_number().to_uint32()));
 
+	if (json.has_boolean_field(L"airborne"))
+		setAirborne(json[L"airborne"].as_bool());
+
 	runAILoop();
 }
 
 void Unit::setDefaults(bool force)
 {
-
+	setAlarmState(AlarmState::AUTO, force);
 }
 
 void Unit::runAILoop() {
@@ -206,6 +219,7 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::operateAs:					updateValue(operateAs, leader->operateAs, datumIndex); break;
 					case DataIndex::shotsScatter:				updateValue(shotsScatter, leader->shotsScatter, datumIndex); break;
 					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
+					case DataIndex::alarmState:					updateValue(alarmState, leader->alarmState, datumIndex); break;
 					}
 				}
 			}
@@ -241,6 +255,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 		appendString(ss, datumIndex, category);
 		datumIndex = DataIndex::alive;
 		appendNumeric(ss, datumIndex, alive);
+		datumIndex = DataIndex::unitID;
+		appendNumeric(ss, datumIndex, unitID);
 	}
 	else {
 		for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
@@ -249,12 +265,17 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 				switch (datumIndex) {
 					case DataIndex::category:					appendString(ss, datumIndex, category); break;
 					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
+					case DataIndex::alarmState:					appendNumeric(ss, datumIndex, alarmState); break;
+					case DataIndex::radarState:					appendNumeric(ss, datumIndex, radarState); break;
 					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
 					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
 					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
 					case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
 					case DataIndex::name:						appendString(ss, datumIndex, name); break;
 					case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
+					case DataIndex::callsign:					appendString(ss, datumIndex, callsign); break;
+					case DataIndex::unitID:						appendNumeric(ss, datumIndex, unitID); break;
+					case DataIndex::groupID:					appendNumeric(ss, datumIndex, groupID); break;
 					case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
 					case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
 					case DataIndex::task:						appendString(ss, datumIndex, task); break;
@@ -292,6 +313,21 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
 					case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
 					case DataIndex::health:						appendNumeric(ss, datumIndex, health); break;
+					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
+					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
+					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
+					//case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	Useful for debugging, but useless in production and very data hungry
+					case DataIndex::barrelHeight:				appendNumeric(ss, datumIndex, barrelHeight); break;
+					case DataIndex::muzzleVelocity:				appendNumeric(ss, datumIndex, muzzleVelocity); break;
+					case DataIndex::aimTime:					appendNumeric(ss, datumIndex, aimTime); break;
+					case DataIndex::shotsToFire:				appendNumeric(ss, datumIndex, shotsToFire); break;
+					case DataIndex::shotsBaseInterval:			appendNumeric(ss, datumIndex, shotsBaseInterval); break;
+					case DataIndex::shotsBaseScatter:			appendNumeric(ss, datumIndex, shotsBaseScatter); break;
+					case DataIndex::engagementRange:			appendNumeric(ss, datumIndex, engagementRange); break;
+					case DataIndex::targetingRange:				appendNumeric(ss, datumIndex, targetingRange); break;
+					case DataIndex::aimMethodRange:				appendNumeric(ss, datumIndex, aimMethodRange); break;
+					case DataIndex::acquisitionRange:			appendNumeric(ss, datumIndex, acquisitionRange); break;
+					case DataIndex::airborne:					appendNumeric(ss, datumIndex, airborne); break;
 				}
 			}
 		}
@@ -447,6 +483,17 @@ void Unit::setROE(unsigned char newROE, bool force)
 		scheduler->appendCommand(command);
 
 		triggerUpdate(DataIndex::ROE);
+	}
+}
+
+void Unit::setAlarmState(unsigned char newAlarmState, bool force)
+{
+	if (alarmState != newAlarmState || force) {
+		alarmState = newAlarmState;
+		Command* command = dynamic_cast<Command*>(new SetOption(groupName, SetCommandType::ALARM_STATE, static_cast<unsigned int>(newAlarmState)));
+		scheduler->appendCommand(command);
+
+		triggerUpdate(DataIndex::alarmState);
 	}
 }
 
@@ -807,4 +854,12 @@ void Unit::setHasTaskAssigned(bool newHasTaskAssigned) {
 
 void Unit::triggerUpdate(unsigned char datumIndex) {
 	updateTimeMap[datumIndex] = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
+unsigned int Unit::computeTotalAmmo()
+{
+	unsigned int totalShells = 0;
+	for (auto const& ammoItem : ammo)
+		totalShells += ammoItem.quantity;
+	return totalShells;
 }

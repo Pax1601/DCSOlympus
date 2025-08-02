@@ -151,7 +151,7 @@ void UnitsManager::deleteUnit(unsigned int ID, bool explosion, string explosionT
 	}
 }
 
-Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance) {
+Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<string> categories, double &distance, bool airborneOnly) {
 	Unit* closestUnit = nullptr;
 	distance = 0;
 
@@ -167,6 +167,9 @@ Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<s
 
 		/* Check if the unit belongs to the desired coalition, is alive, and is of the category requested */
 		if (requestedCategory && p.second->getCoalition() == coalition && p.second->getAlive()) {
+			/* Check if the unit is airborne */
+			if (airborneOnly && !p.second->getAirborne())
+				continue;
 			/* Compute the distance from the unit to the tested unit */
 			double dist;
 			double bearing1;
@@ -194,10 +197,13 @@ Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<s
 	return closestUnit;
 }
 
-map<Unit*, double> UnitsManager::getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range) {
+map<Unit*, double> UnitsManager::getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range, bool airborneOnly) {
 	map<Unit*, double> unitsInRange;
 
 	for (auto const& p : units) {
+		if (airborneOnly && !p.second->getAirborne())
+			continue;			
+
 		/* Check if the units category is of the correct type */
 		bool requestedCategory = false;
 		for (auto const& category : categories) {

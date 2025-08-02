@@ -60,16 +60,20 @@ async function installHooks(folder) {
  */
 
 async function installMod(folder, name) {
+    /* Timestamp string */
     logger.log(`Installing mod in ${folder}`)
 
     await fsp.cp(path.join("..", "mod"), path.join(folder, "Mods", "Services", "Olympus"), { recursive: true });
     logger.log(`Mod succesfully installed in ${folder}`)
 
     /* Check if backup user-editable files exist. If true copy them over */
-    logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"));
-    if (await exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"))) {
+    logger.log(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases", "units", "mods.json"));
+    if (await exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases", "units", "mods.json"))) {
         logger.log("Backup databases found, copying over");
-        await fsp.cp(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"), { recursive: true });
+
+        // Changed in v2.0.0, only the mods database is copied over, if present
+        //await fsp.cp(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases"), path.join(folder, "Mods", "Services", "Olympus", "databases"), { recursive: true });
+        await fsp.cp(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "databases", "units", "mods.json"), path.join(folder, "Mods", "Services", "Olympus", "databases", "units", "mods.json"));
     }
 
     if (exists(path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"))) {
@@ -161,8 +165,13 @@ async function applyConfiguration(folder, instance) {
 
         /* Apply the configuration */
         config["frontend"]["port"] = instance.frontendPort;
+        config["frontend"]["autoconnectWhenLocal"] = instance.autoconnectWhenLocal;
         config["backend"]["port"] = instance.backendPort;
         config["backend"]["address"] = instance.backendAddress;
+
+        if (config["audio"] === undefined) 
+            config["audio"] = {};
+        config["audio"]["SRSPort"] = instance.SRSPort;
 
         if (instance.gameMasterPassword !== "")
             config["authentication"]["gameMasterPassword"] = sha256(instance.gameMasterPassword);
@@ -172,6 +181,9 @@ async function applyConfiguration(folder, instance) {
 
         if (instance.redCommanderPassword !== "")
             config["authentication"]["redCommanderPassword"] = sha256(instance.redCommanderPassword);
+
+        if (instance.adminPassword !== "")
+            config["authentication"]["adminPassword"] = sha256(instance.adminPassword);
 
         await fsp.writeFile(path.join(folder, "Config", "olympus.json"), JSON.stringify(config, null, 4));
         logger.log(`Config succesfully applied in ${folder}`)
@@ -230,6 +242,11 @@ async function deleteMod(folder, name) {
             await fsp.cp(path.join(folder, "Mods", "Services", "Olympus", "scripts", "mods.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "mods.lua"));
         else
             logger.warn(`No mods.lua found in ${folder}, skipping backup...`)
+
+        if (await exists(path.join(folder, "Mods", "Services", "Olympus", "scripts", "unitPayloads.lua")))
+            await fsp.cp(path.join(folder, "Mods", "Services", "Olympus", "scripts", "unitPayloads.lua"), path.join(__dirname, "..", "..", "..", "DCS Olympus backups", name, "scripts", "unitPayloads.lua"));
+        else
+            logger.warn(`No unitPayloads.lua found in ${folder}, skipping backup...`)
 
         /* Remove the mod folder */
         await fsp.rmdir(path.join(folder, "Mods", "Services", "Olympus"), { recursive: true, force: true })

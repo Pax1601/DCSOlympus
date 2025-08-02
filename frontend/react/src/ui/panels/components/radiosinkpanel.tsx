@@ -1,0 +1,145 @@
+import React, { ForwardedRef, forwardRef, useEffect, useState } from "react";
+import { OlFrequencyInput } from "../../components/olfrequencyinput";
+import { FaChevronDown, FaChevronUp, FaPerson, FaVolumeHigh, FaXmark } from "react-icons/fa6";
+import { OlLabelToggle } from "../../components/ollabeltoggle";
+import { OlStateButton } from "../../components/olstatebutton";
+import { faEarListen, faMicrophoneLines } from "@fortawesome/free-solid-svg-icons";
+import { RadioSink } from "../../../audio/radiosink";
+import { getApp } from "../../../olympusapp";
+import { OlRangeSlider } from "../../components/olrangeslider";
+import { zeroAppend } from "../../../other/utils";
+
+export const RadioSinkPanel = forwardRef((props: { radio: RadioSink; shortcutKeys: string[]; onExpanded: () => void }, ref: ForwardedRef<HTMLDivElement>) => {
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (props.onExpanded) props.onExpanded();
+  }, [expanded]);
+
+  return (
+    <div
+      data-receiving={props.radio.getReceiving()}
+      className={`
+        box-border flex flex-col content-center justify-between gap-2 rounded-md
+        border-2 border-transparent bg-olympus-200/30 px-4 py-3
+        data-[receiving='true']:border-white
+      `}
+      ref={ref}
+    >
+      <div
+        className="flex cursor-pointer content-center justify-between gap-2"
+        onClick={() => {
+          setExpanded(!expanded);
+        }}
+      >
+        <div
+          className={`h-fit w-fit cursor-pointer rounded-sm py-2`}
+          onClick={() => {
+            setExpanded(!expanded);
+          }}
+        >
+          <FaChevronDown
+            className={`
+              text-gray-500 transition-transform
+              data-[expanded='false']:-rotate-90
+            `}
+            data-expanded={expanded}
+          />
+        </div>
+        {props.shortcutKeys && (
+          <>
+            <kbd
+              className={`
+                my-auto ml-auto text-nowrap rounded-lg border border-gray-200
+                bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800
+                dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100
+              `}
+            >
+              {props.shortcutKeys.flatMap((key, idx, array) => [key, idx < array.length - 1 ? " + " : ""])}
+            </kbd>
+          </>
+        )}
+        <div className="my-auto flex w-full">
+          {!expanded && `${zeroAppend(props.radio.getFrequency() / 1e6, 3, true, 3)} ${props.radio.getModulation() ? "FM" : "AM"}`}
+          <FaPerson className="my-auto ml-auto" /> {props.radio.getConnectedClients()}
+        </div>
+        <div
+          className={`
+            mb-auto ml-auto aspect-square cursor-pointer rounded-md p-2
+            hover:bg-white/10
+          `}
+          onClick={(ev) => {
+            getApp().getAudioManager().removeSink(props.radio);
+            ev.stopPropagation();
+          }}
+        >
+          <FaXmark className={`my-auto text-gray-500`}></FaXmark>
+        </div>
+      </div>
+      {expanded && (
+        <>
+          <div className="mt-2 flex w-full justify-center">
+            <OlFrequencyInput
+              value={props.radio.getFrequency()}
+              onChange={(value) => {
+                props.radio.setFrequency(value);
+              }}
+            />
+          </div>
+          <div className="flex content-center gap-2 p-2">
+            <div>
+              <FaVolumeHigh className="text-xl" />
+            </div>
+            <OlRangeSlider
+              value={props.radio.getVolume() * 100}
+              onChange={(ev) => {
+                props.radio.setVolume(Number(ev.currentTarget.value) / 100);
+              }}
+              className="my-auto"
+            ></OlRangeSlider>
+          </div>
+          <div className="flex content-center gap-2 p-2">
+            <div>Left</div>
+            <OlRangeSlider
+              value={props.radio.getPan() * 50 + 50}
+              onChange={(ev) => {
+                props.radio.setPan((Number(ev.currentTarget.value) - 50) / 50);
+              }}
+              className="my-auto"
+            ></OlRangeSlider>
+            <div>Right</div>
+          </div>
+          <div className="flex flex-row gap-2">
+            <OlLabelToggle
+              leftLabel="AM"
+              rightLabel="FM"
+              toggled={props.radio.getModulation() !== 0}
+              onClick={() => {
+                props.radio.setModulation(props.radio.getModulation() === 1 ? 0 : 1);
+              }}
+            ></OlLabelToggle>
+
+            <OlStateButton
+              className="ml-auto"
+              checked={props.radio.getPtt()}
+              icon={faMicrophoneLines}
+              onClick={() => {
+                props.radio.setPtt(!props.radio.getPtt());
+              }}
+              tooltip="Talk on frequency"
+            ></OlStateButton>
+
+            <OlStateButton
+              checked={props.radio.getTuned()}
+              icon={faEarListen}
+              onClick={() => {
+                props.radio.setTuned(!props.radio.getTuned());
+              }}
+              tooltip="Tune to radio"
+            ></OlStateButton>
+          </div>
+        </>
+      )}
+    </div>
+  );
+});

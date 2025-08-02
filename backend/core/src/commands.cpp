@@ -46,6 +46,7 @@ string SpawnGroundUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
 
@@ -72,6 +73,7 @@ string SpawnNavyUnits::getString()
             << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
@@ -97,6 +99,7 @@ string SpawnAircrafts::getString()
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
@@ -125,6 +128,7 @@ string SpawnHelicopters::getString()
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
+            << "heading = " << spawnOptions[i].heading << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
@@ -252,5 +256,63 @@ string Explosion::getString()
         << "\"" << explosionType << "\"" << ", "
         << location.lat << ", "
         << location.lng;
+    return commandSS.str();
+}
+
+/* FireLaser command */
+string FireLaser::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.fireLaser, "
+        << ID << ", "
+        << code << ", "
+        << destination.lat << ", "
+        << destination.lng;
+    return commandSS.str();
+}
+
+/* FireInfrared command */
+string FireInfrared::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.fireInfrared, "
+        << ID << ", "
+        << destination.lat << ", "
+        << destination.lng;
+    return commandSS.str();
+}
+
+/* SetLaserCode command */
+string SetLaserCode::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.setLaserCode, "
+        << spotID << ", "
+        << code;
+    return commandSS.str();
+}
+
+/* MoveSpot command */
+string MoveSpot::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.moveSpot, "
+        << spotID << ", "
+        << destination.lat << ", "
+        << destination.lng;
+    return commandSS.str();
+}
+
+/* DeleteSpot command */
+string DeleteSpot::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.deleteSpot, "
+        << spotID;
     return commandSS.str();
 }

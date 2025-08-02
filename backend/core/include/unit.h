@@ -19,12 +19,12 @@ public:
 	~Unit();
 
 	/********** Methods **********/
-	void initialize(json::value json);
+	virtual void initialize(json::value json) final;
 	virtual void setDefaults(bool force = false);
 
 	void runAILoop();
 
-	void update(json::value json, double dt);
+	virtual void update(json::value json, double dt) final;
 	void refreshLeaderData(unsigned long long time);
 
 	unsigned int getID() { return ID; }
@@ -62,15 +62,21 @@ public:
 	bool hasFreshData(unsigned long long time);
 	bool checkFreshness(unsigned char datumIndex, unsigned long long time);
 
+	unsigned int computeTotalAmmo();
+
 	/********** Setters **********/
 	virtual void setCategory(string newValue) { updateValue(category, newValue, DataIndex::category); }
 	virtual void setAlive(bool newValue) { updateValue(alive, newValue, DataIndex::alive); }
+	virtual void setAlarmState(unsigned char newValue, bool force = false);
 	virtual void setHuman(bool newValue) { updateValue(human, newValue, DataIndex::human); }
 	virtual void setControlled(bool newValue) { updateValue(controlled, newValue, DataIndex::controlled); }
 	virtual void setCoalition(unsigned char newValue) { updateValue(coalition, newValue, DataIndex::coalition); }
 	virtual void setCountry(unsigned char newValue) { updateValue(country, newValue, DataIndex::country); }
 	virtual void setName(string newValue) { updateValue(name, newValue, DataIndex::name); }
 	virtual void setUnitName(string newValue) { updateValue(unitName, newValue, DataIndex::unitName); }
+	virtual void setCallsign(string newValue) { updateValue(callsign, newValue, DataIndex::callsign); }
+	virtual void setUnitID(unsigned int newValue) { updateValue(unitID, newValue, DataIndex::unitID); }
+	virtual void setGroupID(unsigned int newValue) { updateValue(groupID, newValue, DataIndex::groupID); }
 	virtual void setGroupName(string newValue) { updateValue(groupName, newValue, DataIndex::groupName); }
 	virtual void setState(unsigned char newValue) { updateValue(state, newValue, DataIndex::state); };
 	virtual void setTask(string newValue) { updateValue(task, newValue, DataIndex::task); }
@@ -108,17 +114,37 @@ public:
 	virtual void setShotsScatter(unsigned char newValue) { updateValue(shotsScatter, newValue, DataIndex::shotsScatter); }
 	virtual void setShotsIntensity(unsigned char newValue) { updateValue(shotsIntensity, newValue, DataIndex::shotsIntensity); }
 	virtual void setHealth(unsigned char newValue) { updateValue(health, newValue, DataIndex::health); }
+	virtual void setRacetrackLength(double newValue) { updateValue(racetrackLength, newValue, DataIndex::racetrackLength); }
+	virtual void setRacetrackAnchor(Coords newValue) { updateValue(racetrackAnchor, newValue, DataIndex::racetrackAnchor); }
+	virtual void setRacetrackBearing(double newValue) { updateValue(racetrackBearing, newValue, DataIndex::racetrackBearing); }
+	virtual void setTimeToNextTasking(double newValue) { updateValue(timeToNextTasking, newValue, DataIndex::timeToNextTasking); }
+	virtual void setBarrelHeight(double newValue) { updateValue(barrelHeight, newValue, DataIndex::barrelHeight); }
+	virtual void setMuzzleVelocity(double newValue) { updateValue(muzzleVelocity, newValue, DataIndex::muzzleVelocity); }
+	virtual void setAimTime(double newValue) { updateValue(aimTime, newValue, DataIndex::aimTime); }
+	virtual void setShotsToFire(unsigned int newValue) { updateValue(shotsToFire, newValue, DataIndex::shotsToFire); }
+	virtual void setShotsBaseInterval(double newValue) { updateValue(shotsBaseInterval, newValue, DataIndex::shotsBaseInterval); }
+	virtual void setShotsBaseScatter(double newValue) { updateValue(shotsBaseScatter, newValue, DataIndex::shotsBaseScatter); }
+	virtual void setEngagementRange(double newValue) { updateValue(engagementRange, newValue, DataIndex::engagementRange); }
+	virtual void setTargetingRange(double newValue) { updateValue(targetingRange, newValue, DataIndex::targetingRange); }
+	virtual void setAimMethodRange(double newValue) { updateValue(aimMethodRange, newValue, DataIndex::aimMethodRange); }
+	virtual void setAcquisitionRange(double newValue) { updateValue(acquisitionRange, newValue, DataIndex::acquisitionRange); }
+	virtual void setRadarState(bool newValue) { updateValue(radarState, newValue, DataIndex::radarState); }
+	virtual void setAirborne(bool newValue) { updateValue(airborne, newValue, DataIndex::airborne); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
 	virtual bool getAlive() { return alive; }
+	virtual unsigned char getAlarmState() { return alarmState; }
 	virtual bool getHuman() { return human; }
 	virtual bool getControlled() { return controlled; }
 	virtual unsigned char getCoalition() { return coalition; }
 	virtual unsigned char getCountry() { return country; }
 	virtual string getName() { return name; }
+	virtual string getCallsign() { return callsign; }
 	virtual string getUnitName() { return unitName; }
 	virtual string getGroupName() { return groupName; }
+	virtual unsigned int getUnitID() { return unitID; }
+	virtual unsigned int getGroupID() { return groupID; }
 	virtual unsigned char getState() { return state; }
 	virtual string getTask() { return task; }
 	virtual bool getHasTask() { return hasTask; }
@@ -155,6 +181,22 @@ public:
 	virtual unsigned char getShotsScatter() { return shotsScatter; }
 	virtual unsigned char getShotsIntensity() { return shotsIntensity; }
 	virtual unsigned char getHealth() { return health; }
+	virtual double getRacetrackLength() { return racetrackLength; }
+	virtual Coords getRacetrackAnchor() { return racetrackAnchor; }
+	virtual double getRacetrackBearing() { return racetrackBearing; }
+	virtual double getTimeToNextTasking() { return timeToNextTasking; }
+	virtual double getBarrelHeight() { return barrelHeight; }
+	virtual double getMuzzleVelocity() { return muzzleVelocity; }
+	virtual double getAimTime() { return aimTime; }
+	virtual unsigned int getShotsToFire() { return shotsToFire; }
+	virtual double getShotsBaseInterval() { return shotsBaseInterval; }
+	virtual double getShotsBaseScatter() { return shotsBaseScatter; }
+	virtual double getEngagementRange() { return engagementRange; }
+	virtual double getTargetingRange() { return targetingRange; }
+	virtual double getAimMethodRange() { return aimMethodRange; }
+	virtual double getAcquisitionRange() { return acquisitionRange; }
+	virtual bool getRadarState() { return radarState; }
+	virtual bool getAirborne() { return airborne; }
 
 protected:
 	unsigned int ID;
@@ -167,8 +209,13 @@ protected:
 	unsigned char country = NULL;
 	string name = "";
 	string unitName = "";
+	string callsign = "";
+	unsigned int unitID = NULL;
+	unsigned int groupID = NULL;
 	string groupName = "";
 	unsigned char state = State::NONE;
+	unsigned char alarmState = AlarmState::AUTO;
+	bool radarState = false;
 	string task = "";
 	bool hasTask = false;
 	Coords position = Coords(NULL);
@@ -187,6 +234,9 @@ protected:
 	double desiredAltitude = 1;
 	bool desiredAltitudeType = 0; /* ASL */
 	unsigned int leaderID = NULL;
+	double racetrackLength = NULL;
+	Coords racetrackAnchor = Coords(NULL);
+	double racetrackBearing = NULL;
 	Offset formationOffset = Offset(NULL);
 	unsigned int targetID = NULL;
 	Coords targetPosition = Coords(NULL);
@@ -205,16 +255,31 @@ protected:
 	unsigned char shotsScatter = 2;
 	unsigned char shotsIntensity = 2;
 	unsigned char health = 100;
+	double timeToNextTasking = 0;
+	double barrelHeight = 0; 
+	double muzzleVelocity = 0; 
+	double aimTime = 0;
+	unsigned int shotsToFire = 0;
+	double shotsBaseInterval = 0;
+	double shotsBaseScatter = 0; 
+	double engagementRange = 0;
+	double targetingRange = 0;
+	double aimMethodRange = 0; 
+	double acquisitionRange = 0; 
+	bool airborne = false;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;
-	unsigned int internalCounter = 0;
 	Unit* missOnPurposeTarget = nullptr;
 	bool hasTaskAssigned = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;
 	unsigned long long lastLoopTime = 0;
 	bool enableTaskFailedCheck = false;
+	unsigned long nextTaskingMilliseconds = 0;
+	unsigned int totalShellsFired = 0;
+	unsigned int shellsFiredAtTasking = 0;
+	unsigned int oldAmmo = 0;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "./build",
+        "allowJs": true,
+        "target": "ES2023",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "skipLibCheck": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}
