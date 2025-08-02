@@ -2,9 +2,10 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-export function Card(props: { children?: JSX.Element | JSX.Element[]; className?: string }) {
+export function Card(props: { children?: JSX.Element | JSX.Element[]; className?: string; onClick?: () => void }) {
   return (
     <div
+      onClick={props.onClick ? props.onClick : undefined}
       className={`
         ${props.className}
         group flex max-h-80 w-full max-w-64 cursor-pointer flex-col

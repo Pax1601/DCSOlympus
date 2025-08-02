@@ -96,7 +96,7 @@ export const states: string[] = [
   UnitState.LAND_AT_POINT,
 ];
 
-export const ROEs: string[] = ["free", "designated", "", "return", "hold"];
+export const ROEs: string[] = ["", "free", "designated", "return", "hold"];
 export const reactionsToThreat: string[] = ["none", "manoeuvre", "passive", "evade"];
 export const emissionsCountermeasures: string[] = ["silent", "attack", "defend", "free"];
 
@@ -220,6 +220,14 @@ export const minimapBoundaries = {
     new LatLng(22.5127778, 149.5427778),
     new LatLng(22.09, 135.0572222),
   ],
+  MarianaIslandsWWII: [
+    // Marianas
+    new LatLng(22.09, 135.0572222),
+    new LatLng(10.5777778, 135.7477778),
+    new LatLng(10.7725, 149.3918333),
+    new LatLng(22.5127778, 149.5427778),
+    new LatLng(22.09, 135.0572222),
+  ],
   Falklands: [
     // South Atlantic
     new LatLng(-49.097217, -79.418267),
@@ -252,6 +260,14 @@ export const minimapBoundaries = {
     new LatLng(36.22, 68.05),
     new LatLng(36.22, 61.21),
   ],
+  GermanyCW: [
+    // Germany Cold War
+    new LatLng(54.724620, 5.570068),
+    new LatLng(49.282140, 5.570068),
+    new LatLng(49.282140, 16.413574),
+    new LatLng(54.724620, 16.413574),
+    new LatLng(54.724620, 5.570068),
+  ],
 };
 
 export const mapBounds = {
@@ -260,6 +276,10 @@ export const mapBounds = {
     zoom: 5,
   },
   MarianaIslands: {
+    bounds: new LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]),
+    zoom: 5,
+  },
+  MarianaIslandsWWII: {
     bounds: new LatLngBounds([10.5777778, 135.7477778], [22.5127778, 149.5427778]),
     zoom: 5,
   },
@@ -285,6 +305,7 @@ export const mapBounds = {
     zoom: 4,
   },
   Afghanistan: { bounds: new LatLngBounds([36.22, 61.21], [30.42, 68.05]), zoom: 5 },
+  GermanyCW: { bounds: new LatLngBounds([54.724620, 5.570068], [49.282140, 16.413574]), zoom: 4 }
 };
 
 export const defaultMapMirrors = {};

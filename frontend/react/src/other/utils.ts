@@ -283,7 +283,7 @@ export function enumToState(state: number) {
 
 export function enumToROE(ROE: number) {
   if (ROE < ROEs.length) return ROEs[ROE];
-  else return ROEs[0];
+  else return ROEs[2];
 }
 
 export function enumToAlarmState(alarmState: number) {
@@ -303,8 +303,8 @@ export function convertROE(idx: number) {
   let roe = 0;
   if (idx === 0) roe = 4;
   else if (idx === 1) roe = 3;
-  else if (idx === 2) roe = 1;
-  else roe = 0;
+  else if (idx === 2) roe = 2;
+  else roe = 1;
   return roe;
 }
 

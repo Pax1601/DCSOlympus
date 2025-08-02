@@ -158,9 +158,13 @@ export function LoginModal(props: { open: boolean }) {
                         <div
                           className={`
                             z-40 my-auto w-[50%] text-center
-                            ${loginByRole ? "text-white" : `
+                            ${
+                              loginByRole
+                                ? "text-white"
+                                : `
                               text-gray-400 transition-colors
-                            `}
+                            `
+                            }
                           `}
                         >
                           Login by role
@@ -168,9 +172,13 @@ export function LoginModal(props: { open: boolean }) {
                         <div
                           className={`
                             z-40 my-auto w-[50%] px-2 text-center
-                            ${!loginByRole ? "text-white" : `
+                            ${
+                              !loginByRole
+                                ? "text-white"
+                                : `
                               text-gray-400 transition-colors
-                            `}
+                            `
+                            }
                           `}
                         >
                           Login by name
@@ -180,7 +188,7 @@ export function LoginModal(props: { open: boolean }) {
                       <div className={`flex flex-col items-start gap-1`}>
                         {loginByRole ? (
                           <>
-                          <label
+                            <label
                               className={`
                                 text-gray-800 text-md
                                 dark:text-white
@@ -188,12 +196,29 @@ export function LoginModal(props: { open: boolean }) {
                             >
                               Role
                             </label>
-                          <OlDropdown label={username} className={`w-full`}>
-                            <OlDropdownItem onClick={() => {setUsername("Game master")}}>Game master</OlDropdownItem>
-                            <OlDropdownItem onClick={() => {setUsername("Blue commander")}}>Blue commander</OlDropdownItem>
-                            <OlDropdownItem onClick={() => {setUsername("Red commander")}}>Red commander</OlDropdownItem>
-                          </OlDropdown>
-                          
+                            <OlDropdown label={username} className={`w-full`}>
+                              <OlDropdownItem
+                                onClick={() => {
+                                  setUsername("Game master");
+                                }}
+                              >
+                                Game master
+                              </OlDropdownItem>
+                              <OlDropdownItem
+                                onClick={() => {
+                                  setUsername("Blue commander");
+                                }}
+                              >
+                                Blue commander
+                              </OlDropdownItem>
+                              <OlDropdownItem
+                                onClick={() => {
+                                  setUsername("Red commander");
+                                }}
+                              >
+                                Red commander
+                              </OlDropdownItem>
+                            </OlDropdown>
                           </>
                         ) : (
                           <>
@@ -284,10 +309,9 @@ export function LoginModal(props: { open: boolean }) {
                         >
                           Choose your role
                         </label>
-                        <OlDropdown
-                          label={activeCommandMode ?? ""}
-                          className={`w-48`}
-                        >
+                        <OlDropdown label={activeCommandMode ?? ""} className={`
+                          w-48
+                        `}>
                           {commandModes?.map((commandMode) => {
                             return <OlDropdownItem onClick={() => setActiveCommandMode(commandMode)}>{commandMode}</OlDropdownItem>;
                           })}
@@ -389,18 +413,20 @@ export function LoginModal(props: { open: boolean }) {
             max-md:flex-col
           `}
         >
-          <Card className="flex">
+          <Card className="flex" onClick={() => window.open("https://www.youtube.com/watch?v=Z7cDVbnRVDc", "_blank")}>
             <img
-              src="images/splash/1.jpg"
+              src="images/v2-thumbnail.jpg"
               className={`
                 h-[40%] max-h-[120px] contents-center w-full rounded-md
                 object-cover
               `}
             ></img>
-            <div className={`
+            <div
+              className={`
               mt-2 flex content-center items-center gap-2 font-bold
-            `}>
-              YouTube Video Guide
+            `}
+            >
+              Olympus v2 trailer
               <FontAwesomeIcon className={`my-auto text-xs text-gray-400`} icon={faExternalLink} />
             </div>
             <div
@@ -412,7 +438,7 @@ export function LoginModal(props: { open: boolean }) {
               Check out our official video tutorial on how to get started with Olympus - so you can immediately start controlling the battlefield.
             </div>
           </Card>
-          <Card className="flex">
+          <Card className="flex" onClick={() => window.open("https://github.com/Pax1601/DCSOlympus/wiki", "_blank")}>
             <img
               src="images/splash/1.jpg"
               className={`
@@ -420,9 +446,11 @@ export function LoginModal(props: { open: boolean }) {
                 object-cover
               `}
             ></img>
-            <div className={`
+            <div
+              className={`
               mt-2 flex content-center items-center gap-2 font-bold
-            `}>
+            `}
+            >
               Wiki Guide
               <FontAwesomeIcon className={`my-auto text-xs text-gray-400`} icon={faExternalLink} />
             </div>
