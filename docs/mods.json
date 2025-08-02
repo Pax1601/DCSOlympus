@@ -1,0 +1,720 @@
+{
+  "A-4E-C": {
+    "loadouts": [
+      {
+        "name": "FFAR Mk1 HE *76, Fuel 300G",
+        "items": [
+          { "name": "FFAR Mk1 HE", "quantity": 76 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "FFAR Mk1 HE *76, Fuel 300G",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "Mk-82 SE *12",
+        "items": [{ "name": "Mk-82 Snakeye", "quantity": 12 }],
+        "enabled": true,
+        "code": "Mk-82 SE *12",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-82 *6, Fuel 150G *2",
+        "items": [
+          { "name": "Mk-82", "quantity": 6 },
+          { "name": "Fuel Tank 150G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-82 *6, Fuel 150G *2",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-82 SE *6, Fuel 150G *2",
+        "items": [
+          { "name": "Mk-82 Snakeye", "quantity": 6 },
+          { "name": "Fuel Tank 150G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-82 SE *6, Fuel 150G *2",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-83 *3, Fuel 300G *2",
+        "items": [
+          { "name": "Mk-83", "quantity": 3 },
+          { "name": "Fuel Tank 300G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-83 *3, Fuel 300G *2",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "Mk-84 *3",
+        "items": [{ "name": "Mk-84", "quantity": 3 }],
+        "enabled": true,
+        "code": "Mk-84 *3",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "Mk-83 *5",
+        "items": [{ "name": "Mk-83", "quantity": 5 }],
+        "enabled": true,
+        "code": "Mk-83 *5",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "Mk-84 *3, Mk-82 *2",
+        "items": [
+          { "name": "Mk-84", "quantity": 3 },
+          { "name": "Mk-82", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-84 *3, Mk-82 *2",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "Mk-82 SE *8, Mk-81 SE *10",
+        "items": [
+          { "name": "Mk-82 Snakeye", "quantity": 8 },
+          { "name": "Mk-81 Snakeye", "quantity": 10 }
+        ],
+        "enabled": true,
+        "code": "Mk-82 SE *8, Mk-81 SE *10",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-81 *18",
+        "items": [{ "name": "Mk-81", "quantity": 18 }],
+        "enabled": true,
+        "code": "Mk-81 *18",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-77 mod 0 *2, Mk-77 mod 1 *4",
+        "items": [
+          { "name": "Mk-77 mod 0", "quantity": 2 },
+          { "name": "Mk-77 mod 1", "quantity": 4 }
+        ],
+        "enabled": true,
+        "code": "Mk-77 mod 0 *2, Mk-77 mod 1 *4",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "Mk-82 *6, LAU-10 *4",
+        "items": [
+          { "name": "Mk-82", "quantity": 6 },
+          { "name": "LAU-10", "quantity": 4 }
+        ],
+        "enabled": true,
+        "code": "Mk-82 *6, LAU-10 *4",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-4 HIPEG *2, Fuel 300G",
+        "items": [
+          { "name": "Mk-4 HIPEG", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "Mk-4 HIPEG *2, Fuel 300G",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "LAU-10 *2, FFAR Mk1 HE *38, Fuel 300G",
+        "items": [
+          { "name": "LAU-10", "quantity": 2 },
+          { "name": "FFAR Mk1 HE", "quantity": 38 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "LAU-10 *2, FFAR Mk1 HE *38, Fuel 300G",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "FFAR Mk5 HEAT *76, Fuel 300G",
+        "items": [
+          { "name": "FFAR Mk5 HEAT", "quantity": 76 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "FFAR Mk5 HEAT *76, Fuel 300G",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "AGM-45B *2, LAU-10 *2, Fuel 300G",
+        "items": [
+          { "name": "AGM-45B", "quantity": 2 },
+          { "name": "LAU-10", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "AGM-45B *2, LAU-10 *2, Fuel 300G",
+        "roles": ["SEAD"]
+      },
+      {
+        "name": "AGM-45B *4, Fuel 300G",
+        "items": [
+          { "name": "AGM-45B", "quantity": 4 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "AGM-45B *4, Fuel 300G",
+        "roles": ["SEAD"]
+      },
+      {
+        "name": "CBU-2/A *2, Fuel 300G",
+        "items": [
+          { "name": "CBU-2/A", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "CBU-2/A *2, Fuel 300G",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-4 HIPEG *3, Mk-82SE *2",
+        "items": [
+          { "name": "Mk-4 HIPEG", "quantity": 3 },
+          { "name": "Mk-82 Snakeye", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-4 HIPEG *3, Mk-82SE *2",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "Mk-81 SE *6, LAU-10 *2, Fuel 150G *2",
+        "items": [
+          { "name": "Mk-81 Snakeye", "quantity": 6 },
+          { "name": "LAU-10", "quantity": 2 },
+          { "name": "Fuel Tank 150G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-81 SE *6, LAU-10 *2, Fuel 150G *2",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "AGM-45B *4",
+        "items": [{ "name": "AGM-45B", "quantity": 4 }],
+        "enabled": true,
+        "code": "AGM-45B *4",
+        "roles": ["SEAD"]
+      },
+      {
+        "name": "Mk-83 *5, Mk-82 *2",
+        "items": [
+          { "name": "Mk-83", "quantity": 5 },
+          { "name": "Mk-82", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-83 *5, Mk-82 *2",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "Mk-81 SE *18",
+        "items": [{ "name": "Mk-81 Snakeye", "quantity": 18 }],
+        "enabled": true,
+        "code": "Mk-81 SE *18",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-81 SE *12, Fuel 300G",
+        "items": [
+          { "name": "Mk-81 Snakeye", "quantity": 12 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "Mk-81 SE *12, Fuel 300G",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-84 *2, Fuel 300G",
+        "items": [
+          { "name": "Mk-84", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "Mk-84 *2, Fuel 300G",
+        "roles": ["Strike"]
+      },
+      {
+        "name": "CBU-2/A *2, Mk-82 SE *2, Fuel 300G",
+        "items": [
+          { "name": "CBU-2/A", "quantity": 2 },
+          { "name": "Mk-82 Snakeye", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "CBU-2/A *2, Mk-82 SE *2, Fuel 300G",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-4 HIPEG *3, LAU-10 *2",
+        "items": [
+          { "name": "Mk-4 HIPEG", "quantity": 3 },
+          { "name": "LAU-10", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-4 HIPEG *3, LAU-10 *2",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "Mk-81 SE *10, LAU-10 *2, Fuel 300G",
+        "items": [
+          { "name": "Mk-81 Snakeye", "quantity": 10 },
+          { "name": "LAU-10", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "Mk-81 SE *10, LAU-10 *2, Fuel 300G",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "AGM-45B *2",
+        "items": [{ "name": "AGM-45B", "quantity": 2 }],
+        "enabled": true,
+        "code": "AGM-45B *2",
+        "roles": ["SEAD"]
+      },
+      {
+        "name": "GAR-8 *2, Fuel 150G",
+        "items": [
+          { "name": "GAR-8", "quantity": 2 },
+          { "name": "Fuel Tank 150G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "GAR-8 *2, Fuel 150G",
+        "roles": ["CAP"]
+      },
+      {
+        "name": "AGM-45B *2, Fuel 300G *2",
+        "items": [
+          { "name": "AGM-45B", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "AGM-45B *2, Fuel 300G *2",
+        "roles": ["SEAD"]
+      },
+      {
+        "name": "Mk-82 *12",
+        "items": [{ "name": "Mk-82", "quantity": 12 }],
+        "enabled": true,
+        "code": "Mk-82 *12",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "CBU-2/A *2, Mk-20 *2, Fuel 300G",
+        "items": [
+          { "name": "CBU-2/A", "quantity": 2 },
+          { "name": "Mk-20", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "CBU-2/A *2, Mk-20 *2, Fuel 300G",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-4 HIPEG *3",
+        "items": [{ "name": "Mk-4 HIPEG", "quantity": 3 }],
+        "enabled": true,
+        "code": "Mk-4 HIPEG *3",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "AGM-45B *2, LAU-10 *2",
+        "items": [
+          { "name": "AGM-45B", "quantity": 2 },
+          { "name": "LAU-10", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "AGM-45B *2, LAU-10 *2",
+        "roles": ["SEAD"]
+      },
+      {
+        "name": "FFAR M156 WP *38, M257 Illumination *14, Fuel 300G",
+        "items": [
+          { "name": "FFAR M156 WP", "quantity": 38 },
+          { "name": "M257 Illumination", "quantity": 14 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "FFAR M156 WP *38, M257 Illumination *14, Fuel 300G",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "FFAR M156 WP *38, M257 Illumination *14, Mk-82 SE *6",
+        "items": [
+          { "name": "FFAR M156 WP", "quantity": 38 },
+          { "name": "M257 Illumination", "quantity": 14 },
+          { "name": "Mk-82 Snakeye", "quantity": 6 }
+        ],
+        "enabled": true,
+        "code": "FFAR M156 WP *38, M257 Illumination *14, Mk-82 SE *6",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "FFAR M156 WP *38, Mk-82 SE *2, Mk-4 HIPEG",
+        "items": [
+          { "name": "FFAR M156 WP", "quantity": 38 },
+          { "name": "Mk-82 Snakeye", "quantity": 2 },
+          { "name": "Mk-4 HIPEG", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "FFAR M156 WP *38, Mk-82 SE *2, Mk-4 HIPEG",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "Mk-4 HIPEG *2, FFAR M156 WP *19, LAU-10, M257 Illumination *7",
+        "items": [
+          { "name": "Mk-4 HIPEG", "quantity": 2 },
+          { "name": "FFAR M156 WP", "quantity": 19 },
+          { "name": "LAU-10", "quantity": 1 },
+          { "name": "M257 Illumination", "quantity": 7 }
+        ],
+        "enabled": true,
+        "code": "Mk-4 HIPEG *2, FFAR M156 WP *19, LAU-10, M257 Illumination *7",
+        "roles": ["CAS"]
+      },
+      {
+        "name": "Fuel 300G *3 (Ferry)",
+        "items": [{ "name": "Fuel Tank 300G", "quantity": 3 }],
+        "enabled": true,
+        "code": "Fuel 300G *3 (Ferry)",
+        "roles": ["Ferry"]
+      },
+      {
+        "name": "CBU-2/A *2, LAU-10 *2, Fuel 300G",
+        "items": [
+          { "name": "CBU-2/A", "quantity": 2 },
+          { "name": "LAU-10", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "CBU-2/A *2, LAU-10 *2, Fuel 300G",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-82 *8, Fuel 150G *2",
+        "items": [
+          { "name": "Mk-82", "quantity": 8 },
+          { "name": "Fuel Tank 150G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-82 *8, Fuel 150G *2",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "Mk-82 SE *8, Fuel 150G *2",
+        "items": [
+          { "name": "Mk-82 Snakeye", "quantity": 8 },
+          { "name": "Fuel Tank 150G", "quantity": 2 }
+        ],
+        "enabled": true,
+        "code": "Mk-82 SE *8, Fuel 150G *2",
+        "roles": ["CAS", "Strike"]
+      },
+      {
+        "name": "GAR-8 *2, Fuel 300G",
+        "items": [
+          { "name": "GAR-8", "quantity": 2 },
+          { "name": "Fuel Tank 300G", "quantity": 1 }
+        ],
+        "enabled": true,
+        "code": "GAR-8 *2, Fuel 300G",
+        "roles": ["CAP"]
+      }
+    ],
+    "name": "A-4E-C",
+    "coalition": "blue",
+    "era": "Mid Cold War",
+    "category": "aircraft",
+    "label": "A-4E-C Skyhawk",
+    "shortLabel": "A4E",
+    "filename": "a-4.png",
+    "enabled": true,
+    "type": "Aircraft",
+    "description": "1 jet engine, straight wing, 1 crew, attack aircraft. Skyhawk",
+    "abilities": "",
+    "canTargetPoint": true,
+    "canRearm": false,
+    "length": 53,
+    "liveries": {
+      "aggressor usmc topgun mig-17": {
+        "name": "USMC Aggressor TOPGUN 56 (MiG-17), 1982",
+        "countries": ["AUSAF"]
+      },
+      "aggressor usn topgun": {
+        "name": "USN Aggressor TOPGUN, 1982",
+        "countries": ["AUSAF"]
+      },
+      "aggressor usn vf-126 bandits": {
+        "name": "USN Aggressor VF-126 Bandits, 1976",
+        "countries": ["AUSAF"]
+      },
+      "aggressor usn vf-127 royal blues": {
+        "name": "USN Aggressor VF-127 Royal Blues, 1982",
+        "countries": ["AUSAF"]
+      },
+      "aggressor usn vfa-127 cyclons (forest)": {
+        "name": "USN Aggressor VFA-127 Cyclons (Forest), 1986",
+        "countries": ["AUSAF"]
+      },
+      "aggressor usn vfa-127 cyclons (sea)": {
+        "name": "USN Aggressor VFA-127 Cyclons (Sea), 1987",
+        "countries": ["AUSAF"]
+      },
+      "blue angels no 1": {
+        "name": "Blue Angels no. 1, 1986",
+        "countries": ["USA"]
+      },
+      "blue angels no 2": {
+        "name": "Blue Angels no. 2, 1986",
+        "countries": ["USA"]
+      },
+      "blue angels no 3": {
+        "name": "Blue Angels no. 3, 1986",
+        "countries": ["USA"]
+      },
+      "blue angels no 4": {
+        "name": "Blue Angels no. 4, 1986",
+        "countries": ["USA"]
+      },
+      "blue angels no 5": {
+        "name": "Blue Angels no. 5, 1986",
+        "countries": ["USA"]
+      },
+      "blue angels no 6": {
+        "name": "Blue Angels no. 6, 1986",
+        "countries": ["USA"]
+      },
+      "community a-4e": {
+        "name": "Community A-4E I: Autumn Splinter, 2018 (Fictional)",
+        "countries": "All"
+      },
+      "community a-4e ii": {
+        "name": "Community A-4E II: Winter Splinter, 2019 (Fictional)",
+        "countries": "All"
+      },
+      "community a-4e iii": {
+        "name": "Community A-4E III: Forever Free, 2021 (Fictional)",
+        "countries": "All"
+      },
+      "community a-4e iv": {
+        "name": "Community A-4E IV: Sea Otter, 2021 (Fictional)",
+        "countries": "All"
+      },
+      "community a-4e v-1": {
+        "name": "Community A-4E V: Blue Team, 2022 (Fictional)",
+        "countries": "All"
+      },
+      "community a-4e v-2": {
+        "name": "Community A-4E V: Red Team, 2022 (Fictional)",
+        "countries": "All"
+      },
+      "international argentina": {
+        "name": "Argentina ARA 309, 1982",
+        "countries": ["ARG"]
+      },
+      "international argentina brigada iv": {
+        "name": "Argentina FAA Falklands Brigada IV, 1982",
+        "countries": ["ARG"]
+      },
+      "international argentina brigada v": {
+        "name": "Argentina FAA Falklands Brigada V, 1982",
+        "countries": ["ARG"]
+      },
+      "international australia": {
+        "name": "Australian Navy, 1972",
+        "countries": ["AUS"]
+      },
+      "international australia squadron 805": {
+        "name": "Australian Navy Squadron 805, 1972",
+        "countries": ["AUS"]
+      },
+      "international brazil": {
+        "name": "Brazil Marinha do Brasil VF-1 Falcoes, 1998",
+        "countries": ["BRA"]
+      },
+      "international brazil loviz": {
+        "name": "Brazil Marinha do Brasil VF-1 LoViz, 2018",
+        "countries": ["BRA"]
+      },
+      "international brazil vf-1 15 anos": {
+        "name": "Brazil Marinha do Brasil VF-1 15 ANOS, 2013",
+        "countries": ["BRA"]
+      },
+      "international finnish air force": {
+        "name": "Finland FiAF, 1984 (Fictional)",
+        "countries": ["FIN"]
+      },
+      "international israel": {
+        "name": "Israel IAF Knights of the North Squadron, 1973",
+        "countries": ["ISR"]
+      },
+      "international kuwait": {
+        "name": "Kuwait KAF Free Kuwait, 1991",
+        "countries": ["KWT"]
+      },
+      "international malaysia tudm": {
+        "name": "Malaysia TUDM M32-29 No.9 Squadron, 2004",
+        "countries": ["MYS"]
+      },
+      "international new zealand 50th": {
+        "name": "RNZAF Golden T-Bird No.2, Squadron Ohakea, 1986",
+        "countries": ["AUS"]
+      },
+      "international new zealand kahu": {
+        "name": "RNZAF Kahu, 1988",
+        "countries": ["AUS"]
+      },
+      "international new zealand kiwi red": {
+        "name": "RNZAF Kiwi Red, 2011",
+        "countries": ["AUS"]
+      },
+      "international new zealand sqn 75": {
+        "name": "RNZAF Squadron 75, 1982",
+        "countries": ["AUS"]
+      },
+      "trainer bae systems": {
+        "name": "BAE Systems, 2013",
+        "countries": ["UK"]
+      },
+      "trainer raf epts raspberry ripple": {
+        "name": "RAF Empire Pilots Test School Raspberry Ripple, 2021 (Fictional)",
+        "countries": ["UK"]
+      },
+      "trainer usmc nwef": {
+        "name": "USMC Naval Weapons Evaluation Facility, 1974",
+        "countries": ["USA"]
+      },
+      "trainer usmc ptmc": {
+        "name": "USMC Pacific Missile Test Center, 1978",
+        "countries": ["USA"]
+      },
+      "trainer usmc vmat-102": {
+        "name": "USMC VMAT-102, 1980",
+        "countries": ["USA"]
+      },
+      "trainer usn bare metal 1956": {
+        "name": "USN Bare Metal, 1956",
+        "countries": ["USA"]
+      },
+      "trainer usn nfws gray": {
+        "name": "USN Naval Fighter Weapons School (Gray), 1980",
+        "countries": ["USA"]
+      },
+      "trainer usn nfws green": {
+        "name": "USN Naval Fighter Weapons School (Green), 1980",
+        "countries": ["USA"]
+      },
+      "trainer usn vc-1 flecompron one": {
+        "name": "USN VC-1 FLECOMPRON One, 1974",
+        "countries": ["USA"]
+      },
+      "trainer usn vc-10 challengers": {
+        "name": "USN VC-10 Challengers, 1988",
+        "countries": ["USA"]
+      },
+      "trainer usn vc-5 checkertails": {
+        "name": "USN VC-5 Checkertails, 1991",
+        "countries": ["USA"]
+      },
+      "trainer usn vc-8 redtails": {
+        "name": "USN VC-8 Redtails, 1985",
+        "countries": ["USA"]
+      },
+      "trainer usn vt-7 eagles": {
+        "name": "USN VT-7 Eagles, 1972",
+        "countries": ["USA"]
+      },
+      "trainer usn vx-5 vampires": {
+        "name": "USN VX-5 Vampires, 1986 (Fictional)",
+        "countries": ["USA"]
+      },
+      "unmarked": {
+        "name": "0 Unmarked",
+        "countries": "All"
+      },
+      "usmc vma-121 green knights": {
+        "name": "USMC VMA-121 Green Knights, 1968",
+        "countries": ["USA"]
+      },
+      "usmc vma-124 memphis marines": {
+        "name": "USMC VMA-124 Memphis Marines, 1973",
+        "countries": ["USA"]
+      },
+      "usmc vma-131 diamondbacks": {
+        "name": "USMC VMA-131 Diamondbacks, 1976",
+        "countries": ["USA"]
+      },
+      "usmc vma-142 flying gators": {
+        "name": "USMC VMA-142 Flying Gators, 1973",
+        "countries": ["USA"]
+      },
+      "usmc vma-211 avengers": {
+        "name": "USMC VMA-211 Avengers, 1972",
+        "countries": ["USA"]
+      },
+      "usmc vma-311 tomcats": {
+        "name": "USMC VMA-311 Tomcats, 1972",
+        "countries": ["USA"]
+      },
+      "usmc vma-322 fighting gamecocks": {
+        "name": "USMC VMA-322 Fighting Gamecocks, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-106 gladiators": {
+        "name": "USN VA-106 Gladiators, 1967",
+        "countries": ["USA"]
+      },
+      "usn va-144 roadrunners": {
+        "name": "USN VA-144 Roadrunners, 1970",
+        "countries": ["USA"]
+      },
+      "usn va-153 blue tail flies": {
+        "name": "USN VA-153 Blue Tail Flies, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-163 saints": {
+        "name": "USN VA-163 Saints, 1969",
+        "countries": ["USA"]
+      },
+      "usn va-164 ghostriders": {
+        "name": "USN VA-164 Ghostriders LADY JESSIE, 1988",
+        "countries": ["USA"]
+      },
+      "usn va-195 dambusters": {
+        "name": "USN VA-195 Dambusters, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-212 rampant raiders": {
+        "name": "USN VA-212 Rampant Raiders, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-45 blackbirds": {
+        "name": "USN VA-45 Blackbirds, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-46 clansmen": {
+        "name": "USN VA-46 Clansmen, 1967",
+        "countries": ["USA"]
+      },
+      "usn va-55 warhorses": {
+        "name": "USN VA-55 Warhorses, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-64 black lancers": {
+        "name": "USN VA-64 Black Lancers, 1972",
+        "countries": ["USA"]
+      },
+      "usn va-83 rampagers": {
+        "name": "USN VA-83 Rampagers, 1966",
+        "countries": ["USA"]
+      },
+      "usn vc-7 tallyhoers": {
+        "name": "USN VC-7 TallyHOers, 1972",
+        "countries": ["USA"]
+      }
+    }
+  }
+}
