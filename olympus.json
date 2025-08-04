@@ -82,7 +82,6 @@
 	"_comment26": "The WSEndpoint is the endpoint used by the web interface to connect to the audio backend WebSocket when using a reverse proxy. A websocket proxy should be set up to forward requests from this endpoint to WSPort.",
 
 	"audio": {
-		
 		"SRSPort": 5002,
 		"WSPort": 4000,
 		"WSEndpoint": "audio"

@@ -240,7 +240,7 @@ protected:
 	Offset formationOffset = Offset(NULL);
 	unsigned int targetID = NULL;
 	Coords targetPosition = Coords(NULL);
-	unsigned char ROE = ROE::OPEN_FIRE_WEAPON_FREE;
+	unsigned char ROE = ROE::OPEN_FIRE;
 	unsigned char reactionToThreat = ReactionToThreat::EVADE_FIRE;
 	unsigned char emissionsCountermeasures = EmissionCountermeasure::DEFEND;
 	DataTypes::TACAN TACAN;
