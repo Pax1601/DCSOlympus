@@ -660,7 +660,13 @@ export function SpawnContextMenu(props: {}) {
                                     .getUnitsManager()
                                     .spawnUnits(
                                       spawnRequestTable.category,
-                                      Array(spawnRequestTable.amount).fill(spawnRequestTable.unit),
+                                      Array(spawnRequestTable.amount).fill(spawnRequestTable.unit).map((unit, index) => {
+                                        return {
+                                          ...unit,
+                                           location: new LatLng(unit.location.lat + (spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index), unit.location.lng),
+                                          heading: unit.heading || 0,
+                                        };
+                                      }),
                                       spawnRequestTable.coalition,
                                       false
                                     );

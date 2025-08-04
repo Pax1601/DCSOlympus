@@ -319,7 +319,7 @@ export function ImportExportModal(props: { open: boolean }) {
                 if (selectionFilter[coalition][markerCategory] !== true) continue;
 
                 let unitsToSpawn = groupData.map((unitData: UnitData) => {
-                  return { unitType: unitData.name, location: unitData.position, liveryID: "", skill: "High" };
+                  return { unitType: unitData.name, location: unitData.position, liveryID: "", skill: "High", heading: unitData.heading || 0 };
                 });
 
                 getApp().getUnitsManager().spawnUnits(category.toLocaleLowerCase(), unitsToSpawn, coalition, false);

@@ -451,10 +451,9 @@ export function UnitSpawnMenu(props: {
                                     `}
                                   >
                                     {props.blueprint?.liveries && props.blueprint?.liveries[id].countries.length == 1 && (
-                                      <img
-                                        src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
-                                        className={`h-6`}
-                                      />
+                                      <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
+                                        h-6
+                                      `} />
                                     )}
 
                                     <div className="my-auto truncate">
@@ -521,12 +520,9 @@ export function UnitSpawnMenu(props: {
                     <div className="my-auto flex flex-col gap-2">
                       <span>Spawn heading</span>
                       <div className="flex gap-1 text-sm text-gray-400">
-                        <FaQuestionCircle className={`my-auto`} />{" "}
-                        <div
-                          className={`my-auto`}
-                        >
-                          Drag to change
-                        </div>
+                        <FaQuestionCircle className={`my-auto`} /> <div className={`
+                          my-auto
+                        `}>Drag to change</div>
                       </div>
                     </div>
 
@@ -632,7 +628,15 @@ export function UnitSpawnMenu(props: {
                         .getUnitsManager()
                         .spawnUnits(
                           spawnRequestTable.category,
-                          Array(spawnRequestTable.amount).fill(spawnRequestTable.unit),
+                          Array(spawnRequestTable.amount)
+                            .fill(spawnRequestTable.unit)
+                            .map((unit, index) => {
+                              return {
+                                ...unit,
+                                location: new LatLng(unit.location.lat + (spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index), unit.location.lng),
+                                heading: unit.heading || 0,
+                              };
+                            }),
                           spawnRequestTable.coalition,
                           false,
                           props.airbase?.getName() ?? undefined
@@ -912,9 +916,12 @@ export function UnitSpawnMenu(props: {
                                 `}
                               >
                                 {props.blueprint?.liveries && props.blueprint?.liveries[id].countries.length == 1 && (
-                                  <img src={`images/countries/${country?.flagCode.toLowerCase()}.svg`} className={`
+                                  <img
+                                    src={`images/countries/${country?.flagCode.toLowerCase()}.svg`}
+                                    className={`
                                     h-6
-                                  `} />
+                                  `}
+                                  />
                                 )}
 
                                 <div className="my-auto truncate">
@@ -980,12 +987,9 @@ export function UnitSpawnMenu(props: {
                   <div className="my-auto flex flex-col gap-2">
                     <span className="text-white">Spawn heading</span>
                     <div className="flex gap-1 text-sm text-gray-400">
-                      <FaQuestionCircle className={`my-auto`} />{" "}
-                      <div
-                        className={`my-auto`}
-                      >
-                        Drag to change
-                      </div>
+                      <FaQuestionCircle className={`my-auto`} /> <div className={`
+                        my-auto
+                      `}>Drag to change</div>
                     </div>
                   </div>
 

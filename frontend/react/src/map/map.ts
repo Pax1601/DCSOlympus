@@ -1055,7 +1055,13 @@ export class Map extends L.Map {
             .getUnitsManager()
             .spawnUnits(
               this.#spawnRequestTable.category,
-              Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit),
+              Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit).map((unit, index) => {
+                return {
+                  ...unit,
+                  location: new L.LatLng(unit.location.lat + (this.#spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index), unit.location.lng),
+                  heading: this.#spawnHeading,
+                };
+              }),
               this.#spawnRequestTable.coalition,
               false,
               undefined,
