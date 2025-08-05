@@ -1,0 +1,19 @@
+states = [ 
+  "none",
+  "idle",
+  "reach-destination",
+  "attack",
+  "follow",
+  "land",
+  "refuel",
+  "AWACS",
+  "tanker",
+  "bomb-point",
+  "carpet-bomb",
+  "bomb-building",
+  "fire-at-area",
+  "simulate-fire-fight",
+  "scenic-aaa",
+  "miss-on-purpose",
+  "land-at-point"
+  ]
