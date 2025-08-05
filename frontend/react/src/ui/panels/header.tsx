@@ -109,7 +109,7 @@ export function Header() {
       .then((res) => {
         setLatestVersion(res["version"]);
 
-        if (VERSION === "{{OLYMPUS_VERSION_NUMBER}}") {
+        if (VERSION.includes("{OLYMPUS_VERSION_NUMBER}")) {
           console.log("OLYMPUS_VERSION_NUMBER is not set. Skipping version check.");
           setIsDevVersion(true);
         } else {
