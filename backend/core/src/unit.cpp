@@ -257,6 +257,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 		appendNumeric(ss, datumIndex, alive);
 		datumIndex = DataIndex::unitID;
 		appendNumeric(ss, datumIndex, unitID);
+		datumIndex = DataIndex::groupID;
+		appendNumeric(ss, datumIndex, groupID);
 	}
 	else {
 		for (unsigned char datumIndex = DataIndex::startOfData + 1; datumIndex < DataIndex::lastIndex; datumIndex++)
