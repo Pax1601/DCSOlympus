@@ -12,6 +12,7 @@ typedef int(__stdcall* f_coreUnitsData)(lua_State* L);
 typedef int(__stdcall* f_coreWeaponsData)(lua_State* L);
 typedef int(__stdcall* f_coreMissionData)(lua_State* L);
 typedef int(__stdcall* f_coreDrawingsData)(lua_State* L);
+typedef int(__stdcall* f_coreSetExecutionResults)(lua_State* L);
 f_coreInit coreInit = nullptr;
 f_coreDeinit coreDeinit = nullptr;
 f_coreFrame coreFrame = nullptr;
@@ -19,6 +20,7 @@ f_coreUnitsData coreUnitsData = nullptr;
 f_coreWeaponsData coreWeaponsData = nullptr;
 f_coreMissionData coreMissionData = nullptr;
 f_coreDrawingsData coreDrawingsData = nullptr;
+f_coreSetExecutionResults coreExecutionResults = nullptr;
 
 string modPath;
 
@@ -117,6 +119,13 @@ static int onSimulationStart(lua_State* L)
         goto error;
     }
 
+	coreExecutionResults = (f_coreSetExecutionResults)GetProcAddress(hGetProcIDDLL, "coreSetExecutionResults");
+    if (!coreExecutionResults)
+    {
+        LogError(L, "Error getting coreSetExecutionResults ProcAddress from DLL");
+        goto error;
+	}
+
     coreInit(L, modPath.c_str());
 
     LogInfo(L, "Module loaded and started successfully.");
@@ -213,6 +222,15 @@ static int setDrawingsData(lua_State* L)
     return 0;
 }
 
+static int setExecutionResults(lua_State* L)
+{
+    if (coreExecutionResults)
+    {
+        coreExecutionResults(L);
+    }
+    return 0;
+}
+
 static const luaL_Reg Map[] = {
 	{"onSimulationStart", onSimulationStart},
     {"onSimulationFrame", onSimulationFrame},
@@ -221,6 +239,7 @@ static const luaL_Reg Map[] = {
     {"setWeaponsData", setWeaponsData },
     {"setMissionData", setMissionData },
     {"setDrawingsData", setDrawingsData },
+	{"setExecutionResults", setExecutionResults },
 	{NULL, NULL}
 };
 

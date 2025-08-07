@@ -1,5 +1,6 @@
 import { MessageType } from "./audiopacket";
 import { defaultSRSData } from "./defaultdata";
+import { AudioPacket } from "./audiopacket";
 
 /* TCP/IP socket */
 var net = require("net");
@@ -113,6 +114,16 @@ export class SRSHandler {
     switch (data[0]) {
       case MessageType.audio:
         const encodedData = new Uint8Array(data.slice(1));
+
+        // Decoded the data for sanity check
+        if (encodedData.length < 22) {
+          console.log("Received audio data is too short, ignoring.");
+          return;
+        }
+
+        let packet = new AudioPacket();
+        packet.fromByteArray(encodedData);
+
         this.udp.send(encodedData, this.SRSPort, "127.0.0.1", (error) => {
           if (error) console.log(`Error sending data to SRS server: ${error}`);
         });

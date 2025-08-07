@@ -13,7 +13,13 @@ public:
 	void execute(lua_State* L);
 	void handleRequest(string key, json::value value, string username, json::value& answer);
 	bool checkSpawnPoints(int spawnPoints, string coalition);
-	bool isCommandExecuted(string commandHash) { return (find(executedCommandsHashes.begin(), executedCommandsHashes.end(), commandHash) != executedCommandsHashes.end()); }
+	bool isCommandExecuted(string commandHash) {
+		for (auto& commandResult : executedCommandResults) {
+			if (commandResult.hash == commandHash) {
+				return true;
+			}
+		}
+	}
 	
 	void setFrameRate(double newFrameRate) { frameRate = newFrameRate; }
 	void setRestrictSpawns(bool newRestrictSpawns) { restrictSpawns = newRestrictSpawns; }
@@ -36,7 +42,7 @@ public:
 
 private:
 	list<Command*> commands;
-	list<string> executedCommandsHashes;
+	list<CommandResult> executedCommandResults;
 	unsigned int load = 0;
 	double frameRate = 0;
 	

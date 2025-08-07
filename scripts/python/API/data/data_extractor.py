@@ -1,6 +1,6 @@
 import struct
 from typing import List
-from data_types import LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
+from data.data_types import LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
 
 class DataExtractor:
     def __init__(self, buffer: bytes):

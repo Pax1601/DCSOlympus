@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
-from data_types import LatLng
+from data.data_types import LatLng
 
 @dataclass
 class UnitSpawnTable:

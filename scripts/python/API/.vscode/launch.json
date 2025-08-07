@@ -4,13 +4,21 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
         {
-            "name": "App",
+            "name": "Voice control",
             "type": "debugpy",
             "request": "launch",
-            "program": "app.py",
-            "console": "integratedTerminal"
+            "program": "voice_control.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Test bed",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "testbed.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
         }
     ]
 }

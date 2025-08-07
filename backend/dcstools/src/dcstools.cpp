@@ -101,7 +101,24 @@ int dostring_in(lua_State* L, string target, string command)
     lua_getfield(L, -1, "dostring_in");
     lua_pushstring(L, target.c_str());
     lua_pushstring(L, command.c_str());
-    return lua_pcall(L, 2, 0, 0);
+    int res = lua_pcall(L, 2, 0, 0);
+    return res;
+}
+
+int dostring_in(lua_State* L, string target, string command, string &result)
+{
+    lua_getglobal(L, "net");
+    lua_getfield(L, -1, "dostring_in");
+    lua_pushstring(L, target.c_str());
+    lua_pushstring(L, command.c_str());
+    int res = lua_pcall(L, 2, 0, 0);
+
+    // Get the first result in the stack
+    if (lua_isstring(L, -1)) {
+        result = lua_tostring(L, -1);
+    }
+
+	return res;
 }
 
 unsigned int TACANChannelToFrequency(unsigned int channel, char XY)
