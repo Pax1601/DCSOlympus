@@ -157,17 +157,7 @@ class API:
         except Exception as e:
             # Log the error but don't crash the update process
             self.logger.error(f"Error in callback: {e}")
-            
-    def register_on_update_callback(self, callback):
-        """
-        Register a callback function to be called on each update.
-        
-        Args:
-            callback (function): The function to call on update. Can be sync or async. 
-                                The function should accept a single argument, which is the API instance.
-        """
-        self.on_update_callback = callback
-
+       
     async def _run_async(self):
         """
         Async implementation of the API service loop.
@@ -203,6 +193,16 @@ class API:
         finally:
             self.logger.info("API stopped")
             self.running = False
+     
+    def register_on_update_callback(self, callback):
+        """
+        Register a callback function to be called on each update.
+        
+        Args:
+            callback (function): The function to call on update. Can be sync or async. 
+                                The function should accept a single argument, which is the API instance.
+        """
+        self.on_update_callback = callback
 
     def unregister_on_update_callback(self):
         """

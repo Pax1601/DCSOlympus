@@ -1,5 +1,6 @@
 
 from math import pi
+import os
 
 from api import API, UnitSpawnTable
 from radio.radio_listener import RadioListener
@@ -70,12 +71,15 @@ def on_message_received(recognized_text: str, unit_id: str, api: API, listener: 
         message_filename = api.generate_audio_message("I did not understand")
         listener.transmit_on_frequency(message_filename, listener.frequency, listener.modulation, listener.encryption)
         
+    # Delete the message file after processing
+    os.remove(message_filename)
+        
 if __name__ == "__main__":
     api = API()
     logger.info("API initialized")
     
     listener = api.create_radio_listener()
     listener.start(frequency=251.000e6, modulation=0, encryption=0)
-    listener.register_message_callback(lambda wav_filename, unit_id, api=api, listener=listener: on_message_received(wav_filename, unit_id, api, listener))
+    listener.register_message_callback(lambda recognized_text, unit_id, api=api, listener=listener: on_message_received(recognized_text, unit_id, api, listener))
 
     api.run()

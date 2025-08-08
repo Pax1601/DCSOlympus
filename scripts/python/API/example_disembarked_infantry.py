@@ -12,7 +12,7 @@ formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-units_to_delete = None
+units_to_delete = []
 
 #############################################################################################
 # This class represents a disembarked infantry unit that will engage in combat              
@@ -28,7 +28,7 @@ class DisembarkedInfantry(Unit):
         with the closest enemy unit.
         """
         logger.info(f"Unit {self.unit_id} is now fighting.")
-
+        
         # Pick a random target
         target = self.pick_random_target()
 
@@ -86,7 +86,7 @@ class DisembarkedInfantry(Unit):
 
             # Simulate a firefight in the direction of the enemy
             firefight_destination = self.position.project_with_bearing_and_distance(30, bearing_to_enemy)
-            self.simulate_fire_fight(firefight_destination.lat, firefight_destination.lng, firefight_destination.alt + 1)
+            self.simulate_fire_fight(firefight_destination, firefight_destination.alt + 1)
             
             await asyncio.sleep(10)  # Simulate some time spent in firefight
             self.start_fighting()  # Restart the fighting process
@@ -109,8 +109,8 @@ def on_api_startup(api: API):
         if unit.alive and not unit.human and unit.coalition == "blue":
             units_to_delete.append(unit)
             try:
-                unit.delete_unit(False, "", True)
                 unit.register_on_property_change_callback("alive", on_unit_alive_change)
+                unit.delete_unit(False, "", True)
                 
                 logger.info(f"Deleted unit: {unit}")
             except Exception as e:
@@ -175,7 +175,7 @@ def on_api_update(api: API):
                                 new_unit.__class__ = DisembarkedInfantry
                                 new_unit.start_fighting()
                                 
-                    api.spawn_ground_units([spawn_table], unit.coalition, "", True, 0, lambda new_group_ID: execution_callback(new_group_ID))
+                    api.spawn_ground_units([spawn_table], unit.coalition, "", True, 0, execution_callback)
                     logger.info(f"Spawned new unit succesfully at {spawn_position} with heading {unit.heading}")
             break
 
