@@ -5,6 +5,11 @@
 #include "logger.h"
 #include "datatypes.h"
 
+struct CommandResult {
+	string hash;
+	string result;
+};
+
 namespace CommandPriority {
 	enum CommandPriorities { LOW, MEDIUM, HIGH, IMMEDIATE };
 };

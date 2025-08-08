@@ -52,10 +52,11 @@ void Scheduler::execute(lua_State* L)
 			if (command->getPriority() == priority)
 			{
 				string commandString = "Olympus.protectedCall(" + command->getString() + ")";
-				if (dostring_in(L, "server", (commandString)))
+				string resultString = "";
+				if (dostring_in(L, "server", (commandString), resultString))
 					log("Error executing command " + commandString);
 				else
-					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()));
+					log("Command '" + commandString + "' executed correctly, current load " + to_string(getLoad()) + ", result string: " + resultString);
 			
 				/* Adjust the load depending on the fps */
 				double fpsMultiplier = 20;
@@ -64,7 +65,10 @@ void Scheduler::execute(lua_State* L)
 
 				load = static_cast<unsigned int>(command->getLoad() * fpsMultiplier);
 				commands.remove(command);
-				executedCommandsHashes.push_back(command->getHash());
+				CommandResult commandResult = {
+					command->getHash(), resultString
+				};
+				executedCommandResults.push_back(commandResult);
 				command->executeCallback(); /* Execute the command callback (this is a lambda function that can be used to execute a function when the command is run) */
 				delete command;
 				return;
@@ -191,7 +195,6 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string coalition = to_string(value[L"coalition"]);
 		string airbaseName = to_string(value[L"airbaseName"]);
 		string country = to_string(value[L"country"]);
-
 
 		int spawnPoints = value[L"spawnPoints"].as_number().to_int32();
 		if (!checkSpawnPoints(spawnPoints, coalition)) {

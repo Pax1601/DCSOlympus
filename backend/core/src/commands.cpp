@@ -49,7 +49,6 @@ string SpawnGroundUnits::getString()
             << "heading = " << spawnOptions[i].heading << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
-
     }
 
     std::ostringstream commandSS;
@@ -59,6 +58,7 @@ string SpawnGroundUnits::getString()
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
+    commandSS << ", \"" << this->getHash() << "\"";
     return commandSS.str();
 }
 
@@ -85,6 +85,7 @@ string SpawnNavyUnits::getString()
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
+    commandSS << ", \"" << this->getHash() << "\"";
     return commandSS.str();
 }
 
@@ -113,6 +114,7 @@ string SpawnAircrafts::getString()
         << "airbaseName = \"" << airbaseName << "\", "
         << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
+    commandSS << ", \"" << this->getHash() << "\"";
     return commandSS.str();
 }
 
@@ -142,6 +144,7 @@ string SpawnHelicopters::getString()
         << "airbaseName = \"" << airbaseName << "\", "
         << "country = \"" << country << "\", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
+    commandSS << ", \"" << this->getHash() << "\"";
     return commandSS.str();
 }
 

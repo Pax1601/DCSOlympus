@@ -1,0 +1,47 @@
+{
+  "backend": {
+    "address": "localhost",
+    "port": 4512
+  },
+  "authentication": {
+    "gameMasterPassword": "a474219e5e9503c84d59500bb1bda3d9ade81e52d9fa1c234278770892a6dd74",
+    "blueCommanderPassword": "7d2e1ef898b21db7411f725a945b76ec8dcad340ed705eaf801bc82be6fe8a4a",
+    "redCommanderPassword": "abc5de7abdb8ed98f6d11d22c9d17593e339fde9cf4b9e170541b4f41af937e3"
+  },
+  "frontend": {
+    "port": 3000,
+    "autoconnectWhenLocal": true,
+    "customAuthHeaders": {
+			"enabled": false,
+			"username": "X-Authorized",
+			"group": "X-Group"
+		},
+    "elevationProvider": {
+      "provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
+      "username": null,
+      "password": null
+    },
+    "mapLayers": {
+      "ArcGIS Satellite": {
+        "urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "minZoom": 1,
+        "maxZoom": 19,
+        "attribution": "Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Mapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+      },
+      "OpenStreetMap Mapnik": {
+        "urlTemplate": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "minZoom": 1,
+        "maxZoom": 20,
+        "attribution": "OpenStreetMap contributors"
+      }
+    },
+    "mapMirrors": {
+      "DCS Map (Official)": "https://maps.dcsolympus.com/maps",
+      "DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
+    }
+  },
+  "audio": {
+    "SRSPort": 5002,
+    "WSPort": 4000
+  }
+}

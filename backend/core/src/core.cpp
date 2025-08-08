@@ -23,6 +23,7 @@ Scheduler* scheduler = nullptr;
 /* Data jsons */
 json::value missionData = json::value::object();
 json::value drawingsByLayer = json::value::object();
+json::value executionResults = json::value::object();
 
 mutex mutexLock;
 string sessionHash;
@@ -174,5 +175,16 @@ extern "C" DllExport int coreDrawingsData(lua_State* L)
     lua_getfield(L, -1, "drawingsByLayer");
     luaTableToJSON(L, -1, drawingsByLayer);
 
+    return(0);
+}
+
+extern "C" DllExport int coreSetExecutionResults(lua_State* L)
+{
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
+    lua_getglobal(L, "Olympus");
+    lua_getfield(L, -1, "executionResults");
+    luaTableToJSON(L, -1, executionResults, true);
     return(0);
 }

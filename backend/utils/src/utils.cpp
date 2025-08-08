@@ -1,5 +1,6 @@
 #include "framework.h"
 #include "utils.h"
+#include <chrono>
 
 // Get current date/time, format is YYYY-MM-DD.HH:mm:ss
 const std::string CurrentDateTime()
@@ -44,7 +45,11 @@ std::string to_string(const std::wstring& wstr)
 
 std::string random_string(size_t length)
 {
-    srand(static_cast<unsigned int>(time(NULL)));
+    // Use nanoseconds since epoch as a seed for random number generation
+    auto now = std::chrono::high_resolution_clock::now();
+    auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
+    srand(static_cast<unsigned int>(nanos));
+
     auto randchar = []() -> char
     {
         const char charset[] =
