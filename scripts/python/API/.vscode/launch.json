@@ -5,18 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Voice control",
+            "name": "Python: Main",
             "type": "debugpy",
             "request": "launch",
-            "program": "voice_control.py",
+            "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "justMyCode": false,
         },
         {
-            "name": "Test bed",
+            "name": "Example voice control",
             "type": "debugpy",
             "request": "launch",
-            "program": "testbed.py",
+            "program": "example_voice_control.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Example disembarked infantry",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_disembarked_infantry.py",
             "console": "integratedTerminal",
             "justMyCode": false,
         }

@@ -5,7 +5,7 @@ from math import pi
 
 # Setup a logger for the module
 import logging
-logger = logging.getLogger("TestBed")
+logger = logging.getLogger("example_disembarked_infantry")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
 formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
