@@ -14,6 +14,7 @@ Olympus.missionData = {}
 Olympus.unitsData = {}
 Olympus.weaponsData = {}
 Olympus.drawingsByLayer = {}
+Olympus.executionResults = {}
 
 -- Units data structures
 Olympus.unitCounter = 1			-- Counter to generate unique names
@@ -662,7 +663,7 @@ end
 	-- loadout: (string, optional) only for air units, must be one of the loadouts defined in unitPayloads.lua or mods.lua
 	-- payload: (table, optional) overrides loadout, specifies directly the loadout of the unit
 	-- liveryID: (string, optional)
-function Olympus.spawnUnits(spawnTable) 
+function Olympus.spawnUnits(spawnTable, requestHash) 
 	Olympus.debug("Olympus.spawnUnits " .. Olympus.serializeTable(spawnTable), 2)
 
 	local unitsTable = nil
@@ -710,10 +711,17 @@ function Olympus.spawnUnits(spawnTable)
 		task = 'CAP'
 	}
 	Olympus.debug(Olympus.serializeTable(vars), 2)
-	mist.dynAdd(vars)
+	local newGroup = mist.dynAdd(vars)
 
 	Olympus.unitCounter = Olympus.unitCounter + 1
 	Olympus.debug("Olympus.spawnUnits completed succesfully", 2)
+
+	if newGroup == nil then
+		Olympus.notify("Olympus.spawnUnits failed to spawn group: " .. Olympus.serializeTable(spawnTable), 30)
+		return nil
+	end
+
+	Olympus.executionResults[requestHash] = newGroup.groupId
 end
 
 -- Generates unit table for air units 
@@ -1498,6 +1506,11 @@ function Olympus.setWeaponsData(arg, time)
 	return time + 0.25
 end
 
+function Olympus.setExecutionResults()
+	Olympus.OlympusDLL.setExecutionResults()
+	return timer.getTime() + 1
+end
+
 function Olympus.setMissionData(arg, time)
 	-- Bullseye data
 	local bullseyes = {}
@@ -1697,6 +1710,7 @@ world.addEventHandler(handler)
 timer.scheduleFunction(Olympus.setUnitsData, {}, timer.getTime() + 0.05)
 timer.scheduleFunction(Olympus.setWeaponsData, {}, timer.getTime() + 0.25)
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
+timer.scheduleFunction(Olympus.setExecutionResults, {}, timer.getTime() + 1)
 
 -- Initialize the ME units
 Olympus.initializeUnits()

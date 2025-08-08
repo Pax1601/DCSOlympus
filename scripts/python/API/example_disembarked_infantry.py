@@ -33,7 +33,7 @@ class DisembarkedInfantry(Unit):
         target = self.pick_random_target()
 
         if random_bearing:
-            # If random_bearing is True or no target is found, use a random bearing
+            # If random_bearing is True use a random bearing
             bearing = randrange(0, 100) / 100 * pi * 2
         elif target is None:
             # If no target is found, use the unit's current heading
@@ -41,7 +41,7 @@ class DisembarkedInfantry(Unit):
         else:
             bearing = self.position.bearing_to(target.position)
 
-        # Project the unit's position 30 meters in front of its current heading
+        # Project the unit's position 30 meters
         destination = self.position.project_with_bearing_and_distance(30, bearing)
 
         # Set the destination for the unit
@@ -98,13 +98,13 @@ def on_api_startup(api: API):
     global units_to_delete
     logger.info("API started")
     
-    # Get all the units from the API
+    # Get all the units from the API. Force an update to get the latest units.
     units = api.update_units()
     
     # Initialize the list to hold units to delete
     units_to_delete = []
 
-    # Delete the units
+    # Delete the AI blue units
     for unit in units.values():
         if unit.alive and not unit.human and unit.coalition == "blue":
             units_to_delete.append(unit)
@@ -122,6 +122,7 @@ def on_api_startup(api: API):
 #################################################################################################
 def on_unit_alive_change(unit: Unit, value: bool):
     global units_to_delete
+    
     if units_to_delete is None:
         logger.error("units_to_delete is not initialized.")
         return
@@ -144,14 +145,15 @@ def on_api_update(api: API):
         logger.info("All units have been deleted successfully.")
         units_to_delete = None
         
+        # Get the units from the API
         logger.info("Spawning a disembarked infantry units.")
         units = api.get_units()
         
         # Find the first human unit that is alive and on the ground
         for unit in units.values():
             if unit.human and unit.alive and not unit.airborne:
-                for i in range(50):
-                    # Spawn a new unit 10 meters in from of the human
+                for i in range(10):
+                    # Spawn unit nearby
                     spawn_position = unit.position.project_with_bearing_and_distance(10, unit.heading + pi / 2 + 0.2 * i)
                     spawn_table: UnitSpawnTable = UnitSpawnTable(
                         unit_type="Soldier M4",
@@ -161,6 +163,7 @@ def on_api_update(api: API):
                         livery_id=""            
                     )
                     
+                    # Define the callback for when the unit is spawned. This is an asynchronous function but could be synchronous too.
                     async def execution_callback(new_group_ID: int):
                         logger.info(f"New units spawned, groupID: {new_group_ID}")
                         
@@ -174,13 +177,20 @@ def on_api_update(api: API):
                                 
                     api.spawn_ground_units([spawn_table], unit.coalition, "", True, 0, lambda new_group_ID: execution_callback(new_group_ID))
                     logger.info(f"Spawned new unit succesfully at {spawn_position} with heading {unit.heading}")
-            
+            break
+
+##############################################################################################
+# Main entry point for the script. It registers the callbacks and starts the API.
+##############################################################################################         
 if __name__ == "__main__":
+    # Initialize the API
     api = API()
     
+    # Register the callbacks
     api.register_on_update_callback(on_api_update)
     api.register_on_startup_callback(on_api_startup)
 
+    # Start the API, this will run forever until stopped
     api.run()
     
     

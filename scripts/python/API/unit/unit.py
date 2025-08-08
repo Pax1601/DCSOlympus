@@ -668,8 +668,8 @@ class Unit:
     def delete_unit(self, explosion=False, explosion_type="", immediate=True):
         return self.api.send_command({"deleteUnit": {"ID": self.ID, "explosion": explosion, "explosionType": explosion_type, "immediate": immediate}})
 
-    def land_at(self, lat: float, lng: float):
-        return self.api.send_command({"landAt": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def land_at(self, location: LatLng):
+        return self.api.send_command({"landAt": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
     def change_speed(self, change: str):
         return self.api.send_command({"changeSpeed": {"ID": self.ID, "change": change}})
@@ -713,26 +713,26 @@ class Unit:
     def refuel(self):
         return self.api.send_command({"refuel": {"ID": self.ID}})
 
-    def bomb_point(self, lat: float, lng: float):
-        return self.api.send_command({"bombPoint": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def bomb_point(self, location: LatLng):
+        return self.api.send_command({"bombPoint": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
-    def carpet_bomb(self, lat: float, lng: float):
-        return self.api.send_command({"carpetBomb": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def carpet_bomb(self, location: LatLng):
+        return self.api.send_command({"carpetBomb": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
-    def bomb_building(self, lat: float, lng: float):
-        return self.api.send_command({"bombBuilding": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def bomb_building(self, location: LatLng):
+        return self.api.send_command({"bombBuilding": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
-    def fire_at_area(self, lat: float, lng: float):
-        return self.api.send_command({"fireAtArea": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def fire_at_area(self, location: LatLng):
+        return self.api.send_command({"fireAtArea": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
-    def fire_laser(self, lat: float, lng: float, code: int):
-        return self.api.send_command({"fireLaser": {"ID": self.ID, "location": {"lat": lat, "lng": lng}, "code": code}})
+    def fire_laser(self, location: LatLng, code: int):
+        return self.api.send_command({"fireLaser": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}, "code": code}})
 
-    def fire_infrared(self, lat: float, lng: float):
-        return self.api.send_command({"fireInfrared": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def fire_infrared(self, location: LatLng):
+        return self.api.send_command({"fireInfrared": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
-    def simulate_fire_fight(self, lat: float, lng: float, altitude: float):
-        return self.api.send_command({"simulateFireFight": {"ID": self.ID, "location": {"lat": lat, "lng": lng}, "altitude": altitude}})
+    def simulate_fire_fight(self, location: LatLng, altitude: float):
+        return self.api.send_command({"simulateFireFight": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}, "altitude": altitude}})
 
     def scenic_aaa(self, coalition: str):
         return self.api.send_command({"scenicAAA": {"ID": self.ID, "coalition": coalition}})
@@ -740,8 +740,8 @@ class Unit:
     def miss_on_purpose(self, coalition: str):
         return self.api.send_command({"missOnPurpose": {"ID": self.ID, "coalition": coalition}})
 
-    def land_at_point(self, lat: float, lng: float):
-        return self.api.send_command({"landAtPoint": {"ID": self.ID, "location": {"lat": lat, "lng": lng}}})
+    def land_at_point(self, location: LatLng):
+        return self.api.send_command({"landAtPoint": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
     def set_shots_scatter(self, shots_scatter: int):
         return self.api.send_command({"setShotsScatter": {"ID": self.ID, "shotsScatter": shots_scatter}})
@@ -749,8 +749,8 @@ class Unit:
     def set_shots_intensity(self, shots_intensity: int):
         return self.api.send_command({"setShotsIntensity": {"ID": self.ID, "shotsIntensity": shots_intensity}})
 
-    def set_racetrack(self, lat: float, lng: float, bearing: float, length: float):
-        return self.api.send_command({"setRacetrack": {"ID": self.ID, "location": {"lat": lat, "lng": lng}, "bearing": bearing, "length": length}})
+    def set_racetrack(self, location: LatLng, bearing: float, length: float):
+        return self.api.send_command({"setRacetrack": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}, "bearing": bearing, "length": length}})
 
     def set_advanced_options(self, is_active_tanker: bool, is_active_awacs: bool, tacan: dict, radio: dict, general_settings: dict):
         return self.api.send_command({"setAdvancedOptions": {"ID": self.ID, "isActiveTanker": is_active_tanker, "isActiveAWACS": is_active_awacs, "TACAN": tacan, "radio": radio, "generalSettings": general_settings}})
