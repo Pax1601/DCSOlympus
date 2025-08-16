@@ -114,13 +114,16 @@ if len(sys.argv) > 1:
         database = json.load(f)
 
     # Loads the loadout names
-    with open('../unitPayloads.lua') as f:
+    with open('unitPayloads.lua') as f:
         lines = f.readlines()
         unit_payloads = lua.decode("".join(lines).replace("Olympus.unitPayloads = ", "").replace("\n", "")) 
 
     # Loads the loadout roles
     with open('payloadRoles.json') as f:
         payloads_roles = json.load(f)
+        
+    with open('pylonUsage.json') as f:
+        pylon_usage = json.load(f)
     
     # Loop on all the units in the database
     for unit_name in database:
@@ -153,6 +156,15 @@ if len(sys.argv) > 1:
                 "roles": ["No task", rename_task(cls.task_default.name)]
             }
             database[unit_name]["loadouts"].append(empty_loadout)
+
+            # Add the available pylon usage
+            database[unit_name]["acceptedPayloads"] = {}
+            for pylon_name in pylon_usage[unit_name]:
+                pylon_data = pylon_usage[unit_name][pylon_name]
+                database[unit_name]["acceptedPayloads"][pylon_name] = {
+                    "clsids": pylon_data,
+                    "names": [find_weapon_name(clsid) for clsid in pylon_data]
+                }
 
             # Loop on all the loadouts for that unit
             for payload_name in unit_payloads[unit_name]:

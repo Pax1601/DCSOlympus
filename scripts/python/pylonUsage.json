@@ -1,0 +1,7065 @@
+{
+  "A-10A": {
+    "1": [
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}",
+      "{DB434044-F5D0-4F1F-9BA9-B73027E18DD3}"
+    ],
+    "2": [
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "3": [
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98452}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}"
+    ],
+    "4": [
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}"
+    ],
+    "8": [
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}"
+    ],
+    "9": [
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98453}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}"
+    ],
+    "10": [
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "11": [
+      "{DB434044-F5D0-4F1F-9BA9-B73027E18DD3}",
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}"
+    ],
+    "5": [
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "7": [
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ]
+  },
+  "A-10C": {
+    "11": [
+      "{DB434044-F5D0-4F1F-9BA9-B73027E18DD3}",
+      "LAU-105_1*CATM-9M_R",
+      "ALQ_184"
+    ],
+    "10": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{DAD45FE5-CFF0-4a2b-99D4-5D044D3BC22F}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{CBU-87}",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}"
+    ],
+    "9": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98453}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_TGM_65H",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{BDU-50HD}",
+      "LAU_88_AGM_65H_2_R",
+      "BRU-42_3*GBU-12",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "LAU_117_TGM_65G",
+      "LAU_117_AGM_65G",
+      "{CBU_103}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{BDU-50LGB}",
+      "LAU_117_CATM_65K",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{GBU-38}"
+    ],
+    "8": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BDU-50LGB}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "BRU-42_3*BDU-33",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{BDU-50HD}",
+      "{GBU-38}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{GBU-31}",
+      "{BRU-42_3*Mk-82AIR}",
+      "{CBU-87}",
+      "{CBU_105}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{BDU-50LD}",
+      "BRU-42_3*GBU-12"
+    ],
+    "4": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BDU-50LGB}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "BRU-42_3*BDU-33",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{BDU-50HD}",
+      "{GBU-38}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{GBU-31}",
+      "{BRU-42_3*Mk-82AIR}",
+      "{CBU-87}",
+      "{CBU_105}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{BDU-50LD}",
+      "BRU-42_3*GBU-12"
+    ],
+    "3": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98452}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_TGM_65D",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "LAU_88_AGM_65H_2_L",
+      "{BDU-50HD}",
+      "BRU-42_3*GBU-12",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "LAU_117_CATM_65K",
+      "LAU_117_AGM_65G",
+      "{CBU_103}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{BDU-50LGB}",
+      "LAU_117_TGM_65G",
+      "LAU_88_AGM_65H_3",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{GBU-38}"
+    ],
+    "2": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{2AF2EC3F-9065-4de5-93E1-1739C9A71EF7}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{DAD45FE5-CFF0-4a2b-99D4-5D044D3BC22F}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{D22C2D63-E5C9-4247-94FB-5E8F3DE22B71}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{CBU-87}",
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}",
+      "{65396399-9F5C-4ec3-A7D2-5A8F4C1D90C4}",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{DDCE7D70-5313-4181-8977-F11018681662}",
+      "{319293F2-392C-4617-8315-7C88C22AF7C4}"
+    ],
+    "1": [
+      "ALQ_184",
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}",
+      "{DB434044-F5D0-4F1F-9BA9-B73027E18DD3}"
+    ],
+    "7": [
+      "{CBU-87}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{Mk82AIR}",
+      "BRU-42_3*BDU-33",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{GBU-38}",
+      "{BDU-50HD}",
+      "{BDU-50LD}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-31}",
+      "{CBU_103}",
+      "{CBU_105}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BDU-50LGB}"
+    ],
+    "5": [
+      "{CBU-87}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{Mk82AIR}",
+      "BRU-42_3*BDU-33",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BDU-50HD}",
+      "{GBU-38}",
+      "{BDU-50LD}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-31}",
+      "{CBU_103}",
+      "{CBU_105}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BDU-50LGB}"
+    ],
+    "6": [
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ]
+  },
+  "A-10C_2": {
+    "11": [
+      "{DB434044-F5D0-4F1F-9BA9-B73027E18DD3}",
+      "LAU-105_1*CATM-9M_R",
+      "ALQ_184"
+    ],
+    "10": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{DAD45FE5-CFF0-4a2b-99D4-5D044D3BC22F}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{CBU-87}",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}"
+    ],
+    "9": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98453}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_TGM_65H",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{BDU-50HD}",
+      "LAU_88_AGM_65H_2_R",
+      "BRU-42_3*GBU-12",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "LAU_117_TGM_65G",
+      "LAU_117_AGM_65G",
+      "{CBU_103}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{BDU-50LGB}",
+      "LAU_117_CATM_65K",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{GBU-38}",
+      "LAU_117_AGM_65L",
+      "{BRU-42_3*Mk-82AIR}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "LAU_117_AGM_65H"
+    ],
+    "8": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BDU-50LGB}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "BRU-42_3*BDU-33",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{BDU-50HD}",
+      "{GBU-38}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{GBU-31}",
+      "{BRU-42_3*Mk-82AIR}",
+      "{CBU-87}",
+      "{CBU_105}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{BDU-50LD}",
+      "BRU-42_3*GBU-12",
+      "{GBU-31V3B}",
+      "{GBU_54_V_1B}"
+    ],
+    "4": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BDU-50LGB}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "BRU-42_3*BDU-33",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{BDU-50HD}",
+      "{GBU-38}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{GBU-31}",
+      "{BRU-42_3*Mk-82AIR}",
+      "{CBU-87}",
+      "{CBU_105}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{BDU-50LD}",
+      "BRU-42_3*GBU-12",
+      "{GBU-31V3B}",
+      "{GBU_54_V_1B}"
+    ],
+    "3": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98452}",
+      "LAU_131x3_HYDRA_70_M156",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_TGM_65D",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "LAU_88_AGM_65H_2_L",
+      "{BDU-50HD}",
+      "BRU-42_3*GBU-12",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "LAU_117_CATM_65K",
+      "LAU_117_AGM_65G",
+      "{CBU_103}",
+      "{64329ED9-B14C-4c0b-A923-A3C911DA1527}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{BDU-50LGB}",
+      "LAU_117_TGM_65G",
+      "LAU_88_AGM_65H_3",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{GBU-38}",
+      "LAU_117_AGM_65L",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "2": [
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{2AF2EC3F-9065-4de5-93E1-1739C9A71EF7}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{Mk82AIR}",
+      "{DAD45FE5-CFF0-4a2b-99D4-5D044D3BC22F}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{D22C2D63-E5C9-4247-94FB-5E8F3DE22B71}",
+      "{69926055-0DA8-4530-9F2F-C86B157EA9F6}",
+      "{CBU-87}",
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}",
+      "{65396399-9F5C-4ec3-A7D2-5A8F4C1D90C4}",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{DDCE7D70-5313-4181-8977-F11018681662}",
+      "{319293F2-392C-4617-8315-7C88C22AF7C4}",
+      "{LAU-131 - 7 AGR-20A}"
+    ],
+    "1": [
+      "ALQ_184",
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}",
+      "{DB434044-F5D0-4F1F-9BA9-B73027E18DD3}"
+    ],
+    "7": [
+      "{CBU-87}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{Mk82AIR}",
+      "BRU-42_3*BDU-33",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{GBU-38}",
+      "{BDU-50HD}",
+      "{BDU-50LD}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-31}",
+      "{CBU_103}",
+      "{CBU_105}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BDU-50LGB}",
+      "{GBU_54_V_1B}"
+    ],
+    "5": [
+      "{CBU-87}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{Mk82AIR}",
+      "BRU-42_3*BDU-33",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BDU-50HD}",
+      "{GBU-38}",
+      "{BDU-50LD}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-31}",
+      "{CBU_103}",
+      "{CBU_105}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BDU-50LGB}",
+      "{GBU_54_V_1B}"
+    ],
+    "6": [
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ]
+  },
+  "AH-64D_BLK_II": {
+    "3": [
+      "{EFT_230GAL}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "M261_MK151",
+      "{M261_INBOARD_DE_M151_C_M257}",
+      "{M261_INBOARD_DE_M151_C_M274}",
+      "{M299_4xAGM_114L}"
+    ],
+    "2": [
+      "{EFT_230GAL}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "M261_MK151",
+      "{M261_INBOARD_DE_M151_C_M257}",
+      "{M261_INBOARD_DE_M151_C_M274}",
+      "{M299_4xAGM_114L}"
+    ],
+    "5": [
+      "{IAFS_ComboPak_100}"
+    ],
+    "4": [
+      "M261_MK151",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "{M261_OUTBOARD_AB_M151_E_M274}",
+      "{M261_OUTBOARD_AB_M151_E_M257}",
+      "{M299_4xAGM_114L}"
+    ],
+    "1": [
+      "M261_MK151",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "{M261_OUTBOARD_AB_M151_E_M274}",
+      "{M261_OUTBOARD_AB_M151_E_M257}",
+      "{M299_4xAGM_114L}"
+    ],
+    "6": [
+      "FCR"
+    ]
+  },
+  "AJS37": {
+    "5": [
+      "{RB75}",
+      "{Robot74}",
+      "{RB75T}",
+      "{Robot05}",
+      "{ARAKM70BHE}",
+      "{M71BOMB}",
+      "{Robot24J}",
+      "{M71BOMBD}",
+      "{LYSBOMB_S7H}"
+    ],
+    "3": [
+      "{RB75}",
+      "{Robot74}",
+      "{RB75T}",
+      "{Robot05}",
+      "{ARAKM70BHE}",
+      "{M71BOMB}",
+      "{Robot24J}",
+      "{M71BOMBD}",
+      "{LYSBOMB_S7V}"
+    ],
+    "2": [
+      "{RB75}",
+      "{Rb04_HB}",
+      "{RB75T}",
+      "{KB}",
+      "{Robot74}",
+      "{AKAN}",
+      "{BK90MJ1}",
+      "{M71BOMB}",
+      "{Rb15_HB}",
+      "{Robot24J}",
+      "{M71BOMBD}",
+      "{ARAKM70BHE}",
+      "{LYSBOMB_V7V}"
+    ],
+    "6": [
+      "{RB75}",
+      "{Rb04_HB}",
+      "{RB75T}",
+      "{U22}",
+      "{Robot74}",
+      "{AKAN}",
+      "{U22A}",
+      "{BK90MJ1}",
+      "{M71BOMB}",
+      "{Rb15_HB}",
+      "{Robot24J}",
+      "{KB}",
+      "{M71BOMBD}",
+      "{ARAKM70BHE}",
+      "{LYSBOMB_V7H}"
+    ],
+    "1": [
+      "{Robot24J}"
+    ],
+    "7": [
+      "{Robot24J}"
+    ],
+    "4": [
+      "{VIGGEN_X-TANK}"
+    ]
+  },
+  "AV8BNA": {
+    "8": [
+      "{Mk82SNAKEYE}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{AGM_122_SIDEARM}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}"
+    ],
+    "7": [
+      "{Mk82SNAKEYE}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{BRU-42_2*GBU-38_LEFT}",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "{AV8BNA_AERO1D}",
+      "{BRU-42_2*Mk-82SNAKEYE_LEFT}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{BRU-42A_2*GBU-12_SIDE_RIGHT}",
+      "{BRU-42_2*Mk-82SNAKEYE_RIGHT}",
+      "{BRU-42_3*Mk-82LD}",
+      "{BRU-42_2*MK-20_RIGHT}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "LAU_117_AGM_65F",
+      "{AIM-9M-ON-ADAPTER}",
+      "{LAU_7_AGM_122_SIDEARM}",
+      "LAU_117_AGM_65L",
+      "{LAU-131 - 7 AGR-20A}"
+    ],
+    "6": [
+      "{Mk82SNAKEYE}",
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}",
+      "{AV8BNA_AERO1D}",
+      "{BRU-42_2*Mk-83_RIGHT}",
+      "{BRU-42_2*Mk-82SNAKEYE_RIGHT}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{BRU-42_2*Mk-82_RIGHT}",
+      "{BRU-42_2*MK-20_RIGHT}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "LAU_117_AGM_65F",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "LAU_117_AGM_65L",
+      "{LAU-131 - 7 AGR-20A}"
+    ],
+    "4": [
+      "{GAU_12_Equalizer}"
+    ],
+    "3": [
+      "{Mk82SNAKEYE}",
+      "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{AV8BNA_AERO1D}",
+      "{BRU-42_2*Mk-83_LEFT}",
+      "{BRU-42_2*Mk-82SNAKEYE_LEFT}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{BRU-42_2*Mk-82_LEFT}",
+      "{BRU-42_2*MK-20_LEFT}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "LAU_117_AGM_65F",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "LAU_117_AGM_65L",
+      "{LAU-131 - 7 AGR-20A}"
+    ],
+    "2": [
+      "{Mk82SNAKEYE}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{BRU-42_2*GBU-38_RIGHT}",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "{AV8BNA_AERO1D}",
+      "{BRU-42_2*Mk-82SNAKEYE_RIGHT}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{BRU-42A_2*GBU-12_SIDE_LEFT}",
+      "{BRU-42_2*Mk-82SNAKEYE_LEFT}",
+      "{BRU-42_3*Mk-82LD}",
+      "{BRU-42_2*MK-20_LEFT}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "LAU_117_AGM_65F",
+      "{AIM-9M-ON-ADAPTER}",
+      "{LAU_7_AGM_122_SIDEARM}",
+      "LAU_117_AGM_65L",
+      "{LAU-131 - 7 AGR-20A}"
+    ],
+    "1": [
+      "{Mk82SNAKEYE}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{AGM_122_SIDEARM}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}"
+    ],
+    "5": [
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}",
+      "{ALQ_164_RF_Jammer}"
+    ]
+  },
+  "C-101CC": {
+    "7": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{FC23864E-3B80-48E3-9C03-4DA8B1D7497B}"
+    ],
+    "1": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{FC23864E-3B80-48E3-9C03-4DA8B1D7497B}"
+    ],
+    "4": [
+      "{C-101-DEFA553}",
+      "{AN-M3}"
+    ],
+    "5": [
+      "{BLG66_AC}",
+      "CBLS-200",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "BR_500",
+      "BIN_200"
+    ],
+    "3": [
+      "{BLG66_AC}",
+      "CBLS-200",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "BR_500",
+      "BIN_200"
+    ],
+    "6": [
+      "{1461CD18-429A-42A9-A21F-4C621ECD4573}",
+      "{BLG66_AC}",
+      "BR_250",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}"
+    ],
+    "2": [
+      "{1461CD18-429A-42A9-A21F-4C621ECD4573}",
+      "{BLG66_AC}",
+      "BR_250",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}"
+    ]
+  },
+  "C-101EB": {
+    "1": [
+      "{SMOKE-SYSTEM-AVIOJET}"
+    ],
+    "2": [
+      "{SMOKE-RED-AVIOJET}",
+      "{SMOKE-YELLOW-AVIOJET}"
+    ]
+  },
+  "H-6J": {
+    "3": [
+      "DIS_DF4B_YJ12",
+      "DIS_GDJ_YJ83K",
+      "DIS_MER6_250_3_N6",
+      "DIS_GDJ_KD63",
+      "DIS_DF4A_KD20"
+    ],
+    "4": [
+      "DIS_DF4B_YJ12",
+      "DIS_GDJ_YJ83K",
+      "DIS_MER6_250_3_N6",
+      "DIS_GDJ_KD63",
+      "DIS_DF4A_KD20"
+    ],
+    "5": [
+      "DIS_DF4B_YJ12",
+      "DIS_GDJ_YJ83K",
+      "DIS_MER6_250_3_N6",
+      "DIS_GDJ_KD63",
+      "DIS_DF4A_KD20"
+    ],
+    "2": [
+      "DIS_DF4B_YJ12",
+      "DIS_GDJ_YJ83K",
+      "DIS_MER6_250_3_N6",
+      "DIS_GDJ_KD63",
+      "DIS_DF4A_KD20"
+    ],
+    "6": [
+      "DIS_GDJ_YJ83K",
+      "DIS_MER6_250_3_N6",
+      "DIS_DF4A_KD20"
+    ],
+    "1": [
+      "DIS_GDJ_YJ83K",
+      "DIS_MER6_250_3_N6",
+      "DIS_DF4A_KD20"
+    ],
+    "8": [
+      "DIS_H6_250_2_N12",
+      "DIS_H6_250_2_N24"
+    ],
+    "7": [
+      "DIS_AKG_DLPOD"
+    ]
+  },
+  "J-11A": {
+    "10": [
+      "{RKL609_R}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "1": [
+      "{RKL609_L}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "9": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "8": [
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{FAB_250_DUAL_R}",
+      "{FAB_500_DUAL_R}",
+      "{B8M1_20_S8KOM_DUAL_R}",
+      "{B13_5_S13OF_DUAL_R}",
+      "{S25_DUAL_R}",
+      "{B79C379A-9E87-4E50-A1EE-7F7E29C2E87A}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{B8M1_20_S8TsM_DUAL_R}",
+      "{B8M1_20_S8OFP2_DUAL_R}",
+      "{53BE25A4-C86C-4571-9BC0-47D668349595}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "3": [
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{FAB_250_DUAL_L}",
+      "{FAB_500_DUAL_L}",
+      "{B8M1_20_S8KOM_DUAL_L}",
+      "{B13_5_S13OF_DUAL_L}",
+      "{S25_DUAL_L}",
+      "{B79C379A-9E87-4E50-A1EE-7F7E29C2E87A}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{B8M1_20_S8TsM_DUAL_L}",
+      "{B8M1_20_S8OFP2_DUAL_L}",
+      "{53BE25A4-C86C-4571-9BC0-47D668349595}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "7": [
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{RBK_250_275_AO_1SCH}"
+    ],
+    "4": [
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{RBK_250_275_AO_1SCH}"
+    ],
+    "5": [
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}"
+    ],
+    "6": [
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{53BE25A4-C86C-4571-9BC0-47D668349595}"
+    ]
+  },
+  "JF-17": {
+    "5": [
+      "DIS_C-802AK",
+      "DIS_TANK1100",
+      "DIS_TANK800",
+      "DIS_GBU_10",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "DIS_CM-802AKG",
+      "DIS_GBU_16",
+      "DIS_LS_6_500",
+      "DIS_GB6_HE",
+      "DIS_GB6_TSP",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "DIS_GB6"
+    ],
+    "4": [
+      "DIS_TANK800",
+      "DIS_WMD7",
+      "DIS_SPJ_POD",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "DIS_AKG_DLPOD"
+    ],
+    "3": [
+      "DIS_C-802AK",
+      "DIS_TANK1100",
+      "DIS_TANK800",
+      "DIS_GBU_10",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "DIS_CM-802AKG",
+      "DIS_GBU_16",
+      "DIS_LS_6_500",
+      "DIS_GB6_HE",
+      "DIS_GB6_TSP",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "DIS_GB6"
+    ],
+    "7": [
+      "DIS_PL-5EII"
+    ],
+    "1": [
+      "DIS_PL-5EII"
+    ],
+    "6": [
+      "DIS_C-701IR",
+      "DIS_SD-10",
+      "DIS_LD-10",
+      "DIS_GBU_12_DUAL_GDJ_II19_R",
+      "DIS_MK_82S_DUAL_GDJ_II19_R",
+      "DIS_WMD7",
+      "DIS_C-701T",
+      "DIS_GBU_12",
+      "DIS_LS_6_500",
+      "DIS_LD-10_DUAL_R",
+      "DIS_LAU68_MK5_DUAL_GDJ_II19_R",
+      "DIS_RKT_90_UG",
+      "DIS_BRM1_90",
+      "DIS_SD-10_DUAL_R",
+      "DIS_MK_82_DUAL_GDJ_II19_R",
+      "DIS_TYPE200_DUAL_R",
+      "DIS_TYPE200",
+      "DIS_LS_6_250_DUAL_R",
+      "DIS_LS_6_100_DUAL_R"
+    ],
+    "2": [
+      "DIS_C-701IR",
+      "DIS_SD-10",
+      "DIS_LD-10",
+      "DIS_GBU_12_DUAL_GDJ_II19_L",
+      "DIS_MK_82S_DUAL_GDJ_II19_L",
+      "DIS_AKG_DLPOD",
+      "DIS_C-701T",
+      "DIS_GBU_12",
+      "DIS_LD-10_DUAL_L",
+      "DIS_LS_6_500",
+      "DIS_BRM1_90",
+      "DIS_LAU68_MK5_DUAL_GDJ_II19_L",
+      "DIS_RKT_90_UG",
+      "DIS_SD-10_DUAL_L",
+      "DIS_MK_82_DUAL_GDJ_II19_L",
+      "DIS_TYPE200_DUAL_L",
+      "DIS_TYPE200",
+      "DIS_LS_6_250_DUAL_L",
+      "DIS_LS_6_100_DUAL_L"
+    ]
+  },
+  "WingLoong-I": {
+    "2": [
+      "DIS_AKD-10"
+    ],
+    "1": [
+      "DIS_AKD-10"
+    ]
+  },
+  "Christen Eagle II": {
+    "1": [
+      "{CE2_SMOKE_WHITE}"
+    ]
+  },
+  "F-15ESE": {
+    "8": [
+      "{F15E_EXTTANK}",
+      "<CLEAN>",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "15": [
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "13": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "CATM-9M"
+    ],
+    "12": [
+      "{CFT_R_BLU107_x_6}",
+      "{CFT_R_CBU_87_x_3}",
+      "{CFT_R_CBU_97_x_3}",
+      "{CFT_R_BDU50LGB_x_2}",
+      "{CFT_R_GBU_12_x_4}",
+      "{CFT_R_MK82LD_x_6}",
+      "{CFT_R_CBU_87_x_6}",
+      "{CFT_R_GBU_10_x_2}",
+      "{CFT_R_CBU_100_x_6}",
+      "{CFT_R_MK82AR_x_6}"
+    ],
+    "9": [
+      "{F-15E_AAQ-13_LANTIRN}"
+    ],
+    "7": [
+      "{F-15E_AAQ-14_LANTIRN}"
+    ],
+    "4": [
+      "{CFT_L_BLU107_x_6}",
+      "{CFT_L_CBU_87_x_3}",
+      "{CFT_L_MK82LD_x_6}",
+      "{CFT_L_BDU50LGB_x_2}",
+      "{CFT_L_GBU_12_x_4}",
+      "{CFT_L_CBU_100_x_6}",
+      "{CFT_L_MK82AR_x_6}"
+    ],
+    "3": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "CATM-9M"
+    ],
+    "1": [
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "CATM-9M"
+    ],
+    "14": [
+      "{F15E_EXTTANK}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "<CLEAN>"
+    ],
+    "11": [
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{AIM-7H}"
+    ],
+    "10": [
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{AIM-7H}"
+    ],
+    "6": [
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "5": [
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "2": [
+      "{F15E_EXTTANK}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "<CLEAN>"
+    ]
+  },
+  "F-16C_50": {
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "2": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{5CE2FF2A-645A-4197-B48D-8720AC69394F}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "3": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{5CE2FF2A-645A-4197-B48D-8720AC69394F}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "LAU_117_AGM_65H",
+      "LAU_88_AGM_65H_2_L",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98452}",
+      "{TER_9A_2L*CBU-97}",
+      "{TER_9A_2L*MK-82}",
+      "{TER_9A_2L*CBU-87}",
+      "{TER_9A_2L*MK-82AIR}",
+      "{BRU57_2*CBU-103}",
+      "{BRU57_2*CBU-105}",
+      "{TER_9A_3*MK-82}",
+      "{TER_9A_3*MK-82AIR}",
+      "{TER_9A_2L*MK-82_Snakeye}",
+      "{TER_9A_3*MK-82_Snakeye}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{TER_9A_2L*GBU-12}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{GBU-31}",
+      "{GBU-31V3B}",
+      "{GBU-38}",
+      "{BRU57_2*GBU-38}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_AGM_65G",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "LAU3_WP61"
+    ],
+    "4": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"
+    ],
+    "5": [
+      "{8A0BE8AE-58D4-4572-9263-3144C0D06364}",
+      "<CLEAN>",
+      "ALQ_184_Long",
+      "ALQ_184"
+    ],
+    "6": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"
+    ],
+    "7": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{5CE2FF2A-645A-4197-B48D-8720AC69394F}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "LAU_117_AGM_65H",
+      "LAU_88_AGM_65H_2_R",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98453}",
+      "{TER_9A_2R*CBU-97}",
+      "{TER_9A_2R*MK-82}",
+      "{TER_9A_2R*CBU-87}",
+      "{TER_9A_2R*MK-82AIR}",
+      "{BRU57_2*CBU-103}",
+      "{BRU57_2*CBU-105}",
+      "{TER_9A_3*MK-82}",
+      "{TER_9A_3*MK-82AIR}",
+      "{TER_9A_2R*MK-82_Snakeye}",
+      "{TER_9A_3*MK-82_Snakeye}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{TER_9A_2R*GBU-12}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{GBU-31}",
+      "{GBU-31V3B}",
+      "{GBU-38}",
+      "{BRU57_2*GBU-38}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_AGM_65G",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "LAU3_WP61"
+    ],
+    "8": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{5CE2FF2A-645A-4197-B48D-8720AC69394F}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "9": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "11": [
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}"
+    ],
+    "10": [
+      "{AN_ASQ_213}"
+    ]
+  },
+  "F-4E-45MC": {
+    "13": [
+      "{F4_SARGENT_TANK_370_GAL_R}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "<CLEAN>",
+      "{SUU_23_POD}",
+      "{HB_F4E_MK-82_6x}",
+      "{GBU_8_B}",
+      "{LAU3_FFAR_MK5HEAT}",
+      "{HB_F4E_MK-82_Snakeye_6x}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_F4E_MK-83_MER_2x}",
+      "{HB_F4E_CBU-52B_MER_3x_Right}",
+      "{CBU-52B}",
+      "{HB_F4E_CBU-2A_MER_2x_Right}",
+      "{HB_F4E_CBU-87_MER_3x_Right}",
+      "{HB_F4E_M117_MER_3x_Right}",
+      "{HB_F4E_CBU-2BA_MER_2x_Right}",
+      "{LAU_34_AGM_45A}",
+      "{HB_F4E_LAU-3_WP156_MER_3x}",
+      "{LAU3_FFAR_WP156}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{HB_F4E_LAU-3_MK5_MER_3x}",
+      "{HB_F4E_CBU-1A_MER_2x_Right}",
+      "{F4_SARGENT_TANK_370_GAL_R_EMPTY}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{AGM_12A}",
+      "{AGM_12B}"
+    ],
+    "9": [
+      "{HB_F4E_AIM-7E-2}",
+      "{HB_F4E_AIM-7M}",
+      "{HB_F4E_AIM-7F}",
+      "{HB_F4E_AIM-7E}"
+    ],
+    "8": [
+      "{HB_F4E_AIM-7E-2}",
+      "{HB_F4E_AIM-7M}",
+      "{HB_F4E_AIM-7F}",
+      "{HB_F4E_AIM-7E}"
+    ],
+    "7": [
+      "{HB_F4E_CBU-87_MER_4x}",
+      "{F4_SARGENT_TANK_600_GAL}",
+      "{HB_F4E_BLU-107B_6x}",
+      "{SUU_23_POD}",
+      "{HB_F4E_MK-82_Snakeye_6x}",
+      "{HB_F4E_M117_MER_5x}",
+      "{HB_F4E_MK-83_MER_3x_Ripple}",
+      "{HB_F4E_MK-82_6x}",
+      "{HB_F4E_ROCKEYE_6x}",
+      "{HB_F4E_LAU-3_MK5_MER_3x}",
+      "{HB_F4E_LAU-3_WP156_MER_3x}",
+      "{HB_F4E_CBU-1A_MER_1x}",
+      "{F4_SARGENT_TANK_600_GAL_EMPTY}",
+      "{HB_F4E_CBU-2A_MER_1x}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_F4E_CBU-2BA_MER_1x}"
+    ],
+    "6": [
+      "{HB_ALQ-131_ON_ADAPTER_IN_AERO7}",
+      "{HB_PAVE_SPIKE_FAST_ON_ADAPTER_IN_AERO7}",
+      "{HB_F4E_AIM-7M}",
+      "{HB_F4E_AIM-7E-2}",
+      "{HB_F4E_AIM-7F}",
+      "{HB_F4E_AIM-7E}"
+    ],
+    "5": [
+      "{HB_F4E_AIM-7E-2}",
+      "{HB_F4E_AIM-7M}",
+      "{HB_F4E_AIM-7F}",
+      "{HB_F4E_AIM-7E}"
+    ],
+    "1": [
+      "{F4_SARGENT_TANK_370_GAL}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "<CLEAN>",
+      "{SUU_23_POD}",
+      "{HB_F4E_MK-82_6x}",
+      "{GBU_8_B}",
+      "{LAU3_FFAR_MK5HEAT}",
+      "{HB_F4E_MK-82_Snakeye_6x}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_F4E_MK-83_MER_2x}",
+      "{HB_F4E_CBU-52B_MER_3x_Left}",
+      "{CBU-52B}",
+      "{HB_F4E_CBU-2A_MER_2x_Left}",
+      "{HB_F4E_CBU-87_MER_3x_Left}",
+      "{HB_F4E_M117_MER_3x_Left}",
+      "{HB_F4E_CBU-2BA_MER_2x_Left}",
+      "{LAU_34_AGM_45A}",
+      "{HB_F4E_LAU-3_WP156_MER_3x}",
+      "{LAU3_FFAR_WP156}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{HB_F4E_LAU-3_MK5_MER_3x}",
+      "{HB_F4E_CBU-1A_MER_2x_Left}",
+      "{F4_SARGENT_TANK_370_GAL_EMPTY}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{AGM_12A}",
+      "{AGM_12B}"
+    ],
+    "11": [
+      "{HB_F4E_CBU-87_2x_SWA}",
+      "{HB_F4EAGM-65D_LAU88_2x_Right}",
+      "{CBU-87}",
+      "{C40A1E3A-DD05-40D9-85A4-217729E37FAE}",
+      "{HB_F4E_GBU-12_2x_SWA}",
+      "{2x Mk-82 SWA}",
+      "<CLEAN>",
+      "{LAU3_FFAR_MK5HEAT}",
+      "{LAU3_FFAR_WP156}",
+      "{HB_F4E_MK-82_2x_SWA}",
+      "{HB_F4E_LAU-68_MK5_3x}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{HB_F4E_M117_3x}",
+      "{HB_F4E_MK-82_3x}",
+      "{HB_F4E_MK-83_3x}",
+      "{HB_F4EAGM-65B_LAU88_3x_Right}",
+      "{HB_F4EAGM-65A_LAU88_2x_Right}",
+      "{HB_F4E_CBU-52B_2x_SWA}",
+      "{AGM_62_I}",
+      "{HB_F4E_CBU-52B_2x}",
+      "{HB_F4EAGM-65A_LAU88_3x_Right}",
+      "{LAU_34_AGM_45A_SWA}",
+      "{HB_F4E_ROCKEYE_2x_SWA}",
+      "{HB_F4E_LAU-68_WP156_1x}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{GBU_8_B}",
+      "{LAU_34_AGM_45A}",
+      "{HB_F4E_MK-82_Snakeye_2x_SWA}",
+      "{HB_F4E_AGM-65A_LAU117_SWA}",
+      "{HB_F4EAGM-65B_LAU88_2x_Right}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{HB_F4E_MK-82_Snakeye_3x}",
+      "{HB_F4E_LAU-3_MK5_3x}",
+      "{HB_F4E_ROCKEYE_3x}",
+      "{HB_F4E_LAU-68_MK5_1x}",
+      "{HB_F4E_BLU-107B_3x}",
+      "{CBU-52B}",
+      "{HB_F4E_AGM-65D_LAU117_SWA}",
+      "{HB_F4EAGM-65D_LAU88_3x_Right}",
+      "{HB_F4E_AGM-65B_LAU117_SWA}",
+      "{HB_F4E_BLU-107B_3x_SWA}",
+      "{AGM_12B}",
+      "{AGM_12A}",
+      "{AGM_12C}"
+    ],
+    "3": [
+      "{HB_F4E_CBU-87_2x_SWA}",
+      "{HB_F4EAGM-65D_LAU88_2x_Left}",
+      "{CBU-87}",
+      "{C40A1E3A-DD05-40D9-85A4-217729E37FAE}",
+      "{HB_F4E_GBU-12_2x_SWA}",
+      "{2x Mk-82 SWA}",
+      "<CLEAN>",
+      "{LAU3_FFAR_MK5HEAT}",
+      "{LAU3_FFAR_WP156}",
+      "{HB_F4E_MK-82_2x_SWA}",
+      "{HB_F4E_LAU-68_MK5_3x}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{HB_F4E_M117_3x}",
+      "{HB_F4E_MK-82_3x}",
+      "{HB_F4E_MK-83_3x}",
+      "{HB_F4EAGM-65B_LAU88_3x_Left}",
+      "{HB_F4EAGM-65A_LAU88_2x_Left}",
+      "{HB_F4E_CBU-52B_2x_SWA}",
+      "{AGM_62_I}",
+      "{HB_F4E_CBU-52B_2x}",
+      "{HB_F4EAGM-65A_LAU88_3x_Left}",
+      "{LAU_34_AGM_45A_SWA}",
+      "{HB_F4E_ROCKEYE_2x_SWA}",
+      "{HB_F4E_LAU-68_WP156_1x}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{GBU_8_B}",
+      "{LAU_34_AGM_45A}",
+      "{HB_F4E_MK-82_Snakeye_2x_SWA}",
+      "{HB_F4E_AGM-65A_LAU117_SWA}",
+      "{HB_F4EAGM-65B_LAU88_2x_Left}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{HB_F4E_MK-82_Snakeye_3x}",
+      "{HB_F4E_LAU-3_MK5_3x}",
+      "{HB_F4E_ROCKEYE_3x}",
+      "{HB_F4E_LAU-68_MK5_1x}",
+      "{HB_F4E_BLU-107B_3x}",
+      "{CBU-52B}",
+      "{HB_F4E_AGM-65D_LAU117_SWA}",
+      "{HB_F4EAGM-65D_LAU88_3x_Left}",
+      "{HB_F4E_AGM-65B_LAU117_SWA}",
+      "{HB_F4E_BLU-107B_3x_SWA}",
+      "{AGM_12B}",
+      "{AGM_12A}",
+      "{AGM_12C}"
+    ],
+    "12": [
+      "{AIM-9L}",
+      "<CLEAN>",
+      "{AIM-9M}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9J}",
+      "{AIM-9B}",
+      "{AIM-9JULI}",
+      "CATM-9M"
+    ],
+    "10": [
+      "{AIM-9L}",
+      "<CLEAN>",
+      "{AIM-9M}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9J}",
+      "{AIM-9B}",
+      "{AIM-9JULI}"
+    ],
+    "4": [
+      "{AIM-9L}",
+      "<CLEAN>",
+      "{AIM-9M}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9J}",
+      "{AIM-9B}",
+      "{AIM-9JULI}"
+    ],
+    "2": [
+      "{AIM-9L}",
+      "<CLEAN>",
+      "{AIM-9M}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9J}",
+      "{AIM-9B}",
+      "{AIM-9JULI}",
+      "CATM-9M"
+    ],
+    "14": [
+      "{HB_ALE_40_30_60}",
+      "{HB_ALE_40_0_0}"
+    ]
+  },
+  "F-5E-3": {
+    "1": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9P5}",
+      "{AIM-9B}"
+    ],
+    "2": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "3": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "4": [
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{CBU-52B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{MER-5E_MK82x5}",
+      "{MER-5E_Mk82SNAKEYEx5}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "5": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "6": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "7": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9P5}",
+      "{AIM-9B}",
+      "{AIS_ASQ_T50}"
+    ]
+  },
+  "F-5E-3_FC": {
+    "1": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9P5}",
+      "{AIM-9B}"
+    ],
+    "2": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "3": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "4": [
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{CBU-52B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{MER-5E_MK82x5}",
+      "{MER-5E_Mk82SNAKEYEx5}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "5": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "6": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "7": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9P5}",
+      "{AIM-9B}"
+    ]
+  },
+  "F-5E": {
+    "1": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9P5}",
+      "{AIM-9B}"
+    ],
+    "2": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "3": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "4": [
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{CBU-52B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{MER-5E_MK82x5}",
+      "{MER-5E_Mk82SNAKEYEx5}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "5": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{0395076D-2F77-4420-9D33-087A4398130B}",
+      "{PTB-150GAL}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "6": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}",
+      "{CBU-52B}",
+      "LAU3_HE151",
+      "LAU3_HE5",
+      "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}",
+      "{174C6E6D-0C3D-42ff-BCB3-0853CB371F5C}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "7": [
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}",
+      "{AIM-9P5}",
+      "{AIM-9B}",
+      "{AIS_ASQ_T50}"
+    ]
+  },
+  "F-86F Sabre": {
+    "4": [
+      "{PTB_120_F86F35}",
+      "{HVARx2}",
+      "{F86ANM64}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "7": [
+      "{PTB_120_F86F35}",
+      "{HVARx2}",
+      "{F86ANM64}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "10": [
+      "{PTB_200_F86F35}",
+      "{HVARx2}"
+    ],
+    "1": [
+      "{PTB_200_F86F35}",
+      "{HVARx2}"
+    ],
+    "6": [
+      "{GAR-8}"
+    ],
+    "5": [
+      "{GAR-8}"
+    ],
+    "9": [
+      "{HVARx2}"
+    ],
+    "8": [
+      "{HVARx2}"
+    ],
+    "3": [
+      "{HVARx2}"
+    ],
+    "2": [
+      "{HVARx2}"
+    ]
+  },
+  "F-86F_FC": {
+    "4": [
+      "{PTB_120_F86F35}",
+      "{HVARx2}",
+      "{F86ANM64}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "7": [
+      "{PTB_120_F86F35}",
+      "{HVARx2}",
+      "{F86ANM64}",
+      "{00F5DAC4-0466-4122-998F-B1A298E34113}"
+    ],
+    "10": [
+      "{PTB_200_F86F35}",
+      "{HVARx2}"
+    ],
+    "1": [
+      "{PTB_200_F86F35}",
+      "{HVARx2}"
+    ],
+    "6": [
+      "{GAR-8}"
+    ],
+    "5": [
+      "{GAR-8}"
+    ],
+    "9": [
+      "{HVARx2}"
+    ],
+    "8": [
+      "{HVARx2}"
+    ],
+    "3": [
+      "{HVARx2}"
+    ],
+    "2": [
+      "{HVARx2}"
+    ]
+  },
+  "F-14A-135-GR": {
+    "8": [
+      "{F14-300gal}"
+    ],
+    "3": [
+      "{F14-300gal}"
+    ],
+    "10": [
+      "{LAU-138 wtip - AIM-9M}",
+      "{LAU-138 wtip - AIM-9L}"
+    ],
+    "9": [
+      "{SHOULDER AIM_54A_Mk47 R}",
+      "{SHOULDER AIM_54A_Mk60 R}",
+      "{SHOULDER AIM_54C_Mk47 R}",
+      "{SHOULDER AIM-7M}",
+      "{LAU-7 - AIM-9M}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 RS}",
+      "{F14-LANTIRN-TP}"
+    ],
+    "7": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_LAU10}"
+    ],
+    "6": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 3R}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3R}",
+      "{MAK79_MK81 3R}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_SUU25}"
+    ],
+    "5": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 3L}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3L}",
+      "{MAK79_MK81 3L}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*SUU25 R}"
+    ],
+    "4": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*LAU10 R}"
+    ],
+    "2": [
+      "{SHOULDER AIM_54A_Mk47 L}",
+      "{SHOULDER AIM_54A_Mk60 L}",
+      "{SHOULDER AIM_54C_Mk47 L}",
+      "{SHOULDER AIM-7M}",
+      "{LAU-7 - AIM-9M}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 LS}"
+    ],
+    "1": [
+      "{LAU-138 wtip - AIM-9M}",
+      "{LAU-138 wtip - AIM-9L}"
+    ]
+  },
+  "F-14A-95-GR": {
+    "10": [
+      "{LAU-138 wtip - AIM-9L}"
+    ],
+    "9": [
+      "{SHOULDER AIM_54A_Mk47 R}",
+      "{SHOULDER AIM_54A_Mk60 R}",
+      "{SHOULDER AIM-7F}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 RS}"
+    ],
+    "7": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{BELLY AIM-7F}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_LAU10}"
+    ],
+    "6": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{BELLY AIM-7F}",
+      "{MAK79_BDU33 3R}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3R}",
+      "{MAK79_MK81 3R}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_SUU25}"
+    ],
+    "5": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{BELLY AIM-7F}",
+      "{MAK79_BDU33 3L}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3L}",
+      "{MAK79_MK81 3L}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*SUU25 R}"
+    ],
+    "4": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{BELLY AIM-7F}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*LAU10 R}"
+    ],
+    "2": [
+      "{SHOULDER AIM_54A_Mk47 L}",
+      "{SHOULDER AIM_54A_Mk60 L}",
+      "{SHOULDER AIM-7F}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 LS}"
+    ],
+    "1": [
+      "{LAU-138 wtip - AIM-9L}"
+    ]
+  },
+  "F-14B": {
+    "8": [
+      "{F14-300gal}"
+    ],
+    "3": [
+      "{F14-300gal}"
+    ],
+    "10": [
+      "{LAU-138 wtip - AIM-9M}",
+      "{LAU-138 wtip - AIM-9L}"
+    ],
+    "9": [
+      "{SHOULDER AIM_54A_Mk47 R}",
+      "{SHOULDER AIM_54A_Mk60 R}",
+      "{SHOULDER AIM_54C_Mk47 R}",
+      "{SHOULDER AIM-7M}",
+      "{LAU-7 - AIM-9M}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 RS}",
+      "{F14-LANTIRN-TP}"
+    ],
+    "7": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_LAU10}"
+    ],
+    "6": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 3R}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3R}",
+      "{MAK79_MK81 3R}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_SUU25}"
+    ],
+    "5": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 3L}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3L}",
+      "{MAK79_MK81 3L}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*SUU25 R}"
+    ],
+    "4": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*LAU10 R}"
+    ],
+    "2": [
+      "{SHOULDER AIM_54A_Mk47 L}",
+      "{SHOULDER AIM_54A_Mk60 L}",
+      "{SHOULDER AIM_54C_Mk47 L}",
+      "{SHOULDER AIM-7M}",
+      "{LAU-7 - AIM-9M}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 LS}"
+    ],
+    "1": [
+      "{LAU-138 wtip - AIM-9M}",
+      "{LAU-138 wtip - AIM-9L}"
+    ]
+  },
+  "F4U-1D": {
+    "1": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "2": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "3": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "4": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "8": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "11": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "10": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "9": [
+      "{HVAR_USN_Mk28_Mod4_Corsair}"
+    ],
+    "7": [
+      "{AN-M64}",
+      "{Tiny_Tim_Corsair}"
+    ],
+    "5": [
+      "{AN-M64}",
+      "{Tiny_Tim_Corsair}"
+    ]
+  },
+  "F/A-18A": {
+    "1": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "2": [
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{8B7CADF9-4954-46B3-8CFB-93F2F5B90B03}"
+    ],
+    "3": [
+      "{EFEC8200-B922-11d7-9897-000476191836}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "4": [
+      "{6C0D552F-570B-42ff-9F6D-F10D9C1D4E1C}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "5": [
+      "{EFEC8200-B922-11d7-9897-000476191836}"
+    ],
+    "6": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "7": [
+      "{EFEC8200-B922-11d7-9897-000476191836}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "8": [
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{8B7CADF9-4954-46B3-8CFB-93F2F5B90B03}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ]
+  },
+  "F/A-18C": {
+    "1": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "2": [
+      "{C40A1E3A-DD05-40D9-85A4-217729E37FAE}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}",
+      "{AF42E6DF-9A60-46D8-A9A0-1708B241AADB}",
+      "{8B7CADF9-4954-46B3-8CFB-93F2F5B90B03}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}"
+    ],
+    "3": [
+      "{EFEC8201-B922-11d7-9897-000476191836}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}"
+    ],
+    "4": [
+      "{6C0D552F-570B-42ff-9F6D-F10D9C1D4E1C}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "5": [
+      "{EFEC8201-B922-11d7-9897-000476191836}",
+      "{EFEC8200-B922-11d7-9897-000476191836}"
+    ],
+    "6": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{1C2B16EB-8EB0-43de-8788-8EBB2D70B8BC}"
+    ],
+    "7": [
+      "{EFEC8201-B922-11d7-9897-000476191836}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}"
+    ],
+    "8": [
+      "{C40A1E3A-DD05-40D9-85A4-217729E37FAE}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "{D5D51E24-348C-4702-96AF-97A714E72697}",
+      "{AF42E6DF-9A60-46D8-A9A0-1708B241AADB}",
+      "{8B7CADF9-4954-46B3-8CFB-93F2F5B90B03}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ]
+  },
+  "FA-18C_hornet": {
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{5CE2FF2A-645A-4197-B48D-8720AC69394F}"
+    ],
+    "1": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{5CE2FF2A-645A-4197-B48D-8720AC69394F}"
+    ],
+    "4": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{AN_ASQ_228}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "6": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "2": [
+      "LAU-115_2*LAU-127_AIM-9M",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BRU33_2X_MK-83}",
+      "{LAU-115 - AIM-7M}",
+      "{BRU33_2X_CBU-99}",
+      "{BRU33_2X_MK-82_Snakeye}",
+      "{BRU33_2X_ROCKEYE}",
+      "{BRU33_2X_MK-82}",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "{BRU33_2*LAU10}",
+      "{BRU33_2*LAU61}",
+      "{BRU33_2*LAU68_MK5}",
+      "{GBU_31_V_4B}",
+      "LAU-115_2*LAU-127_AIM-120C",
+      "LAU_117_AGM_65F",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{BRU55_2*GBU-38}",
+      "{AGM_84H}",
+      "{AGM_84D}"
+    ],
+    "8": [
+      "LAU-115_2*LAU-127_AIM-9M",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{BRU33_2X_MK-83}",
+      "{LAU-115 - AIM-7M}",
+      "{BRU33_2X_CBU-99}",
+      "{BRU33_2X_MK-82_Snakeye}",
+      "{BRU33_2X_ROCKEYE}",
+      "{BRU33_2X_MK-82}",
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "{BRU33_2*LAU10}",
+      "{BRU33_2*LAU61}",
+      "{BRU33_2*LAU68_MK5}",
+      "{GBU_31_V_4B}",
+      "LAU-115_2*LAU-127_AIM-120C",
+      "LAU_117_AGM_65F",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{BRU55_2*GBU-38}",
+      "{AGM_84H}",
+      "{AGM_84D}"
+    ],
+    "3": [
+      "{FPU_8A_FUEL_TANK}",
+      "{GBU_31_V_4B}",
+      "LAU_117_AGM_65F",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{BRU33_2X_GBU-12}",
+      "{AGM_84D}"
+    ],
+    "5": [
+      "{FPU_8A_FUEL_TANK}",
+      "{AWW-13}"
+    ],
+    "7": [
+      "{FPU_8A_FUEL_TANK}",
+      "{GBU_31_V_4B}",
+      "LAU_117_AGM_65F",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{BRU33_2X_GBU-12}",
+      "{AGM_84D}"
+    ]
+  },
+  "I-16": {
+    "1": [
+      "I16_RS_82"
+    ],
+    "2": [
+      "I16_RS_82"
+    ],
+    "3": [
+      "I16_RS_82"
+    ],
+    "6": [
+      "I16_RS_82"
+    ],
+    "7": [
+      "I16_RS_82"
+    ],
+    "8": [
+      "I16_RS_82"
+    ],
+    "4": [
+      "I16_FAB_100SV",
+      "I16_DROP_FUEL_TANK"
+    ],
+    "5": [
+      "I16_FAB_100SV",
+      "I16_DROP_FUEL_TANK"
+    ]
+  },
+  "Ka-50": {
+    "1": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "B_8V20A_CM",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{A6FD14D3-6D30-4C85-88A7-8D17BEE120E2}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{PTB_450}"
+    ],
+    "2": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{PTB_450}",
+      "B_8V20A_CM",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "3": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{PTB_450}",
+      "B_8V20A_CM",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "4": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "B_8V20A_CM",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{A6FD14D3-6D30-4C85-88A7-8D17BEE120E2}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{PTB_450}"
+    ]
+  },
+  "Ka-50_3": {
+    "6": [
+      "{9S846_2xIGLA}"
+    ],
+    "5": [
+      "{9S846_2xIGLA}"
+    ],
+    "4": [
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{A6FD14D3-6D30-4C85-88A7-8D17BEE120E2}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "B_8V20A_OFP2",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "B_8V20A_OM",
+      "B_8V20A_CM"
+    ],
+    "1": [
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{A6FD14D3-6D30-4C85-88A7-8D17BEE120E2}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "B_8V20A_OFP2",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "B_8V20A_OM",
+      "B_8V20A_CM"
+    ],
+    "3": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "B_8V20A_OFP2",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "B_8V20A_OM",
+      "B_8V20A_CM",
+      "{PTB_450}"
+    ],
+    "2": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "B_8V20A_OFP2",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "B_8V20A_OM",
+      "B_8V20A_CM",
+      "{PTB_450}"
+    ]
+  },
+  "L-39C": {
+    "3": [
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{R-3S}",
+      "{D3F65166-1AB8-490f-AF2F-2FB6E22568B4}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{UB-16-57UMP}"
+    ],
+    "1": [
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{R-3S}",
+      "{D3F65166-1AB8-490f-AF2F-2FB6E22568B1}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{UB-16-57UMP}"
+    ],
+    "2": [
+      "{INV-SMOKE-WHITE}"
+    ]
+  },
+  "L-39ZA": {
+    "5": [
+      "{UB-16-57UMP}",
+      "{FAB-100x2}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{PK-3}",
+      "{APU-60-1_R_60M}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{R-3S}"
+    ],
+    "1": [
+      "{UB-16-57UMP}",
+      "{FAB-100x2}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{PK-3}",
+      "{APU-60-1_R_60M}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{R-3S}"
+    ],
+    "4": [
+      "{UB-16-57UMP}",
+      "{PTB_150L_L39}",
+      "{PTB_350L_L39}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{FAB-100x2}",
+      "{PK-3}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}"
+    ],
+    "2": [
+      "{UB-16-57UMP}",
+      "{PTB_150L_L39}",
+      "{PTB_350L_L39}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{FAB-100x2}",
+      "{PK-3}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}"
+    ]
+  },
+  "M-2000C": {
+    "5": [
+      "{M2KC_RPL_522}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{M2KC_RAFAUT_GBU12}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{34759BBC-AF1E-4AEE-A581-498FF7A6EBCE}",
+      "{M2KC_BAP100_18_RACK}"
+    ],
+    "9": [
+      "{MMagicII}"
+    ],
+    "1": [
+      "{MMagicII}"
+    ],
+    "8": [
+      "{Matra_S530D}",
+      "{M2KC_08_RPL541}"
+    ],
+    "2": [
+      "{Matra_S530D}",
+      "{M2KC_02_RPL541}"
+    ],
+    "10": [
+      "{Eclair}"
+    ],
+    "7": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}"
+    ],
+    "6": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}"
+    ],
+    "4": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}"
+    ],
+    "3": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{Mk82SNAKEYE}"
+    ]
+  },
+  "MB-339A": {
+    "1": [
+      "{FUEL-TIP-ELLITTIC-L}",
+      "{FUEL-TIP-TANK-500-L}"
+    ],
+    "10": [
+      "{FUEL-TIP-ELLITTIC-R}",
+      "{FUEL-TIP-TANK-500-R}"
+    ],
+    "8": [
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "<CLEAN>",
+      "{FUEL-SUBAL_TANK-330}",
+      "{BRD_4_250_4xMK76}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "{Mk82SNAKEYE}",
+      "{BLG66_BELOUGA_AC}",
+      "{BLU107B_DURANDAL}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{14_3_M2_6xBAP100}",
+      "{14_3_M2_6xBAT120}"
+    ],
+    "3": [
+      "{7A44FF09-527C-4B7E-B42B-3F111CFE50FB}",
+      "<CLEAN>",
+      "{FUEL-SUBAL_TANK-330}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}",
+      "{Mk82SNAKEYE}",
+      "{BLG66_BELOUGA_AC}",
+      "{BLU107B_DURANDAL}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{14_3_M2_6xBAP100}",
+      "{14_3_M2_6xBAT120}"
+    ],
+    "9": [
+      "{90321C8E-7ED1-47D4-A160-E074D5ABD902}",
+      "<CLEAN>",
+      "LAU3_HE151",
+      "{LR25_ARF8M3_API}",
+      "{Matra155RocketPod}",
+      "{BLU107B_DURANDAL}",
+      "{LR25_ARF8M3_HEI}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{14_3_M2_6xBAP100}",
+      "{14_3_M2_6xBAT120}"
+    ],
+    "2": [
+      "{90321C8E-7ED1-47D4-A160-E074D5ABD902}",
+      "<CLEAN>",
+      "LAU3_HE151",
+      "{LR25_ARF8M3_API}",
+      "{Matra155RocketPod}",
+      "{BLU107B_DURANDAL}",
+      "{LR25_ARF8M3_HEI}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{14_3_M2_6xBAP100}",
+      "{14_3_M2_6xBAT120}"
+    ],
+    "7": [
+      "{MB339_DEFA553_R}",
+      "<CLEAN>",
+      "{MB339_ANM3_R}",
+      "{Mk82SNAKEYE}",
+      "{Matra155RocketPod}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{14_3_M2_6xBAP100}",
+      "{14_3_M2_6xBAT120}"
+    ],
+    "4": [
+      "{MB339_DEFA553_L}",
+      "<CLEAN>",
+      "{MB339_VINTEN}",
+      "{MB339_ANM3_L}",
+      "{MB339_TRAVELPOD}",
+      "{Mk82SNAKEYE}",
+      "{Matra155RocketPod}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{14_3_M2_6xBAP100}",
+      "{14_3_M2_6xBAT120}"
+    ]
+  },
+  "MB-339APAN": {
+    "7": [
+      "{WHITE-TANK}"
+    ],
+    "6": [
+      "{SMOKE-WHITE-MB339}"
+    ],
+    "4": [
+      "{COLOR-TANK}"
+    ],
+    "9": [
+      "<CLEAN>"
+    ],
+    "2": [
+      "<CLEAN>"
+    ],
+    "5": [
+      "{SMOKE-RED-MB339}",
+      "{SMOKE-GREEN-MB339}"
+    ],
+    "8": [
+      "{FUEL-SUBAL_TANK-330}"
+    ],
+    "3": [
+      "{FUEL-SUBAL_TANK-330}"
+    ],
+    "10": [
+      "{FUEL-TIP-ELLITTIC-R}",
+      "{FUEL-TIP-TANK-500-R}"
+    ],
+    "1": [
+      "{FUEL-TIP-ELLITTIC-L}",
+      "{FUEL-TIP-TANK-500-L}"
+    ]
+  },
+  "Mi-24P": {
+    "6": [
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}",
+      "{9M114 Shturm-V-2 Rack}"
+    ],
+    "1": [
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}",
+      "{9M114 Shturm-V-2 Rack}"
+    ],
+    "5": [
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{UB-32A-24}",
+      "GUV_VOG",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{APU_68_S-24}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{RBK_250_275_AO_1SCH}",
+      "{PTB_450}"
+    ],
+    "2": [
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{UB-32A-24}",
+      "GUV_VOG",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{APU_68_S-24}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{RBK_250_275_AO_1SCH}",
+      "{PTB_450}"
+    ],
+    "4": [
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "B_8V20A_OFP2",
+      "{UB-32A-24}",
+      "GUV_VOG",
+      "GUV_YakB_GSHP",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{APU_68_S-24}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}",
+      "{RBK_500U_OAB_2_5RT}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{RBK_250_275_AO_1SCH}",
+      "{PTB_450}"
+    ],
+    "3": [
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "B_8V20A_OFP2",
+      "{UB-32A-24}",
+      "GUV_VOG",
+      "GUV_YakB_GSHP",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{APU_68_S-24}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}",
+      "{RBK_500U_OAB_2_5RT}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{RBK_250_275_AO_1SCH}",
+      "{PTB_450}"
+    ]
+  },
+  "MiG-15bis": {
+    "1": [
+      "FAB_50",
+      "FAB_100M",
+      "PTB300_MIG15",
+      "PTB400_MIG15",
+      "PTB600_MIG15"
+    ],
+    "2": [
+      "FAB_50",
+      "FAB_100M",
+      "PTB300_MIG15",
+      "PTB400_MIG15",
+      "PTB600_MIG15"
+    ]
+  },
+  "MiG-15bis_FC": {
+    "1": [
+      "FAB_50",
+      "FAB_100M",
+      "PTB300_MIG15",
+      "PTB400_MIG15",
+      "PTB600_MIG15"
+    ],
+    "2": [
+      "FAB_50",
+      "FAB_100M",
+      "PTB300_MIG15",
+      "PTB400_MIG15",
+      "PTB600_MIG15"
+    ]
+  },
+  "MiG-19P": {
+    "5": [
+      "PTB760_MIG19",
+      "{ORO57K_S5M_HEFRAG}",
+      "FAB_100M",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "2": [
+      "PTB760_MIG19",
+      "{ORO57K_S5M_HEFRAG}",
+      "FAB_100M",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "6": [
+      "{K-13A}"
+    ],
+    "1": [
+      "{K-13A}"
+    ],
+    "4": [
+      "{ORO57K_S5M_HEFRAG}"
+    ],
+    "3": [
+      "{ORO57K_S5M_HEFRAG}"
+    ]
+  },
+  "MiG-21Bis": {
+    "3": [
+      "{PTB_800_MIG21}",
+      "{PTB_490C_MIG21}",
+      "{SPS-141-100}",
+      "{RN-24}",
+      "{RN-28}"
+    ],
+    "2": [
+      "{R-3R}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{UB-32_S5M}",
+      "{08164777-5E9C-4B08-B48E-5AA7AFB246E2}",
+      "{UPK-23-250 MiG-21}",
+      "{Kh-66_Grom}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{S-24A}",
+      "{S-24B}",
+      "{R-3S}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}"
+    ],
+    "4": [
+      "{R-3R}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{UB-32_S5M}",
+      "{08164777-5E9C-4B08-B48E-5AA7AFB246E2}",
+      "{UPK-23-250 MiG-21}",
+      "{Kh-66_Grom}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{S-24A}",
+      "{S-24B}",
+      "{R-3S}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}"
+    ],
+    "1": [
+      "{R-3S}",
+      "{R-60 2L}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{S-24A}",
+      "{S-24B}",
+      "{PTB_490_MIG21}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{UB-16_S5M}"
+    ],
+    "5": [
+      "{R-3S}",
+      "{R-60 2R}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{S-24A}",
+      "{S-24B}",
+      "{PTB_490_MIG21}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{UB-16_S5M}"
+    ],
+    "6": [
+      "{ASO-2}"
+    ],
+    "7": [
+      "{SMOKE_WHITE}"
+    ]
+  },
+  "Mirage-F1B": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP250LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1BD": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1BE": {
+    "1": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ]
+  },
+  "Mirage-F1BQ": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1C-200": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250LD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1C": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250LD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1CE": {
+    "1": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ]
+  },
+  "Mirage-F1CG": {
+    "1": [
+      "<CLEAN>",
+      "{AIM-9JULI}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "CLB4-PYLON-SAMP400LD",
+      "{CLB4_SAMP400HD}",
+      "CLB4-PYLON-SAMP250HD",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{AIM-9JULI}"
+    ]
+  },
+  "Mirage-F1CH": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1CJ": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1CK": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1CR": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "PTB-1200-F1",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1CT": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1CZ": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1DDA": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1ED": {
+    "1": [
+      "<CLEAN>",
+      "{FC23864E-3B80-48E3-9C03-4DA8B1D7497B}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{FC23864E-3B80-48E3-9C03-4DA8B1D7497B}"
+    ]
+  },
+  "Mirage-F1EDA": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1EE": {
+    "1": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_EM}",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "BARAX_ECM"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ]
+  },
+  "Mirage-F1EH": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "{R530F_EM}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1EQ": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{S530F}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1JA": {
+    "1": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "DIS_PL-8B",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "DIS_PL-8B",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{R550_Magic_1}"
+    ]
+  },
+  "Mirage-F1M-CE": {
+    "1": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ]
+  },
+  "Mirage-F1M-EE": {
+    "1": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "PTB-1200-F1",
+      "{R530F_IR}",
+      "{CLB4_SAMP400LD}",
+      "{CLB4_SAMP400HD}",
+      "{CLB4_SAMP250HD}",
+      "{CLB4_BLU107}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{R530F_IR}",
+      "PTB-1200-F1",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}",
+      "{S530F}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{MATRA_F4_SNEBT251}",
+      "{MATRA_F1_SNEBT253}",
+      "{MATRA_F4_SNEBT253}",
+      "{MATRA_F1_SNEBT256}",
+      "{MATRA_F4_SNEBT256}",
+      "{SAMP250HD}",
+      "{SAMP400LD}",
+      "{BLU107B_DURANDAL}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{AIM-9JULI}",
+      "{R550_Magic_1}",
+      "{AIM-9J}"
+    ]
+  },
+  "OH58D": {
+    "1": [
+      "OH58D_FIM_92_L",
+      "OH58D_M3P_L500",
+      "OH58D_AGM_114_L",
+      "{M260_M151}",
+      "{M260_M229}",
+      "{M260_APKWS_M151}",
+      "{M260_A_M151_B_M257}"
+    ],
+    "5": [
+      "OH58D_FIM_92_R",
+      "OH58D_AGM_114_R",
+      "{M260_M151}",
+      "{M260_M229}",
+      "{M260_APKWS_M151}",
+      "{M260_A_M151_B_M257}"
+    ]
+  },
+  "SA342L": {
+    "1": [
+      "{GIAT_M621_APHE}",
+      "{FN_HMP400}",
+      "{HOT3_R2}",
+      "{SA342_Mistral_R2}",
+      "{SA342_Mistral_R1}"
+    ],
+    "2": [
+      "{TELSON8_SNEBT251}",
+      "{FN_HMP400}",
+      "{HOT3_L2}",
+      "{SA342_Mistral_L2}",
+      "{SA342_Mistral_L1}"
+    ],
+    "3": [
+      "{FAS}"
+    ],
+    "4": [
+      "{IR_Deflector}"
+    ],
+    "6": [
+      "{INV-SMOKE-RED}"
+    ],
+    "7": [
+      "{INV-SMOKE-BLUE}"
+    ]
+  },
+  "SA342M": {
+    "1": [
+      "{HOT3_R2_M}",
+      "{HOT3_R1_M}"
+    ],
+    "2": [
+      "{HOT3_L2_M}",
+      "{HOT3_L1_M}"
+    ],
+    "3": [
+      "FAS}"
+    ],
+    "4": [
+      "{IR_Deflector}"
+    ],
+    "6": [
+      "{INV-SMOKE-RED}"
+    ],
+    "7": [
+      "{INV-SMOKE-BLUE}"
+    ]
+  },
+  "SA342Minigun": {
+    "3": [
+      "{FAS}"
+    ],
+    "4": [
+      "{IR_Deflector}"
+    ],
+    "6": [
+      "{INV-SMOKE-RED}"
+    ],
+    "7": [
+      "{INV-SMOKE-BLUE}"
+    ]
+  },
+  "SA342Mistral": {
+    "1": [
+      "{MBDA_MistralD}"
+    ],
+    "2": [
+      "{MBDA_MistralG}"
+    ],
+    "3": [
+      "{MBDA_MistralD}"
+    ],
+    "4": [
+      "{MBDA_MistralG}"
+    ],
+    "6": [
+      "{IR_Deflector}"
+    ],
+    "5": [
+      "{FAS}"
+    ]
+  },
+  "B-1B": {
+    "1": [
+      "MK_82*28",
+      "{AABA1A14-78A1-4E85-94DD-463CF75BD9E4}",
+      "GBU-38*16",
+      "CBU87*10",
+      "CBU97*10",
+      "B-1B_Mk-84*8",
+      "GBU-31*8",
+      "GBU-31V3B*8"
+    ],
+    "2": [
+      "MK_82*28",
+      "{AABA1A14-78A1-4E85-94DD-463CF75BD9E4}",
+      "GBU-38*16",
+      "CBU87*10",
+      "CBU97*10",
+      "B-1B_Mk-84*8",
+      "GBU-31*8",
+      "GBU-31V3B*8"
+    ],
+    "3": [
+      "MK_82*28",
+      "{AABA1A14-78A1-4E85-94DD-463CF75BD9E4}",
+      "GBU-38*16",
+      "CBU87*10",
+      "CBU97*10",
+      "B-1B_Mk-84*8",
+      "GBU-31*8",
+      "GBU-31V3B*8"
+    ]
+  },
+  "B-52H": {
+    "1": [
+      "{696CFFC4-0BDE-42A8-BE4B-0BE3D9DD723C}",
+      "{585D626E-7F42-4073-AB70-41E728C333E2}",
+      "{4CD2BB0F-5493-44EF-A927-9760350F7BA1}",
+      "{45447F82-01B5-4029-A572-9AAD28AF0275}"
+    ],
+    "3": [
+      "{696CFFC4-0BDE-42A8-BE4B-0BE3D9DD723C}",
+      "{585D626E-7F42-4073-AB70-41E728C333E2}",
+      "{4CD2BB0F-5493-44EF-A927-9760350F7BA1}",
+      "{45447F82-01B5-4029-A572-9AAD28AF0275}"
+    ],
+    "2": [
+      "{6C47D097-83FF-4FB2-9496-EAB36DDF0B05}",
+      "{8DCAF3A3-7FCF-41B8-BB88-58DEDA878EDE}",
+      "{46ACDCF8-5451-4E26-BDDB-E78D5830E93C}"
+    ]
+  },
+  "A-20G": {
+    "1": [
+      "{4xAN-M64_on_InvCountedAttachmentPoints}"
+    ]
+  },
+  "Bf-109K-4": {
+    "1": [
+      "BF109K_4_FUEL_TANK",
+      "SC_501_SC250",
+      "SC_501_SC500"
+    ]
+  },
+  "FW-190A8": {
+    "1": [
+      "<CLEAN>",
+      "ER_4_SC50",
+      "{AB_250_2_SD_10A}",
+      "{AB_250_2_SD_2}",
+      "{AB_500_1_SD_10A}",
+      "{SC_250_T1_L2}",
+      "SC_501_SC250",
+      "SC_501_SC500",
+      "{SC_500_L2}",
+      "{SD_250_Stg}",
+      "{SD_500_A}",
+      "BF109K_4_FUEL_TANK"
+    ],
+    "3": [
+      "{WGr21}"
+    ],
+    "2": [
+      "{WGr21}"
+    ]
+  },
+  "FW-190D9": {
+    "1": [
+      "SC_501_SC500",
+      "FW109_FUEL_TANK"
+    ],
+    "3": [
+      "{FW_190_R4M_RGHT_WING}",
+      "{WGr21}"
+    ],
+    "2": [
+      "{FW_190_R4M_LEFT_WING}",
+      "{WGr21}"
+    ]
+  },
+  "MosquitoFBMkVI": {
+    "2": [
+      "{British_SAP_500LB_Bomb_Mk5}",
+      "{British_GP_500LB_Bomb_Mk5}",
+      "{MOSQUITO_100GAL_SLIPPER_TANK}",
+      "",
+      "{British_GP_500LB_Bomb_Mk4_Short}"
+    ],
+    "1": [
+      "{British_SAP_500LB_Bomb_Mk5}",
+      "{British_GP_500LB_Bomb_Mk5}",
+      "{MOSQUITO_100GAL_SLIPPER_TANK}",
+      "",
+      "{British_GP_500LB_Bomb_Mk4_Short}"
+    ],
+    "4": [
+      "{British_SAP_250LB_Bomb_Mk5_on_Handley_Page_Type_B_Cut_Bar}",
+      "{British_MC_500LB_Bomb_Mk1_Short_on_Handley_Page_Type_B_Cut_Bar}",
+      "{British_MC_250LB_Bomb_Mk2_on_Handley_Page_Type_B_Cut_Bar}",
+      "{British_GP_500LB_Bomb_Mk4_Short_on_Handley_Page_Type_B_Cut_Bar}"
+    ],
+    "3": [
+      "{British_SAP_250LB_Bomb_Mk5_on_Handley_Page_Type_B_Cut_Bar}",
+      "{British_MC_500LB_Bomb_Mk1_Short_on_Handley_Page_Type_B_Cut_Bar}",
+      "{British_MC_250LB_Bomb_Mk2_on_Handley_Page_Type_B_Cut_Bar}",
+      "{British_GP_500LB_Bomb_Mk4_Short_on_Handley_Page_Type_B_Cut_Bar}"
+    ],
+    "5": [
+      "{MOSSIE_4_British_HE_60LBSAPNo2_3INCHNo1_ON_LEFT_WING_RAILS}",
+      "{MOSSIE_2_British_HE_60LBFNo1_3INCHNo1_ON_LEFT_WING_RAILS}"
+    ],
+    "6": [
+      "{MOSSIE_4_British_HE_60LBSAPNo2_3INCHNo1_ON_RIGHT_WING_RAILS}",
+      "{MOSSIE_2_British_HE_60LBFNo1_3INCHNo1_ON_RIGHT_WING_RAILS}"
+    ]
+  },
+  "P-47D-30": {
+    "2": [
+      "{AN_M65}",
+      "{US_150GAL_FUEL_TANK}",
+      "{AN-M64}",
+      "{AN_M57}"
+    ],
+    "3": [
+      "{AN_M65}",
+      "{US_150GAL_FUEL_TANK}",
+      "{AN-M64}",
+      "{AN_M57}"
+    ],
+    "1": [
+      "{US_110GAL_FUEL_TANK}",
+      "{AN_M57}"
+    ]
+  },
+  "P-47D-30bl1": {
+    "2": [
+      "{AN_M57}",
+      "{AN-M64}"
+    ],
+    "3": [
+      "{AN_M57}",
+      "{AN-M64}"
+    ],
+    "1": [
+      "{US_110GAL_FUEL_TANK}"
+    ]
+  },
+  "P-47D-40": {
+    "2": [
+      "{AN_M65}",
+      "{US_150GAL_FUEL_TANK}",
+      "{AN_M57}",
+      "{AN-M64}"
+    ],
+    "3": [
+      "{AN_M65}",
+      "{US_150GAL_FUEL_TANK}",
+      "{AN_M57}",
+      "{AN-M64}"
+    ],
+    "1": [
+      "{AN_M57}",
+      "{US_110GAL_FUEL_TANK}"
+    ],
+    "4": [
+      "{3xM8_ROCKETS_IN_TUBES}",
+      "{P47_5_HVARS_ON_LEFT_WING_RAILS}"
+    ],
+    "5": [
+      "{3xM8_ROCKETS_IN_TUBES}",
+      "{P47_5_HVARS_ON_RIGHT_WING_RAILS}"
+    ]
+  },
+  "P-51D-30-NA": {
+    "7": [
+      "{DT75GAL}",
+      "{AN-M64}",
+      "{HVAR}"
+    ],
+    "4": [
+      "{DT75GAL}",
+      "{AN-M64}",
+      "{HVAR}"
+    ],
+    "10": [
+      "{HVAR}",
+      "{HVAR_SMOKE_GENERATOR}"
+    ],
+    "9": [
+      "{HVAR}"
+    ],
+    "8": [
+      "{HVAR}"
+    ],
+    "3": [
+      "{HVAR}"
+    ],
+    "2": [
+      "{HVAR}"
+    ],
+    "1": [
+      "{HVAR}",
+      "{HVAR_SMOKE_GENERATOR}"
+    ],
+    "6": [
+      "{HVAR}"
+    ],
+    "5": [
+      "{HVAR}"
+    ]
+  },
+  "P-51D": {
+    "7": [
+      "{DT75GAL}",
+      "{AN-M64}",
+      "{HVAR}"
+    ],
+    "4": [
+      "{DT75GAL}",
+      "{AN-M64}",
+      "{HVAR}"
+    ],
+    "10": [
+      "{HVAR}",
+      "{HVAR_SMOKE_GENERATOR}"
+    ],
+    "9": [
+      "{HVAR}"
+    ],
+    "8": [
+      "{HVAR}"
+    ],
+    "3": [
+      "{HVAR}"
+    ],
+    "2": [
+      "{HVAR}"
+    ],
+    "1": [
+      "{HVAR}",
+      "{HVAR_SMOKE_GENERATOR}"
+    ],
+    "6": [
+      "{HVAR}"
+    ],
+    "5": [
+      "{HVAR}"
+    ]
+  },
+  "A-50": {},
+  "AH-1W": {
+    "2": [
+      "M260_HYDRA_WP",
+      "{3DFB7321-AB0E-11d7-9897-000476191836}",
+      "M260_HYDRA",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+    ],
+    "3": [
+      "M260_HYDRA_WP",
+      "{3DFB7321-AB0E-11d7-9897-000476191836}",
+      "M260_HYDRA",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+    ],
+    "1": [
+      "{3EA17AB0-A805-4D9E-8732-4CE00CB00F17}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "M260_HYDRA",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+    ],
+    "4": [
+      "{3EA17AB0-A805-4D9E-8732-4CE00CB00F17}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "M260_HYDRA",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+    ]
+  },
+  "AH-64A": {
+    "1": [
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+    ],
+    "4": [
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+    ],
+    "2": [
+      "{3DFB7321-AB0E-11d7-9897-000476191836}",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}"
+    ],
+    "3": [
+      "{3DFB7321-AB0E-11d7-9897-000476191836}",
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}"
+    ]
+  },
+  "AH-64D": {
+    "1": [
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}"
+    ],
+    "2": [
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}",
+      "{3DFB7321-AB0E-11d7-9897-000476191836}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}"
+    ],
+    "3": [
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}",
+      "{3DFB7321-AB0E-11d7-9897-000476191836}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}"
+    ],
+    "4": [
+      "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}",
+      "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}"
+    ]
+  },
+  "An-26B": {},
+  "An-30M": {},
+  "C-130": {},
+  "C-17A": {},
+  "CH-47D": {},
+  "CH-53E": {},
+  "E-2C": {},
+  "E-3A": {},
+  "F-117A": {
+    "1": [
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{EF0A9419-01D6-473B-99A3-BEBDB923B14D}"
+    ],
+    "2": [
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{EF0A9419-01D6-473B-99A3-BEBDB923B14D}"
+    ]
+  },
+  "F-14A": {
+    "12": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "1": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "2": [
+      "{7575BA0B-7294-4844-857B-031A144B2595}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "4": [
+      "{7575BA0B-7294-4844-857B-031A144B2595}"
+    ],
+    "5": [
+      "{7575BA0B-7294-4844-857B-031A144B2595}"
+    ],
+    "8": [
+      "{7575BA0B-7294-4844-857B-031A144B2595}"
+    ],
+    "9": [
+      "{7575BA0B-7294-4844-857B-031A144B2595}"
+    ],
+    "11": [
+      "{7575BA0B-7294-4844-857B-031A144B2595}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ]
+  },
+  "F-15C": {
+    "2": [
+      "{E1F29B21-F291-4589-9FD8-3272EEC69506}"
+    ],
+    "6": [
+      "{E1F29B21-F291-4589-9FD8-3272EEC69506}"
+    ],
+    "10": [
+      "{E1F29B21-F291-4589-9FD8-3272EEC69506}"
+    ],
+    "11": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "3": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "5": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "8": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "7": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "4": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ]
+  },
+  "F-15E": {
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "2": [
+      "{E1F29B21-F291-4589-9FD8-3272EEC69506}",
+      "LAU_117_AGM_65H",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{GBU-31V3B}"
+    ],
+    "3": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "18": [
+      "{E1F29B21-F291-4589-9FD8-3272EEC69506}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_AGM_65H",
+      "{GBU-31V3B}"
+    ],
+    "19": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}"
+    ],
+    "17": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "10": [
+      "{E1F29B21-F291-4589-9FD8-3272EEC69506}",
+      "{GBU-31V3B}"
+    ],
+    "11": [
+      "{CBU-87}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{GBU-31}",
+      "{CBU_103}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{Mk82AIR}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "9": [
+      "{CBU-87}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{GBU-31}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{CBU_103}",
+      "{Mk82AIR}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "8": [
+      "{CBU-87}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{CBU_103}",
+      "{Mk82AIR}",
+      "{GBU-31V3B}"
+    ],
+    "12": [
+      "{CBU-87}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{CBU_103}",
+      "{Mk82AIR}",
+      "{GBU-31V3B}"
+    ],
+    "7": [
+      "{CBU-87}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{GBU-31}",
+      "{CBU_103}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{Mk82AIR}",
+      "{GBU-38}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "13": [
+      "{CBU-87}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{GBU-31}",
+      "{GBU-38}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{CBU_103}",
+      "{Mk82AIR}",
+      "{CAE48299-A294-4bad-8EE6-89EFC5DCDF00}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "6": [
+      "{Mk82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{GBU-38}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"
+    ],
+    "5": [
+      "{Mk82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "4": [
+      "{Mk82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{GBU-38}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "16": [
+      "{Mk82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{GBU-38}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "15": [
+      "{Mk82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "14": [
+      "{Mk82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{GBU-38}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ]
+  },
+  "F-16A MLU": {
+    "4": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ],
+    "6": [
+      "{8A0BE8AE-58D4-4572-9263-3144C0D06364}",
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}"
+    ],
+    "7": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ],
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "2": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "3": [
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ],
+    "8": [
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "10": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "5": [
+      "{CAAC1CFD-6745-416B-AFA4-CB57414856D0}"
+    ]
+  },
+  "F-16A": {
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "2": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "3": [
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ],
+    "4": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"
+    ],
+    "6": [
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}",
+      "{8A0BE8AE-58D4-4572-9263-3144C0D06364}",
+      "ALQ_184"
+    ],
+    "7": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"
+    ],
+    "8": [
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{0B9ABA77-93B8-45FC-9C63-82AFB2CB50A4}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "10": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "5": [
+      "{CAAC1CFD-6745-416B-AFA4-CB57414856D0}"
+    ]
+  },
+  "F-16C bl.50": {
+    "10": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "8": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "LAU_117_AGM_65G",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{CBU-87}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{GBU-31}",
+      "{GBU-31V3B}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}"
+    ],
+    "3": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "LAU_117_AGM_65G",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{CBU-87}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{GBU-31}",
+      "{GBU-31V3B}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}"
+    ],
+    "2": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "6": [
+      "{8A0BE8AE-58D4-4572-9263-3144C0D06364}",
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}"
+    ],
+    "7": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{CBU-87}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "4": [
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{CBU-87}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ]
+  },
+  "F-16C bl.52d": {
+    "1": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}"
+    ],
+    "2": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}"
+    ],
+    "3": [
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98452}",
+      "{GBU-31}",
+      "{GBU-31V3B}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{GBU-38}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{BRU-42_3*Mk-82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{CBU-87}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_AGM_65G",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "4": [
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "LAU_117_AGM_65G"
+    ],
+    "6": [
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}",
+      "ALQ_184",
+      "{8A0BE8AE-58D4-4572-9263-3144C0D06364}"
+    ],
+    "7": [
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{F376DBEE-4CAE-41BA-ADD9-B2910AC95DEC}",
+      "LAU_117_AGM_65G"
+    ],
+    "8": [
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{DAC53A2F-79CA-42FF-A77A-F5649B601308}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98453}",
+      "{GBU-31}",
+      "{GBU-31V3B}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{GBU-38}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{9BCC2A2B-5708-4860-B1F1-053A18442067}",
+      "{BRU-42_3*Mk-82AIR}",
+      "{5335D97A-35A5-4643-9D9B-026C75961E52}",
+      "{CBU-87}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "LAU_117_AGM_65G",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{C8E06185-7CD6-4C90-959F-044679E90751}"
+    ],
+    "9": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}"
+    ],
+    "10": [
+      "{C8E06185-7CD6-4C90-959F-044679E90751}",
+      "{40EF17B7-F508-45de-8566-6FFECC0C1AB8}",
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{9BFD8C90-F7AE-4e90-833B-BFD0CED0E536}"
+    ],
+    "5": [
+      "{A111396E-D3E8-4b9c-8AC9-2432489304D5}"
+    ]
+  },
+  "F-4E": {
+    "2": [
+      "{9DDF5297-94B9-42FC-A45E-6E316121CD85}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98452}",
+      "{3E6B632D-65EB-44D2-9501-1C2D04515405}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{B83CB620-5BBE-4BEA-910C-EB605A327EF9}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{D7670BC7-881B-4094-906C-73879CF7EB28}"
+    ],
+    "3": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}",
+      "{6D21ECEA-F85B-4E8D-9D51-31DC9B8AA4EF}"
+    ],
+    "4": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "6": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "7": [
+      "{8D399DDA-FF81-4F14-904D-099B34FE7918}"
+    ],
+    "8": [
+      "{9DDF5297-94B9-42FC-A45E-6E316121CD85}",
+      "{E6A6262A-CA08-4B3D-B030-E1A993B98453}",
+      "{3E6B632D-65EB-44D2-9501-1C2D04515405}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{B83CB620-5BBE-4BEA-910C-EB605A327EF9}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{D7670BC7-881B-4094-906C-73879CF7EB27}"
+    ],
+    "1": [
+      "{3E6B632D-65EB-44D2-9501-1C2D04515405}",
+      "{7B4B122D-C12C-4DB4-834E-4D8BB4D863A8}",
+      "{1C97B4A0-AA3B-43A8-8EE7-D11071457185}",
+      "{B83CB620-5BBE-4BEA-910C-EB605A327EF9}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "9": [
+      "{3E6B632D-65EB-44D2-9501-1C2D04515405}",
+      "{7B4B122D-C12C-4DB4-834E-4D8BB4D863A8}",
+      "{1C97B4A0-AA3B-43A8-8EE7-D11071457185}",
+      "{B83CB620-5BBE-4BEA-910C-EB605A327EF9}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}"
+    ],
+    "5": [
+      "{8B9E3FD0-F034-4A07-B6CE-C269884CC71B}"
+    ]
+  },
+  "IL-76MD": {},
+  "IL-78M": {},
+  "Ka-27": {},
+  "Ka-52": {
+    "1": [
+      "{A6FD14D3-6D30-4C85-88A7-8D17BEE120E2}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "2": [
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "3": [
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "4": [
+      "{A6FD14D3-6D30-4C85-88A7-8D17BEE120E2}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ]
+  },
+  "KC-10A": {},
+  "KC-135": {},
+  "Mi-24V": {
+    "3": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{PTB_450}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "B_8V20A_CM",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}"
+    ],
+    "4": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{PTB_450}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "B_8V20A_CM",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}"
+    ],
+    "1": [
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}"
+    ],
+    "6": [
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}"
+    ],
+    "2": [
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "B_8V20A_CM",
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{PTB_450}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "5": [
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "B_8V20A_CM",
+      "{B919B0F4-7C25-455E-9A02-CEA51DB895E3}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{PTB_450}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ]
+  },
+  "Mi-26": {},
+  "Mi-28N": {
+    "2": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{PTB_450}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "B_8V20A_CM",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "3": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{PTB_450}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "B_8V20A_CM",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "1": [
+      "{PTB_450}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{57232979-8B0F-4db7-8D9A-55197E06B0F5}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "B_8V20A_CM"
+    ],
+    "4": [
+      "{PTB_450}",
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
+      "{57232979-8B0F-4db7-8D9A-55197E06B0F5}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "B_8V20A_CM"
+    ]
+  },
+  "Mi-8MT": {
+    "5": [
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "GUV_YakB_GSHP",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}"
+    ],
+    "4": [
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}"
+    ],
+    "3": [
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}"
+    ],
+    "2": [
+      "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
+      "GUV_YakB_GSHP",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}"
+    ],
+    "6": [
+      "GUV_VOG",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}"
+    ],
+    "1": [
+      "GUV_VOG",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}"
+    ]
+  },
+  "MiG-23MLD": {
+    "3": [
+      "{B0DBC591-0F52-4F7D-AD7B-51E67725FB81}",
+      "{APU-60-1_R_60M}"
+    ],
+    "5": [
+      "{275A2855-4A79-4B2D-B082-91EA2ADF4691}",
+      "{APU-60-1_R_60M}"
+    ],
+    "2": [
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{CCF898C9-5BC7-49A4-9D1E-C3ED3D5166A1}",
+      "{6980735A-44CC-4BB9-A1B5-591532F1DC69}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}"
+    ],
+    "4": [
+      "{A5BAEAB7-6FAF-4236-AF72-0FD900F493F9}"
+    ],
+    "6": [
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{CCF898C9-5BC7-49A4-9D1E-C3ED3D5166A1}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}"
+    ]
+  },
+  "MiG-25PD": {
+    "1": [
+      "{5F26DBC2-FB43-4153-92DE-6BBCE26CB0FF}",
+      "{4EDBA993-2E34-444C-95FB-549300BF7CAF}",
+      "{APU-60-1_R_60M}"
+    ],
+    "2": [
+      "{4EDBA993-2E34-444C-95FB-549300BF7CAF}"
+    ],
+    "3": [
+      "{4EDBA993-2E34-444C-95FB-549300BF7CAF}"
+    ],
+    "4": [
+      "{5F26DBC2-FB43-4153-92DE-6BBCE26CB0FF}",
+      "{4EDBA993-2E34-444C-95FB-549300BF7CAF}",
+      "{APU-60-1_R_60M}"
+    ]
+  },
+  "MiG-25RBT": {
+    "1": [
+      "{R-60 2L}",
+      "{R-60M 2L}"
+    ],
+    "2": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "3": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "4": [
+      "{R-60 2R}",
+      "{R-60M 2R}"
+    ]
+  },
+  "MiG-27K": {
+    "2": [
+      "{E659C4BE-2CD8-4472-8C08-3F28ACB61A8A}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{601C99F7-9AF3-4ed7-A565-F8B8EC0D7AAC}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}"
+    ],
+    "3": [
+      "{APU-60-1_R_60M}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}"
+    ],
+    "4": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "5": [
+      "{A5BAEAB7-6FAF-4236-AF72-0FD900F493F9}"
+    ],
+    "6": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "7": [
+      "{APU-60-1_R_60M}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}"
+    ],
+    "8": [
+      "{E659C4BE-2CD8-4472-8C08-3F28ACB61A8A}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{601C99F7-9AF3-4ed7-A565-F8B8EC0D7AAC}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}"
+    ]
+  },
+  "MiG-29A": {
+    "3": [
+      "{C0FF4842-FBAC-11d5-9190-00A0249B6F00}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "4": [
+      "{2BEC576B-CDF5-4B7F-961F-B0FA4312B841}"
+    ],
+    "5": [
+      "{C0FF4842-FBAC-11d5-9190-00A0249B6F00}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "1": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "2": [
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "6": [
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "7": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ]
+  },
+  "MiG-29G": {
+    "1": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "3": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{C0FF4842-FBAC-11d5-9190-00A0249B6F00}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "4": [
+      "{2BEC576B-CDF5-4B7F-961F-B0FA4312B841}"
+    ],
+    "5": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{C0FF4842-FBAC-11d5-9190-00A0249B6F00}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "6": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "7": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ]
+  },
+  "MiG-29S": {
+    "1": [
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "3": [
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{C0FF4842-FBAC-11d5-9190-00A0249B6F00}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "5": [
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{C0FF4842-FBAC-11d5-9190-00A0249B6F00}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "6": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "7": [
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "4": [
+      "{2BEC576B-CDF5-4B7F-961F-B0FA4312B841}"
+    ]
+  },
+  "MiG-31": {
+    "1": [
+      "{5F26DBC2-FB43-4153-92DE-6BBCE26CB0FF}",
+      "{4EDBA993-2E34-444C-95FB-549300BF7CAF}",
+      "{B0DBC591-0F52-4F7D-AD7B-51E67725FB81}"
+    ],
+    "2": [
+      "{F1243568-8EF0-49D4-9CB5-4DA90D92BC1D}"
+    ],
+    "3": [
+      "{F1243568-8EF0-49D4-9CB5-4DA90D92BC1D}"
+    ],
+    "4": [
+      "{F1243568-8EF0-49D4-9CB5-4DA90D92BC1D}"
+    ],
+    "5": [
+      "{F1243568-8EF0-49D4-9CB5-4DA90D92BC1D}"
+    ],
+    "6": [
+      "{5F26DBC2-FB43-4153-92DE-6BBCE26CB0FF}",
+      "{4EDBA993-2E34-444C-95FB-549300BF7CAF}",
+      "{275A2855-4A79-4B2D-B082-91EA2ADF4691}"
+    ]
+  },
+  "Mirage 2000-5": {
+    "1": [
+      "{FC23864E-3B80-48E3-9C03-4DA8B1D7497B}"
+    ],
+    "3": [
+      "{0DA03783-61E4-40B2-8FAE-6AEE0A5C5AAE}",
+      "{6D778860-7BB8-4ACB-9E95-BA772C6BBC2C}"
+    ],
+    "4": [
+      "{0DA03783-61E4-40B2-8FAE-6AEE0A5C5AAE}",
+      "{6D778860-7BB8-4ACB-9E95-BA772C6BBC2C}"
+    ],
+    "6": [
+      "{0DA03783-61E4-40B2-8FAE-6AEE0A5C5AAE}",
+      "{6D778860-7BB8-4ACB-9E95-BA772C6BBC2C}"
+    ],
+    "7": [
+      "{0DA03783-61E4-40B2-8FAE-6AEE0A5C5AAE}",
+      "{6D778860-7BB8-4ACB-9E95-BA772C6BBC2C}"
+    ],
+    "9": [
+      "{FC23864E-3B80-48E3-9C03-4DA8B1D7497B}"
+    ],
+    "2": [
+      "{414DA830-B61A-4F9E-B71B-C2F6832E1D7A}",
+      "{FD21B13E-57F3-4C2A-9F78-C522D0B5BCE1}"
+    ],
+    "5": [
+      "{414DA830-B61A-4F9E-B71B-C2F6832E1D7A}"
+    ],
+    "8": [
+      "{414DA830-B61A-4F9E-B71B-C2F6832E1D7A}",
+      "{FD21B13E-57F3-4C2A-9F78-C522D0B5BCE1}"
+    ]
+  },
+  "MQ-9 Reaper": {
+    "4": [
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-38}",
+      "AGM114x2_OH_58"
+    ],
+    "3": [
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-38}",
+      "AGM114x2_OH_58"
+    ],
+    "2": [
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-38}",
+      "AGM114x2_OH_58"
+    ],
+    "1": [
+      "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}",
+      "{GBU-38}",
+      "AGM114x2_OH_58"
+    ]
+  },
+  "OH-58D": {
+    "1": [
+      "AGM114x2_OH_58",
+      "oh-58-brauning",
+      "M260_HYDRA",
+      "M260_HYDRA_WP"
+    ],
+    "2": [
+      "M260_HYDRA",
+      "AGM114x2_OH_58",
+      "M260_HYDRA_WP"
+    ]
+  },
+  "RQ-1A Predator": {
+    "2": [
+      "{ee368869-c35a-486a-afe7-284beb7c5d52}"
+    ],
+    "1": [
+      "{ee368869-c35a-486a-afe7-284beb7c5d52}"
+    ]
+  },
+  "S-3B": {
+    "6": [
+      "{8B7CADF9-4954-46B3-8CFB-93F2F5B90B03}",
+      "{AF42E6DF-9A60-46D8-A9A0-1708B241AADB}",
+      "{444BA8AE-82A7-4345-842E-76154EFCCA46}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}"
+    ],
+    "1": [
+      "{8B7CADF9-4954-46B3-8CFB-93F2F5B90B03}",
+      "{AF42E6DF-9A60-46D8-A9A0-1708B241AADB}",
+      "{69DC8AE7-8F77-427B-B8AA-B19D3F478B66}",
+      "{60CC734F-0AFA-4E2E-82B8-93B941AB11CF}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{F3EFE0AB-E91A-42D8-9CA2-B63C91ED570A}"
+    ],
+    "5": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}"
+    ],
+    "2": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}",
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}"
+    ],
+    "4": [
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "3": [
+      "{ADD3FAE1-EBF6-4EF9-8EFC-B36B5DDF1E6B}",
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ]
+  },
+  "SH-3W": {},
+  "SH-60B": {
+    "1": [
+      "{7B8DCEB4-820B-4015-9B48-1028A4195692}"
+    ]
+  },
+  "Su-17M4": {
+    "1": [
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{5A1AC2B4-CA4B-4D09-A1AF-AC52FBC4B60B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{E659C4BE-2CD8-4472-8C08-3F28ACB61A8A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{414E383A-59EB-41BC-8566-2B5E0788ED1F}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "2": [
+      "{APU-60-1_R_60M}"
+    ],
+    "3": [
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{5A1AC2B4-CA4B-4D09-A1AF-AC52FBC4B60B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{E86C5AA5-6D49-4F00-AD2E-79A62D6DDE26}",
+      "{FE382A68-8620-4AC0-BDF5-709BFE3977D7}",
+      "{3E35F8C1-052D-11d6-9191-00A0249B6F00}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "4": [
+      "{E659C4BE-2CD8-4472-8C08-3F28ACB61A8A}",
+      "{5A1AC2B4-CA4B-4D09-A1AF-AC52FBC4B60B}",
+      "{A5BAEAB7-6FAF-4236-AF72-0FD900F493F9}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{414E383A-59EB-41BC-8566-2B5E0788ED1F}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "5": [
+      "{E659C4BE-2CD8-4472-8C08-3F28ACB61A8A}",
+      "{5A1AC2B4-CA4B-4D09-A1AF-AC52FBC4B60B}",
+      "{A5BAEAB7-6FAF-4236-AF72-0FD900F493F9}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{414E383A-59EB-41BC-8566-2B5E0788ED1F}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "6": [
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{5A1AC2B4-CA4B-4D09-A1AF-AC52FBC4B60B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{E86C5AA5-6D49-4F00-AD2E-79A62D6DDE26}",
+      "{FE382A68-8620-4AC0-BDF5-709BFE3977D7}",
+      "{3E35F8C1-052D-11d6-9191-00A0249B6F00}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "7": [
+      "{APU-60-1_R_60M}"
+    ],
+    "8": [
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{5A1AC2B4-CA4B-4D09-A1AF-AC52FBC4B60B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{E659C4BE-2CD8-4472-8C08-3F28ACB61A8A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{414E383A-59EB-41BC-8566-2B5E0788ED1F}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ]
+  },
+  "Su-24M": {
+    "1": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{APU-60-1_R_60M}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "2": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{4D13E282-DF46-4B23-864A-A9423DFDE504}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{7D7EC917-05F6-49D4-8045-61FC587DD019}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF03}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{FE382A68-8620-4AC0-BDF5-709BFE3977D7}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{E86C5AA5-6D49-4F00-AD2E-79A62D6DDE26}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{39821727-F6E2-45B3-B1F0-490CC8921D1E}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}",
+      "{40AB87E8-BEFB-4D85-90D9-B2753ACF9514}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}"
+    ],
+    "3": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}"
+    ],
+    "6": [
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}"
+    ],
+    "7": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{4D13E282-DF46-4B23-864A-A9423DFDE504}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{7D7EC917-05F6-49D4-8045-61FC587DD019}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF03}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{FE382A68-8620-4AC0-BDF5-709BFE3977D7}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{E86C5AA5-6D49-4F00-AD2E-79A62D6DDE26}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{39821727-F6E2-45B3-B1F0-490CC8921D1E}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}",
+      "{40AB87E8-BEFB-4D85-90D9-B2753ACF9514}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}"
+    ],
+    "8": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{APU-60-1_R_60M}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{6DADF342-D4BA-4D8A-B081-BA928C4AF86D}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{3858707D-F5D5-4bbb-BDD8-ABB0530EBC7C}",
+      "{292960BB-6518-41AC-BADA-210D65D5073C}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "5": [
+      "{16602053-4A12-40A2-B214-AB60D481B20E}",
+      "{0519A264-0AB6-11d6-9193-00A0249B6F00}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}"
+    ],
+    "4": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{APK_9}"
+    ]
+  },
+  "Su-24MR": {
+    "1": [
+      "{B0DBC591-0F52-4F7D-AD7B-51E67725FB81}"
+    ],
+    "5": [
+      "{0519A263-0AB6-11d6-9193-00A0249B6F00}",
+      "{0519A262-0AB6-11d6-9193-00A0249B6F00}"
+    ],
+    "8": [
+      "{0519A261-0AB6-11d6-9193-00A0249B6F00}"
+    ],
+    "2": [
+      "{7D7EC917-05F6-49D4-8045-61FC587DD019}"
+    ],
+    "7": [
+      "{7D7EC917-05F6-49D4-8045-61FC587DD019}"
+    ]
+  },
+  "Su-25": {
+    "1": [
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "2": [
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "3": [
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "4": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "5": [
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}"
+    ],
+    "6": [
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}"
+    ],
+    "7": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "8": [
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}"
+    ],
+    "9": [
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3DFB7320-AB0E-11d7-9897-000476191836}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "10": [
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ]
+  },
+  "Su-25T": {
+    "1": [
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82C}"
+    ],
+    "2": [
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "3": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "4": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "5": [
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{E2C426E3-8B10-4E09-B733-9CDC26520F48}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{601C99F7-9AF3-4ed7-A565-F8B8EC0D7AAC}",
+      "{B5CA9846-776E-4230-B4FD-8BCC9BFB1676}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}"
+    ],
+    "7": [
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{E2C426E3-8B10-4E09-B733-9CDC26520F48}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{601C99F7-9AF3-4ed7-A565-F8B8EC0D7AAC}",
+      "{B5CA9846-776E-4230-B4FD-8BCC9BFB1676}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}"
+    ],
+    "8": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "9": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "10": [
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}",
+      "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "11": [
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}",
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82C}"
+    ],
+    "6": [
+      "{B1EF6B0E-3D91-4047-A7A5-A99E7D8B4A8B}",
+      "{0519A264-0AB6-11d6-9193-00A0249B6F00}"
+    ]
+  },
+  "Su-25TM": {
+    "1": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82D}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "2": [
+      "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}"
+    ],
+    "3": [
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "4": [
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "5": [
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{601C99F7-9AF3-4ed7-A565-F8B8EC0D7AAC}",
+      "{B5CA9846-776E-4230-B4FD-8BCC9BFB1676}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{2234F529-1D57-4496-8BB0-0150F9BDBBD3}",
+      "{4D13E282-DF46-4B23-864A-A9423DFDE50A}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{E2C426E3-8B10-4E09-B733-9CDC26520F48}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF0A}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "7": [
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{601C99F7-9AF3-4ed7-A565-F8B8EC0D7AAC}",
+      "{B5CA9846-776E-4230-B4FD-8BCC9BFB1676}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{2234F529-1D57-4496-8BB0-0150F9BDBBD3}",
+      "{4D13E282-DF46-4B23-864A-A9423DFDE50A}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{E2C426E3-8B10-4E09-B733-9CDC26520F48}",
+      "{D4A8D9B9-5C45-42e7-BBD2-0E54F8308432}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF0A}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "8": [
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{F789E86A-EE2E-4E6B-B81E-D5E5F903B6ED}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{E92CBFE5-C153-11d8-9897-000476191836}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "9": [
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{E8D4652F-FD48-45B7-BA5B-2AE05BB5A9CF}",
+      "{752AF1D2-EBCC-4bd7-A1E7-2357F5601C70}",
+      "{0180F983-C14A-11d8-9897-000476191836}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{79D73885-0801-45a9-917F-C90FE1CE3DFC}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "10": [
+      "{CBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{637334E4-AB5A-47C0-83A6-51B7F1DF3CD5}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{29A828E2-C6BB-11d8-9897-000476191836}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{0511E528-EA28-4caf-A212-00D1408DF10A}"
+    ],
+    "11": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82C}",
+      "{682A481F-0CB5-4693-A382-D00DD4A156D7}"
+    ],
+    "6": [
+      "{B1EF6B0E-3D91-4047-A7A5-A99E7D8B4A8B}",
+      "{0519A264-0AB6-11d6-9193-00A0249B6F00}",
+      "{F4920E62-A99A-11d8-9897-000476191836}"
+    ]
+  },
+  "Su-27": {
+    "1": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82F}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "3": [
+      "{B79C379A-9E87-4E50-A1EE-7F7E29C2E87A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{TWIN_S25}",
+      "{TWIN_B_8M1_S_8KOM}",
+      "{TWIN_B_8M1_S_8_OFP2}",
+      "{TWIN_B13L_5OF}"
+    ],
+    "4": [
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{MBD3_U6_5*FAB-250}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}"
+    ],
+    "5": [
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{MBD3_U6_3*FAB-250_fwd}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "6": [
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{53BE25A4-C86C-4571-9BC0-47D668349595}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}"
+    ],
+    "7": [
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{MBD3_U6_5*FAB-250}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}"
+    ],
+    "8": [
+      "{B79C379A-9E87-4E50-A1EE-7F7E29C2E87A}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74884}",
+      "{BD289E34-DF84-4C5E-9220-4B14C346E79D}",
+      "{96A7F676-F956-404A-AD04-F33FB2C74881}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{TWIN_S25}",
+      "{TWIN_B_8M1_S_8KOM}",
+      "{TWIN_B_8M1_S_8_OFP2}",
+      "{TWIN_B13L_5OF}"
+    ],
+    "9": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "10": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}",
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82A}"
+    ]
+  },
+  "Su-30": {
+    "1": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82F}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "3": [
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{88DAC840-9F75-4531-8689-B46E64E42E53}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF03}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{39821727-F6E2-45B3-B1F0-490CC8921D1E}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{40AB87E8-BEFB-4D85-90D9-B2753ACF9514}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}"
+    ],
+    "4": [
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4D13E282-DF46-4B23-864A-A9423DFDE504}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF03}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}"
+    ],
+    "5": [
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{2234F529-1D57-4496-8BB0-0150F9BDBBD2}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "6": [
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{2234F529-1D57-4496-8BB0-0150F9BDBBD2}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}"
+    ],
+    "7": [
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{4D13E282-DF46-4B23-864A-A9423DFDE504}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF03}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}"
+    ],
+    "8": [
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{88DAC840-9F75-4531-8689-B46E64E42E53}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{D8F2C90B-887B-4B9E-9FE2-996BC9E9AF03}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{39821727-F6E2-45B3-B1F0-490CC8921D1E}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{40AB87E8-BEFB-4D85-90D9-B2753ACF9514}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{3468C652-E830-4E73-AFA9-B5F260AB7C3D}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{B4FC81C9-B861-4E87-BBDC-A1158E648EBF}"
+    ],
+    "9": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "10": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82A}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ]
+  },
+  "Su-33": {
+    "1": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82F}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "3": [
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{B79C379A-9E87-4E50-A1EE-7F7E29C2E87A}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{TWIN_B_8M1_S_8KOM}",
+      "{TWIN_B_8M1_S_8_OFP2}",
+      "{TWIN_B13L_5OF}",
+      "{TWIN_S25}"
+    ],
+    "4": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}"
+    ],
+    "5": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{3E35F8C1-052D-11d6-9191-00A0249B6F00}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}"
+    ],
+    "6": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{53BE25A4-C86C-4571-9BC0-47D668349595}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}"
+    ],
+    "7": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{53BE25A4-C86C-4571-9BC0-47D668349595}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}"
+    ],
+    "8": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{3E35F8C1-052D-11d6-9191-00A0249B6F00}",
+      "{7AEC222D-C523-425e-B714-719C0D1EB14D}"
+    ],
+    "9": [
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{E8069896-8435-4B90-95C0-01A03AE6E400}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}"
+    ],
+    "10": [
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{B79C379A-9E87-4E50-A1EE-7F7E29C2E87A}",
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{A0648264-4BC0-4EE8-A543-D119F6BA4257}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{TWIN_B_8M1_S_8KOM}",
+      "{TWIN_B_8M1_S_8_OFP2}",
+      "{TWIN_B13L_5OF}",
+      "{TWIN_S25}"
+    ],
+    "11": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "12": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82A}",
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ]
+  },
+  "Su-34": {
+    "1": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82F}"
+    ],
+    "2": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "3": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{X-29T}",
+      "{X-31A}",
+      "{X-31P}",
+      "{X-29L}"
+    ],
+    "4": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{X-29L}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{X-29T}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{40AB87E8-BEFB-4D85-90D9-B2753ACF9514}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{39821727-F6E2-45B3-B1F0-490CC8921D1E}",
+      "{X-31A}",
+      "{X-31P}"
+    ],
+    "5": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{X-29L}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{X-29T}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{X-31P}",
+      "{X-31A}"
+    ],
+    "6": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "7": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{9B25D316-0434-4954-868F-D51DB1A38DF0}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}"
+    ],
+    "8": [
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{X-29L}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{X-29T}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{X-31P}",
+      "{X-31A}"
+    ],
+    "9": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{F99BEC1A-869D-4AC7-9730-FBA0E3B1F5FC}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{X-29L}",
+      "{BA565F89-2373-4A84-9502-A0E017D3A44A}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{X-29T}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{40AA4ABE-D6EB-4CD6-AEFE-A1A0477B24AB}",
+      "{40AB87E8-BEFB-4D85-90D9-B2753ACF9514}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{39821727-F6E2-45B3-B1F0-490CC8921D1E}",
+      "{X-31A}",
+      "{X-31P}"
+    ],
+    "10": [
+      "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
+      "{FB3CE165-BF07-4979-887C-92B87F13276B}",
+      "{35B698AC-9FEF-4EC4-AD29-484A0085F62B}",
+      "{B4C01D60-A8A3-4237-BD72-CA7655BC0FE9}",
+      "{4203753F-8198-4E85-9924-6F8FF679F9FF}",
+      "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
+      "{D5435F26-F120-4FA3-9867-34ACE562EF1B}",
+      "{F72F47E5-C83A-4B85-96ED-D3E46671EE9A}",
+      "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
+      "{X-29T}",
+      "{X-31A}",
+      "{X-31P}",
+      "{X-29L}"
+    ],
+    "11": [
+      "{FBC29BFE-3D24-4C64-B81D-941239D12249}"
+    ],
+    "12": [
+      "{44EE8698-89F9-48EE-AF36-5FD31896A82A}"
+    ]
+  },
+  "Tornado GR4": {
+    "12": [
+      "{8C3F26A1-FA0F-11d5-9190-00A0249B6F00}"
+    ],
+    "11": [
+      "{EF124821-F9BB-4314-A153-E0E2FE1162C4}"
+    ],
+    "10": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{E6747967-B1F0-4C77-977B-AB2E6EB0C102}"
+    ],
+    "3": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}",
+      "{E6747967-B1F0-4C77-977B-AB2E6EB0C102}"
+    ],
+    "2": [
+      "{EF124821-F9BB-4314-A153-E0E2FE1162C4}"
+    ],
+    "1": [
+      "{8C3F26A2-FA0F-11d5-9190-00A0249B6F00}",
+      "{8C3F26A1-FA0F-11d5-9190-00A0249B6F00}"
+    ],
+    "9": [
+      "{E6747967-B1F0-4C77-977B-AB2E6EB0C102}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{1461CD18-429A-42A9-A21F-4C621ECD4573}"
+    ],
+    "7": [
+      "",
+      "{08164777-5E9C-4B08-B48E-5AA7AFB246E2}"
+    ],
+    "8": [
+      "",
+      "{08164777-5E9C-4B08-B48E-5AA7AFB246E2}"
+    ],
+    "4": [
+      "{E6747967-B1F0-4C77-977B-AB2E6EB0C102}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{1461CD18-429A-42A9-A21F-4C621ECD4573}"
+    ],
+    "5": [
+      "",
+      "{08164777-5E9C-4B08-B48E-5AA7AFB246E2}"
+    ],
+    "6": [
+      "",
+      "{08164777-5E9C-4B08-B48E-5AA7AFB246E2}"
+    ]
+  },
+  "Tornado IDS": {
+    "1": [
+      "{8C3F26A1-FA0F-11d5-9190-00A0249B6F00}"
+    ],
+    "2": [
+      "{EF124821-F9BB-4314-A153-E0E2FE1162C4}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{7210496B-7B81-4B52-80D6-8529ECF847CD}"
+    ],
+    "3": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "4": [
+      "{7210496B-7B81-4B52-80D6-8529ECF847CD}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"
+    ],
+    "9": [
+      "{7210496B-7B81-4B52-80D6-8529ECF847CD}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"
+    ],
+    "10": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "11": [
+      "{EF124821-F9BB-4314-A153-E0E2FE1162C4}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{7210496B-7B81-4B52-80D6-8529ECF847CD}"
+    ],
+    "12": [
+      "{8C3F26A1-FA0F-11d5-9190-00A0249B6F00}",
+      "{8C3F26A2-FA0F-11d5-9190-00A0249B6F00}"
+    ],
+    "5": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "6": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "7": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ],
+    "8": [
+      "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
+    ]
+  },
+  "Tu-142": {
+    "1": [
+      "{C42EE4C3-355C-4B83-8B22-B39430B8F4AE}"
+    ]
+  },
+  "Tu-160": {
+    "1": [
+      "{0290F5DE-014A-4BB1-9843-D717749B1DED}"
+    ],
+    "2": [
+      "{0290F5DE-014A-4BB1-9843-D717749B1DED}"
+    ]
+  },
+  "Tu-22M3": {
+    "3": [
+      "{12429ECF-03F0-4DF6-BCBD-5D38B6343DE1}",
+      "{BDAD04AA-4D4A-4E51-B958-180A89F963CF}",
+      "{AD5E5863-08FC-4283-B92C-162E2B2BD3FF}"
+    ],
+    "5": [
+      "{12429ECF-03F0-4DF6-BCBD-5D38B6343DE1}",
+      "{E1AAE713-5FC3-4CAA-9FF5-3FDCFB899E33}"
+    ],
+    "1": [
+      "{12429ECF-03F0-4DF6-BCBD-5D38B6343DE1}",
+      "{E1AAE713-5FC3-4CAA-9FF5-3FDCFB899E33}"
+    ],
+    "4": [
+      "{E1AAE713-5FC3-4CAA-9FF5-3FDCFB899E33}"
+    ],
+    "2": [
+      "{E1AAE713-5FC3-4CAA-9FF5-3FDCFB899E33}"
+    ]
+  },
+  "Tu-95MS": {
+    "1": [
+      "{0290F5DE-014A-4BB1-9843-D717749B1DED}"
+    ]
+  },
+  "UH-1H": {
+    "1": [
+      "M134_L"
+    ],
+    "2": [
+      "XM158_MK5"
+    ],
+    "5": [
+      "XM158_MK5"
+    ],
+    "6": [
+      "M134_R"
+    ]
+  },
+  "UH-60A": {}
+}

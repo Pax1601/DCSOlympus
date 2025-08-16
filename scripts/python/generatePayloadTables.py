@@ -92,7 +92,9 @@ for filename in filenames:
                 src = tmp['payloads'].values()
             else:
                 src = tmp['payloads']
-            
+
+            print(f"Processing {filename} with {len(src)} payloads, detected unit name {tmp['unitType']}")
+
             names[tmp['unitType']] = []
             roles[tmp['unitType']] = {}
             payloads[tmp['unitType']] = {}
@@ -129,9 +131,22 @@ for filename in filenames:
 with open('payloadRoles.json', 'w') as f:
     json.dump(roles, f, ensure_ascii = False, indent = 2)
 
-with open('../unitPayloads.lua', 'w') as f:
+with open('unitPayloads.lua', 'w') as f:
     f.write("Olympus.unitPayloads = " + dump_lua(payloads))
-    
-    
 
+# Iterate over the payloads and accumulate the pylon data
+pylon_usage = {}
+for unitType, unitPayloads in payloads.items():
+    pylon_usage[unitType] = {}
+    for payloadName, pylons in unitPayloads.items():
+        for pylonID, pylonData in pylons.items():
+            # Keep track of what CLSIDs are used on each pylon
+            clsid = pylonData['CLSID']
+            if pylonID not in pylon_usage[unitType]:
+                pylon_usage[unitType][pylonID] = []
+            if clsid not in pylon_usage[unitType][pylonID]:
+                pylon_usage[unitType][pylonID].append(clsid)
 
+# Save the pylon usage data to a JSON file
+with open('pylonUsage.json', 'w') as f:
+    json.dump(pylon_usage, f, ensure_ascii=False, indent=2)

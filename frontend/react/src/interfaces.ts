@@ -314,6 +314,7 @@ export interface UnitBlueprint {
   roles?: string[];
   type?: string;
   loadouts?: LoadoutBlueprint[];
+  acceptedPayloads?: { [key: string]: { clsids: string[]; names: string[] } };
   filename?: string;
   liveries?: { [key: string]: { name: string; countries: string[] } };
   cost?: number;

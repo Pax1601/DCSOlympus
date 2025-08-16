@@ -47,8 +47,10 @@ if len(sys.argv) > 1:
                 print(f"Warning, could not find {unit_name} in classes list. Skipping...")
                 continue
 
-            database[unit_name]["acquisitionRange"] = unitmap[found_name].detection_range
-            database[unit_name]["engagementRange"] = unitmap[found_name].threat_range
+            if not "acquisitionRange" in database[unit_name]:
+                database[unit_name]["acquisitionRange"] = unitmap[found_name].detection_range
+            if not "engagementRange" in database[unit_name]:
+                database[unit_name]["engagementRange"] = unitmap[found_name].threat_range
 
         except Exception as e:
             print(f"Could not find data for unitof type {unit_name}: {e}, skipping...")

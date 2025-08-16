@@ -283,7 +283,7 @@ export function UnitSpawnMenu(props: {
                             <span
                               className={`
                                 font-normal
-                                dark:text-white
+                                dark:text-gray-400
                               `}
                             >
                               Altitude
@@ -322,7 +322,7 @@ export function UnitSpawnMenu(props: {
                       <span
                         className={`
                           my-auto font-normal
-                          dark:text-white
+                          dark:text-gray-400
                         `}
                       >
                         Role
@@ -358,7 +358,7 @@ export function UnitSpawnMenu(props: {
                       <span
                         className={`
                           my-auto font-normal
-                          dark:text-white
+                          dark:text-gray-400
                         `}
                       >
                         Weapons
@@ -410,7 +410,7 @@ export function UnitSpawnMenu(props: {
                       <span
                         className={`
                           my-auto font-normal
-                          dark:text-white
+                          dark:text-gray-400
                         `}
                       >
                         Livery
@@ -476,7 +476,7 @@ export function UnitSpawnMenu(props: {
                       <span
                         className={`
                           my-auto font-normal
-                          dark:text-white
+                          dark:text-gray-400
                         `}
                       >
                         Skill
@@ -594,7 +594,7 @@ export function UnitSpawnMenu(props: {
                             dark:bg-[#17212D]
                           `}
                         >
-                          {item.quantity}
+                          {item.quantity} x
                         </div>
                         <div
                           className={`
@@ -756,7 +756,7 @@ export function UnitSpawnMenu(props: {
                             <span
                               className={`
                                 font-normal
-                                dark:text-white
+                                dark:text-gray-400
                               `}
                             >
                               Altitude
@@ -795,7 +795,7 @@ export function UnitSpawnMenu(props: {
                       <span
                         className={`
                           my-auto font-normal
-                          dark:text-white
+                          dark:text-gray-400
                         `}
                       >
                         Role
@@ -831,7 +831,7 @@ export function UnitSpawnMenu(props: {
                       <span
                         className={`
                           my-auto font-normal
-                          dark:text-white
+                          dark:text-gray-400
                         `}
                       >
                         Weapons
@@ -875,7 +875,7 @@ export function UnitSpawnMenu(props: {
                   <span
                     className={`
                       my-auto font-normal
-                      dark:text-white
+                      dark:text-gray-400
                     `}
                   >
                     Livery
@@ -944,7 +944,7 @@ export function UnitSpawnMenu(props: {
                   <span
                     className={`
                       my-auto font-normal
-                      dark:text-white
+                      dark:text-gray-400
                     `}
                   >
                     Skill
@@ -1058,7 +1058,7 @@ export function UnitSpawnMenu(props: {
                               dark:bg-[#17212D]
                             `}
                           >
-                            {item.quantity}
+                            {item.quantity} x
                           </div>
                           <div
                             className={`

@@ -68,7 +68,7 @@
             "args": {
               "key": "folder",
               "description": "DCS folder location",
-              "default": "E:\\Eagle Dynamics\\DCS World (Open Beta)"
+              "default": "C:\\Program Files\\Eagle Dynamics\\DCS World"
             }
           }
     ]
