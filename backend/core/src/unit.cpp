@@ -765,6 +765,7 @@ void Unit::goToDestination(string enrouteTask)
 	}
 }
 
+// NOTE: if the current active path has a threshold set, that value will be used instead of the passed one
 bool Unit::isDestinationReached(double threshold)
 {
 	if (activeDestination != NULL)
@@ -774,7 +775,7 @@ bool Unit::isDestinationReached(double threshold)
 		{
 			double dist = 0;
 			Geodesic::WGS84().Inverse(p->getPosition().lat, p->getPosition().lng, activeDestination.lat, activeDestination.lng, dist);
-			if (dist < threshold)
+			if (dist < (activeDestination.threshold == 0? threshold: activeDestination.threshold))
 			{
 				log(unitName + " destination reached");
 				return true;

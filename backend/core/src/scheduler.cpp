@@ -168,6 +168,12 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 				string WP = to_string(i);
 				double lat = path[i][L"lat"].as_double();
 				double lng = path[i][L"lng"].as_double();
+				if (path[i].has_number_field(L"threshold")) {
+					double threshold = path[i][L"threshold"].as_double();
+					Coords dest; dest.lat = lat; dest.lng = lng; dest.threshold = threshold;
+					newPath.push_back(dest);
+					continue;
+				}
 				Coords dest; dest.lat = lat; dest.lng = lng;
 				newPath.push_back(dest);
 			}

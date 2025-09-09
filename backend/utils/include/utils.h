@@ -6,6 +6,7 @@ struct Coords {
     double lat = 0;
     double lng = 0;
     double alt = 0;
+	double threshold = 0; // used for proximity checks only, not part of the actual coordinates
 };
 
 struct Offset {
