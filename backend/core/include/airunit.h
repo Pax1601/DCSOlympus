@@ -22,6 +22,8 @@ public:
 	virtual void setRacetrackLength(double newValue);
 	virtual void setRacetrackAnchor(Coords newValue);
 	virtual void setRacetrackBearing(double newValue);
+
+	virtual void setCargoWeight(double newValue);
 	
 protected:
 	virtual void AIloop();

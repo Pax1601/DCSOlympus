@@ -67,4 +67,6 @@ class DataIndexes(Enum):
     AIM_METHOD_RANGE = 63
     ACQUISITION_RANGE = 64
     AIRBORNE = 65
+    CARGO_WEIGHT = 66
+    DRAW_ARGUMENTS = 67
     END_OF_DATA = 255

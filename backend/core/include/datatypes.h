@@ -70,6 +70,8 @@ namespace DataIndex {
 		aimMethodRange,
 		acquisitionRange,
 		airborne,
+		cargoWeight,
+		drawArguments,
 		lastIndex,
 		endOfData = 255
 	};
@@ -159,6 +161,11 @@ namespace DataTypes {
 		unsigned int ID = 0;
 		unsigned char detectionMethod = 0;
 	};
+
+	struct DrawArgument {
+		unsigned int argument = 0;
+		double value = 0.0;
+	};
 }
 #pragma pack(pop)
 
@@ -167,6 +174,7 @@ bool operator==(const DataTypes::Radio& lhs, const DataTypes::Radio& rhs);
 bool operator==(const DataTypes::GeneralSettings& lhs, const DataTypes::GeneralSettings& rhs);
 bool operator==(const DataTypes::Ammo& lhs, const DataTypes::Ammo& rhs);
 bool operator==(const DataTypes::Contact& lhs, const DataTypes::Contact& rhs);
+bool operator==(const DataTypes::DrawArgument& lhs, const DataTypes::DrawArgument& rhs);
 
 struct SpawnOptions {
 	string unitType;

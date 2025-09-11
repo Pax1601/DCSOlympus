@@ -27,6 +27,30 @@
             "program": "example_disembarked_infantry.py",
             "console": "integratedTerminal",
             "justMyCode": false,
+        },
+        {
+            "name": "Example set cargo weight",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_set_cargo_weight.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Example draw argument",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_draw_argument.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Example precise movement",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_precise_movement.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
         }
     ]
 }

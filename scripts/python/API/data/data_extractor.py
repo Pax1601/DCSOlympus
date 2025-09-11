@@ -1,6 +1,6 @@
 import struct
 from typing import List
-from data.data_types import LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
+from data.data_types import DrawArgument, LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
 
 class DataExtractor:
     def __init__(self, buffer: bytes):
@@ -48,6 +48,7 @@ class DataExtractor:
         lat = self.extract_float64()
         lng = self.extract_float64()
         alt = self.extract_float64()
+        threshold = self.extract_float64()
         return LatLng(lat, lng, alt)
     
     def extract_from_bitmask(self, bitmask: int, position: int) -> bool:
@@ -137,3 +138,13 @@ class DataExtractor:
             y=self.extract_float64(),
             z=self.extract_float64()
         )
+    
+    def extract_draw_arguments(self) -> List[DrawArgument]:
+        value = []
+        size = self.extract_uint16()
+        for _ in range(size):
+            value.append(DrawArgument(
+                argument=self.extract_uint32(),
+                value=self.extract_float64()
+            ))
+        return value

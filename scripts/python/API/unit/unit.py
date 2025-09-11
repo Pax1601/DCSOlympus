@@ -3,7 +3,7 @@ import asyncio
 
 from data.data_extractor import DataExtractor
 from data.data_indexes import DataIndexes
-from data.data_types import LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
+from data.data_types import DrawArgument, LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
 from data.roes import ROES
 from data.states import states
 from utils.utils import enum_to_coalition
@@ -81,6 +81,8 @@ class Unit:
         self.targeting_range = 0.0
         self.aim_method_range = 0.0
         self.acquisition_range = 0.0
+        self.cargo_weight = 0.0
+        self.draw_arguments: List[DrawArgument] = []
         
         self.previous_total_ammo = 0
         self.total_ammo = 0
@@ -654,6 +656,20 @@ class Unit:
                     # Trigger callbacks for property change
                     if "airborne" in self.on_property_change_callbacks:
                         self._trigger_callback("airborne", self.airborne)
+            elif datum_index == DataIndexes.CARGO_WEIGHT.value:
+                cargo_weight = data_extractor.extract_float64()
+                if cargo_weight != self.cargo_weight:
+                    self.cargo_weight = cargo_weight
+                    # Trigger callbacks for property change
+                    if "cargo_weight" in self.on_property_change_callbacks:
+                        self._trigger_callback("cargo_weight", self.cargo_weight)
+            elif datum_index == DataIndexes.DRAW_ARGUMENTS.value:
+                draw_arguments = data_extractor.extract_draw_arguments()
+                if draw_arguments != self.draw_arguments:
+                    self.draw_arguments = draw_arguments
+                    # Trigger callbacks for property change
+                    if "draw_arguments" in self.on_property_change_callbacks:
+                        self._trigger_callback("draw_arguments", self.draw_arguments)
     
     # --- API functions requiring ID ---
     def set_path(self, path: List[LatLng]):
@@ -758,6 +774,8 @@ class Unit:
     def set_engagement_properties(self, barrel_height, muzzle_velocity, aim_time, shots_to_fire, shots_base_interval, shots_base_scatter, engagement_range, targeting_range, aim_method_range, acquisition_range):
         return self.api.send_command({"setEngagementProperties": {"ID": self.ID, "barrelHeight": barrel_height, "muzzleVelocity": muzzle_velocity, "aimTime": aim_time, "shotsToFire": shots_to_fire, "shotsBaseInterval": shots_base_interval, "shotsBaseScatter": shots_base_scatter, "engagementRange": engagement_range, "targetingRange": targeting_range, "aimMethodRange": aim_method_range, "acquisitionRange": acquisition_range}})
                 
-    
+    def set_cargo_weight(self, cargo_weight: float):
+        return self.api.send_command({"setCargoWeight": {"ID": self.ID, "weight": cargo_weight}})
         
-        
+    def register_draw_argument(self, argument: int, active: bool = True):
+        return self.api.send_command({"registerDrawArgument": {"ID": self.ID, "argument": argument, "active": active}})

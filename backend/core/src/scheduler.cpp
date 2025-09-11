@@ -827,6 +827,31 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unitsManager->loadDatabases();
 	}
 	/************************/
+	else if (key.compare("setCargoWeight") == 0) 
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double weight = value[L"weight"].as_double();
+			unit->setCargoWeight(weight);
+			log(username + " set weight to unit " + unit->getUnitName() + "(" + unit->getName() + "), " + to_string(weight), true);
+		}
+	}
+	/************************/
+	else if (key.compare("registerDrawArgument") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			int argument = value[L"argument"].as_integer();
+			bool active = value[L"active"].as_bool();
+
+			command = dynamic_cast<Command*>(new RegisterDrawArgument(ID, argument, active));
+
+			log(username + " registered draw argument " + to_string(argument) + " for unit " + unit->getUnitName() + "(" + unit->getName() + "), value:" + to_string(active), true);
+		}
+	}
+	/************************/
 	else
 	{
 		log("Unknown command: " + key);

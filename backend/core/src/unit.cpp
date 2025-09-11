@@ -128,6 +128,20 @@ void Unit::update(json::value json, double dt)
 		setAmmo(ammo);
 	}
 
+	if (json.has_object_field(L"drawArguments")) {
+		vector<DataTypes::DrawArgument> drawArguments;
+		for (auto const& el : json[L"drawArguments"].as_object()) {
+			DataTypes::DrawArgument drawArgumentItem;
+			auto drawArgumentJson = el.second;
+			if (drawArgumentJson.has_number_field(L"argument"))
+				drawArgumentItem.argument = drawArgumentJson[L"argument"].as_number().to_uint32();
+			if (drawArgumentJson.has_number_field(L"value"))
+				drawArgumentItem.value = drawArgumentJson[L"value"].as_number().to_double();
+			drawArguments.push_back(drawArgumentItem);
+		}
+		setDrawArguments(drawArguments);
+	}
+
 	if (json.has_object_field(L"contacts")) {
 		vector<DataTypes::Contact> contacts;
 		for (auto const& el : json[L"contacts"].as_object()) {
@@ -328,6 +342,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::aimMethodRange:				appendNumeric(ss, datumIndex, aimMethodRange); break;
 					case DataIndex::acquisitionRange:			appendNumeric(ss, datumIndex, acquisitionRange); break;
 					case DataIndex::airborne:					appendNumeric(ss, datumIndex, airborne); break;
+					case DataIndex::cargoWeight:				appendNumeric(ss, datumIndex, cargoWeight); break;
+					case DataIndex::drawArguments:				appendVector(ss, datumIndex, drawArguments); break;
 				}
 			}
 		}
@@ -697,6 +713,24 @@ void Unit::setGeneralSettings(DataTypes::GeneralSettings newGeneralSettings, boo
 
 		triggerUpdate(DataIndex::generalSettings);
 	}
+}
+
+void Unit::setDrawArguments(vector<DataTypes::DrawArgument> newDrawArguments)
+{
+	if (drawArguments.size() == newDrawArguments.size()) {
+		bool equal = true;
+		for (int i = 0; i < drawArguments.size(); i++) {
+			if (drawArguments.at(i) != newDrawArguments.at(i))
+			{
+				equal = false;
+				break;
+			}
+		}
+		if (equal)
+			return;
+	}
+	drawArguments = newDrawArguments;
+	triggerUpdate(DataIndex::drawArguments);
 }
 
 void Unit::setDesiredSpeed(double newDesiredSpeed)
