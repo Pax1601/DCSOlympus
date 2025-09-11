@@ -539,3 +539,43 @@ private:
 	const unsigned int spotID;
 	const Coords destination;
 };
+
+/* Set cargo weight */
+class SetCargoWeight : public Command
+{
+	public:
+	SetCargoWeight(unsigned int ID, double weight, function<void(void)> callback = []() {}) :
+		Command(callback),
+		ID(ID),
+		weight(weight)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int ID;
+	const double weight;
+};
+
+/* Register draw argument */
+class RegisterDrawArgument : public Command
+{
+	public:
+	RegisterDrawArgument(unsigned int ID, unsigned int argument, bool active, function<void(void)> callback = []() {}) :
+		Command(callback),
+		ID(ID),
+		argument(argument),
+		active(active)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int ID;
+	const unsigned int argument;
+	const bool active;
+};

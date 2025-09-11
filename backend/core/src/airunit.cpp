@@ -429,3 +429,13 @@ void AirUnit::setRacetrackBearing(double newRacetrackBearing) {
 		triggerUpdate(DataIndex::racetrackBearing);
 	}
 }
+
+void AirUnit::setCargoWeight(double newCargoWeight) { 
+	if (cargoWeight != newCargoWeight) {
+		cargoWeight = newCargoWeight;
+		triggerUpdate(DataIndex::cargoWeight);
+
+		Command* command = dynamic_cast<Command*>(new SetCargoWeight(this->ID, cargoWeight));
+		scheduler->appendCommand(command);
+	}
+}

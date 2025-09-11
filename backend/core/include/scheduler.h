@@ -19,6 +19,7 @@ public:
 				return true;
 			}
 		}
+		return false;
 	}
 	
 	void setFrameRate(double newFrameRate) { frameRate = newFrameRate; }

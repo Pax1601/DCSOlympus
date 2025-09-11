@@ -1,4 +1,4 @@
-import { Marker, LatLng, Polyline, Icon, DivIcon, CircleMarker, Map, Point, LeafletMouseEvent, DomEvent, DomUtil, Circle } from "leaflet";
+import { LatLng, Polyline, DivIcon, CircleMarker, Map, Point, DomEvent } from "leaflet";
 import { getApp } from "../olympusapp";
 import {
   enumToCoalition,
@@ -54,7 +54,7 @@ import {
 } from "../constants/constants";
 import { DataExtractor } from "../server/dataextractor";
 import { Weapon } from "../weapon/weapon";
-import { AlarmState, Ammo, Contact, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
+import { AlarmState, Ammo, Contact, DrawingArgument, GeneralSettings, LoadoutBlueprint, ObjectIconOptions, Offset, Radio, TACAN, UnitBlueprint, UnitData } from "../interfaces";
 import { RangeCircle } from "../map/rangecircle";
 import { Group } from "./group";
 import { ContextActionSet } from "./contextactionset";
@@ -159,6 +159,8 @@ export abstract class Unit extends CustomMarker {
   #racetrackAnchor: LatLng = new LatLng(0, 0);
   #racetrackBearing: number = 0;
   #airborne: boolean = false;
+  #cargoWeight: number = 0;
+  #drawingArguments: DrawingArgument[] = [];
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
   #blueprint: UnitBlueprint | null = null;
@@ -405,6 +407,12 @@ export abstract class Unit extends CustomMarker {
   }
   getAirborne() {
     return this.#airborne;
+  }
+  getCargoWeight() {
+    return this.#cargoWeight;
+  }
+  getDrawingArguments() {
+    return this.#drawingArguments;
   }
 
   static getConstructor(type: string) {
@@ -797,6 +805,12 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.airborne:
           this.#airborne = dataExtractor.extractBool();
           break;
+        case DataIndexes.cargoWeight:
+          this.#cargoWeight = dataExtractor.extractFloat64();
+          break;
+        case DataIndexes.drawingArguments:
+          this.#drawingArguments = dataExtractor.extractDrawingArguments();
+          break;
         default:
           break;
       }
@@ -920,6 +934,8 @@ export abstract class Unit extends CustomMarker {
       aimMethodRange: this.#aimMethodRange,
       acquisitionRange: this.#acquisitionRange,
       airborne: this.#airborne,
+      cargoWeight: this.#cargoWeight,
+      drawingArguments: this.#drawingArguments,
     };
   }
 

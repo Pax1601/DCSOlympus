@@ -319,3 +319,26 @@ string DeleteSpot::getString()
         << spotID;
     return commandSS.str();
 }
+
+/* SetCargoWeight command */
+string SetCargoWeight::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.setCargoWeight, "
+        << ID << ", " 
+        << weight;
+    return commandSS.str();
+}
+
+/* RegisterDrawArgument command */
+string RegisterDrawArgument::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.registerDrawArgument, "
+        << ID << ", "
+        << argument << ", "
+        << active;
+    return commandSS.str();
+}

@@ -130,9 +130,11 @@ public:
 	virtual void setAcquisitionRange(double newValue) { updateValue(acquisitionRange, newValue, DataIndex::acquisitionRange); }
 	virtual void setRadarState(bool newValue) { updateValue(radarState, newValue, DataIndex::radarState); }
 	virtual void setAirborne(bool newValue) { updateValue(airborne, newValue, DataIndex::airborne); }
+	virtual void setCargoWeight(double newValue) { updateValue(cargoWeight, newValue, DataIndex::cargoWeight); }
+	virtual void setDrawArguments(vector<DataTypes::DrawArgument> newValue);
 
 	/********** Getters **********/
-	virtual string getCategory() { return category; };
+	virtual string getCategory() { return category; }
 	virtual bool getAlive() { return alive; }
 	virtual unsigned char getAlarmState() { return alarmState; }
 	virtual bool getHuman() { return human; }
@@ -197,6 +199,8 @@ public:
 	virtual double getAcquisitionRange() { return acquisitionRange; }
 	virtual bool getRadarState() { return radarState; }
 	virtual bool getAirborne() { return airborne; }
+	virtual double getCargoWeight() { return cargoWeight; }
+	virtual vector<DataTypes::DrawArgument> getDrawArguments() { return drawArguments; }
 
 protected:
 	unsigned int ID;
@@ -267,6 +271,8 @@ protected:
 	double aimMethodRange = 0; 
 	double acquisitionRange = 0; 
 	bool airborne = false;
+	double cargoWeight = 0;
+	vector<DataTypes::DrawArgument> drawArguments;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

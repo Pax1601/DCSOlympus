@@ -547,6 +547,8 @@ export enum DataIndexes {
   aimMethodRange,
   acquisitionRange,
   airborne,
+  cargoWeight,
+  drawingArguments,
   endOfData = 255,
 }
 

@@ -8,13 +8,15 @@ class LatLng:
     lat: float
     lng: float
     alt: float
-    
+    threshold: Optional[float] = 0  # Optional threshold for proximity checks
+
     def toJSON(self):
         """Convert LatLng to a JSON serializable dictionary."""
         return {
             "lat": self.lat,
             "lng": self.lng,
-            "alt": self.alt
+            "alt": self.alt,
+            "threshold": self.threshold
         }
         
     def project_with_bearing_and_distance(self, d, bearing):
@@ -89,3 +91,8 @@ class Offset:
     x: float
     y: float
     z: float
+
+@dataclass
+class DrawArgument:
+    argument: int
+    value: float

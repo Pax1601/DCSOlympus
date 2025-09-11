@@ -219,6 +219,11 @@ export interface Offset {
   z: number;
 }
 
+export interface DrawingArgument {
+  argument: number;
+  value: number;
+}
+
 export interface UnitData {
   category: string;
   markerCategory: string;
@@ -286,6 +291,8 @@ export interface UnitData {
   aimMethodRange: number;
   acquisitionRange: number;
   airborne: boolean;
+  cargoWeight: number;
+  drawingArguments: DrawingArgument[];
 }
 
 export interface LoadoutItemBlueprint {

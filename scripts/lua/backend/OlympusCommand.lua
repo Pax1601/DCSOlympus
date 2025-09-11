@@ -23,6 +23,7 @@ Olympus.unitIndex = 0			-- Counter used to spread the computational load of data
 Olympus.unitStep = 50			-- Max number of units that get updated each cycle
 Olympus.units = {}				-- Table holding references to all the currently existing units
 Olympus.unitsInitialLife = {}	-- getLife0 returns 0 for ships, so we need to store the initial life of units
+Olympus.drawArguments = {}      -- Table that sets what drawArguments to read for each unit
 
 Olympus.weaponIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS			
 Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
@@ -1087,8 +1088,36 @@ function Olympus.setOnOff(groupName, onOff)
 	end
 end
 
+-- Get the unit description
 function getUnitDescription(unit) 
 	return unit:getDescr()
+end
+
+-- Set the unit cargo weight
+function Olympus.setCargoWeight(ID, weight)
+	Olympus.debug("Olympus.setCargoWeight " .. ID .. " " .. tostring(weight), 2)
+
+	local unit = Olympus.getUnitByID(ID)
+	if unit ~= nil and unit:isExist() then
+		trigger.action.setUnitInternalCargo(unit:getName(), weight)
+	end
+end
+
+-- Register a drawArgument to be read for a unit
+function Olympus.registerDrawArgument(ID, argument, active)
+	Olympus.debug("Olympus.registerDrawArgument " .. ID .. " " .. tostring(argument) .. " " .. tostring(active), 2)
+
+	-- Create the table if it does not exist
+	if Olympus.drawArguments[ID] == nil then
+		Olympus.drawArguments[ID] = {}
+	end
+
+	-- Set the draw argument to true or false
+	if active then
+		Olympus.drawArguments[ID][argument] = true
+	else
+		Olympus.drawArguments[ID][argument] = false
+	end
 end
 
 -- This function gets the navpoints from the DCS mission
@@ -1293,6 +1322,20 @@ function Olympus.setUnitsData(arg, time)
 							table["radarState"] = false
 						end	
 					end ]]
+
+					-- Read the draw arguments
+					local drawArguments = {}
+					if Olympus.drawArguments[ID] ~= nil then
+						for argument, active in pairs(Olympus.drawArguments[ID]) do
+							if active then
+								drawArguments[#drawArguments + 1] = {
+									argument = argument,
+									value = unit:getDrawArgumentValue(argument)
+								}
+							end
+						end
+					end
+					table["drawArguments"] = drawArguments
 					
 					local group = unit:getGroup()
 					if group ~= nil then

@@ -2,12 +2,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-            "label": "check-setup", 
-            "type": "shell",
-            "command": "cd .. ; ./check_setup.bat",
-            "isBackground": false
-        },
-		{
 			"type": "npm",
 			"script": "dev",
 			"problemMatcher": [

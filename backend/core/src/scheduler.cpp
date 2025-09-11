@@ -168,6 +168,12 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 				string WP = to_string(i);
 				double lat = path[i][L"lat"].as_double();
 				double lng = path[i][L"lng"].as_double();
+				if (path[i].has_number_field(L"threshold")) {
+					double threshold = path[i][L"threshold"].as_double();
+					Coords dest; dest.lat = lat; dest.lng = lng; dest.threshold = threshold;
+					newPath.push_back(dest);
+					continue;
+				}
 				Coords dest; dest.lat = lat; dest.lng = lng;
 				newPath.push_back(dest);
 			}
@@ -819,6 +825,31 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	/************************/
 	else if (key.compare("reloadDatabases") == 0) {
 		unitsManager->loadDatabases();
+	}
+	/************************/
+	else if (key.compare("setCargoWeight") == 0) 
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double weight = value[L"weight"].as_double();
+			unit->setCargoWeight(weight);
+			log(username + " set weight to unit " + unit->getUnitName() + "(" + unit->getName() + "), " + to_string(weight), true);
+		}
+	}
+	/************************/
+	else if (key.compare("registerDrawArgument") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			int argument = value[L"argument"].as_integer();
+			bool active = value[L"active"].as_bool();
+
+			command = dynamic_cast<Command*>(new RegisterDrawArgument(ID, argument, active));
+
+			log(username + " registered draw argument " + to_string(argument) + " for unit " + unit->getUnitName() + "(" + unit->getName() + "), value:" + to_string(active), true);
+		}
 	}
 	/************************/
 	else

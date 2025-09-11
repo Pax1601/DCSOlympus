@@ -1,5 +1,5 @@
 import { LatLng } from "leaflet";
-import { Ammo, Contact, GeneralSettings, Offset, Radio, TACAN } from "../interfaces";
+import { Ammo, Contact, DrawingArgument, GeneralSettings, Offset, Radio, TACAN } from "../interfaces";
 
 export class DataExtractor {
   #seekPosition = 0;
@@ -58,7 +58,9 @@ export class DataExtractor {
   }
 
   extractLatLng() {
-    return new LatLng(this.extractFloat64(), this.extractFloat64(), this.extractFloat64());
+    let latlng = new LatLng(this.extractFloat64(), this.extractFloat64(), this.extractFloat64());
+    let threshold = this.extractFloat64();
+    return latlng;
   }
 
   extractFromBitmask(bitmask: number, position: number) {
@@ -100,6 +102,14 @@ export class DataExtractor {
       frequency: this.extractUInt32(),
       callsign: this.extractUInt8(),
       callsignNumber: this.extractUInt8(),
+    };
+    return value;
+  }
+
+  extractDrawingArgument() {
+    const value: DrawingArgument = {
+      argument: this.extractUInt32(),
+      value: this.extractFloat64(),
     };
     return value;
   }
@@ -157,6 +167,15 @@ export class DataExtractor {
       y: this.extractFloat64(),
       z: this.extractFloat64(),
     };
+    return value;
+  }
+
+  extractDrawingArguments() {
+    const value: DrawingArgument[] = [];
+    const size = this.extractUInt16();
+    for (let idx = 0; idx < size; idx++) {
+      value.push(this.extractDrawingArgument());
+    }
     return value;
   }
 }
