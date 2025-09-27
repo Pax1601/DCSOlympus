@@ -83,6 +83,8 @@ class Unit:
         self.acquisition_range = 0.0
         self.cargo_weight = 0.0
         self.draw_arguments: List[DrawArgument] = []
+        self.custom_string = ""
+        self.custom_integer = 0
         
         self.previous_total_ammo = 0
         self.total_ammo = 0
@@ -670,6 +672,20 @@ class Unit:
                     # Trigger callbacks for property change
                     if "draw_arguments" in self.on_property_change_callbacks:
                         self._trigger_callback("draw_arguments", self.draw_arguments)
+            elif datum_index == DataIndexes.CUSTOM_STRING.value:
+                custom_string = data_extractor.extract_string()
+                if custom_string != self.custom_string:
+                    self.custom_string = custom_string
+                    # Trigger callbacks for property change
+                    if "custom_string" in self.on_property_change_callbacks:
+                        self._trigger_callback("custom_string", self.custom_string)
+            elif datum_index == DataIndexes.CUSTOM_INTEGER.value:
+                custom_integer = data_extractor.extract_uint32()
+                if custom_integer != self.custom_integer:
+                    self.custom_integer = custom_integer
+                    # Trigger callbacks for property change
+                    if "custom_integer" in self.on_property_change_callbacks:
+                        self._trigger_callback("custom_integer", self.custom_integer)
     
     # --- API functions requiring ID ---
     def set_path(self, path: List[LatLng]):
@@ -779,3 +795,9 @@ class Unit:
         
     def register_draw_argument(self, argument: int, active: bool = True):
         return self.api.send_command({"registerDrawArgument": {"ID": self.ID, "argument": argument, "active": active}})
+    
+    def set_custom_string(self, custom_string: str):
+        return self.api.send_command({"setCustomString": {"ID": self.ID, "customString": custom_string}})
+
+    def set_custom_integer(self, custom_integer: int):
+        return self.api.send_command({"setCustomInteger": {"ID": self.ID, "customInteger": custom_integer}})

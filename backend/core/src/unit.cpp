@@ -344,6 +344,8 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::airborne:					appendNumeric(ss, datumIndex, airborne); break;
 					case DataIndex::cargoWeight:				appendNumeric(ss, datumIndex, cargoWeight); break;
 					case DataIndex::drawArguments:				appendVector(ss, datumIndex, drawArguments); break;
+					case DataIndex::customString:				appendString(ss, datumIndex, customString); break;
+					case DataIndex::customInteger: 				appendNumeric(ss, datumIndex, customInteger); break;
 				}
 			}
 		}

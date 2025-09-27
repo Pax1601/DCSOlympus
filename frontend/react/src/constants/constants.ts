@@ -549,6 +549,8 @@ export enum DataIndexes {
   airborne,
   cargoWeight,
   drawingArguments,
+  customString,
+  customInteger,
   endOfData = 255,
 }
 

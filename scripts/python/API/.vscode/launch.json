@@ -51,6 +51,14 @@
             "program": "example_precise_movement.py",
             "console": "integratedTerminal",
             "justMyCode": false,
+        },
+        {
+            "name": "Infantry boarding",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "infantry_boarding.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
         }
     ]
 }

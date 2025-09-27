@@ -293,6 +293,8 @@ export interface UnitData {
   airborne: boolean;
   cargoWeight: number;
   drawingArguments: DrawingArgument[];
+  customString: string;
+  customInteger: number;
 }
 
 export interface LoadoutItemBlueprint {

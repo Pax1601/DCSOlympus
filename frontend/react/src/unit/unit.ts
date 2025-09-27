@@ -161,6 +161,8 @@ export abstract class Unit extends CustomMarker {
   #airborne: boolean = false;
   #cargoWeight: number = 0;
   #drawingArguments: DrawingArgument[] = [];
+  #customString: string = "";
+  #customInteger: number = 0;
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
   #blueprint: UnitBlueprint | null = null;
@@ -413,6 +415,12 @@ export abstract class Unit extends CustomMarker {
   }
   getDrawingArguments() {
     return this.#drawingArguments;
+  }
+  getCustomString() {
+    return this.#customString;
+  }
+  getCustomInteger() {
+    return this.#customInteger;
   }
 
   static getConstructor(type: string) {
@@ -811,6 +819,12 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.drawingArguments:
           this.#drawingArguments = dataExtractor.extractDrawingArguments();
           break;
+        case DataIndexes.customString:
+          this.#customString = dataExtractor.extractString();
+          break;
+        case DataIndexes.customInteger:
+          this.#customInteger = dataExtractor.extractUInt32();
+          break;
         default:
           break;
       }
@@ -936,6 +950,8 @@ export abstract class Unit extends CustomMarker {
       airborne: this.#airborne,
       cargoWeight: this.#cargoWeight,
       drawingArguments: this.#drawingArguments,
+      customString: this.#customString,
+      customInteger: this.#customInteger
     };
   }
 
