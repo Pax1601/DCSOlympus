@@ -69,4 +69,6 @@ class DataIndexes(Enum):
     AIRBORNE = 65
     CARGO_WEIGHT = 66
     DRAW_ARGUMENTS = 67
+    CUSTOM_STRING = 68
+    CUSTOM_INTEGER = 69
     END_OF_DATA = 255

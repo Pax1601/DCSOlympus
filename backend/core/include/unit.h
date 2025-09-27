@@ -132,6 +132,8 @@ public:
 	virtual void setAirborne(bool newValue) { updateValue(airborne, newValue, DataIndex::airborne); }
 	virtual void setCargoWeight(double newValue) { updateValue(cargoWeight, newValue, DataIndex::cargoWeight); }
 	virtual void setDrawArguments(vector<DataTypes::DrawArgument> newValue);
+	virtual void setCustomString(string newValue) { updateValue(customString, newValue, DataIndex::customString); }
+	virtual void setCustomInteger(unsigned long newValue) { updateValue(customInteger, newValue, DataIndex::customInteger); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; }
@@ -201,6 +203,8 @@ public:
 	virtual bool getAirborne() { return airborne; }
 	virtual double getCargoWeight() { return cargoWeight; }
 	virtual vector<DataTypes::DrawArgument> getDrawArguments() { return drawArguments; }
+	virtual string getCustomString() { return customString; }
+	virtual unsigned long getCustomInteger() { return customInteger; }
 
 protected:
 	unsigned int ID;
@@ -273,6 +277,9 @@ protected:
 	bool airborne = false;
 	double cargoWeight = 0;
 	vector<DataTypes::DrawArgument> drawArguments;
+	
+	string customString = "";
+	unsigned long customInteger = 0;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

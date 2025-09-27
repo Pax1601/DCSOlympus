@@ -189,7 +189,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		string color = to_string(value[L"color"]);
 		double lat = value[L"location"][L"lat"].as_double();
 		double lng = value[L"location"][L"lng"].as_double();
-		
+
 		Coords loc; loc.lat = lat; loc.lng = lng;
 		command = dynamic_cast<Command*>(new Smoke(color, loc));
 		log(username + " added a " + color + " smoke at (" + to_string(lat) + ", " + to_string(lng) + ")", true);
@@ -223,8 +223,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 
-			spawnOptions.push_back({unitType, location, loadout, skill, liveryID, heading});
-			log(username + " spawned a " + coalition + " " + unitType , true);
+			spawnOptions.push_back({ unitType, location, loadout, skill, liveryID, heading });
+			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
 		if (key.compare("spawnAircrafts") == 0)
@@ -257,8 +257,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			Coords location; location.lat = lat; location.lng = lng;
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
-			
-			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading});
+
+			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
@@ -404,7 +404,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unsigned int ID = unit[L"ID"].as_integer();
 			double lat = unit[L"location"][L"lat"].as_double();
 			double lng = unit[L"location"][L"lng"].as_double();
-			
+
 			Coords location; location.lat = lat; location.lng = lng;
 			cloneOptions.push_back({ ID, location });
 			log(username + " cloning unit with ID " + to_string(ID), true);
@@ -433,7 +433,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unsigned char alarmState = value[L"alarmState"].as_number().to_uint32();
 			unit->setAlarmState(alarmState);
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") alarm state to " + to_string(alarmState), true);
-		} else {
+		}
+		else {
 			log("Error while setting setAlarmState. Unit does not exist.");
 		}
 	}
@@ -562,7 +563,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setTargetingRange(value[L"targetingRange"].as_number().to_double());
 			unit->setAimMethodRange(value[L"aimMethodRange"].as_number().to_double());
 			unit->setAcquisitionRange(value[L"acquisitionRange"].as_number().to_double());
-			
+
 			log(username + " updated unit " + unit->getUnitName() + "(" + unit->getName() + ") engagementProperties", true);
 		}
 	}
@@ -587,7 +588,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
 			unit->setOnOff(onOff);
-			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") onOff to: " + (onOff? "true": "false"), true);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") onOff to: " + (onOff ? "true" : "false"), true);
 		}
 	}
 	/************************/
@@ -711,7 +712,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unitsManager->acquireControl(ID);
 		unsigned char operateAs = value[L"operateAs"].as_number().to_uint32();
 		Unit* unit = unitsManager->getGroupLeader(ID);
-		if (unit != nullptr) 
+		if (unit != nullptr)
 			unit->setOperateAs(operateAs);
 	}
 	/************************/
@@ -817,7 +818,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		command = dynamic_cast<Command*>(new DeleteSpot(spotID));
 	}
 	/************************/
-	else if (key.compare("setCommandModeOptions") == 0) 
+	else if (key.compare("setCommandModeOptions") == 0)
 	{
 		setCommandModeOptions(value);
 		log(username + " updated the Command Mode Options", true);
@@ -827,7 +828,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unitsManager->loadDatabases();
 	}
 	/************************/
-	else if (key.compare("setCargoWeight") == 0) 
+	else if (key.compare("setCargoWeight") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
 		Unit* unit = unitsManager->getUnit(ID);
@@ -849,6 +850,28 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			command = dynamic_cast<Command*>(new RegisterDrawArgument(ID, argument, active));
 
 			log(username + " registered draw argument " + to_string(argument) + " for unit " + unit->getUnitName() + "(" + unit->getName() + "), value:" + to_string(active), true);
+		}
+	}
+	/************************/
+	else if (key.compare("setCustomString") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			string customString = to_string(value[L"customString"]);
+			unit->setCustomString(customString);
+			log(username + " set custom string to unit " + unit->getUnitName() + "(" + unit->getName() + "), " + customString, true);
+		}
+	}
+	/************************/
+	else if (key.compare("setCustomInteger") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		Unit* unit = unitsManager->getUnit(ID);
+		if (unit != nullptr) {
+			double customNumber = value[L"customInteger"].as_double();
+			unit->setCustomInteger(customNumber);
+			log(username + " set custom number to unit " + unit->getUnitName() + "(" + unit->getName() + "), " + to_string(customNumber), true);
 		}
 	}
 	/************************/

@@ -72,6 +72,8 @@ namespace DataIndex {
 		airborne,
 		cargoWeight,
 		drawArguments,
+		customString,
+		customInteger,
 		lastIndex,
 		endOfData = 255
 	};
