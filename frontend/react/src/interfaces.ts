@@ -300,6 +300,7 @@ export interface UnitData {
 export interface LoadoutItemBlueprint {
   name: string;
   quantity: number;
+  type: string;
   effectiveAgainst?: string;
 }
 

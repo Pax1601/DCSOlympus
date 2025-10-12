@@ -156,8 +156,8 @@ export function OlDropdown(props: {
           data-open={open}
           className={`
             absolute z-40 divide-y divide-gray-100 overflow-y-scroll
-            no-scrollbar rounded-lg bg-white p-2 shadow
-            dark:bg-gray-700
+            no-scrollbar rounded-lg border border-2 border-gray-600 bg-gray-700
+            p-2 shadow
             data-[open='false']:hidden
           `}
         >
@@ -187,7 +187,7 @@ export function OlDropdown(props: {
 }
 
 /* Conveniency Component for dropdown elements */
-export function OlDropdownItem(props: { onClick?: () => void; className?: string; borderColor?: string; children?: string | JSX.Element | JSX.Element[] }) {
+export function OlDropdownItem(props: { onClick?: () => void; className?: string; borderColor?: string; children?: string | JSX.Element | JSX.Element[], disabled?: boolean }) {
   return (
     <button
       onClick={props.onClick ?? (() => {})}
@@ -195,8 +195,11 @@ export function OlDropdownItem(props: { onClick?: () => void; className?: string
         ${props.className ?? ""}
         flex w-full cursor-pointer select-none flex-row content-center
         rounded-md px-4 py-2
-        dark:hover:bg-gray-600 dark:hover:text-white
-        hover:bg-gray-100
+        hover:bg-gray-600 hover:text-white
+        ${props.disabled ? `
+          cursor-default opacity-50
+          hover:bg-transparent hover:text-gray-200
+        ` : ``}
       `}
       style={{
         border: props.borderColor ? `2px solid ${props.borderColor}` : "2px solid transparent",
