@@ -560,10 +560,16 @@ export class Map extends L.Map {
           }
         })
         .then((res: any) => {
-          if ("alt-" + theatre.toLowerCase() in res) {
+          // Convert the result keys to lower case to avoid case sensitivity issues
+          const lowerCaseRes: any = {};
+          for (const key in res) {
+            lowerCaseRes[key.toLowerCase()] = res[key];
+          }
+
+          if ("alt-" + theatre.toLowerCase() in lowerCaseRes) {
             let template = `${mirror}/alt-${theatre.toLowerCase()}/{z}/{x}/{y}.png`;
             layers.push(
-              ...res["alt-" + theatre.toLowerCase()].map((layerConfig: any) => {
+              ...lowerCaseRes["alt-" + theatre.toLowerCase()].map((layerConfig: any) => {
                 return new L.TileLayer(template, {
                   ...layerConfig,
                   crossOrigin: "",
