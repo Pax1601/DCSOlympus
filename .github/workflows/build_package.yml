@@ -3,6 +3,8 @@ name: Build & package
 on:
   push:
     branches: [ "main", "release-candidate" ]
+  pull_request:
+    branches: [ "dcs-bfis" ]
 
 permissions:
   contents: read
