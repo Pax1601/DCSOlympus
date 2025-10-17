@@ -50,6 +50,7 @@ export class OlympusApp {
   #unitsManager: UnitsManager;
   #weaponsManager: WeaponsManager;
   #audioManager: AudioManager;
+  #llmAgentManager: any;
   #sessionDataManager: SessionDataManager;
   #controllerManager: ControllerManager;
   #coalitionAreasManager: CoalitionAreasManager;
@@ -97,6 +98,10 @@ export class OlympusApp {
     return this.#audioManager;
   }
 
+  getLLMAgentManager() {
+    return this.#llmAgentManager;
+  }
+
   getSessionDataManager() {
     return this.#sessionDataManager;
   }
@@ -131,6 +136,15 @@ export class OlympusApp {
     this.#unitsManager = new UnitsManager();
     this.#weaponsManager = new WeaponsManager();
     this.#audioManager = new AudioManager();
+    // Initialize LLM Agent manager after audio so it can locate TTS source
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const mod = require("./llm/llmagentmanager");
+      const LLMAgentManager = mod.LLMAgentManager;
+      this.#llmAgentManager = new LLMAgentManager();
+    } catch (e) {
+      this.#llmAgentManager = null;
+    }
     this.#controllerManager = new ControllerManager();
     this.#coalitionAreasManager = new CoalitionAreasManager();
     this.#drawingsManager = new DrawingsManager();

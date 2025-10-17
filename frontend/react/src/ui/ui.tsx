@@ -23,6 +23,7 @@ import { KeybindModal } from "./modals/keybindmodal";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { AppStateChangedEvent, ServerStatusUpdatedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
+import { LLMAgentMenu } from "./panels/llmagentmenu";
 import { InfoBar } from "./panels/infobar";
 import { HotGroupBar } from "./panels/hotgroupsbar";
 import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
@@ -33,10 +34,16 @@ import { TrainingModal } from "./modals/trainingmodal";
 import { AdminModal } from "./modals/adminmodal";
 
 export function UI() {
+  // Read dev params first so we can initialize state accordingly
+  const params = new URLSearchParams(window.location.search);
+  const devMock = params.get("dev") === "1";
+  const openLLM = params.get("llm") === "1";
+
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
-  const [serverConnected, setServerConnected] = useState(false as boolean);
-  const [connectedOnce, setConnectedOnce] = useState(false);
+  // In dev mode, start as connected to fully bypass the overlay from first render
+  const [serverConnected, setServerConnected] = useState((devMock ? true : false) as boolean);
+  const [connectedOnce, setConnectedOnce] = useState(devMock ? true : false);
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -45,14 +52,24 @@ export function UI() {
     });
     ServerStatusUpdatedEvent.on((status) => {
       // If we connected at least once, record it
-      if (status.connected) setConnectedOnce(true);
-      setServerConnected(status.connected);
+      if (devMock) {
+        setConnectedOnce(true);
+        setServerConnected(true);
+      } else {
+        if (status.connected) setConnectedOnce(true);
+        setServerConnected(status.connected);
+      }
     });
   }, []);
 
   useEffect(() => {
     setupApp();
-  });
+    if (devMock) {
+      // Force a usable UI state without backend for frontend-only testing
+      getApp().setState(OlympusState.IDLE);
+      if (openLLM) getApp().setState(OlympusState.LLM_AGENT);
+    }
+  }, []);
 
   return (
     <div
@@ -98,6 +115,7 @@ export function UI() {
             <DrawingMenu open={appState === OlympusState.DRAW} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <LLMAgentMenu open={appState === OlympusState.LLM_AGENT} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <UnitExplosionMenu
               open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
@@ -119,7 +137,7 @@ export function UI() {
         )}
       </div>
 
-      {!serverConnected && appState !== OlympusState.LOGIN && (
+      {!devMock && !serverConnected && appState !== OlympusState.LOGIN && (
         <div
           className={`
             absolute left-0 top-0 z-50 flex h-screen w-screen items-center
