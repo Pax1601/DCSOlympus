@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown, faA, faDatabase } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown, faA, faDatabase, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../olympusapp";
 import { NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
 import { AppStateChangedEvent } from "../../events";
@@ -25,6 +25,15 @@ export function SideBar() {
     >
       <div className={`w-16 flex-1 flex-wrap items-center justify-center p-4`}>
         <div className={`flex flex-col items-center justify-center gap-2.5`}>
+          <OlStateButton
+            onClick={() => {
+              getApp().setState(appState !== OlympusState.LLM_AGENT ? OlympusState.LLM_AGENT : OlympusState.IDLE);
+            }}
+            checked={appState === OlympusState.LLM_AGENT}
+            icon={faRobot}
+            tooltip="Hide/show LLM Agent control"
+            tooltipPosition="side"
+          ></OlStateButton>
           <OlStateButton
             onClick={() => {
               getApp().setState(appState !== OlympusState.MAIN_MENU ? OlympusState.MAIN_MENU : OlympusState.IDLE);

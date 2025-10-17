@@ -354,6 +354,7 @@ export enum OlympusState {
   AUDIO = "Audio",
   AIRBASE = "Airbase",
   GAME_MASTER = "Game master",
+  LLM_AGENT = "LLM Agent",
   IMPORT_EXPORT = "Import/export",
   WARNING = "Warning modal",
   DATABASE_EDITOR = "Database editor",
