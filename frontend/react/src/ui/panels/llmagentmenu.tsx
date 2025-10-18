@@ -3,6 +3,7 @@ import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
 import { OlympusState } from "../../constants/constants";
 import { LLMDecisionMadeEvent } from "../../events";
+import { bfisSendDecision } from "../../llm/bfisclient";
 
 export function LLMAgentMenu(props: { open: boolean; onClose: () => void }) {
   const [isActive, setIsActive] = useState(false);
@@ -109,6 +110,27 @@ export function LLMAgentMenu(props: { open: boolean; onClose: () => void }) {
             <option value="tactical">Tactical (real-time)</option>
             <option value="strategic">Strategic (planning)</option>
           </select>
+          {devMock && (
+            <button
+              className="rounded bg-olympus-700 px-3 py-2 text-white hover:bg-olympus-600"
+              onClick={async () => {
+                const text = "Sample decision: Hold position and scan";
+                const res = await bfisSendDecision(text);
+                if (res) {
+                  const ts = new Date(res.timestamp).toLocaleTimeString();
+                  const d = `${ts} - Sent to BFIS: ${text} (id ${res.id})`;
+                  setDecisions((arr) => [d, ...arr].slice(0, 50));
+                  say(d);
+                } else {
+                  const d = `BFIS not reachable; start service at http://localhost:8713 or add ?bfis=URL`;
+                  setDecisions((arr) => [d, ...arr].slice(0, 50));
+                }
+              }}
+              title="POST a sample decision to BFIS (dev only)"
+            >
+              Send Decision (MVP)
+            </button>
+          )}
         </div>
 
         <div>
