@@ -1,5 +1,6 @@
 import { getApp } from "../olympusapp";
 import { TextToSpeechSource } from "../audio/texttospeechsource";
+import { LLMDecisionMadeEvent, LLMStatusUpdatedEvent } from "../events";
 
 export class LLMAgentManager {
   private ttsSource: TextToSpeechSource | null = null;
@@ -25,12 +26,14 @@ export class LLMAgentManager {
     if (this.isActive) return;
     this.isActive = true;
     this.announceStatus("LLM Agent started");
+    try { LLMStatusUpdatedEvent.dispatch({ isActive: true, mode: "tactical" }); } catch {}
   }
 
   stop() {
     if (!this.isActive) return;
     this.isActive = false;
     this.announceStatus("LLM Agent paused");
+    try { LLMStatusUpdatedEvent.dispatch({ isActive: false, mode: "tactical" }); } catch {}
   }
 
   announceStatus(message: string) {
@@ -48,6 +51,14 @@ export class LLMAgentManager {
     if (!this.ttsSource) this.initializeTTS();
     try {
       this.ttsSource?.playText(text);
+    } catch {}
+  }
+
+  announceDecision(text: string) {
+    this.announce(text);
+    try {
+      const ts = new Date().toISOString();
+      LLMDecisionMadeEvent.dispatch({ timestamp: ts, text });
     } catch {}
   }
 
