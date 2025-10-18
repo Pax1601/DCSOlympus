@@ -4,7 +4,6 @@ import { getApp } from "../../olympusapp";
 import { OlympusState } from "../../constants/constants";
 import { bfisSendDecision } from "../../llm/bfisclient";
 import { LLMDecisionMadeEvent } from "../../events";
-import { bfisSendDecision } from "../../llm/bfisclient";
 
 export function LLMAgentMenu(props: { open: boolean; onClose: () => void }) {
   const [isActive, setIsActive] = useState(false);
