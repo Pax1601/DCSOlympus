@@ -211,6 +211,41 @@ export class AudioOptionsChangedEvent {
   }
 }
 
+// =================== LLM events ===================
+export class LLMDecisionMadeEvent {
+  static on(callback: (payload: { timestamp: string; text: string }) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail as { timestamp: string; text: string });
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(payload: { timestamp: string; text: string }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: payload }));
+    if (DEBUG) console.log(`Event ${this.name} dispatched`, payload);
+  }
+}
+
+export class LLMStatusUpdatedEvent {
+  static on(callback: (payload: { isActive: boolean; mode: "tactical" | "strategic" }) => void, singleShot = false) {
+    document.addEventListener(
+      this.name,
+      (ev: CustomEventInit) => {
+        callback(ev.detail as { isActive: boolean; mode: "tactical" | "strategic" });
+      },
+      { once: singleShot }
+    );
+  }
+
+  static dispatch(payload: { isActive: boolean; mode: "tactical" | "strategic" }) {
+    document.dispatchEvent(new CustomEvent(this.name, { detail: payload }));
+    if (DEBUG) console.log(`Event ${this.name} dispatched`, payload);
+  }
+}
+
 export class ModalEvent {
   static on(callback: (modal: boolean) => void, singleShot = false) {
     document.addEventListener(
