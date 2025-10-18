@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "./components/menu";
 import { getApp } from "../../olympusapp";
 import { OlympusState } from "../../constants/constants";
 import { bfisSendDecision } from "../../llm/bfisclient";
+import { LLMDecisionMadeEvent } from "../../events";
 
 export function LLMAgentMenu(props: { open: boolean; onClose: () => void }) {
   const [isActive, setIsActive] = useState(false);
@@ -22,6 +23,13 @@ export function LLMAgentMenu(props: { open: boolean; onClose: () => void }) {
       /* ignore */
     }
   }
+
+  useEffect(() => {
+    // Subscribe to decision events (non-dev can dispatch these)
+    LLMDecisionMadeEvent.on((p) => {
+      setDecisions((arr) => [`${new Date(p.timestamp).toLocaleTimeString()} — ${p.text}`, ...arr].slice(0, 50));
+    });
+  }, []);
 
   return (
     <Menu
@@ -128,13 +136,7 @@ export function LLMAgentMenu(props: { open: boolean; onClose: () => void }) {
         <div>
           <h3 className="font-semibold text-gray-200 mb-2">Decisions</h3>
           <div className="bg-olympus-500 rounded p-3 max-h-[250px] overflow-y-auto border border-olympus-600 text-gray-300 text-sm">
-            {decisions.length === 0 ? (
-              <div>No decisions yet</div>
-            ) : (
-              decisions.map((d, i) => (
-                <div key={i} className="border-b border-olympus-600 py-1">{d}</div>
-              ))
-            )}
+            {decisions.length === 0 ? <div>No decisions yet</div> : decisions.map((d, i) => (<div key={i} className="border-b border-olympus-600 py-1">{d}</div>))}
           </div>
         </div>
       </div>
