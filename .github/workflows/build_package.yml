@@ -2,7 +2,7 @@ name: Build & package
 
 on:
   push:
-    branches: [ "main", "release-candidate" ]
+    branches: [ "main", "release-candidate", "dcs-bfis" ]
   pull_request:
     branches: [ "dcs-bfis" ]
 
