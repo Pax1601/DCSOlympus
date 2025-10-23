@@ -304,7 +304,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     try {
         customStringJson = JSON.parse(customString);
     } catch (e) {
-        console.error("Invalid JSON string:", customString);
     }
 
     // Used to show custom strings as json, recusively returns divs for arrays

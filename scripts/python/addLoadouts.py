@@ -4,8 +4,6 @@ import inspect
 import difflib
 from slpp import slpp as lua
 
-SEARCH_FOLDER = sys.argv[2]
-
 from dcs.weapons_data import Weapons
 from dcs.planes import *
 from dcs.helicopters import *
@@ -121,10 +119,7 @@ if len(sys.argv) > 1:
     # Loads the loadout roles
     with open('payloadRoles.json') as f:
         payloads_roles = json.load(f)
-        
-    with open('pylonUsage.json') as f:
-        pylon_usage = json.load(f)
-    
+                
     # Loop on all the units in the database
     for unit_name in database:
         try:
@@ -133,10 +128,6 @@ if len(sys.argv) > 1:
                 unitmap = plane_map 
             elif (sys.argv[1] == "helicopter"):
                 unitmap = helicopter_map 
-            elif (sys.argv[1] == "groundunit"):
-                unitmap = vehicle_map 
-            elif (sys.argv[1] == "navyunit"):
-                unitmap = ship_map 
             lowercase_keys = [key.lower() for key in unitmap.keys()]
             res = difflib.get_close_matches(unit_name.lower(), lowercase_keys)
             if len(res) > 0:
@@ -156,15 +147,26 @@ if len(sys.argv) > 1:
                 "roles": ["No task", rename_task(cls.task_default.name)]
             }
             database[unit_name]["loadouts"].append(empty_loadout)
+            
+            pylon_usage = {}
+            for pylon_name in cls.pylons:
+                pylon_usage[pylon_name] = []
+                # The pylon data is expressed as a class named PylonX, where X is the pylon_name
+                pylon_cls_name = f'Pylon{pylon_name}'
+                if hasattr(cls, pylon_cls_name):
+                    pylon_cls = getattr(cls, pylon_cls_name)
+                    # The pylon class has as many attributes as there are possible weapons for that pylon
+                    for attr_name in dir(pylon_cls):
+                        if not attr_name.startswith('__') and not callable(getattr(pylon_cls, attr_name)):
+                            weapon_data = getattr(pylon_cls, attr_name)
+                            if isinstance(weapon_data[1], dict) and "clsid" in weapon_data[1]:
+                                pylon_usage[pylon_name].append(weapon_data[1])
 
             # Add the available pylon usage
             database[unit_name]["acceptedPayloads"] = {}
-            for pylon_name in pylon_usage[unit_name]:
-                pylon_data = pylon_usage[unit_name][pylon_name]
-                database[unit_name]["acceptedPayloads"][pylon_name] = {
-                    "clsids": pylon_data,
-                    "names": [find_weapon_name(clsid) for clsid in pylon_data]
-                }
+            for pylon_name in pylon_usage:
+                pylon_data = pylon_usage[pylon_name]
+                database[unit_name]["acceptedPayloads"][pylon_name] = pylon_usage[pylon_name]
 
             # Loop on all the loadouts for that unit
             for payload_name in unit_payloads[unit_name]:

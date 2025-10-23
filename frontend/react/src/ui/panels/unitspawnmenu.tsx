@@ -59,7 +59,7 @@ export function UnitSpawnMenu(props: {
     const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
     const [spawnLiveryID, setSpawnLiveryID] = useState("");
     const [spawnSkill, setSpawnSkill] = useState("High");
-    const [selectedWeapons, setSelectedWeapons] = useState([] as string[]);
+    const [selectedWeapons, setSelectedWeapons] = useState({} as { [key: string]: { clsids: string; name: string; weight: number } });
     const [quickAccessName, setQuickAccessName] = useState("Preset 1");
     const [key, setKey] = useState("");
     const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
@@ -76,6 +76,7 @@ export function UnitSpawnMenu(props: {
         setSpawnRole("");
         setSpawnLoadout(null);
         setSpawnLiveryID("");
+        setSelectedWeapons({});
     }, [props.blueprint]);
 
     /* When the menu is opened show the unit preview on the map as a cursor */
@@ -160,32 +161,6 @@ export function UnitSpawnMenu(props: {
         setCompassAngle(getApp()?.getMap().getSpawnHeading() ?? 0);
     }, [appState]);
 
-    useEffect(() => {
-        setSelectedWeapons([]);
-
-        // Choose the first loadout that matches the selected role that is not empty
-        const loadout = props.blueprint?.loadouts?.filter((loadout) => loadout.name !== "Empty loadout").find((loadout) => loadout.roles.includes(spawnRole));
-        if (loadout) {
-            setSpawnLoadout(loadout);
-            //setSelectedWeapons(loadout.items.map((item) => item.name));
-        }
-
-        // When the role changes, set the selected weapons to the weapons contained in the first loadout of that type
-        // Commented out for usability tests
-        //const loadout = loadouts.filter((loadout) => loadout.name !== "Empty loadout").find((loadout) => loadout.roles.includes(spawnRole));
-        //if (loadout) {
-        //    setSelectedWeapons(loadout.items.map((item) => item.name));
-        //}
-    }, [spawnRole]);
-
-    useEffect(() => {
-        // Select the first loadout that contains all the selected weapons
-        if (selectedWeapons.length > 0) {
-            const loadout = props.blueprint?.loadouts?.find((loadout) => selectedWeapons.every((weapon) => loadout.items.some((item) => item.name === weapon)));
-            if (loadout) setSpawnLoadout(loadout);
-        }
-    }, [selectedWeapons]);
-
     const handleMouseDown = (e: React.MouseEvent) => {
         e.preventDefault();
         const onMouseMove = (e: MouseEvent) => {
@@ -220,35 +195,6 @@ export function UnitSpawnMenu(props: {
     let mainRole = roles[0];
     if (allRoles !== undefined) mainRole = mode(allRoles);
     spawnRole === "" && roles.length > 0 && setSpawnRole(mainRole);
-
-    /* Make a list of all the available weapons */
-    let allWeapons: { [key: string]: string } = {};
-    props.blueprint?.loadouts?.forEach((loadout) => {
-        loadout.items.forEach((item) => {
-            allWeapons[item.name] = item.type;
-        });
-    });
-
-    // List the loadouts that contain all the selected weapons
-    let filteredLoadouts: LoadoutBlueprint[] = [];
-    if (selectedWeapons.length > 0) {
-        props.blueprint?.loadouts?.forEach((loadout) => {
-            let loadoutWeaponNames = loadout.items.map((item) => item.name);
-            if (selectedWeapons.every((weapon) => loadoutWeaponNames.includes(weapon))) {
-                filteredLoadouts.push(loadout);
-            }
-        });
-    } else filteredLoadouts = props.blueprint?.loadouts ?? [];
-
-    /* Organize the weapons by type */
-    let weaponsByType: { [key: string]: { name: string; available: boolean }[] } = {};
-    Object.keys(allWeapons).forEach((weaponName) => {
-        // Set which weapons are available and which are not by checking if they are in any of the filtered loadouts
-        const isAvailable = filteredLoadouts.some((loadout) => loadout.items.some((item) => item.name === weaponName));
-        const weaponType = allWeapons[weaponName];
-        if (weaponType in weaponsByType) weaponsByType[weaponType].push({ name: weaponName, available: isAvailable });
-        else weaponsByType[weaponType] = [{ name: weaponName, available: isAvailable }];
-    });
 
     return (
         <>
@@ -702,7 +648,11 @@ export function UnitSpawnMenu(props: {
                                     open={openAccordion === OpenAccordion.LOADOUT}
                                     title="Loadout wizard"
                                 >
-                                    <WeaponsWizard selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons} weaponsByType={weaponsByType} />
+                                    <WeaponsWizard
+                                        selectedWeapons={selectedWeapons}
+                                        setSelectedWeapons={setSelectedWeapons}
+                                        weaponsByPylon={props.blueprint?.acceptedPayloads ?? {}}
+                                    />
                                 </OlAccordion>
 
                                 {spawnLoadout && spawnLoadout.items.length > 0 && (
@@ -773,7 +723,7 @@ export function UnitSpawnMenu(props: {
                             {props.blueprint && <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} />}
                             <div
                                 className={`
-                                  flex h-fit flex-col gap-5 px-5 pb-8 pt-6
+                                  flex h-fit flex-col gap-2 px-5 pb-8 pt-6
                                 `}
                             >
                                 <div
@@ -1193,7 +1143,11 @@ export function UnitSpawnMenu(props: {
                                     open={openAccordion === OpenAccordion.LOADOUT}
                                     title="Loadout wizard"
                                 >
-                                    <WeaponsWizard selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons} weaponsByType={weaponsByType} />
+                                    <WeaponsWizard
+                                        selectedWeapons={selectedWeapons}
+                                        setSelectedWeapons={setSelectedWeapons}
+                                        weaponsByPylon={props.blueprint?.acceptedPayloads ?? {}}
+                                    />
                                 </OlAccordion>
                                 {spawnLoadout && spawnLoadout.items.length > 0 && (
                                     <OlAccordion
