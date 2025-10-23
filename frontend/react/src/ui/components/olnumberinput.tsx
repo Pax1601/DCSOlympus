@@ -8,6 +8,7 @@ export function OlNumberInput(props: {
   max: number;
   minLength?: number;
   className?: string;
+  internalClassName?: string;
   tooltip?: string | (() => JSX.Element | JSX.Element[]);
   tooltipPosition?: string;
   tooltipRelativeToParent?: boolean;
@@ -34,7 +35,10 @@ export function OlNumberInput(props: {
       `}
     >
       <div
-        className="relative flex max-w-[8rem] items-center"
+        className={`
+          relative flex max-w-[8rem] items-center
+          ${props.internalClassName ?? ""}
+        `}
         ref={buttonRef}
         onMouseEnter={() => {
           setHoverTimeout(

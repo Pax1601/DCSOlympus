@@ -360,6 +360,7 @@ export enum OlympusState {
   MEASURE = "Measure",
   TRAINING = "Training",
   ADMIN = "Admin",
+  IMPORT_IMAGE_OVERLAY = "Import image overlay"
 }
 
 export const NO_SUBSTATE = "No substate";
