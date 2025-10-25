@@ -443,7 +443,7 @@ export class Map extends L.Map {
         ctrlKey: false,
       });
 
-    for (let contextActionName in ContextActions) {
+    for (const contextActionName of Object.keys(ContextActions) as Array<keyof typeof ContextActions>) {
       const contextAction = ContextActions[contextActionName] as ContextAction;
       if (contextAction.getOptions().code) {
         getApp()
@@ -631,13 +631,13 @@ export class Map extends L.Map {
     return this.#spawnHeading;
   }
 
-  addStarredSpawnRequestTable(key, spawnRequestTable: SpawnRequestTable, quickAccessName: string) {
+  addStarredSpawnRequestTable(key: string, spawnRequestTable: SpawnRequestTable, quickAccessName: string) {
     this.#starredSpawnRequestTables[key] = spawnRequestTable;
     this.#starredSpawnRequestTables[key].quickAccessName = quickAccessName;
     StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
   }
 
-  removeStarredSpawnRequestTable(key) {
+  removeStarredSpawnRequestTable(key: string) {
     if (key in this.#starredSpawnRequestTables) delete this.#starredSpawnRequestTables[key];
     StarredSpawnsChangedEvent.dispatch(this.#starredSpawnRequestTables);
   }
@@ -678,7 +678,7 @@ export class Map extends L.Map {
   }
 
   setHiddenType(key: string, value: boolean) {
-    this.#hiddenTypes[key] = value;
+    this.#hiddenTypes[key as keyof MapHiddenTypes] = value;
     HiddenTypesChangedEvent.dispatch(this.#hiddenTypes);
   }
 
@@ -788,13 +788,13 @@ export class Map extends L.Map {
     return smokeMarker;
   }
 
-  setOption(key, value) {
+  setOption<K extends keyof MapOptions>(key: K, value: MapOptions[K]) {
     this.#options[key] = value;
-    MapOptionsChangedEvent.dispatch(this.#options, key);
+    MapOptionsChangedEvent.dispatch(this.#options, key as keyof MapOptions);
   }
 
-  setOptions(options) {
-    this.#options = { ...options };
+  setOptions(options: Partial<MapOptions>) {
+    this.#options = { ...this.#options, ...options } as MapOptions;
     MapOptionsChangedEvent.dispatch(this.#options);
   }
 
@@ -1071,7 +1071,7 @@ export class Map extends L.Map {
               false,
               undefined,
               undefined,
-              (hash) => {
+              (hash: string) => {
                 this.addTemporaryMarker(
                   e.latlng,
                   this.#spawnRequestTable?.unit.unitType ?? "unknown",
@@ -1239,7 +1239,7 @@ export class Map extends L.Map {
       this.#lastMouseCoordinates = e.latlng;
 
       MouseMovedEvent.dispatch(e.latlng);
-      getGroundElevation(e.latlng, (elevation) => {
+      getGroundElevation(e.latlng, (elevation: number) => {
         MouseMovedEvent.dispatch(e.latlng, elevation);
       });
 
@@ -1366,8 +1366,8 @@ export class Map extends L.Map {
       .filter((unit) => !unit.getHuman());
 
     Object.keys(this.#destinationPreviewMarkers).forEach((ID) => {
-      this.#destinationPreviewMarkers[ID].removeFrom(this);
-      delete this.#destinationPreviewMarkers[ID];
+      this.#destinationPreviewMarkers[parseInt(ID)].removeFrom(this);
+      delete this.#destinationPreviewMarkers[parseInt(ID)];
     });
 
     if (this.#keepRelativePositions) {
@@ -1385,7 +1385,7 @@ export class Map extends L.Map {
   #moveDestinationPreviewMarkers() {
     if (this.#keepRelativePositions) {
       Object.entries(getApp().getUnitsManager().computeGroupDestination(this.#destinationRotationCenter, this.#destinationRotation)).forEach(([ID, latlng]) => {
-        this.#destinationPreviewMarkers[ID]?.setLatLng(latlng);
+        this.#destinationPreviewMarkers[parseInt(ID)]?.setLatLng(latlng);
       });
     } else {
       Object.values(this.#destinationPreviewMarkers).forEach((marker) => {
