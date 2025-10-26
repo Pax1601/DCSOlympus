@@ -7,7 +7,7 @@ import { UnitControlMenu } from "./panels/unitcontrolmenu";
 import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { OptionsMenu } from "./panels/optionsmenu";
-import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, UnitControlSubState } from "../constants/constants";
+import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/loginmodal";
 
@@ -32,6 +32,7 @@ import { WarningModal } from "./modals/warningmodal";
 import { TrainingModal } from "./modals/trainingmodal";
 import { AdminModal } from "./modals/adminmodal";
 import { ImageOverlayModal } from "./modals/imageoverlaymodal";
+import { LoadoutWizardModal } from "./modals/loadoutwizardmodal";
 
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -76,6 +77,7 @@ export function UI() {
             <TrainingModal open={appState === OlympusState.TRAINING} />
             <AdminModal open={appState === OlympusState.ADMIN} />
             <ImageOverlayModal open={appState === OlympusState.IMPORT_IMAGE_OVERLAY} />
+            <LoadoutWizardModal open={appState === OlympusState.SPAWN && appSubState === SpawnSubState.LOADOUT_WIZARD} />
           </>
         )}
 

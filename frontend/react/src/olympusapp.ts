@@ -310,11 +310,13 @@ export class OlympusApp {
   }
 
   setState(state: OlympusState, subState: OlympusSubState = NO_SUBSTATE) {
+    const previousState = this.#state;
+    const previousSubState = this.#subState;
     this.#state = state;
     this.#subState = subState;
 
     console.log(`App state set to ${state}, substate ${subState}`);
-    AppStateChangedEvent.dispatch(state, subState);
+    AppStateChangedEvent.dispatch(state, subState, previousState, previousSubState);
   }
 
   getState() {

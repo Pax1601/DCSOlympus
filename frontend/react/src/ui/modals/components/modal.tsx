@@ -8,8 +8,9 @@ export function Modal(props: {
   open: boolean;
   children?: JSX.Element | JSX.Element[];
   className?: string;
-  size?: "sm" | "md" | "lg" | "full";
+  size?: "sm" | "md" | "lg" | "full" | "tall";
   disableClose?: boolean;
+  onClose?: () => void;
 }) {
   const [splash, setSplash] = useState(Math.ceil(Math.random() * 7));
 
@@ -54,6 +55,14 @@ export function Modal(props: {
                   `
                   : ""
               }
+              ${
+                props.size === "tall"
+                  ? `
+                    h-[80%] w-[800px]
+                    max-md:h-full max-md:w-full
+                  `
+                  : ""
+              }
               ${props.size === "full" ? "h-full w-full" : ""}
             `}
           >
@@ -90,7 +99,7 @@ export function Modal(props: {
                   >
                     <FaXmark
                       onClick={() => {
-                        getApp().setState(OlympusState.IDLE);
+                        props.onClose ? props.onClose() : getApp().setState(OlympusState.IDLE); 
                       }}
                     />{" "}
                   </div>

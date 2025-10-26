@@ -5,7 +5,7 @@ import { OlNumberInput } from "../components/olnumberinput";
 import { OlLabelToggle } from "../components/ollabeltoggle";
 import { OlRangeSlider } from "../components/olrangeslider";
 import { OlDropdownItem, OlDropdown } from "../components/oldropdown";
-import { LoadoutBlueprint, SpawnRequestTable, UnitBlueprint } from "../../interfaces";
+import { LoadoutBlueprint, SpawnRequestTable, UnitBlueprint, UnitSpawnTable } from "../../interfaces";
 import { OlStateButton } from "../components/olstatebutton";
 import { Coalition } from "../../types/types";
 import { getApp } from "../../olympusapp";
@@ -17,11 +17,10 @@ import { faArrowLeft, faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlStringInput } from "../components/olstringinput";
 import { countryCodes } from "../data/codes";
 import { OlAccordion } from "../components/olaccordion";
-import { AppStateChangedEvent, SpawnHeadingChangedEvent } from "../../events";
+import { AppStateChangedEvent, CustomLoadoutsUpdatedEvent, SetLoadoutWizardBlueprintEvent, SpawnHeadingChangedEvent } from "../../events";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FaQuestionCircle } from "react-icons/fa";
+import { FaMagic, FaQuestionCircle } from "react-icons/fa";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
-import { WeaponsWizard } from "./components/weaponswizard";
 import { LoadoutViewer } from "./components/loadoutviewer";
 
 enum OpenAccordion {
@@ -59,7 +58,7 @@ export function UnitSpawnMenu(props: {
     const [spawnAltitudeType, setSpawnAltitudeType] = useState(false);
     const [spawnLiveryID, setSpawnLiveryID] = useState("");
     const [spawnSkill, setSpawnSkill] = useState("High");
-    const [selectedWeapons, setSelectedWeapons] = useState({} as { [key: string]: { clsids: string; name: string; weight: number } });
+
     const [quickAccessName, setQuickAccessName] = useState("Preset 1");
     const [key, setKey] = useState("");
     const [spawnRequestTable, setSpawnRequestTable] = useState(null as null | SpawnRequestTable);
@@ -70,13 +69,16 @@ export function UnitSpawnMenu(props: {
     useEffect(() => {
         setAppState(getApp()?.getState());
         AppStateChangedEvent.on((state, subState) => setAppState(state));
+        CustomLoadoutsUpdatedEvent.on((unitName, loadout) => {
+            setSpawnRole(loadout.roles[0]);
+            setSpawnLoadout(loadout);
+        });
     }, []);
 
     useEffect(() => {
         setSpawnRole("");
         setSpawnLoadout(null);
         setSpawnLiveryID("");
-        setSelectedWeapons({});
     }, [props.blueprint]);
 
     /* When the menu is opened show the unit preview on the map as a cursor */
@@ -115,16 +117,25 @@ export function UnitSpawnMenu(props: {
     /* Callback and effect to update the spawn request table */
     const updateSpawnRequestTable = useCallback(() => {
         if (props.blueprint !== null) {
+            const loadoutCode = spawnLoadout ? (props.blueprint.loadouts?.find((loadout) => loadout.name === spawnLoadout.name)?.code ?? "") : "";
+            const loadoutPayload = spawnLoadout
+                ? (props.blueprint.loadouts?.find((loadout) => loadout.name === spawnLoadout.name)?.payload ?? undefined)
+                : undefined;
+
+            const unitTable: UnitSpawnTable = {
+                unitType: props.blueprint?.name,
+                location: props.latlng ?? new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
+                skill: spawnSkill,
+                liveryID: spawnLiveryID,
+                altitude: ftToM(spawnAltitude),
+                loadout: loadoutCode,
+            };
+
+            if (loadoutPayload) unitTable.payload = loadoutPayload;
+
             setSpawnRequestTable({
                 category: props.blueprint?.category,
-                unit: {
-                    unitType: props.blueprint?.name,
-                    location: props.latlng ?? new LatLng(0, 0), // This will be filled when the user clicks on the map to spawn the unit
-                    skill: spawnSkill,
-                    liveryID: spawnLiveryID,
-                    altitude: ftToM(spawnAltitude),
-                    loadout: props.blueprint?.loadouts?.find((loadout) => loadout.name === spawnLoadout?.name)?.code ?? "",
-                },
+                unit: unitTable,
                 amount: spawnNumber,
                 coalition: spawnCoalition,
             });
@@ -192,9 +203,48 @@ export function UnitSpawnMenu(props: {
 
     /* Initialize the role */
     let allRoles = props.blueprint?.loadouts?.flatMap((loadout) => loadout.roles).filter((role) => role !== "No task");
-    let mainRole = roles[0];
+
+    // If there are loadouts with Custom role, include Custom in the role selection
+    const hasCustomRoleLoadouts = props.blueprint?.loadouts?.some((loadout) => loadout.roles.includes("Custom"));
+    if (hasCustomRoleLoadouts && allRoles) allRoles.push("Custom");
+
+    // If there are custom loadouts, select "Custom" as the main role
+    let mainRole = hasCustomRoleLoadouts ? "Custom" : roles[0];
     if (allRoles !== undefined) mainRole = mode(allRoles);
     spawnRole === "" && roles.length > 0 && setSpawnRole(mainRole);
+
+    // Filter the loadouts based on the selected role
+    const filteredLoadouts = props.blueprint?.loadouts?.filter((loadout) => loadout.roles.includes(spawnRole));
+
+    // Order the loadouts so that custom loadouts appear first and "Empty loadout" appears last
+    if (filteredLoadouts) {
+        filteredLoadouts.sort((a, b) => {
+            if (a.isCustom && !b.isCustom) return -1;
+            if (!a.isCustom && b.isCustom) return 1;
+            if (a.name === "Empty loadout") return 1;
+            if (b.name === "Empty loadout") return -1;
+            return 0;
+        });
+    }
+
+    /* Effect to reset the loadout if the role changes */
+    useEffect(() => {
+        // If the current loadout is not in the filtered loadouts, reset it
+        if (spawnLoadout && filteredLoadouts && !filteredLoadouts.includes(spawnLoadout)) {
+            setSpawnLoadout(null);
+        }
+    }, [spawnRole, props.blueprint]);
+
+    /* Initialize the loadout */
+    const initializeLoadout = useCallback(() => {
+        if (spawnLoadout && filteredLoadouts && filteredLoadouts.includes(spawnLoadout)) return;
+        if (filteredLoadouts && filteredLoadouts.length > 0) {
+            if (filteredLoadouts.filter((loadout) => loadout.name !== "Empty loadout").length > 0)
+                setSpawnLoadout(filteredLoadouts.filter((loadout) => loadout.name !== "Empty loadout")[0]);
+            else setSpawnLoadout(filteredLoadouts[0]);
+        }
+    }, [filteredLoadouts, spawnLoadout]);
+    useEffect(initializeLoadout, [filteredLoadouts]);
 
     return (
         <>
@@ -207,7 +257,7 @@ export function UnitSpawnMenu(props: {
                             `}
                         >
                             <div className="mr-2">
-                                <div className="flex h-fit flex-col gap-3">
+                                <div className="flex h-fit flex-col gap-2">
                                     <div className="flex">
                                         <FontAwesomeIcon
                                             onClick={props.onBack}
@@ -246,10 +296,11 @@ export function UnitSpawnMenu(props: {
                                     >
                                         <div
                                             className={`
-                                              my-auto text-sm text-white
+                                              my-auto text-nowrap text-sm
+                                              text-white
                                             `}
                                         >
-                                            Quick access:{" "}
+                                            Quick access:
                                         </div>
                                         <OlStringInput
                                             onChange={(e) => {
@@ -371,6 +422,87 @@ export function UnitSpawnMenu(props: {
                                                         );
                                                     })}
                                                 </OlDropdown>
+                                            </div>
+                                            <div
+                                                className={`
+                                                  flex flex-col content-center
+                                                  justify-between gap-2
+                                                `}
+                                            >
+                                                <span
+                                                    className={`
+                                                      my-auto font-normal
+                                                      dark:text-gray-400
+                                                    `}
+                                                >
+                                                    Loadout
+                                                </span>
+                                                <OlDropdown
+                                                    label={spawnLoadout ? spawnLoadout.name : "Default"}
+                                                    className={`w-full`}
+                                                    tooltip={() => (
+                                                        <OlExpandingTooltip
+                                                            title="Unit loadout"
+                                                            content="Selects the loadout of the spawned unit. Depending on the selection, the unit will be equipped with different weapons and equipment."
+                                                        />
+                                                    )}
+                                                    tooltipRelativeToParent={true}
+                                                >
+                                                    {filteredLoadouts?.map((loadout) => {
+                                                        return (
+                                                            <OlDropdownItem
+                                                                key={loadout.name}
+                                                                onClick={() => {
+                                                                    setSpawnLoadout(loadout);
+                                                                }}
+                                                                className={`
+                                                                  w-full
+                                                                `}
+                                                            >
+                                                                <span
+                                                                    className={`
+                                                                      w-full
+                                                                      content-center
+                                                                      overflow-hidden
+                                                                      text-ellipsis
+                                                                      text-nowrap
+                                                                      text-left
+                                                                      w-max-full
+                                                                      flex gap-2
+                                                                    `}
+                                                                >
+                                                                    <div
+                                                                        className={`
+                                                                          my-auto
+                                                                        `}
+                                                                    >
+                                                                        {loadout.name}
+                                                                    </div>
+                                                                </span>
+                                                            </OlDropdownItem>
+                                                        );
+                                                    })}
+                                                </OlDropdown>
+                                            </div>
+                                            <div>
+                                                <button
+                                                    type="button"
+                                                    className={`
+                                                      flex w-full justify-center
+                                                      gap-2 rounded-md
+                                                      border-[1px] p-2
+                                                      align-middle text-sm
+                                                      dark:text-white
+                                                      hover:bg-white/10
+                                                    `}
+                                                    onClick={() => {
+                                                        SetLoadoutWizardBlueprintEvent.dispatch(props.blueprint!);
+                                                        getApp().setState(OlympusState.SPAWN, SpawnSubState.LOADOUT_WIZARD);
+                                                    }}
+                                                >
+                                                    <FaMagic className="my-auto" />
+                                                    Loadout wizard
+                                                </button>
                                             </div>
                                         </>
                                     )}
@@ -640,21 +772,6 @@ export function UnitSpawnMenu(props: {
                                 >
                                     {props.blueprint ? <OlUnitSummary blueprint={props.blueprint} coalition={spawnCoalition} /> : <span></span>}
                                 </OlAccordion>
-
-                                <OlAccordion
-                                    onClick={() => {
-                                        setOpenAccordion(openAccordion === OpenAccordion.LOADOUT ? OpenAccordion.NONE : OpenAccordion.LOADOUT);
-                                    }}
-                                    open={openAccordion === OpenAccordion.LOADOUT}
-                                    title="Loadout wizard"
-                                >
-                                    <WeaponsWizard
-                                        selectedWeapons={selectedWeapons}
-                                        setSelectedWeapons={setSelectedWeapons}
-                                        weaponsByPylon={props.blueprint?.acceptedPayloads ?? {}}
-                                    />
-                                </OlAccordion>
-
                                 {spawnLoadout && spawnLoadout.items.length > 0 && (
                                     <OlAccordion
                                         onClick={() => {
@@ -1056,6 +1173,75 @@ export function UnitSpawnMenu(props: {
                                         })}
                                     </OlDropdown>
                                 </div>
+                                <div
+                                    className={`
+                                      flex flex-col content-center
+                                      justify-between gap-2
+                                    `}
+                                >
+                                    <span
+                                        className={`
+                                          my-auto font-normal
+                                          dark:text-gray-400
+                                        `}
+                                    >
+                                        Loadout
+                                    </span>
+                                    <OlDropdown
+                                        label={spawnLoadout ? spawnLoadout.name : "Default"}
+                                        className={`w-full`}
+                                        tooltip={() => (
+                                            <OlExpandingTooltip
+                                                title="Unit loadout"
+                                                content="Selects the loadout of the spawned unit. Depending on the selection, the unit will be equipped with different weapons and equipment."
+                                            />
+                                        )}
+                                        tooltipRelativeToParent={true}
+                                    >
+                                        {filteredLoadouts?.map((loadout) => {
+                                            return (
+                                                <OlDropdownItem
+                                                    key={loadout.name}
+                                                    onClick={() => {
+                                                        setSpawnLoadout(loadout);
+                                                    }}
+                                                    className={`w-full`}
+                                                >
+                                                    <span
+                                                        className={`
+                                                          w-full content-center
+                                                          overflow-hidden
+                                                          text-ellipsis
+                                                          text-nowrap text-left
+                                                          w-max-full flex gap-2
+                                                        `}
+                                                    >
+                                                        <div className="my-auto">{loadout.name}</div>
+                                                    </span>
+                                                </OlDropdownItem>
+                                            );
+                                        })}
+                                    </OlDropdown>
+                                </div>
+                                <div>
+                                    <button
+                                        type="button"
+                                        className={`
+                                          flex w-full justify-center gap-2
+                                          rounded-md border-[1px] p-2
+                                          align-middle text-sm
+                                          dark:text-white
+                                          hover:bg-white/10
+                                        `}
+                                        onClick={() => {
+                                            SetLoadoutWizardBlueprintEvent.dispatch(props.blueprint!);
+                                            getApp().setState(OlympusState.SPAWN, SpawnSubState.LOADOUT_WIZARD);
+                                        }}
+                                    >
+                                        <FaMagic className="my-auto" />
+                                        Loadout wizard
+                                    </button>
+                                </div>
                                 <div className="my-5 flex justify-between">
                                     <div className="my-auto flex flex-col gap-2">
                                         <span className="text-white">Spawn heading</span>
@@ -1069,13 +1255,7 @@ export function UnitSpawnMenu(props: {
                                               my-auto
                                             `}
                                             />{" "}
-                                            <div
-                                                className={`
-                        my-auto
-                      `}
-                                            >
-                                                Drag to change
-                                            </div>
+                                            <div className={`my-auto`}>Drag to change</div>
                                         </div>
                                     </div>
 
@@ -1128,38 +1308,8 @@ export function UnitSpawnMenu(props: {
                                         ></img>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div
-                                className={`
-                                  flex h-fit flex-col gap-1 px-4 py-2
-                                  dark:bg-olympus-200/30
-                                `}
-                            >
-                                <OlAccordion
-                                    onClick={() => {
-                                        setOpenAccordion(openAccordion === OpenAccordion.LOADOUT ? OpenAccordion.NONE : OpenAccordion.LOADOUT);
-                                    }}
-                                    open={openAccordion === OpenAccordion.LOADOUT}
-                                    title="Loadout wizard"
-                                >
-                                    <WeaponsWizard
-                                        selectedWeapons={selectedWeapons}
-                                        setSelectedWeapons={setSelectedWeapons}
-                                        weaponsByPylon={props.blueprint?.acceptedPayloads ?? {}}
-                                    />
-                                </OlAccordion>
-                                {spawnLoadout && spawnLoadout.items.length > 0 && (
-                                    <OlAccordion
-                                        onClick={() => {
-                                            setShowLoadout(!showLoadout);
-                                        }}
-                                        open={showLoadout}
-                                        title="Loadout"
-                                    >
-                                        <LoadoutViewer spawnLoadout={spawnLoadout} />
-                                    </OlAccordion>
-                                )}
+                                <div className="text-gray-200">Loadout</div>
+                                {spawnLoadout && <LoadoutViewer spawnLoadout={spawnLoadout} />}
                             </div>
 
                             {props.airbase && (

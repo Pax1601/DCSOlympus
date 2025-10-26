@@ -102,6 +102,7 @@ string SpawnAircrafts::getString()
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "heading = " << spawnOptions[i].heading << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
+            << "payload = " << spawnOptions[i].payload << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }
@@ -132,6 +133,7 @@ string SpawnHelicopters::getString()
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "heading = " << spawnOptions[i].heading << ", "
             << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
+            << "payload = " << spawnOptions[i].payload << ", "
             << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
             << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
     }

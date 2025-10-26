@@ -8,6 +8,7 @@ import {
   AudioSinksChangedEvent,
   AudioSourcesChangedEvent,
   CoalitionAreasChangedEvent,
+  CustomLoadoutsUpdatedEvent,
   DrawingsUpdatedEvent,
   HotgroupsChangedEvent,
   MapSourceChangedEvent,
@@ -16,7 +17,7 @@ import {
   SessionDataSavedEvent,
   StarredSpawnsChangedEvent,
 } from "./events";
-import { SessionData } from "./interfaces";
+import { LoadoutBlueprint, SessionData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { getApp } from "./olympusapp";
@@ -124,7 +125,7 @@ export class SessionDataManager {
         HotgroupsChangedEvent.on((hotgroups) => {
           this.#sessionData.hotgroups = {};
           Object.keys(hotgroups).forEach((hotgroup) => {
-            (this.#sessionData.hotgroups as { [key: string]: number[] })[hotgroup] = hotgroups[hotgroup].map((unit) => unit.ID);
+            (this.#sessionData.hotgroups as { [key: string]: number[] })[hotgroup] = hotgroups[parseInt(hotgroup)].map((unit) => unit.ID);
           });
           this.#saveSessionData();
         });
@@ -144,6 +145,16 @@ export class SessionDataManager {
 
         MapSourceChangedEvent.on((source) => {
           this.#sessionData.mapSource = { id: source };
+          this.#saveSessionData();
+        });
+
+        CustomLoadoutsUpdatedEvent.on((unitName, loadout) => {
+          // If the loadout is of type isPersistent, update the session data
+          if (loadout.persistent) {
+            if (!this.#sessionData.customLoadouts) this.#sessionData.customLoadouts = {};
+            if (!this.#sessionData.customLoadouts[unitName]) this.#sessionData.customLoadouts[unitName] = [];
+            this.#sessionData.customLoadouts[unitName].push({...loadout});
+          }
           this.#saveSessionData();
         });
       }, 200);

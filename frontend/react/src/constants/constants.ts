@@ -399,6 +399,7 @@ export enum SpawnSubState {
   NO_SUBSTATE = "No substate",
   SPAWN_UNIT = "Unit",
   SPAWN_EFFECT = "Effect",
+  LOADOUT_WIZARD = "Loadout wizard"
 }
 
 export enum OptionsSubstate {

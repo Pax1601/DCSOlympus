@@ -1,12 +1,26 @@
 import { getApp } from "../../olympusapp";
 import { GAME_MASTER } from "../../constants/constants";
 import { UnitBlueprint } from "../../interfaces";
-import { UnitDatabaseLoadedEvent } from "../../events";
+import { SessionDataLoadedEvent, UnitDatabaseLoadedEvent } from "../../events";
 
 export class UnitDatabase {
   blueprints: { [key: string]: UnitBlueprint } = {};
 
-  constructor() {}
+  constructor() {
+    SessionDataLoadedEvent.on((sessionData) => {
+      // Check if the sessionData customloadouts contains any loadouts for units, and if so, update the blueprints
+      if (sessionData.customLoadouts) {
+        for (let unitName in sessionData.customLoadouts) {
+          if (this.blueprints[unitName]) {
+            if (!this.blueprints[unitName].loadouts) this.blueprints[unitName].loadouts = [];
+            sessionData.customLoadouts[unitName].forEach((loadout) => {
+              this.blueprints[unitName].loadouts?.push(loadout);
+            });
+          }
+        }
+      }
+    }); 
+  }
 
   load(url: string, category?: string) {
     if (url !== "") {
@@ -204,7 +218,7 @@ export class UnitDatabase {
   getLoadoutNamesByRole(name: string, role: string) {
     var filteredBlueprints = this.getBlueprints();
     var loadoutsByRole: string[] = [];
-    var loadouts = filteredBlueprints[name].loadouts;
+    var loadouts = filteredBlueprints[name as any].loadouts;
     if (loadouts) {
       for (let loadout of loadouts) {
         if (loadout.roles.includes(role) || loadout.roles.includes("")) {
