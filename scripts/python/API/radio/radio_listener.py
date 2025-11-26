@@ -11,8 +11,6 @@ import logging
 import threading
 from typing import Dict, Optional, Callable, Any
 import json
-from google.cloud import speech
-from google.cloud.speech import SpeechContext
 
 from audio.audio_packet import AudioPacket, MessageType
 from audio.audio_recorder import AudioRecorder
@@ -49,7 +47,7 @@ class RadioListener:
         self.modulation = 0
         self.encryption = 0
         self.coalition = "blue"
-        self.speech_contexts = []
+        self.intercom_ID = None
                 
         self.audio_recorders: Dict[str, AudioRecorder] = {}
         
@@ -67,13 +65,7 @@ class RadioListener:
         self.clients_data: dict = {}
         
         # Setup logging
-        self.logger = logging.getLogger(f"RadioListener-{address}:{port}")
-        if not self.logger.handlers:
-            handler = logging.StreamHandler()
-            formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
-            handler.setFormatter(formatter)
-            self.logger.addHandler(handler)
-            self.logger.setLevel(logging.INFO)
+        self.logger = logging.getLogger(f"DCSOlympus.API")
                 
     async def _handle_message(self, message: bytes) -> None:
         """
@@ -111,31 +103,51 @@ class RadioListener:
         Callback for when audio data is recorded.
         
         Args:
-            recorder: The AudioRecorder instance
-            audio_data: The recorded audio data
+            wav_filename: Path to the recorded WAV file
+            unit_id: The unit ID that recorded the audio
         """
+        self.logger.info(f"Recording callback triggered with file: {wav_filename}, unit_id: {unit_id}")
+        
         if self.message_callback:
-            with open(wav_filename, 'rb') as audio_file:
-                audio_content = audio_file.read()
-
-            client = speech.SpeechClient()
-            config = speech.RecognitionConfig(
-                language_code="en",
-                encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-                sample_rate_hertz=16000,
-                speech_contexts=[self.speech_contexts]
-            )
-            audio = speech.RecognitionAudio(content=audio_content)
-
-            # Synchronous speech recognition request
-            response = client.recognize(config=config, audio=audio)
-
-            # Extract recognized text
-            recognized_text = " ".join([result.alternatives[0].transcript for result in response.results])
-            
-            self.message_callback(recognized_text, unit_id)
+            try:
+                # Use API's centralized transcription service
+                recognized_text = self.api.transcribe_audio(wav_filename)
+                
+                self.logger.info(f"Transcribed text: '{recognized_text}'")
+                if recognized_text:
+                    self.message_callback(recognized_text, unit_id)
+                else:
+                    self.logger.debug("No speech detected in audio")
+                    
+            except RuntimeError as e:
+                self.logger.error(f"Whisper model not available: {e}")
+            except FileNotFoundError as e:
+                self.logger.error(f"Audio file not found: {wav_filename} - {e}")
+            except PermissionError as e:
+                self.logger.error(f"Permission denied accessing audio file: {wav_filename} - {e}")
+            except Exception as e:
+                self.logger.error(f"Error during audio transcription: {e}")
+                self.logger.error(f"File path: {wav_filename}")
+                import traceback
+                self.logger.error(f"Traceback: {traceback.format_exc()}")
+            finally:
+                # Clean up the temporary file after processing
+                try:
+                    import os
+                    if os.path.exists(wav_filename):
+                        os.remove(wav_filename)
+                        self.logger.debug(f"Cleaned up temporary file: {wav_filename}")
+                except Exception as cleanup_error:
+                    self.logger.warning(f"Failed to clean up temporary file {wav_filename}: {cleanup_error}")
         else:
             self.logger.warning("No message callback registered to handle recorded audio")
+            # Still clean up the file even if no callback is registered
+            try:
+                import os
+                if os.path.exists(wav_filename):
+                    os.remove(wav_filename)
+            except Exception:
+                pass
     
     async def _listen(self) -> None:
         """Main WebSocket listening loop."""
@@ -233,93 +245,25 @@ class RadioListener:
                 }
             ]
         }
+        
+        if self.intercom_ID is not None:
+            message["unitID"] = self.intercom_ID
 
         if self._websocket:
             message_bytes = json.dumps(message).encode('utf-8')
             data = bytes([MessageType.AUDIO.SETTINGS.value]) + message_bytes
             await self._websocket.send(data)
+                    
+    def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None) -> bool:
+        if (intercom_ID is not None):
+            frequency = 100
+            modulation = 2
+            encryption = 0
             
-    async def _send_message(self, message: Any) -> bool:
-        """
-        Send a message through the WebSocket connection.
-        
-        Args:
-            message: Message to send (will be JSON-encoded if not a string)
-            
-        Returns:
-            bool: True if message was sent successfully, False otherwise
-        """
-        if not self.is_connected():
-            self.logger.warning("Cannot send message: WebSocket not connected")
+        if frequency is None or modulation is None or encryption is None:
+            self.logger.error("Frequency, modulation, and encryption must be specified for transmission")
             return False
         
-        try:
-            # Convert message to string if needed
-            if isinstance(message, str):
-                data = message
-            else:
-                data = json.dumps(message)
-            
-            await self._websocket.send(data)
-            self.logger.debug(f"Sent message: {data}")
-            return True
-            
-        except Exception as e:
-            self.logger.error(f"Error sending message: {e}")
-            return False
-            
-    def register_message_callback(self, callback: Callable[[str, str], None]) -> None:
-        """Set the callback function for handling received messages.
-        Args:
-            callback (Callable[[str, str], None]): Function to call with recognized text and unit ID"""
-        self.message_callback = callback
-        
-    def register_clients_callback(self, callback: Callable[[dict], None]) -> None:
-        """Set the callback function for handling clients data."""
-        self.clients_callback = callback
-        
-    def set_speech_contexts(self, contexts: list[SpeechContext]) -> None:
-        """
-        Set the speech contexts for speech recognition.
-        
-        Args:
-            contexts (list[SpeechContext]): List of SpeechContext objects
-        """
-        self.speech_contexts = contexts
-
-    def start(self, frequency: int, modulation: int, encryption: int) -> None:
-        """Start the audio listener in a separate thread.
-        
-        Args:
-            frequency (int): Transmission frequency in Hz
-            modulation (int): Modulation type (0 for AM, 1 for FM, etc.)
-            encryption (int): Encryption type (0 for none, 1 for simple, etc., TODO)
-        """
-        if self._running or self._thread is not None:
-            self.logger.warning("RadioListener is already running")
-            return
-        
-        self._should_stop = False
-        self._thread = threading.Thread(target=self._run_event_loop, daemon=True)
-        self._thread.start()
-        
-        self.logger.info(f"RadioListener started, connecting to {self.websocket_url}")
-        self.frequency = frequency
-        self.modulation = modulation
-        self.encryption = encryption
-        
-    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int) -> bool:
-        """
-        Transmit a WAV file as OPUS frames over the websocket.
-        Args:
-            file_name (str): Path to the input WAV file (linear16, mono, 16kHz)
-            frequency (float): Transmission frequency
-            modulation (int): Modulation type
-            encryption (int): Encryption type
-        Returns:
-            bool: True if transmission succeeded, False otherwise
-        """
-
         try:
             # Open WAV file
             with wave.open(file_name, 'rb') as wf:
@@ -341,6 +285,11 @@ class RadioListener:
                         return False
                     # Create AudioPacket
                     packet = AudioPacket()
+                    
+                    # If provided, set intercom ID as unit ID
+                    if intercom_ID is not None:
+                        packet.set_unit_id(intercom_ID)
+                    
                     packet.set_packet_id(packet_id)
                     packet.set_audio_data(opus_data)
                     packet.set_frequencies([{
@@ -369,7 +318,80 @@ class RadioListener:
         except Exception as e:
             self.logger.error(f"Transmit failed: {e}")
             return False
+
+            
+    def register_message_callback(self, callback: Callable[[str, str], None]) -> None:
+        """Set the callback function for handling received messages.
+        Args:
+            callback (Callable[[str, str], None]): Function to call with recognized text and unit ID"""
+        self.message_callback = callback
+        
+    def register_clients_callback(self, callback: Callable[[dict], None]) -> None:
+        """Set the callback function for handling clients data."""
+        self.clients_callback = callback
+        
+    def start(self, frequency: int, modulation: int, encryption: int) -> None:
+        """Start the audio listener in a separate thread.
+        
+        Args:
+            frequency (int): Transmission frequency in Hz
+            modulation (int): Modulation type (0 for AM, 1 for FM, etc.)
+            encryption (int): Encryption type (0 for none, 1 for simple, etc., TODO)
+        """
+        if self._running or self._thread is not None:
+            self.logger.warning("RadioListener is already running")
+            return
+        
+        self._should_stop = False
+        self._thread = threading.Thread(target=self._run_event_loop, daemon=True)
+        self._thread.start()
+        
+        self.logger.info(f"RadioListener started, connecting to {self.websocket_url}")
+        self.frequency = frequency
+        self.modulation = modulation
+        self.encryption = encryption
+        
+        
+    def start_on_intercom(self, intercom_ID: int) -> None:
+        """Start the audio listener in a separate thread.
+        Args:
+            intercom_ID (int): Intercom ID to listen to
+        """
+        if self._running or self._thread is not None:
+            self.logger.warning("RadioListener is already running")
+            return
+        
+        self._should_stop = False
+        self._thread = threading.Thread(target=self._run_event_loop, daemon=True)
+        self._thread.start()
+        
+        self.logger.info(f"RadioListener started, connecting to {self.websocket_url}")
+        self.intercom_ID = intercom_ID
+        
+    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int) -> bool:
+        """
+        Transmit a WAV file as OPUS frames over the websocket.
+        Args:
+            file_name (str): Path to the input WAV file (linear16, mono, 16kHz)
+            frequency (float): Transmission frequency
+            modulation (int): Modulation type
+            encryption (int): Encryption type
+        Returns:
+            bool: True if transmission succeeded, False otherwise
+        """
+        return self._send_message(file_name, frequency, modulation, encryption, None)
     
+    def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
+        """
+        Transmit a WAV file as OPUS frames over the websocket on a specific intercom ID.
+        Args:
+            file_name (str): Path to the input WAV file (linear16, mono, 16kHz)
+            intercom_ID (int): Unit ID to transmit to
+        Returns:
+            bool: True if transmission succeeded, False otherwise
+        """
+        return self._send_message(file_name, None, None, None, intercom_ID)
+
     def stop(self) -> None:
         """Stop the audio listener gracefully."""
         if not self._running and self._thread is None:
@@ -411,4 +433,5 @@ class RadioListener:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit with graceful shutdown."""
         self.stop()
-
+        
+    

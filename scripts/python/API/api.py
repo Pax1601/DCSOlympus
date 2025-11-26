@@ -8,7 +8,7 @@ import logging
 import os
 import tempfile
 import asyncio
-from google.cloud import speech, texttospeech
+from google.cloud import speech
 
 # Custom imports
 from data.data_extractor import DataExtractor 
@@ -29,8 +29,21 @@ class API:
         self.on_startup_callback = None
         self.should_stop = False
         self.running = False
+        self.auto_update_units = True
         
         self.units_update_timestamp = 0
+        
+        # Initialize Kokoro TTS and Whisper (will be set up after logger)
+        self.kokoro = None
+        self.whisper = None
+        
+        # Whisper configuration options
+        self.whisper_options = {
+            "fp16": False,  # Use FP32 for better compatibility on some systems
+            "no_speech_threshold": 0.6,  # Skip processing if no speech detected
+            "logprob_threshold": -1.0,  # Skip low confidence segments
+            "compression_ratio_threshold": 2.4,  # Skip repetitive segments
+        }
         
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API")
@@ -82,6 +95,54 @@ class API:
                 self.navyunit_database = json.load(file)
         except FileNotFoundError:
             self.logger.error("Navy unit database file not found.")     
+        
+        # Initialize Kokoro TTS and Whisper after logger and databases are set up
+        self._initialize_kokoro()
+        self._initialize_whisper()
+        
+    def _initialize_kokoro(self, model_path: str = "kokoro-v1.0.int8.onnx", voices_path: str = "voices-v1.0.bin"):
+        """
+        Initialize Kokoro TTS if models are available.
+        
+        Args:
+            model_path (str): Path to the Kokoro ONNX model file.
+            voices_path (str): Path to the Kokoro voices file.
+        """
+        try:
+            if os.path.exists(model_path) and os.path.exists(voices_path):
+                from kokoro_onnx import Kokoro
+                self.kokoro = Kokoro(model_path, voices_path)
+                available_voices = self.kokoro.get_voices()
+                self.logger.info(f"Kokoro TTS initialized with {len(available_voices)} voices")
+                self.logger.info(f"Available voices: {available_voices}...")
+            else:
+                self.logger.warning(f"Kokoro models not found ({model_path}, {voices_path}). TTS unavailable.")
+                self.kokoro = None
+        except ImportError:
+            self.logger.warning("kokoro-onnx not installed. TTS unavailable.")
+            self.kokoro = None
+        except Exception as e:
+            self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
+            self.kokoro = None
+            
+    def _initialize_whisper(self, model_size: str = "base"):
+        """
+        Initialize Whisper speech recognition if available.
+        
+        Args:
+            model_size (str): Size of the Whisper model to use (tiny, base, small, medium, large).
+        """
+        try:
+            import whisper
+            self.whisper = whisper.load_model(model_size)
+            self.logger.info(f"Whisper speech recognition initialized with '{model_size}' model")
+            self.logger.debug(f"Whisper model device: {self.whisper.device}")
+        except ImportError:
+            self.logger.warning("OpenAI whisper not installed. Speech recognition unavailable.")
+            self.whisper = None
+        except Exception as e:
+            self.logger.error(f"Failed to initialize Whisper: {e}")
+            self.whisper = None
         
     def _get(self, endpoint):
         credentials = f"{self.username}:{self.password}"
@@ -182,7 +243,8 @@ class API:
         try:
             while not self.should_stop:
                 # Update units from the last update timestamp
-                self.update_units(self.units_update_timestamp)
+                if self.auto_update_units:
+                    self.update_units(self.units_update_timestamp)
                 
                 if self.on_update_callback:
                     await self._run_callback_async(self.on_update_callback, self)
@@ -461,42 +523,308 @@ class API:
         from radio.radio_listener import RadioListener
         return RadioListener(self, "localhost", self.config.get("audio").get("WSPort"))
     
-    def generate_audio_message(text: str, gender: str = "male", code: str = "en-US") -> str:
+    def generate_audio_message(self, text: str, voice: str = "af_bella") -> str:
         """
-        Generate a WAV file from text using Google Text-to-Speech API.
+        Generate a WAV file from text using Kokoro TTS.
         Remember to manually delete the generated file after use!
         
         Args:
             text (str): The text to synthesize.
-            gender (str): The gender of the voice (male or female).
-            code (str): The language code (e.g., en-US).
+            voice (str): The voice name to use (e.g., af_bella, af_alloy, etc.).
 
         Returns:
             str: The filename of the generated WAV file.
+            
+        Raises:
+            Exception: If Kokoro TTS fails or is not available.
         """
-        client = texttospeech.TextToSpeechClient()
-        input_text = texttospeech.SynthesisInput(text=text)
-        voice = texttospeech.VoiceSelectionParams(
-            language_code=code,
-            ssml_gender=texttospeech.SsmlVoiceGender.MALE if gender == "male" else texttospeech.SsmlVoiceGender.FEMALE
-        )
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
-            sample_rate_hertz=16000
-        )
-        response = client.synthesize_speech(
-            input=input_text,
-            voice=voice,
-            audio_config=audio_config
-        )
-        # Save the response audio to a WAV file
-        temp_dir = tempfile.gettempdir()
-        file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
-        with open(file_name, "wb") as out:
-            out.write(response.audio_content)
-        
-        return file_name       
+        try:
+            # Check if Kokoro is available
+            if self.kokoro is None:
+                raise RuntimeError("Kokoro TTS not available. Check model files and installation.")
+            
+            # Preprocess text for better TTS results
+            text = text.strip()
+            if not text:
+                raise ValueError("Empty text provided for TTS")
+            
+            # Ensure text ends with punctuation for better prosody
+            if not text[-1] in '.!?':
+                text += '.'
+                
+            logging.debug(f"Preprocessed text for TTS: '{text}'")
+                
+            import soundfile as sf
+            import numpy as np
+            import librosa
+            
+            # Get available voices and validate the requested voice
+            available_voices = self.kokoro.get_voices()
+            logging.debug(f"Available voices: {available_voices[:5]}...")  # Log first 5 voices
+            
+            if voice not in available_voices:
+                logging.warning(f"Voice {voice} not found, using {available_voices[0]}")
+                voice = available_voices[0]
+            
+            logging.debug(f"Using voice: {voice}")
+            
+            # Generate audio
+            audio_result = self.kokoro.create(text, voice=voice)
+            logging.debug(f"Kokoro returned: {type(audio_result)}")
+            
+            # Handle tuple return format (audio_array, sample_rate)
+            if isinstance(audio_result, tuple) and len(audio_result) == 2:
+                audio, sample_rate = audio_result
+                logging.debug(f"Extracted audio: {len(audio)} samples at {sample_rate}Hz")
+            else:
+                audio = audio_result
+                sample_rate = 24000  # Default Kokoro sample rate
+                logging.debug(f"Direct audio: {len(audio) if audio else 0} samples")
+            
+            # Check if audio was generated successfully
+            if audio is None or len(audio) < 100:  # Less than 100 samples is likely an error
+                # Try with longer text if original was very short
+                if len(text.strip()) < 10:
+                    extended_text = f"Message received: {text}. End of message."
+                    logging.warning(f"Text too short, extending: '{text}' -> '{extended_text}'")
+                    audio_result = self.kokoro.create(extended_text, voice=voice)
+                    
+                    # Handle tuple return format again
+                    if isinstance(audio_result, tuple) and len(audio_result) == 2:
+                        audio, sample_rate = audio_result
+                    else:
+                        audio = audio_result
+                        sample_rate = 24000
+                    
+                    logging.debug(f"Extended audio length: {len(audio) if audio is not None else 0}")
+                
+                # If still too short, raise an error
+                if audio is None or len(audio) < 100:
+                    raise ValueError(f"Kokoro generated very short audio ({len(audio) if audio is not None else 0} samples). Original text: '{text}'")
+            
+            logging.debug(f"Generated {len(audio)} audio samples for text: '{text}'")
+            
+            # Convert to numpy array if needed
+            if isinstance(audio, list):
+                audio = np.array(audio, dtype=np.float32)
+            elif not isinstance(audio, np.ndarray):
+                raise TypeError(f"Unexpected audio format from Kokoro: {type(audio)}")
+            
+            # Resample from Kokoro's 24kHz to 16kHz for radio compatibility
+            audio_16k = librosa.resample(audio, orig_sr=24000, target_sr=16000)
+            
+            # Save to temporary file
+            temp_dir = tempfile.gettempdir()
+            file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
+            
+            # Save as 16-bit PCM WAV
+            sf.write(file_name, audio_16k, 16000, subtype='PCM_16')
+            
+            logging.debug(f"Generated audio with Kokoro: {file_name} ({len(audio_16k)} samples)")
+            return file_name
+            
+        except Exception as e:
+            logging.error(f"Kokoro TTS failed: {e}")
+            raise
     
+    def transcribe_audio(self, wav_filename: str) -> str:
+        """
+        Transcribe audio from a WAV file using the pre-initialized Whisper model.
+        
+        Args:
+            wav_filename (str): Path to the WAV file to transcribe.
+            
+        Returns:
+            str: The transcribed text, or empty string if transcription fails or no speech detected.
+            
+        Raises:
+            RuntimeError: If Whisper model is not available.
+            FileNotFoundError: If the audio file doesn't exist.
+        """
+        if self.whisper is None:
+            raise RuntimeError("Whisper model not available")
+            
+        try:
+            import os
+            import wave
+            import numpy as np
+            
+            # Check if file exists
+            if not os.path.exists(wav_filename):
+                raise FileNotFoundError(f"Audio file not found: {wav_filename}")
+            
+            # Get absolute path
+            abs_wav_filename = os.path.abspath(wav_filename)
+            
+            # Verify file can be opened and get properties
+            with wave.open(abs_wav_filename, 'rb') as test_wav:
+                channels = test_wav.getnchannels()
+                sample_rate = test_wav.getframerate()
+                sample_width = test_wav.getsampwidth()
+                frames = test_wav.getnframes()
+                duration = frames / sample_rate
+                
+            self.logger.debug(f"WAV file properties - Channels: {channels}, Sample Rate: {sample_rate}, "
+                            f"Sample Width: {sample_width}, Duration: {duration:.2f}s")
+            
+            # Load audio data directly from WAV file
+            with wave.open(abs_wav_filename, 'rb') as wav_file:
+                # Read all frames
+                frames = wav_file.readframes(wav_file.getnframes())
+                # Convert bytes to numpy array
+                if wav_file.getsampwidth() == 2:  # 16-bit
+                    audio = np.frombuffer(frames, dtype=np.int16)
+                else:
+                    audio = np.frombuffer(frames, dtype=np.int32)
+                
+                # Convert to float32 and normalize to [-1, 1] range
+                audio = audio.astype(np.float32) / (2**(wav_file.getsampwidth() * 8 - 1))
+            
+            self.logger.debug(f"Loaded audio: {len(audio)} samples")
+            
+            # Use Whisper with the audio array
+            result = self.whisper.transcribe(
+                audio, 
+                language="en", 
+                verbose=False,
+                **self.whisper_options
+            )
+            
+            recognized_text = result["text"].strip()
+            self.logger.debug(f"Transcribed text: '{recognized_text}'")
+            
+            return recognized_text
+            
+        except Exception as e:
+            self.logger.error(f"Audio transcription failed: {e}")
+            import traceback
+            self.logger.error(f"Traceback: {traceback.format_exc()}")
+            return ""
+    
+    def configure_whisper_options(self, fp16: bool = None, no_speech_threshold: float = None, 
+                                 logprob_threshold: float = None, compression_ratio_threshold: float = None):
+        """
+        Configure Whisper transcription options.
+        
+        Args:
+            fp16 (bool, optional): Use FP16 precision. If None, keeps current setting.
+            no_speech_threshold (float, optional): Threshold for skipping segments with no speech. 
+                                                 Higher values make it more likely to skip segments. If None, keeps current setting.
+            logprob_threshold (float, optional): Threshold for skipping segments with low confidence.
+                                               Lower values make it more likely to skip segments. If None, keeps current setting.
+            compression_ratio_threshold (float, optional): Threshold for skipping repetitive segments.
+                                                         Higher values make it more likely to skip segments. If None, keeps current setting.
+        
+        Returns:
+            dict: The updated Whisper options configuration.
+        """
+        if fp16 is not None:
+            self.whisper_options["fp16"] = fp16
+            
+        if no_speech_threshold is not None:
+            self.whisper_options["no_speech_threshold"] = no_speech_threshold
+            
+        if logprob_threshold is not None:
+            self.whisper_options["logprob_threshold"] = logprob_threshold
+            
+        if compression_ratio_threshold is not None:
+            self.whisper_options["compression_ratio_threshold"] = compression_ratio_threshold
+        
+        self.logger.info(f"Whisper options updated: {self.whisper_options}")
+        return self.whisper_options.copy()
+    
+    def get_whisper_options(self):
+        """
+        Get the current Whisper transcription options.
+        
+        Returns:
+            dict: A copy of the current Whisper options configuration.
+        """
+        return self.whisper_options.copy()
+    
+    def set_whisper_model(self, model_size: str = "base"):
+        """
+        Change the Whisper model to a different size.
+        
+        Args:
+            model_size (str): Size of the Whisper model to use (tiny, base, small, medium, large, large-v2, large-v3).
+                            - tiny: Fastest, least accurate (~39 MB)
+                            - base: Good balance (~74 MB) 
+                            - small: Better accuracy (~244 MB)
+                            - medium: Higher accuracy (~769 MB)
+                            - large: Best accuracy (~1550 MB)
+                            - large-v2: Improved large model
+                            - large-v3: Latest large model
+        
+        Returns:
+            bool: True if model was successfully loaded, False otherwise.
+        """
+        try:
+            import whisper
+            
+            # Store old model reference for cleanup
+            old_model = self.whisper
+            
+            self.logger.info(f"Loading Whisper model: {model_size}")
+            new_model = whisper.load_model(model_size)
+            
+            # Only update if loading was successful
+            self.whisper = new_model
+            self.logger.info(f"Whisper model changed to '{model_size}' successfully")
+            self.logger.debug(f"New Whisper model device: {self.whisper.device}")
+            
+            # Clean up old model if it exists
+            if old_model is not None:
+                del old_model
+                self.logger.debug("Old Whisper model cleaned up")
+            
+            return True
+            
+        except ImportError:
+            self.logger.error("OpenAI whisper not installed. Cannot change model.")
+            return False
+        except Exception as e:
+            self.logger.error(f"Failed to load Whisper model '{model_size}': {e}")
+            return False
+    
+    def get_whisper_model_info(self):
+        """
+        Get information about the current Whisper model.
+        
+        Returns:
+            dict: Information about the current model including device and available models.
+        """
+        if self.whisper is None:
+            return {"status": "not_available", "current_model": None, "device": None}
+        
+        # Try to determine model size from the model's name or dims
+        model_size = "unknown"
+        if hasattr(self.whisper, 'dims'):
+            dims = self.whisper.dims
+            # Map common dimensions to model sizes (approximate)
+            if dims.n_text_layer == 4:
+                model_size = "tiny"
+            elif dims.n_text_layer == 6:
+                model_size = "base"
+            elif dims.n_text_layer == 12:
+                model_size = "small"
+            elif dims.n_text_layer == 24:
+                model_size = "medium"
+            elif dims.n_text_layer == 32:
+                model_size = "large"
+        
+        return {
+            "status": "available",
+            "current_model": model_size,
+            "device": str(self.whisper.device),
+            "available_models": ["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"],
+            "model_dims": {
+                "n_mels": self.whisper.dims.n_mels if hasattr(self.whisper, 'dims') else None,
+                "n_text_layer": self.whisper.dims.n_text_layer if hasattr(self.whisper, 'dims') else None,
+                "n_vocab": self.whisper.dims.n_vocab if hasattr(self.whisper, 'dims') else None
+            }
+        }
+       
     def get_closest_units(self, coalitions: list[str], categories: list[str], position: LatLng, operate_as: str | None = None, max_number: int = 1, max_distance: float = 10000) -> list[Unit]:
         """
         Get the closest units of a specific coalition and category to a given position. 

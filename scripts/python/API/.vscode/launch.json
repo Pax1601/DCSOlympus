@@ -59,6 +59,22 @@
             "program": "infantry_boarding.py",
             "console": "integratedTerminal",
             "justMyCode": false,
+        },
+        {
+            "name": "Intercom",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_intercom_control.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Echo with whisper",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_echo.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
         }
     ]
 }
