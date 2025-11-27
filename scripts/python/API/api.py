@@ -8,6 +8,7 @@ import os
 import tempfile
 import asyncio
 import wave
+import shutil
 
 # Audio processing imports (moved to top level for performance)
 try:
@@ -109,26 +110,31 @@ class API:
         self._initialize_kokoro()
         self._initialize_whisper()
         
-    def _initialize_kokoro(self, model_path: str = "kokoro-v1.0.int8.onnx", voices_path: str = "voices-v1.0.bin"):
+    def _initialize_kokoro(self, repo_id: str = 'hexgrad/Kokoro-82M', lang_code: str = 'a'):
         """
-        Initialize Kokoro TTS if models are available.
+        Initialize Kokoro TTS using KPipeline.
         
         Args:
-            model_path (str): Path to the Kokoro ONNX model file.
-            voices_path (str): Path to the Kokoro voices file.
+            repo_id (str): HuggingFace repo ID for the Kokoro model.
+            lang_code (str): Language code (e.g., 'a' for American English, 'b' for British English).
         """
         try:
-            if os.path.exists(model_path) and os.path.exists(voices_path):
-                from kokoro_onnx import Kokoro
-                self.kokoro = Kokoro(model_path, voices_path)
-                available_voices = self.kokoro.get_voices()
-                self.logger.info(f"Kokoro TTS initialized with {len(available_voices)} voices")
-                self.logger.info(f"Available voices: {available_voices}...")
-            else:
-                self.logger.warning(f"Kokoro models not found ({model_path}, {voices_path}). TTS unavailable.")
-                self.kokoro = None
+            from kokoro import KPipeline
+            import warnings
+            
+            # Suppress kokoro warnings
+            warnings.filterwarnings("ignore", message='dropout option adds dropout after all but last recurrent layer.*')
+            warnings.filterwarnings("ignore", message='.*torch.nn.utils.weight_norm.*is deprecated.*')
+            
+            self.kokoro = KPipeline(lang_code=lang_code, repo_id=repo_id)
+            self.kokoro_lang_code = lang_code
+            
+            # Available voices for reference
+            # https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md
+            self.logger.info(f"Kokoro TTS initialized with KPipeline from {repo_id}")
+            self.logger.info("Available voices: af_* (American Female), am_* (American Male), bf_* (British Female), bm_* (British Male), etc.")
         except ImportError:
-            self.logger.warning("kokoro-onnx not installed. TTS unavailable.")
+            self.logger.warning("kokoro not installed. TTS unavailable. Install with: pip install kokoro-onnx")
             self.kokoro = None
         except Exception as e:
             self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
@@ -532,14 +538,15 @@ class API:
         from radio.radio_listener import RadioListener
         return RadioListener(self, "localhost", self.config.get("audio").get("WSPort"))
     
-    def generate_audio_message(self, text: str, voice: str = "af_bella") -> str:
+    def generate_audio_message(self, text: str, voice: str = "af_bella", speed: float = 1.0) -> str:
         """
-        Generate a WAV file from text using Kokoro TTS.
+        Generate a WAV file from text using Kokoro TTS with streaming for faster response.
         Remember to manually delete the generated file after use!
         
         Args:
             text (str): The text to synthesize.
-            voice (str): The voice name to use (e.g., af_bella, af_alloy, etc.).
+            voice (str): The voice name to use (e.g., af_bella, af_nicole, am_adam, bm_daniel, etc.).
+            speed (float): Speech speed multiplier (default 1.0, higher = faster).
 
         Returns:
             str: The filename of the generated WAV file.
@@ -550,93 +557,76 @@ class API:
         try:
             # Check if Kokoro is available
             if self.kokoro is None:
-                raise RuntimeError("Kokoro TTS not available. Check model files and installation.")
+                raise RuntimeError("Kokoro TTS not available. Install with: pip install kokoro-onnx")
             
-            # Preprocess text for better TTS results
+            # Fast preprocessing
+            original_text = text
             text = text.strip()
             if not text:
                 raise ValueError("Empty text provided for TTS")
             
-            # Ensure text ends with punctuation for better prosody
-            if not text[-1] in '.!?':
+            # Quick punctuation fix for better prosody
+            if text[-1] not in '.!?':
                 text += '.'
-                
-            logging.debug(f"Preprocessed text for TTS: '{text}'")
+            
+            # Create cache key
+            cache_key = f"{text}_{voice}_{speed}"
+            
+            # Check cache first for instant response
+            if cache_key in self._audio_cache:
+                cached_file = self._audio_cache[cache_key]
+                if os.path.exists(cached_file):
+                    # Copy cached file to new temp file
+                    temp_dir = tempfile.gettempdir()
+                    new_file = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
+                    shutil.copy2(cached_file, new_file)
+                    self.logger.debug(f"Using cached audio for: '{text}'")
+                    return new_file
+                else:
+                    # Remove invalid cache entry
+                    del self._audio_cache[cache_key]
             
             # Check if audio libraries are available
             if not AUDIO_LIBS_AVAILABLE:
                 raise RuntimeError("Audio processing libraries (soundfile, numpy, scipy) not available")
             
-            # Get available voices and validate the requested voice
-            available_voices = self.kokoro.get_voices()
-            logging.debug(f"Available voices: {available_voices[:5]}...")  # Log first 5 voices
+            # Generate audio using KPipeline streaming
+            self.logger.debug(f"Generating audio for: '{text}' with voice: {voice} at speed: {speed}")
             
-            if voice not in available_voices:
-                logging.warning(f"Voice {voice} not found, using {available_voices[0]}")
-                voice = available_voices[0]
+            chunk_list = []
+            try:
+                # Use KPipeline to generate audio in streaming fashion
+                for _, _, audio in self.kokoro(text, voice=voice, speed=speed):
+                    chunk_list.append(np.array(audio.tolist(), dtype=np.float32))
+            except Exception as e:
+                self.logger.error(f"KPipeline TTS generation failed: {e}")
+                raise RuntimeError(f"Failed to generate audio: {e}")
             
-            logging.debug(f"Using voice: {voice}")
+            if not chunk_list:
+                raise ValueError(f"No audio generated for text: '{original_text}'")
             
-            # Generate audio
-            audio_result = self.kokoro.create(text, voice=voice)
-            logging.debug(f"Kokoro returned: {type(audio_result)}")
+            # Concatenate all chunks
+            audio = np.concatenate(chunk_list)
+            self.logger.debug(f"Generated {len(audio)} audio samples")
             
-            # Handle tuple return format (audio_array, sample_rate)
-            if isinstance(audio_result, tuple) and len(audio_result) == 2:
-                audio, sample_rate = audio_result
-                logging.debug(f"Extracted audio: {len(audio)} samples at {sample_rate}Hz")
-            else:
-                audio = audio_result
-                sample_rate = 24000  # Default Kokoro sample rate
-                logging.debug(f"Direct audio: {len(audio) if audio else 0} samples")
-            
-            # Check if audio was generated successfully
-            if audio is None or len(audio) < 100:  # Less than 100 samples is likely an error
-                # Try with longer text if original was very short
-                if len(text.strip()) < 10:
-                    extended_text = f"Message received: {text}. End of message."
-                    logging.warning(f"Text too short, extending: '{text}' -> '{extended_text}'")
-                    audio_result = self.kokoro.create(extended_text, voice=voice)
-                    
-                    # Handle tuple return format again
-                    if isinstance(audio_result, tuple) and len(audio_result) == 2:
-                        audio, sample_rate = audio_result
-                    else:
-                        audio = audio_result
-                        sample_rate = 24000
-                    
-                    logging.debug(f"Extended audio length: {len(audio) if audio is not None else 0}")
-                
-                # If still too short, raise an error
-                if audio is None or len(audio) < 100:
-                    raise ValueError(f"Kokoro generated very short audio ({len(audio) if audio is not None else 0} samples). Original text: '{text}'")
-            
-            logging.debug(f"Generated {len(audio)} audio samples for text: '{text}'")
-            
-            # Convert to numpy array if needed
-            if isinstance(audio, list):
-                audio = np.array(audio, dtype=np.float32)
-            elif not isinstance(audio, np.ndarray):
-                raise TypeError(f"Unexpected audio format from Kokoro: {type(audio)}")
-            
-            # Resample from Kokoro's 24kHz to 16kHz for radio compatibility using scipy
-            # Calculate the resampling ratio
-            resample_ratio = 16000 / 24000  # target_sr / orig_sr
-            num_samples = int(len(audio) * resample_ratio)
-            audio_16k = scipy_signal.resample(audio, num_samples)
+            # Resample from Kokoro's 24kHz to 16kHz for radio compatibility
+            target_length = int(len(audio) * 16000 / 24000)
+            audio_16k = scipy_signal.resample(audio, target_length)
             
             # Save to temporary file
             temp_dir = tempfile.gettempdir()
             file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
             
-            # Save as 16-bit PCM WAV
+            # Fast WAV writing
             sf.write(file_name, audio_16k, 16000, subtype='PCM_16')
             
-            logging.debug(f"Generated audio with Kokoro: {file_name} ({len(audio_16k)} samples)")
+            # Cache management - add to cache and clean if needed
+            self._add_to_cache(cache_key, file_name)
+            
             return file_name
             
         except Exception as e:
-            logging.error(f"Kokoro TTS failed: {e}")
+            self.logger.error(f"Kokoro TTS failed: {e}")
             raise
     
     def transcribe_audio(self, wav_filename: str) -> str:
