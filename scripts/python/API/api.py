@@ -13,7 +13,7 @@ import wave
 try:
     import soundfile as sf
     import numpy as np
-    from scipy import signal
+    from scipy import signal as scipy_signal
     AUDIO_LIBS_AVAILABLE = True
 except ImportError as e:
     AUDIO_LIBS_AVAILABLE = False
@@ -623,7 +623,7 @@ class API:
             # Calculate the resampling ratio
             resample_ratio = 16000 / 24000  # target_sr / orig_sr
             num_samples = int(len(audio) * resample_ratio)
-            audio_16k = signal.resample(audio, num_samples)
+            audio_16k = scipy_signal.resample(audio, num_samples)
             
             # Save to temporary file
             temp_dir = tempfile.gettempdir()
