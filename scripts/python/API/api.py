@@ -3,12 +3,21 @@ import time
 import requests
 import base64
 import signal
-import sys
 import logging
 import os
 import tempfile
 import asyncio
-from google.cloud import speech
+import wave
+
+# Audio processing imports (moved to top level for performance)
+try:
+    import soundfile as sf
+    import numpy as np
+    from scipy import signal
+    AUDIO_LIBS_AVAILABLE = True
+except ImportError as e:
+    AUDIO_LIBS_AVAILABLE = False
+    print(f"Audio processing libraries not available: {e}")
 
 # Custom imports
 from data.data_extractor import DataExtractor 
@@ -553,10 +562,10 @@ class API:
                 text += '.'
                 
             logging.debug(f"Preprocessed text for TTS: '{text}'")
-                
-            import soundfile as sf
-            import numpy as np
-            import librosa
+            
+            # Check if audio libraries are available
+            if not AUDIO_LIBS_AVAILABLE:
+                raise RuntimeError("Audio processing libraries (soundfile, numpy, scipy) not available")
             
             # Get available voices and validate the requested voice
             available_voices = self.kokoro.get_voices()
@@ -610,8 +619,11 @@ class API:
             elif not isinstance(audio, np.ndarray):
                 raise TypeError(f"Unexpected audio format from Kokoro: {type(audio)}")
             
-            # Resample from Kokoro's 24kHz to 16kHz for radio compatibility
-            audio_16k = librosa.resample(audio, orig_sr=24000, target_sr=16000)
+            # Resample from Kokoro's 24kHz to 16kHz for radio compatibility using scipy
+            # Calculate the resampling ratio
+            resample_ratio = 16000 / 24000  # target_sr / orig_sr
+            num_samples = int(len(audio) * resample_ratio)
+            audio_16k = signal.resample(audio, num_samples)
             
             # Save to temporary file
             temp_dir = tempfile.gettempdir()
@@ -644,10 +656,11 @@ class API:
         if self.whisper is None:
             raise RuntimeError("Whisper model not available")
             
+        # Check if audio libraries are available
+        if not AUDIO_LIBS_AVAILABLE:
+            raise RuntimeError("Audio processing libraries (numpy) not available")
+            
         try:
-            import os
-            import wave
-            import numpy as np
             
             # Check if file exists
             if not os.path.exists(wav_filename):
