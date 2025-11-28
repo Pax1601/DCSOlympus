@@ -254,7 +254,7 @@ class RadioListener:
             data = bytes([MessageType.AUDIO.SETTINGS.value]) + message_bytes
             await self._websocket.send(data)
                     
-    def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None) -> bool:
+    def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None, unit_ID: int | None) -> bool:
         if (intercom_ID is not None):
             frequency = 100
             modulation = 2
@@ -289,6 +289,8 @@ class RadioListener:
                     # If provided, set intercom ID as unit ID
                     if intercom_ID is not None:
                         packet.set_unit_id(intercom_ID)
+                    elif unit_ID is not None:
+                        packet.set_unit_id(unit_ID)
                     
                     packet.set_packet_id(packet_id)
                     packet.set_audio_data(opus_data)
@@ -368,7 +370,7 @@ class RadioListener:
         self.logger.info(f"RadioListener started, connecting to {self.websocket_url}")
         self.intercom_ID = intercom_ID
         
-    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int) -> bool:
+    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
         """
         Transmit a WAV file as OPUS frames over the websocket.
         Args:
@@ -376,10 +378,14 @@ class RadioListener:
             frequency (float): Transmission frequency
             modulation (int): Modulation type
             encryption (int): Encryption type
+
+        Kwargs:
+            unit_ID (int, optional): The unit ID of the source unit to impersonate
+
         Returns:
             bool: True if transmission succeeded, False otherwise
         """
-        return self._send_message(file_name, frequency, modulation, encryption, None)
+        return self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get("unit_ID"))
     
     def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
         """

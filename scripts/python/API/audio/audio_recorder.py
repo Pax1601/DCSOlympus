@@ -101,7 +101,7 @@ class AudioRecorder:
             self.silence_timer.cancel()
         
         # Set a timer for 2 seconds
-        self.silence_timer = threading.Timer(2.0, self.stop_recording)
+        self.silence_timer = threading.Timer(0.5, self.stop_recording)
         self.silence_timer.start()
 
     

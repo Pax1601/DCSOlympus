@@ -14,16 +14,62 @@ logger.propagate = False
 
 # Function to handle received messages
 # This function will be called when a message is received on the radio frequency
-def on_message_received(recognized_text: str, unit_id: str, api: API, listener: RadioListener):
+def on_message_received_tower(recognized_text: str, unit_id: str, api: API, listener: RadioListener):
     logger.info(f"Received message from {unit_id}: {recognized_text}")
+
+    try:
+        unit = api.get_units()[unit_id]
+        unit_name = unit.callsign + ", "
+    except:
+        unit_name = "last station calling, "
+        
+    recognized_text = recognized_text.lower()
+
+    if "tower" not in recognized_text:
+        return
+
+    if "taxi" in recognized_text:
+        text = "Tower, Clear to taxi runway 2 6"
+    elif "departure" in recognized_text:
+        text = "Tower, Clear for takeoff runway 2 6"
+    elif "initial" in recognized_text:
+        text = "Tower, clear into the break 2 6"
+    elif "abeam" in recognized_text or "full stop" in recognized_text or "final" in recognized_text:
+        text = "Tower, Clear to land runway 2 6, wind calm"
+    else:
+        text = "Could not understand, say again"
     
-    # Generate echo message
-    echo_text = f"Echo: {recognized_text}"
-    logger.info(f"Generating echo response: {echo_text}")
+    logger.info(f"Generating echo response: {unit_name + text}")
+
+    generate_text(unit_name + text, listener)
+
+def on_message_received_ground(recognized_text: str, unit_id: str, api: API, listener: RadioListener):
+    logger.info(f"Received message from {unit_id}: {recognized_text}")
+
+    try:
+        unit = api.get_units()[unit_id]
+        unit_name = unit.callsign + ", "
+    except:
+        unit_name = "last station calling, "
+
+    recognized_text = recognized_text.lower()
+
+    if "ground" not in recognized_text:
+        return
+
+    if "taxi" in recognized_text:
+        text = "Ground, Clear to taxi runway 2 6"
+    else:
+        text = "Could not understand, say again"
     
+    logger.info(f"Generating echo response: {unit_name + text}")
+
+    generate_text(unit_name + text, listener)
+    
+def generate_text(text, listener): 
     try:
         # Generate audio using Kokoro TTS (now built into the API)
-        audio_file = api.generate_audio_message(echo_text, voice="af_bella")
+        audio_file = api.generate_audio_message(text, voice="bm_daniel")
         logger.info(f"Generated audio file: {audio_file}")
         
         # Transmit the audio back on the same frequency
@@ -73,10 +119,12 @@ if __name__ == "__main__":
     final_options = api.get_whisper_options()
     logger.info(f"Final Whisper options: {final_options}")
     
-    listener = api.create_radio_listener()
-    listener.start(frequency=251.000e6, modulation=0, encryption=0)
-    listener.register_message_callback(lambda recognized_text, unit_id, api=api, listener=listener: on_message_received(recognized_text, unit_id, api, listener))
-    
-    api.auto_update_units = False
+    listener_ground = api.create_radio_listener()
+    listener_ground.start(frequency=140.950e6, modulation=0, encryption=0)
+    listener_ground.register_message_callback(lambda recognized_text, unit_id, api=api, listener=listener_ground: on_message_received_ground(recognized_text, unit_id, api, listener))
 
+    listener_tower = api.create_radio_listener()
+    listener_tower.start(frequency=139.725e6, modulation=0, encryption=0)
+    listener_tower.register_message_callback(lambda recognized_text, unit_id, api=api, listener=listener_tower: on_message_received_tower(recognized_text, unit_id, api, listener))
+    
     api.run()

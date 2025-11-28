@@ -27,7 +27,7 @@ from data.unit_spawn_table import UnitSpawnTable
 from data.data_types import LatLng
 
 class API:
-    def __init__(self, username: str = "API", databases_location: str = "databases"):
+    def __init__(self, username: str = "API", databases_location: str = "databases", load_whisper: bool = True, load_kokoro: bool = True):
         self.base_url = None
         self.config = None
         self.logs = {}
@@ -107,8 +107,11 @@ class API:
             self.logger.error("Navy unit database file not found.")     
         
         # Initialize Kokoro TTS and Whisper after logger and databases are set up
-        self._initialize_kokoro()
-        self._initialize_whisper()
+        if load_kokoro:
+            self._initialize_kokoro()
+
+        if load_whisper:
+            self._initialize_whisper()
         
     def _initialize_kokoro(self, repo_id: str = 'hexgrad/Kokoro-82M', lang_code: str = 'a'):
         """
@@ -140,7 +143,7 @@ class API:
             self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
             self.kokoro = None
             
-    def _initialize_whisper(self, model_size: str = "base"):
+    def _initialize_whisper(self, model_size: str = "tiny"):
         """
         Initialize Whisper speech recognition if available.
         
@@ -538,7 +541,7 @@ class API:
         from radio.radio_listener import RadioListener
         return RadioListener(self, "localhost", self.config.get("audio").get("WSPort"))
     
-    def generate_audio_message(self, text: str, voice: str = "af_bella", speed: float = 1.0) -> str:
+    def generate_audio_message(self, text: str, voice: str = "bm_daniel", speed: float = 1.0) -> str:
         """
         Generate a WAV file from text using Kokoro TTS with streaming for faster response.
         Remember to manually delete the generated file after use!
@@ -568,24 +571,7 @@ class API:
             # Quick punctuation fix for better prosody
             if text[-1] not in '.!?':
                 text += '.'
-            
-            # Create cache key
-            cache_key = f"{text}_{voice}_{speed}"
-            
-            # Check cache first for instant response
-            if cache_key in self._audio_cache:
-                cached_file = self._audio_cache[cache_key]
-                if os.path.exists(cached_file):
-                    # Copy cached file to new temp file
-                    temp_dir = tempfile.gettempdir()
-                    new_file = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
-                    shutil.copy2(cached_file, new_file)
-                    self.logger.debug(f"Using cached audio for: '{text}'")
-                    return new_file
-                else:
-                    # Remove invalid cache entry
-                    del self._audio_cache[cache_key]
-            
+                        
             # Check if audio libraries are available
             if not AUDIO_LIBS_AVAILABLE:
                 raise RuntimeError("Audio processing libraries (soundfile, numpy, scipy) not available")
@@ -619,9 +605,6 @@ class API:
             
             # Fast WAV writing
             sf.write(file_name, audio_16k, 16000, subtype='PCM_16')
-            
-            # Cache management - add to cache and clean if needed
-            self._add_to_cache(cache_key, file_name)
             
             return file_name
             
@@ -745,7 +728,7 @@ class API:
         """
         return self.whisper_options.copy()
     
-    def set_whisper_model(self, model_size: str = "base"):
+    def set_whisper_model(self, model_size: str = "tiny"):
         """
         Change the Whisper model to a different size.
         
