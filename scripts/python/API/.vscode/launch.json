@@ -75,6 +75,24 @@
             "program": "example_echo.py",
             "console": "integratedTerminal",
             "justMyCode": false,
+        },
+        {
+            "name": "ATC",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "atc.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Current file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

@@ -536,10 +536,14 @@ class API:
         Create an audio listener instance.
         
         Returns:
-            AudioListener: An instance of the AudioListener class.
+            RadioListener: An instance of the RadioListener class.
         """
         from radio.radio_listener import RadioListener
-        return RadioListener(self, "localhost", self.config.get("audio").get("WSPort"))
+
+        if self.config.get("audio").get("WSAddress"):
+            return RadioListener(self, self.config.get("audio").get("WSAddress"), None)
+        else:
+            return RadioListener(self, self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"))
     
     def generate_audio_message(self, text: str, voice: str = "bm_daniel", speed: float = 1.0) -> str:
         """

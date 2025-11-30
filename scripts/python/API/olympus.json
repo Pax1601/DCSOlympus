@@ -1,7 +1,6 @@
 {
   "backend": {
-    "address": "localhost",
-    "port": 4512
+    "address": "refugees.dcsolympus.com/direct"
   },
   "authentication": {
     "gameMasterPassword": "a00a5973aacb17e4659125fbe10f4160d096dd84b2f586d2d75669462a30106d",
@@ -43,6 +42,6 @@
   },
   "audio": {
     "SRSPort": 5002,
-    "WSPort": 4000
+    "WSAddress": "refugees.dcsolympus.com/audio"
   }
 }
