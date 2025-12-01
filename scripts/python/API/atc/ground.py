@@ -5,8 +5,8 @@ from atc.tower import ALTITUDE_THRESHOLD, DISTANCE_THRESHOLD
 CONTROL_RADIUS = 5000
 
 class GroundATC(ATCAgency):
-    def __init__(self, airport_name: str, api: API, config: dict, frequency: float):
-        super().__init__(airport_name, api, config, frequency)
+    def __init__(self, airport_name: str, api: API, config: dict, frequency: float, voice: str = "bm_lewis"):
+        super().__init__(airport_name, api, config, frequency, voice)
         self.tower = None
 
         if self.frequency is None:
@@ -98,9 +98,9 @@ class GroundATC(ATCAgency):
             unit.set_atc_state(ATCState.TAXIING_TO_RUNWAY)
             
             if units_taxiing_to_runway == 1:
-                text = f"{unit.callsign}, {self.airport_name} ground, taxi to runway {self.active_runway}."
+                text = f"{unit.callsign}, {self.airport_name} ground, taxi to runway {' '.join(self.active_runway)}."
             else:
-                text = f"{unit.callsign}, {self.airport_name} ground, number {units_taxiing_to_runway} taxi to runway {self.active_runway} behind the {last_unit.name}."
+                text = f"{unit.callsign}, {self.airport_name} ground, number {units_taxiing_to_runway} taxi to runway {' '.join(self.active_runway)} behind the {last_unit.name}."
 
         if units_taxiing_to_parking > 0:
             text += f" Be advised, there are {units_taxiing_to_parking} other aircraft taxiing to parking."
@@ -131,7 +131,7 @@ class GroundATC(ATCAgency):
             self.logger.info(f"Unit {unit.ID} is airborne, releasing ground control")
 
             # Send a message to the unit
-            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {Unicom.frequency / 1e6:.3f} for further instructions.")
+            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)} for further instructions.")
             unit.set_controlling_agency(Unicom)
             unit.set_atc_state(ATCState.UNKNOWN)
 
@@ -140,10 +140,10 @@ class GroundATC(ATCAgency):
         if unit.get_atc_state() == ATCState.TAXIING_TO_RUNWAY:
             self.logger.info(f"Unit {unit.ID} is in hold short box, switch to tower")
             if self.tower is not None:
-                self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} ground, contact tower on {self.tower.frequency / 1e6}.")
+                self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} ground, contact tower on {self._format_frequency_for_speech(self.tower.frequency)}.")
                 self.tower.transfer_unit(unit)
             else:
-                self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} ground, monitor {Unicom.frequency}.")
+                self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} ground, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
                 unit.set_controlling_agency(Unicom)
 
     def transfer_unit(self, unit: ATCUnit):

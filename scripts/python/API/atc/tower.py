@@ -9,8 +9,8 @@ ALTITUDE_THRESHOLD = 200  # in meters
 MAX_ORDER = 0
 
 class TowerATC(ATCAgency):
-    def __init__(self, airport_name: str, api: API, config: dict, frequency: float):
-        super().__init__(airport_name, api, config, frequency)
+    def __init__(self, airport_name: str, api: API, config: dict, frequency: float, voice: str = "am_adam"):
+        super().__init__(airport_name, api, config, frequency, voice)
         self.ground = None
         self.radar = None
         
@@ -52,7 +52,7 @@ class TowerATC(ATCAgency):
                             # If the unit is outside of control radius, release it
                             self.logger.info(f"Releasing unit {unit.ID} from tower control")
                             # Send a message to the unit
-                            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {Unicom.frequency / 1e6:.3f}.")
+                            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
                             unit.set_controlling_agency(Unicom)
                 else:
                     if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
@@ -89,7 +89,7 @@ class TowerATC(ATCAgency):
                     # Check that this unit is next in line for takeoff
                     if self._get_list_of_units_in_takeoff_order()[0] == unit:
                         self.logger.info(f"Clearing unit {unit.ID} for takeoff")
-                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {self.active_runway} cleared for takeoff.")
+                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared for takeoff.")
                         unit.set_atc_state(ATCState.TAKING_OFF)
 
             # If outside of the runway, and in landing state, transfer to ground ATC
@@ -100,13 +100,13 @@ class TowerATC(ATCAgency):
                     self.ground.transfer_unit(unit)
 
                     # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, contact ground on {self.ground.frequency / 1e6:.3f}.")
+                    self._send_message_to_unit(unit, f"{unit.callsign}, contact ground on {self._format_frequency_for_speech(self.ground.frequency)}.")
                 else:
                     self.logger.warning(f"Ground ATC not set, cannot transfer unit {unit.ID}")
                     unit.set_controlling_agency(Unicom)
 
                     # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, taxi at own discretion and monitor {Unicom.frequency / 1e6:.3f}.")
+                    self._send_message_to_unit(unit, f"{unit.callsign}, taxi at own discretion and monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
         # Unit is airborne
         else:
             if unit.get_atc_state() == ATCState.TAKING_OFF:
@@ -121,18 +121,18 @@ class TowerATC(ATCAgency):
                     self.radar.transfer_unit(unit)
 
                     # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, contact departure on {self.radar.frequency / 1e6:.3f}.")
+                    self._send_message_to_unit(unit, f"{unit.callsign}, contact departure on {self._format_frequency_for_speech(self.radar.frequency)}.")
                 else:
                     self.logger.warning(f"Radar ATC not set, cannot transfer unit {unit.ID}")
                     unit.set_controlling_agency(Unicom)
 
                     # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, proceed on course and monitor {Unicom.frequency / 1e6:.3f}.")
+                    self._send_message_to_unit(unit, f"{unit.callsign}, proceed on course and monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
             elif unit.get_atc_state() == ATCState.ARRIVING:
                 if unit.position.distance_to(self.runway_center) < DISTANCE_THRESHOLD and unit.position.alt - self.runway_elevation < ALTITUDE_THRESHOLD:
                     if self.check_runway_clear(unit):
                         self.logger.info(f"Clearing unit {unit.ID} for landing")
-                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {self.active_runway} cleared to land.")
+                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared to land.")
                         unit.set_atc_state(ATCState.LANDING)
                     else:
                         self.logger.info(f"Runway not clear for unit {unit.ID} landing")
@@ -158,11 +158,11 @@ class TowerATC(ATCAgency):
             global MAX_ORDER
             MAX_ORDER += 1
             unit.set_order(MAX_ORDER)
-            return f"{unit.callsign}, {self.airport_name} tower, hold short of runway {self.active_runway}. You are number {len(self._get_list_of_units_in_takeoff_order()) + 1} for departure."
+            return f"{unit.callsign}, {self.airport_name} tower, hold short of runway {' '.join(self.active_runway)}. You are number {len(self._get_list_of_units_in_takeoff_order()) + 1} for departure."
             
         self.logger.info(f"Clearing unit {unit.ID} for takeoff")
         unit.set_atc_state(ATCState.TAKING_OFF)
-        return f"{unit.callsign}, {self.airport_name} tower, runway {self.active_runway} cleared for takeoff."
+        return f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared for takeoff."
 
     def handle_landing_request(self, unit: ATCUnit):
         # Check if the runway is clear
@@ -172,7 +172,7 @@ class TowerATC(ATCAgency):
         
         self.logger.info(f"Clearing unit {unit.ID} for landing")
         unit.set_atc_state(ATCState.LANDING)
-        return f"{unit.callsign}, {self.airport_name} tower, runway {self.active_runway} cleared to land."
+        return f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared to land."
 
     def handle_break_request(self, unit: ATCUnit):
         self.logger.info(f"Clearing unit {unit.ID} for overhead break")
@@ -182,7 +182,7 @@ class TowerATC(ATCAgency):
     def handle_go_around_request(self, unit: ATCUnit):
         self.logger.info(f"Unit {unit.ID} going around")
         unit.set_atc_state(ATCState.GOING_AROUND)
-        return f"{unit.callsign}, {self.airport_name} tower, go around. Climb to pattern altitude and enter downwind for runway {self.active_runway}."
+        return f"{unit.callsign}, {self.airport_name} tower, go around. Climb to pattern altitude and enter downwind for runway {' '.join(self.active_runway)}."
 
     def transfer_unit(self, unit: ATCUnit):
         # This unit has been transferred to this agency from another

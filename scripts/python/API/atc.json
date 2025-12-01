@@ -2,8 +2,9 @@
   "Wiesbaden": {
     "active_runway": "26",
     "frequencies": {
-      "ground": 140.95,
-      "tower": 139.725
+      "base": 240.300,
+      "ground": 313.550,
+      "tower": 240.950
     },
     "runways": {
       "26": {

@@ -19,11 +19,12 @@ class ATCState(Enum):
     TOUCH_AND_GO = "touch_and_go"
 
 class ATCAgency:
-    def __init__(self, airport_name: str, api: API, config: dict, frequency: float):
+    def __init__(self, airport_name: str, api: API, config: dict, frequency: float, voice: str = "bm_daniel"):
         self.airport_name = airport_name
         self.api = api
         self.config = config
         self.frequency = frequency
+        self.voice = voice  # Store the voice for this agency
 
         self.logger = logging.getLogger("olympus_ATC")
 
@@ -102,6 +103,34 @@ class ATCAgency:
                 return False
         return True
     
+    def _format_frequency_for_speech(self, frequency_hz: float) -> str:
+        """
+        Format a frequency in Hz for speech synthesis.
+        Example: 180325000 Hz becomes "1 8 0 decimal 3 2 5"
+        """
+        # Convert to MHz and format with 3 decimal places
+        frequency_mhz = frequency_hz / 1e6
+        frequency_str = f"{frequency_mhz:.3f}"
+        
+        # Split into whole and decimal parts
+        if '.' in frequency_str:
+            whole_part, decimal_part = frequency_str.split('.')
+        else:
+            whole_part = frequency_str
+            decimal_part = ""
+        
+        # Format whole part with spaces between digits
+        formatted_whole = ' '.join(whole_part)
+        
+        # Format decimal part with spaces between digits, remove trailing zeros
+        if decimal_part:
+            decimal_part = decimal_part.rstrip('0')  # Remove trailing zeros
+            if decimal_part:  # If there are still digits after removing zeros
+                formatted_decimal = ' '.join(decimal_part)
+                return f"{formatted_whole} decimal {formatted_decimal}"
+        
+        return formatted_whole
+
     def transfer_unit(self, unit):
         pass
 
@@ -111,8 +140,8 @@ class ATCAgency:
     def _send_message_to_unit(self, unit, text: str):
         self.logger.info(f"Generating response to unit {unit.ID}: {text}")
 
-        # Generate audio
-        audio_file = self.api.generate_audio_message(text, voice="bm_daniel")
+        # Generate audio using this agency's assigned voice
+        audio_file = self.api.generate_audio_message(text, voice=self.voice)
         self.logger.info(f"Generated audio file: {audio_file}")
         
         # Transmit the audio back on the same frequency
