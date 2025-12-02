@@ -1,5 +1,33 @@
 from api import API
 from atc.agency import ATCAgency, ATCState, ATCUnit, Unicom
+import Levenshtein
+import re
+import random
+
+# Tower-specific word corrections
+word_corrections = {
+    "tower": ["tower", "power", "hour", "tauer", "towers"],
+    "abeam": ["a bean","bean","abeam","a beam","been"],
+    "land": ["landing", "land","lander"],
+    "initials": ["initial"],
+    "go around": ["around", "ground", "round", "grand", "a round"],
+    "departure": ["departure", "depart", "departs"],
+    "final": ["final", "finals", "fine"],
+    "approach": ["approach", "approch", "approaches"]
+}
+
+# Keywords that identify this as a tower message
+tower_keywords = ["tower", "control"]
+
+# Trigger words and their corresponding handlers
+trigger_words = [
+    (["land","abeam","final"], "handle_landing_request"),
+    (["departure"], "handle_takeoff_request"),
+    (["initials"], "handle_break_request"),
+    (["go around"], "handle_go_around_request"),
+    (["tower"], "handle_tower_report")
+]
+
 
 CONTROL_RADIUS = 10 * 1852  # 10 nautical miles in meters
 CONTROL_ALTITUDE = 5000 * 0.3048  # 5000 feet in meters
@@ -59,24 +87,65 @@ class TowerATC(ATCAgency):
                         self.check_unit_position(unit)
                         continue
 
-    def handle_message(self, recognized_text: str, unit: ATCUnit):
-        if "tower" not in recognized_text.lower():
+    def handle_message(self, recognised_text: str, unit: ATCUnit):
+        print(f"[TOWER] Original text: '{recognised_text}'")  
+        
+        # Replace misheard words with correct ones using fuzzy matching
+        # Split on spaces, hyphens, punctuation, and other noise characters
+        text_words = re.split(r'[\s\-\.,;:!?\(\)\[\]"\']+', recognised_text)
+        corrected_words = []
+        
+        for word in text_words:
+            best_match = word
+            best_ratio = 0.8  # Minimum similarity threshold
+            
+            # Check against all word variations for potential corrections
+            for correct_word, variations in word_corrections.items():
+                for variation in variations:
+                    ratio = Levenshtein.ratio(word.lower(), variation.lower())
+                    if ratio > best_ratio:
+                        best_match = correct_word  # Replace with the correct word
+                        best_ratio = ratio
+            
+            corrected_words.append(best_match)
+        
+        # Reconstruct the text with corrections
+        corrected_text = " ".join(corrected_words)
+        
+        # Print the corrected text for debugging
+        if corrected_text != recognised_text:
+            print(f"[TOWER] Corrected text: '{corrected_text}'")
+        
+        recognised_text = corrected_text
+        
+        # Check if this is a tower message (needs any of the tower keywords)
+        if not any(keyword in recognised_text.lower() for keyword in tower_keywords):
             return  # Not a tower message
 
+        # Check if unit should be talking to tower (not at parking/taxi areas)
+        # Tower only handles units at the runway or airborne, or already under tower control
+        if unit.get_controlling_agency() != self:
+            # If unit is on ground and not at runway, they should talk to ground first
+            if not unit.airborne and not self.check_unit_in_runway(unit) and not self.check_unit_in_hold_short_box(unit):
+                # Redirect to ground control
+                if self.ground:
+                    self._send_message_to_unit(unit, f"{unit.callsign}, contact ground on {self._format_frequency_for_speech(self.ground.frequency)} for taxi clearance.")
+                else:
+                    self._send_message_to_unit(unit, f"{unit.callsign}, contact ground control for taxi clearance.")
+                return
+
         # Define a list of trigger words and the callback to execute if they are found
-        trigger_words = [
-            (["departure"], self.handle_takeoff_request),
-            (["land", "final", "beam"], self.handle_landing_request),
-            (["initial", "break", "overhead"], self.handle_break_request),
-            (["go around", "missed approach"], self.handle_go_around_request),
-        ]
-
         text = None
-        for words, callback in trigger_words:
-            if any(word in recognized_text.lower() for word in words):
-                text = callback(unit)     
-                break  
-
+        for words, handler_name in trigger_words:
+            # Check if any words in the trigger are present
+            if any(word in recognised_text.lower() for word in words):
+                handler = getattr(self, handler_name)
+                # Pass corrected_words for analysis if it's the base_ops_report handler
+                if handler_name == "handle_tower_report":
+                    text = handler(unit, corrected_words)
+                else:
+                    text = handler(unit)
+                break  # Use the first match (most specific first)  
         if text:
             self._send_message_to_unit(unit, text)
 
@@ -89,7 +158,7 @@ class TowerATC(ATCAgency):
                     # Check that this unit is next in line for takeoff
                     if self._get_list_of_units_in_takeoff_order()[0] == unit:
                         self.logger.info(f"Clearing unit {unit.ID} for takeoff")
-                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared for takeoff.")
+                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)}, right hand, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared for takeoff.")
                         unit.set_atc_state(ATCState.TAKING_OFF)
 
             # If outside of the runway, and in landing state, transfer to ground ATC
@@ -132,7 +201,7 @@ class TowerATC(ATCAgency):
                 if unit.position.distance_to(self.runway_center) < DISTANCE_THRESHOLD and unit.position.alt - self.runway_elevation < ALTITUDE_THRESHOLD:
                     if self.check_runway_clear(unit):
                         self.logger.info(f"Clearing unit {unit.ID} for landing")
-                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared to land.")
+                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared to land.")
                         unit.set_atc_state(ATCState.LANDING)
                     else:
                         self.logger.info(f"Runway not clear for unit {unit.ID} landing")
@@ -172,17 +241,52 @@ class TowerATC(ATCAgency):
         
         self.logger.info(f"Clearing unit {unit.ID} for landing")
         unit.set_atc_state(ATCState.LANDING)
-        return f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared to land."
+        return f"{unit.callsign}, {self.airport_name} tower, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)} cleared to land, recheck gear."
 
     def handle_break_request(self, unit: ATCUnit):
         self.logger.info(f"Clearing unit {unit.ID} for overhead break")
         unit.set_atc_state(ATCState.ARRIVING)
-        return f"{unit.callsign}, {self.airport_name} tower, cleared for overhead break at your discretion."
+        return f"{unit.callsign}, {self.airport_name} tower, cleared into the break {' '.join(self.active_runway)}, righthand."
     
     def handle_go_around_request(self, unit: ATCUnit):
         self.logger.info(f"Unit {unit.ID} going around")
         unit.set_atc_state(ATCState.GOING_AROUND)
-        return f"{unit.callsign}, {self.airport_name} tower, go around. Climb to pattern altitude and enter downwind for runway {' '.join(self.active_runway)}."
+        return f"{unit.callsign}, {self.airport_name} tower, go around rejoin pattern, contact me at initial again."
+
+    def handle_tower_report(self, unit: ATCUnit, corrected_words=None):
+        # Analyze the corrected words to see if there's meaningful content beyond base keywords
+        if corrected_words is None:
+            corrected_words = []
+        
+        # Remove empty words, base keywords, callsign, and very short words
+        callsign_words = unit.callsign.lower().split() if hasattr(unit, 'callsign') and unit.callsign else []
+        exclude_words = tower_keywords + callsign_words
+        
+        meaningful_words = [word for word in corrected_words 
+                           if word.strip() and word.lower() not in exclude_words and len(word) > 2]
+        
+        self.logger.info(f"Tower message from unit {unit.ID}. Corrected words: {corrected_words}")
+        self.logger.info(f"Meaningful words beyond keywords: {meaningful_words}")
+        
+        if len(meaningful_words) == 0:
+            # They said just "base" or "ops" with nothing else meaningful
+            responses = [
+                ", tower, go ahead.",
+                ", tower, pass your message."
+            ]
+            response = random.choice(responses)
+            self.logger.info(f"No additional content detected, prompting for more info")
+        else:
+            # They said base/ops plus other words we didn't understand
+            responses = [
+                ", tower, say again.",
+                ", tower, say again last.",
+                ", tower, didn't copy, say again."
+            ]
+            response = random.choice(responses)
+            self.logger.info(f"Additional unclear content detected: {' '.join(meaningful_words)}")
+        
+        return f"{unit.callsign}{response}"
 
     def transfer_unit(self, unit: ATCUnit):
         # This unit has been transferred to this agency from another

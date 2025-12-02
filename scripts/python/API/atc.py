@@ -2,6 +2,8 @@ from api import API
 
 # Setup a logger for the module
 import logging
+
+from atc.clearance import ClearanceDeliveryATC
 logger = logging.getLogger("olympus_ATC")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
@@ -95,6 +97,11 @@ if __name__ == "__main__":
                 atis_atc = ATISATC(airport_name, api, airport_config, frequency * 1e6, voice=assigned_voice)
                 logger.info(f"    ATIS ATC initialized for {airport_name} with voice {assigned_voice}")
                 agencies.append(atis_atc)
+            elif agency_name.lower() == "clearance":
+                from atc.clearance import ClearanceDeliveryATC
+                clearance_atc = ClearanceDeliveryATC(airport_name, api, airport_config, frequency * 1e6, voice=assigned_voice)
+                logger.info(f"    Clearance Delivery ATC initialized for {airport_name} with voice {assigned_voice}")
+                agencies.append(clearance_atc)
             else:
                 logger.warning(f"    Unknown agency '{agency_name}' for airport '{airport_name}'")
 

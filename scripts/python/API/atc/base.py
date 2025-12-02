@@ -6,7 +6,7 @@ import re
 
 word_corrections = {
     "base": ["base", "bass", "bace", "vase", "pace", "face", "east"],
-    "ops": ["ops", "of", "ups", "aps", "stops", "oops", "bud"],
+    "ops": ["ops", "of", "off","offs", "up", "ups", "aps", "stops", "oops", "bud", ],
     "out": ["out", "owt", "awt", "outbound"],
     "in": ["in", "inn", "inbound"],
     "taxi": ["taxi", "tacky", "tack"],
@@ -16,10 +16,11 @@ word_corrections = {
 base_keywords = ["base", "ops"]
 
 trigger_words = [
+    (["out"], "handle_out_report"),
     (["in","down"], "handle_in_and_down_report"),
     (["in","up"], "handle_in_and_up_report"),
     (["in"], "handle_in_and_up_report"),  # Default "in" to up/normal
-    (["out"], "handle_out_report")
+    (["base","ops"], "handle_base_ops_report")
 ]
 
 random_in_and_up_responses = [
@@ -122,7 +123,11 @@ class BaseOPSATC(ATCAgency):
             # Check if ALL words in the trigger are present
             if all(word in recognised_text.lower() for word in words):
                 handler = getattr(self, handler_name)
-                text = handler(unit)     
+                # Pass corrected_words for analysis if it's the base_ops_report handler
+                if handler_name == "handle_base_ops_report":
+                    text = handler(unit, corrected_words)
+                else:
+                    text = handler(unit)
                 break  # Use the first match (most specific first)  
 
         if text:
@@ -145,6 +150,41 @@ class BaseOPSATC(ATCAgency):
         self.logger.info(f"Responding to OUT report from unit {unit.ID}")
         out_message = random.choice(random_out_responses)
         return f"{unit.callsign}{out_message}"
+    
+    def handle_base_ops_report(self, unit: ATCUnit, corrected_words=None):
+        # Analyze the corrected words to see if there's meaningful content beyond base keywords
+        if corrected_words is None:
+            corrected_words = []
+        
+        # Remove empty words, base keywords, callsign, and very short words
+        callsign_words = unit.callsign.lower().split() if hasattr(unit, 'callsign') and unit.callsign else []
+        exclude_words = base_keywords + callsign_words
+        
+        meaningful_words = [word for word in corrected_words 
+                           if word.strip() and word.lower() not in exclude_words and len(word) > 2]
+        
+        self.logger.info(f"Base ops message from unit {unit.ID}. Corrected words: {corrected_words}")
+        self.logger.info(f"Meaningful words beyond keywords: {meaningful_words}")
+        
+        if len(meaningful_words) == 0:
+            # They said just "base" or "ops" with nothing else meaningful
+            responses = [
+                ", base, go ahead.",
+                ", base, pass your message."
+            ]
+            response = random.choice(responses)
+            self.logger.info(f"No additional content detected, prompting for more info")
+        else:
+            # They said base/ops plus other words we didn't understand
+            responses = [
+                ", base, say again.",
+                ", base, say again last.",
+                ", base, didn't copy, say again."
+            ]
+            response = random.choice(responses)
+            self.logger.info(f"Additional unclear content detected: {' '.join(meaningful_words)}")
+        
+        return f"{unit.callsign}{response}"
 
 
         

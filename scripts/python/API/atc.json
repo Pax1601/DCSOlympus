@@ -3,6 +3,7 @@
     "active_runway": "26",
     "frequencies": {
       "base": 240.300,
+      "clearance": 252.450,
       "ground": 313.550,
       "tower": 240.950,
       "atis": 250.900

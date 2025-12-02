@@ -1,6 +1,34 @@
 from api import API
 from atc.agency import ATCAgency, ATCState, ATCUnit, Unicom
 from atc.tower import ALTITUDE_THRESHOLD, DISTANCE_THRESHOLD
+import Levenshtein
+import re
+import random
+
+# Ground-specific word corrections
+word_corrections = {
+    "ground": ["ground", "round", "grand", "found", "grounds"],
+    "taxi": ["taxi", "tacky", "tack", "taxi"],
+    "pushback": ["pushback", "push back", "pushpack", "push"],
+    "startup": ["startup", "start up", "start", "started"],
+    "ready": ["ready", "ready", "redy", "red"],
+    "holding": ["holding", "hold", "holds", "holding short"],
+    "short": ["short", "shot", "shores"],
+    "runway": ["runway", "run way", "runaway"],
+    "parking": ["parking", "park", "barking", "parking area"]
+}
+
+# Keywords that identify this as a ground message
+ground_keywords = ["ground", "ramp"]
+
+# Trigger words and their corresponding handlers
+trigger_words = [
+    (["taxi"], "handle_taxi_request"),
+    (["startup"], "handle_startup_request"),
+    (["radio"], "handle_radio_check_request"),
+    (["ground"], "handle_ground_report")
+]
+
 
 CONTROL_RADIUS = 5000
 
@@ -40,22 +68,54 @@ class GroundATC(ATCAgency):
                     self.logger.info(f"Unit {unit.ID} is now under ground control")    
 
 
-    def handle_message(self, recognized_text: str, unit: ATCUnit):
-        if "ground" not in recognized_text.lower():
+    def handle_message(self, recognised_text: str, unit: ATCUnit):
+        print(f"[GROUND] Original text: '{recognised_text}'")  
+        
+        # Replace misheard words with correct ones using fuzzy matching
+        # Split on spaces, hyphens, punctuation, and other noise characters
+        text_words = re.split(r'[\s\-\.,;:!?\(\)\[\]"\']+', recognised_text)
+        corrected_words = []
+        
+        for word in text_words:
+            best_match = word
+            best_ratio = 0.8  # Minimum similarity threshold
+            
+            # Check against all word variations for potential corrections
+            for correct_word, variations in word_corrections.items():
+                for variation in variations:
+                    ratio = Levenshtein.ratio(word.lower(), variation.lower())
+                    if ratio > best_ratio:
+                        best_match = correct_word  # Replace with the correct word
+                        best_ratio = ratio
+            
+            corrected_words.append(best_match)
+        
+        # Reconstruct the text with corrections
+        corrected_text = " ".join(corrected_words)
+        
+        # Print the corrected text for debugging
+        if corrected_text != recognised_text:
+            print(f"[GROUND] Corrected text: '{corrected_text}'")
+        
+        recognised_text = corrected_text
+        
+        # Check if this is a ground message (needs any of the ground keywords)
+        if not any(keyword in recognised_text.lower() for keyword in ground_keywords):
             return  # Not a ground message
 
         # Define a list of trigger words and the callback to execute if they are found
-        trigger_words = [
-            (["radio", "check"], self.handle_radio_check_request),
-            (["engine", "start"], self.handle_startup_request),
-            (["taxi", "to runway"], self.handle_taxi_request),
-        ]
 
         text = None
-        for words, callback in trigger_words:
-            if any(word in recognized_text.lower() for word in words):
-                text = callback(unit)     
-                break  
+        for words, handler_name in trigger_words:
+            # Check if ALL words in the trigger are present
+            if all(word in recognised_text.lower() for word in words):
+                handler = getattr(self, handler_name)
+                # Pass corrected_words for analysis if it's the base_ops_report handler
+                if handler_name == "handle_ground_report":
+                    text = handler(unit, corrected_words)
+                else:
+                    text = handler(unit)
+                break  # Use the first match (most specific first)  
 
         if text:
             self._send_message_to_unit(unit, text)
@@ -93,14 +153,14 @@ class GroundATC(ATCAgency):
 
         text = ""
         if unit.get_atc_state() == ATCState.TAXIING_TO_PARKING:
-            text = f"{unit.callsign}, {self.airport_name} ground, continue taxi to parking."
+            text = f"{unit.callsign}, {self.airport_name} ground, taxi to parking."
         else:
             unit.set_atc_state(ATCState.TAXIING_TO_RUNWAY)
             
             if units_taxiing_to_runway == 1:
-                text = f"{unit.callsign}, {self.airport_name} ground, taxi to runway {' '.join(self.active_runway)}."
+                text = f"{unit.callsign}, {self.airport_name} ground, taxi to and hold short runway {' '.join(self.active_runway)}, righthand."
             else:
-                text = f"{unit.callsign}, {self.airport_name} ground, number {units_taxiing_to_runway} taxi to runway {' '.join(self.active_runway)} behind the {last_unit.name}."
+                text = f"{unit.callsign}, {self.airport_name} ground, number {units_taxiing_to_runway} taxi to and hold short runway {' '.join(self.active_runway)}, righthand, behind the {last_unit.name}."
 
         if units_taxiing_to_parking > 0:
             text += f" Be advised, there are {units_taxiing_to_parking} other aircraft taxiing to parking."
@@ -152,4 +212,36 @@ class GroundATC(ATCAgency):
         unit.set_controlling_agency(self)
         unit.set_atc_state(ATCState.TAXIING_TO_PARKING)
             
-    
+    def handle_ground_report(self, unit: ATCUnit, corrected_words=None):
+        # Analyze the corrected words to see if there's meaningful content beyond base keywords
+        if corrected_words is None:
+            corrected_words = []
+        
+        # Remove empty words, base keywords, callsign, and very short words
+        callsign_words = unit.callsign.lower().split() if hasattr(unit, 'callsign') and unit.callsign else []
+        exclude_words = ground_keywords + callsign_words
+        
+        meaningful_words = [word for word in corrected_words 
+                           if word.strip() and word.lower() not in exclude_words and len(word) > 2]
+        
+        self.logger.info(f"Ground message from unit {unit.ID}. Corrected words: {corrected_words}")
+        self.logger.info(f"Meaningful words beyond keywords: {meaningful_words}")
+        
+        if len(meaningful_words) == 0:
+            # They said just "base" or "ops" with nothing else meaningful
+            responses = [
+                ", ground, go ahead.",
+                ", ground, pass your message."
+            ]
+            response = random.choice(responses)
+            self.logger.info(f"No additional content detected, prompting for more info")
+        else:
+            # They said base/ops plus other words we didn't understand
+            responses = [
+                ", ground, say again.",
+                ", ground, say again last."
+            ]
+            response = random.choice(responses)
+            self.logger.info(f"Additional unclear content detected: {' '.join(meaningful_words)}")
+        
+        return f"{unit.callsign}{response}"
