@@ -90,6 +90,11 @@ if __name__ == "__main__":
                 base_ops_atc = BaseOPSATC(airport_name, api, airport_config, frequency * 1e6, voice=assigned_voice)
                 logger.info(f"    Base Ops ATC initialized for {airport_name} with voice {assigned_voice}")
                 agencies.append(base_ops_atc)
+            elif agency_name.lower() == "atis":
+                from atc.atis import ATISATC
+                atis_atc = ATISATC(airport_name, api, airport_config, frequency * 1e6, voice=assigned_voice)
+                logger.info(f"    ATIS ATC initialized for {airport_name} with voice {assigned_voice}")
+                agencies.append(atis_atc)
             else:
                 logger.warning(f"    Unknown agency '{agency_name}' for airport '{airport_name}'")
 

@@ -4,7 +4,8 @@
     "frequencies": {
       "base": 240.300,
       "ground": 313.550,
-      "tower": 240.950
+      "tower": 240.950,
+      "atis": 250.900
     },
     "runways": {
       "26": {
