@@ -111,8 +111,7 @@ def parse_kml_polygons(kml_file_path: str) -> List[Dict]:
                     try:
                         lon = float(parts[0])
                         lat = float(parts[1])
-                        alt = float(parts[2]) if len(parts) > 2 else 0.0
-                        coordinates.append([lon, lat, alt])
+                        coordinates.append([lat, lon])
                     except ValueError:
                         logger.warning(f"Invalid coordinate in '{name}': {pair}")
         
@@ -273,7 +272,7 @@ if __name__ == "__main__":
                 if runway_name:
                     airport_config['runways'][runway_name] = {
                         'runwayBox': polygon['coordinates'],
-                        'elevation': polygon['coordinates'][0][2] if polygon['coordinates'] else 0
+                        'elevation': 0 #TODO
                     }
             elif polygon_type == "hold short":
                 # Collect hold short boxes

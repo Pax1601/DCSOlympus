@@ -57,7 +57,7 @@ class GroundATC(ATCAgency):
                         continue
             
                     # Take control of the unit if it is outside of the runway box
-                    if not self.check_unit_in_runway(unit):
+                    if not isinstance(unit, ATCUnit):
                         self.logger.info(f"Unit {unit.ID} is within ground control radius, taking control")
 
                         # Recast the unit to ATCUnit to set ATC state
@@ -155,10 +155,10 @@ class GroundATC(ATCAgency):
         else:
             unit.set_atc_state(ATCState.TAXIING_TO_RUNWAY)
             
-            if len(units_taxiing_to_runway) == 1:
+            if len(units_taxiing_to_runway) == 0:
                 text = f"{unit.callsign}, {self.airport_name} ground, taxi to and hold short runway {' '.join(self.active_runway)}, righthand."
             else:
-                text = f"{unit.callsign}, {self.airport_name} ground, number {len(units_taxiing_to_runway)} taxi to and hold short runway {' '.join(self.active_runway)}, righthand, behind the {units_taxiing_to_runway[-1].name}."
+                text = f"{unit.callsign}, {self.airport_name} ground, number {len(units_taxiing_to_runway) + 1} taxi to and hold short runway {' '.join(self.active_runway)}, righthand, behind the {units_taxiing_to_runway[-1].name}."
 
         if units_taxiing_to_parking > 0:
             if units_taxiing_to_parking == 1:

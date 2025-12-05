@@ -52,7 +52,7 @@ class ATCAgency:
         
         latitudes = [coord[0] for coord in coords]
         longitudes = [coord[1] for coord in coords]
-        self.runway_center = LatLng(sum(latitudes) / 4, sum(longitudes) / 4, runway_info.get("elevation", 0))
+        self.runway_center = LatLng(sum(latitudes) / len(latitudes), sum(longitudes) / len(longitudes), runway_info.get("elevation", 0))
 
         # Define a runway box
         self.runway_box = coords

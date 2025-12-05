@@ -2,7 +2,7 @@ from api import API
 from atc.agency import ATCAgency, ATCState, ATCUnit, Unicom
 
 # Keywords that identify this as an approach message
-approach_keywords = ["approach", "radar"]
+approach_keywords = ["approach", "departure"]
 
 class ApproachATC(ATCAgency):
     def __init__(self, airport_name: str, api: API, config: dict, frequency: float, voice: str = "am_adam"):
@@ -97,32 +97,22 @@ class ApproachATC(ATCAgency):
                     self.logger.info(f"Unit {unit.ID} is now under approach control")
                 else:
                     if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
-                        # If the unit is outside of control area, release it
                         self.logger.info(f"Releasing unit {unit.ID} from approach control")
                         # Send a message to the unit
-                        self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
-                        unit.set_controlling_agency(Unicom)
+                        if self.radar:
+                            self._send_message_to_unit(unit, f"{unit.callsign}, contact radar on {self._format_frequency_for_speech(self.radar.frequency)}.")
+                            unit.set_controlling_agency(self.radar)
+                        else:
+                            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
+                            unit.set_controlling_agency(Unicom)
 
     def check_unit_position(self, unit: ATCUnit):
         # If the unit is in the ATZ of the tower, transfer it to tower ATC
-        if self.tower and self.tower.check_unit_in_atz(unit) and self.tower.check_unit_altitude_in_control(unit):
+        if self.tower and self.tower.check_unit_in_atz(unit) and self.tower.check_unit_altitude_in_control(unit) and not unit.get_atc_state() == ATCState.TAKING_OFF and not unit.get_atc_state() == ATCState.DEPARTING:
             self.logger.info(f"Transferring unit {unit.ID} to tower ATC")
             unit.set_controlling_agency(self.tower)
             self.tower.transfer_unit(unit)
             return
-        # If the unit is outside of approach zone or altitude limits, release it
-        in_approach_zone = self.check_unit_in_approach_zone(unit)   
-        in_altitude = self.check_unit_altitude_in_control(unit)
-
-        if not in_approach_zone or not in_altitude:
-            self.logger.info(f"Releasing unit {unit.ID} from approach control")
-            # Send a message to the unit
-            if self.radar:
-                self._send_message_to_unit(unit, f"{unit.callsign}, contact radar on {self._format_frequency_for_speech(self.radar.frequency)}.")
-                unit.set_controlling_agency(self.radar)
-            else:
-                self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
-                unit.set_controlling_agency(Unicom)
     
     def handle_message(self, recognised_text: str, unit: ATCUnit):
         self.logger.debug(f"Original text: '{recognised_text}'")

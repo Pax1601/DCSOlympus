@@ -7,11 +7,11 @@ import random
 
 # Tower-specific word corrections
 word_corrections = {
-    "tower": ["tower", "power", "hour", "tauer", "towers"],
-    "abeam": ["a bean","bean","abeam","a beam","been"],
+    "tower": ["tower", "power", "hour", "tauer", "towers", "tell her", "Tau"],
+    "abeam": ["a bean","bean","abeam","a beam","been", "abin"],
     "land": ["landing", "land","lander"],
     "initials": ["initial"],
-    "go around": ["around", "ground", "round", "grand", "a round"],
+    "go around": ["around", "ground", "round", "grand", "a round", "going around", "go around"],
     "departure": ["departure", "depart", "departs"],
     "final": ["final", "finals", "fine"],
     "approach": ["approach", "approch", "approaches"]
@@ -219,7 +219,7 @@ class TowerATC(ATCAgency):
                         unit.set_atc_state(ATCState.TAKING_OFF)
 
             # If outside of the runway, and in landing state, transfer to ground ATC
-            if not self.check_unit_in_runway(unit) and not self.check_unit_in_hold_short_box(unit) and not unit.airborne:
+            if not self.check_unit_in_runway(unit) and not self.check_unit_in_hold_short_box(unit) and not unit.airborne and unit.get_atc_state() == ATCState.LANDING:
                 if self.ground:
                     self.logger.info(f"Transferring unit {unit.ID} to ground ATC")
                     unit.set_controlling_agency(self.ground)
