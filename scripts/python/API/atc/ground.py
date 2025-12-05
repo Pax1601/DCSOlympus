@@ -1,6 +1,6 @@
 from api import API
+from atc.shared import get_new_order
 from atc.agency import ATCAgency, ATCState, ATCUnit, Unicom
-from atc.tower import ALTITUDE_THRESHOLD, DISTANCE_THRESHOLD
 import Levenshtein
 import re
 import random
@@ -26,11 +26,11 @@ trigger_words = [
     (["taxi"], "handle_taxi_request"),
     (["startup"], "handle_startup_request"),
     (["radio"], "handle_radio_check_request"),
-    (["ground"], "handle_ground_report")
+    (["ground"], "handle_ground_report"),
+    (["runway", "back", "departure"], "handle_taxi_to_runway_request"),
 ]
 
-
-CONTROL_RADIUS = 5000
+CONTROL_RADIUS = 5000 
 
 class GroundATC(ATCAgency):
     def __init__(self, airport_name: str, api: API, config: dict, frequency: float, voice: str = "bm_lewis"):
@@ -55,21 +55,19 @@ class GroundATC(ATCAgency):
                     if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
                         self.check_unit_position(unit)
                         continue
-                    
-                    # If the unit is controlled by another agency, skip it
-                    if isinstance(unit, ATCUnit) and unit.get_controlling_agency() != self:
-                        continue
+            
+                    # Take control of the unit if it is outside of the runway box
+                    if not self.check_unit_in_runway(unit):
+                        self.logger.info(f"Unit {unit.ID} is within ground control radius, taking control")
 
-                    # Take control of the unit
-                    # Recast the unit to ATCUnit to set ATC state
-                    unit.__class__ = ATCUnit
-                    unit.set_atc_state(ATCState.UNKNOWN)
-                    unit.set_controlling_agency(self)
-                    self.logger.info(f"Unit {unit.ID} is now under ground control")    
-
+                        # Recast the unit to ATCUnit to set ATC state
+                        unit.__class__ = ATCUnit
+                        unit.set_atc_state(ATCState.UNKNOWN)
+                        unit.set_controlling_agency(self)
+                        self.logger.info(f"Unit {unit.ID} is now under ground control")    
 
     def handle_message(self, recognised_text: str, unit: ATCUnit):
-        print(f"[GROUND] Original text: '{recognised_text}'")  
+        self.logger.debug(f"Original text: '{recognised_text}'")  
         
         # Replace misheard words with correct ones using fuzzy matching
         # Split on spaces, hyphens, punctuation, and other noise characters
@@ -93,9 +91,9 @@ class GroundATC(ATCAgency):
         # Reconstruct the text with corrections
         corrected_text = " ".join(corrected_words)
         
-        # Print the corrected text for debugging
+        # Log the corrected text for debugging
         if corrected_text != recognised_text:
-            print(f"[GROUND] Corrected text: '{corrected_text}'")
+            self.logger.debug(f"Corrected text: '{corrected_text}'")
         
         recognised_text = corrected_text
         
@@ -104,7 +102,6 @@ class GroundATC(ATCAgency):
             return  # Not a ground message
 
         # Define a list of trigger words and the callback to execute if they are found
-
         text = None
         for words, handler_name in trigger_words:
             # Check if ALL words in the trigger are present
@@ -123,7 +120,7 @@ class GroundATC(ATCAgency):
     def handle_radio_check_request(self, unit: ATCUnit):
         # Respond to radio check request    
         self.logger.info(f"Responding to radio check from unit {unit.ID}")
-        return f"{unit.callsign}, {self.airport_name} ground, I read you 5 by 5."
+        return f"{unit.callsign}, {self.airport_name} ground, I reed you 5 by 5."
 
     def handle_startup_request(self, unit: ATCUnit):
         # Send startup instructions to the unit
@@ -133,14 +130,15 @@ class GroundATC(ATCAgency):
     
     def handle_taxi_request(self, unit: ATCUnit):
         # Find if there are other units taxiing to the runway
-        units_taxiing_to_runway = 1
-        last_unit = None
+        units_taxiing_to_runway: list[ATCUnit] = []
         for other_unit in self.api.get_units().values():
             if other_unit.ID != unit.ID and isinstance(other_unit, ATCUnit) and other_unit.alive and other_unit.human:
                 if other_unit.get_controlling_agency() == self and other_unit.get_atc_state() == ATCState.TAXIING_TO_RUNWAY:
-                    units_taxiing_to_runway += 1
-                    last_unit = other_unit
+                    units_taxiing_to_runway.append(other_unit)
 
+        # Order the units according to their "get_order"
+        units_taxiing_to_runway.sort(key=lambda u: u.get_order())
+        
         # Count the number of units taxiing to parking
         units_taxiing_to_parking = 0
         for other_unit in self.api.get_units().values():
@@ -157,25 +155,34 @@ class GroundATC(ATCAgency):
         else:
             unit.set_atc_state(ATCState.TAXIING_TO_RUNWAY)
             
-            if units_taxiing_to_runway == 1:
+            if len(units_taxiing_to_runway) == 1:
                 text = f"{unit.callsign}, {self.airport_name} ground, taxi to and hold short runway {' '.join(self.active_runway)}, righthand."
             else:
-                text = f"{unit.callsign}, {self.airport_name} ground, number {units_taxiing_to_runway} taxi to and hold short runway {' '.join(self.active_runway)}, righthand, behind the {last_unit.name}."
+                text = f"{unit.callsign}, {self.airport_name} ground, number {len(units_taxiing_to_runway)} taxi to and hold short runway {' '.join(self.active_runway)}, righthand, behind the {units_taxiing_to_runway[-1].name}."
 
         if units_taxiing_to_parking > 0:
-            text += f" Be advised, there are {units_taxiing_to_parking} other aircraft taxiing to parking."
+            if units_taxiing_to_parking == 1:
+                text += " Be advised, there is 1 other aircraft taxiing to parking."
+            else:
+                text += f" Be advised, there are {units_taxiing_to_parking} other aircraft taxiing to parking."
+
+        # Set the unit's order in the taxi queue
+        unit.set_order(get_new_order())
         return text
+    
+    # This allows to force the unit to taxi back to the runway to the hold short
+    def handle_taxi_to_runway_request(self, unit: ATCUnit):
+        # Send taxi to runway instructions to the unit
+        self.logger.info(f"Sending taxi to runway instructions to unit {unit.ID}")
+        unit.set_atc_state(ATCState.TAXIING_TO_RUNWAY)
+        self.handle_taxi_request(unit)
         
-    def check_unit_position(self, unit: ATCUnit):
-        if self.hold_short_box is None or len(self.hold_short_box) < 3:
-            self.logger.warning(f"Invalid hold short box configuration")
-            return False
-        
+    def check_unit_position(self, unit: ATCUnit):        
         # Check if the unit is inside the hold short box polygon
         is_inside = self.check_unit_in_hold_short_box(unit)
         
         if is_inside:
-            self.logger.debug(f"Unit {unit.ID} is inside the hold short box")
+            self.logger.debug(f"Unit {unit.ID} is inside a hold short box")
             self.unit_in_hold_short_box(unit)
 
         # Check the unit's speed and if it's taxiing without permission, send instructions
@@ -186,14 +193,7 @@ class GroundATC(ATCAgency):
             # Set the ground state to taxiing to runway to avoid repeated messages
             unit.set_atc_state(ATCState.TAXIING_TO_RUNWAY)
 
-        # If the unit is airborne and sufficiently high or far away, release control
-        if unit.airborne and (unit.position.alt - self.runway_elevation > ALTITUDE_THRESHOLD or unit.position.distance_to(self.runway_center) > DISTANCE_THRESHOLD):
-            self.logger.info(f"Unit {unit.ID} is airborne, releasing ground control")
-
-            # Send a message to the unit
-            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)} for further instructions.")
-            unit.set_controlling_agency(Unicom)
-            unit.set_atc_state(ATCState.UNKNOWN)
+        # TODO: handle helicopters that can taxi while hovering
 
     def unit_in_hold_short_box(self, unit: ATCUnit):
         # If the unit is in the hold short box and has not yet started taxiing, send taxi instructions
@@ -203,8 +203,7 @@ class GroundATC(ATCAgency):
                 self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} ground, contact tower on {self._format_frequency_for_speech(self.tower.frequency)}.")
                 self.tower.transfer_unit(unit)
             else:
-                self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} ground, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
-                unit.set_controlling_agency(Unicom)
+                raise ValueError("Tower agency not set for ground ATC")
 
     def transfer_unit(self, unit: ATCUnit):
         # This unit has been transferred to this agency from another
@@ -228,7 +227,7 @@ class GroundATC(ATCAgency):
         self.logger.info(f"Meaningful words beyond keywords: {meaningful_words}")
         
         if len(meaningful_words) == 0:
-            # They said just "base" or "ops" with nothing else meaningful
+            # They said just "ground" with nothing else meaningful
             responses = [
                 ", ground, go ahead.",
                 ", ground, pass your message."

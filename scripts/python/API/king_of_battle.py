@@ -48,7 +48,7 @@ def on_unit_alive_change(unit: Unit, value: bool):
 
 async def call_splash(time):
     await asyncio.sleep(time)
-    print("\nSplash over")
+    logger.info("\nSplash over")
 
 def artillery_time_of_flight(horizontal_distance, initial_muzzle_velocity):
     g = 9.81  # m/s²
@@ -107,24 +107,24 @@ async def check_for_mission():
     if current_mission_on_going:
         heading_method = input("Mill or degrees? (M/d)")
         if not heading_method or heading_method.lower() == 'm' or heading_method.lower() == 'mill':
-            print("Mill selected")
+            logger.info("Mill selected")
             angle_input = input("Angle in mill (Integer values only)")
             if angle_input.isdigit():
                 angle = int(angle_input)
-                print(f"Angle set to: {angle} mill")
+                logger.info(f"Angle set to: {angle} mill")
             else:
-                print("Invalid number restarting")
+                logger.warning("Invalid number restarting")
                 current_mission_on_going = False
                 return
         elif heading_method.lower() == 'd' or heading_method.lower() == 'degree':
-            print("Degrees selected")
+            logger.info("Degrees selected")
             angle_input = input("Angle in degrees (Integer values only)")
             if angle_input.isdigit():
                 angle = int(angle_input)*17.777778
                 angle = int(angle)
-                print(f"Angle set to: {angle} mill, converted from {angle_input} degrees")
+                logger.info(f"Angle set to: {angle} mill, converted from {angle_input} degrees")
             else:
-                print("Invalid number restarting")
+                logger.warning("Invalid number restarting")
                 current_mission_on_going = False
                 return
         else:
@@ -134,9 +134,9 @@ async def check_for_mission():
         distance_of_shot = input("Distance of shot in meters? (Integer values only)")
         if distance_of_shot.isdigit():
             distance = int(distance_of_shot)
-            print(f"Distance set to: {distance} meters")
+            logger.info(f"Distance set to: {distance} meters")
         else:
-            print("Invalid number restarting")
+            logger.warning("Invalid number restarting")
             current_mission_on_going = False
             return
         
@@ -144,28 +144,28 @@ async def check_for_mission():
         if observer_angle_input.isdigit():
             observer_angle_to_target = int(observer_angle_input)
             observer_angle_input = observer_angle_input
-            print(f"Observer angle to target set to: {observer_angle_to_target} degrees")
+            logger.info(f"Observer angle to target set to: {observer_angle_to_target} degrees")
         else:
             observer_angle_to_target = 720
                 
         box_width_input = input("Dispersion width in meters? (Integer values only, otherwise assume 1)")
         if box_width_input.isdigit():
             box_width = int(box_width_input)
-            print(f"Dispersion width set to: {box_width_input}")        
+            logger.info(f"Dispersion width set to: {box_width_input}")        
         else:
             box_width = 1
 
         box_length_input = input("Dispersion length in meters? (Integer values only, otherwise assume 1)")
         if box_length_input.isdigit():
             box_length = int(box_length_input)
-            print(f"Dispersion length set to: {box_length_input}")
+            logger.info(f"Dispersion length set to: {box_length_input}")
         else:
             box_length = 1
 
         incremenet_input = input("Increment per round in meters? (Integer values only, otherwise assume 0)")
         if incremenet_input.isdigit():
             increment = int(incremenet_input)
-            print(f"Increment per round set to: {increment} meters")
+            logger.info(f"Increment per round set to: {increment} meters")
         else:
             increment = 0
 
@@ -173,7 +173,7 @@ async def check_for_mission():
         if total_rounds_input.isdigit():
             total_rounds = int(total_rounds_input)
             rounds_complete = total_rounds
-            print(f"Total rounds to be fired set to: {total_rounds}")
+            logger.info(f"Total rounds to be fired set to: {total_rounds}")
         else:
             total_rounds = 1
             rounds_complete = total_rounds
@@ -184,7 +184,7 @@ async def check_for_mission():
             volley_size_input = input("Volley size? (Integer values only, otherwise assume 1)")
             if volley_size_input.isdigit():
                 volley_size = int(volley_size_input)
-                print(f"Volley size set to: {volley_size}")
+                logger.info(f"Volley size set to: {volley_size}")
             else:
                 volley_size = 1
 
@@ -199,7 +199,7 @@ async def check_for_mission():
         first_shot = True
         final_shot_announced = False
 
-        print(f"\n\nDistance {distance}. Direction {angle} mills (or {angle*0.05625} degrees). Rounds {total_rounds} width {box_width}, length {box_length}, time of flight {flight_time:.1f} seconds.\n\n")
+        logger.info(f"\n\nDistance {distance}. Direction {angle} mills (or {angle*0.05625} degrees). Rounds {total_rounds} width {box_width}, length {box_length}, time of flight {flight_time:.1f} seconds.\n\n")
 
         start_mission = input("If this is correct press enter to shoot..., type anything else to cancel")
         if start_mission == "":
@@ -220,17 +220,17 @@ async def check_for_mission():
                         if hasattr(unit, 'arty_target_position'):
                             delattr(unit, 'arty_target_position')
             
-            print("Mission started, to exit firing loop enter q for quit.\n")
+            logger.info("Mission started, to exit firing loop enter q for quit.\n")
             return
             
     else:
         fire_mission = input("\nExecute new fire mission? (Y/n)")
         if not fire_mission or fire_mission.lower() == 'y' or fire_mission.lower() == 'yes':
-            print("Yes")
+            logger.info("Yes")
             current_mission_on_going = True
             # Reset unit states for new mission
         else:
-            print("No")
+            logger.info("No")
 
 def listen_for_cancel():
     global current_mission_on_going
@@ -245,10 +245,10 @@ def listen_for_cancel():
             try:
                 user_input = input()  # Press Enter to cancel
                 if user_input == "q":
-                    print(f"\n\nPrior missions mills {original_bearing/0.000985 - (map_mag_var*17.777778)} distance {distance} meters.\n")
+                    logger.info(f"\n\nPrior missions mills {original_bearing/0.000985 - (map_mag_var*17.777778)} distance {distance} meters.\n")
                     adjusted_bearing = (original_bearing/0.000985 - (map_mag_var*17.777778))+((unit.position.bearing_to(unit.position.project_with_bearing_and_distance(distance, original_bearing).project_with_bearing_and_distance(shot_add_drop,observer_angle_to_target).project_with_bearing_and_distance(shot_left_right, observer_angle_to_target+pi/2)))*0.000985)
                     adjusted_distance = unit.position.distance_to(unit.position.project_with_bearing_and_distance(distance, original_bearing).project_with_bearing_and_distance(shot_add_drop,observer_angle_to_target).project_with_bearing_and_distance(shot_left_right, observer_angle_to_target+pi/2))
-                    print(f"\n\nAdjusted missions mills {adjusted_bearing} distance {adjusted_distance} meters.\n")
+                    logger.info(f"\n\nAdjusted missions mills {adjusted_bearing} distance {adjusted_distance} meters.\n")
                     current_mission_on_going = False
                     mission_is_go = False
                     shot_add_drop = 0
@@ -271,7 +271,7 @@ def listen_for_cancel():
                     pass  # Ignore empty input to prevent accidental cancellations
                 elif user_input == "a":
                     shot_add_drop += 50
-                    print(f"Add 50, new distance {shot_add_drop} m")
+                    logger.info(f"Add 50, new distance {shot_add_drop} m")
                     units = api.get_units()
                     for unit in units.values():
                         if unit.name == 'L118_Unit' and unit.coalition == 'blue':
@@ -279,7 +279,7 @@ def listen_for_cancel():
                             break  # Only need to do this once
                 elif user_input == "d":
                     shot_add_drop -= 50
-                    print(f"Drop 50, new distance {shot_add_drop} m")
+                    logger.info(f"Drop 50, new distance {shot_add_drop} m")
                     units = api.get_units()
                     for unit in units.values():
                         if unit.name == 'L118_Unit' and unit.coalition == 'blue':
@@ -287,21 +287,21 @@ def listen_for_cancel():
                             break  # Only need to do this once
                 elif user_input == "x":
                     shot_left_right += 50
-                    print(f"Right 50, new distance {shot_left_right} m")
+                    logger.info(f"Right 50, new distance {shot_left_right} m")
                     units = api.get_units()
                     for unit in units.values():
                         original_target = unit.position.project_with_bearing_and_distance(distance, original_bearing).project_with_bearing_and_distance(shot_add_drop,observer_angle_to_target).project_with_bearing_and_distance(shot_left_right, observer_angle_to_target+pi/2)
                         break  # Only need to do this once
                 elif user_input == 'z':
                     shot_left_right -= 50
-                    print(f"Left 50, new distance {shot_left_right} m")
+                    logger.info(f"Left 50, new distance {shot_left_right} m")
                     units = api.get_units()
                     for unit in units.values():
                         if unit.name == 'L118_Unit' and unit.coalition == 'blue':
                             original_target = unit.position.project_with_bearing_and_distance(distance, original_bearing).project_with_bearing_and_distance(shot_add_drop,observer_angle_to_target).project_with_bearing_and_distance(shot_left_right, observer_angle_to_target+pi/2)
                             break  # Only need to do this once
                 elif user_input == 'c':
-                    print(f"Cease fire")
+                    logger.info(f"Cease fire")
                     units = api.get_units()
                     for unit in units.values():
                         if unit.name == 'L118_Unit' and unit.coalition == 'blue':
@@ -310,7 +310,7 @@ def listen_for_cancel():
                                 unit.set_path([unit.position])                                
                                 # Reset fire mission to allow new shot
                 elif user_input == 'r':
-                    print(f"Resuming fire")
+                    logger.info(f"Resuming fire")
                     units = api.get_units()
                     for unit in units.values():
                         if unit.name == 'L118_Unit' and unit.coalition == 'blue':
@@ -326,7 +326,7 @@ def listen_for_cancel():
                             if hasattr(unit, 'arty_target_position'):
                                 # Recalculate target position with new distance
                                 unit.set_path([unit.position])
-                    print("\nCease fire to update observer position in polar co-ordinates from artillery position.\n")
+                    logger.info("\nCease fire to update observer position in polar co-ordinates from artillery position.\n")
 
 
             except EOFError:
@@ -462,7 +462,7 @@ async def arty():
                             #print("Fire mission in effect")
                             if unit.total_ammo <= unit.start_ammo- 1 and first_shot == True:                               
                                 time = artillery_time_of_flight(distance, 708)
-                                print("\nShot over\n")
+                                logger.info("\nShot over\n")
                                 asyncio.create_task(call_splash(time))
                                 first_shot = False
                                 if unit.total_ammo <= unit.start_ammo - unit.rounds_complete:

@@ -51,6 +51,7 @@ def get_new_user_input(api, unit_ID, listener):
         return
     
     waiting_for_input = True
+    # User input prompts - keeping as print for console interaction
     print("Enter text to send, enter to resend last message:")
     text = input()
 

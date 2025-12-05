@@ -1,4 +1,7 @@
 from api import API
+import logging
+
+logger = logging.getLogger(__name__)
 
 def on_api_startup(api: API):
     units = api.update_units()
@@ -11,7 +14,7 @@ def on_api_update(api: API):
     units = api.get_units()
     for unit in units.values():
         if unit.name == "UH-1H":
-            print(f"Cargo Weight for {unit.name}: {unit.cargo_weight} kg")
+            logger.info(f"Cargo Weight for {unit.name}: {unit.cargo_weight} kg")
 
 ##############################################################################################
 # Main entry point for the script. It registers the callbacks and starts the API.

@@ -169,7 +169,8 @@ class Unit:
                 callback(*args)
         except Exception as e:
             # Log the error but don't crash the update process
-            print(f"Error in property change callback: {e}")
+            import logging
+            logging.getLogger(__name__).error(f"Error in property change callback: {e}")
 
     def _trigger_destination_reached_callback(self, reached: bool):
         """

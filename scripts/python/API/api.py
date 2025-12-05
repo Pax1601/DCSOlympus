@@ -18,7 +18,8 @@ try:
     AUDIO_LIBS_AVAILABLE = True
 except ImportError as e:
     AUDIO_LIBS_AVAILABLE = False
-    print(f"Audio processing libraries not available: {e}")
+    import logging
+    logging.warning(f"Audio processing libraries not available: {e}")
 
 # Custom imports
 from data.data_extractor import DataExtractor 

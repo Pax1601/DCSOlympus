@@ -1,4 +1,5 @@
 from api import API
+from atc.shared import get_new_order
 from atc.agency import ATCAgency, ATCState, ATCUnit, Unicom
 import Levenshtein
 import re
@@ -28,28 +29,73 @@ trigger_words = [
     (["tower"], "handle_tower_report")
 ]
 
-
-CONTROL_RADIUS = 10 * 1852  # 10 nautical miles in meters
-CONTROL_ALTITUDE = 5000 * 0.3048  # 5000 feet in meters
 DISTANCE_THRESHOLD = 3000  # in meters
 ALTITUDE_THRESHOLD = 200  # in meters
-
-MAX_ORDER = 0
 
 class TowerATC(ATCAgency):
     def __init__(self, airport_name: str, api: API, config: dict, frequency: float, voice: str = "am_adam"):
         super().__init__(airport_name, api, config, frequency, voice)
         self.ground = None
-        self.radar = None
+        self.approach = None
         
         if self.frequency is None:
             raise ValueError("Tower ATC frequency not specified in config")
+        
+        # Get ATZ data from config
+        atz = self.config.get("atz", {})
+        
+        # Get ATZ coordinates
+        self.atz_coordinates = atz.get("coordinates", [])
+        if not self.atz_coordinates:
+            self.logger.warning(f"No ATZ coordinates defined for {airport_name}, using default control radius")
+            self.use_polygon_control = False
+            self.control_radius = 10 * 1852  # 10 NM in meters as fallback
+        else:
+            self.use_polygon_control = True
+        
+        # Get vertical limits from ATZ data
+        vertical = atz.get("vertical", {})
+        if vertical:
+            # Parse lower limit
+            lower = vertical.get("lower", "SFC")
+            if lower == "SFC" or lower == "sfc":
+                self.control_altitude_lower = 0.0
+            else:
+                # Assume it's in feet
+                self.control_altitude_lower = float(lower) * 0.3048  # Convert feet to meters
+            
+            # Parse upper limit
+            upper = vertical.get("upper", 5000)
+            if isinstance(upper, str) and (upper.upper() == "SFC"):
+                self.control_altitude_upper = 0.0
+            else:
+                # Assume it's in feet
+                self.control_altitude_upper = float(upper) * 0.3048  # Convert feet to meters
+        else:
+            self.logger.warning(f"No vertical limits defined for {airport_name}, using defaults")
+            self.control_altitude_lower = 0.0
+            self.control_altitude_upper = 5000 * 0.3048  # 5000 feet in meters
 
     def set_ground(self, ground: ATCAgency):
         self.ground = ground
 
-    def set_radar(self, radar: ATCAgency):
-        self.radar = radar
+    def set_approach(self, approach: ATCAgency):
+        self.approach = approach
+    
+    def check_unit_in_atz(self, unit) -> bool:
+        """Check if unit is within the ATZ (tower control zone)."""
+        if self.use_polygon_control:
+            # Check if unit is inside ATZ polygon
+            return self._point_in_polygon(unit.position.lat, unit.position.lng, self.atz_coordinates)
+        else:
+            # Fallback to radius-based control
+            distance_to_runway = unit.position.distance_to(self.runway_center)
+            return distance_to_runway <= self.control_radius
+    
+    def check_unit_altitude_in_control(self, unit) -> bool:
+        """Check if unit altitude is within tower control limits."""
+        altitude_agl = unit.position.alt - self.runway_elevation
+        return self.control_altitude_lower <= altitude_agl <= self.control_altitude_upper
 
     def update(self):
         units = self.api.get_units()
@@ -57,9 +103,12 @@ class TowerATC(ATCAgency):
         for unit in units.values():
             # Check if the unit is airborne or on the runway
             if unit.alive and unit.human:
-                distance_to_runway = unit.position.distance_to(self.runway_center)
                 if unit.airborne:
-                    if distance_to_runway <= CONTROL_RADIUS and (unit.position.alt - self.runway_elevation <= CONTROL_ALTITUDE):
+                    # Check if unit is within ATZ and altitude limits
+                    in_atz = self.check_unit_in_atz(unit)
+                    in_altitude = self.check_unit_altitude_in_control(unit)
+                    
+                    if in_atz and in_altitude:
                         # Check if the unit is already under control by this agency
                         if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
                             self.check_unit_position(unit)
@@ -77,7 +126,7 @@ class TowerATC(ATCAgency):
                         self.logger.info(f"Unit {unit.ID} is now under tower control")
                     else:
                         if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
-                            # If the unit is outside of control radius, release it
+                            # If the unit is outside of control area, release it
                             self.logger.info(f"Releasing unit {unit.ID} from tower control")
                             # Send a message to the unit
                             self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
@@ -88,7 +137,7 @@ class TowerATC(ATCAgency):
                         continue
 
     def handle_message(self, recognised_text: str, unit: ATCUnit):
-        print(f"[TOWER] Original text: '{recognised_text}'")  
+        self.logger.debug(f"Original text: '{recognised_text}'")  
         
         # Replace misheard words with correct ones using fuzzy matching
         # Split on spaces, hyphens, punctuation, and other noise characters
@@ -112,9 +161,9 @@ class TowerATC(ATCAgency):
         # Reconstruct the text with corrections
         corrected_text = " ".join(corrected_words)
         
-        # Print the corrected text for debugging
+        # Log the corrected text for debugging
         if corrected_text != recognised_text:
-            print(f"[TOWER] Corrected text: '{corrected_text}'")
+            self.logger.debug(f"Corrected text: '{corrected_text}'")
         
         recognised_text = corrected_text
         
@@ -131,8 +180,16 @@ class TowerATC(ATCAgency):
                 if self.ground:
                     self._send_message_to_unit(unit, f"{unit.callsign}, contact ground on {self._format_frequency_for_speech(self.ground.frequency)} for taxi clearance.")
                 else:
-                    self._send_message_to_unit(unit, f"{unit.callsign}, contact ground control for taxi clearance.")
+                    raise ValueError("Ground agency not set for tower ATC")
                 return
+            
+            # Force the unit to be under tower control if they are airborne within the ATZ and altitude limits and they are contacting us
+            if unit.airborne and self.check_unit_altitude_in_control(unit) and self.check_unit_in_atz(unit):
+                # If unit is airborne and within tower control area, take control
+                self.logger.info(f"Unit {unit.ID} is within tower control area, taking control")
+                unit.__class__ = ATCUnit
+                unit.set_atc_state(ATCState.ARRIVING)
+                unit.set_controlling_agency(self)
 
         # Define a list of trigger words and the callback to execute if they are found
         text = None
@@ -171,32 +228,33 @@ class TowerATC(ATCAgency):
                     # Notify the unit
                     self._send_message_to_unit(unit, f"{unit.callsign}, contact ground on {self._format_frequency_for_speech(self.ground.frequency)}.")
                 else:
-                    self.logger.warning(f"Ground ATC not set, cannot transfer unit {unit.ID}")
-                    unit.set_controlling_agency(Unicom)
-
-                    # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, taxi at own discretion and monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
+                    raise ValueError("Ground agency not set for tower ATC")
         # Unit is airborne
         else:
             if unit.get_atc_state() == ATCState.TAKING_OFF:
                 # If the unit is airborne and in takeoff state, set to departing
                 self.logger.info(f"Unit {unit.ID} is airborne after takeoff")
                 unit.set_atc_state(ATCState.DEPARTING)
-            elif unit.get_atc_state() == ATCState.DEPARTING and (unit.position.distance_to(self.runway_center) > CONTROL_RADIUS or unit.position.alt - self.runway_elevation > CONTROL_ALTITUDE):
-                # If the unit is airborne and in departure state, transfer to radar ATC if available
-                if self.radar:
-                    self.logger.info(f"Transferring unit {unit.ID} to radar ATC")
-                    unit.set_controlling_agency(self.radar)
-                    self.radar.transfer_unit(unit)
+            elif unit.get_atc_state() == ATCState.DEPARTING:
+                # Check if unit has left the ATZ or altitude control zone
+                in_atz = self.check_unit_in_atz(unit)
+                in_altitude = self.check_unit_altitude_in_control(unit)
+                
+                if not in_atz or not in_altitude:
+                    # If the unit is airborne and in departure state, transfer to radar ATC if available
+                    if self.approach:
+                        self.logger.info(f"Transferring unit {unit.ID} to departure ATC")
+                        unit.set_controlling_agency(self.approach)
+                        self.approach.transfer_unit(unit)
 
-                    # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, contact departure on {self._format_frequency_for_speech(self.radar.frequency)}.")
-                else:
-                    self.logger.warning(f"Radar ATC not set, cannot transfer unit {unit.ID}")
-                    unit.set_controlling_agency(Unicom)
+                        # Notify the unit
+                        self._send_message_to_unit(unit, f"{unit.callsign}, contact departure on {self._format_frequency_for_speech(self.approach.frequency)}.")
+                    else:
+                        self.logger.warning(f"Departure ATC not set, cannot transfer unit {unit.ID}")
+                        unit.set_controlling_agency(Unicom)
 
-                    # Notify the unit
-                    self._send_message_to_unit(unit, f"{unit.callsign}, proceed on course and monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
+                        # Notify the unit
+                        self._send_message_to_unit(unit, f"{unit.callsign}, proceed on course and monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
             elif unit.get_atc_state() == ATCState.ARRIVING:
                 if unit.position.distance_to(self.runway_center) < DISTANCE_THRESHOLD and unit.position.alt - self.runway_elevation < ALTITUDE_THRESHOLD:
                     if self.check_runway_clear(unit):
@@ -224,24 +282,29 @@ class TowerATC(ATCAgency):
         if not self.check_runway_clear(unit) or self._get_last_in_takeoff_order() not in [None, unit]:
             self.logger.info(f"Runway not clear for unit {unit.ID} takeoff request")
             unit.set_atc_state(ATCState.WAITING_FOR_TAKEOFF)
-            global MAX_ORDER
-            MAX_ORDER += 1
-            unit.set_order(MAX_ORDER)
-            return f"{unit.callsign}, {self.airport_name} tower, hold short of runway {' '.join(self.active_runway)}. You are number {len(self._get_list_of_units_in_takeoff_order()) + 1} for departure."
+            unit.set_order(get_new_order())
+            return f"{unit.callsign}, {self.airport_name} tower, hold short of runway {' '.join(self.active_runway)}. You are number {len(self._get_list_of_units_in_takeoff_order())} for departure."
             
         self.logger.info(f"Clearing unit {unit.ID} for takeoff")
         unit.set_atc_state(ATCState.TAKING_OFF)
-        return f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared for takeoff."
+
+        # Transfer to departure ATC if available
+        if self.approach:
+            self.approach.transfer_unit(unit)
+        else:
+            raise ValueError("Approach agency not set for tower ATC")
+
+        return f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)} cleared for takeoff, push departure on {self._format_frequency_for_speech(self.approach.frequency)}."
 
     def handle_landing_request(self, unit: ATCUnit):
-        # Check if the runway is clear
-        if not self.check_runway_clear(unit):
-            self.logger.info(f"Runway not clear for unit {unit.ID} landing request")
-            return f"{unit.callsign}, {self.airport_name} tower, continue."
-        
-        self.logger.info(f"Clearing unit {unit.ID} for landing")
-        unit.set_atc_state(ATCState.LANDING)
-        return f"{unit.callsign}, {self.airport_name} tower, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)} cleared to land, recheck gear."
+        # Check that the unit is in the arriving state before clearing to land
+        if unit.get_atc_state() != ATCState.ARRIVING:
+            self.logger.info(f"Unit {unit.ID} not in arriving state, ask again")
+            return f"{unit.callsign}, {self.airport_name} tower, say again."
+
+        # Tell the unit to continue, will clear when close to runway
+        self.logger.info(f"Clearing unit {unit.ID} to continue approach")
+        return f"{unit.callsign}, {self.airport_name} tower, copy, continue."
 
     def handle_break_request(self, unit: ATCUnit):
         self.logger.info(f"Clearing unit {unit.ID} for overhead break")
@@ -296,7 +359,7 @@ class TowerATC(ATCAgency):
     def _get_list_of_units_in_takeoff_order(self):
         # Get a list of units in takeoff order
         units = self.api.get_units()
-        takeoff_units = [u for u in units.values() if isinstance(u, ATCUnit) and u.get_controlling_agency() == self and (u.get_atc_state() == ATCState.WAITING_FOR_TAKEOFF or u.get_atc_state() == ATCState.TAKING_OFF)]
+        takeoff_units = [u for u in units.values() if isinstance(u, ATCUnit) and u.get_controlling_agency() == self and (u.get_atc_state() == ATCState.WAITING_FOR_TAKEOFF or u.get_atc_state() == ATCState.TAKING_OFF) and u.alive]
         
         if not takeoff_units:
             return []

@@ -81,7 +81,7 @@ class BaseOPSATC(ATCAgency):
         units = self.api.get_units()
 
     def handle_message(self, recognised_text: str, unit: ATCUnit):
-        print(f"[BASE OPS] Original text: '{recognised_text}'")  
+        self.logger.debug(f"Original text: '{recognised_text}'")  
         
         # Replace misheard words with correct ones using fuzzy matching
         # Split on spaces, hyphens, punctuation, and other noise characters
@@ -105,12 +105,12 @@ class BaseOPSATC(ATCAgency):
         # Reconstruct the text with corrections
         corrected_text = " ".join(corrected_words)
         
-        # Print the corrected text for debugging
+        # Log the corrected text for debugging
         if corrected_text != recognised_text:
-            print(f"[BASE OPS] Corrected text: '{corrected_text}'")
+            self.logger.debug(f"Corrected text: '{corrected_text}'")
             recognised_text = corrected_text
         else:
-            print(f"[BASE OPS] Text is correct already: '{corrected_text}'")
+            self.logger.debug(f"Text is correct already: '{corrected_text}'")
             corrected_text = recognised_text      
         
         

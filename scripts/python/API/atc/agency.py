@@ -44,10 +44,12 @@ class ATCAgency:
         if runway_info is None:
             self.logger.error(f"Active runway '{self.active_runway}' not found in Ground ATC config")
 
-        # Compute the center point of the runway. The runway is defined by 4 pairs of lat/lon coordinates in a list
+        # Compute the center point of the runway. Chech that there are at least 3 coords
         coords = runway_info.get("runwayBox", [])
-        if len(coords) != 4:
-            self.logger.error(f"Runway '{self.active_runway}' does not have 4 coordinate pairs defined")
+
+        if len(coords) < 3:
+            self.logger.error(f"Runway '{self.active_runway}' does not have enough coordinates to define a runway box")
+        
         latitudes = [coord[0] for coord in coords]
         longitudes = [coord[1] for coord in coords]
         self.runway_center = LatLng(sum(latitudes) / 4, sum(longitudes) / 4, runway_info.get("elevation", 0))
@@ -58,15 +60,17 @@ class ATCAgency:
         # Get the runway elevation
         self.runway_elevation = runway_info.get("elevation", 0)
 
-        # Get the hold short box from the active runway
-        hold_short_box = runway_info.get("holdShortBox", None)
-        if hold_short_box is None:
-            self.logger.error(f"Runway '{self.active_runway}' does not have a hold short box defined")
-        self.hold_short_box = hold_short_box
+        # Get the hold short boxes from the active runway (can be multiple)
+        hold_short_boxes = runway_info.get("holdShortBoxes", None)
+        if hold_short_boxes is None:
+            self.logger.warning(f"Runway '{self.active_runway}' does not have hold short boxes defined")
+            self.hold_short_boxes = []
+        else:
+            self.hold_short_boxes = hold_short_boxes
 
     def on_message_received(self, recognized_text: str, unit_id: int):
         # Handle incoming messages for ground ATC
-        print(f"ATC received message from unit {unit_id}: {recognized_text}")
+        self.logger.debug(f"ATC received message from unit {unit_id}: {recognized_text}")
 
         # Find the unit that sent the message
         units = self.api.get_units()
@@ -89,7 +93,11 @@ class ATCAgency:
         self.handle_message(recognized_text, unit)
 
     def check_unit_in_hold_short_box(self, unit) -> bool:
-        return self._point_in_polygon(unit.position.lat, unit.position.lng, self.hold_short_box)
+        """Check if unit is in any of the hold short boxes."""
+        for hold_short_box in self.hold_short_boxes:
+            if self._point_in_polygon(unit.position.lat, unit.position.lng, hold_short_box):
+                return True
+        return False
     
     def check_unit_in_runway(self, unit) -> bool:
         return self._point_in_polygon(unit.position.lat, unit.position.lng, self.runway_box)

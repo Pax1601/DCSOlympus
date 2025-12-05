@@ -16,8 +16,19 @@ class ATISATC(ATCAgency):
         if self.frequency is None:
             raise ValueError("ATIS ATC frequency not specified in config")
         
+        # Generate audio using this agency's assigned voice
+        self.audio_file = self.api.generate_audio_message(self.get_atis_message(), voice=self.voice)
+        
         # Start the continuous ATIS broadcast
         self.start_atis_broadcast()
+
+    def __del__(self):
+        self.stop_atis_broadcast()
+
+        # Clean up the temporary audio file
+        import os
+        if os.path.exists(self.audio_file):
+            os.remove(self.audio_file)
 
     def set_ground(self, ground: ATCAgency):
         self.ground = ground
@@ -55,15 +66,11 @@ class ATISATC(ATCAgency):
         while self.atis_running:
             try:
                 # Generate and broadcast ATIS message
-                atis_message = self.get_atis_message()
                 self.logger.info("Broadcasting ATIS message")
-                
-                # Generate audio using this agency's assigned voice
-                audio_file = self.api.generate_audio_message(atis_message, voice=self.voice)
                 
                 # Transmit the audio
                 success = self.listener.transmit_on_frequency(
-                    file_name=audio_file,
+                    file_name=self.audio_file,
                     frequency=self.listener.frequency,
                     modulation=self.listener.modulation,
                     encryption=self.listener.encryption
@@ -73,12 +80,7 @@ class ATISATC(ATCAgency):
                     self.logger.info("ATIS broadcast transmitted successfully")
                 else:
                     self.logger.error("Failed to transmit ATIS broadcast")
-                
-                # Clean up the temporary audio file
-                import os
-                if os.path.exists(audio_file):
-                    os.remove(audio_file)
-                
+                                
             except Exception as e:
                 self.logger.error(f"Error in ATIS broadcast: {e}")
             

@@ -24,7 +24,7 @@ class ClearanceDeliveryATC(ATCAgency):
         pass
 
     def handle_message(self, recognised_text: str, unit: ATCUnit):
-        print(f"[CLEARANCE] Original text: '{recognised_text}'")  
+        self.logger.debug(f"Original text: '{recognised_text}'")  
         
         # Check if this is a clearance delivery message
         if not any(keyword in recognised_text.lower() for keyword in clearance_keywords):
