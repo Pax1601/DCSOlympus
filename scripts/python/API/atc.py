@@ -400,6 +400,28 @@ if __name__ == "__main__":
 
     logger.info("All ATC agencies (including radar) set up successfully")
 
+    # Assign radars to approaches based on polygon containment
+    radar_atcs = [agency for agency in agencies if isinstance(agency, RadarATC)]
+    approach_atcs = [agency for agency in agencies if isinstance(agency, ApproachATC)]
+    
+    if radar_atcs and approach_atcs:
+        logger.info(f"Checking radar-to-approach assignments for {len(radar_atcs)} radar(s) and {len(approach_atcs)} approach(es)")
+        
+        for radar_atc in radar_atcs:
+            for approach_atc in approach_atcs:
+                # Check if any of the approach coordinates are inside the radar polygon
+                radar_assigned = False
+                for coord in approach_atc.approach_coordinates:
+                    lat, lon = coord[0], coord[1]
+                    if radar_atc._point_in_polygon(lat, lon, radar_atc.radar_coordinates):
+                        approach_atc.set_radar(radar_atc)
+                        logger.info(f"Assigned radar '{radar_atc.area_name}' to approach '{approach_atc.airport_name}'")
+                        radar_assigned = True
+                        break  # No need to check other coordinates once we found a match
+                
+                if not radar_assigned:
+                    logger.debug(f"Radar '{radar_atc.area_name}' not assigned to approach '{approach_atc.airport_name}' (no coordinates inside radar polygon)")
+
     # Register the update callback to be called periodically
     api.register_on_update_callback(lambda api=api, agencies=agencies: update_atc(api, agencies))
 
