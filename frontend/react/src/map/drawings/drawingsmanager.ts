@@ -34,15 +34,13 @@ export abstract class DCSDrawing {
   }
 
   setWeight(drawingData) {
-    if (!drawingData.thickness) {
+    // Gestione esplicita per thickness undefined o null
+    if (drawingData.thickness === undefined || drawingData.thickness === null) {
       return;
     }
 
+    // Ora thickness può essere 0 (nessun bordo)
     this.#weight = drawingData.thickness * 0.5;
-
-    if (this.#weight === 0) {
-      this.#weight = 0.1;
-    }
 
     if (this.#weight > 1) {
       this.#weight = 1;
@@ -206,6 +204,8 @@ export class DCSPolygon extends DCSDrawing {
           [drawingData.points["4"].lat, drawingData.points["4"].lng],
         ];
 
+        console.log('Drawing rectangle: ', drawingData);
+
         this.#polygon = new Polygon(bounds, {
           color: `${decimalToRGBA(drawingData.colorString)}`,
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
@@ -266,8 +266,6 @@ export class DCSPolygon extends DCSDrawing {
         });
 
       case "free":
-        console.log('Free polygon: ', drawingData);
-        
         const freePolypoints: [number, number][] = Object.values(drawingData.points as Record<string, { lat: number; lng: number }>).map((p) => [p.lat, p.lng]);
 
         this.#polygon = new Polygon(freePolypoints, {
@@ -328,8 +326,6 @@ export class DCSLine extends DCSDrawing {
 
   constructor(drawingData, parent) {
     if (!drawingData) return;
-
-    console.log('Drawing line with style: ', drawingData.style);
 
     super(drawingData, parent);
 
@@ -440,7 +436,8 @@ export class DCSLine extends DCSDrawing {
       className: 'leaflet-cross-marker',
       iconSize: [size, size],
       iconAnchor: [size / 2, size / 2],
-      html: this.createCrossSVG(color, weight)
+      // Applica rotazione direttamente nell'HTML
+      html: `<div style="transform: rotate(${bearing}rad); width: 100%; height: 100%;">${this.createCrossSVG(color, weight)}</div>`
     });
 
     const marker = new Marker(latlng, {
@@ -449,22 +446,16 @@ export class DCSLine extends DCSDrawing {
       keyboard: false,
     });
 
-    // Applica rotazione dopo che il marker è aggiunto
-    marker.on('add', () => {
-      const element = marker.getElement();
-      if (element) {
-        element.style.transform = `rotate(${bearing}rad)`;
-      }
-    });
-
     return marker;
   }
 
   private createCrossSVG(color: string, weight: number): string {
-    // Estrai RGB da rgba string
-    const colorMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    // Estrai RGBA completo (incluso alpha channel)
+    const colorMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
     const svgColor = colorMatch
-      ? `rgb(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]})`
+      ? colorMatch[4] !== undefined
+        ? `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, ${colorMatch[4]})`
+        : `rgb(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]})`
       : 'rgb(255, 255, 255)';
 
     const strokeWidth = Math.max(2, weight * 2);
