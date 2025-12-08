@@ -280,7 +280,7 @@ export class DCSPolygon extends DCSDrawing {
         break;
     }
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
   }
 
   getLayer() {
@@ -344,7 +344,7 @@ export class DCSLine extends DCSDrawing {
       });
     }
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
   }
 
   private createCrossLine(
@@ -528,8 +528,6 @@ export class DCSTextBox extends DCSDrawing {
 
     if (!drawingData) return;
 
-    if (drawingData.text.indexOf('normandy') !== -1) console.log('Drawing textbox: ', drawingData);
-
     super(drawingData, parent);
 
     /* Example textbox "ABC625":
@@ -573,7 +571,7 @@ export class DCSTextBox extends DCSDrawing {
 
     this.#marker = new Marker([drawingData.lat, drawingData.lng], { icon: customIcon });
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
   }
 
   private escapeHtml(text: string): string {
@@ -633,7 +631,7 @@ export class DCSNavpoint extends DCSDrawing {
 
     this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment, drawingData.tag);
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
   }
 
   getLayer() {
