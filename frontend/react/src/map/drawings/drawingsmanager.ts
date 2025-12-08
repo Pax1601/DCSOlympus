@@ -204,8 +204,6 @@ export class DCSPolygon extends DCSDrawing {
           [drawingData.points["4"].lat, drawingData.points["4"].lng],
         ];
 
-        console.log('Drawing rectangle: ', drawingData);
-
         this.#polygon = new Polygon(bounds, {
           color: `${decimalToRGBA(drawingData.colorString)}`,
           fillColor: `${decimalToRGBA(drawingData.fillColorString)}`,
@@ -527,9 +525,14 @@ export class DCSTextBox extends DCSDrawing {
   #marker: Marker;
 
   constructor(drawingData, parent) {
+
+    if (!drawingData) return;
+
+    if (drawingData.text.indexOf('normandy') !== -1) console.log('Drawing textbox: ', drawingData);
+
     super(drawingData, parent);
 
-    /* Example textbox "ABC625": 
+    /* Example textbox "ABC625":
         angle: 0
         borderThickness: 1
         colorString: 4294967295
@@ -543,24 +546,24 @@ export class DCSTextBox extends DCSDrawing {
         name: "ABC625"
         primitiveType: "TextBox"
         text: "ABC625"
-        visible: true 
+        visible: true
       */
     const customIcon = new DivIcon({
       html: `
 				<div style="
-					border: ${drawingData.borderThickness}px solid ${decimalToRGBA(drawingData.colorString)}; 
+					border: ${drawingData.borderThickness}px solid ${decimalToRGBA(drawingData.colorString)};
 					background-color: ${decimalToRGBA(drawingData.fillColorString)};
-					color: ${decimalToRGBA(drawingData.colorString)}; 
+					color: ${decimalToRGBA(drawingData.colorString)};
 					padding: 5px;
-					font-family: Arial, sans-serif; 
+					font-family: Arial, sans-serif;
 					font-size: ${drawingData.fontSize - 1}px;
 					text-align: center;
-					width: max-content; 
+					width: max-content;
 					transform: rotate(${drawingData.angle}deg);
 					transform-origin: center;
 					opacity: 100%;
 				">
-					${drawingData.text || drawingData.name}
+					${this.formatTextWithBreaks(drawingData.text || drawingData.name)}
 				</div>
 				`,
       // iconSize: [100, 50], // Dimensioni del box
@@ -571,6 +574,19 @@ export class DCSTextBox extends DCSDrawing {
     this.#marker = new Marker([drawingData.lat, drawingData.lng], { icon: customIcon });
 
     this.setVisibility(true);
+  }
+
+  private escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  private formatTextWithBreaks(text: string): string {
+    // Escape HTML per prevenire XSS
+    const escaped = this.escapeHtml(text);
+    // Sostituisci \n con <br>
+    return escaped.replace(/\n/g, '<br>');
   }
 
   getLayer() {
