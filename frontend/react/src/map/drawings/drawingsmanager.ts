@@ -34,12 +34,12 @@ export abstract class DCSDrawing {
   }
 
   setWeight(drawingData) {
-    // Gestione esplicita per thickness undefined o null
+    // Explicit handling for undefined or null thickness
     if (drawingData.thickness === undefined || drawingData.thickness === null) {
       return;
     }
 
-    // Ora thickness può essere 0 (nessun bordo)
+    // Now thickness can be 0 (no border)
     this.#weight = drawingData.thickness * 0.5;
 
     if (this.#weight > 1) {
@@ -354,7 +354,7 @@ export class DCSLine extends DCSDrawing {
   ): LayerGroup {
     const group = new LayerGroup();
 
-    // Linea base solida
+    // Solid base line
     this.#basePolyline = new Polyline(points, {
       color: color,
       weight: weight,
@@ -362,10 +362,10 @@ export class DCSLine extends DCSDrawing {
     });
     group.addLayer(this.#basePolyline);
 
-    // Calcola posizioni delle X
+    // Calculate X positions
     const markerPositions = this.calculateCrossPositions(points);
 
-    // Crea marker X
+    // Create X markers
     this.#crossMarkers = markerPositions.map(({latlng, bearing}) => {
       const marker = this.createCrossMarker(latlng, bearing, color, weight);
       group.addLayer(marker);
@@ -380,12 +380,12 @@ export class DCSLine extends DCSDrawing {
   ): Array<{latlng: LatLng, bearing: number}> {
     const positions: Array<{latlng: LatLng, bearing: number}> = [];
 
-    // Spaziatura adattiva basata sullo zoom
+    // Adaptive spacing based on zoom level
     const currentZoom = getApp().getMap().getZoom();
-    const REFERENCE_ZOOM = 10; // Zoom di riferimento
-    const BASE_SPACING = 5000; // 5km allo zoom di riferimento
+    const REFERENCE_ZOOM = 10; // Reference zoom level
+    const BASE_SPACING = 5000; // 5km at reference zoom level
 
-    // Calcola spaziatura: più zoom = più X ravvicinate
+    // Calculate spacing: higher zoom = closer X marks
     // Zoom 12: ~1.25km, Zoom 10: ~5km, Zoom 8: ~20km
     const CROSS_SPACING = BASE_SPACING * Math.pow(2, REFERENCE_ZOOM - currentZoom);
 
@@ -396,9 +396,9 @@ export class DCSLine extends DCSDrawing {
       const segmentDistance = start.distanceTo(end);
       const segmentBearing = bearing(
         start.lat, start.lng, end.lat, end.lng, false
-      ) * Math.PI / 180; // Converti in radianti
+      ) * Math.PI / 180; // Convert to radians
 
-      // Garantisci almeno 1 X per segmento lungo
+      // Ensure at least 1 X per long segment
       const minMarksPerSegment = segmentDistance > CROSS_SPACING / 2 ? 1 : 0;
       const numMarks = Math.max(minMarksPerSegment, Math.floor(segmentDistance / CROSS_SPACING));
 
@@ -434,7 +434,7 @@ export class DCSLine extends DCSDrawing {
       className: 'leaflet-cross-marker',
       iconSize: [size, size],
       iconAnchor: [size / 2, size / 2],
-      // Applica rotazione direttamente nell'HTML
+      // Apply rotation directly in HTML
       html: `<div style="transform: rotate(${bearing}rad); width: 100%; height: 100%;">${this.createCrossSVG(color, weight)}</div>`
     });
 
@@ -448,7 +448,7 @@ export class DCSLine extends DCSDrawing {
   }
 
   private createCrossSVG(color: string, weight: number): string {
-    // Estrai RGBA completo (incluso alpha channel)
+    // Extract full RGBA (including alpha channel)
     const colorMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
     const svgColor = colorMatch
       ? colorMatch[4] !== undefined
@@ -581,9 +581,9 @@ export class DCSTextBox extends DCSDrawing {
   }
 
   private formatTextWithBreaks(text: string): string {
-    // Escape HTML per prevenire XSS
+    // Escape HTML to prevent XSS
     const escaped = this.escapeHtml(text);
-    // Sostituisci \n con <br>
+    // Replace \n with <br>
     return escaped.replace(/\n/g, '<br>');
   }
 
