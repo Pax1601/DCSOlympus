@@ -322,6 +322,29 @@ string DeleteSpot::getString()
     return commandSS.str();
 }
 
+/* CreateMarker command */
+string CreateMarker::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.createMarker, "
+		<< markerID << ", "
+        << position.lat << ", "
+        << position.lng << ", "
+		<< "\"" << text << "\"";
+    return commandSS.str();
+}
+
+/* DeleteMarker command */
+string DeleteMarker::getString()
+{
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.deleteMarker, "
+        << markerID;
+    return commandSS.str();
+}
+
 /* SetCargoWeight command */
 string SetCargoWeight::getString()
 {

@@ -822,6 +822,25 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		command = dynamic_cast<Command*>(new DeleteSpot(spotID));
 	}
 	/************************/
+	else if (key.compare("createMarker") == 0)
+	{
+		unsigned int markerID = value[L"markerID"].as_integer();
+		string text = to_string(value[L"text"]);
+		double lat = value[L"location"][L"lat"].as_double();
+		double lng = value[L"location"][L"lng"].as_double();
+		Coords loc; loc.lat = lat; loc.lng = lng;
+
+		log("Creating marker with ID " + to_string(markerID));
+		command = dynamic_cast<Command*>(new CreateMarker(markerID, loc, text));
+	}
+	/************************/
+	else if (key.compare("deleteMarker") == 0)
+	{
+		unsigned int markerID = value[L"markerID"].as_integer();
+		log("Deleting marker with ID " + to_string(markerID));
+		command = dynamic_cast<Command*>(new DeleteMarker(markerID));
+	}
+	/************************/
 	else if (key.compare("setCommandModeOptions") == 0)
 	{
 		setCommandModeOptions(value);

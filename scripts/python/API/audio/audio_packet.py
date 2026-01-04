@@ -1,7 +1,9 @@
 from enum import Enum
 from typing import List, Dict, Optional
 import struct
+import logging
 
+logger = logging.getLogger(__name__)
 packet_id = 0
 
 class MessageType(Enum):
@@ -31,11 +33,11 @@ class AudioPacket:
 
         # Perform some sanity checks
         if total_length != len(byte_array):
-            print(f"Warning, audio packet expected length is {total_length} but received length is {len(byte_array)}, aborting...")
+            logger.warning(f"Audio packet expected length is {total_length} but received length is {len(byte_array)}, aborting...")
             return
 
         if frequencies_length % 10 != 0:
-            print(f"Warning, audio packet frequencies data length is {frequencies_length} which is not a multiple of 10, aborting...")
+            logger.warning(f"Audio packet frequencies data length is {frequencies_length} which is not a multiple of 10, aborting...")
             return
 
         # Extract the audio data
@@ -69,19 +71,19 @@ class AudioPacket:
         
         # Perform some sanity checks
         if len(self._frequencies) == 0:
-            print("Warning, could not encode audio packet, no frequencies data provided, aborting...")
+            logger.warning("Could not encode audio packet, no frequencies data provided, aborting...")
             return None
 
         if self._audio_data is None:
-            print("Warning, could not encode audio packet, no audio data provided, aborting...")
+            logger.warning("Could not encode audio packet, no audio data provided, aborting...")
             return None
 
         if self._transmission_guid is None:
-            print("Warning, could not encode audio packet, no transmission GUID provided, aborting...")
+            logger.warning("Could not encode audio packet, no transmission GUID provided, aborting...")
             return None
 
         if self._client_guid is None:
-            print("Warning, could not encode audio packet, no client GUID provided, aborting...")
+            logger.warning("Could not encode audio packet, no client GUID provided, aborting...")
             return None
 
         # Prepare the array for the header

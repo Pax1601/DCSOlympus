@@ -540,6 +540,44 @@ private:
 	const Coords destination;
 };
 
+/* Create a marker */
+class CreateMarker : public Command
+{
+public:
+	CreateMarker(unsigned int markerID, Coords position, string text, function<void(void)> callback = []() {}) :
+		Command(callback),
+		markerID(markerID),
+		position(position),
+		text(text)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int markerID;
+	const Coords position;
+	const string text;
+};
+
+/* Delete a marker */
+class DeleteMarker : public Command
+{
+	public:
+	DeleteMarker(unsigned int markerID, function<void(void)> callback = []() {}) :
+		Command(callback),
+		markerID(markerID)
+	{
+		priority = CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return 5; }
+
+private:
+	const unsigned int markerID;
+};
+
 /* Set cargo weight */
 class SetCargoWeight : public Command
 {

@@ -11,6 +11,7 @@
 #define AIRBASES_URI "airbases"
 #define BULLSEYE_URI "bullseyes"
 #define SPOTS_URI "spots"
+#define MARKERS_URI "markers"
 #define MISSION_URI "mission"
 #define COMMANDS_URI "commands"
 #define DRAWINGS_URI "drawings"

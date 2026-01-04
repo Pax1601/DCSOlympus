@@ -59,6 +59,49 @@
             "program": "infantry_boarding.py",
             "console": "integratedTerminal",
             "justMyCode": false,
+        },
+        {
+            "name": "Intercom",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_intercom_control.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "Echo with whisper",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_echo.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "ATC",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "atc.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Example markers",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "example_markers.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Current file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

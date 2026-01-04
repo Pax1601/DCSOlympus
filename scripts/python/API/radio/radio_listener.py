@@ -11,8 +11,6 @@ import logging
 import threading
 from typing import Dict, Optional, Callable, Any
 import json
-from google.cloud import speech
-from google.cloud.speech import SpeechContext
 
 from audio.audio_packet import AudioPacket, MessageType
 from audio.audio_recorder import AudioRecorder
@@ -28,20 +26,23 @@ class RadioListener:
     to receive audio messages with graceful shutdown handling.
     """
     
-    def __init__(self, api, address: str = "localhost", port: int = 5000):
+    def __init__(self, api, address: str, port: int | None):
         """
         Initialize the RadioListener.
         
         Args:
             address (str): WebSocket server address
             port (int): WebSocket server port
-            message_callback: Optional callback function for handling received messages
+            endpoint (str): WebSocket server endpoint
         """
         self.api = api
         
         self.address = address
         self.port = port
-        self.websocket_url = f"ws://{address}:{port}"
+        if port is None:
+            self.websocket_url = f"wss://{address}"
+        else:
+            self.websocket_url = f"ws://{address}:{port}"
         self.message_callback = None
         self.clients_callback = None
         
@@ -49,7 +50,7 @@ class RadioListener:
         self.modulation = 0
         self.encryption = 0
         self.coalition = "blue"
-        self.speech_contexts = []
+        self.intercom_ID = None
                 
         self.audio_recorders: Dict[str, AudioRecorder] = {}
         
@@ -63,17 +64,18 @@ class RadioListener:
         self._loop: Optional[asyncio.AbstractEventLoop] = None
         self._thread: Optional[threading.Thread] = None
         
+        # Transmission mutex to ensure only one message plays at a time
+        self._transmission_lock = threading.Lock()
+        
+        # Track when last transmission was received (to wait 2 seconds before transmitting)
+        self._last_receive_time = 0.0
+        self._receive_lock = threading.Lock()
+        
         # Clients data
         self.clients_data: dict = {}
         
         # Setup logging
-        self.logger = logging.getLogger(f"RadioListener-{address}:{port}")
-        if not self.logger.handlers:
-            handler = logging.StreamHandler()
-            formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
-            handler.setFormatter(formatter)
-            self.logger.addHandler(handler)
-            self.logger.setLevel(logging.INFO)
+        self.logger = logging.getLogger(f"DCSOlympus.API")
                 
     async def _handle_message(self, message: bytes) -> None:
         """
@@ -91,6 +93,10 @@ class RadioListener:
                 audio_packet.from_byte_array(message[1:])
                 
                 if audio_packet.get_transmission_guid() != self._guid:
+                    # Update last receive time
+                    with self._receive_lock:
+                        self._last_receive_time = time.time()
+                    
                     if audio_packet.get_transmission_guid() not in self.audio_recorders:
                         recorder = AudioRecorder(self.api)
                         self.audio_recorders[audio_packet.get_transmission_guid()] = recorder
@@ -111,31 +117,51 @@ class RadioListener:
         Callback for when audio data is recorded.
         
         Args:
-            recorder: The AudioRecorder instance
-            audio_data: The recorded audio data
+            wav_filename: Path to the recorded WAV file
+            unit_id: The unit ID that recorded the audio
         """
+        self.logger.info(f"Recording callback triggered with file: {wav_filename}, unit_id: {unit_id}")
+        
         if self.message_callback:
-            with open(wav_filename, 'rb') as audio_file:
-                audio_content = audio_file.read()
-
-            client = speech.SpeechClient()
-            config = speech.RecognitionConfig(
-                language_code="en",
-                encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-                sample_rate_hertz=16000,
-                speech_contexts=[self.speech_contexts]
-            )
-            audio = speech.RecognitionAudio(content=audio_content)
-
-            # Synchronous speech recognition request
-            response = client.recognize(config=config, audio=audio)
-
-            # Extract recognized text
-            recognized_text = " ".join([result.alternatives[0].transcript for result in response.results])
-            
-            self.message_callback(recognized_text, unit_id)
+            try:
+                # Use API's centralized transcription service
+                recognized_text = self.api.transcribe_audio(wav_filename)
+                
+                self.logger.info(f"Transcribed text: '{recognized_text}'")
+                if recognized_text:
+                    self.message_callback(recognized_text, unit_id)
+                else:
+                    self.logger.debug("No speech detected in audio")
+                    
+            except RuntimeError as e:
+                self.logger.error(f"Whisper model not available: {e}")
+            except FileNotFoundError as e:
+                self.logger.error(f"Audio file not found: {wav_filename} - {e}")
+            except PermissionError as e:
+                self.logger.error(f"Permission denied accessing audio file: {wav_filename} - {e}")
+            except Exception as e:
+                self.logger.error(f"Error during audio transcription: {e}")
+                self.logger.error(f"File path: {wav_filename}")
+                import traceback
+                self.logger.error(f"Traceback: {traceback.format_exc()}")
+            finally:
+                # Clean up the temporary file after processing
+                try:
+                    import os
+                    if os.path.exists(wav_filename):
+                        os.remove(wav_filename)
+                        self.logger.debug(f"Cleaned up temporary file: {wav_filename}")
+                except Exception as cleanup_error:
+                    self.logger.warning(f"Failed to clean up temporary file {wav_filename}: {cleanup_error}")
         else:
             self.logger.warning("No message callback registered to handle recorded audio")
+            # Still clean up the file even if no callback is registered
+            try:
+                import os
+                if os.path.exists(wav_filename):
+                    os.remove(wav_filename)
+            except Exception:
+                pass
     
     async def _listen(self) -> None:
         """Main WebSocket listening loop."""
@@ -233,40 +259,104 @@ class RadioListener:
                 }
             ]
         }
+        
+        if self.intercom_ID is not None:
+            message["unitID"] = self.intercom_ID
 
         if self._websocket:
             message_bytes = json.dumps(message).encode('utf-8')
             data = bytes([MessageType.AUDIO.SETTINGS.value]) + message_bytes
             await self._websocket.send(data)
-            
-    async def _send_message(self, message: Any) -> bool:
-        """
-        Send a message through the WebSocket connection.
-        
-        Args:
-            message: Message to send (will be JSON-encoded if not a string)
-            
-        Returns:
-            bool: True if message was sent successfully, False otherwise
-        """
-        if not self.is_connected():
-            self.logger.warning("Cannot send message: WebSocket not connected")
+                    
+    def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None, unit_ID: int | None) -> bool:
+        # Acquire the transmission lock to ensure only one message plays at a time
+        acquired = self._transmission_lock.acquire(blocking=True, timeout=30.0)
+        if not acquired:
+            self.logger.error("Failed to acquire transmission lock within timeout")
             return False
         
         try:
-            # Convert message to string if needed
-            if isinstance(message, str):
-                data = message
-            else:
-                data = json.dumps(message)
+            # Check if we're currently receiving data and wait if needed
+            with self._receive_lock:
+                last_receive = self._last_receive_time
             
-            await self._websocket.send(data)
-            self.logger.debug(f"Sent message: {data}")
-            return True
+            if last_receive > 0:
+                time_since_receive = time.time() - last_receive
+                # If less than 2 seconds since last receive, wait
+                if time_since_receive < 2.0:
+                    wait_time = 2.0 - time_since_receive
+                    self.logger.debug(f"Waiting {wait_time:.2f}s after last received transmission")
+                    time.sleep(wait_time)
             
-        except Exception as e:
-            self.logger.error(f"Error sending message: {e}")
-            return False
+            if (intercom_ID is not None):
+                frequency = 100
+                modulation = 2
+                encryption = 0
+                
+            if frequency is None or modulation is None or encryption is None:
+                self.logger.error("Frequency, modulation, and encryption must be specified for transmission")
+                return False
+            
+            try:
+                # Open WAV file
+                with wave.open(file_name, 'rb') as wf:
+                    if wf.getnchannels() != 1 or wf.getframerate() != 16000 or wf.getsampwidth() != 2:
+                        self.logger.error("Input WAV must be mono, 16kHz, 16-bit (linear16)")
+                        return False
+                    frame_size = int(16000 * 0.04)  # 40ms frames = 640 samples
+                    encoder = opuslib.Encoder(16000, 1, opuslib.APPLICATION_AUDIO)
+                    packet_id = 0
+                    while True:
+                        pcm_bytes = wf.readframes(frame_size)
+                        if not pcm_bytes or len(pcm_bytes) < frame_size * 2:
+                            break
+                        # Encode PCM to OPUS
+                        try:
+                            opus_data = encoder.encode(pcm_bytes, frame_size)
+                        except Exception as e:
+                            self.logger.error(f"Opus encoding failed: {e}")
+                            return False
+                        # Create AudioPacket
+                        packet = AudioPacket()
+                        
+                        # If provided, set intercom ID as unit ID
+                        if intercom_ID is not None:
+                            packet.set_unit_id(intercom_ID)
+                        elif unit_ID is not None:
+                            packet.set_unit_id(unit_ID)
+                        
+                        packet.set_packet_id(packet_id)
+                        packet.set_audio_data(opus_data)
+                        packet.set_frequencies([{
+                            'frequency': frequency,
+                            'modulation': modulation,
+                            'encryption': encryption
+                            }])
+                        packet.set_transmission_guid(self._guid)
+                        packet.set_client_guid(self._guid)
+                        # Serialize and send over websocket
+                        if self._websocket and self._loop and not self._loop.is_closed():
+                            data = packet.to_byte_array()
+                            fut = asyncio.run_coroutine_threadsafe(self._websocket.send(data), self._loop)
+                            try:
+                                fut.result(timeout=2.0)
+                            except Exception as send_err:
+                                self.logger.error(f"Failed to send packet {packet_id}: {send_err}")
+                                return False
+                        else:
+                            self.logger.error("WebSocket not connected")
+                            return False
+                        packet_id += 1
+                        time.sleep(0.04)  # Simulate real-time transmission
+                self.logger.info(f"Transmitted {packet_id} packets from {file_name}")
+                return True
+            except Exception as e:
+                self.logger.error(f"Transmit failed: {e}")
+                return False
+        finally:
+            # Always release the lock
+            self._transmission_lock.release()
+
             
     def register_message_callback(self, callback: Callable[[str, str], None]) -> None:
         """Set the callback function for handling received messages.
@@ -278,15 +368,6 @@ class RadioListener:
         """Set the callback function for handling clients data."""
         self.clients_callback = callback
         
-    def set_speech_contexts(self, contexts: list[SpeechContext]) -> None:
-        """
-        Set the speech contexts for speech recognition.
-        
-        Args:
-            contexts (list[SpeechContext]): List of SpeechContext objects
-        """
-        self.speech_contexts = contexts
-
     def start(self, frequency: int, modulation: int, encryption: int) -> None:
         """Start the audio listener in a separate thread.
         
@@ -308,7 +389,24 @@ class RadioListener:
         self.modulation = modulation
         self.encryption = encryption
         
-    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int) -> bool:
+        
+    def start_on_intercom(self, intercom_ID: int) -> None:
+        """Start the audio listener in a separate thread.
+        Args:
+            intercom_ID (int): Intercom ID to listen to
+        """
+        if self._running or self._thread is not None:
+            self.logger.warning("RadioListener is already running")
+            return
+        
+        self._should_stop = False
+        self._thread = threading.Thread(target=self._run_event_loop, daemon=True)
+        self._thread.start()
+        
+        self.logger.info(f"RadioListener started, connecting to {self.websocket_url}")
+        self.intercom_ID = intercom_ID
+        
+    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
         """
         Transmit a WAV file as OPUS frames over the websocket.
         Args:
@@ -316,60 +414,26 @@ class RadioListener:
             frequency (float): Transmission frequency
             modulation (int): Modulation type
             encryption (int): Encryption type
+
+        Kwargs:
+            unit_ID (int, optional): The unit ID of the source unit to impersonate
+
         Returns:
             bool: True if transmission succeeded, False otherwise
         """
-
-        try:
-            # Open WAV file
-            with wave.open(file_name, 'rb') as wf:
-                if wf.getnchannels() != 1 or wf.getframerate() != 16000 or wf.getsampwidth() != 2:
-                    self.logger.error("Input WAV must be mono, 16kHz, 16-bit (linear16)")
-                    return False
-                frame_size = int(16000 * 0.04)  # 40ms frames = 640 samples
-                encoder = opuslib.Encoder(16000, 1, opuslib.APPLICATION_AUDIO)
-                packet_id = 0
-                while True:
-                    pcm_bytes = wf.readframes(frame_size)
-                    if not pcm_bytes or len(pcm_bytes) < frame_size * 2:
-                        break
-                    # Encode PCM to OPUS
-                    try:
-                        opus_data = encoder.encode(pcm_bytes, frame_size)
-                    except Exception as e:
-                        self.logger.error(f"Opus encoding failed: {e}")
-                        return False
-                    # Create AudioPacket
-                    packet = AudioPacket()
-                    packet.set_packet_id(packet_id)
-                    packet.set_audio_data(opus_data)
-                    packet.set_frequencies([{
-                        'frequency': frequency,
-                        'modulation': modulation,
-                        'encryption': encryption
-                        }])
-                    packet.set_transmission_guid(self._guid)
-                    packet.set_client_guid(self._guid)
-                    # Serialize and send over websocket
-                    if self._websocket and self._loop and not self._loop.is_closed():
-                        data = packet.to_byte_array()
-                        fut = asyncio.run_coroutine_threadsafe(self._websocket.send(data), self._loop)
-                        try:
-                            fut.result(timeout=2.0)
-                        except Exception as send_err:
-                            self.logger.error(f"Failed to send packet {packet_id}: {send_err}")
-                            return False
-                    else:
-                        self.logger.error("WebSocket not connected")
-                        return False
-                    packet_id += 1
-                    time.sleep(0.04)  # Simulate real-time transmission
-            self.logger.info(f"Transmitted {packet_id} packets from {file_name}")
-            return True
-        except Exception as e:
-            self.logger.error(f"Transmit failed: {e}")
-            return False
+        return self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get("unit_ID"))
     
+    def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
+        """
+        Transmit a WAV file as OPUS frames over the websocket on a specific intercom ID.
+        Args:
+            file_name (str): Path to the input WAV file (linear16, mono, 16kHz)
+            intercom_ID (int): Unit ID to transmit to
+        Returns:
+            bool: True if transmission succeeded, False otherwise
+        """
+        return self._send_message(file_name, None, None, None, intercom_ID)
+
     def stop(self) -> None:
         """Stop the audio listener gracefully."""
         if not self._running and self._thread is None:
@@ -411,4 +475,5 @@ class RadioListener:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit with graceful shutdown."""
         self.stop()
-
+        
+    

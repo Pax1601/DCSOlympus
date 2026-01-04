@@ -37,6 +37,7 @@ Olympus.spotsCounter = 1
 Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
 Olympus.fireCounter = 1
+Olympus.markers = {}
 
 -- Load the lua file system
 local lfs = require('lfs')
@@ -1622,11 +1623,26 @@ function Olympus.setMissionData(arg, time)
 		end
 	end
 
+	-- Markers
+	local markers = {}
+	for idx, marker in pairs(Olympus.markers) do
+		markers[idx] = {
+			coalition = marker.coalition,
+			groupID = marker.groupID,
+			text = marker.text,
+			pos = {}
+		}
+		local lat, lng = coord.LOtoLL(marker.pos)
+		markers[idx].pos["lat"] = lat
+		markers[idx].pos["lng"] = lng
+	end
+
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
 	Olympus.missionData["airbases"] = airbases
 	Olympus.missionData["mission"] = mission
 	Olympus.missionData["spots"] = spots
+	Olympus.missionData["markers"] = markers
 
 	Olympus.OlympusDLL.setMissionData()
 	return time + 1	-- For perfomance reasons mission data is updated once every second
@@ -1744,6 +1760,31 @@ function handler:onEvent(event)
 		if Olympus ~= nil and Olympus.units ~= nil then
 			Olympus.units[unit["id_"]] = unit
 			Olympus.debug("New unit created " .. unit["id_"], 2)
+		end
+	elseif event.id == 25 then
+		-- Marker created
+		if Olympus ~= nil then
+			Olympus.markers[event.idx] = {
+				coalition = event.coalition,
+				groupID = event.groupID,
+				text = event.text,
+				pos = event.pos
+			}
+		end
+	elseif event.id == 26 then
+		-- Marker changed
+		if Olympus ~= nil and Olympus.markers[event.idx] then
+			Olympus.markers[event.idx] = {
+				coalition = event.coalition,
+				groupID = event.groupID,
+				text = event.text,
+				pos = event.pos
+			}
+		end
+	elseif event.id == 27 then
+		-- Marker removed
+		if Olympus ~= nil and Olympus.markers[event.idx] then
+			Olympus.markers[event.idx] = nil
 		end
 	end
 end

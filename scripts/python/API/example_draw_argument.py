@@ -1,4 +1,7 @@
 from api import API
+import logging
+
+logger = logging.getLogger(__name__)
 
 def on_api_startup(api: API):
     units = api.update_units()
@@ -11,9 +14,9 @@ def on_api_update(api: API):
     units = api.get_units()
     for unit in units.values():
         if unit.name == "UH-1H":
-            print(f"Draw Arguments for {unit.name}:")
+            logger.info(f"Draw Arguments for {unit.name}:")
             for draw_arg in unit.draw_arguments:
-                print(f"  Argument: {draw_arg.argument}, Value: {draw_arg.value}")
+                logger.info(f"  Argument: {draw_arg.argument}, Value: {draw_arg.value}")
 
 ##############################################################################################
 # Main entry point for the script. It registers the callbacks and starts the API.

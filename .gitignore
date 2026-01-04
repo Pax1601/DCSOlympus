@@ -43,3 +43,4 @@ manager/manager.log
 /frontend/server/public
 /frontend/server/build
 /frontend/react/.vite
+scripts/python/API/olympus.json
