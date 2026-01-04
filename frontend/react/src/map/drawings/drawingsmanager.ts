@@ -1,8 +1,8 @@
-import { decimalToRGBA } from "../../other/utils";
+import { bearing, decimalToRGBA } from "../../other/utils";
 import { getApp } from "../../olympusapp";
 import { CommandModeOptionsChangedEvent, DrawingsInitEvent, DrawingsUpdatedEvent, MapOptionsChangedEvent, SessionDataLoadedEvent } from "../../events";
 import { MapOptions } from "../../types/types";
-import { Circle, DivIcon, Layer, LayerGroup, layerGroup, Marker, Polygon, Polyline } from "leaflet";
+import { Circle, DivIcon, LatLng, Layer, LayerGroup, layerGroup, Marker, Polygon, Polyline } from "leaflet";
 import { NavpointMarker } from "../markers/navpointmarker";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../../constants/constants";
 
@@ -34,15 +34,13 @@ export abstract class DCSDrawing {
   }
 
   setWeight(drawingData) {
-    if (!drawingData.thickness) {
+    // Explicit handling for undefined or null thickness
+    if (drawingData.thickness === undefined || drawingData.thickness === null) {
       return;
     }
 
+    // Now thickness can be 0 (no border)
     this.#weight = drawingData.thickness * 0.5;
-
-    if (this.#weight === 0) {
-      this.#weight = 0.1;
-    }
 
     if (this.#weight > 1) {
       this.#weight = 1;
@@ -282,7 +280,7 @@ export class DCSPolygon extends DCSDrawing {
         break;
     }
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
   }
 
   getLayer() {
@@ -319,40 +317,192 @@ export class DCSPolygon extends DCSDrawing {
 }
 
 export class DCSLine extends DCSDrawing {
-  #line: Polyline;
+  #layer: Polyline | LayerGroup;
+  #basePolyline: Polyline | null = null;
+  #crossMarkers: Marker[] = [];
+  #style: string;
 
   constructor(drawingData, parent) {
+    if (!drawingData) return;
+
     super(drawingData, parent);
 
+    this.#style = drawingData.style;
     const points: [number, number][] = Object.values(drawingData.points as Record<string, { lat: number; lng: number }>).map((p) => [p.lat, p.lng]);
-    const dashArray = drawingData.style === "dot" ? "5" : drawingData.style === "dot2" ? "10" : undefined;
 
-    this.#line = new Polyline(points, {
-      color: `${decimalToRGBA(drawingData.colorString)}`,
-      weight: this.getWeight(),
-      dashArray: dashArray,
+    const color = decimalToRGBA(drawingData.colorString);
+    const weight = this.getWeight();
+
+    if (drawingData.style === "cross") {
+      this.#layer = this.createCrossLine(points, color, weight);
+    } else {
+      const dashArray = drawingData.style === "dot" ? "5" : drawingData.style === "dot2" ? "10" : undefined;
+      this.#layer = new Polyline(points, {
+        color: color,
+        weight: weight,
+        dashArray: dashArray,
+      });
+    }
+
+    this.setVisibility(drawingData.visible !== false);
+  }
+
+  private createCrossLine(
+    points: [number, number][],
+    color: string,
+    weight: number
+  ): LayerGroup {
+    const group = new LayerGroup();
+
+    // Solid base line
+    this.#basePolyline = new Polyline(points, {
+      color: color,
+      weight: weight,
+      dashArray: undefined,
+    });
+    group.addLayer(this.#basePolyline);
+
+    // Calculate X positions
+    const markerPositions = this.calculateCrossPositions(points);
+
+    // Create X markers
+    this.#crossMarkers = markerPositions.map(({latlng, bearing}) => {
+      const marker = this.createCrossMarker(latlng, bearing, color, weight);
+      group.addLayer(marker);
+      return marker;
     });
 
-    this.setVisibility(true);
+    return group;
+  }
+
+  private calculateCrossPositions(
+    points: [number, number][]
+  ): Array<{latlng: LatLng, bearing: number}> {
+    const positions: Array<{latlng: LatLng, bearing: number}> = [];
+
+    // Adaptive spacing based on zoom level
+    const currentZoom = getApp().getMap().getZoom();
+    const REFERENCE_ZOOM = 10; // Reference zoom level
+    const BASE_SPACING = 5000; // 5km at reference zoom level
+
+    // Calculate spacing: higher zoom = closer X marks
+    // Zoom 12: ~1.25km, Zoom 10: ~5km, Zoom 8: ~20km
+    const CROSS_SPACING = BASE_SPACING * Math.pow(2, REFERENCE_ZOOM - currentZoom);
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const start = new LatLng(points[i][0], points[i][1]);
+      const end = new LatLng(points[i + 1][0], points[i + 1][1]);
+
+      const segmentDistance = start.distanceTo(end);
+      const segmentBearing = bearing(
+        start.lat, start.lng, end.lat, end.lng, false
+      ) * Math.PI / 180; // Convert to radians
+
+      // Ensure at least 1 X per long segment
+      const minMarksPerSegment = segmentDistance > CROSS_SPACING / 2 ? 1 : 0;
+      const numMarks = Math.max(minMarksPerSegment, Math.floor(segmentDistance / CROSS_SPACING));
+
+      for (let j = 1; j <= numMarks; j++) {
+        const fraction = j / (numMarks + 1);
+        const latlng = this.interpolateLatLng(start, end, fraction);
+        positions.push({ latlng, bearing: segmentBearing });
+      }
+    }
+
+    return positions;
+  }
+
+  private interpolateLatLng(
+    start: LatLng,
+    end: LatLng,
+    fraction: number
+  ): LatLng {
+    const lat = start.lat + (end.lat - start.lat) * fraction;
+    const lng = start.lng + (end.lng - start.lng) * fraction;
+    return new LatLng(lat, lng);
+  }
+
+  private createCrossMarker(
+    latlng: LatLng,
+    bearing: number,
+    color: string,
+    weight: number
+  ): Marker {
+    const size = Math.max(16, weight * 20);
+
+    const icon = new DivIcon({
+      className: 'leaflet-cross-marker',
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      // Apply rotation directly in HTML
+      html: `<div style="transform: rotate(${bearing}rad); width: 100%; height: 100%;">${this.createCrossSVG(color, weight)}</div>`
+    });
+
+    const marker = new Marker(latlng, {
+      icon: icon,
+      interactive: false,
+      keyboard: false,
+    });
+
+    return marker;
+  }
+
+  private createCrossSVG(color: string, weight: number): string {
+    // Extract full RGBA (including alpha channel)
+    const colorMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    const svgColor = colorMatch
+      ? colorMatch[4] !== undefined
+        ? `rgba(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]}, ${colorMatch[4]})`
+        : `rgb(${colorMatch[1]}, ${colorMatch[2]}, ${colorMatch[3]})`
+      : 'rgb(255, 255, 255)';
+
+    const strokeWidth = Math.max(2, weight * 2);
+
+    return `
+      <svg width="100%" height="100%" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <line x1="2" y1="2" x2="22" y2="22"
+              stroke="${svgColor}"
+              stroke-width="${strokeWidth}"
+              stroke-linecap="round"/>
+        <line x1="22" y1="2" x2="2" y2="22"
+              stroke="${svgColor}"
+              stroke-width="${strokeWidth}"
+              stroke-linecap="round"/>
+      </svg>
+    `;
   }
 
   getLayer() {
-    return this.#line;
+    return this.#layer;
   }
 
   setOpacity(opacity: number): void {
-    if (opacity === this.#line.options.opacity) return;
+    if (this.#style === "cross") {
+      // Aggiorna polyline base
+      if (this.#basePolyline && opacity !== this.#basePolyline.options.opacity) {
+        this.#basePolyline.options.opacity = opacity;
+        this.#basePolyline.redraw();
+      }
 
-    this.#line.options.opacity = opacity;
-    this.#line.redraw();
+      // Aggiorna tutti i marker X
+      this.#crossMarkers.forEach(marker => {
+        marker.setOpacity(opacity);
+      });
+    } else {
+      // Logica originale per Polyline standard
+      const polyline = this.#layer as Polyline;
+      if (opacity === polyline.options.opacity) return;
+      polyline.options.opacity = opacity;
+      polyline.redraw();
+    }
 
     getApp().getDrawingsManager().requestUpdateEventDispatch();
   }
 
   setVisibility(visibility: boolean): void {
-    if (visibility && !this.getParent().getLayerGroup().hasLayer(this.#line)) this.#line.addTo(this.getParent().getLayerGroup());
+    if (visibility && !this.getParent().getLayerGroup().hasLayer(this.#layer)) this.#layer.addTo(this.getParent().getLayerGroup());
     //@ts-ignore Leaflet typings are wrong
-    if (!visibility && this.getParent().getLayerGroup().hasLayer(this.#line)) this.#line.removeFrom(this.getParent().getLayerGroup());
+    if (!visibility && this.getParent().getLayerGroup().hasLayer(this.#layer)) this.#layer.removeFrom(this.getParent().getLayerGroup());
 
     if (visibility && !this.getParent().getVisibility()) this.getParent().setVisibility(true);
 
@@ -360,11 +510,14 @@ export class DCSLine extends DCSDrawing {
   }
 
   getOpacity(): number {
-    return this.#line.options.opacity ?? 1;
+    if (this.#style === "cross" && this.#basePolyline) {
+      return this.#basePolyline.options.opacity ?? 1;
+    }
+    return (this.#layer as Polyline).options.opacity ?? 1;
   }
 
   getVisibility(): boolean {
-    return this.getParent().getLayerGroup().hasLayer(this.#line);
+    return this.getParent().getLayerGroup().hasLayer(this.#layer);
   }
 }
 
@@ -372,9 +525,12 @@ export class DCSTextBox extends DCSDrawing {
   #marker: Marker;
 
   constructor(drawingData, parent) {
+
+    if (!drawingData) return;
+
     super(drawingData, parent);
 
-    /* Example textbox "ABC625": 
+    /* Example textbox "ABC625":
         angle: 0
         borderThickness: 1
         colorString: 4294967295
@@ -388,24 +544,24 @@ export class DCSTextBox extends DCSDrawing {
         name: "ABC625"
         primitiveType: "TextBox"
         text: "ABC625"
-        visible: true 
+        visible: true
       */
     const customIcon = new DivIcon({
       html: `
 				<div style="
-					border: ${drawingData.borderThickness}px solid ${decimalToRGBA(drawingData.colorString)}; 
+					border: ${drawingData.borderThickness}px solid ${decimalToRGBA(drawingData.colorString)};
 					background-color: ${decimalToRGBA(drawingData.fillColorString)};
-					color: ${decimalToRGBA(drawingData.colorString)}; 
+					color: ${decimalToRGBA(drawingData.colorString)};
 					padding: 5px;
-					font-family: Arial, sans-serif; 
+					font-family: Arial, sans-serif;
 					font-size: ${drawingData.fontSize - 1}px;
 					text-align: center;
-					width: max-content; 
+					width: max-content;
 					transform: rotate(${drawingData.angle}deg);
 					transform-origin: center;
 					opacity: 100%;
 				">
-					${drawingData.text || drawingData.name}
+					${this.formatTextWithBreaks(drawingData.text || drawingData.name)}
 				</div>
 				`,
       // iconSize: [100, 50], // Dimensioni del box
@@ -415,7 +571,20 @@ export class DCSTextBox extends DCSDrawing {
 
     this.#marker = new Marker([drawingData.lat, drawingData.lng], { icon: customIcon });
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
+  }
+
+  private escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  private formatTextWithBreaks(text: string): string {
+    // Escape HTML to prevent XSS
+    const escaped = this.escapeHtml(text);
+    // Replace \n with <br>
+    return escaped.replace(/\n/g, '<br>');
   }
 
   getLayer() {
@@ -462,7 +631,7 @@ export class DCSNavpoint extends DCSDrawing {
 
     this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment, drawingData.tag);
 
-    this.setVisibility(true);
+    this.setVisibility(drawingData.visible !== false);
   }
 
   getLayer() {
