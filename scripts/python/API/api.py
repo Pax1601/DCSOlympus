@@ -8,7 +8,6 @@ import os
 import tempfile
 import asyncio
 import wave
-import shutil
 
 # Audio processing imports (moved to top level for performance)
 try:
@@ -33,6 +32,10 @@ class API:
         self.config = None
         self.logs = {}
         self.units: dict[str, Unit] = {}
+        self.mission = {}
+        self.markers = {}
+        self.spots = {}
+        self.bullseyes = {}
         self.username = username
         self.databases_location = databases_location
         self.interval = 1  # Default update interval in seconds
@@ -47,14 +50,6 @@ class API:
         # Initialize Kokoro TTS and Whisper (will be set up after logger)
         self.kokoro = None
         self.whisper = None
-        
-        # Whisper configuration options
-        self.whisper_options = {
-            "fp16": False,  # Use FP32 for better compatibility on some systems
-            "no_speech_threshold": 0.6,  # Skip processing if no speech detected
-            "logprob_threshold": -1.0,  # Skip low confidence segments
-            "compression_ratio_threshold": 2.4,  # Skip repetitive segments
-        }
         
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API")
@@ -138,7 +133,7 @@ class API:
             self.logger.info(f"Kokoro TTS initialized with KPipeline from {repo_id}")
             self.logger.info("Available voices: af_* (American Female), am_* (American Male), bf_* (British Female), bm_* (British Male), etc.")
         except ImportError:
-            self.logger.warning("kokoro not installed. TTS unavailable. Install with: pip install kokoro-onnx")
+            self.logger.warning("kokoro not installed. TTS unavailable.")
             self.kokoro = None
         except Exception as e:
             self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
@@ -151,6 +146,15 @@ class API:
         Args:
             model_size (str): Size of the Whisper model to use (tiny, base, small, medium, large).
         """
+        
+        # Whisper configuration options
+        self.whisper_options = {
+            "fp16": False,  # Use FP32 for better compatibility on some systems
+            "no_speech_threshold": 0.6,  # Skip processing if no speech detected
+            "logprob_threshold": -1.0,  # Skip low confidence segments
+            "compression_ratio_threshold": 2.4,  # Skip repetitive segments
+        }
+        
         try:
             import whisper
             self.whisper = whisper.load_model(model_size)
@@ -326,11 +330,43 @@ class API:
     
     def get_logs(self):
         """
-        Get the logs from the API. Notice that if the API is not running, update_logs() must be manually called first.
+        Get the logs from the API. Update_logs() must be manually called first.
         Returns:
             dict: A dictionary of log entries indexed by their log ID.
         """
         return self.logs
+    
+    def get_mission(self):
+        """
+        Get the mission data from the API. Update_mission() must be manually called first.
+        Returns:
+            dict: A dictionary representing the mission data.
+        """
+        return self.mission
+    
+    def get_markers(self):
+        """
+        Get the markers data from the API. Update_marker() must be manually called first.
+        Returns:
+            dict: A dictionary representing the markers data.
+        """
+        return self.markers
+    
+    def get_spots(self):
+        """
+        Get the spots data from the API. Update_spots() must be manually called first.
+        Returns:
+            dict: A dictionary representing the spots data.
+        """
+        return self.spots
+    
+    def get_bullseyes(self):
+        """
+        Get the bullseyes data from the API. Update_bullseyes() must be manually called first.
+        Returns:
+            dict: A dictionary representing the bullseyes data.
+        """
+        return self.bullseyes
 
     def update_units(self, time=0):
         """
@@ -386,6 +422,70 @@ class API:
                 self.logger.error("Failed to parse JSON response")
         else:
             self.logger.error(f"Failed to fetch logs: {response.status_code} - {response.text}")
+            
+    def update_mission(self):
+        """
+        Fetch the mission data from the API.
+        Returns:
+            dict: A dictionary representing the mission data.
+        """
+        response = self._get("mission")
+        if response.status_code == 200:
+            try:
+                self.mission = json.loads(response.content.decode('utf-8'))['mission']
+                return self.mission
+            except ValueError:
+                self.logger.error("Failed to parse JSON response")
+        else:
+            self.logger.error(f"Failed to fetch mission data: {response.status_code} - {response.text}")
+            
+    def update_markers(self):
+        """
+        Fetch the markers from the API.
+        Returns:
+            dict: A dictionary representing the markers data.
+        """
+        response = self._get("markers")
+        if response.status_code == 200:
+            try:
+                self.markers = json.loads(response.content.decode('utf-8'))['markers']
+                return self.markers
+            except ValueError:
+                self.logger.error("Failed to parse JSON response")
+        else:
+            self.logger.error(f"Failed to fetch markers data: {response.status_code} - {response.text}")
+            
+    def update_spots(self):
+        """
+        Fetch the spots from the API.
+        Returns:
+            dict: A dictionary representing the spots data.
+        """
+        response = self._get("spots")
+        if response.status_code == 200:
+            try:
+                self.spots = json.loads(response.content.decode('utf-8'))['spots']
+                return self.spots
+            except ValueError:
+                self.logger.error("Failed to parse JSON response")
+        else:
+            self.logger.error(f"Failed to fetch spots data: {response.status_code} - {response.text}")
+            
+    def update_bullseyes(self):
+        """
+        Fetch the bullseyes from the API.
+        Returns:
+            dict: A dictionary representing the bullseyes data.
+        """
+        response = self._get("bullseyes")
+        if response.status_code == 200:
+            try:
+                self.bullseyes = json.loads(response.content.decode('utf-8'))['bullseyes']
+                return self.bullseyes
+            except ValueError:
+                self.logger.error("Failed to parse JSON response")
+        else:
+            self.logger.error(f"Failed to fetch bullseyes data: {response.status_code} - {response.text}")
 
     def spawn_aircrafts(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
         """
@@ -531,6 +631,46 @@ class API:
                     self.logger.error("Command hash not found in response")
             except ValueError:
                 self.logger.error("Failed to parse JSON response")
+                
+    def create_marker(self, markerID: int, latlng: LatLng, text: str):
+        """
+        Create a map marker.
+        
+        Args:
+            latlng (LatLng): The latitude and longitude of the marker.
+            text (str): The text to display on the marker.
+        """
+        command = {
+            "markerID": markerID,
+            "location": {
+                "lat": latlng.lat,
+                "lng": latlng.lng
+            },
+            "text": text
+        }
+        data = { "createMarker": command }
+        response = self._put(data)
+        if response.status_code == 200:
+            self.logger.info(f"Marker created at ({latlng.lat}, {latlng.lng}) with text: '{text}'")
+        else:
+            self.logger.error(f"Failed to create marker: {response.status_code} - {response.text}")
+            
+    def delete_marker(self, marker_id: int):
+        """
+        Delete a map marker by its ID.
+        
+        Args:
+            marker_id (int): The ID of the marker to delete.
+        """
+        command = {
+            "markerID": marker_id
+        }
+        data = { "deleteMarker": command }
+        response = self._put(data)
+        if response.status_code == 200:
+            self.logger.info(f"Marker with ID {marker_id} deleted successfully")
+        else:
+            self.logger.error(f"Failed to delete marker: {response.status_code} - {response.text}")
 
     def create_radio_listener(self):
         """

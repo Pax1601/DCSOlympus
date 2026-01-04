@@ -157,6 +157,9 @@ extern "C" DllExport int coreMissionData(lua_State * L)
     /* Lock for thread safety */
     lock_guard<mutex> guard(mutexLock);
 
+	// Reset the mission data json to avoid stale data
+	missionData = json::value::object();
+
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "missionData");
     luaTableToJSON(L, -1, missionData);
