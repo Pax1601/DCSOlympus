@@ -430,6 +430,89 @@
       "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"
     ]
   },
+  "A6E": {
+    "1": [
+      "{HB_A6E_AERO1D}",
+      "{HB_A6E_MK20_MER_6x}",
+      "{HB_A6E_MK82_MER_6x}",
+      "{HB_A6E_MK81_MER_6x}",
+      "{HB_A6E_MK83_MER_3x_FWD}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_A6E_GBU12_MER_2x_LEFT}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{HB_A6E_LAU61MK151_TER_3x}",
+      "{HB_A6E_LAU10_TER_3x}",
+      "{HB_A6E_TALD_MER_4x}",
+      "{F14-ALQ167-POD}",
+      "{HB_A6E_MK82SE_MER_6x}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{HB_A6E_LAU7_AIM9L}"
+    ],
+    "2": [
+      "{HB_A6E_AERO1D}",
+      "{HB_A6E_MK20_MER_5x_LEFT}",
+      "{HB_A6E_MK82_MER_5x_LEFT}",
+      "{HB_A6E_MK81_MER_5x_LEFT}",
+      "{HB_A6E_MK83_MER_3x_AFT}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_A6E_GBU12_MER_2x_LEFT}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{HB_A6E_LAU61MK151_TER_2x_LEFT}",
+      "{HB_A6E_LAU10_TER_2x_LEFT}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{AGM_84D}",
+      "{HB_A6E_MK82SE_MER_5x_LEFT}",
+      "LAU_117_AGM_65F",
+      "{HB_A6E_MK83_MER_2x_LEFT}"
+    ],
+    "3": [
+      "{HB_A6E_AERO1D}",
+      "{HB_A6E_MK20_MER_6x}",
+      "{HB_A6E_MK82_MER_6x}",
+      "{HB_A6E_MK81_MER_6x}",
+      "{HB_A6E_MK83_MER_3x_FWD}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{HB_A6E_MK82SE_MER_5x}",
+      "{HB_A6E_D704}"
+    ],
+    "4": [
+      "{HB_A6E_AERO1D}",
+      "{HB_A6E_MK20_MER_5x_RIGHT}",
+      "{HB_A6E_MK82_MER_5x_RIGHT}",
+      "{HB_A6E_MK81_MER_5x_RIGHT}",
+      "{HB_A6E_MK83_MER_3x_AFT}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_A6E_GBU12_MER_2x_RIGHT}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{HB_A6E_LAU61MK151_TER_2x_RIGHT}",
+      "{HB_A6E_LAU10_TER_2x_RIGHT}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{AGM_84D}",
+      "{HB_A6E_MK82SE_MER_5x_RIGHT}",
+      "LAU_117_AGM_65F"
+    ],
+    "5": [
+      "{HB_A6E_AERO1D}",
+      "{HB_A6E_MK20_MER_6x}",
+      "{HB_A6E_MK82_MER_6x}",
+      "{HB_A6E_MK81_MER_6x}",
+      "{HB_A6E_MK83_MER_3x_FWD}",
+      "{AB8B8299-F1CC-4359-89B5-2172E0CF4A5A}",
+      "{HB_A6E_GBU12_MER_2x_RIGHT}",
+      "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}",
+      "{51F9AAE5-964F-4D21-83FB-502E3BFE5F8A}",
+      "{HB_A6E_LAU61MK151_TER_3x}",
+      "{HB_A6E_LAU10_TER_3x}",
+      "{HB_A6E_LAU7_AIM9M}",
+      "{HB_A6E_MK82SE_MER_6x}",
+      "{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}",
+      "{HB_A6E_LAU7_AIM9L}"
+    ]
+  },
   "AH-64D_BLK_II": {
     "3": [
       "{EFT_230GAL}",
@@ -1620,6 +1703,150 @@
     ],
     "2": [
       "{HVARx2}"
+    ]
+  },
+  "F-14A-135-GR-Early": {
+    "pylon_7": [
+      "{F14-300gal}"
+    ],
+    "pylon_2": [
+      "{F14-300gal}"
+    ],
+    "pylon_8A": [
+      "{LAU-138 wtip - AIM-9M}",
+      "{LAU-138 wtip - AIM-9L}"
+    ],
+    "pylon_8B": [
+      "{SHOULDER AIM_54A_Mk47 R}",
+      "{SHOULDER AIM_54A_Mk60 R}",
+      "{SHOULDER AIM_54C_Mk47 R}",
+      "{SHOULDER AIM-7M}",
+      "{LAU-7 - AIM-9M}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 RS}",
+      "{F14-LANTIRN-TP}"
+    ],
+    "pylon_6": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_LAU10}",
+      "{F14-ALQ167}"
+    ],
+    "pylon_5": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 3R}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3R}",
+      "{MAK79_MK81 3R}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_SUU25}",
+      "{F14-TARPS}"
+    ],
+    "pylon_4": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 3L}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 3L}",
+      "{MAK79_MK81 3L}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*SUU25 R}"
+    ],
+    "pylon_3": [
+      "{AIM_54A_Mk47}",
+      "{AIM_54A_Mk60}",
+      "{AIM_54C_Mk47}",
+      "{BELLY AIM-7M}",
+      "{MAK79_BDU33 4}",
+      "{BRU3242_3*BDU33}",
+      "{BRU-32 GBU-10}",
+      "{BRU-32 GBU-12}",
+      "{BRU-32 GBU-16}",
+      "{BRU-32 GBU-24}",
+      "{BRU-32 MK-84}",
+      "{BRU-32 MK-83}",
+      "{BRU-32 MK-82}",
+      "{MAK79_MK82 4}",
+      "{MAK79_MK81 4}",
+      "{BRU-32 MK-20}",
+      "{BRU-32 MK-82AIR}",
+      "{BRU3242_2*LAU10 R}",
+      "{F14-ECA}"
+    ],
+    "pylon_1B": [
+      "{SHOULDER AIM_54A_Mk47 L}",
+      "{SHOULDER AIM_54A_Mk60 L}",
+      "{SHOULDER AIM_54C_Mk47 L}",
+      "{SHOULDER AIM-7M}",
+      "{LAU-7 - AIM-9M}",
+      "{LAU-7 - AIM-9L}",
+      "{PHXBRU3242_2*LAU10 LS}"
+    ],
+    "pylon_1A": [
+      "{LAU-138 wtip - AIM-9M}",
+      "{LAU-138 wtip - AIM-9L}"
+    ],
+    "1": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
+    ],
+    "2": [
+      "{SHOULDER AIM-7M}"
+    ],
+    "3": [
+      "{F14-300gal}"
+    ],
+    "4": [
+      "{BRU3242_ADM141}"
+    ],
+    "5": [
+      "{BRU3242_ADM141}"
+    ],
+    "6": [
+      "{BRU3242_ADM141}"
+    ],
+    "7": [
+      "{BRU3242_ADM141}"
+    ],
+    "8": [
+      "{F14-300gal}"
+    ],
+    "9": [
+      "{SHOULDER AIM-7M}"
+    ],
+    "10": [
+      "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}"
     ]
   },
   "F-14A-135-GR": {
@@ -4538,29 +4765,71 @@
       "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
       "{96A7F676-F956-404A-AD04-F33FB2C74884}",
       "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
-      "{57232979-8B0F-4db7-8D9A-55197E06B0F5}",
+      "{CHAP_8x9M120_Ataka_V}",
       "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
       "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
       "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
       "{96A7F676-F956-404A-AD04-F33FB2C74881}",
-      "B_8V20A_CM"
+      "B_8V20A_CM",
+      "{CHAP_8x9M120F_Ataka_V}"
     ],
     "4": [
       "{PTB_450}",
       "{6A4B9E69-64FE-439a-9163-3A87FB6A4D81}",
       "{96A7F676-F956-404A-AD04-F33FB2C74884}",
       "{05544F1A-C39C-466b-BC37-5BD1D52E57BB}",
-      "{57232979-8B0F-4db7-8D9A-55197E06B0F5}",
+      "{CHAP_8x9M120_Ataka_V}",
       "{37DCC01E-9E02-432F-B61D-10C166CA2798}",
       "{FC56DF80-9B09-44C5-8976-DCFAFF219062}",
       "{3C612111-C7AD-476E-8A8E-2485812F4E5C}",
       "{96A7F676-F956-404A-AD04-F33FB2C74881}",
-      "B_8V20A_CM"
+      "B_8V20A_CM",
+      "{CHAP_8x9M120F_Ataka_V}"
     ]
   },
   "Tu-95MS": {
+    "9": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
     "1": [
-      "{0290F5DE-014A-4BB1-9843-D717749B1DED}"
+      "{CHAP_Kh555x6}"
+    ],
+    "2": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
+    "3": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
+    "4": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
+    "5": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
+    "6": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
+    "7": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
+    ],
+    "8": [
+      "<CLEAN>",
+      "{Kh-101}",
+      "{Kh-555}"
     ]
   },
   "B-1B": {

@@ -484,6 +484,181 @@
       "1": 32
     }
   },
+  "A6E": {
+    "AERO-1D Fuel Tank 300 GAL*5": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Mk20*28": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Mk82*28": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Mk81*28": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Mk83*15": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Mk84*5": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "GBU-12*8, AERO-1D Fuel Tank 300 GAL": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "GBU-16*5": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "GBU-10*4": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "LAU-61*10": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Zuni*10": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "HARM*2, TALD*4, Mk20*6": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike",
+      "6": "SEAD"
+    },
+    "HARPOON*2, AIM-9M, ALQ-167, AERO-1D Fuel Tank 300 GAL": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "Mk82SE*27": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "HARM*2, Mk20*10, AERO-1D Fuel Tank 300 GAL": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike",
+      "6": "SEAD"
+    },
+    "Mk82*12, AERO-1D Fuel Tank 300 GAL*3": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "AERO-1D Fuel Tank 300 GAL*4": {
+      "1": "AFAC",
+      "2": "Reconnaissance"
+    },
+    "Mk82*6, GBU-16*2, AIM-9L*2": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike"
+    },
+    "D-704 Refueling Pod, AERO-1D Fuel Tank 300 GAL*4": {
+      "1": "Refueling",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "CAS",
+      "5": "AFAC",
+      "6": "RunwayAttack",
+      "7": "AntishipStrike",
+      "8": "Reconnaissance"
+    },
+    "D-704 Refueling Pod, AERO-1D Fuel Tank 300 GAL*2 (Inboard)": {
+      "1": "Refueling",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "CAS",
+      "5": "AFAC",
+      "6": "RunwayAttack",
+      "7": "AntishipStrike",
+      "8": "Reconnaissance"
+    },
+    "D-704 Refueling Pod, AERO-1D Fuel Tank 300 GAL*2 (Outboard)": {
+      "1": "Refueling",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "CAS",
+      "5": "AFAC",
+      "6": "RunwayAttack",
+      "7": "AntishipStrike",
+      "8": "Reconnaissance"
+    },
+    "D-704 Refueling Pod, AERO-1D Fuel Tank 300 GAL*2": {
+      "1": "Refueling",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "CAS",
+      "5": "AFAC",
+      "6": "RunwayAttack",
+      "7": "AntishipStrike",
+      "8": "Reconnaissance"
+    },
+    "AERO-1D Fuel Tank 300 GAL*2, HARPOON, MK20*3, GBU-16": {
+      "1": "CAS",
+      "2": "GroundAttack",
+      "3": "PinpointStrike",
+      "4": "RunwayAttack",
+      "5": "AntishipStrike",
+      "6": "SEAD"
+    }
+  },
   "AH-64D_BLK_II": {
     "2 * Fuel Tank 230 gal": {
       "1": 16,
@@ -3120,6 +3295,265 @@
       "1": 31,
       "2": 32,
       "3": 30
+    }
+  },
+  "F-14A-135-GR-Early": {
+    "XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*6, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*6, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-7M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*4, AIM-7M*2, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*1, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*2, AIM-7M*1, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*4, AIM-9M*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*4, AIM-9M*2, AIM-9L*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-7M*4, AIM-9L*4, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK47*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54A-MK60*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "AIM-54C-MK47*2, AIM-7M*3, AIM-9M*2, XT*2": {
+      "1": "Intercept",
+      "2": "CAP",
+      "3": "Escort",
+      "4": "FighterSweep"
+    },
+    "BDU-33*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "BDU-33*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "GBU-10*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "GBU-12*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-16*4": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike"
+    },
+    "GBU-24*2": {
+      "1": "GroundAttack",
+      "2": "PinpointStrike",
+      "3": "RunwayAttack"
+    },
+    "Mk-84*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-83*4": {
+      "1": "GroundAttack",
+      "2": "RunwayAttack"
+    },
+    "Mk-82*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-81*14": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Mk-20*4": {
+      "1": "GroundAttack"
+    },
+    "Mk-82AIR*4": {
+      "1": "GroundAttack"
+    },
+    "Zuni*12": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "Zuni*28": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "LUU-2*24": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*1": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-20*2": {
+      "1": "GroundAttack",
+      "2": "CAS"
+    },
+    "AIM-7M*1, AIM-9M*2, XT*2, GBU-12*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-7M*1, AIM-9M*2, XT*2, GBU-24*1, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-82*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "AIM-54A-MK60*1, AIM-7M*1, AIM-9M*2, XT*2, Mk-20*2, LANTIRN": {
+      "1": "GroundAttack",
+      "2": "CAS",
+      "3": "RunwayAttack",
+      "4": "PinpointStrike"
+    },
+    "ADM-141a*4, Aim-7M*2, Aim-9M*2, XT 300 GAL*2": {
+      "1": 29
+    },
+    "TARPS": {
+      "1": "Reconnaissance"
+    },
+    "TARPS, ALQ-167, ECA": {
+      "1": "Reconnaissance"
+    },
+    "TARPS, AIM-7M*2": {
+      "1": "Reconnaissance"
     }
   },
   "F-14A-135-GR": {
@@ -6713,7 +7147,7 @@
       "2": 32,
       "3": 18
     },
-    "16x9M114, 2xKMGU AT": {
+    "16x9M120, 2xKMGU AT": {
       "1": 31,
       "2": 32,
       "3": 18
@@ -6721,7 +7155,7 @@
     "4xFAB-500": {
       "1": 32
     },
-    "16x9M114, 2xFAB-500": {
+    "16x9M120, 2xFAB-500": {
       "1": 32
     },
     "40xS-8": {
@@ -6740,7 +7174,7 @@
       "2": 32,
       "3": 18
     },
-    "16x9M114, 2xUPK-23": {
+    "16x9M120, 2xUPK-23": {
       "1": 31,
       "2": 32,
       "3": 18
@@ -6748,13 +7182,13 @@
     "2xFAB-500": {
       "1": 32
     },
-    "16x9M114, 40xS-8": {
+    "16x9M120, 40xS-8": {
       "1": 31,
       "2": 32,
       "3": 18,
       "4": 30
     },
-    "16x9M114": {
+    "16x9M120": {
       "1": 31,
       "2": 32,
       "3": 18
@@ -6764,7 +7198,7 @@
       "2": 32,
       "3": 18
     },
-    "16x9M114, 2xKMGU AP": {
+    "16x9M120, 2xKMGU AP": {
       "1": 31,
       "2": 32,
       "3": 18
@@ -6775,7 +7209,7 @@
     "4xKMGU AT": {
       "1": 32
     },
-    "16x9M114, 40xS-8 TsM": {
+    "16x9M120, 40xS-8 TsM": {
       "1": 16
     },
     "80xS-8 TsM": {
@@ -6784,7 +7218,7 @@
     "2xKMGU AT": {
       "1": 32
     },
-    "9x9M114": {
+    "8x9M120": {
       "1": 31,
       "2": 32,
       "3": 18
@@ -6797,19 +7231,92 @@
       "2": 32,
       "3": 18
     },
-    "2xFAB-250, 16x9M114": {
+    "2xFAB-250, 16x9M120": {
       "1": 32
     },
-    "16x9M114, 10xS-13": {
+    "16x9M120F, 10xS-13": {
       "1": 31,
       "2": 32,
       "3": 18,
       "4": 30
+    },
+    "16x9M120F, 2xKMGU AT": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M120F, 2xFAB-500": {
+      "1": 32
+    },
+    "16x9M120F, 2xUPK-23": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M120F, 40xS-8": {
+      "1": 31,
+      "2": 32,
+      "3": 18,
+      "4": 30
+    },
+    "16x9M120F": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M120F, 2xKMGU AP": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "16x9M120F, 40xS-8 TsM": {
+      "1": 16
+    },
+    "8x9M120F": {
+      "1": 31,
+      "2": 32,
+      "3": 18
+    },
+    "2xFAB-250, 16x9M120F": {
+      "1": 32
     }
   },
   "Tu-95MS": {
-    "Kh-65*6": {
-      "1": 33
+    "Kh-555x6": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33
+    },
+    "Kh-101x8": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33
+    },
+    "Kh-101x4": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33
+    },
+    "Kh-555x8": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33
+    },
+    "Kh-555x4": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33
+    },
+    "Kh-555x14": {
+      "1": 29,
+      "2": 31,
+      "3": 32,
+      "4": 33
     }
   },
   "B-1B": {
