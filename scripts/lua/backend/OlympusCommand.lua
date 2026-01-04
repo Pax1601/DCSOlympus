@@ -651,6 +651,18 @@ function Olympus.deleteSpot(spotID)
 	end
 end
 
+-- Creates a marker on the map for all players
+function Olympus.createMarker(markerID, lat, lng, text)
+	Olympus.debug("Olympus.createMarker " .. markerID .. " -> (" .. lat .. ", " .. lng .. ") " .. text, 2)
+	trigger.action.markToAll(markerID, text, mist.utils.makeVec3GL(coord.LLtoLO(lat, lng, 0)))
+end
+
+-- Deletes a marker from the map
+function Olympus.deleteMarker(markerID)
+	Olympus.debug("Olympus.deleteMarker " .. markerID, 2)
+	trigger.action.removeMark(markerID)
+end
+
 -- Spawns a new unit or group
 -- Spawn table contains the following parameters
 -- category: (string), either Aircraft, Helicopter, GroundUnit or NavyUnit
@@ -1635,6 +1647,7 @@ function Olympus.setMissionData(arg, time)
 		local lat, lng = coord.LOtoLL(marker.pos)
 		markers[idx].pos["lat"] = lat
 		markers[idx].pos["lng"] = lng
+		markers[idx].deleted = marker.deleted
 	end
 
 	-- Assemble table
@@ -1768,7 +1781,8 @@ function handler:onEvent(event)
 				coalition = event.coalition,
 				groupID = event.groupID,
 				text = event.text,
-				pos = event.pos
+				pos = event.pos,
+				deleted = false
 			}
 		end
 	elseif event.id == 26 then
@@ -1778,13 +1792,20 @@ function handler:onEvent(event)
 				coalition = event.coalition,
 				groupID = event.groupID,
 				text = event.text,
-				pos = event.pos
+				pos = event.pos,
+				deleted = false
 			}
 		end
 	elseif event.id == 27 then
 		-- Marker removed
 		if Olympus ~= nil and Olympus.markers[event.idx] then
-			Olympus.markers[event.idx] = nil
+			Olympus.markers[event.idx] = {
+				coalition = event.coalition,
+				groupID = event.groupID,
+				text = event.text,
+				pos = event.pos,
+				deleted = true
+			}
 		end
 	end
 end
