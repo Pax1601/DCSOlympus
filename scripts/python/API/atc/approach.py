@@ -107,6 +107,16 @@ class ApproachATC(ATCAgency):
                             unit.set_controlling_agency(Unicom)
 
     def check_unit_position(self, unit: ATCUnit):
+        # If there is no tower defined, cannot transfer to tower and the state is not unknown
+        if not self.tower and unit.get_atc_state() != ATCState.UNKNOWN:
+            unit.set_atc_state(ATCState.UNKNOWN)
+            return
+        
+        # If the unit is outside the ATZ of the tower, set to unknown
+        if self.tower and not self.tower.check_unit_in_atz(unit) and unit.get_atc_state() != ATCState.UNKNOWN:
+            unit.set_atc_state(ATCState.UNKNOWN)
+            return
+        
         # If the unit is in the ATZ of the tower, transfer it to tower ATC
         if self.tower and self.tower.check_unit_in_atz(unit) and self.tower.check_unit_altitude_in_control(unit) and not unit.get_atc_state() == ATCState.TAKING_OFF and not unit.get_atc_state() == ATCState.DEPARTING:
             self.logger.info(f"Transferring unit {unit.ID} to tower ATC")
