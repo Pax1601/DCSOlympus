@@ -215,7 +215,7 @@ class TowerATC(ATCAgency):
                     # Check that this unit is next in line for takeoff
                     if self._get_list_of_units_in_takeoff_order()[0] == unit:
                         self.logger.info(f"Clearing unit {unit.ID} for takeoff")
-                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)}, right hand, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared for takeoff.")
+                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)}, right hand, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared for takeoff, push departure on {self._format_frequency_for_speech(self.approach.frequency)}.")
                         unit.set_atc_state(ATCState.TAKING_OFF)
 
             # If outside of the runway, and in landing state, transfer to ground ATC
