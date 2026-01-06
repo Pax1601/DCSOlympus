@@ -23,11 +23,11 @@ ground_keywords = ["ground", "ramp"]
 
 # Trigger words and their corresponding handlers
 trigger_words = [
+    (["runway", "back", "departure"], "handle_taxi_to_runway_request"),
     (["taxi"], "handle_taxi_request"),
     (["startup"], "handle_startup_request"),
     (["radio"], "handle_radio_check_request"),
-    (["ground"], "handle_ground_report"),
-    (["runway", "back", "departure"], "handle_taxi_to_runway_request"),
+    (["ground"], "handle_ground_report"), # MUST BE THE LAST ITEM IN THE LIST
 ]
 
 CONTROL_RADIUS = 5000 

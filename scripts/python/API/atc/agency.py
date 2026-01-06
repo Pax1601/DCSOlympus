@@ -15,6 +15,7 @@ class ATCState(Enum):
     LANDING = "landing"
     DEPARTING = "departing"
     ARRIVING = "arriving"
+    WAITING_FOR_LANDING = "waiting_for_landing"
     GOING_AROUND = "going_around"
     TOUCH_AND_GO = "touch_and_go"
 

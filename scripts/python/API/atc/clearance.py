@@ -32,9 +32,9 @@ class ClearanceDeliveryATC(ATCAgency):
 
         # Always respond that clearance delivery is not manned
         if self.ground:
-            response = f"{unit.callsign}, clearance delivery is none operational, V F R flight only, contact ground on {self._format_frequency_for_speech(self.ground.frequency)} for taxi instructions."
+            response = f"{unit.callsign}, clearance delivery is not operational, V F R flight only, contact ground on {self._format_frequency_for_speech(self.ground.frequency)} for taxi instructions."
         else:
-            response = f"{unit.callsign}, clearance delivery is none operational, V F R flight only, contact ground for taxi instructions."
+            response = f"{unit.callsign}, clearance delivery is not operational, V F R flight only, contact ground for taxi instructions."
         
         self.logger.info(f"Redirecting unit {unit.ID} from clearance delivery to ground control")
         self._send_message_to_unit(unit, response)

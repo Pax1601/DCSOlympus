@@ -11,11 +11,18 @@ from dcs.ships import *
 from dcs.planes import *
 from dcs.helicopters import *
 
+class A6E(PlaneType):
+    id = "A6E"
+    name = "A-6E Intruder"
+    livery_name = "A-6E"
+
 # The database file on which to operate is the first standard argument of the call
 if len(sys.argv) > 1:
     if (sys.argv[1] == "aircraft"):
         filename = '..\\..\\databases\\units\\aircraftdatabase.json' 
-        units_map = plane_map
+        units_map: List = plane_map
+        if "A-6E" not in units_map:
+            units_map["A-6E"] = A6E
     elif (sys.argv[1] == "helicopter"):
         filename = '..\\..\\databases\\units\\helicopterdatabase.json' 
         units_map = helicopter_map

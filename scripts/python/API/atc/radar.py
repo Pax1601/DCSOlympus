@@ -165,24 +165,62 @@ class RadarATC(ATCAgency):
         self.logger.info(f"Unit {unit.ID} has been transferred to radar ATC")
         unit.set_controlling_agency(self)
     
-    def _format_frequency_for_speech(self, frequency: float) -> str:
-        """Format frequency for speech synthesis."""
-        freq_mhz = frequency / 1e6
-        # Split into parts for natural speech
-        whole = int(freq_mhz)
-        decimal = int((freq_mhz - whole) * 1000)
-        return f"{whole} point {decimal}"
-    
-    def _send_message_to_unit(self, unit: ATCUnit, message: str):
-        """Send a message to a unit via radio."""
-        self.logger.info(f"Sending message to unit {unit.ID}: {message}")
-        self.listener.send_message(message, unit.ID)
-    
-    def _point_in_polygon(self, lat: float, lng: float, polygon_coords: list) -> bool:
-        """Check if a point is inside a polygon using ray-casting algorithm."""
-        # Convert coordinates to (lat, lng) tuples
-        polygon = [(coord[1], coord[0]) for coord in polygon_coords]
+    def _format_frequency_for_speech(self, frequency_hz: float) -> str:
+        """
+        Format a frequency in Hz for speech synthesis.
+        Example: 180325000 Hz becomes "1 8 0 decimal 3 2 5"
+        """
+        # Convert to MHz and format with 3 decimal places
+        frequency_mhz = frequency_hz / 1e6
+        frequency_str = f"{frequency_mhz:.3f}"
         
+        # Split into whole and decimal parts
+        if '.' in frequency_str:
+            whole_part, decimal_part = frequency_str.split('.')
+        else:
+            whole_part = frequency_str
+            decimal_part = ""
+        
+        # Format whole part with spaces between digits
+        formatted_whole = ' '.join(whole_part)
+        
+        # Format decimal part with spaces between digits, remove trailing zeros
+        if decimal_part:
+            decimal_part = decimal_part.rstrip('0')  # Remove trailing zeros
+            if decimal_part:  # If there are still digits after removing zeros
+                formatted_decimal = ' '.join(decimal_part)
+                return f"{formatted_whole} decimal {formatted_decimal}"
+        
+        return formatted_whole
+
+    def _send_message_to_unit(self, unit, text: str):
+        self.logger.info(f"Generating response to unit {unit.ID}: {text}")
+
+        # Generate audio using this agency's assigned voice
+        audio_file = self.api.generate_audio_message(text, voice=self.voice)
+        self.logger.info(f"Generated audio file: {audio_file}")
+        
+        # Transmit the audio back on the same frequency
+        success = self.listener.transmit_on_frequency(
+            file_name=audio_file,
+            frequency=self.listener.frequency,
+            modulation=self.listener.modulation,
+            encryption=self.listener.encryption
+        )
+        
+        if success:
+            self.logger.info("Message transmitted successfully")
+        else:
+            self.logger.error("Failed to transmit message")
+            
+        # Clean up the temporary audio file
+        import os
+        if os.path.exists(audio_file):
+            os.remove(audio_file)
+            self.logger.debug(f"Cleaned up audio file: {audio_file}")
+    
+    def _point_in_polygon(self, lat: float, lng: float, polygon: list) -> bool:
+        """Check if a point is inside a polygon using ray-casting algorithm."""
         x, y = lat, lng
         n = len(polygon)
         inside = False

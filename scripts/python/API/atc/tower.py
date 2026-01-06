@@ -26,7 +26,7 @@ trigger_words = [
     (["departure"], "handle_takeoff_request"),
     (["initials"], "handle_break_request"),
     (["go around"], "handle_go_around_request"),
-    (["tower"], "handle_tower_report")
+    (["tower"], "handle_tower_report") # MUST BE THE LAST ITEM IN THE LIST
 ]
 
 DISTANCE_THRESHOLD = 3000  # in meters
@@ -128,9 +128,17 @@ class TowerATC(ATCAgency):
                         if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
                             # If the unit is outside of control area, release it
                             self.logger.info(f"Releasing unit {unit.ID} from tower control")
-                            # Send a message to the unit
-                            self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
-                            unit.set_controlling_agency(Unicom)
+                            if self.approach:
+                                self.logger.info(f"Transferring unit {unit.ID} to approach ATC")
+                                unit.set_controlling_agency(self.approach)
+                                self.approach.transfer_unit(unit)
+
+                                # Notify the unit
+                                self._send_message_to_unit(unit, f"{unit.callsign}, contact approach on {self._format_frequency_for_speech(self.approach.frequency)}.")
+                            else:
+                                # Send a message to the unit
+                                self._send_message_to_unit(unit, f"{unit.callsign}, monitor {self._format_frequency_for_speech(Unicom.frequency)}.")
+                                unit.set_controlling_agency(Unicom)
                 else:
                     if isinstance(unit, ATCUnit) and unit.get_controlling_agency() == self:
                         self.check_unit_position(unit)
@@ -265,6 +273,13 @@ class TowerATC(ATCAgency):
                         self.logger.info(f"Runway not clear for unit {unit.ID} landing")
                         self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, go around.")
                         unit.set_atc_state(ATCState.GOING_AROUND)
+            elif unit.get_atc_state() == ATCState.WAITING_FOR_LANDING:
+                # Check if the runway is clear and not other units are landing
+                if self.check_runway_clear(unit):
+                    if all(other_unit.get_atc_state() != ATCState.LANDING for other_unit in self.api.get_units().values() if other_unit != unit and isinstance(other_unit, ATCUnit) and other_unit.get_controlling_agency() == self):
+                        self.logger.info(f"Clearing unit {unit.ID} for landing from waiting state")
+                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared to land.")
+                        unit.set_atc_state(ATCState.LANDING)
             elif unit.get_atc_state() == ATCState.GOING_AROUND:
                 if unit.position.distance_to(self.runway_center) > DISTANCE_THRESHOLD or unit.position.alt - self.runway_elevation > ALTITUDE_THRESHOLD:
                     # If the unit is going around and climbed above thresholds, set to arriving again
@@ -301,10 +316,24 @@ class TowerATC(ATCAgency):
         if unit.get_atc_state() != ATCState.ARRIVING:
             self.logger.info(f"Unit {unit.ID} not in arriving state, ask again")
             return f"{unit.callsign}, {self.airport_name} tower, say again."
-
-        # Tell the unit to continue, will clear when close to runway
-        self.logger.info(f"Clearing unit {unit.ID} to continue approach")
-        return f"{unit.callsign}, {self.airport_name} tower, copy, continue."
+        
+        unit.set_atc_state(ATCState.WAITING_FOR_LANDING)
+        
+        # Check if there are any other units on the runway
+        if not self.check_runway_clear(unit):
+            self.logger.info(f"Runway not clear for unit {unit.ID} landing request")
+            return f"{unit.callsign}, {self.airport_name} tower, copy, continue."
+        
+        # Check if any unit is already in the LANDING state
+        for other_unit in self.api.get_units().values():
+            if other_unit != unit and isinstance(other_unit, ATCUnit) and other_unit.get_controlling_agency() == self and other_unit.get_atc_state() == ATCState.LANDING:
+                self.logger.info(f"Another unit {other_unit.ID} is already landing, ask unit {unit.ID} to continue")
+                return f"{unit.callsign}, {self.airport_name} tower, copy, continue."
+        
+        # Clear the unit to land
+        self.logger.info(f"Clearing unit {unit.ID} for landing")
+        unit.set_atc_state(ATCState.LANDING)
+        return f"{unit.callsign}, {self.airport_name} tower, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared to land."
 
     def handle_break_request(self, unit: ATCUnit):
         self.logger.info(f"Clearing unit {unit.ID} for overhead break")

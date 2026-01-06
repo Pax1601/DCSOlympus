@@ -8,6 +8,12 @@ from dcs.weapons_data import Weapons
 from dcs.planes import *
 from dcs.helicopters import *
 
+class A6E(PlaneType):
+    id = "A6E"
+    name = "A-6E Intruder"
+    livery_name = "A-6E"
+    task_default = task.GroundAttack
+
 clsid_conversion = {
     'ExtFuelTankID'						: "{EFT_230GAL}"							,
     'InternalFuelTank100'				: "{IAFS_ComboPak_100}"						,
@@ -126,6 +132,8 @@ if len(sys.argv) > 1:
             # Get the pydcs Python class for the unit
             if (sys.argv[1] == "aircraft"):
                 unitmap = plane_map 
+                if "A-6E" not in unitmap:
+                    unitmap["A-6E"] = A6E
             elif (sys.argv[1] == "helicopter"):
                 unitmap = helicopter_map 
             lowercase_keys = [key.lower() for key in unitmap.keys()]

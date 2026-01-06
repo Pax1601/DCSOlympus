@@ -13,6 +13,11 @@ from dcs.vehicles import *
 from dcs.ships import *
 from dcs.liveries.liveryscanner import LiveryScanner
 
+class A6E(PlaneType):
+    id = "A6E"
+    name = "A-6E Intruder"
+    livery_name = "A-6E"
+
 livery_scanner = LiveryScanner()
 livery_scanner.scan_dcs_installation(SEARCH_FOLDER)
 
@@ -42,6 +47,8 @@ if len(sys.argv) > 1:
             # Get the pydcs Python class for the unit
             if (sys.argv[1] == "aircraft"):
                 unitmap = plane_map 
+                if "A-6E" not in unitmap:
+                    unitmap["A-6E"] = A6E
             elif (sys.argv[1] == "helicopter"):
                 unitmap = helicopter_map 
             elif (sys.argv[1] == "groundunit"):
