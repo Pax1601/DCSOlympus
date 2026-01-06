@@ -211,12 +211,10 @@ class TowerATC(ATCAgency):
         if not unit.airborne:
             if unit.get_atc_state() == ATCState.WAITING_FOR_TAKEOFF:
                 # Check that the runway is clear or that the occupying unit is this one
-                if self.check_runway_clear(unit) and self._get_last_in_takeoff_order() == unit:
-                    # Check that this unit is next in line for takeoff
-                    if self._get_list_of_units_in_takeoff_order()[0] == unit:
-                        self.logger.info(f"Clearing unit {unit.ID} for takeoff")
-                        self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)}, right hand, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared for takeoff, push departure on {self._format_frequency_for_speech(self.approach.frequency)}.")
-                        unit.set_atc_state(ATCState.TAKING_OFF)
+                if self._get_list_of_units_in_takeoff_order()[0] == unit:
+                    self.logger.info(f"Clearing unit {unit.ID} for takeoff")
+                    self._send_message_to_unit(unit, f"{unit.callsign}, {self.airport_name} tower, runway {' '.join(self.active_runway)}, right hand, wind 2 2 niner at 6 knots, runway {' '.join(self.active_runway)}, cleared for takeoff, push departure on {self._format_frequency_for_speech(self.approach.frequency)}.")
+                    unit.set_atc_state(ATCState.TAKING_OFF)
 
             # If outside of the runway, and in landing state, transfer to ground ATC
             if not self.check_unit_in_runway(unit) and not self.check_unit_in_hold_short_box(unit) and not unit.airborne and unit.get_atc_state() == ATCState.LANDING:
