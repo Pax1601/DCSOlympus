@@ -12,6 +12,7 @@ import threading
 from typing import Dict, Optional, Callable, Any
 import json
 
+from api import API
 from audio.audio_packet import AudioPacket, MessageType
 from audio.audio_recorder import AudioRecorder
 from utils.utils import coalition_to_enum
@@ -26,7 +27,7 @@ class RadioListener:
     to receive audio messages with graceful shutdown handling.
     """
     
-    def __init__(self, api, address: str, port: int | None):
+    def __init__(self, api: API, address: str, port: int | None):
         """
         Initialize the RadioListener.
         
@@ -51,6 +52,9 @@ class RadioListener:
         self.encryption = 0
         self.coalition = "blue"
         self.intercom_ID = None
+        
+        self.prompt = ""
+        self.prepend_calling_callsign = False
                 
         self.audio_recorders: Dict[str, AudioRecorder] = {}
         
@@ -124,8 +128,18 @@ class RadioListener:
         
         if self.message_callback:
             try:
+                prompt = self.prompt
+                # Find the unit's callsign to prepend if needed
+                if self.prepend_calling_callsign:
+                    units = self.api.get_units()
+                    if unit_id in units:
+                        callsign = units[unit_id].callsign
+                        if callsign:
+                            prompt = f"The following message is from callsign {callsign}. {prompt}"
+                            self.logger.debug(f"Prepended callsign to prompt: {prompt}")
+                
                 # Use API's centralized transcription service
-                recognized_text = self.api.transcribe_audio(wav_filename)
+                recognized_text = self.api.transcribe_audio(wav_filename, prompt)
                 
                 self.logger.info(f"Transcribed text: '{recognized_text}'")
                 if recognized_text:
@@ -466,6 +480,22 @@ class RadioListener:
     def is_connected(self) -> bool:
         """Check if WebSocket is currently connected."""
         return self._websocket is not None and not self._websocket.closed
+    
+    def set_prompt(self, prompt: str) -> None:
+        """Set the prompt to use for transcription.
+        
+        Args:
+            prompt (str): The prompt string
+        """
+        self.prompt = prompt
+        
+    def set_prepend_calling_callsign(self, prepend: bool) -> None:
+        """Set whether to prepend the calling unit's callsign to the transcription prompt.
+        
+        Args:
+            prepend (bool): True to prepend callsign, False otherwise
+        """
+        self.prepend_calling_callsign = prepend
         
     def __enter__(self):
         """Context manager entry."""

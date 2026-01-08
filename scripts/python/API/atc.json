@@ -1,3 +1,27 @@
 {
-  "airspace": "airspaces/germany.kml"
+    "langen": {
+        "kml": "Langen_Control_Zone.kml",
+        "airbases": {
+            "weisbaden": {
+                "atis": {
+                    "frequency": 121.9
+                },
+                "base": {
+                    "frequency": 121.9
+                },
+                "ground": {
+                    "frequency": 121.9,
+                    "kml": "Langen_Weisbaden_Ground.kml"
+                },
+                "tower": {
+                    "frequency": 124.85,
+                    "kml": "Langen_Weisbaden_Tower.kml"
+                },
+                "approach": {
+                    "frequency": 125.35,
+                    "kml": "Langen_Weisbaden_Approach.kml"
+                }
+            }
+        }
+    }
 }

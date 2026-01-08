@@ -27,7 +27,7 @@ from data.unit_spawn_table import UnitSpawnTable
 from data.data_types import LatLng
 
 class API:
-    def __init__(self, username: str = "API", databases_location: str = "databases", load_whisper: bool = True, load_kokoro: bool = True):
+    def __init__(self, username: str = "API", databases_location: str = "databases", config_location: str = "olympus.json", load_whisper: bool = True, load_kokoro: bool = True):
         self.base_url = None
         self.config = None
         self.logs = {}
@@ -62,11 +62,11 @@ class API:
 
         # Read the config file olympus.json
         try:
-            with open("olympus.json", "r") as file:
+            with open(self.config_location, "r") as file:
                 # Load the JSON configuration
                 self.config = json.load(file)
         except FileNotFoundError:
-            self.logger.error("Configuration file olympus.json not found.")
+            self.logger.error(f"Configuration file {self.config_location} not found.")
         
         self.password = self.config.get("authentication").get("gameMasterPassword")
         address = self.config.get("backend").get("address")
@@ -757,12 +757,13 @@ class API:
             self.logger.error(f"Kokoro TTS failed: {e}")
             raise
     
-    def transcribe_audio(self, wav_filename: str) -> str:
+    def transcribe_audio(self, wav_filename: str, prompt: str = "") -> str:
         """
         Transcribe audio from a WAV file using the pre-initialized Whisper model.
         
         Args:
             wav_filename (str): Path to the WAV file to transcribe.
+            prompt (str): Optional prompt to guide transcription.
             
         Returns:
             str: The transcribed text, or empty string if transcription fails or no speech detected.
@@ -818,6 +819,7 @@ class API:
                 audio, 
                 language="en", 
                 verbose=False,
+                initial_prompt=prompt,
                 **self.whisper_options
             )
             
