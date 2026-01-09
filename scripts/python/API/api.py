@@ -44,6 +44,10 @@ class API:
         self.should_stop = False
         self.running = False
         self.auto_update_units = True
+        self.config_location = config_location
+
+        # These are test units that are not really in game, but are useful for testing purposes
+        self.test_units: dict[int, Unit] = {}
         
         self.units_update_timestamp = 0
         
@@ -139,7 +143,7 @@ class API:
             self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
             self.kokoro = None
             
-    def _initialize_whisper(self, model_size: str = "tiny"):
+    def _initialize_whisper(self, model_size: str = "base.en"):
         """
         Initialize Whisper speech recognition if available.
         
@@ -326,7 +330,10 @@ class API:
         Returns:
             dict: A dictionary of Unit objects indexed by their unit ID.
         """
-        return self.units
+        # Merge the test units into the main units dictionary for retrieval
+        result = self.units.copy()
+        result.update(self.test_units)
+        return result
     
     def get_logs(self):
         """
@@ -875,7 +882,7 @@ class API:
         """
         return self.whisper_options.copy()
     
-    def set_whisper_model(self, model_size: str = "tiny"):
+    def set_whisper_model(self, model_size: str = "base.en"):
         """
         Change the Whisper model to a different size.
         
@@ -992,6 +999,16 @@ class API:
         closest_units = closest_units[:max_number]
 
         return closest_units
+    
+    def add_test_unit(self, unit: Unit):
+        """
+        Add a test unit to the API's unit list. This is primarily for testing purposes.
+        
+        Args:
+            unit (Unit): The Unit object to add.
+        """
+        self.units[unit.ID] = unit
+        self.logger.info(f"Test unit added: ID {unit.ID}, Name: {unit.callsign}")
     
     def send_command(self, command: str):
         """

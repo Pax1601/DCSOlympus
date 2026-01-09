@@ -1,13 +1,12 @@
 {
   "backend": {
-    "address": "localhost",
-    "port": 4512
+    "address": "refugees.dcsolympus.com/direct"
   },
   "authentication": {
-    "gameMasterPassword": "a474219e5e9503c84d59500bb1bda3d9ade81e52d9fa1c234278770892a6dd74",
-        "blueCommanderPassword": "1e0bbd6c686ba050b8eb03ffeedc64fdc9d80947fce821abbe5d6dc8d252c5ac",
-        "redCommanderPassword": "7581e0d493f6ab3fc525c4dce2a5f835c0399ebb3207d49e609cbccb2d902a42",
-        "adminPassword": ""
+        "gameMasterPassword": "a00a5973aacb17e4659125fbe10f4160d096dd84b2f586d2d75669462a30106d",
+        "blueCommanderPassword": "7d2e1ef898b21db7411f725a945b76ec8dcad340ed705eaf801bc82be6fe8a4a",
+        "redCommanderPassword": "abc5de7abdb8ed98f6d11d22c9d17593e339fde9cf4b9e170541b4f41af937e3",
+        "adminPassword": "a00a5973aacb17e4659125fbe10f4160d096dd84b2f586d2d75669462a30106d"
   },
   "frontend": {
     "port": 3000,
@@ -43,6 +42,6 @@
   },
   "audio": {
     "SRSPort": 5002,
-    "WSPort": 4000
+    "WSAddress": "refugees.dcsolympus.com/audio"
   }
 }

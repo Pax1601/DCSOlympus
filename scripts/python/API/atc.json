@@ -1,27 +1,41 @@
 {
-    "langen": {
-        "kml": "Langen_Control_Zone.kml",
-        "airbases": {
-            "weisbaden": {
-                "atis": {
-                    "frequency": 121.9
-                },
-                "base": {
-                    "frequency": 121.9
-                },
-                "ground": {
-                    "frequency": 121.9,
-                    "kml": "Langen_Weisbaden_Ground.kml"
-                },
-                "tower": {
-                    "frequency": 124.85,
-                    "kml": "Langen_Weisbaden_Tower.kml"
-                },
-                "approach": {
-                    "frequency": 125.35,
-                    "kml": "Langen_Weisbaden_Approach.kml"
-                }
+  "kml": "kmls/Germany CW.kml",
+  "radars": {
+    "Langen": {
+      "frequency": 125.35,
+      "airbases": {
+        "Wiesbaden": {
+          "icao": "EDSW",
+          "metar": "22906KT 9999 FEW150 20/11 Q1012=",
+          "runways": {
+            "26/08": {
+              "26": {
+                "pattern_direction": "right",
+                "takeoff_procedure": "Climb runway heading 2000 feet."
+              },
+              "08": {
+                "pattern_direction": "left",
+                "takeoff_procedure": "Climb runway heading 2000 feet."
+              }
             }
+          },
+          "atis": {
+            "frequency": 121.75
+          },
+          "base": {
+            "frequency": 121.6
+          },
+          "ground": {
+            "frequency": 121.9
+          },
+          "tower": {
+            "frequency": 124.85
+          },
+          "approach": {
+            "frequency": 125.35
+          }
         }
+      }
     }
+  }
 }

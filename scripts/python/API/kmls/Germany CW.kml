@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Germany CW</name>
+	<gx:CascadingStyle kml:id="__managed_style_37C21ABAC73CD7296BBC">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_24CCD151433CD7296BBC">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_16D6159B4B3CD7296BBC">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_24CCD151433CD7296BBC</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_37C21ABAC73CD7296BBC</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="0BF790EDCF3CD7661334">
+		<name>Langen</name>
+		<LookAt>
+			<longitude>8.830046442569003</longitude>
+			<latitude>49.83257379382845</latitude>
+			<altitude>36.11072626210433</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>30.00035805476768</gx:fovy>
+			<range>1320900.955226272</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_16D6159B4B3CD7296BBC</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						10.20528953575616,48.99979888979551,0 12.02507265872828,49.6000832999964,0 12.29761890486924,50.55330271978713,0 11.00124613732173,51.64534619224029,0 9.20532608390441,51.97582723901927,0 6.090555392162608,51.72715355881785,0 5.834507890838696,51.09482054450579,0 6.263316778838723,50.53975362418607,0 6.362793714184589,49.53779033246711,0 8.16556177789084,48.99116957379152,0 10.20528953575616,48.99979888979551,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Folder id="07FFBB47ED3CD7321B60">
+		<name>Wiesbaden</name>
+		<styleUrl>#__managed_style_16D6159B4B3CD7296BBC</styleUrl>
+		<Placemark id="06C6741B203CD72DAF76">
+			<name>Approach</name>
+			<LookAt>
+				<longitude>8.088304268714692</longitude>
+				<latitude>49.90080204336273</latitude>
+				<altitude>215.7034142451693</altitude>
+				<heading>2.822332402883402</heading>
+				<tilt>0</tilt>
+				<gx:fovy>30.0000832</gx:fovy>
+				<range>130148.3096240088</range>
+				<altitudeMode>absolute</altitudeMode>
+			</LookAt>
+			<styleUrl>#__managed_style_16D6159B4B3CD7296BBC</styleUrl>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<coordinates>
+							8.525641841595226,50.06466283232548,0 8.696139920555376,50.10135990585999,0 8.575778843889324,50.31192830520992,0 7.897778291437934,50.17273385777631,0 7.986037795816577,49.98478701341046,0 8.006157979321975,49.94703029784608,0 8.197728817461325,49.99087726868917,0 8.525641841595226,50.06466283232548,0 
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+		<Placemark id="0B3973ECDF3CD7296BAC">
+			<name>26/08</name>
+			<LookAt>
+				<longitude>8.32736735438197</longitude>
+				<latitude>50.04936243808667</latitude>
+				<altitude>137.3826742934326</altitude>
+				<heading>0</heading>
+				<tilt>0</tilt>
+				<gx:fovy>30.0000832</gx:fovy>
+				<range>1923.221568635199</range>
+				<altitudeMode>absolute</altitudeMode>
+			</LookAt>
+			<styleUrl>#__managed_style_16D6159B4B3CD7296BBC</styleUrl>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<coordinates>
+							8.340526359792293,50.05254202091567,0 8.340361468741959,50.05287054503953,0 8.310355287735376,50.04712451860217,0 8.310538870489575,50.04676543789191,0 8.340526359792293,50.05254202091567,0 
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+		<Placemark id="03DBCD0D453CD72BFD80">
+			<name>Tower</name>
+			<LookAt>
+				<longitude>8.348063783490442</longitude>
+				<latitude>50.03305704727997</latitude>
+				<altitude>133.5980105716509</altitude>
+				<heading>2.822332402972801</heading>
+				<tilt>0</tilt>
+				<gx:fovy>30.0000832</gx:fovy>
+				<range>109004.4411432557</range>
+				<altitudeMode>absolute</altitudeMode>
+			</LookAt>
+			<styleUrl>#__managed_style_16D6159B4B3CD7296BBC</styleUrl>
+			<Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+						<coordinates>
+							8.509174742331574,50.08221990544,0 8.457595825926244,50.17689107804055,0 8.135953348518646,50.11126306446109,0 8.1864303580333,50.01554060498744,0 8.329614212042195,50.04424145795439,0 8.509174742331574,50.08221990544,0 
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+			</Polygon>
+		</Placemark>
+	</Folder>
+</Document>
+</kml>

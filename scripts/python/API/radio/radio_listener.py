@@ -21,6 +21,8 @@ import wave
 import opuslib
 import time
 
+test_counter = 1
+
 class RadioListener:
     """
     WebSocket audio listener that connects to a specified address and port
@@ -124,7 +126,19 @@ class RadioListener:
             wav_filename: Path to the recorded WAV file
             unit_id: The unit ID that recorded the audio
         """
+        global test_counter
         self.logger.info(f"Recording callback triggered with file: {wav_filename}, unit_id: {unit_id}")
+
+        # If a unit id with this id does not exit, add it as a test unit
+        units = self.api.get_units()
+        if unit_id not in units:
+            from unit.unit import Unit
+            test_unit = Unit(int(unit_id), self.api)
+            test_unit.callsign = f"Test{test_counter}"
+            test_counter += 1
+            test_unit.human = True
+            self.api.add_test_unit(test_unit)
+            self.logger.info(f"Added test unit with ID {unit_id} for recording callback")
         
         if self.message_callback:
             try:
@@ -382,7 +396,7 @@ class RadioListener:
         """Set the callback function for handling clients data."""
         self.clients_callback = callback
         
-    def start(self, frequency: int, modulation: int, encryption: int) -> None:
+    def start(self, frequency: int, modulation: int = 0, encryption: int = 0) -> None:
         """Start the audio listener in a separate thread.
         
         Args:
@@ -402,8 +416,7 @@ class RadioListener:
         self.frequency = frequency
         self.modulation = modulation
         self.encryption = encryption
-        
-        
+         
     def start_on_intercom(self, intercom_ID: int) -> None:
         """Start the audio listener in a separate thread.
         Args:

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+from shapely.geometry import Point, Polygon
+
 from utils.utils import bearing_to, distance, project_with_bearing_and_distance
 
 @dataclass
@@ -51,6 +53,33 @@ class LatLng:
             Bearing in radians to the other point.
         """
         return bearing_to(self.lat, self.lng, other.lat, other.lng)
+    
+@dataclass
+class BoundingPolygon:
+    coordinates: List[LatLng]
+
+    def contains(self, point: LatLng) -> bool:
+        """
+        Check if a point is inside the polygon using Shapely library.
+        Uses geographic coordinates (lat, lng) for accurate spherical geometry.
+        
+        Args:
+            point: The LatLng point to check.
+        Returns:
+            True if the point is inside the polygon, False otherwise.
+        """
+        if len(self.coordinates) < 3:
+            return False
+        
+        # Create a Shapely polygon from coordinates (lng, lat order for Shapely)
+        polygon_coords = [(coord.lng, coord.lat) for coord in self.coordinates]
+        polygon = Polygon(polygon_coords)
+        
+        # Create a Shapely point from the test point
+        test_point = Point(point.lng, point.lat)
+        
+        # Use Shapely's contains method
+        return polygon.contains(test_point)
 
 @dataclass
 class TACAN:
