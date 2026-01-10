@@ -175,7 +175,7 @@ def compute_runway_headings(runway_coordinates: list[LatLng]) -> tuple[float, fl
     else:
         return (heading2, heading1)
 
-def format_frequency_for_speech(frequency_hz: float) -> str:
+def spell_frequency(frequency_hz: float) -> str:
     """
     Format a frequency in Hz for speech synthesis.
     Example: 180325000 Hz becomes "1 8 0 decimal 3 2 5"

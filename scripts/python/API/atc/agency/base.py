@@ -15,8 +15,8 @@ class Base(AirbaseAgency):
                 "in": ["in"],
                 "in and up": ["in and up"],
                 "in and down": ["in and down"],
-                "radio check": ["radio check", "do you read me", "can you hear me"],
-                "good readability": ["loud and clear", "you are loud and clear", "I read you loud and clear", "five by five"], 
+                "radio check": ["radio check"],
+                "good readability": ["loud and clear", "five by five"], 
                 "bad readability": ["I can't hear you well", "you are breaking up", "your signal is weak"]
         }
         

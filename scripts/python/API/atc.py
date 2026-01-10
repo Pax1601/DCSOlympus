@@ -45,6 +45,10 @@ def update_atc(api: API, radars: list[Radar]):
     for radar in radars:
         for airbase in radar.get_airbases():
             airbase.update_weather(timestring_top_of_hour, letter)
+
+    # Iterate over all radars to perform their periodic updates
+    for radar in radars:
+        radar.update()
              
 def initialize_agencies(api: API) -> list[Radar]:
     radars = []

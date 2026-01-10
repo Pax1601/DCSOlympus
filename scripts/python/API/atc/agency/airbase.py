@@ -1,7 +1,8 @@
+import math
 from api import API, LatLng, Unit
 import logging
 from data.data_types import BoundingPolygon
-from atc.utils import compute_runway_headings, pick_runway_from_wind_direction, read_metar, normalize_metar
+from atc.utils import compute_runway_headings, pick_runway_from_wind_direction, read_metar, normalize_metar, spell_number
 
 class Runway:
     def __init__(self, name: str, config: dict, coordinates: list[LatLng], logger: logging.Logger):
@@ -152,7 +153,23 @@ class Airbase:
                 runway = Runway(runway_name, runway_config, runway_kml.get("coordinates", []), self.logger)
                 self.runways.append(runway)
 
+    # Update all agencies associated with this airbase
+    def update(self):
+        # Update all agencies associated with this airbase
+        if self.atis:
+            self.atis.update()
+        if self.base:
+            self.base.update()
+        if self.ground:
+            self.ground.update()
+        if self.tower:
+            self.tower.update()
+        if self.approach:
+            self.approach.update()
+
+    # Update weather information based on METAR
     def update_weather(self, timestring_top_of_hour: str, letter: str):
+        # TODO: Time seems to be wrong
         if self.metar is None:
             return  # No weather data to update
         
@@ -187,15 +204,57 @@ class Airbase:
 
         self.logger.info(f"Updated weather for Airbase {self.name}: {self.weather_data}")
         # TODO: ATIS, if present, should also be updated with new weather data
+
+    # Spell out the wind information for radio transmission
+    def spell_wind(self):
+        if self.weather_data is None:
+            return "Wind data not available."
+        
+        wind_dir = self.weather_data.get("wind_dir", None)
+        wind_speed = self.weather_data.get("wind_speed", None)
+        wind_gust = self.weather_data.get("wind_gust", None)
+
+        if wind_dir is None or wind_speed is None:
+            return "Wind data not available."
+
+        wind_str = f"Wind {spell_number(math.floor(wind_dir))} at {spell_number(math.floor(wind_speed))} knots"
+        if wind_gust is not None and wind_gust > wind_speed:
+            wind_str += f", gusting to {spell_number(math.floor(wind_gust))} knots"
+        
+        return wind_str
     
+    # Get the active runway
     def get_active_runway(self):
         return self.active_runway
     
+    # Get the weather data
     def get_weather_data(self):
         return self.weather_data
     
+    # Get the METAR string
     def get_metar(self):
         return self.metar
     
+    # Get the weather letter, as in "information Alpha"
     def get_weather_letter(self):
         return self.letter
+    
+    # Get base
+    def get_base_agency(self):
+        return self.base
+    
+    # Get ATIS
+    def get_atis_agency(self):
+        return self.atis
+    
+    # Get ground
+    def get_ground_agency(self):
+        return self.ground
+    
+    # Get tower
+    def get_tower_agency(self):
+        return self.tower
+    
+    # Get approach
+    def get_approach_agency(self):
+        return self.approach

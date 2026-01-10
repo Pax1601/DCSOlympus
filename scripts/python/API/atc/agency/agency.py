@@ -184,4 +184,8 @@ class Agency:
     def get_sentences(self) -> dict[str, list[str]]:
         return {}
     
+    # Update method called periodically. This should be overridden by subclasses.
+    def update(self):
+        pass
+    
         

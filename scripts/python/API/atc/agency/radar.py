@@ -38,3 +38,8 @@ class Radar(Agency):
         # Implement logic to determine if the unit is valid for Radar control
         self.logger.info(f"Validating unit {unit.callsign} for Radar agency")
         return True  # Placeholder implementation
+    
+    # Update the radar and all its airbases
+    def update(self):
+        for airbase in self.airbases:
+            airbase.update()
