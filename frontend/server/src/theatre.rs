@@ -1,9 +1,11 @@
 use enum_iterator::Sequence;
+use serde::Deserialize;
 use tracing::error;
 
 use crate::{AIRBASES, airbase::Airfields};
 
-#[derive(Debug, Clone, Sequence, Eq, PartialEq, Hash)]
+#[derive(Debug, Clone, Sequence, Eq, PartialEq, Hash, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum Theatre {
     Caucasus,
     Falklands,
@@ -37,16 +39,16 @@ impl ToString for Theatre {
 impl Theatre {
     pub fn airbases_json_string(&self) -> &str {
         match self {
-            Theatre::Caucasus => include_str!("..\\databases\\airbases\\caucasus.json"),
-            Theatre::Falklands => include_str!("..\\databases\\airbases\\falklands.json"),
-            Theatre::Kola => include_str!("..\\databases\\airbases\\kola.json"),
-            Theatre::Marianas => include_str!("..\\databases\\airbases\\marianas.json"),
-            Theatre::Nevada => include_str!("..\\databases\\airbases\\nevada.json"),
-            Theatre::Normandy => include_str!("..\\databases\\airbases\\normandy.json"),
-            Theatre::PersianGulf => include_str!("..\\databases\\airbases\\persiangulf.json"),
-            Theatre::Sinaimap => include_str!("..\\databases\\airbases\\sinaimap.json"),
-            Theatre::Syria => include_str!("..\\databases\\airbases\\syria.json"),
-            Theatre::TheChannel => include_str!("..\\databases\\airbases\\thechannel.json"),
+            Theatre::Caucasus => include_str!("../databases/airbases/caucasus.json"),
+            Theatre::Falklands => include_str!("../databases/airbases/falklands.json"),
+            Theatre::Kola => include_str!("../databases/airbases/kola.json"),
+            Theatre::Marianas => include_str!("../databases/airbases/marianas.json"),
+            Theatre::Nevada => include_str!("../databases/airbases/nevada.json"),
+            Theatre::Normandy => include_str!("../databases/airbases/normandy.json"),
+            Theatre::PersianGulf => include_str!("../databases/airbases/persiangulf.json"),
+            Theatre::Sinaimap => include_str!("../databases/airbases/sinaimap.json"),
+            Theatre::Syria => include_str!("../databases/airbases/syria.json"),
+            Theatre::TheChannel => include_str!("../databases/airbases/thechannel.json"),
         }
     }
 
