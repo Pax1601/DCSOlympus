@@ -5,7 +5,15 @@ use axum::response::{IntoResponse, Response};
 
 use crate::theatre::Theatre;
 
-pub async fn airbases(Path((theatre, airbase)): Path<(Theatre, String)>) -> Response {
+pub async fn show_airbases() -> (StatusCode, String) {
+    (StatusCode::OK, Theatre::error_message())
+}
+
+/// Url that takes Theatre and Airbase name
+pub async fn airbases(Path((theatre, airbase)): Path<(String, String)>) -> Response {
+    let Ok(theatre) = serde_json::from_str::<Theatre>(&theatre) else {
+        return (StatusCode::NOT_FOUND, Theatre::error_message()).into_response();
+    };
     let airbases = theatre.airbases_json();
 
     let Some(airfield) = airbases.airfields.get(&airbase).cloned() else {

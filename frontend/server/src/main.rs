@@ -35,7 +35,9 @@ fn load_airbases() -> HashMap<Theatre, Airfields> {
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
-    let app = Router::new().route("/{theatre}/{airbase}", get(routes::airbases));
+    let app = Router::new()
+        .route("/api/airbases", get(routes::show_airbases))
+        .route("/api/airbases/{theatre}/{airbase}", get(routes::airbases));
 
     info!("Starting web server on port 3000");
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();

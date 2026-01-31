@@ -1,4 +1,4 @@
-use enum_iterator::Sequence;
+use enum_iterator::{Sequence, all};
 use serde::Deserialize;
 use tracing::error;
 
@@ -37,6 +37,17 @@ impl ToString for Theatre {
 }
 
 impl Theatre {
+    pub fn error_message() -> String {
+        format!(
+            "Missing/invalid theatre name; must be one of:\n\t{}",
+            all::<Theatre>().fold(String::new(), |acc, theatre| format!(
+                "{}\n\t{}",
+                acc,
+                theatre.to_string()
+            ))
+        )
+    }
+
     pub fn airbases_json_string(&self) -> &str {
         match self {
             Theatre::Caucasus => include_str!("../databases/airbases/caucasus.json"),
