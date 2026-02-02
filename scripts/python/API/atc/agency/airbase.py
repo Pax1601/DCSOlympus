@@ -2,7 +2,7 @@ import math
 from api import API, LatLng, Unit
 import logging
 from data.data_types import BoundingPolygon
-from atc.utils import compute_runway_headings, pick_runway_from_wind_direction, read_metar, normalize_metar, spell_number
+from atc.utils import compute_runway_headings, compute_runway_length, compute_runway_threshold, pick_runway_from_wind_direction, read_metar, normalize_metar, spell_number
 
 class Runway:
     def __init__(self, name: str, config: dict, coordinates: list[LatLng], logger: logging.Logger):
@@ -29,8 +29,8 @@ class Runway:
         return self.takeoff_procedure
     
     def get_threshold_coordinates(self):
-        self.logger.warning("Runway.get_threshold_coordinates() not implemented yet")
-        return LatLng(0, 0, 0)  # TODO: Placeholder implementation
+        # TODO read the position of the thresholds from the kml file, if provided
+        return compute_runway_threshold(self.bounding_polygon.coordinates, self.get_heading())
     
     def get_heading(self):
         headings = compute_runway_headings(self.bounding_polygon.coordinates)
@@ -69,6 +69,88 @@ class Runway:
         elif 'C' in self.name:
             spelled_name = spelled_name.replace('C', ' Center')
         return spelled_name
+    
+    def get_closest_units_to_threshold(self, units: list[Unit]) -> Unit:
+        # Create a list of ATCUnits ordered by distance to the runway threshold
+        # Only consider units that are on the ground and are ATCUnits. The list has the closest unit first, the farthest last.
+       
+        # Get the runway threshold position
+        threshold = self.get_threshold_coordinates()
+
+        # Filter units that are on the ground and are ATCUnits
+        from atc.atc_unit import ATCUnit
+        ground_units = [unit for unit in units if not unit.airborne and isinstance(unit, ATCUnit)]
+
+        # Calculate distance to threshold for each ground unit and sort
+        units_with_distance = []
+        for unit in ground_units:
+            distance = unit.position.distance_to(threshold)
+            units_with_distance.append((unit, distance))
+
+        # Sort by distance (closest first)
+        units_with_distance.sort(key=lambda x: x[1])
+
+        # Return just the units (without distances)
+        return [unit for unit, _ in units_with_distance]
+    
+    def check_past_runway_center(self, unit: Unit) -> bool:
+        # Check if the given unit has passed the runway center
+        # This is done by comparing the distance from the unit to each threshold
+        threshold = self.get_threshold_coordinates()
+        opposite_threshold = compute_runway_threshold(self.bounding_polygon.coordinates, (self.get_heading() + 180) % 360)
+
+        distance_to_threshold = unit.position.distance_to(threshold)
+        distance_to_opposite_threshold = unit.position.distance_to(opposite_threshold)
+
+        # If the distance to the opposite threshold is less than to the threshold, the unit has passed the center
+        return distance_to_opposite_threshold < distance_to_threshold
+    
+    def check_past_runway_end(self, unit: Unit) -> bool:
+        runway_length = compute_runway_length(self.bounding_polygon.coordinates)
+        threshold = self.get_threshold_coordinates()
+        opposite_threshold = compute_runway_threshold(self.bounding_polygon.coordinates, (self.get_heading() + 180) % 360)
+
+        distance_to_threshold = unit.position.distance_to(threshold)
+        distance_to_opposite_threshold = unit.position.distance_to(opposite_threshold)
+
+        # If the distance to the opposite threshold is less than to the threshold, and the distance to the threshold is greater than the runway length, the unit has passed the runway end
+        return distance_to_opposite_threshold < distance_to_threshold and distance_to_threshold > runway_length 
+    
+    def check_on_runway_axis(self, unit: Unit, tolerance_meters: float = 200.0) -> bool:
+        # Check if the given unit is on the runway axis within a certain tolerance
+        # This is done by calculating the perpendicular distance from the unit to the runway centerline
+        import math
+        
+        # Get the runway threshold and center
+        threshold = self.get_threshold_coordinates()
+
+        # Calculate the bearing from threshold along the runway axis
+        runway_bearing = self.get_heading() * (math.pi / 180.0)  # Convert to radians
+        
+        # Calculate the distance from threshold to unit
+        distance_threshold_to_unit = threshold.distance_to(unit.position)
+        
+        # Calculate the bearing from threshold to unit
+        bearing_threshold_to_unit = threshold.bearing_to(unit.position)
+        
+        # Calculate the angular difference between runway bearing and bearing to unit
+        angular_diff = bearing_threshold_to_unit - runway_bearing
+        
+        # Calculate the cross-track distance (perpendicular distance to runway centerline)
+        # Using the cross-track distance formula for spherical geometry:
+        # dxt = asin(sin(distance/R) * sin(bearing_difference)) * R
+        # where R is Earth's radius (6371000 m)
+        R = 6371000.0
+        
+        # Convert distance to angular distance
+        angular_distance = distance_threshold_to_unit / R
+        
+        # Calculate cross-track distance
+        cross_track_distance = abs(math.asin(math.sin(angular_distance) * math.sin(angular_diff)) * R)
+        
+        # Check if the cross-track distance is within tolerance
+        return cross_track_distance <= tolerance_meters
+        
 
 class Airbase:
     def __init__(self, name, config: dict, api: API, logger: logging.Logger, kml: dict):

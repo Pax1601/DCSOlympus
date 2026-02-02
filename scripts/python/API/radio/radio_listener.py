@@ -137,6 +137,8 @@ class RadioListener:
             test_unit.callsign = f"Test{test_counter}"
             test_counter += 1
             test_unit.human = True
+            test_unit.alive = True
+            test_unit.airborne = False
             self.api.add_test_unit(test_unit)
             self.logger.info(f"Added test unit with ID {unit_id} for recording callback")
         

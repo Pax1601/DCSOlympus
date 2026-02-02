@@ -15,6 +15,7 @@ class Ground(AirbaseAgency):
                 "information": ["with information on board"],
                 "startup clearance": ["Request startup clearance."],
                 "taxi clearance": ["Request taxi clearance."],
+                "taxi to parking": ["Taxi to parking."],
                 "runway in use": ["Request runway in use."],
                 "affirmative": ["Affirmative."],
                 "negative": ["Negative."],

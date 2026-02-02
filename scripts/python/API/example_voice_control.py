@@ -55,7 +55,7 @@ def on_message_received(recognized_text: str, unit_id: str, api: API, listener: 
         logger.info("Troop disembarkment requested!")
 
         # Use the API to spawn an infrantry unit 10 meters away from the unit
-        spawn_location = unit.position.project_with_bearing_and_distance(bearing=unit.heading+pi/2, d=10)
+        spawn_location = unit.position.project_with_bearing_and_distance(bearing=unit.heading+pi/2, distance=10)
         spawn_table: UnitSpawnTable = UnitSpawnTable(
             unit_type="Soldier M4",
             location=spawn_location,

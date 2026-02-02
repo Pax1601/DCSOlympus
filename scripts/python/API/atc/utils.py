@@ -1,4 +1,5 @@
 import logging
+import math
 import xml.etree.ElementTree as ET
 from api import LatLng
 from metar.Metar import Metar
@@ -174,6 +175,103 @@ def compute_runway_headings(runway_coordinates: list[LatLng]) -> tuple[float, fl
         return (heading1, heading2)
     else:
         return (heading2, heading1)
+    
+def compute_runway_length(runway_coordinates: list[LatLng]) -> float:
+    """
+    Compute the runway length from runway polygon coordinates.
+    Approximates the length as the distance between the two farthest points.
+    
+    Args:
+        runway_coordinates: List of LatLng points defining the runway polygon.
+    Returns:
+        Runway length in meters.
+    """
+    max_distance = 0.0
+    num_points = len(runway_coordinates)
+    
+    for i in range(num_points):
+        for j in range(i + 1, num_points):
+            dist = runway_coordinates[i].distance_to(runway_coordinates[j])
+            if dist > max_distance:
+                max_distance = dist
+                
+    return max_distance
+
+def compute_runway_center(runway_coordinates: list[LatLng]) -> LatLng:
+    """
+    Compute the center point of the runway from its polygon coordinates.
+    Uses the polygon centroid formula which accounts for non-uniform vertex distribution.
+    
+    Args:
+        runway_coordinates: List of LatLng points defining the runway polygon.
+    Returns:
+        LatLng point representing the center of the runway.
+    """
+    if len(runway_coordinates) == 0:
+        return LatLng(0.0, 0.0, 0.0)
+    
+    if len(runway_coordinates) == 1:
+        return runway_coordinates[0]
+    
+    # Use the shoelace formula for polygon centroid
+    # This properly accounts for non-uniform vertex distribution
+    n = len(runway_coordinates)
+    
+    # Calculate signed area and centroid coordinates
+    signed_area = 0.0
+    centroid_lat = 0.0
+    centroid_lng = 0.0
+    centroid_alt = 0.0
+    
+    for i in range(n):
+        j = (i + 1) % n  # Next vertex (wraps around to 0)
+        
+        lat_i = runway_coordinates[i].lat
+        lng_i = runway_coordinates[i].lng
+        lat_j = runway_coordinates[j].lat
+        lng_j = runway_coordinates[j].lng
+        
+        # Shoelace formula component
+        cross = lng_i * lat_j - lng_j * lat_i
+        signed_area += cross
+        centroid_lat += (lat_i + lat_j) * cross
+        centroid_lng += (lng_i + lng_j) * cross
+    
+    signed_area *= 0.5
+    
+    # Avoid division by zero for degenerate polygons
+    if abs(signed_area) < 1e-10:
+        # Fall back to simple average if polygon is degenerate
+        avg_lat = sum(coord.lat for coord in runway_coordinates) / n
+        avg_lng = sum(coord.lng for coord in runway_coordinates) / n
+        avg_alt = sum(coord.alt for coord in runway_coordinates) / n
+        return LatLng(avg_lat, avg_lng, avg_alt)
+    
+    centroid_lat /= (6.0 * signed_area)
+    centroid_lng /= (6.0 * signed_area)
+    
+    # Calculate average altitude (altitude doesn't participate in 2D centroid calculation)
+    centroid_alt = sum(coord.alt for coord in runway_coordinates) / n
+    
+    return LatLng(centroid_lat, centroid_lng, centroid_alt)
+
+def compute_runway_threshold(runway_coordinates: list[LatLng], heading: float) -> LatLng:
+    """
+    Compute the threshold points (ends) of the runway from its polygon coordinates.
+    Approximates the thresholds using the runway center and length. The heading is used to determine direction.
+    
+    Args:
+        runway_coordinates: List of LatLng points defining the runway polygon.
+        heading: Runway heading in degrees.
+    Returns:
+        LatLng point representing one of the runway thresholds.
+    """
+    
+    center = compute_runway_center(runway_coordinates)
+    length = compute_runway_length(runway_coordinates)
+    heading_rad = math.radians(heading) - math.pi # Rotate 180 degrees to get from center to threshold
+    
+    return center.project_with_bearing_and_distance(length / 2, heading_rad)
 
 def spell_frequency(frequency_hz: float) -> str:
     """

@@ -21,17 +21,17 @@ class LatLng:
             "threshold": self.threshold
         }
         
-    def project_with_bearing_and_distance(self, d, bearing):
+    def project_with_bearing_and_distance(self, distance, bearing):
         """
         Project this LatLng point with a bearing and distance.
         Args:
-            d: Distance in meters to project.
+            distance: Distance in meters to project.
             bearing: Bearing in radians.
         Returns:            
             A new LatLng point projected from this point.
         
         """
-        (new_lat, new_lng) = project_with_bearing_and_distance(self.lat, self.lng, d, bearing) 
+        (new_lat, new_lng) = project_with_bearing_and_distance(self.lat, self.lng, distance, bearing) 
         return LatLng(new_lat, new_lng, self.alt)
     
     def distance_to(self, other):

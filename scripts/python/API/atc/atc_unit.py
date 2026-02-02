@@ -8,13 +8,9 @@ from atc.agency.approach import Approach
 from atc.agency.radar import Radar
 from atc.utils import spell_frequency, spell_number
 from atc.constants import * 
-from enum import Enum
 import time
 from atc.constants import READBACK_TIMEOUT_SECONDS, READBACK_CANCEL_TIMEOUT_SECONDS
 from atc.agency.airbase import Airbase
-
-class ATCUnitState(Enum):
-    IDLE = 0
 
 class ATCUnit(Unit):
     # Initialize additional properties for ATCUnit
@@ -40,6 +36,7 @@ class ATCUnit(Unit):
 
     # Update method called periodically
     def update(self):
+        # Readback handling ############################################################
         # If we are waiting for a readback, check for timeout
         if self.waiting_for_readback:
             if time.time() - self.waiting_for_readback_epoch > READBACK_TIMEOUT_SECONDS and not self.asked_if_copied_readback:
@@ -55,6 +52,16 @@ class ATCUnit(Unit):
                 self.agency_waiting_for_readback = None
                 self.asked_if_copied_readback = False
 
+        # Flags reset handling ########################################################
+        # If we are no longer alive reset all flags
+        if not self.alive:
+            self.cleared_for_takeoff = False
+            self.cleared_to_land = False
+            self.going_around = False
+            self.keep_checking_takeoff_clearance = False
+            self.keep_checking_landing_clearance = False
+            return
+        
         # If we are airborne, clear takeoff clearance
         if self.airborne and self.cleared_for_takeoff:
             self.cleared_for_takeoff = False
@@ -65,6 +72,65 @@ class ATCUnit(Unit):
             self.cleared_to_land = False
             self.going_around = False
             self.keep_checking_landing_clearance = False
+            
+        # If we are cleared to land, on runway axis, and past the runway center, we are going around
+        if self.cleared_to_land and self.controlling_agency is not None:
+            airbase = self.controlling_agency.get_airbase()
+            runway = airbase.get_active_runway()
+            if runway.check_on_runway_axis(self) and runway.check_past_runway_center(self):
+                self.going_around = True
+                self.cleared_to_land = False
+                self.keep_checking_landing_clearance = False
+                
+        # If we are going around, on runway axis, and past the opposite threshold, reset going around status
+        if self.going_around and self.controlling_agency is not None:
+            airbase = self.controlling_agency.get_airbase()
+            runway = airbase.get_active_runway()
+            if runway.check_on_runway_axis(self) and runway.check_past_runway_end(self):
+                self.going_around = False
+                
+        # If the controlling agency is not Tower, clear takeoff, landing, and going around statuses
+        if not isinstance(self.controlling_agency, Tower):
+            self.cleared_for_takeoff = False
+            self.cleared_to_land = False
+            self.going_around = False
+            self.keep_checking_takeoff_clearance = False
+            self.keep_checking_landing_clearance = False
+            
+        # Takeoff clearance checking ####################################################
+        if self.keep_checking_takeoff_clearance and isinstance(self.controlling_agency, Tower):
+            tower: Tower = self.controlling_agency
+            departure_message, cleared, keep_checking = tower.check_takeoff_clearance(self)
+            if cleared:
+                self.cleared_for_takeoff = True
+                self.keep_checking_takeoff_clearance = False
+                self.controlling_agency.transmit_message(f"{self.callsign}, Tower. {departure_message}")
+                # Create a readback callback to confirm takeoff clearance
+                self.wait_for_readback(tower, lambda readback: self.handle_tower_takeoff_readback(tower, readback))
+            else:
+                self.keep_checking_takeoff_clearance = keep_checking
+                
+        # Landing clearance checking ####################################################
+        if self.keep_checking_landing_clearance and isinstance(self.controlling_agency, Tower):
+            tower: Tower = self.controlling_agency
+            landing_message, cleared, keep_checking, go_around = tower.check_landing_clearance(self)
+            if cleared:
+                self.cleared_to_land = True
+                self.keep_checking_landing_clearance = False
+                self.controlling_agency.transmit_message(f"{self.callsign}, Tower. {landing_message}")
+                # Create a readback callback to confirm landing clearance
+                self.wait_for_readback(tower, lambda readback: self.handle_tower_landing_readback(tower, readback))
+            else:
+                self.keep_checking_landing_clearance = keep_checking         
+                
+        # Go around checking ##########################################################
+        if self.cleared_to_land and not self.going_around and isinstance(self.controlling_agency, Tower):
+            go_around = self.controlling_agency.check_go_around(self)
+            if go_around:
+                self.going_around = True
+                self.cleared_to_land = False
+                self.keep_checking_landing_clearance = False
+                self.controlling_agency.transmit_message(f"{self.callsign}, Tower. Go around.")
                 
     # Handle an incoming message from an agency
     def handle_message(self, agency: Agency, message: str):
@@ -166,6 +232,15 @@ class ATCUnit(Unit):
                 message_out += " Copy, thank you."
             elif intent == "bad readability":
                 message_out += " Understood, check your radio."
+            elif intent == "frequencies":
+                # TODO Add ATIS frequency if available
+                message_out += f" The frequencies for {agency.get_airbase().name} are:"
+                if agency.get_airbase().tower is not None:
+                    message_out += f" Tower {spell_frequency(agency.get_airbase().tower.listener.frequency)} MHz,"
+                if agency.get_airbase().ground is not None:
+                    message_out += f" Ground {spell_frequency(agency.get_airbase().ground.listener.frequency)} MHz,"
+                if agency.get_airbase().approach is not None:
+                    message_out += f" Approach {spell_frequency(agency.get_airbase().approach.listener.frequency)} MHz."
         else:
             message_out += " Say again."
         agency.transmit_message(message_out)
@@ -222,6 +297,8 @@ class ATCUnit(Unit):
                 message_out += " Clear to start. Advise when ready to taxi."
             elif intent == "taxi clearance":
                 message_out += f" Clear to taxi. Hold short of runway {active_runway.spell_name()}."
+            elif intent == "taxi to parking":
+                message_out += " Taxi to parking at own discretion."
             elif intent == "runway in use":
                 # Get the active runway from the airbase
                 message_out += f" Runway {active_runway.spell_name()} in use."
@@ -277,13 +354,45 @@ class ATCUnit(Unit):
                     # Create a readback callback to confirm takeoff clearance
                     self.wait_for_readback(agency, lambda readback: self.handle_tower_takeoff_readback(agency, readback))
 
-                # If we need to keep checking, set a check flag
+                # If we need to keep checking, set a check flag. We will periodically check if the unit is now eligible for takeoff clearance
                 if keep_checking:
                     self.keep_checking_takeoff_clearance = True
+            elif intent == "land" or intent == "abeam" or intent == "final":
+                landing_message, cleared, keep_checking, go_around = agency.check_landing_clearance(self)
+                message_out += f" {landing_message}"
+
+                # If cleared, set the cleared to land status
+                if cleared:
+                    self.cleared_to_land = True
+                    # Create a readback callback to confirm landing clearance
+                    self.wait_for_readback(agency, lambda readback: self.handle_tower_landing_readback(agency, readback))
+
+                # If we need to keep checking, set a check flag. We will periodically check if the unit is now eligible for landing clearance
+                if keep_checking:
+                    self.keep_checking_landing_clearance = True
+                    
+                # If we need to go around, set the going around status
+                if go_around:
+                    self.going_around = True
+            elif intent == "go around":
+                message_out += " Copy, go around."
+                self.going_around = True
+                self.cleared_to_land = False
+                self.keep_checking_landing_clearance = False
+            elif intent == "stay in the pattern":
+                message_out += f" Copy, stay on this frequency and enter {active_runway.get_pattern_direction()} downwind for runway {active_runway.spell_name()}. Report on downwind."
+            elif intent == "initials":
+                if active_runway.get_pattern_direction() == "left":
+                    message_out += f" Copy, clear to break runway {active_runway.spell_name()}. Report on downwind."
+                else:
+                    message_out += f" Copy, clear to break runway {active_runway.spell_name()}, righthand. Report on downwind."
+            elif intent == "downwind":
+                message_out += f" Copy, report abeam."  
         else:
             message_out += " Say again."
         agency.transmit_message(message_out)
 
+    # Handle the readback for a takeoff clearance from Tower
     def handle_tower_takeoff_readback(self, agency: Tower, message: str):
         good_readback = False
         message_out = f"{self.callsign}, Tower."
@@ -297,6 +406,26 @@ class ATCUnit(Unit):
                 message_out += " Negative."
                 departure_message, _, _ = agency.check_takeoff_clearance(self)
                 message_out += f" {departure_message}"
+                agency.transmit_message(message_out)
+        else:
+            message_out += " Say again."
+            agency.transmit_message(message_out)
+        return good_readback
+    
+    # Handle the readback for landing clearance from Tower
+    def handle_tower_landing_readback(self, agency: Tower, message: str):
+        good_readback = False
+        message_out = f"{self.callsign}, Tower."
+
+        intent = agency.get_probable_intent(message)
+        if intent is not None:
+            if intent == "cleared to land":
+                # Nothing else to do, it was a good readback
+                good_readback = True
+            else:
+                message_out += " Negative."
+                landing_message, _, _, _ = agency.check_landing_clearance(self)
+                message_out += f" {landing_message}"
                 agency.transmit_message(message_out)
         else:
             message_out += " Say again."

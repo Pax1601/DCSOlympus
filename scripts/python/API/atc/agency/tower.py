@@ -89,7 +89,7 @@ class Tower(AirbaseAgency):
         runway = self.airbase.get_active_runway()
         threshold_coords = runway.get_threshold_coordinates()
         distance_to_threshold = unit.position.distance_to(threshold_coords)
-        if distance_to_threshold > 200:  # 200 meters threshold
+        if distance_to_threshold > 400 and unit.position.lat != 0 and unit.position.lng != 0:  # 400 meters threshold, but ignore test units at (0,0)
             ground = self.airbase.get_ground_agency()
             if ground:
                 message = f"Your are not in position for departure, switch to ground for taxi instructions on {spell_frequency(ground.listener.frequency)}."
@@ -108,16 +108,131 @@ class Tower(AirbaseAgency):
         # Check 6: Is the runway clear?
         units = self.api.get_units()
         # Remove self from the list so we don't check against ourselves
-        del units[unit.ID]
-        if not runway.is_clear(units.values()):
+        if not runway.is_clear([units.values() for u in units.values() if u != unit]):
             return ("Hold position.", False, True)
         
         # Check 7: Is another unit cleared to land?
         if self.cleared_to_land_unit:
             return ("Hold position.", False, True)
         
+        # Check 8: Is this unit the closest to the runway threshold?
+        closest_units = runway.get_closest_units_to_threshold(units.values())
+        if not closest_units or closest_units[0] != unit:
+            # Get the position of the unit in the queue
+            position_in_queue = None
+            for index, u in enumerate(closest_units):
+                if u == unit:
+                    position_in_queue = index 
+                    break
+            return (f"Hold position. You are number {position_in_queue} in the queue.", False, True)
+        
         # If all checks passed, clear the unit for takeoff
         self.cleared_for_takeoff_unit = unit
-        return (f"Cleared for takeoff runway {runway.spell_name()}. {self.airbase.spell_wind()}. {runway.get_takeoff_procedure()}", True, False)
+        
+        # Check if a departure agency is available
+        departure_agency = self.airbase.get_approach_agency()
+        if departure_agency:
+            return (f"Cleared for takeoff runway {runway.spell_name()}. {self.airbase.spell_wind()}. {runway.get_takeoff_procedure()}. After takeoff, contact {departure_agency.name} on {spell_frequency(departure_agency.listener.frequency)}.", True, False)
+        else: 
+            return (f"Cleared for takeoff runway {runway.spell_name()}. {self.airbase.spell_wind()}. {runway.get_takeoff_procedure()}.", True, False)
+    
+    # Check landing clearance
+    def check_landing_clearance(self, unit: Unit) -> tuple[str, bool, bool, bool]:
+        """
+        Check if the given unit has landing clearance.
+        Args:
+            unit (ATCUnit): The unit requesting landing clearance.  
+        Returns:
+            str: Response message regarding landing clearance.
+            bool: True if cleared to land, False otherwise.
+            bool: True if we should keep checking, False otherwise.
+            bool: True if the unit should go around, False otherwise.
+        """
+        from atc.atc_unit import ATCUnit
+        if not isinstance(unit, ATCUnit):
+            self.logger.warning(f"Unit {unit.callsign} is not an ATCUnit, cannot check landing clearance.")
+            return ("Negative, you are not under my control.", False, False, False)
+        
+        # Compute distance to runway threshold
+        threshold_coords = self.get_airbase().get_active_runway().get_threshold_coordinates()
+        distance_to_threshold = unit.position.distance_to(threshold_coords)
+
+        # Implement logic to check if the unit has landing clearance
+        self.logger.info(f"Checking landing clearance for unit {unit.callsign}")
+        
+        # Check 1: Is the unit airborne?
+        if not unit.airborne:
+            return ("Negative, you are already on the ground.", False, False, False)
+        
+        # Check 2: Is the unit under this agency's control?
+        if not self.is_valid_agency(unit):
+            return ("Negative, you are not under my control.", False, False, False)
+        
+        # Check 3: Was the unit already cleared to land?
+        if self.cleared_to_land_unit == unit:
+            return (f"You are already cleared to land, runway {self.airbase.get_active_runway().spell_name()}.", True, False, False)
+        
+        # Check 4: Is there another unit already cleared to land?
+        if self.cleared_to_land_unit and self.cleared_to_land_unit != unit:
+            if distance_to_threshold < 5000:  # 5 km
+                return ("Go around.", False, False, True)
+            else:
+                return ("Continue, follow traffic.", False, True, False)
+        
+        # Check 5: Is the runway clear?
+        units = self.api.get_units()
+        # Remove self from the list so we don't check against ourselves
+        del units[unit.ID]
+        runway = self.airbase.get_active_runway()
+        if not runway.is_clear(units.values()):
+            if distance_to_threshold < 5000:  # 5 km
+                return ("Go around.", False, False, True)
+            else:
+                return ("Continue, report on final.", False, True, False)
+        
+        # Check 6: Is another unit cleared for takeoff?
+        if self.cleared_for_takeoff_unit:
+            if distance_to_threshold < 5000:  # 5 km
+                return ("Go around.", False, False, True)
+            else:
+                return ("Continue, report on final.", False, True, False)
+            
+        # Check 7: Is this unit going around already?
+        if unit.get_going_around():
+            return ("Continue your go around.", False, False, False)
+        
+        # If all checks passed, clear the unit to land
+        self.cleared_to_land_unit = unit
+        return (f"Cleared to land runway {runway.spell_name()}. {self.airbase.spell_wind()}.", True, False, False)
+    
+    # Check if a cleared to land unit should go around
+    def check_go_around(self, unit: Unit) -> bool:
+        """
+        Check if the given unit should go around.
+        Args:
+            unit (ATCUnit): The unit on final approach.
+        Returns:
+            bool: True if the unit should go around, False otherwise.
+        """
+        
+        # Compute distance to runway threshold
+        threshold_coords = self.get_airbase().get_active_runway().get_threshold_coordinates()
+        distance_to_threshold = unit.position.distance_to(threshold_coords)
+        
+        # Implement logic to check if the unit should go around
+        self.logger.info(f"Checking go around for unit {unit.callsign}")
+        
+        # Check 1: If the runway is not clear and the unit is within 5 km of the threshold, instruct to go around
+        if distance_to_threshold < 5000:  # 5 km
+            units = self.api.get_units()
+            # Remove self from the list so we don't check against ourselves
+            del units[unit.ID]
+            runway = self.airbase.get_active_runway()
+            if not runway.is_clear(units.values()):
+                return True
+        
+        
+    
+    
         
         

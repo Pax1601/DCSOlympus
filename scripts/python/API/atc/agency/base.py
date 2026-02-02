@@ -17,7 +17,8 @@ class Base(AirbaseAgency):
                 "in and down": ["in and down"],
                 "radio check": ["radio check"],
                 "good readability": ["loud and clear", "five by five"], 
-                "bad readability": ["I can't hear you well", "you are breaking up", "your signal is weak"]
+                "bad readability": ["I can't hear you well", "you are breaking up", "your signal is weak"],
+                "frequencies": ["say frequencies of this airbase", "what are the frequencies here", "give me the frequencies for this airbase", "report frequencies"],
         }
         
     # Get radio prompt specific to Base
