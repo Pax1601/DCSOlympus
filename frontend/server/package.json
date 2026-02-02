@@ -19,7 +19,7 @@
     "cors": "^2.8.5",
     "debug": "~4.4.0",
     "ejs": "^3.1.10",
-    "electron": "^33.4.5",
+    "electron": "^40.1.0",
     "express": "^4.21.2",
     "express-basic-auth": "^1.2.1",
     "http-proxy-middleware": "^3.0.3",
