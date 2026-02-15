@@ -99,7 +99,7 @@ background = true
 # long running programs (uncomment it if you need it)
 [jobs.run-long]
 command = [
-    "cargo", "run", "--", "--config=F:\\code\\DCSOlympus-Rust\\frontend\\olympus.json",
+    "cargo", "run", "--", "--config=C:\\Users\\Timm\\Saved Games\\DCS\\Config\\olympus.json",
     # put launch parameters for your program behind a `--` separator
 ]
 need_stdout = true

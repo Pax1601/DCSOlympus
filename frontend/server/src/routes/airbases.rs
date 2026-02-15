@@ -4,9 +4,10 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
 
+use crate::AppState;
 use crate::theatre::Theatre;
 
-pub fn routes() -> Router {
+pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/", get(index_thearte))
         .route("/{theatre}", get(show_airbases))
