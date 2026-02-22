@@ -15,7 +15,7 @@
     "create-desktop-shortcuts": "^1.11.0",
     "dir-compare": "^4.2.0",
     "ejs": "^3.1.10",
-    "electron": "^28.3.3",
+    "electron": "^40.1.0",
     "find-process": "^1.4.10",
     "follow-redirects": "^1.15.9",
     "octokit": "^3.2.1",
