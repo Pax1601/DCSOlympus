@@ -280,11 +280,11 @@ export const minimapBoundaries = {
   ],
   Kola: [
     // Kola
-    new LatLng(74, 11),
+    new LatLng(73, 11),
     new LatLng(65, 11),
     new LatLng(65, 43),
-    new LatLng(74, 43),
-    new LatLng(74, 11),
+    new LatLng(73, 43),
+    new LatLng(73, 11),
   ]
 };
 
@@ -325,7 +325,7 @@ export const mapBounds = {
   Afghanistan: { bounds: new LatLngBounds([36.22, 61.21], [30.42, 68.05]), zoom: 5 },
   GermanyCW: { bounds: new LatLngBounds([54.724620, 5.570068], [49.282140, 16.413574]), zoom: 4 },
   Iraq: { bounds: new LatLngBounds([36.672825, 39.413452], [29.798943, 53.201294]), zoom: 4 },
-  Kola: { bounds: new LatLngBounds([74, 11], [64, 43]), zoom: 2 },
+  Kola: { bounds: new LatLngBounds([73, 11], [64, 43]), zoom: 3 },
 };
 
 export const defaultMapMirrors = {};
