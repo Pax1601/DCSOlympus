@@ -74,6 +74,7 @@ export enum UnitState {
   SCENIC_AAA = "scenic-aaa",
   MISS_ON_PURPOSE = "miss-on-purpose",
   LAND_AT_POINT = "land-at-point",
+  SIMULATE_ENGAGEMENT = "simulate-engagement",
 }
 
 export const states: string[] = [
@@ -94,6 +95,7 @@ export const states: string[] = [
   UnitState.SCENIC_AAA,
   UnitState.MISS_ON_PURPOSE,
   UnitState.LAND_AT_POINT,
+  UnitState.SIMULATE_ENGAGEMENT,
 ];
 
 export const ROEs: string[] = ["", "free", "designated", "return", "hold"];
@@ -279,8 +281,8 @@ export const minimapBoundaries = {
   Kola: [
     // Kola
     new LatLng(74, 11),
-    new LatLng(66, 11),
-    new LatLng(66, 43),
+    new LatLng(65, 11),
+    new LatLng(65, 43),
     new LatLng(74, 43),
     new LatLng(74, 11),
   ]
@@ -323,7 +325,7 @@ export const mapBounds = {
   Afghanistan: { bounds: new LatLngBounds([36.22, 61.21], [30.42, 68.05]), zoom: 5 },
   GermanyCW: { bounds: new LatLngBounds([54.724620, 5.570068], [49.282140, 16.413574]), zoom: 4 },
   Iraq: { bounds: new LatLngBounds([36.672825, 39.413452], [29.798943, 53.201294]), zoom: 4 },
-  Kola: { bounds: new LatLngBounds([74, 11], [66, 43]), zoom: 4 },
+  Kola: { bounds: new LatLngBounds([74, 11], [64, 43]), zoom: 2 },
 };
 
 export const defaultMapMirrors = {};
@@ -1005,7 +1007,7 @@ export namespace ContextActions {
     },
     { type: ContextActionType.ADMIN, code: "KeyX", ctrlKey: false, shiftKey: false }
   );
-
+  
   export const SET_AWACS_REFERENCE = new ContextAction(
     "set-awacs-reference",
     "Set AWACS reference",
