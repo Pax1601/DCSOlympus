@@ -290,18 +290,18 @@ export class SpotEditMarker extends Marker {
 
   /**
    * Handles the key down event.
-   * @param {Event} ev - The keyboard event object.
+   * @param {KeyboardEvent} ev - The keyboard event object.
    */
-  #onKeyDown(ev) {
+  #onKeyDown(ev: KeyboardEvent) {
     if (ev.key === "Enter") this.#acceptInput(ev);
     else if (ev.key === "Escape") this.#setEditMode(ev, false);
   }
 
   /**
    * Accepts the input value when the Enter key is pressed.
-   * @param {Event} ev - The keyboard event object.
+   * @param {KeyboardEvent | MouseEvent} ev - The event object.
    */
-  #acceptInput(ev) {
+  #acceptInput(ev: KeyboardEvent | MouseEvent) {
     const element = this.getElement();
     if (element) {
       const input = element.querySelector(".input") as HTMLInputElement;
@@ -321,9 +321,9 @@ export class SpotEditMarker extends Marker {
 
   /**
    * Handles the button click event.
-   * @param {Event} ev - The event object.
+   * @param {MouseEvent} ev - The mouse event object.
    */
-  #onButtonClicked(ev: Event) {
+  #onButtonClicked(ev: MouseEvent) {
     if (this.#isEditable) this.#acceptInput(ev);
     else this.onDeleteButtonClicked();
   }

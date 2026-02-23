@@ -255,7 +255,7 @@ export function JTACMenu(props: { open: boolean; onClose: () => void; children?:
                 )}
                 {referenceSystem === "MGRS" && (
                   <>
-                    {latLngToMGRS(targetPosition.lat, targetPosition.lng, 6).string}
+                    {latLngToMGRS(targetPosition?.lat || 0, targetPosition?.lng || 0, 6)?.string || "Invalid coordinates"}
                   </>
                 )}
               </span>

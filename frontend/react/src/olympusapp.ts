@@ -24,8 +24,6 @@ import { GAME_MASTER, LoginSubState, MAP_OPTIONS_DEFAULTS, NO_SUBSTATE, OlympusS
 import { AdminPasswordChangedEvent, AppStateChangedEvent, AudioOptionsChangedEvent, ConfigLoadedEvent, InfoPopupEvent, MapOptionsChangedEvent, SelectedUnitsChangedEvent, ShortcutsChangedEvent } from "./events";
 import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
-import { ControllerManager } from "./controllers/controllermanager";
-import { AWACSController } from "./controllers/awacs";
 import { CoalitionAreasManager } from "./map/coalitionarea/coalitionareamanager";
 import { DrawingsManager } from "./map/drawings/drawingsmanager";
 
@@ -34,26 +32,25 @@ export var IP = window.location.toString();
 
 export class OlympusApp {
   /* Global data */
-  #config: OlympusConfig;
+  #config: OlympusConfig | null = null;
   #state: OlympusState = OlympusState.NOT_INITIALIZED;
   #subState: OlympusSubState = NO_SUBSTATE;
   #infoMessages: string[] = [];
   #startupWarningsShown: boolean = false;
 
   /* Main leaflet map, extended by custom methods */
-  #map: Map;
+  #map: Map | null = null;
 
   /* Managers */
-  #missionManager: MissionManager;
-  #serverManager: ServerManager;
-  #shortcutManager: ShortcutManager;
-  #unitsManager: UnitsManager;
-  #weaponsManager: WeaponsManager;
-  #audioManager: AudioManager;
-  #sessionDataManager: SessionDataManager;
-  #controllerManager: ControllerManager;
-  #coalitionAreasManager: CoalitionAreasManager;
-  #drawingsManager: DrawingsManager;
+  #missionManager: MissionManager | null = null;
+  #serverManager: ServerManager | null = null;
+  #shortcutManager: ShortcutManager | null = null;
+  #unitsManager: UnitsManager | null = null;
+  #weaponsManager: WeaponsManager | null = null;
+  #audioManager: AudioManager | null = null;
+  #sessionDataManager: SessionDataManager | null = null;
+  #coalitionAreasManager: CoalitionAreasManager | null = null;
+  #drawingsManager: DrawingsManager | null = null;
   //#pluginsManager: // TODO
 
   #adminPassword: string = "";
@@ -74,43 +71,39 @@ export class OlympusApp {
   }
 
   getServerManager() {
-    return this.#serverManager;
+    return this.#serverManager as ServerManager;
   }
 
   getShortcutManager() {
-    return this.#shortcutManager;
+    return this.#shortcutManager as ShortcutManager;
   }
 
   getUnitsManager() {
-    return this.#unitsManager;
+    return this.#unitsManager as UnitsManager;
   }
 
   getWeaponsManager() {
-    return this.#weaponsManager;
+    return this.#weaponsManager as WeaponsManager;
   }
 
   getMissionManager() {
-    return this.#missionManager;
+    return this.#missionManager as MissionManager;
   }
 
   getAudioManager() {
-    return this.#audioManager;
+    return this.#audioManager as AudioManager;
   }
 
   getSessionDataManager() {
-    return this.#sessionDataManager;
-  }
-
-  getControllerManager() {
-    return this.#controllerManager;
+    return this.#sessionDataManager as SessionDataManager;
   }
 
   getCoalitionAreasManager() {
-    return this.#coalitionAreasManager;
+    return this.#coalitionAreasManager as CoalitionAreasManager;
   }
 
   getDrawingsManager() {
-    return this.#drawingsManager;
+    return this.#drawingsManager as DrawingsManager;
   }
 
   /* TODO
@@ -131,7 +124,6 @@ export class OlympusApp {
     this.#unitsManager = new UnitsManager();
     this.#weaponsManager = new WeaponsManager();
     this.#audioManager = new AudioManager();
-    this.#controllerManager = new ControllerManager();
     this.#coalitionAreasManager = new CoalitionAreasManager();
     this.#drawingsManager = new DrawingsManager();
 
@@ -145,7 +137,7 @@ export class OlympusApp {
     fetch(configRequest)
       .then((response) => {
         if (response.status === 200)
-          return new Promise((res: ([OlympusConfig, Headers]) => void, rej) => {
+          return new Promise((res: ([OlympusConfig, Headers]: [OlympusConfig, Headers]) => void, rej) => {
             response
               .json()
               .then((result) => res([result, response.headers]))
@@ -157,7 +149,7 @@ export class OlympusApp {
         this.#config = result;
         if (this.#config.frontend.customAuthHeaders?.enabled) {
           if (headers.has(this.#config.frontend.customAuthHeaders.username) && headers.has(this.#config.frontend.customAuthHeaders.group)) {
-            this.getServerManager().setUsername(headers.get(this.#config.frontend.customAuthHeaders.username));
+            this.getServerManager().setUsername(headers.get(this.#config.frontend.customAuthHeaders.username || "") || "Unknown user");
             this.setState(OlympusState.LOGIN, LoginSubState.COMMAND_MODE);
           }
         }
@@ -194,7 +186,7 @@ export class OlympusApp {
 
     this.#shortcutManager?.addShortcut("idle", {
       label: "Deselect all",
-      keyUpCallback: (ev: KeyboardEvent) => {
+      keyUpCallback: (_: KeyboardEvent) => {
         this.setState(OlympusState.IDLE);
       },
       code: "Escape",
@@ -210,10 +202,11 @@ export class OlympusApp {
   saveProfile() {
     const username = this.getServerManager()?.getUsername();
     if (username) {
-      let profile = {};
-      profile["mapOptions"] = this.#map?.getOptions();
-      profile["shortcuts"] = this.#shortcutManager?.getShortcutsOptions();
-      profile["audioOptions"] = this.#audioManager?.getOptions();
+      let profile = {
+        mapOptions: this.#map?.getOptions(),
+        shortcuts: this.#shortcutManager?.getShortcutsOptions(),
+        audioOptions: this.#audioManager?.getOptions(),
+      };
 
       const requestOptions = {
         method: "PUT", // Specify the request method
@@ -346,20 +339,5 @@ export class OlympusApp {
   }
 
   startServerMode() {
-    //ConfigLoadedEvent.on((config) => {
-    //  this.getAudioManager().start();
-//
-    //  Object.values(config.controllers).forEach((controllerOptions) => {
-    //    if (controllerOptions.type.toLowerCase() === "awacs") {
-    //      this.getControllerManager().addController(
-    //        new AWACSController(
-    //          { frequency: controllerOptions.frequency, modulation: controllerOptions.modulation },
-    //          controllerOptions.coalition,
-    //          controllerOptions.callsign
-    //        )
-    //      );
-    //    }
-    //  });
-    //});
   }
 }

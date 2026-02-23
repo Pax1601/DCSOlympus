@@ -330,7 +330,7 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
                     .getMap()
                     .setOption("cameraPluginPort", mapOptions.cameraPluginPort + 1)
                 }
-                onChange={(ev) => getApp().getMap().setOption("cameraPluginPort", ev.target.value)}
+                onChange={(ev) => getApp().getMap().setOption("cameraPluginPort", Number(ev.target.value))}
               />
             </div>
           </div>

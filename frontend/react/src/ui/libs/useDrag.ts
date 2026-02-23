@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export const useDrag = (props: { ref, initialPosition, count}) => {
+export const useDrag = (props: { ref: React.RefObject<HTMLElement>, initialPosition: { x: number, y: number }, count: number }) => {
   const [position, setPosition] = useState({ x: props.initialPosition.x, y: props.initialPosition.y });
   const [dragging, isDragging] = useState(false);
   const [count, setCount] = useState(0)
@@ -10,13 +10,13 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
     setPosition({ x: props.initialPosition.x, y: props.initialPosition.y })
   }
 
-  const handleMouseUp = (evt) => {
+  const handleMouseUp = (evt: MouseEvent) => {
     evt.preventDefault();
 
     isDragging(false);
   };
 
-  const handleMouseDown = (evt) => {
+  const handleMouseDown = (evt: MouseEvent) => {
     evt.preventDefault();
 
     const { current: draggableElement } = props.ref;
@@ -29,14 +29,17 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
   };
 
   const handleMouseMove = useCallback(
-    (evt) => {
+    (evt: MouseEvent) => {
       const { current: draggableElement } = props.ref;
 
       if (!dragging || !draggableElement) return;
 
       evt.preventDefault();
 
-      const parentRect = draggableElement.parentElement.getBoundingClientRect();
+      const parentRect = draggableElement.parentElement?.getBoundingClientRect();
+
+      if (!parentRect) return;
+
       const rect = draggableElement.getBoundingClientRect();
 
       const [width, height] = [rect.width, rect.height];
@@ -61,7 +64,7 @@ export const useDrag = (props: { ref, initialPosition, count}) => {
     };
   }, [handleMouseMove]);
 
-  const forcePosition = (x, y) => {
+  const forcePosition = (x: number, y: number) => {
     setPosition({x, y});
   }
 

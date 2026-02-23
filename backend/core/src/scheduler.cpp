@@ -179,9 +179,28 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			}
 
 			unit->setActivePath(newPath);
-			unit->setState(State::REACH_DESTINATION);
+			// Only change the state to REACH_DESTINATION if we are not in SIMULATE_ENGAGEMENT state, because in this state the unit can move.
+			if (unit->getState() != State::SIMULATE_ENGAGEMENT)
+				unit->setState(State::REACH_DESTINATION);
 			log(username + " updated destination path for unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
 		}
+	}
+	/************************/
+	else if (key.compare("stop") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr)
+		{
+			json::value path = value[L"path"];
+			list<Coords> newPath;
+
+			// Set the path to an empty list to stop the unit, and set the state to IDLE
+			unit->setActivePath(newPath);
+			unit->setState(State::IDLE);
+
+			log(username + " stopped unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
 	}
 	/************************/
 	else if (key.compare("smoke") == 0)
@@ -685,6 +704,17 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setTargetPosition(loc);
 			unit->setState(State::SIMULATE_FIRE_FIGHT);
 			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to simulate a fire fight", true);
+		}
+	}
+	/************************/
+	else if (key.compare("simulateEngagement") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unit->setState(State::SIMULATE_ENGAGEMENT);
+			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to simulate an engagement", true);
 		}
 	}
 	/************************/

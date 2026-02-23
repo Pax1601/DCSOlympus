@@ -571,6 +571,10 @@
   background-image: url("/images/states/miss-on-purpose.svg");
 }
 
+[data-object|="unit"][data-state="simulate-engagement"] .unit-state {
+  background-image: url("/images/states/miss-on-purpose.svg");
+}
+
 [data-object|="unit"][data-state="scenic-aaa"] .unit-state {
   background-image: url("/images/states/scenic-aaa.svg");
 }

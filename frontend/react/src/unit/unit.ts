@@ -77,6 +77,7 @@ import { ArrowMarker } from "../map/markers/arrowmarker";
 import { Spot } from "../mission/spot";
 import { SpotEditMarker } from "../map/markers/spoteditmarker";
 import { SpotMarker } from "../map/markers/spotmarker";
+import { Coalition } from "../types/types";
 
 const bearingStrings = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west", "north"];
 
@@ -92,7 +93,7 @@ export abstract class Unit extends CustomMarker {
   #radarState: boolean | undefined = undefined;
   #human: boolean = false;
   #controlled: boolean = false;
-  #coalition: string = "neutral";
+  #coalition: Coalition = "neutral";
   #country: number = 0;
   #name: string = "";
   #unitName: string = "";
@@ -619,7 +620,7 @@ export abstract class Unit extends CustomMarker {
           let newCoalition = enumToCoalition(dataExtractor.extractUInt8());
           updateMarker = true;
           if (newCoalition != this.#coalition) this.#clearRanges();
-          this.#coalition = newCoalition;
+          this.#coalition = newCoalition as Coalition;
           break; // If the coalition has changed, redraw the range circles to update the colour
         case DataIndexes.country:
           this.#country = dataExtractor.extractUInt8();
@@ -1325,9 +1326,9 @@ export abstract class Unit extends CustomMarker {
       /* Hide the unit if it is Olympus-controlled and Olympus-controlled units are hidden */
       (this.isControlledByOlympus() && hiddenTypes["olympus"]) ||
       /* Hide the unit if this specific category is hidden */
-      hiddenTypes[this.getMarkerCategory()] ||
+      hiddenTypes[this.getMarkerCategory() as keyof typeof hiddenTypes] ||
       /* Hide the unit if this coalition is hidden */
-      hiddenTypes[this.#coalition] ||
+      hiddenTypes[this.#coalition as keyof typeof hiddenTypes] ||
       /* Hide the unit if it does not belong to the commanded coalition and it is not detected by a method that can pinpoint its location (RWR does not count) */
       (!this.belongsToCommandedCoalition() &&
         (this.#detectionMethods.length == 0 || (this.#detectionMethods.length == 1 && this.#detectionMethods[0] === RWR))) ||
@@ -1540,7 +1541,7 @@ export abstract class Unit extends CustomMarker {
   delete(explosion: boolean, explosionType: string, immediate: boolean) {
     getApp()
       .getServerManager()
-      .deleteUnit(this.ID, explosion, explosionType, immediate, (commandHash) => {
+      .deleteUnit(this.ID, explosion, explosionType, immediate, (commandHash: string) => {
         /* When the command is executed, add an explosion marker where the unit was */
         if (explosion) {
           // TODO some commands don't currently return a commandHash, fix that!
@@ -1636,6 +1637,10 @@ export abstract class Unit extends CustomMarker {
           .getServerManager()
           .simulateFireFight(this.ID, latlng, altitude + targetGroundElevation - unitGroundElevation);
     });
+  }
+
+  simulateEngagement() {
+    getApp().getServerManager().simulateEngagement(this.ID);
   }
 
   // TODO: Remove coalition
@@ -1995,7 +2000,7 @@ export abstract class Unit extends CustomMarker {
         .querySelector(".unit")
         ?.setAttribute(
           "data-operate-as",
-          this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT
+          this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT || this.getState() === UnitState.SIMULATE_ENGAGEMENT
             ? this.#operateAs
             : "neutral"
         );
@@ -2223,8 +2228,8 @@ export abstract class Unit extends CustomMarker {
     /* Iterate all existing lines and remove those associated to a spot that no longer exists */
     Object.keys(this.#spotLines).forEach((spotID) => {
       if (getApp().getMissionManager().getSpotByID(Number(spotID)) === undefined) {
-        getApp().getMap().removeLayer(this.#spotLines[spotID]);
-        delete this.#spotLines[spotID];
+        getApp().getMap().removeLayer(this.#spotLines[Number(spotID)]);
+        delete this.#spotLines[Number(spotID)];
       }
     });
   }
@@ -2258,8 +2263,8 @@ export abstract class Unit extends CustomMarker {
     /* Iterate all existing edit markers and remove those associated to a spot that no longer exists */
     Object.keys(this.#spotEditMarkers).forEach((spotID) => {
       if (getApp().getMissionManager().getSpotByID(Number(spotID)) === undefined) {
-        getApp().getMap().removeLayer(this.#spotEditMarkers[spotID]);
-        delete this.#spotEditMarkers[spotID];
+        getApp().getMap().removeLayer(this.#spotEditMarkers[Number(spotID)]);
+        delete this.#spotEditMarkers[Number(spotID)];
       }
     });
   }
@@ -2283,6 +2288,7 @@ export abstract class Unit extends CustomMarker {
     } else {
       // Update the existing spot marker
       if (!getApp().getMap().hasLayer(this.#spotMarkers[spot.getID()])) this.#spotMarkers[spot.getID()].addTo(getApp().getMap());
+      //@ts-ignore "freeze" is a custom property we add to the marker to prevent it from being moved by the update loop while the user is dragging it
       var frozen = this.#spotMarkers[spot.getID()].options["freeze"];
       if (!frozen) {
         this.#spotMarkers[spot.getID()].setLatLng(spot.getTargetPosition());
@@ -2292,8 +2298,8 @@ export abstract class Unit extends CustomMarker {
     /* Iterate all existing markers and remove those associated to a spot that no longer exists */
     Object.keys(this.#spotMarkers).forEach((spotID) => {
       if (getApp().getMissionManager().getSpotByID(Number(spotID)) === undefined) {
-        getApp().getMap().removeLayer(this.#spotMarkers[spotID]);
-        delete this.#spotMarkers[spotID];
+        getApp().getMap().removeLayer(this.#spotMarkers[Number(spotID)]);
+        delete this.#spotMarkers[Number(spotID)];
       }
     });
   }
@@ -2676,7 +2682,7 @@ export class GroundUnit extends Unit {
 }
 
 export class NavyUnit extends Unit {
-  #carrier: Carrier;
+  #carrier: Carrier | null = null;
 
   constructor(ID: number) {
     super(ID);

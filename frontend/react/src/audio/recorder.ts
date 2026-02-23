@@ -5,11 +5,10 @@ export class Recorder {
   });
   #trackGenerator: any; // TODO can we have typings?
   #writer: any;
-  #gainNode: GainNode;
   #mediaRecorder: MediaRecorder;
   #recording = false;
   #chunks: any[] = [];
-  onRecordingCompleted: (blob: Blob) => void
+  onRecordingCompleted: (blob: Blob) => void = (blob) => {};
 
   constructor() {
     this.#decoder.configure({
@@ -34,7 +33,7 @@ export class Recorder {
     });
   }
 
-  recordBuffer(arrayBuffer) {
+  recordBuffer(arrayBuffer: ArrayBuffer) {
     if (!this.#recording) return;
 
     const init = {
@@ -69,7 +68,7 @@ export class Recorder {
     this.#recording = false;
   }
 
-  #handleDecodedData(audioData) {
+  #handleDecodedData(audioData: AudioData) {
     this.#writer.ready.then(() => {
       this.#writer.write(audioData);
     });

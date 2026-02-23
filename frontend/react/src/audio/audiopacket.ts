@@ -13,9 +13,9 @@ export enum MessageType {
 export class AudioPacket {
   /* Mandatory data */
   #frequencies: { frequency: number; modulation: number; encryption: number }[] = [];
-  #audioData: Uint8Array;
-  #transmissionGUID: string;
-  #clientGUID: string;
+  #audioData: Uint8Array | undefined;
+  #transmissionGUID: string | undefined;
+  #clientGUID: string | undefined;
 
   /* Default data */
   #unitID: number = 0;

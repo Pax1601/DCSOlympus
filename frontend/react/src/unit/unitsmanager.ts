@@ -62,7 +62,7 @@ export class UnitsManager {
   #units: { [ID: number]: Unit } = {};
   #groups: { [groupName: string]: Group } = {};
   #unitDatabase: UnitDatabase;
-  #protectionCallback: (units: Unit[]) => void = (units) => {};
+  #protectionCallback: (units: Unit[]) => void = (units: Unit[]) => {};
   #AWACSReference: Unit | null = null;
   #clusters: { [key: number]: Unit[] } = {};
   #pathMarkers: PathMarker[] = [];
@@ -89,11 +89,11 @@ export class UnitsManager {
     });
 
     SessionDataLoadedEvent.on((sessionData) => {
-      UnitsRefreshedEvent.on((units) => {
+      UnitsRefreshedEvent.on((units: Unit[]) => {
         const localSessionData = deepCopyTable(sessionData);
         if (localSessionData.hotgroups) {
           Object.keys(localSessionData.hotgroups).forEach((hotgroup) => {
-            localSessionData.hotgroups[hotgroup].forEach((ID) => {
+            localSessionData.hotgroups[hotgroup].forEach((ID: number) => {
               let unit = this.getUnitByID(ID);
               if (unit) this.addToHotgroup(Number(hotgroup), [unit]);
             });
@@ -329,7 +329,7 @@ export class UnitsManager {
     }
 
     /* Update the path markers */
-    if (this.#pathMarkers.find((pathMarker: PathMarker) => pathMarker.options["freeze"]) === undefined) {
+    if (this.#pathMarkers.find((pathMarker: PathMarker) => pathMarker.options["freeze" as keyof typeof pathMarker.options]) === undefined) {
       this.#pathMarkers.forEach((pathMarker: PathMarker) => {
         if (!pathMarkersCoordinates.some((coord: LatLng) => pathMarker.getLatLng().equals(coord))) {
           pathMarker.remove();
@@ -550,7 +550,7 @@ export class UnitsManager {
 
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the destination for each unit. If mantainRelativePosition is true, compute the destination so to hold the relative positions */
       var unitDestinations: { [key: number]: LatLng } = {};
@@ -621,6 +621,24 @@ export class UnitsManager {
     } else callback(units);
   }
 
+  forceIdle(units: Unit[] | null = null, onExecution: () => void = () => {}) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units: Unit[]) => {
+      onExecution();
+      for (let idx in units) {
+        getApp().getServerManager().forceIdle(units[idx].ID);
+      }
+      this.#showActionMessage(units, " forced to idle");
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+
   /** Instruct all the selected units to land at a specific location
    *
    * @param latlng Location where to land at
@@ -630,7 +648,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.landAt(latlng));
 
@@ -651,7 +669,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.changeSpeed(speedChange));
     };
@@ -670,7 +688,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.changeAltitude(altitudeChange));
     };
@@ -689,7 +707,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setSpeed(speed));
       this.#showActionMessage(units, `setting speed to ${msToKnots(speed)} kts`);
@@ -709,7 +727,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setSpeedType(speedType));
       this.#showActionMessage(units, `setting speed type to ${speedType}`);
@@ -729,7 +747,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setAltitude(altitude));
       this.#showActionMessage(units, `setting altitude to ${mToFt(altitude)} ft`);
@@ -749,7 +767,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setAltitudeType(altitudeType));
       this.#showActionMessage(units, `setting altitude type to ${altitudeType}`);
@@ -769,7 +787,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setROE(ROE));
       this.#showActionMessage(units, `ROE set to ${ROE}`);
@@ -790,7 +808,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setAlarmState(alarmState));
       this.#showActionMessage(units, `Alarm State set to ${alarmState.toString()}`);
@@ -810,7 +828,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setReactionToThreat(reactionToThreat));
       this.#showActionMessage(units, `reaction to threat set to ${reactionToThreat}`);
@@ -830,7 +848,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setEmissionsCountermeasures(emissionCountermeasure));
       this.#showActionMessage(units, `emissions & countermeasures set to ${emissionCountermeasure}`);
@@ -850,7 +868,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setOnOff(onOff));
       this.#showActionMessage(units, `unit active set to ${onOff}`);
@@ -870,7 +888,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setFollowRoads(followRoads));
       this.#showActionMessage(units, `follow roads set to ${followRoads}`);
@@ -890,7 +908,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setOperateAs(operateAs));
       this.#showActionMessage(units, `operate as set to ${operateAs}`);
@@ -923,7 +941,7 @@ export class UnitsManager {
   ) {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setAdvancedOptions(isActiveTanker, isActiveAWACS, TACAN, radio, generalSettings));
       this.#showActionMessage(units, `advanced options set`);
@@ -952,7 +970,7 @@ export class UnitsManager {
   ) {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) =>
         unit.setEngagementProperties(
@@ -986,7 +1004,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.attackUnit(ID));
       this.#showActionMessage(units, `attacking unit ${this.getUnitByID(ID)?.getUnitName()}`);
@@ -1005,7 +1023,7 @@ export class UnitsManager {
 
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.refuel());
       this.#showActionMessage(units, `sent to nearest tanker`);
@@ -1027,7 +1045,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
         getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
@@ -1047,7 +1065,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
       var unitTargets: { [key: number]: LatLng } = {};
@@ -1074,7 +1092,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
       var unitTargets: { [key: number]: LatLng } = {};
@@ -1101,7 +1119,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
       var unitTargets: { [key: number]: LatLng } = {};
@@ -1129,7 +1147,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
       var unitTargets: { [key: number]: LatLng } = {};
@@ -1157,7 +1175,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
       var unitTargets: { [key: number]: LatLng } = {};
@@ -1185,7 +1203,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       getGroundElevation(latlng, (response: string) => {
         var groundElevation: number | null = null;
@@ -1219,7 +1237,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.scenicAAA());
       this.#showActionMessage(units, `unit set to perform scenic AAA`);
@@ -1237,10 +1255,28 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.missOnPurpose());
       this.#showActionMessage(units, `unit set to perform miss-on-purpose AAA`);
+    };
+
+    if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+      getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+      this.#protectionCallback = callback;
+    } else callback(units);
+  }
+  /** Instruct units to enter into simulate engagement mode. Units will aim at nearby enemy units with some scatter, without actually firing any shots.
+   * @param units (Optional) Array of units to apply the control to. If not provided, the operation will be completed on all selected units.
+   */
+  simulateEngagement(units: Unit[] | null = null, onExecution: () => void = () => {}) {
+    if (units === null) units = this.getSelectedUnits();
+    units = units.filter((unit) => !unit.getHuman());
+
+    let callback = (units: Unit[]) => {
+      onExecution();
+      units.forEach((unit: Unit) => unit.simulateEngagement());
+      this.#showActionMessage(units, `unit set to perform simulated engagement`);
     };
 
     if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
@@ -1257,7 +1293,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       /* Compute the target for each unit. If mantainRelativePosition is true, compute the target so to hold the relative positions */
       var unitTargets: { [key: number]: LatLng } = {};
@@ -1284,7 +1320,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setShotsScatter(shotsScatter));
       this.#showActionMessage(units, `shots scatter set to ${shotsScatter}`);
@@ -1304,7 +1340,7 @@ export class UnitsManager {
     if (units === null) units = this.getSelectedUnits();
     units = units.filter((unit) => !unit.getHuman());
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units.forEach((unit: Unit) => unit.setShotsIntensity(shotsIntensity));
       this.#showActionMessage(units, `shots intensity set to ${shotsIntensity}`);
@@ -1342,7 +1378,7 @@ export class UnitsManager {
 
     // TODO: maybe check units are all of same coalition?
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       if (this.getUnitsCategories(units).length == 1) {
         var unitsData: { ID: number; location: LatLng }[] = [];
@@ -1416,7 +1452,7 @@ export class UnitsManager {
     // TODO add fast delete option
     if (units === null) units = this.getSelectedUnits(); /* Can be applied to humans too */
 
-    let callback = (units) => {
+    let callback = (units: Unit[]) => {
       onExecution();
       units?.forEach((unit: Unit) => unit.delete(explosion, explosionType, false));
       this.#showActionMessage(units as Unit[], `deleted`);
@@ -1821,7 +1857,7 @@ export class UnitsManager {
     this.#protectionCallback(this.getSelectedUnits());
   }
 
-  setAWACSReference(ID) {
+  setAWACSReference(ID: number) {
     this.#AWACSReference = this.#units[ID] ?? null;
     AWACSReferenceChangedEvent.dispatch(this.#AWACSReference);
   }
@@ -1851,7 +1887,7 @@ export class UnitsManager {
     var clustered = turf.clustersDbscan(geojson, distance, { minPoints: minPoints ?? 1 });
 
     let clusters: { [key: number]: Unit[] } = {};
-    clustered.features.forEach((feature, idx) => {
+    clustered.features.forEach((feature: any, idx: number) => {
       if (feature.properties.cluster !== undefined) {
         if (clusters[feature.properties.cluster] === undefined) clusters[feature.properties.cluster] = [] as Unit[];
         clusters[feature.properties.cluster].push(units[idx]);

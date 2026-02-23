@@ -27,6 +27,7 @@ import { OlDropdown, OlDropdownItem } from "../components/oldropdown";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { Coalition, SRSClientData } from "../../types/types";
 import { AudioManagerState, GAME_MASTER, NONE } from "../../constants/constants";
+import { Shortcut } from "../../shortcut/shortcut";
 
 export function AudioMenu(props: { open: boolean; onClose: () => void; children?: JSX.Element | JSX.Element[] }) {
   const [devices, setDevices] = useState([] as MediaDeviceInfo[]);
@@ -35,7 +36,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
   const [audioManagerEnabled, setAudioManagerEnabled] = useState(false);
   const [activeSource, setActiveSource] = useState(null as AudioSource | null);
   const [count, setCount] = useState(0);
-  const [shortcuts, setShortcuts] = useState({});
+  const [shortcuts, setShortcuts] = useState({} as Record<string, Shortcut>);
   const [input, setInput] = useState(undefined as undefined | MediaDeviceInfo);
   const [output, setOutput] = useState(undefined as undefined | MediaDeviceInfo);
   const [coalition, setCoalition] = useState("blue" as Coalition);
@@ -352,7 +353,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
               <OlDropdown label={input ? input.label : "Default"}>
                 {devices
                   .filter((device) => device.kind === "audioinput")
-                  .map((device, idx) => {
+                  .map((device, _) => {
                     return (
                       <OlDropdownItem onClick={() => getApp().getAudioManager().setInput(device)}>
                         <div className="w-full truncate text-left">{device.label}</div>
@@ -365,7 +366,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
               <OlDropdown label={output ? output.label : "Default"}>
                 {devices
                   .filter((device) => device.kind === "audiooutput")
-                  .map((device, idx) => {
+                  .map((device, _) => {
                     return (
                       <OlDropdownItem onClick={() => getApp().getAudioManager().setOutput(device)}>
                         <div className="w-full truncate text-left">{device.label}</div>
@@ -429,7 +430,7 @@ export function AudioMenu(props: { open: boolean; onClose: () => void; children?
             if (sink instanceof RadioSink)
               return (
                 <RadioSinkPanel
-                  shortcutKeys={shortcuts[`PTT${idx}Active`]?.toActions() ?? []}
+                  shortcutKeys={shortcuts[`PTT${idx}Active` as keyof typeof shortcuts]?.toActions() ?? []}
                   key={sink.getName()}
                   radio={sink}
                   onExpanded={() => {

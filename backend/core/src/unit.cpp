@@ -332,7 +332,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
 					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
 					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
-					//case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	Useful for debugging, but useless in production and very data hungry
+					case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	//Useful for debugging, but useless in production and very data hungry
 					case DataIndex::barrelHeight:				appendNumeric(ss, datumIndex, barrelHeight); break;
 					case DataIndex::muzzleVelocity:				appendNumeric(ss, datumIndex, muzzleVelocity); break;
 					case DataIndex::aimTime:					appendNumeric(ss, datumIndex, aimTime); break;

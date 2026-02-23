@@ -109,7 +109,7 @@ export function OlRoundStateButton(props: {
   icon: IconProp;
   tooltip?: string | (() => JSX.Element | JSX.Element[]);
   tooltipPosition?: string;
-  onClick: (event) => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) {
   const [hover, setHover] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null as number | null);

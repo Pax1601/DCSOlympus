@@ -92,6 +92,7 @@ void NavyUnit::setState(unsigned char newState)
 		}
 		case State::FIRE_AT_AREA:
 		case State::SIMULATE_FIRE_FIGHT:
+		case State::SIMULATE_ENGAGEMENT:
 		case State::SCENIC_AAA:
 		case State::MISS_ON_PURPOSE: {
 			setTargetPosition(Coords(NULL));
@@ -135,6 +136,12 @@ void NavyUnit::setState(unsigned char newState)
 		resetActiveDestination();
 		break;
 	}
+	case State::SIMULATE_ENGAGEMENT: {
+		setEnableTaskCheckFailed(false);
+		clearActivePath();
+		resetActiveDestination();
+		break;
+	}
 	case State::SCENIC_AAA: {
 		setEnableTaskCheckFailed(false);
 		clearActivePath();
@@ -164,8 +171,6 @@ void NavyUnit::setState(unsigned char newState)
 
 void NavyUnit::AIloop()
 {
-	srand(static_cast<unsigned int>(time(NULL)) + ID);
-
 	switch (state) {
 	case State::IDLE: {
 		setTask("Idle");
@@ -239,6 +244,12 @@ void NavyUnit::AIloop()
 		setState(State::IDLE);
 		break;
 	}
+	case State::SIMULATE_ENGAGEMENT: {
+		setTask("Simulating engagement");
+		// TODO 
+		setState(State::IDLE);
+		break;
+								   }
 	default:
 		break;
 	}

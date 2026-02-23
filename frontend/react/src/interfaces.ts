@@ -59,8 +59,26 @@ export interface SessionData {
     )[];
     hotgroups?: { [key: string]: number[] };
     starredSpawns?: { [key: number]: SpawnRequestTable };
-    drawings?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
-    navpoints?: { [key: string]: { visibility: boolean; opacity: number; name: string; guid: string; containers: any; drawings: any } };
+    drawings?: {
+        "Mission drawings": {
+            drawings: Record<string, any>;
+            containers: Record<string, any>;
+            guid: string;
+            name: string;
+            opacity: number;
+            visibility: boolean;
+        };
+    };
+    navpoints?: {
+        Navpoints: {
+            drawings: Record<string, any>;
+            containers: Record<string, any>;
+            guid: string;
+            name: string;
+            opacity: number;
+            visibility: boolean;
+        };
+    };
     mapSource?: { id: string };
     customLoadouts?: { [key: string]: LoadoutBlueprint[] };
 }

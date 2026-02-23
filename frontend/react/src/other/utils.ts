@@ -5,8 +5,10 @@ import { AlarmState, DateAndTime } from "../interfaces";
 import { Converter } from "usng";
 import { MGRS } from "../types/types";
 import { featureCollection } from "turf";
-import MagVar from "magvar";
 import axios from "axios";
+
+// @ts-ignore Magvar library does not have types available, so we ignore type checking for this part
+import MagVar from "magvar";
 
 export function bearing(lat1: number, lon1: number, lat2: number, lon2: number, magnetic = true) {
   const φ1 = deg2rad(lat1); // φ, λ in radians
@@ -87,7 +89,7 @@ export function ConvertDDToDMS(D: number, lng: boolean) {
   else return zeroPad(deg, 2) + "°" + zeroPad(min, 2) + "'" + zeroPad(sec, 2) + "." + zeroPad(dec, 2) + '"';
 }
 
-export function DDToDDM(decimalDegrees) {
+export function DDToDDM(decimalDegrees = 0) {
   const degrees = Math.trunc(decimalDegrees);
   const minutes = Math.abs((decimalDegrees - degrees) * 60);
 
@@ -136,6 +138,7 @@ export function latLngToMGRS(lat: number, lng: number, precision: number = 4): M
     return undefined;
   }
 
+  // @ts-ignore Magvar library does not have types available, so we ignore type checking for this part
   const mgrs = new Converter({}).LLtoMGRS(lat, lng, precision);
   const match = mgrs.match(new RegExp(`^(\\d{2})([A-Z])([A-Z])([A-Z])(\\d+)$`));
   if (match) {
@@ -161,6 +164,7 @@ export function latLngToMGRS(lat: number, lng: number, precision: number = 4): M
 }
 
 export function latLngToUTM(lat: number, lng: number) {
+  // @ts-ignore Magvar library does not have types available, so we ignore type checking for this part
   return new Converter({}).LLtoUTM(lat, lng);
 }
 
@@ -223,7 +227,8 @@ export function polyContains(latlng: LatLng, polygon: Polygon) {
       return [latlng.lng, latlng.lat];
     }),
   ];
-  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat]);
+  const firstLatLngs = polygon.getLatLngs()[0] as LatLng[];
+  coordinates[0].push([firstLatLngs[0].lng, firstLatLngs[0].lat]);
   const poly = turf.polygon(coordinates);
   return turf.inside(turf.point([latlng.lng, latlng.lat]), poly);
 }
@@ -239,7 +244,8 @@ export function polyCenter(polygon: Polygon) {
       return [latlng.lng, latlng.lat];
     }),
   ];
-  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat]);
+  const firstLatLngs = polygon.getLatLngs()[0] as LatLng[];
+  coordinates[0].push([firstLatLngs[0].lng, firstLatLngs[0].lat]);
   const poly = turf.polygon(coordinates);
   const center = turf.center(featureCollection([poly]));
   return new LatLng(center.geometry.coordinates[1], center.geometry.coordinates[0]);
@@ -260,7 +266,8 @@ export function randomPointInPoly(polygon: Polygon): LatLng {
       return [latlng.lng, latlng.lat];
     }),
   ];
-  coordinates[0].push([polygon.getLatLngs()[0][0].lng, polygon.getLatLngs()[0][0].lat]);
+  const firstLatLngs = polygon.getLatLngs()[0] as LatLng[];
+  coordinates[0].push([firstLatLngs[0].lng, firstLatLngs[0].lat]);
   const poly = turf.polygon(coordinates);
   var inside = turf.inside(turf.point([lng, lat]), poly);
 
@@ -374,7 +381,7 @@ export function getGroundElevation(latlng: LatLng, callback: CallableFunction) {
   xhr.send();
 }
 
-export function makeID(length) {
+export function makeID(length = 5) {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
@@ -386,7 +393,7 @@ export function makeID(length) {
   return result;
 }
 
-export function hash(str, seed = 0) {
+export function hash(str: string, seed = 0) {
   let h1 = 0xdeadbeef ^ seed,
     h2 = 0x41c6ce57 ^ seed;
   for (let i = 0, ch; i < str.length; i++) {
@@ -402,7 +409,7 @@ export function hash(str, seed = 0) {
   return `${4294967296 * (2097151 & h2) + (h1 >>> 0)}`;
 }
 
-export function byteArrayToInteger(array) {
+export function byteArrayToInteger(array: Uint8Array) {
   let res = 0;
   for (let i = 0; i < array.length; i++) {
     res = res << 8;
@@ -411,7 +418,7 @@ export function byteArrayToInteger(array) {
   return res;
 }
 
-export function integerToByteArray(value, length) {
+export function integerToByteArray(value: number, length: number) {
   let res: number[] = [];
   for (let i = 0; i < length; i++) {
     res.push(value & 255);
@@ -420,7 +427,7 @@ export function integerToByteArray(value, length) {
   return res;
 }
 
-export function doubleToByteArray(number) {
+export function doubleToByteArray(number: number) {
   var buffer = new ArrayBuffer(8); // JS numbers are 8 bytes long, or 64 bits
   var longNum = new Float64Array(buffer); // so equivalent to Float64
 
@@ -429,28 +436,28 @@ export function doubleToByteArray(number) {
   return Array.from(new Uint8Array(buffer));
 }
 
-export function byteArrayToDouble(array) {
-  return new DataView(array.reverse().buffer).getFloat64(0);
+export function byteArrayToDouble(array: Uint8Array) {
+  return new DataView(array.reverse().buffer ).getFloat64(0);
 }
 
-export function rand(min, max) {
+export function rand(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-export function getRandomColor(seed) {
+export function getRandomColor(seed: number) {
   var h = ((seed * Math.PI * 100) % 360) + 1;
   var s = 50;
   var l = 50;
   return "hsl(" + h + "," + s + "%," + l + "%)";
 }
 
-export function wait(time) {
+export function wait(time: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, time);
   });
 }
 
-export function computeBearingRangeString(latlng1, latlng2) {
+export function computeBearingRangeString(latlng1: LatLng, latlng2: LatLng) {
   return `${zeroAppend(bearing(latlng1.lat, latlng1.lng, latlng2.lat, latlng2.lng), 3)}/${zeroAppend(latlng1.distanceTo(latlng2) / 1852, 3)}`;
 }
 
@@ -468,7 +475,7 @@ export function spellNumbers(string: string) {
   return string;
 }
 
-export function blobToBase64(blob) {
+export function blobToBase64(blob: Blob) {
   return new Promise((resolve: (value: string) => void, _) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result as string);
@@ -476,9 +483,9 @@ export function blobToBase64(blob) {
   });
 }
 
-export function mode(array) {
+export function mode(array: any[]) {
   if (array.length == 0) return null;
-  var modeMap = {};
+  var modeMap: { [key: string]: number } = {};
   var maxEl = array[0],
     maxCount = 1;
   for (var i = 0; i < array.length; i++) {
@@ -493,7 +500,7 @@ export function mode(array) {
   return maxEl;
 }
 
-export function deepCopyTable(table) {
+export function deepCopyTable(table: any) {
   try {
     return JSON.parse(JSON.stringify(table));
   } catch (error) {
@@ -502,7 +509,7 @@ export function deepCopyTable(table) {
   }
 }
 
-export function computeStandardFormationOffset(formation, idx) {
+export function computeStandardFormationOffset(formation: string, idx: number) {
   let offset = { x: 0, y: 0, z: 0 };
   if (formation === "trail") {
     offset.y = 75 * idx;
@@ -555,7 +562,7 @@ export function computeStandardFormationOffset(formation, idx) {
   return offset;
 }
 
-export function nearestNiceNumber(number) {
+export function nearestNiceNumber(number: number) {
   let niceNumbers = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
   let niceNumber = niceNumbers[0];
   for (let i = 0; i < niceNumbers.length; i++) {
@@ -567,7 +574,7 @@ export function nearestNiceNumber(number) {
   return niceNumber;
 }
 
-export function roundToNearestFive(number) {
+export function roundToNearestFive(number: number) {
   return Math.round(number / 5) * 5;
 }
 
@@ -589,7 +596,7 @@ export function fromDCSFormationOffset(offset: { x: number; y: number; z: number
  * @param {number} percent - The percentage to adjust the brightness (positive to lighten, negative to darken).
  * @returns {string} - The adjusted color in hashtag format.
  */
-export function adjustBrightness(color, percent) {
+export function adjustBrightness(color: string, percent: number): string {
   // Ensure the color is in the correct format
   if (!/^#[0-9A-F]{6}$/i.test(color)) {
     throw new Error("Invalid color format. Use #RRGGBB.");
@@ -615,7 +622,7 @@ export function adjustBrightness(color, percent) {
  * @param {number} opacity - The opacity value (between 0 and 1).
  * @returns {string} - The color in rgba format.
  */
-export function setOpacity(color, opacity) {
+export function setOpacity(color: string, opacity: number): string {
   // Ensure the color is in the correct format
   if (!/^#[0-9A-F]{6}$/i.test(color)) {
     throw new Error("Invalid color format. Use #RRGGBB.");
@@ -640,7 +647,7 @@ export function setOpacity(color, opacity) {
  * @param {string} color - The color in hashtag format (e.g., "#RRGGBB").
  * @returns {number} - The brightness value (0 to 255).
  */
-export function computeBrightness(color) {
+export function computeBrightness(color: string): number {
   // Ensure the color is in the correct format
   if (!/^#[0-9A-F]{6}$/i.test(color)) {
     throw new Error("Invalid color format. Use #RRGGBB.");

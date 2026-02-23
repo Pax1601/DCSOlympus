@@ -92,6 +92,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             TACAN: undefined as undefined | TACAN,
             generalSettings: undefined as undefined | GeneralSettings,
             alarmState: undefined as undefined | AlarmState,
+            simualteEngagement: undefined as undefined | boolean,
         };
     }
 
@@ -174,6 +175,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             emissionsCountermeasures: (unit: Unit) => unit.getEmissionsCountermeasures(),
             scenicAAA: (unit: Unit) => unit.getState() === "scenic-aaa",
             missOnPurpose: (unit: Unit) => unit.getState() === "miss-on-purpose",
+            simualteEngagement: (unit: Unit) => unit.getState() === "simulate-engagement",
             shotsScatter: (unit: Unit) => unit.getShotsScatter(),
             shotsIntensity: (unit: Unit) => unit.getShotsIntensity(),
             operateAs: (unit: Unit) => unit.getOperateAs(),
@@ -203,16 +205,16 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             },
         } as { [key in keyof typeof selectedUnitsData]: (unit: Unit) => void };
 
-        var updatedData = {};
+        var updatedData = {} as { [key in keyof typeof selectedUnitsData]: any };
         let anyForcedDataUpdated = false;
         Object.entries(getters).forEach(([key, getter]) => {
             let newDatum = getApp()?.getUnitsManager()?.getSelectedUnitsVariable(getter);
-            if (forcedUnitsData[key] !== undefined) {
-                if (newDatum === forcedUnitsData[key]) {
+            if (forcedUnitsData[key as keyof typeof forcedUnitsData] !== undefined) {
+                if (newDatum === forcedUnitsData[key as keyof typeof forcedUnitsData]) {
                     anyForcedDataUpdated = true;
-                    forcedUnitsData[key] = undefined;
-                } else updatedData[key] = forcedUnitsData[key];
-            } else updatedData[key] = newDatum;
+                    forcedUnitsData[key as keyof typeof forcedUnitsData] = undefined;
+                } else updatedData[key as keyof typeof forcedUnitsData] = forcedUnitsData[key as keyof typeof forcedUnitsData];
+            } else updatedData[key as keyof typeof forcedUnitsData] = newDatum;
         });
         setSelectedUnitsData(updatedData as typeof selectedUnitsData);
         if (anyForcedDataUpdated) setForcedUnitsData({ ...forcedUnitsData });
@@ -243,15 +245,17 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
         blue: { [key: string]: { label: string; occurences: number } };
         red: { [key: string]: { label: string; occurences: number } };
         neutral: { [key: string]: { label: string; occurences: number } };
+        all: { [key: string]: { label: string; occurences: number } };
     } = {
         blue: {},
         red: {},
         neutral: {},
+        all: {},
     };
 
     selectedUnits.forEach((unit) => {
-        if (!(unit.getName() in unitOccurences[unit.getCoalition()]))
-            unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label };
+        if (!(unit.getName() in unitOccurences[unit.getCoalition() ]))
+            unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label ?? "" };
         else unitOccurences[unit.getCoalition()][unit.getName()].occurences++;
     });
 
@@ -260,7 +264,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     const filteredUnits = Object.values(getApp()?.getUnitsManager()?.getUnits() ?? {}).filter(
         (unit) =>
             unit.getUnitName().toLowerCase().indexOf(filterString.toLowerCase()) >= 0 ||
-            (unit.getBlueprint()?.label ?? "").toLowerCase()?.indexOf(filterString.toLowerCase()) >= 0
+            (unit.getBlueprint()?.label ?? "").toLowerCase()?.indexOf(filterString.toLowerCase()) >= 0,
     );
 
     const everyUnitIsGround = selectedCategories.every((category) => {
@@ -303,8 +307,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     let customStringJson: { [key: string]: any } | null = null;
     try {
         customStringJson = JSON.parse(customString);
-    } catch (e) {
-    }
+    } catch (e) {}
 
     // Used to show custom strings as json, recusively returns divs for arrays
     function recursivelyPrintArray(obj: any, depth = 0) {
@@ -314,19 +317,33 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                     <div className="text-gray-400">[</div>
                     {obj.map((item: any, index: number) => (
                         <div key={index} className={`my-auto flex text-gray-200`}>
-                            {recursivelyPrintArray(item, depth + 1)}{index < obj.length - 1 ? <span className={`
+                            {recursivelyPrintArray(item, depth + 1)}
+                            {index < obj.length - 1 ? (
+                                <span
+                                    className={`
                               text-gray-400
-                            `}>, </span> : null}
+                            `}
+                                >
+                                    ,{" "}
+                                </span>
+                            ) : null}
                         </div>
                     ))}
                     <div className="text-gray-400">]</div>
                 </div>
             );
         } else {
-            if (typeof obj === "boolean") return <div className={`
-              my-auto
-              text-${obj ? `green` : `red`}-400
-            `}>{obj.toString()}</div>;
+            if (typeof obj === "boolean")
+                return (
+                    <div
+                        className={`
+                          my-auto
+                          text-${obj ? `green` : `red`}-400
+                        `}
+                    >
+                        {obj.toString()}
+                    </div>
+                );
             else return <div className={`my-auto text-gray-200`}>{obj}</div>;
         }
     }
@@ -437,10 +454,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     <OlToggle
                                                         key={entry[0]}
                                                         onClick={() => {
-                                                            selectionFilter["control"][entry[0]] = !selectionFilter["control"][entry[0]];
+                                                            selectionFilter["control"][entry[0] as keyof typeof selectionFilter["control"]] = !selectionFilter["control"][entry[0] as keyof typeof selectionFilter["control"]];
                                                             setSelectionFilter(deepCopyTable(selectionFilter));
                                                         }}
-                                                        toggled={selectionFilter["control"][entry[0]]}
+                                                        toggled={selectionFilter["control"][entry[0] as keyof typeof selectionFilter["control"]]}
                                                     />
                                                 </div>
                                             );
@@ -523,10 +540,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 key={coalition}
                                                             >
                                                                 <OlCheckbox
-                                                                    checked={selectionFilter[coalition][entry[0]]}
+                                                                    checked={(selectionFilter as any)[coalition][entry[0]]}
                                                                     disabled={selectionID !== null}
                                                                     onChange={() => {
-                                                                        selectionFilter[coalition][entry[0]] = !selectionFilter[coalition][entry[0]];
+                                                                        (selectionFilter as any)[coalition][entry[0]] = !(selectionFilter as any)[coalition][entry[0]];
                                                                         setSelectionFilter(deepCopyTable(selectionFilter));
                                                                     }}
                                                                 />
@@ -545,7 +562,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     onChange={() => {
                                                         const newValue = !Object.values(selectionFilter["blue"]).some((value) => value);
                                                         Object.keys(selectionFilter["blue"]).forEach((key) => {
-                                                            selectionFilter["blue"][key] = newValue;
+                                                            (selectionFilter as any)["blue"][key] = newValue;
                                                         });
                                                         setSelectionFilter(deepCopyTable(selectionFilter));
                                                     }}
@@ -557,7 +574,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     onChange={() => {
                                                         const newValue = !Object.values(selectionFilter["neutral"]).some((value) => value);
                                                         Object.keys(selectionFilter["neutral"]).forEach((key) => {
-                                                            selectionFilter["neutral"][key] = newValue;
+                                                            (selectionFilter as any)["neutral"][key] = newValue;
                                                         });
                                                         setSelectionFilter(deepCopyTable(selectionFilter));
                                                     }}
@@ -569,7 +586,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     onChange={() => {
                                                         const newValue = !Object.values(selectionFilter["red"]).some((value) => value);
                                                         Object.keys(selectionFilter["red"]).forEach((key) => {
-                                                            selectionFilter["red"][key] = newValue;
+                                                            (selectionFilter as any)["red"][key] = newValue;
                                                         });
                                                         setSelectionFilter(deepCopyTable(selectionFilter));
                                                     }}
@@ -596,7 +613,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                             filteredUnits.map((unit) => {
                                                 return (
                                                     <OlDropdownItem
-                                                        key={unit[0]}
+                                                        key={unit.ID}
                                                         onClick={() => {
                                                             setSelectionID(unit.ID);
                                                         }}
@@ -651,7 +668,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                     if (selectionID) {
                                         if (unit.ID !== selectionID) return;
                                     } else {
-                                        if (!selectionFilter[unit.getCoalition()][unit.getMarkerCategory()]) return;
+                                        if (!(selectionFilter as any)[unit.getCoalition()][unit.getMarkerCategory()]) return;
                                     }
 
                                     unit.setSelected(true);
@@ -737,7 +754,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                             <div>
                                 {
                                     <>
-                                        {["blue", "red", "neutral"].map((coalition) => {
+                                        {(["blue", "red", "neutral"] as Coalition[]).map((coalition) => {
                                             return Object.keys(unitOccurences[coalition]).map((name, idx) => {
                                                 return (
                                                     <div
@@ -863,7 +880,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 setForcedUnitsData({
                                                                     ...forcedUnitsData,
                                                                     desiredAltitudeType: selectedUnitsData.desiredAltitudeType === "ASL" ? "AGL" : "ASL",
-                                                                })
+                                                                }),
                                                             );
                                                     }}
                                                     tooltip={() => (
@@ -884,7 +901,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             setForcedUnitsData({
                                                                 ...forcedUnitsData,
                                                                 desiredAltitude: value,
-                                                            })
+                                                            }),
                                                         );
                                                 }}
                                                 value={selectedUnitsData.desiredAltitude}
@@ -941,7 +958,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 setForcedUnitsData({
                                                                     ...forcedUnitsData,
                                                                     desiredSpeedType: selectedUnitsData.desiredSpeedType === "CAS" ? "GS" : "CAS",
-                                                                })
+                                                                }),
                                                             );
                                                     }}
                                                     tooltip={() => (
@@ -963,7 +980,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                         setForcedUnitsData({
                                                             ...forcedUnitsData,
                                                             desiredSpeed: value,
-                                                        })
+                                                        }),
                                                     );
                                             }}
                                             value={selectedUnitsData.desiredSpeed}
@@ -1147,7 +1164,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                             setForcedUnitsData({
                                                                                 ...forcedUnitsData,
                                                                                 ROE: ROEs[convertROE(idx)],
-                                                                            })
+                                                                            }),
                                                                         );
                                                                 }}
                                                                 active={selectedUnitsData.ROE === ROEs[convertROE(idx)]}
@@ -1265,7 +1282,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                         setForcedUnitsData({
                                                                             ...forcedUnitsData,
                                                                             alarmState: [AlarmState.GREEN, AlarmState.AUTO, AlarmState.RED][idx],
-                                                                        })
+                                                                        }),
                                                                     );
                                                             }}
                                                             active={selectedUnitsData.alarmState === [AlarmState.GREEN, AlarmState.AUTO, AlarmState.RED][idx]}
@@ -1406,14 +1423,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     reactionToThreat: reactionsToThreat[idx],
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     }}
                                                                     active={selectedUnitsData.reactionToThreat === reactionsToThreat[idx]}
                                                                     icon={icon}
                                                                 />
                                                             );
-                                                        }
+                                                        },
                                                     )}
                                                 </OlButtonGroup>
                                             </div>
@@ -1543,14 +1560,14 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     emissionsCountermeasures: emissionsCountermeasures[idx],
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     }}
                                                                     active={selectedUnitsData.emissionsCountermeasures === emissionsCountermeasures[idx]}
                                                                     icon={icon}
                                                                 />
                                                             );
-                                                        }
+                                                        },
                                                     )}
                                                 </OlButtonGroup>
                                             </div>
@@ -1599,7 +1616,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     setForcedUnitsData({
                                                                         ...forcedUnitsData,
                                                                         isActiveTanker: !selectedUnitsData.isActiveTanker,
-                                                                    })
+                                                                    }),
                                                             );
                                                 }}
                                                 tooltip={() => (
@@ -1653,7 +1670,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     setForcedUnitsData({
                                                                         ...forcedUnitsData,
                                                                         isActiveAWACS: !selectedUnitsData.isActiveAWACS,
-                                                                    })
+                                                                    }),
                                                             );
                                                 }}
                                                 tooltip={() => (
@@ -1828,11 +1845,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     if (selectedUnitsData.scenicAAA) {
                                                                         getApp()
                                                                             .getUnitsManager()
-                                                                            .stop(null, () =>
+                                                                            .forceIdle(null, () =>
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     scenicAAA: false,
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     } else {
                                                                         getApp()
@@ -1841,7 +1858,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     scenicAAA: true,
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     }
                                                                 }}
@@ -1878,11 +1895,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     if (selectedUnitsData.missOnPurpose) {
                                                                         getApp()
                                                                             .getUnitsManager()
-                                                                            .stop(null, () =>
+                                                                            .forceIdle(null, () =>
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     missOnPurpose: false,
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     } else {
                                                                         getApp()
@@ -1891,7 +1908,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     missOnPurpose: true,
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     }
                                                                 }}
@@ -1905,6 +1922,56 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             />
                                                         </div>
                                                         {/* ============== Miss on purpose toggle END ============== */}
+                                                        {/* ============== Simulate engagement toggle START ============== */}
+                                                        <div
+                                                            className={`
+                                                              flex
+                                                              content-center
+                                                              justify-between
+                                                            `}
+                                                        >
+                                                            <span
+                                                                className={`
+                                                                  my-auto
+                                                                  font-normal
+                                                                  dark:text-white
+                                                                `}
+                                                            >
+                                                                Simulate engagement mode
+                                                            </span>
+                                                            <OlToggle
+                                                                toggled={selectedUnitsData.simualteEngagement}
+                                                                onClick={() => {
+                                                                    if (selectedUnitsData.simualteEngagement) {
+                                                                        getApp()
+                                                                            .getUnitsManager()
+                                                                            .forceIdle(null, () =>
+                                                                                setForcedUnitsData({
+                                                                                    ...forcedUnitsData,
+                                                                                    simualteEngagement: false,
+                                                                                }),
+                                                                            );
+                                                                    } else {
+                                                                        getApp()
+                                                                            .getUnitsManager()
+                                                                            .simulateEngagement(null, () =>
+                                                                                setForcedUnitsData({
+                                                                                    ...forcedUnitsData,
+                                                                                    simualteEngagement: true,
+                                                                                }),
+                                                                            );
+                                                                    }
+                                                                }}
+                                                                tooltip={() => (
+                                                                    <OlExpandingTooltip
+                                                                        title="Enable simulate engagement mode"
+                                                                        content="This mode will make the unit simulate an engagement with nearby enemy units, actively aiming at their position but with some scatter. This can help Game Masters create a more immersive scenario without increasing its difficulty, while also avoiding any risk of blue/red units shooting each other when they are not supposed to."
+                                                                    />
+                                                                )}
+                                                                tooltipRelativeToParent={true}
+                                                            />
+                                                        </div>
+                                                        {/* ============== Simulate engagement toggle END ============== */}
                                                         <div
                                                             className={`
                                                               flex gap-4
@@ -1939,7 +2006,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                             setForcedUnitsData({
                                                                                                 ...forcedUnitsData,
                                                                                                 shotsScatter: idx + 1,
-                                                                                            })
+                                                                                            }),
                                                                                         );
                                                                                 }}
                                                                                 active={selectedUnitsData.shotsScatter === idx + 1}
@@ -1951,38 +2018,42 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             </div>
                                                             {/* ============== Shots scatter END ============== */}
                                                             {/* ============== Shots intensity START ============== */}
-                                                            {/*<div className="flex flex-col gap-2">
-                                <span
-                                  className={`
-                                    my-auto font-normal
-                                    dark:text-white
-                                  `}
-                                >
-                                  Shots intensity
-                                </span>
-                                <OlButtonGroup>
-                                  {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
-                                    return (
-                                      <OlButtonGroupItem
-                                        key={idx}
-                                        onClick={() => {
-                                          getApp()
-                                            .getUnitsManager()
-                                            .setShotsIntensity(idx + 1, null, () =>
-                                              setForcedUnitsData({
-                                                ...forcedUnitsData,
-                                                shotsIntensity: idx + 1,
-                                              })
-                                            );
-                                        }}
-                                        active={selectedUnitsData.shotsIntensity === idx + 1}
-                                        icon={icon}
-                                      />
-                                    );
-                                  })}
-                                </OlButtonGroup>
-                              </div>
-                              {/* ============== Shots intensity END ============== */}
+                                                            <div className={`
+                                                              flex flex-col
+                                                              gap-2
+                                                            `}>
+                                                                <span
+                                                                    className={`
+                                                                      my-auto
+                                                                      font-normal
+                                                                      dark:text-white
+                                                                    `}
+                                                                >
+                                                                    Shots intensity
+                                                                </span>
+                                                                <OlButtonGroup>
+                                                                    {[olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
+                                                                        return (
+                                                                            <OlButtonGroupItem
+                                                                                key={idx}
+                                                                                onClick={() => {
+                                                                                    getApp()
+                                                                                        .getUnitsManager()
+                                                                                        .setShotsIntensity(idx + 1, null, () =>
+                                                                                            setForcedUnitsData({
+                                                                                                ...forcedUnitsData,
+                                                                                                shotsIntensity: idx + 1,
+                                                                                            }),
+                                                                                        );
+                                                                                }}
+                                                                                active={selectedUnitsData.shotsIntensity === idx + 1}
+                                                                                icon={icon}
+                                                                            />
+                                                                        );
+                                                                    })}
+                                                                </OlButtonGroup>
+                                                            </div>
+                                                            {/* ============== Shots intensity END ============== */}
                                                             {/*<OlStateButton
                                 className="mt-auto"
                                 checked={showEngagementSettings}
@@ -2018,7 +2089,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
                                                                                     operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
-                                                                                })
+                                                                                }),
                                                                             );
                                                                     }}
                                                                     tooltip={() => (
@@ -2460,7 +2531,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                                 engagementRange,
                                                                                 targetingRange,
                                                                                 aimMethodRange,
-                                                                                acquisitionRange
+                                                                                acquisitionRange,
                                                                             );
                                                                     }}
                                                                 >
@@ -2496,7 +2567,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     setForcedUnitsData({
                                                                         ...forcedUnitsData,
                                                                         followRoads: !selectedUnitsData.followRoads,
-                                                                    })
+                                                                    }),
                                                                 );
                                                         }}
                                                         tooltip={() => (
@@ -2535,7 +2606,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 setForcedUnitsData({
                                                                     ...forcedUnitsData,
                                                                     onOff: !selectedUnitsData.onOff,
-                                                                })
+                                                                }),
                                                             );
                                                     }}
                                                     tooltip={() => (
@@ -2699,7 +2770,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 if (activeRadioSettings)
                                                     activeRadioSettings.radio.callsignNumber = Math.max(
                                                         Math.min(Number(activeRadioSettings.radio.callsignNumber - 1), 9),
-                                                        1
+                                                        1,
                                                     );
                                                 setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                                             }}
@@ -2707,7 +2778,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 if (activeRadioSettings)
                                                     activeRadioSettings.radio.callsignNumber = Math.max(
                                                         Math.min(Number(activeRadioSettings.radio.callsignNumber + 1), 9),
-                                                        1
+                                                        1,
                                                     );
                                                 setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                                             }}
@@ -2727,7 +2798,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 if (activeRadioSettings)
                                                     activeRadioSettings.TACAN.channel = Math.max(
                                                         Math.min(Number(activeRadioSettings.TACAN.channel - 1), 126),
-                                                        1
+                                                        1,
                                                     );
                                                 setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                                             }}
@@ -2735,7 +2806,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 if (activeRadioSettings)
                                                     activeRadioSettings.TACAN.channel = Math.max(
                                                         Math.min(Number(activeRadioSettings.TACAN.channel + 1), 126),
-                                                        1
+                                                        1,
                                                     );
                                                 setActiveRadioSettings(deepCopyTable(activeRadioSettings));
                                             }}
@@ -2831,7 +2902,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             selectedUnitsData.isActiveAWACS,
                                                             activeRadioSettings.TACAN,
                                                             activeRadioSettings.radio,
-                                                            selectedUnitsData.generalSettings
+                                                            selectedUnitsData.generalSettings,
                                                         );
                                                 setActiveRadioSettings(null);
                                                 setShowRadioSettings(false);
@@ -2968,7 +3039,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             selectedUnitsData.isActiveAWACS,
                                                             selectedUnitsData.TACAN,
                                                             selectedUnitsData.radio,
-                                                            activeAdvancedSettings
+                                                            activeAdvancedSettings,
                                                         );
                                                 setActiveAdvancedSettings(null);
                                                 setShowAdvancedSettings(false);
@@ -3102,13 +3173,27 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     );
                                                 })}
                                         </div>
-                                        {/* Useful for debugging but very data hungry
-                    
-                    ([UnitState.SIMULATE_FIRE_FIGHT, UnitState.MISS_ON_PURPOSE, UnitState.SCENIC_AAA] as string[]).includes(selectedUnits[0].getState()) && (
-                      <div className="my-auto text-sm text-gray-400">
-                        Time to next tasking: {zeroAppend(selectedUnits[0].getTimeToNextTasking(), 0, true, 2)}s
-                      </div>
-                    )*/}
+                                        {
+                                            /* Useful for debugging but very data hungry */
+
+                                            (
+                                                [
+                                                    UnitState.SIMULATE_FIRE_FIGHT,
+                                                    UnitState.MISS_ON_PURPOSE,
+                                                    UnitState.SCENIC_AAA,
+                                                    UnitState.SIMULATE_ENGAGEMENT,
+                                                ] as string[]
+                                            ).includes(selectedUnits[0].getState()) && (
+                                                <div
+                                                    className={`
+                                                      my-auto text-sm
+                                                      text-gray-400
+                                                    `}
+                                                >
+                                                    Time to next tasking: {zeroAppend(selectedUnits[0].getTimeToNextTasking(), 0, true, 2)}s
+                                                </div>
+                                            ) /**/
+                                        }
 
                                         <div
                                             className={`

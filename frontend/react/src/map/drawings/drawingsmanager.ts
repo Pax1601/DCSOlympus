@@ -4,14 +4,14 @@ import { CommandModeOptionsChangedEvent, DrawingsInitEvent, DrawingsUpdatedEvent
 import { MapOptions } from "../../types/types";
 import { Circle, DivIcon, LatLng, Layer, LayerGroup, layerGroup, Marker, Polygon, Polyline } from "leaflet";
 import { NavpointMarker } from "../markers/navpointmarker";
-import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../../constants/constants";
+import { BLUE_COMMANDER, GAME_MASTER, RED_COMMANDER } from "../../constants/constants";
 
 export abstract class DCSDrawing {
   #name: string;
   #parent: DCSDrawingsContainer;
-  #weight: number;
+  #weight: number = 1;
 
-  constructor(drawingData, parent: DCSDrawingsContainer) {
+  constructor(drawingData: any, parent: DCSDrawingsContainer) {
     this.#name = drawingData["name"];
     this.#parent = parent;
     this.setWeight(drawingData);
@@ -33,7 +33,7 @@ export abstract class DCSDrawing {
     };
   }
 
-  setWeight(drawingData) {
+  setWeight(drawingData: any) {
     // Explicit handling for undefined or null thickness
     if (drawingData.thickness === undefined || drawingData.thickness === null) {
       return;
@@ -63,11 +63,11 @@ export class DCSEmptyLayer extends DCSDrawing {
     return layerGroup();
   }
 
-  setOpacity(opacity: number): void {
+  setOpacity(_: number): void {
     //Do nothing
   }
 
-  setVisibility(visibility: boolean): void {
+  setVisibility(_: boolean): void {
     //Do nothing
   }
 
@@ -81,9 +81,9 @@ export class DCSEmptyLayer extends DCSDrawing {
 }
 
 export class DCSPolygon extends DCSDrawing {
-  #polygon: Polygon | Circle;
+  #polygon: Polygon | Circle = new Polygon([]);
 
-  constructor(drawingData, parent) {
+  constructor(drawingData: any, parent: DCSDrawingsContainer) {
     super(drawingData, parent);
 
     const polygonMode = drawingData["polygonMode"];
@@ -92,10 +92,13 @@ export class DCSPolygon extends DCSDrawing {
     switch (drawingData.style) {
       case "dash":
         dashArray = [5];
+        break;
       case "dot":
         dashArray = [2];
+        break;
       case "dotdash":
         dashArray = "2, 5, 5, 5";
+        break;
     }
 
     switch (polygonMode) {
@@ -252,6 +255,7 @@ export class DCSPolygon extends DCSDrawing {
             "visible": true
           }
            */
+          
         const points: [number, number][] = Object.values(drawingData.points as Record<string, { lat: number; lng: number }>).map((p) => [p.lat, p.lng]);
 
         this.#polygon = new Polygon(points, {
@@ -262,7 +266,7 @@ export class DCSPolygon extends DCSDrawing {
           weight: this.getWeight(),
           dashArray: dashArray,
         });
-
+        break;
       case "free":
         const freePolypoints: [number, number][] = Object.values(drawingData.points as Record<string, { lat: number; lng: number }>).map((p) => [p.lat, p.lng]);
 
@@ -317,12 +321,12 @@ export class DCSPolygon extends DCSDrawing {
 }
 
 export class DCSLine extends DCSDrawing {
-  #layer: Polyline | LayerGroup;
+  #layer: Polyline | LayerGroup = new Polyline([]);
   #basePolyline: Polyline | null = null;
   #crossMarkers: Marker[] = [];
-  #style: string;
+  #style: string = "solid";
 
-  constructor(drawingData, parent) {
+  constructor(drawingData: any, parent: DCSDrawingsContainer) {
     if (!drawingData) return;
 
     super(drawingData, parent);
@@ -522,9 +526,9 @@ export class DCSLine extends DCSDrawing {
 }
 
 export class DCSTextBox extends DCSDrawing {
-  #marker: Marker;
+  #marker: Marker = new Marker([0, 0]);
 
-  constructor(drawingData, parent) {
+  constructor(drawingData: any, parent: DCSDrawingsContainer) {
 
     if (!drawingData) return;
 
@@ -626,7 +630,7 @@ export class DCSTextBox extends DCSDrawing {
 export class DCSNavpoint extends DCSDrawing {
   #point: NavpointMarker;
 
-  constructor(drawingData, parent) {
+  constructor(drawingData: any, parent: DCSDrawingsContainer) {
     super(drawingData, parent);
 
     this.#point = new NavpointMarker([drawingData.lat, drawingData.lng], drawingData.callsignStr, drawingData.comment, drawingData.tag);
@@ -694,7 +698,7 @@ export class DCSDrawingsContainer {
     return this.#guid;
   }
 
-  initFromData(drawingsData) {
+  initFromData(drawingsData: any) {
     let hasContainers = false;
     Object.keys(drawingsData).forEach((layerName: string) => {
       const layerIsAContainer = drawingsData[layerName]["name"] === undefined && drawingsData[layerName]["callsignStr"] === undefined;
@@ -827,7 +831,7 @@ export class DCSDrawingsContainer {
   }
 
   toJSON() {
-    let JSON = { drawings: {}, containers: {}, guid: this.#guid, name: this.#name, opacity: this.#opacity, visibility: this.#visibility };
+    let JSON = { drawings: {} as Record<string, any>, containers: {} as Record<string, any>, guid: this.#guid, name: this.#name, opacity: this.#opacity, visibility: this.#visibility };
     this.#drawings.forEach((drawing) => {
       JSON["drawings"][drawing.getName()] = drawing.toJSON();
     });
@@ -837,7 +841,7 @@ export class DCSDrawingsContainer {
     return JSON;
   }
 
-  fromJSON(JSON) {
+  fromJSON(JSON: any) {
     this.#subContainers.forEach((container) => {
       if (JSON["containers"][container.getName()]) container.fromJSON(JSON["containers"][container.getName()]);
     });
@@ -851,7 +855,7 @@ export class DCSDrawingsContainer {
     this.setVisibility(JSON["visibility"]);
   }
 
-  hasSearchString(searchString) {
+  hasSearchString(searchString: string) {
     if (this.getName().toLowerCase().includes(searchString.toLowerCase())) return true;
     if (
       this.getDrawings().some((drawing) =>
@@ -871,8 +875,26 @@ export class DrawingsManager {
   #drawingsContainer: DCSDrawingsContainer;
   #navpointsContainer: DCSDrawingsContainer;
   #updateEventRequested: boolean = false;
-  #sessionDataDrawings = {};
-  #sessionDataNavpoints = {};
+  #sessionDataDrawings = {} as {
+        "Mission drawings": {
+            drawings: Record<string, any>;
+            containers: Record<string, any>;
+            guid: string;
+            name: string;
+            opacity: number;
+            visibility: boolean;
+        };
+    };
+  #sessionDataNavpoints = {} as {
+        Navpoints: {
+            drawings: Record<string, any>;
+            containers: Record<string, any>;
+            guid: string;
+            name: string;
+            opacity: number;
+            visibility: boolean;
+        };
+    };
   #initialized: boolean = false;
   #hiddenContainers: Record<string, { parent: DCSDrawingsContainer, container: DCSDrawingsContainer }> = {};
 
@@ -888,8 +910,26 @@ export class DrawingsManager {
     });
 
     SessionDataLoadedEvent.on((sessionData) => {
-      this.#sessionDataDrawings = sessionData.drawings ?? {};
-      this.#sessionDataNavpoints = sessionData.navpoints ?? {};
+      this.#sessionDataDrawings = sessionData.drawings ?? {} as {
+        "Mission drawings": {
+            drawings: Record<string, any>;
+            containers: Record<string, any>;
+            guid: string;
+            name: string;
+            opacity: number;
+            visibility: boolean;
+        };
+    };
+      this.#sessionDataNavpoints = sessionData.navpoints ?? {} as {
+        Navpoints: {
+            drawings: Record<string, any>;
+            containers: Record<string, any>;
+            guid: string;
+            name: string;
+            opacity: number;
+            visibility: boolean;
+        };
+    };
       if (this.#initialized) {
         if (this.#sessionDataDrawings["Mission drawings"]) this.#drawingsContainer.fromJSON(this.#sessionDataDrawings["Mission drawings"]);
         if (this.#sessionDataNavpoints["Navpoints"]) this.#navpointsContainer.fromJSON(this.#sessionDataNavpoints["Navpoints"]);
@@ -925,7 +965,7 @@ export class DrawingsManager {
   }
 
   private restrictContainer(containerName: string, targetContainer: any, hiddenKey: string) {
-    const container = targetContainer.getSubContainers().find(c => c.getName().toLowerCase() === containerName.toLowerCase());
+    const container = targetContainer.getSubContainers().find((c: any) => c.getName().toLowerCase() === containerName.toLowerCase());
     if (container) {
       this.#hiddenContainers[hiddenKey] = {
         parent: container['#parent'],

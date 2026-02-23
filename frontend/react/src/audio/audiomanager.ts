@@ -28,10 +28,10 @@ import { TextToSpeechSource } from "./texttospeechsource";
 import { AudioOptions, Coalition, SRSClientData } from "../types/types";
 
 export class AudioManager {
-  #audioContext: AudioContext;
+  #audioContext: AudioContext | null = null;
   #devices: MediaDeviceInfo[] = [];
-  #input: MediaDeviceInfo;
-  #output: MediaDeviceInfo;
+  #input: MediaDeviceInfo | null = null;
+  #output: MediaDeviceInfo | null = null;
   #options: AudioOptions = { input: "", output: "" };
 
   /* The audio sinks used to transmit the audio stream to the SRS backend */
@@ -43,24 +43,24 @@ export class AudioManager {
   /* The audio backend must be manually started so that the browser can detect the user is enabling audio.
   Otherwise, no playback will be performed. */
   #state: string = AudioManagerState.STOPPED;
-  #port: number;
-  #endpoint: string;
+  #port: number = 0;
+  #endpoint: string = "";
   #socket: WebSocket | null = null;
   #guid: string = makeID(22);
   #SRSClientsData: SRSClientData[] = [];
-  #syncInterval: number;
+  #syncInterval: number = 0;
   #speechRecognition: boolean = true;
-  #internalTextToSpeechSource: TextToSpeechSource;
+  #internalTextToSpeechSource: TextToSpeechSource | null = null;
   #coalition: Coalition = "blue";
   #commandMode: string = BLUE_COMMANDER;
-  #connectionCheckTimeout: number;
+  #connectionCheckTimeout: number = 0;
   #receivedPackets: number = 0;
 
   constructor() {
     ConfigLoadedEvent.on((config: OlympusConfig) => {
       if (config.audio) {
-        this.setPort(config.audio.WSPort);
-        this.setEndpoint(config.audio.WSEndpoint);
+        this.setPort(config.audio.WSPort ?? 0);
+        this.setEndpoint(config.audio.WSEndpoint ?? "");
       } else console.error("No audio configuration found in the Olympus configuration file");
     });
 
@@ -145,7 +145,7 @@ export class AudioManager {
       this.#receivedPackets++;
 
       /* Extract the clients data */
-      event.data.arrayBuffer().then((packetArray) => {
+      event.data.arrayBuffer().then((packetArray: ArrayBuffer) => {
         const packetUint8Array = new Uint8Array(packetArray);
         if (packetUint8Array[0] === MessageType.clientsData) {
           const newSRSClientsData = JSON.parse(new TextDecoder().decode(packetUint8Array.slice(1))).clientsData;
@@ -156,7 +156,7 @@ export class AudioManager {
           if (newSRSClientsData.length !== this.#SRSClientsData.length) {
             clientsDataChanged = true;
           } else {
-            newSRSClientsData.forEach((newClientData) => {
+            newSRSClientsData.forEach((newClientData: SRSClientData) => {
               /* Check if the length is the same, but the clients names have changed */
               let clientData = this.#SRSClientsData.find((clientData) => newClientData.name === clientData.name);
               if (clientData === undefined) clientsDataChanged = true;
@@ -165,7 +165,7 @@ export class AudioManager {
                 if (
                   clientData.coalition !== newClientData.coalition ||
                   clientData.unitID !== newClientData.unitID ||
-                  Object.keys(clientData.iff).find((key) => clientData.iff[key] !== newClientData.iff[key]) !== undefined ||
+                  Object.keys(clientData.iff).find((key) => clientData.iff[key as keyof typeof clientData.iff] !== newClientData.iff[key as keyof typeof newClientData.iff]) !== undefined ||
                   clientData.radios.find(
                     (radio, idx) => radio.frequency !== newClientData.radios[idx].frequency || radio.modulation !== newClientData.radios[idx].modulation
                   ) !== undefined
@@ -223,10 +223,16 @@ export class AudioManager {
 
                 sink.setTransmittingUnit(getApp().getUnitsManager().getUnitByID(audioPacket.getUnitID()) ?? undefined);
 
+                const audioData = audioPacket.getAudioData();
+                if (!audioData) {
+                  console.error("Received audio packet with no audio data");
+                  return;
+                }
+
                 /* Make a copy of the array buffer for the playback pipeline to use */
-                var dst = new ArrayBuffer(audioPacket.getAudioData().buffer.byteLength);
-                new Uint8Array(dst).set(new Uint8Array(audioPacket.getAudioData().buffer));
-                sink.recordArrayBuffer(audioPacket.getAudioData().buffer);
+                var dst = new ArrayBuffer(audioData.buffer.byteLength);
+                new Uint8Array(dst).set(new Uint8Array(audioData.buffer));
+                sink.recordArrayBuffer(audioData.buffer as ArrayBuffer);
                 sink.playBuffer(dst);
               }
             });
@@ -252,6 +258,18 @@ export class AudioManager {
         if (newOutput) {
           this.#output = newOutput;
           AudioManagerOutputChangedEvent.dispatch(newOutput);
+        }
+      }
+
+      if (!this.#input) {
+        /* If no input device was set, set the default one as input */
+        let newInput = this.#devices.find((device) => device.kind === "audioinput" && device.deviceId === "default");
+        if (newInput) {
+          this.#input = newInput;
+          AudioManagerInputChangedEvent.dispatch(newInput);
+        } else {
+          console.error("No default input device found");
+          return;
         }
       }
 
@@ -361,11 +379,11 @@ export class AudioManager {
     AudioManagerStateChangedEvent.dispatch(this.#state);
   }
 
-  setPort(port) {
+  setPort(port: number) {
     this.#port = port;
   }
 
-  setEndpoint(endpoint) {
+  setEndpoint(endpoint: string) {
     this.#endpoint = endpoint;
   }
 
@@ -410,7 +428,7 @@ export class AudioManager {
     return newRadio;
   }
 
-  tuneNewRadio(frequency, modulation) {
+  tuneNewRadio(frequency: number, modulation: number) {
     /* Check if a radio with the same frequency and modulation already exists */
     let radio = this.#sinks.find((sink) => sink instanceof RadioSink && sink.getFrequency() === frequency && sink.getModulation() === modulation);
     if (radio === undefined) {
@@ -424,7 +442,7 @@ export class AudioManager {
     return this.#sinks;
   }
 
-  removeSink(sink) {
+  removeSink(sink: AudioSink) {
     console.log(`Removing sink ${sink.getName()}`);
     sink.disconnect();
     this.#sinks = this.#sinks.filter((v) => v != sink);
@@ -445,7 +463,7 @@ export class AudioManager {
     return this.#guid;
   }
 
-  send(array) {
+  send(array: Uint8Array) {
     this.#socket?.send(array);
   }
 
@@ -492,7 +510,7 @@ export class AudioManager {
     }
   }
 
-  playText(text) {
+  playText(text: string) {
     this.#sources.find((source) => source instanceof TextToSpeechSource)?.playText(text);
   }
 

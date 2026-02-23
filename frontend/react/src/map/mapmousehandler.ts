@@ -1,4 +1,4 @@
-import { DomEvent, LeafletMouseEvent, Point } from "leaflet";
+import { DomEvent, LeafletMouseEvent } from "leaflet";
 import { Map } from "./map";
 
 enum MapMouseHandlerState {
@@ -41,7 +41,7 @@ export class MapMouseHandler {
 
   mouseWheel: (event: LeafletMouseEvent) => void = () => {};
 
-  constructor(map) {
+  constructor(map: Map) {
     this.#map = map;
 
     /* Events for touchscreen and mouse */
@@ -50,15 +50,15 @@ export class MapMouseHandler {
       DomEvent.on(this.#map.getContainer(), "touchend", (e: any) => this.#onTouchEnd(e), this);
       DomEvent.on(this.#map.getContainer(), "touchmove", (e: any) => this.#onTouchMove(e), this);
     } else {
-      this.#map.on("mouseup", (e: any) => this.#onMouseUp(e));
-      this.#map.on("mousedown", (e: any) => this.#onMouseDown(e));
-      this.#map.on("mousemove", (e: any) => this.#onMouseMove(e));
+      this.#map.on("mouseup", (e: LeafletMouseEvent) => this.#onMouseUp(e));
+      this.#map.on("mousedown", (e: LeafletMouseEvent) => this.#onMouseDown(e));
+      this.#map.on("mousemove", (e: LeafletMouseEvent) => this.#onMouseMove(e));
     }
-    this.#map.on("dblclick", (e: any) => this.#onDoubleClick(e));
+    this.#map.on("dblclick", (e: LeafletMouseEvent) => this.#onDoubleClick(e));
 
     /* Disable unwanted events */
-    this.#map.on("click", (e: any) => e.originalEvent.preventDefault());
-    this.#map.on("contextmenu", (e: any) => e.originalEvent.preventDefault());
+    this.#map.on("click", (e: LeafletMouseEvent) => e.originalEvent.preventDefault());
+    this.#map.on("contextmenu", (e: LeafletMouseEvent) => e.originalEvent.preventDefault());
 
     /* Mouse wheel event */
     DomEvent.on(this.#map.getContainer(), "wheel", (e: any) => this.#onMouseWheel(e), this);

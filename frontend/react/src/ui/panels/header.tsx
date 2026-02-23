@@ -146,7 +146,8 @@ export function Header() {
     if (scrollRef.current) onScroll(scrollRef.current);
   });
 
-  function onScroll(el) {
+  function onScroll(el: EventTarget | null) {
+    if (!(el instanceof HTMLElement)) return;
     const sl = el.scrollLeft;
     const sr = el.scrollWidth - el.scrollLeft - el.clientWidth;
 
@@ -157,12 +158,12 @@ export function Header() {
     sr > 1 && scrolledRight && setScrolledRight(false);
   }
 
-  function unitTypeFilterClickHandler(event: MouseEvent, entryName: string) {
+  function unitTypeFilterClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, entryName: string) {
     if (event.ctrlKey) {
       const hiddenTypes = getApp().getMap().getHiddenTypes();
-      const isAnyTypeHidden = Object.keys(unitViewTypesFilter).some((entryName) => hiddenTypes[entryName] === true);
+      const isAnyTypeHidden = Object.keys(unitViewTypesFilter).some((entryName) => hiddenTypes[entryName as keyof typeof hiddenTypes] === true);
 
-      if (isAnyTypeHidden && !mapHiddenTypes[entryName]) {
+      if (isAnyTypeHidden && !mapHiddenTypes[entryName as keyof typeof mapHiddenTypes]) {
         // If we ctrl+click an already displayed unit type, we show every unit type
         Object.keys(unitViewTypesFilter).forEach((entryName) => {
           getApp().getMap().setHiddenType(entryName, false);
@@ -177,7 +178,7 @@ export function Header() {
 
       getApp().getMap().setHiddenType(entryName, false);
     } else {
-      getApp().getMap().setHiddenType(entryName, !mapHiddenTypes[entryName]);
+      getApp().getMap().setHiddenType(entryName, !mapHiddenTypes[entryName as keyof typeof mapHiddenTypes]);
     }
   }
 
@@ -439,9 +440,9 @@ export function Header() {
               <OlRoundStateButton
                 key={entry[0]}
                 onClick={() => {
-                  getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0]]);
+                  getApp().getMap().setHiddenType(entry[0], !mapHiddenTypes[entry[0] as keyof typeof mapHiddenTypes]);
                 }}
-                checked={!mapHiddenTypes[entry[0]]}
+                checked={!mapHiddenTypes[entry[0] as keyof typeof mapHiddenTypes]}
                 icon={entry[1]}
                 tooltip={"Hide/show " + entry[0] + " units"}
               />
@@ -479,7 +480,7 @@ export function Header() {
               <OlRoundStateButton
                 key={entry[0]}
                 onClick={(event) => unitTypeFilterClickHandler(event, entry[0])}
-                checked={!mapHiddenTypes[entry[0]]}
+                checked={!mapHiddenTypes[entry[0] as keyof typeof mapHiddenTypes]}
                 icon={entry[1]}
                 tooltip={() => {
                   return (

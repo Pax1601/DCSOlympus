@@ -9,4 +9,5 @@
     "typescriptreact"
   ],
   "prettier.printWidth": 160,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

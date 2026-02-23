@@ -152,8 +152,6 @@ void AirUnit::setState(unsigned char newState)
 
 void AirUnit::AIloop()
 {
-	srand(static_cast<unsigned int>(time(NULL)) + ID);
-
 	/* Reset the anchor */
 	if (state != State::IDLE) {
 		setRacetrackAnchor(Coords(NULL));

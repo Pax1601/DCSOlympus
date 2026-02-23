@@ -68,7 +68,7 @@ import { ContextActionSet } from "../unit/contextactionset";
 import { SmokeMarker } from "./markers/smokemarker";
 import { Measure } from "./measure";
 import { FlakMarker } from "./markers/flakmarker";
-import { MapMouseHandler } from "./mapMouseHandler";
+import { MapMouseHandler } from "./mapmousehandler";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);

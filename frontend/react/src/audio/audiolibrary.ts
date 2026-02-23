@@ -122,7 +122,7 @@ export class AmpEnvelope {
     this.start(this.context.currentTime);
   }
 
-  off(MidiEvent: any): void {
+  off(_: any): void {
     return this.stop(this.context.currentTime);
   }
 

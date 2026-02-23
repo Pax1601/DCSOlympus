@@ -8,14 +8,14 @@ import { bearing, deg2rad, midpoint, mToFt, mToNm, nmToM, rad2deg } from "../oth
 export class Measure {
   #active: boolean = false;
   #map: Map;
-  #line: Polyline;
-  #measureMarker: MeasureMarker;
-  #startMarker: MeasureStartMarker;
-  #endMarker: MeasureEndMarker;
+  #line: Polyline | undefined = undefined;
+  #measureMarker: MeasureMarker | undefined = undefined;
+  #startMarker: MeasureStartMarker | undefined = undefined;
+  #endMarker: MeasureEndMarker | undefined = undefined;
   #totalDistance: number = 0;
   onMarkerMoved: (startLatLng: LatLng, endLatLng: LatLng) => void = () => {};
 
-  constructor(map) {
+  constructor(map: Map) {
     this.#map = map;
   }
 
@@ -27,11 +27,11 @@ export class Measure {
       this.#line = new Polyline([this.#startMarker.getLatLng(), this.#endMarker.getLatLng()], { color: "#FFFFFF", dashArray: "5, 5" }).addTo(this.#map);
       this.#measureMarker = new MeasureMarker(new LatLng(0, 0), "", 0).addTo(this.#map);
 
-      this.#startMarker.on("drag", (event) => {
+      this.#startMarker.on("drag", (_) => {
         this.#onMarkersMove();
       });
 
-      this.#endMarker.on("drag", (event) => {
+      this.#endMarker.on("drag", (_) => {
         this.#onMarkersMove();
       });
 
@@ -63,18 +63,19 @@ export class Measure {
   }
 
   moveMarkers(startLatLng: LatLng | null, endLatLng: LatLng | null) {
-    startLatLng && this.#startMarker.setLatLng(startLatLng);
-    endLatLng && this.#endMarker.setLatLng(endLatLng);
+    startLatLng && this.#startMarker?.setLatLng(startLatLng);
+    endLatLng && this.#endMarker?.setLatLng(endLatLng);
     this.#onMarkersMove();
   }
 
   getDistance() {
-    return this.#startMarker.getLatLng().distanceTo(this.#endMarker.getLatLng());
+    if (!this.#startMarker || !this.#endMarker) return 0;
+    return this.#startMarker?.getLatLng().distanceTo(this.#endMarker?.getLatLng());
   }
 
   finish() {
     this.#active = false;
-    this.#endMarker.setMoving(false);
+    this.#endMarker?.setMoving(false);
   }
 
   isActive() {
@@ -86,6 +87,8 @@ export class Measure {
   }
 
   #onMarkersMove() {
+    if (!this.#startMarker || !this.#endMarker || !this.#measureMarker || !this.#line) return;
+
     const distance = this.#startMarker.getLatLng().distanceTo(this.#endMarker.getLatLng());
     let distanceString = "";
     if (distance > nmToM(1)) distanceString = `${mToNm(distance).toFixed(distance < nmToM(10) ? 2 : 0)} NM`;

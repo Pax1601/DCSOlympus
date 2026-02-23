@@ -4,8 +4,8 @@ import { SVGInjector } from "@tanem/svg-injector";
 
 export class NavpointMarker extends CustomMarker {
   #callsignStr: string;
-  #comment: string;
-  #tag: string;
+  #comment: string = "";
+  #tag: string = "";
 
   constructor(latlng: LatLngExpression, callsignStr: string, comment: string, tag: string) {
     super(latlng, { interactive: false, draggable: false });

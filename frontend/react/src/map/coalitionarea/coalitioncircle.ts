@@ -12,9 +12,9 @@ export class CoalitionCircle extends Circle {
   #coalition: Coalition = "blue";
   #selected: boolean = true;
   #creating: boolean = false;
-  #radiusHandle: DraggableHandle;
+  #radiusHandle: DraggableHandle | null = null;
   #labelText: string;
-  #label: Marker;
+  #label: Marker | null = null;
   #updateTimeout: number | null = null;
 
   constructor(latlng: LatLngExpression, options: CircleOptions, creating = true) {

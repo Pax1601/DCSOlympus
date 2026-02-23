@@ -3,14 +3,14 @@ import { getApp } from "../olympusapp";
 
 /* Base audio sink class */
 export abstract class AudioSink {
-  #name: string;
-  #gainNode: GainNode;
+  #name: string = "Unnamed sink";
+  #gainNode: GainNode | null = null;
 
   constructor() {
-    this.#gainNode = getApp().getAudioManager().getAudioContext().createGain();
+    this.#gainNode = getApp().getAudioManager().getAudioContext()?.createGain() ?? null;
   }
 
-  setName(name) {
+  setName(name: string) {
     this.#name = name;
   }
 
@@ -19,7 +19,7 @@ export abstract class AudioSink {
   }
 
   disconnect() {
-    this.getInputNode().disconnect();
+    this.getInputNode()?.disconnect();
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 

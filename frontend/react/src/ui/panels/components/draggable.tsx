@@ -10,7 +10,7 @@ export function Draggable(props: {
   const [refPosition, setRefPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = useCallback(
-    (e) => {
+    (e: MouseEvent) => {
       if (dragging) {
         e.stopPropagation();
         e.preventDefault();
@@ -22,7 +22,7 @@ export function Draggable(props: {
   );
 
   const handleMouseUp = useCallback(
-    (e) => {
+    (e: MouseEvent) => {
       if (dragging) {
         e.stopPropagation();
         e.preventDefault();

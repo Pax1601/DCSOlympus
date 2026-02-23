@@ -33,7 +33,7 @@ export function FormationCanvas(props: {
 
   /* Handle mouse movement, for dragging of the scene */
   const handleMouseMove = useCallback(
-    (e) => {
+    (e: MouseEvent) => {
       if (dragging) {
         e.stopPropagation();
         e.preventDefault();
@@ -49,7 +49,7 @@ export function FormationCanvas(props: {
 
   /* Handle mouse up, to stop dragging the scene */
   const handleMouseUp = useCallback(
-    (e) => {
+    (e: MouseEvent) => {
       if (dragging) {
         e.stopPropagation();
         e.preventDefault();

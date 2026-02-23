@@ -60,7 +60,8 @@ export function MapToolBar(props: {}) {
     CopiedUnitsEvents.on((unitsData) => setCopiedUnitsData(unitsData));
   }, []);
 
-  function onScroll(el) {
+  function onScroll(el: EventTarget | null) {
+    if (!(el instanceof HTMLElement)) return;
     const sl = el.scrollTop;
     const sr = el.scrollHeight - el.scrollTop - el.clientHeight;
 

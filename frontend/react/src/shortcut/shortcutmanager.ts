@@ -13,7 +13,7 @@ export class ShortcutManager {
     return this;
   }
 
-  getShortcut(id) {
+  getShortcut(id: string) {
     return this.#shortcuts[id];
   }
 
@@ -22,7 +22,7 @@ export class ShortcutManager {
   }
 
   getShortcutsOptions() {
-    let shortcutsOptions = {};
+    let shortcutsOptions: { [key: string]: ShortcutOptions } = {};
     for (let id in this.#shortcuts) {
       shortcutsOptions[id] = this.#shortcuts[id].getOptions();
     }

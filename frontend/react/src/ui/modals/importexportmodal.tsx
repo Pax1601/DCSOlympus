@@ -131,10 +131,10 @@ export function ImportExportModal(props: { open: boolean }) {
                   <OlToggle
                     key={entry[0]}
                     onClick={() => {
-                      selectionFilter["control"][entry[0]] = !selectionFilter["control"][entry[0]];
+                      (selectionFilter as any)["control"][entry[0]] = !(selectionFilter as any)["control"][entry[0]];
                       setSelectionFilter(deepCopyTable(selectionFilter));
                     }}
-                    toggled={selectionFilter["control"][entry[0]]}
+                    toggled={(selectionFilter as any)["control"][entry[0]]}
                   />
                 </div>
               );
@@ -173,10 +173,10 @@ export function ImportExportModal(props: { open: boolean }) {
                           <OlCheckbox
                             checked={
                               (appSubState === ImportExportSubstate.EXPORT &&
-                                selectionFilter[coalition][entry[0]] &&
+                                (selectionFilter as any)[coalition][entry[0]] &&
                                 selectableUnits.find((unit) => unit.getMarkerCategory() === entry[0] && unit.getCoalition() === coalition) !== undefined) ||
                               (appSubState === ImportExportSubstate.IMPORT &&
-                                selectionFilter[coalition][entry[0]] &&
+                                (selectionFilter as any)[coalition][entry[0]] &&
                                 Object.values(importData).find((group) =>
                                   group.find((unit) => unit.markerCategory === entry[0] && unit.coalition === coalition)
                                 ) !== undefined)
@@ -190,7 +190,7 @@ export function ImportExportModal(props: { open: boolean }) {
                                 ) === undefined)
                             }
                             onChange={() => {
-                              selectionFilter[coalition][entry[0]] = !selectionFilter[coalition][entry[0]];
+                              (selectionFilter as any)[coalition][entry[0]] = !(selectionFilter as any)[coalition][entry[0]];
                               setSelectionFilter(deepCopyTable(selectionFilter));
                             }}
                           />
@@ -218,7 +218,7 @@ export function ImportExportModal(props: { open: boolean }) {
                       onChange={() => {
                         const newValue = !Object.values(selectionFilter["blue"]).some((value) => value);
                         Object.keys(selectionFilter["blue"]).forEach((key) => {
-                          selectionFilter["blue"][key] = newValue;
+                          (selectionFilter as any)["blue"][key] = newValue;
                         });
                         setSelectionFilter(deepCopyTable(selectionFilter));
                       }}
@@ -230,7 +230,7 @@ export function ImportExportModal(props: { open: boolean }) {
                       onChange={() => {
                         const newValue = !Object.values(selectionFilter["neutral"]).some((value) => value);
                         Object.keys(selectionFilter["neutral"]).forEach((key) => {
-                          selectionFilter["neutral"][key] = newValue;
+                          (selectionFilter as any)["neutral"][key] = newValue;
                         });
                         setSelectionFilter(deepCopyTable(selectionFilter));
                       }}
@@ -242,7 +242,7 @@ export function ImportExportModal(props: { open: boolean }) {
                       onChange={() => {
                         const newValue = !Object.values(selectionFilter["red"]).some((value) => value);
                         Object.keys(selectionFilter["red"]).forEach((key) => {
-                          selectionFilter["red"][key] = newValue;
+                          (selectionFilter as any)["red"][key] = newValue;
                         });
                         setSelectionFilter(deepCopyTable(selectionFilter));
                       }}
@@ -262,7 +262,7 @@ export function ImportExportModal(props: { open: boolean }) {
             if (appSubState === ImportExportSubstate.EXPORT) {
               var unitsToExport: { [key: string]: any } = {};
               selectableUnits
-                .filter((unit) => selectionFilter[unit.getCoalition()][unit.getMarkerCategory()])
+                .filter((unit) => (selectionFilter as any)[unit.getCoalition()][unit.getMarkerCategory()])
                 .forEach((unit: Unit) => {
                   var data: any = unit.getData();
                   if (unit.getGroupName() in unitsToExport) unitsToExport[unit.getGroupName()].push(data);
@@ -288,8 +288,8 @@ export function ImportExportModal(props: { open: boolean }) {
                 };
                 //@ts-ignore TODO
                 showSaveFilePicker(opts)
-                  .then((handle) => handle.createWritable())
-                  .then((writeable) => {
+                  .then((handle: FileSystemFileHandle) => handle.createWritable())
+                  .then((writeable: FileSystemWritableFileStream) => {
                     getApp().setState(OlympusState.IDLE);
                     getApp().addInfoMessage("Exporting data please wait...");
                     writeable
@@ -298,7 +298,7 @@ export function ImportExportModal(props: { open: boolean }) {
                       .catch(() => getApp().addInfoMessage("An error occurred while exporting the data"));
                   })
                   .then(() => getApp().addInfoMessage("Data exported correctly"))
-                  .catch((err) => getApp().addInfoMessage("An error occurred while exporting the data"));
+                  .catch((_: any) => getApp().addInfoMessage("An error occurred while exporting the data"));
               } else {
                 const a = document.createElement("a");
                 const file = new Blob([JSON.stringify(unitsToExport)], {
@@ -316,7 +316,7 @@ export function ImportExportModal(props: { open: boolean }) {
 
                 let { markerCategory, coalition, category } = groupData[0];
 
-                if (selectionFilter[coalition][markerCategory] !== true) continue;
+                if ((selectionFilter as any)[coalition][markerCategory] !== true) continue;
 
                 let unitsToSpawn = groupData.map((unitData: UnitData) => {
                   return { unitType: unitData.name, location: unitData.position, liveryID: "", skill: "High", heading: unitData.heading || 0 };

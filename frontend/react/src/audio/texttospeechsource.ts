@@ -3,13 +3,13 @@ import { getApp } from "../olympusapp";
 import { AudioSourcesChangedEvent } from "../events";
 
 export class TextToSpeechSource extends AudioSource {
-  #source: AudioBufferSourceNode;
+  #source: AudioBufferSourceNode | null = null;
   #duration: number = 0;
   #currentPosition: number = 0;
   #updateInterval: number | null = null;
   #lastUpdateTime: number = 0;
   #playing = false;
-  #audioBuffer: AudioBuffer;
+  #audioBuffer: AudioBuffer | null = null;
   #restartTimeout: any;
   #looping = false;
   #loading = false;
@@ -22,6 +22,13 @@ export class TextToSpeechSource extends AudioSource {
   }
 
   playText(text: string) {
+    const audioContext = getApp().getAudioManager().getAudioContext();
+
+    if (!audioContext) {
+      console.error("Audio context not available");
+      return;
+    }
+
     const requestOptions = {
       method: "PUT", // Specify the request method
       headers: { "Content-Type": "application/json" }, // Specify the content type
@@ -43,9 +50,7 @@ export class TextToSpeechSource extends AudioSource {
         return blob.arrayBuffer();
       })
       .then((contents) => {
-        getApp()
-          .getAudioManager()
-          .getAudioContext()
+        audioContext
           /* Decode the audio file. This method takes care of codecs */
           .decodeAudioData(contents, (audioBuffer) => {
             this.#audioBuffer = audioBuffer;
@@ -63,10 +68,24 @@ export class TextToSpeechSource extends AudioSource {
   }
 
   play() {
+    const audioContext = getApp().getAudioManager().getAudioContext();
+
+    if (!audioContext) {
+      console.error("Audio context not available");
+      return;
+    }
+
+    const outputNode = this.getOutputNode();
+
+    if (!outputNode) {
+      console.error("Output node not available");
+      return;
+    }
+
     /* A new buffer source must be created every time the file is played */
-    this.#source = getApp().getAudioManager().getAudioContext().createBufferSource();
+    this.#source = audioContext.createBufferSource();
     this.#source.buffer = this.#audioBuffer;
-    this.#source.connect(this.getOutputNode());
+    this.#source.connect(outputNode);
     this.#source.loop = this.#looping;
 
     /* Start playing the file at the selected position */
@@ -100,8 +119,8 @@ export class TextToSpeechSource extends AudioSource {
 
   pause() {
     /* Disconnect the source and update the position to the current time (precisely)*/
-    this.#source.stop();
-    this.#source.disconnect();
+    this.#source?.stop();
+    this.#source?.disconnect();
     this.#playing = false;
     this.getConnectedTo().forEach((sink) => sink.setPtt(false));
 
@@ -129,7 +148,7 @@ export class TextToSpeechSource extends AudioSource {
     return this.#duration;
   }
 
-  setCurrentPosition(percentPosition) {
+  setCurrentPosition(percentPosition: number) {
     /* To change the current play position we must:
     1) pause the current playback;
     2) update the current position value;
@@ -144,7 +163,7 @@ export class TextToSpeechSource extends AudioSource {
     this.#currentPosition = (percentPosition / 100) * this.#duration;
   }
 
-  setLooping(looping) {
+  setLooping(looping: boolean) {
     this.#looping = looping;
     if (this.#source) this.#source.loop = looping;
     AudioSourcesChangedEvent.dispatch(getApp().getAudioManager().getSources());

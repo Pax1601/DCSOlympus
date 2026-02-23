@@ -95,6 +95,7 @@ void GroundUnit::setState(unsigned char newState)
 		}
 		case State::FIRE_AT_AREA: 
 		case State::SIMULATE_FIRE_FIGHT: 
+		case State::SIMULATE_ENGAGEMENT:
 		case State::SCENIC_AAA:
 		case State::MISS_ON_PURPOSE: {
 			setTargetPosition(Coords(NULL));
@@ -142,6 +143,13 @@ void GroundUnit::setState(unsigned char newState)
 		resetActiveDestination();
 		break;
 	}
+	case State::SIMULATE_ENGAGEMENT: {
+		setTask("Simulating engagement");
+		setEnableTaskCheckFailed(false);
+		// Do not clearActivePath(); to allow the unit to fight and move at the same time
+		resetActiveDestination();
+		break;
+	}
 	case State::SCENIC_AAA: {
 		setTask("Scenic AAA");
 		setEnableTaskCheckFailed(false);
@@ -164,6 +172,34 @@ void GroundUnit::setState(unsigned char newState)
 	resetTaskFailedCounter();
 	nextTaskingMilliseconds = 0;
 
+	switch (newState) {
+		// Force an initial value of nextTaskingMilliseconds for SIMULATE_ENGAGEMENT to avoid all units shooting at the same time when they start engaging at the same time
+		case State::SIMULATE_ENGAGEMENT: {
+			unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+
+			// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
+			// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
+			map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+
+			// Adjust the aim time based on the number of friendlies in range. The more friendlies, the more we can increase the time to wait before shooting again to maintain a constant volume of fire.
+			double aimTime = getAimTime();
+			if (friendliesInRange.size() > 0) {
+				aimTime *= (1 + friendliesInRange.size());
+			}
+
+			// Multiply the aim time by a random factor to avoid all units shooting at the same time and create a more natural effect
+			aimTime *= RANDOM_ZERO_TO_ONE;
+
+			/* Wait an amout of time depending on the shots intensity */
+			unsigned long timeNow = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+			nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(aimTime * 1000);
+			break;
+		} 
+		default: {
+			break;
+		}
+	}
+
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
 	state = newState;
 
@@ -174,13 +210,16 @@ void GroundUnit::setState(unsigned char newState)
 
 void GroundUnit::AIloop()
 {
-	srand(static_cast<unsigned int>(time(NULL)) + ID);
 	unsigned long timeNow = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
 
 	double currentAmmo = computeTotalAmmo();
 	/* Out of ammo */
 	if (shotsToFire > 0 && currentAmmo < shotsToFire && state != State::IDLE && state != State::REACH_DESTINATION) 
 		setState(State::IDLE);
+
+	// If we are simulating an engagement and we are out of ammo, just ruuuun
+	if (shotsToFire > 0 && currentAmmo < shotsToFire && state == State::SIMULATE_ENGAGEMENT)
+		setState(State::REACH_DESTINATION);
 	
 	/* Account for unit reloading */
 	if (currentAmmo < oldAmmo)
@@ -260,7 +299,7 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		string taskString = "";
 
-		if ((totalShellsFired - shellsFiredAtTasking >= shotsToFire || timeNow >= nextTaskingMilliseconds) && targetPosition != Coords(NULL)) {
+		if (timeNow >= nextTaskingMilliseconds && targetPosition != Coords(NULL)) {
 			if (scheduler->getLoad() > 100) {
 				taskString = "Excessive load, skipping tasking of unit";
 				setTargetPosition(Coords(NULL));
@@ -315,6 +354,10 @@ void GroundUnit::AIloop()
 			}
 		}
 
+		// Reset the task if we have shot the shotsToFire to avoid shooting indefinitely
+		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire && getHasTask())
+			resetTask();
+
 		if (targetPosition == Coords(NULL))
 			setState(State::IDLE);
 
@@ -329,11 +372,184 @@ void GroundUnit::AIloop()
 
 		break;
 	}
+	case State::SIMULATE_ENGAGEMENT: {
+		string taskString = "";
+
+		// Compute the target position. 
+		// First, consider our coalition or our "operate as" coalition to determine who are the enemies. Then, get the closest enemy unit and set it as target.
+		double distance = 0;
+		unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+		unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
+		Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);
+		
+		// Set the target position as the target unit position
+		if (target != nullptr && distance < engagementRange) {
+			setTargetPosition(target->getPosition());
+		}
+		else {
+			setTargetPosition(Coords(NULL));
+		}
+
+		// Write down the difference in shells fired since the last tasking and the shots to fire threshold in the task string for debug purposes
+		taskString += "Shells fired since last tasking: " + to_string(totalShellsFired - shellsFiredAtTasking) + "/" + to_string(shotsToFire) + ". ";
+		// Log the target position and active path size for debug purposes
+		if (targetPosition != Coords(NULL))
+			taskString += "Target position: (" + to_string(targetPosition.lat) + ", " + to_string(targetPosition.lng) + "). ";
+		else
+			taskString += "No target in range. ";
+		taskString += "Active path size: " + to_string(activePath.size()) + ". ";
+
+		if (timeNow >= nextTaskingMilliseconds) {
+			if (scheduler->getLoad() > 100) {
+				taskString = "Excessive load, skipping tasking of unit";
+				setTargetPosition(Coords(NULL));
+				if (getHasTask())
+					resetTask();
+			}
+			else {
+				float randomValue = RANDOM_ZERO_TO_ONE;
+				// Log the random value for debug purposes
+				
+				log(unitName + "(" + name + ")" + " random value: " + to_string(randomValue));
+				// If the unit has an active destination, randomly choose if we want to move or we want to shoot
+				if ((randomValue < 0.5 || targetPosition == Coords(NULL)) && activePath.size() > 0) {
+					// Fake a shoot action so that the unit starts moving
+					totalShellsFired += shotsToFire;
+					// Run for 10 seconds
+					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(10 * 1000);
+					// Set the active destination to NULL so that the moving command is reissued
+					resetActiveDestination();
+				}
+				else {
+					// If we don't have an active destination or we randomly chose to shoot, try to shoot at the target if there is one in range
+					if (targetPosition != Coords(NULL)) {
+						/* Get the distance and bearing to the target */
+						Coords scatteredTargetPosition = targetPosition;
+						double distance;
+						double bearing1;
+						double bearing2;
+						Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, scatteredTargetPosition.lat, scatteredTargetPosition.lng, distance, bearing1, bearing2);
+
+						/* Apply a scatter to the aim */
+						bearing1 += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter + 1) * 10;
+
+						/* Compute the scattered position applying a random scatter to the shot */
+						double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577 + 2 / 57.29577 /* degs */) * RANDOM_MINUS_ONE_TO_ONE;
+						Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
+
+						/* Recover the data from the database */
+						bool indirectFire = false;
+						if (database.has_object_field(to_wstring(name))) {
+							json::value databaseEntry = database[to_wstring(name)];
+							if (databaseEntry.has_boolean_field(L"indirectFire"))
+								indirectFire = databaseEntry[L"indirectFire"].as_bool();
+						}
+
+						/* If the unit is of the indirect fire type, like a mortar, simply shoot at the target */
+						if (indirectFire) {
+							taskString += "Simulating fire fight with indirect fire";
+							log(unitName + "(" + name + ")" + " simulating fire fight with indirect fire");
+							std::ostringstream taskSS;
+							taskSS.precision(10);
+							taskSS << "{id = 'FireAtPoint', lat = " << scatteredTargetPosition.lat << ", lng = " << scatteredTargetPosition.lng << ", radius = 0.01}";
+							Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+							scheduler->appendCommand(command);
+							shellsFiredAtTasking = totalShellsFired;
+							setHasTask(true);
+						}
+						/* Otherwise use the aim method */
+						else {
+							taskString += "Simulating fire fight with aim point method. ";
+							log(unitName + "(" + name + ")" + " simulating fire fight with aim at point method");
+							string aimTaskString = aimAtPoint(scatteredTargetPosition);
+							taskString += aimTaskString;
+						}
+
+						// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
+						// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
+						map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+
+						// Adjust the aim time based on the number of friendlies in range. The more friendlies, the more we can increase the time to wait before shooting again to maintain a constant volume of fire.
+						double aimTime = getAimTime();
+						if (friendliesInRange.size() > 0) {
+							aimTime *= (1 + friendliesInRange.size());
+						}
+
+						// Multiply the aim time by a random factor to avoid all units shooting at the same time and create a more natural effect
+						aimTime *= RANDOM_ZERO_TO_ONE;
+
+						/* Wait an amout of time depending on the shots intensity */
+						nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(aimTime * 1000);
+
+						// Multiply the next tasking time depending on the selected intensity
+						nextTaskingMilliseconds *= (1 + (ShotsIntensity::MEDIUM - shotsIntensity) * 0.5);
+
+						// Reset the active destination to NULL so that the moving command is reissued after shooting
+						resetActiveDestination();
+					}
+				}
+			}
+		}
+
+		// If we have shot the shotsToFire, reset the task
+		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire)
+		{	
+			// Reset the task to stop shooting
+			if (getHasTask() && activeDestination == NULL)
+				resetTask();
+
+			string enrouteTask = "";
+			bool looping = false;
+
+			std::ostringstream taskSS;
+			taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads() ? "true" : "false") << " }";
+			enrouteTask = taskSS.str();
+
+			if (activePath.size() > 0) {
+				if (activeDestination == NULL || !getHasTask())
+				{
+					if (setActiveDestination())
+						goToDestination(enrouteTask);
+				}
+				else {
+					if (isDestinationReached(GROUND_DEST_DIST_THR)) {
+						if (updateActivePath(looping) && setActiveDestination())
+							goToDestination(enrouteTask);
+					}
+				}
+			}
+			else {
+				if (getHasTask())
+					resetTask();
+			}
+		}
+		else {
+			// If we are not done shooting but there is no target, set the unit to do nothing but do not leave this state
+			if (targetPosition == Coords(NULL) && getHasTask())
+				resetTask();
+
+			// If there is no destination to reach, reset the task to do nothing but do not leave this state
+			if (activePath.size() == 0 && getHasTask())
+				resetTask();
+		}
+
+		/* Fallback if something went wrong */
+		if (timeNow >= nextTaskingMilliseconds)
+			nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(3 * 1000);
+
+		setTimeToNextTasking(((nextTaskingMilliseconds - timeNow) / 1000.0));
+
+		if (taskString.length() > 0)
+			setTask(taskString);
+
+		break;
+	}
+								    
 	case State::SCENIC_AAA: {
 		string taskString = "";
 
 		/* Only perform scenic functions when the scheduler is "free" */
-		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire || timeNow >= nextTaskingMilliseconds) {
+		if (timeNow >= nextTaskingMilliseconds) {
 			if (scheduler->getLoad() > 100) {
 				taskString = "Excessive load, skipping tasking of unit";
 				setTargetPosition(Coords(NULL));
@@ -404,6 +620,10 @@ void GroundUnit::AIloop()
 			}
 		}
 
+		// Reset the task if we have shot the shotsToFire to avoid shooting indefinitely
+		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire && getHasTask())
+			resetTask();
+		
 		if (timeNow >= nextTaskingMilliseconds)
 			nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(3 * 1000);
 
@@ -435,7 +655,7 @@ void GroundUnit::AIloop()
 		if (canAAA) {
 			/* Only perform scenic functions when the scheduler is "free" */
 			/* Only run this when the internal counter reaches 0 to avoid excessive computations when no nearby target */
-			if (totalShellsFired - shellsFiredAtTasking >= shotsToFire || timeNow >= nextTaskingMilliseconds) {
+			if (timeNow >= nextTaskingMilliseconds) {
 				if (scheduler->getLoad() > 100) {
 					taskString = "Excessive load, skipping tasking of unit";
 					setTargetPosition(Coords(NULL));
@@ -551,6 +771,10 @@ void GroundUnit::AIloop()
 					}
 				}
 			}
+
+			// Reset the task if we have shot the shotsToFire to avoid shooting indefinitely
+			if (totalShellsFired - shellsFiredAtTasking >= shotsToFire && getHasTask())
+				resetTask();
 
 			/* If no valid target was detected */
 			if (timeNow >= nextTaskingMilliseconds) {

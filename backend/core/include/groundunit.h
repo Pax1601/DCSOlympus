@@ -22,4 +22,6 @@ public:
 protected:
 	virtual void AIloop();
 	static json::value database;
+
+	bool movingEngagement = false;
 };

@@ -17,7 +17,7 @@ export class CoalitionPolygon extends Polygon {
   #middleHandles: CoalitionAreaMiddleHandle[] = [];
   #activeIndex: number = 0;
   #labelText: string;
-  #label: Marker;
+  #label: Marker | null = null;
   #updateTimeout: number | null = null;
 
   constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolylineOptions, creating = true) {

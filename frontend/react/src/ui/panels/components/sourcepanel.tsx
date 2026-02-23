@@ -1,9 +1,9 @@
 import React, { ForwardedRef, forwardRef, useEffect, useState } from "react";
 import { OlStateButton } from "../../components/olstatebutton";
-import { faHourglass, faPause, faPlay, faRepeat, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faHourglass, faPause, faPlay, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../../olympusapp";
 import { AudioSource } from "../../../audio/audiosource";
-import { FaChevronDown, FaChevronUp, FaVolumeHigh, FaXmark } from "react-icons/fa6";
+import { FaChevronDown, FaVolumeHigh, FaXmark } from "react-icons/fa6";
 import { OlRangeSlider } from "../../components/olrangeslider";
 import { FileSource } from "../../../audio/filesource";
 import { MicrophoneSource } from "../../../audio/microphonesource";
@@ -21,7 +21,7 @@ export const AudioSourcePanel = forwardRef((props: { source: AudioSource; onExpa
 
   useEffect(() => {
     setInterval(() => {
-      setMeterLevel(Math.min(1, props.source.getMeter().getPeaks().current[0]));
+      setMeterLevel(Math.min(1, props.source.getMeter()?.getPeaks().current[0] || 0));
     }, 50);
   }, []);
 

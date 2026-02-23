@@ -188,6 +188,6 @@ extern "C" DllExport int coreSetExecutionResults(lua_State* L)
 
     lua_getglobal(L, "Olympus");
     lua_getfield(L, -1, "executionResults");
-    luaTableToJSON(L, -1, executionResults, true);
+    luaTableToJSON(L, -1, executionResults);
     return(0);
 }

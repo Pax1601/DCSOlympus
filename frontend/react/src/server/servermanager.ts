@@ -244,6 +244,12 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  forceIdle(ID: number, callback: CallableFunction = () => {}) {
+    var command = { ID: ID };
+    var data = { stop: command };
+    this.PUT(data, callback);
+  }
+
   spawnSmoke(color: string, latlng: LatLng, callback: CallableFunction = () => {}) {
     var command = { color: color, location: latlng };
     var data = { smoke: command };
@@ -511,6 +517,12 @@ export class ServerManager {
   simulateFireFight(ID: number, latlng: LatLng, altitude: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng, altitude: altitude };
     var data = { simulateFireFight: command };
+    this.PUT(data, callback);
+  }
+
+  simulateEngagement(ID: number, callback: CallableFunction = () => {}) {
+    var command = { ID: ID };
+    var data = { simulateEngagement: command };
     this.PUT(data, callback);
   }
 

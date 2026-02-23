@@ -150,21 +150,21 @@ export class TemporaryUnitMarker extends CustomMarker {
 
         handle.append(handleImg);
 
-        const rotateHandle = (heading) => {
+        const rotateHandle = (heading: number) => {
           el.style.transform = `rotate(${heading}deg)`;
           unitIcon.style.transform = `rotate(-${heading}deg)`;
           if (shortLabel) shortLabel.style.transform = `rotate(-${heading}deg)`;
         };
 
-        SpawnHeadingChangedEvent.on((heading) => rotateHandle(heading));
+        SpawnHeadingChangedEvent.on((heading: number) => rotateHandle(heading));
         rotateHandle(getApp().getMap().getSpawnHeading());
 
         // Add drag and rotate functionality
-        handle.addEventListener("mousedown", (e) => {
+        handle.addEventListener("mousedown", (e: MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
 
-          const onMouseMove = (e) => {
+          const onMouseMove = (e: MouseEvent) => {
             const rect = el.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;

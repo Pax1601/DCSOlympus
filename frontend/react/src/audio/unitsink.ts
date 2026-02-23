@@ -31,13 +31,20 @@ export class UnitSink extends AudioSink {
   }
 
   #updatePipelines() {
+    const inputNode = this.getInputNode();
+
+    if (!inputNode) {
+      console.error("Input node not available");
+      return;
+    }
+
     getApp()
       .getAudioManager()
       .getSRSClientsData()
       .forEach((clientData: SRSClientData) => {
         const unitID = clientData.unitID;
         if (unitID !== 0 && !(unitID in this.#unitPipelines)) {
-          this.#unitPipelines[unitID] = new AudioUnitPipeline(this.#unit, unitID, this.getInputNode());
+          this.#unitPipelines[unitID] = new AudioUnitPipeline(this.#unit, unitID, inputNode);
           this.#unitPipelines[unitID].setPtt(false);
           this.#unitPipelines[unitID].setMaxDistance(this.#maxDistance);
           console.log(`Added unit pipeline for unitID ${unitID} `);
@@ -53,7 +60,7 @@ export class UnitSink extends AudioSink {
     });
   }
 
-  setPtt(ptt) {
+  setPtt(ptt: boolean) {
     this.#ptt = ptt;
     Object.values(this.#unitPipelines).forEach((pipeline) => {
       pipeline.setPtt(ptt);
@@ -65,7 +72,7 @@ export class UnitSink extends AudioSink {
     return this.#ptt;
   }
 
-  setMaxDistance(maxDistance) {
+  setMaxDistance(maxDistance: number) {
     this.#maxDistance = maxDistance;
     Object.values(this.#unitPipelines).forEach((pipeline) => {
       pipeline.setMaxDistance(maxDistance);

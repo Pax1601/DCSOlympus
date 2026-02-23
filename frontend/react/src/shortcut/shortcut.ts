@@ -8,7 +8,7 @@ export class Shortcut {
   #keydown: boolean = false;
   #modal: boolean = false;
 
-  constructor(id, options: ShortcutOptions) {
+  constructor(id: string, options: ShortcutOptions) {
     this.#id = id;
     this.#options = options;
 
@@ -86,9 +86,5 @@ export class Shortcut {
         .replace("ShiftRight", "Right Shift")
     );
     return actions;
-  }
-
-  #setKeydown(keydown: boolean) {
-    this.#keydown = keydown;
   }
 }

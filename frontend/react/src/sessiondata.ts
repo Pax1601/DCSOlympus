@@ -17,7 +17,7 @@ import {
   SessionDataSavedEvent,
   StarredSpawnsChangedEvent,
 } from "./events";
-import { LoadoutBlueprint, SessionData } from "./interfaces";
+import { SessionData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { getApp } from "./olympusapp";

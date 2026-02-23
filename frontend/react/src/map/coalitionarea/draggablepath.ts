@@ -1,7 +1,8 @@
-export const initDraggablePath = (L) => {
+// @ts-nocheck Draggable path class I copied from leaflet-path-drag. I don't want to rewrite it in TypeScript and it works fine as is, so I'm ignoring type checking for this file.
+export const initDraggablePath = (L: any) => {
   //@ts-ignore
   const PathDraggable = L.Draggable.extend({
-    initialize: function (path) {
+    initialize: function (path: any) {
       this._path = path;
 
       this._canvas = path._map.getRenderer(path) instanceof L.Canvas;
@@ -18,7 +19,7 @@ export const initDraggablePath = (L) => {
       this.fire("drag", e);
     },
 
-    _onDown: function (e) {
+    _onDown: function (e: any) {
       var first = e.touches ? e.touches[0] : e;
 
       this._startPoint = new L.Point(first.clientX, first.clientY);
@@ -35,7 +36,7 @@ export const initDraggablePath = (L) => {
 
   //@ts-ignore
   L.Handler.PathDrag = L.Handler.extend({
-    initialize: function (path) {
+    initialize: function (path: any) {
       this._path = path;
     },
 
@@ -76,7 +77,7 @@ export const initDraggablePath = (L) => {
       this._path.closePopup().fire("movestart").fire("dragstart");
     },
 
-    _onDrag: function (e) {
+    _onDrag: function (e: any) {
       var path = this._path,
         event = e.originalEvent.touches && e.originalEvent.touches.length === 1 ? e.originalEvent.touches[0] : e.originalEvent,
         newPoint = L.point(event.clientX, event.clientY),
@@ -101,13 +102,13 @@ export const initDraggablePath = (L) => {
       path.fire("move", e);
     },
 
-    _onDragEnd: function (e) {
+    _onDragEnd: function (e: any) {
       if (this._path._bounds) this.resetBounds();
 
       this._path.fire("moveend").fire("dragend", e);
     },
 
-    latLngToLayerPoint: function (latlng) {
+    latLngToLayerPoint: function (latlng: any) {
       // Same as map.latLngToLayerPoint, but without the round().
 
       var projectedPoint = this._path._map.project(L.latLng(latlng));
@@ -115,7 +116,7 @@ export const initDraggablePath = (L) => {
       return projectedPoint._subtract(this._path._map.getPixelOrigin());
     },
 
-    updateLatLng: function (latlng) {
+    updateLatLng: function (latlng: any) {
       var oldPoint = this.latLngToLayerPoint(latlng);
 
       oldPoint._add(this._offset);
@@ -131,17 +132,18 @@ export const initDraggablePath = (L) => {
       //@ts-ignore
       this._path._bounds = new L.LatLngBounds();
 
-      this._path.eachLatLng(function (latlng) {
+      this._path.eachLatLng(function (latlng: any) {
+        // @ts-ignore
         this._bounds.extend(latlng);
       });
     },
   });
 
   L.Path.include({
-    eachLatLng: function (callback, context) {
+    eachLatLng: function (callback: any, context?: any) {
       context = context || this;
 
-      var loop = function (latlngs) {
+      var loop = function (latlngs: any) {
         for (var i = 0; i < latlngs.length; i++) {
           if (L.Util.isArray(latlngs[i])) loop(latlngs[i]);
           else callback.call(context, latlngs[i]);
@@ -156,8 +158,11 @@ export const initDraggablePath = (L) => {
     //@ts-ignore
     this.dragging = new L.Handler.PathDrag(this);
 
+    //@ts-ignore 
     if (this.options.draggable) {
+      //@ts-ignore 
       this.once("add", function () {
+        //@ts-ignore 
         this.dragging.enable();
       });
     }

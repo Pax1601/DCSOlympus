@@ -9,8 +9,8 @@ import { PlaybackPipeline } from "./playbackpipeline";
 
 /* Radio sink, basically implements a simple SRS Client in Olympus. Does not support encryption at this moment */
 export class RadioSink extends AudioSink {
-  #encoder: AudioEncoder;
-  #desinationNode: MediaStreamAudioDestinationNode;
+  #encoder: AudioEncoder | null = null;
+  #desinationNode: MediaStreamAudioDestinationNode | null = null;
   #audioTrackProcessor: any; // TODO can we have typings?
   #frequency = 251000000;
   #modulation = 0;
@@ -18,18 +18,25 @@ export class RadioSink extends AudioSink {
   #tuned = true;
   #volume = 1;
   #receiving = false;
-  #clearReceivingTimeout: number;
+  #clearReceivingTimeout: number = 0;
   #packetID = 0;
   #guid = makeID(22);
-  #recorder: Recorder;
+  #recorder: Recorder | null = null;
   #transmittingUnit: Unit | undefined;
   #pan: number = 0;
-  #playbackPipeline: PlaybackPipeline;
-  #connectedClients: number;
+  #playbackPipeline: PlaybackPipeline | null = null;
+  #connectedClients: number = 0;
   speechDataAvailable: (blob: Blob) => void = (blob) => {};
 
   constructor() {
     super();
+
+    const audioContext = getApp().getAudioManager().getAudioContext();
+
+    if (!audioContext) {
+      console.error("Audio context not available");
+      return;
+     }
 
     this.#playbackPipeline = new PlaybackPipeline();
 
@@ -54,7 +61,7 @@ export class RadioSink extends AudioSink {
       bitrateMode: "constant",
     });
 
-    this.#desinationNode = getApp().getAudioManager().getAudioContext().createMediaStreamDestination();
+    this.#desinationNode = audioContext.createMediaStreamDestination();
     this.#desinationNode.channelCount = 1;
 
     //@ts-ignore
@@ -67,10 +74,10 @@ export class RadioSink extends AudioSink {
       })
     );
 
-    this.getInputNode().connect(this.#desinationNode);
+    this.getInputNode()?.connect(this.#desinationNode);
   }
 
-  setFrequency(frequency) {
+  setFrequency(frequency: number) {
     this.#frequency = frequency;
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
@@ -79,7 +86,7 @@ export class RadioSink extends AudioSink {
     return this.#frequency;
   }
 
-  setModulation(modulation) {
+  setModulation(modulation: number) {
     this.#modulation = modulation;
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
@@ -88,7 +95,7 @@ export class RadioSink extends AudioSink {
     return this.#modulation;
   }
 
-  setPtt(ptt) {
+  setPtt(ptt: boolean) {
     this.#ptt = ptt;
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
@@ -97,7 +104,7 @@ export class RadioSink extends AudioSink {
     return this.#ptt;
   }
 
-  setTuned(tuned) {
+  setTuned(tuned: boolean) {
     this.#tuned = tuned;
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
@@ -106,9 +113,10 @@ export class RadioSink extends AudioSink {
     return this.#tuned;
   }
 
-  setVolume(volume) {
+  setVolume(volume: number) {
     this.#volume = volume;
-    this.getInputNode().gain.value = volume;
+    const inputNode = this.getInputNode();
+    if (inputNode) inputNode.gain.value = volume;
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
@@ -118,7 +126,7 @@ export class RadioSink extends AudioSink {
 
   setPan(pan: number) {
     this.#pan = pan;
-    this.#playbackPipeline.setPan(pan);
+    this.#playbackPipeline?.setPan(pan);
     AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
   }
 
@@ -126,16 +134,16 @@ export class RadioSink extends AudioSink {
     return this.#pan;
   }
 
-  setReceiving(receiving) {
+  setReceiving(receiving: boolean) {
     // Only do it if actually changed
     if (receiving !== this.#receiving) {
       AudioSinksChangedEvent.dispatch(getApp().getAudioManager().getSinks());
 
-      this.#playbackPipeline.setEnabled(receiving);
+      this.#playbackPipeline?.setEnabled(receiving);
 
       if (getApp().getAudioManager().getSpeechRecognition()) {
-        if (receiving) this.#recorder.start();
-        else this.#recorder.stop();
+        if (receiving) this.#recorder?.start();
+        else this.#recorder?.stop();
       }
     }
     if (receiving) {
@@ -167,17 +175,19 @@ export class RadioSink extends AudioSink {
       ]);
       audioPacket.setClientGUID(getApp().getAudioManager().getGuid());
       audioPacket.setTransmissionGUID(this.#guid);
-      getApp().getAudioManager().send(audioPacket.toByteArray());
+      const byteArray = audioPacket.toByteArray();
+      if (byteArray != undefined)
+        getApp().getAudioManager().send(byteArray);
     }
   }
 
-  handleRawData(audioData) {
-    this.#encoder.encode(audioData);
+  handleRawData(audioData: AudioData) {
+    this.#encoder?.encode(audioData);
     audioData.close();
   }
 
   recordArrayBuffer(arrayBuffer: ArrayBuffer) {
-    this.#recorder.recordBuffer(arrayBuffer);
+    this.#recorder?.recordBuffer(arrayBuffer);
   }
 
   setTransmittingUnit(transmittingUnit: Unit | undefined) {
@@ -188,8 +198,8 @@ export class RadioSink extends AudioSink {
     return this.#transmittingUnit;
   }
 
-  playBuffer(arrayBuffer) {
-    this.#playbackPipeline.playBuffer(arrayBuffer);
+  playBuffer(arrayBuffer: ArrayBuffer) {
+    this.#playbackPipeline?.playBuffer(arrayBuffer);
   }
 
   setConnectedClients(clientsNumber: number) {

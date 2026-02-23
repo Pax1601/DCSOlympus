@@ -180,7 +180,7 @@ export abstract class Weapon extends CustomMarker {
   updateVisibility() {
     const hiddenUnits = getApp().getMap().getHiddenTypes();
     var hidden =
-      hiddenUnits[this.getMarkerCategory()] || hiddenUnits[this.#coalition] || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
+      hiddenUnits[this.getMarkerCategory() as keyof typeof hiddenUnits] || hiddenUnits[this.#coalition as keyof typeof hiddenUnits] || (!this.belongsToCommandedCoalition() && this.#detectionMethods.length == 0);
 
     this.setHidden(hidden || !this.#alive);
   }
@@ -300,6 +300,8 @@ export class Missile extends Weapon {
         this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showCallsign: false,
       rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC),
+      showCluster: false,
+      showAlarmState: false,
     };
   }
 }
@@ -337,6 +339,8 @@ export class Bomb extends Weapon {
         this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showCallsign: false,
       rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC),
+      showCluster: false,
+      showAlarmState: false
     };
   }
 }
@@ -374,6 +378,8 @@ export class Shell extends Weapon {
         this.getDetectionMethods().some((value) => [RADAR, IRST, DLINK].includes(value)),
       showCallsign: false,
       rotateToHeading: this.belongsToCommandedCoalition() || this.getDetectionMethods().includes(VISUAL) || this.getDetectionMethods().includes(OPTIC),
+      showCluster: false,
+      showAlarmState: false
     };
   }
 }
