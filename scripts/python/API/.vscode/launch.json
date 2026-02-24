@@ -5,94 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Main",
+            "name": "Python: Main (Custom Config File)",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--config",
+                "${input:configPath}"
+            ]
         },
         {
-            "name": "Example voice control",
+            "name": "Python: Main (Custom Config + Debug)",
             "type": "debugpy",
             "request": "launch",
-            "program": "example_voice_control.py",
+            "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "justMyCode": false,
-        },
-        {
-            "name": "Example disembarked infantry",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_disembarked_infantry.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "Example set cargo weight",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_set_cargo_weight.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "Example draw argument",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_draw_argument.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "Example precise movement",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_precise_movement.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "Infantry boarding",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "infantry_boarding.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "Intercom",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_intercom_control.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "Echo with whisper",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_echo.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-        },
-        {
-            "name": "ATC",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "atc.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "name": "Example markers",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "example_markers.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--config",
+                "${input:configPath}",
+                "--log-level",
+                "DEBUG"
+            ]
         },
         {
             "name": "Current file",
@@ -102,6 +40,14 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "cwd": "${workspaceFolder}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "configPath",
+            "type": "promptString",
+            "description": "Path to configuration file (relative or absolute)",
+            "default": "plugin_manager_config.json"
         }
     ]
 }

@@ -30,6 +30,9 @@ import {
     olButtonsIntensity1,
     olButtonsIntensity2,
     olButtonsIntensity3,
+    olButtonsPostureDefensive,
+    olButtonsPostureOffensive,
+    olButtonsPostureStatic,
     olButtonsRoeDesignated,
     olButtonsRoeFree,
     olButtonsRoeHold,
@@ -137,6 +140,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     const [activeAdvancedSettings, setActiveAdvancedSettings] = useState(null as null | GeneralSettings);
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const [showScenicModes, setShowScenicModes] = useState(false);
+    const [showAdvancedGroundUnitControl, setShowAdvancedGroundUnitControl] = useState(false);
     const [showEngagementSettings, setShowEngagementSettings] = useState(false);
     const [barrelHeight, setBarrelHeight] = useState(0);
     const [muzzleVelocity, setMuzzleVelocity] = useState(0);
@@ -255,7 +259,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     };
 
     selectedUnits.forEach((unit) => {
-        if (!(unit.getName() in unitOccurences[unit.getCoalition() ]))
+        if (!(unit.getName() in unitOccurences[unit.getCoalition()]))
             unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label ?? "" };
         else unitOccurences[unit.getCoalition()][unit.getName()].occurences++;
     });
@@ -455,10 +459,11 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     <OlToggle
                                                         key={entry[0]}
                                                         onClick={() => {
-                                                            selectionFilter["control"][entry[0] as keyof typeof selectionFilter["control"]] = !selectionFilter["control"][entry[0] as keyof typeof selectionFilter["control"]];
+                                                            selectionFilter["control"][entry[0] as keyof (typeof selectionFilter)["control"]] =
+                                                                !selectionFilter["control"][entry[0] as keyof (typeof selectionFilter)["control"]];
                                                             setSelectionFilter(deepCopyTable(selectionFilter));
                                                         }}
-                                                        toggled={selectionFilter["control"][entry[0] as keyof typeof selectionFilter["control"]]}
+                                                        toggled={selectionFilter["control"][entry[0] as keyof (typeof selectionFilter)["control"]]}
                                                     />
                                                 </div>
                                             );
@@ -544,7 +549,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     checked={(selectionFilter as any)[coalition][entry[0]]}
                                                                     disabled={selectionID !== null}
                                                                     onChange={() => {
-                                                                        (selectionFilter as any)[coalition][entry[0]] = !(selectionFilter as any)[coalition][entry[0]];
+                                                                        (selectionFilter as any)[coalition][entry[0]] = !(selectionFilter as any)[coalition][
+                                                                            entry[0]
+                                                                        ];
                                                                         setSelectionFilter(deepCopyTable(selectionFilter));
                                                                     }}
                                                                 />
@@ -2020,11 +2027,13 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             </div>
                                                             {/* ============== Shots scatter END ============== */}
                                                             {/* ============== Shots intensity START ============== */}
-                                                            <div className={`
-                                                              flex w-full
-                                                              justify-between
-                                                              gap-2
-                                                            `}>
+                                                            <div
+                                                                className={`
+                                                                  flex w-full
+                                                                  justify-between
+                                                                  gap-2
+                                                                `}
+                                                            >
                                                                 <span
                                                                     className={`
                                                                       my-auto
@@ -2057,46 +2066,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 </OlButtonGroup>
                                                             </div>
                                                             {/* ============== Shots intensity END ============== */}
-                                                            {/* ============== Posture START ============== }
-                                                            <div
-                                                                className={`
-                                                                  flex w-full
-                                                                  justify-between
-                                                                  gap-2
-                                                                `}
-                                                            >
-                                                                <span
-                                                                    className={`
-                                                                      my-auto
-                                                                      font-normal
-                                                                      dark:text-white
-                                                                    `}
-                                                                >
-                                                                    Posture
-                                                                </span>
-                                                                <OlButtonGroup>
-                                                                    {[olButtonsIntensity1, olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
-                                                                        return (
-                                                                            <OlButtonGroupItem
-                                                                                key={idx}
-                                                                                onClick={() => {
-                                                                                    getApp()
-                                                                                        .getUnitsManager()
-                                                                                        .setPosture(idx + 1, null, () =>
-                                                                                            setForcedUnitsData({
-                                                                                                ...forcedUnitsData,
-                                                                                                posture: idx + 1,
-                                                                                            }),
-                                                                                        );
-                                                                                }}
-                                                                                active={selectedUnitsData.posture === idx + 1}
-                                                                                icon={icon}
-                                                                            />
-                                                                        );
-                                                                    })}
-                                                                </OlButtonGroup>
-                                                            </div>
-                                                            { ============== Posture END ============== */}
                                                             {/*<OlStateButton
                                 className="mt-auto"
                                 checked={showEngagementSettings}
@@ -2592,6 +2561,136 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             </div>
                                                         )}
                                                     </>
+                                                )}
+                                            </div>
+                                            <div
+                                                className={`
+                                                  flex flex-col gap-4 rounded-md
+                                                  bg-olympus-200/30 p-4
+                                                `}
+                                            >
+                                                <div
+                                                    className={`
+                                                      flex justify-between
+                                                    `}
+                                                >
+                                                    <span
+                                                        className={`
+                                                          my-auto font-normal
+                                                          dark:text-white
+                                                        `}
+                                                    >
+                                                        Advanced ground unit control
+                                                    </span>
+                                                    <FaChevronLeft
+                                                        data-open={showAdvancedGroundUnitControl}
+                                                        className={`
+                                                          my-auto cursor-pointer
+                                                          text-gray-200
+                                                          transition-transform
+                                                          data-[open='true']:-rotate-90
+                                                        `}
+                                                        onClick={() => setShowAdvancedGroundUnitControl(!showAdvancedGroundUnitControl)}
+                                                    />
+                                                </div>
+                                                {showAdvancedGroundUnitControl && (
+                                                    <div
+                                                        className={`
+                                                          flex flex-col gap-4
+                                                        `}
+                                                    >
+                                                        <div
+                                                            className={`
+                                                              flex w-full
+                                                              justify-between
+                                                              gap-2
+                                                            `}
+                                                        >
+                                                            <span
+                                                                className={`
+                                                                  my-auto
+                                                                  font-normal
+                                                                  dark:text-white
+                                                                `}
+                                                            >
+                                                                Posture
+                                                            </span>
+                                                            <OlButtonGroup>
+                                                                {[olButtonsPostureStatic, olButtonsPostureDefensive, null, olButtonsPostureOffensive].map(
+                                                                    (icon, idx) => {
+                                                                        if (icon === null) return <></>
+                                                                                
+                                                                        return (
+                                                                            <OlButtonGroupItem
+                                                                                key={idx}
+                                                                                onClick={() => {
+                                                                                    getApp()
+                                                                                        .getUnitsManager()
+                                                                                        .setPosture(idx + 1, null, () =>
+                                                                                            setForcedUnitsData({
+                                                                                                ...forcedUnitsData,
+                                                                                                posture: idx + 1,
+                                                                                            }),
+                                                                                        );
+                                                                                }}
+                                                                                active={selectedUnitsData.posture === idx + 1}
+                                                                                icon={icon}
+                                                                            />
+                                                                        );
+                                                                    },
+                                                                )}
+                                                            </OlButtonGroup>
+                                                        </div>
+                                                        {selectedUnits.every((unit) => unit.getCoalition() === "neutral") && (
+                                                            <div
+                                                                className={`
+                                                                  flex
+                                                                  content-center
+                                                                  justify-between
+                                                                `}
+                                                            >
+                                                                <span
+                                                                    className={`
+                                                                      my-auto
+                                                                      font-normal
+                                                                      dark:text-white
+                                                                    `}
+                                                                >
+                                                                    Operate as
+                                                                </span>
+                                                                <OlCoalitionToggle
+                                                                    coalition={selectedUnitsData.operateAs as Coalition}
+                                                                    onClick={() => {
+                                                                        let newOperateAs: string;
+                                                                        if (selectedUnitsData.operateAs === "neutral") {
+                                                                            newOperateAs = "blue";
+                                                                        } else if (selectedUnitsData.operateAs === "blue") {
+                                                                            newOperateAs = "red";
+                                                                        } else {
+                                                                            newOperateAs = "neutral";
+                                                                        }
+
+                                                                        getApp()
+                                                                            .getUnitsManager()
+                                                                            .setOperateAs(newOperateAs, null, () =>
+                                                                                setForcedUnitsData({
+                                                                                    ...forcedUnitsData,
+                                                                                    operateAs: newOperateAs as Coalition,
+                                                                                }),
+                                                                            );
+                                                                    }}
+                                                                    tooltip={() => (
+                                                                        <OlExpandingTooltip
+                                                                            title="Unit operate as coalition"
+                                                                            content="This option is only available for neutral units and it allows you to change what coalition the unit will 'operate as' when performing scenic tasks. For example, a 'red' neutral unit tasked to perform miss on purpose will shoot in the direction of blue units. "
+                                                                        />
+                                                                    )}
+                                                                    tooltipRelativeToParent={true}
+                                                                    tooltipPosition="above"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
                                             {/* ============== Follow roads toggle START ============== */}

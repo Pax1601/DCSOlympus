@@ -27,7 +27,7 @@ from data.unit_spawn_table import UnitSpawnTable
 from data.data_types import LatLng
 
 class API:
-    def __init__(self, username: str = "API", databases_location: str = "databases", load_whisper: bool = True, load_kokoro: bool = True):
+    def __init__(self, username: str = "API", saved_games_folder: str = ".", load_whisper: bool = True, load_kokoro: bool = True):
         self.base_url = None
         self.config = None
         self.logs = {}
@@ -37,7 +37,7 @@ class API:
         self.spots = {}
         self.bullseyes = {}
         self.username = username
-        self.databases_location = databases_location
+        self.databases_location = os.path.join(saved_games_folder, "Mods", "Services", "Olympus", "databases")
         self.interval = 1  # Default update interval in seconds
         self.on_update_callback = None
         self.on_startup_callback = None
@@ -62,7 +62,7 @@ class API:
 
         # Read the config file olympus.json
         try:
-            with open("olympus.json", "r") as file:
+            with open(os.path.join(saved_games_folder, "Config", "olympus.json"), "r") as file:
                 # Load the JSON configuration
                 self.config = json.load(file)
         except FileNotFoundError:
@@ -79,25 +79,25 @@ class API:
             
         # Read the aircraft, helicopter, groundunit and navyunit databases as json files
         try:
-            with open(f"{self.databases_location}/aircraftdatabase.json", "r", -1, 'utf-8') as file:
+            with open(f"{self.databases_location}/units/aircraftdatabase.json", "r", -1, 'utf-8') as file:
                 self.aircraft_database = json.load(file)
         except FileNotFoundError:
             self.logger.error("Aircraft database file not found.")
         
         try:
-            with open(f"{self.databases_location}/helicopterdatabase.json", "r", -1, 'utf-8')  as file:
+            with open(f"{self.databases_location}/units/helicopterdatabase.json", "r", -1, 'utf-8')  as file:
                 self.helicopter_database = json.load(file)
         except FileNotFoundError:
             self.logger.error("Helicopter database file not found.")
         
         try:
-            with open(f"{self.databases_location}/groundunitdatabase.json", "r", -1, 'utf-8')  as file:
+            with open(f"{self.databases_location}/units/groundunitdatabase.json", "r", -1, 'utf-8')  as file:
                 self.groundunit_database = json.load(file)
         except FileNotFoundError:
             self.logger.error("Ground unit database file not found.")
         
         try:
-            with open(f"{self.databases_location}/navyunitdatabase.json", "r", -1, 'utf-8')  as file:
+            with open(f"{self.databases_location}/units/navyunitdatabase.json", "r", -1, 'utf-8')  as file:
                 self.navyunit_database = json.load(file)
         except FileNotFoundError:
             self.logger.error("Navy unit database file not found.")     
@@ -1019,4 +1019,12 @@ class API:
         Sets up signal handlers for graceful shutdown.
         """
         asyncio.run(self._run_async())
+        
+    def register_asyncio_coroutine(self, loop: asyncio.AbstractEventLoop):
+        """
+        Register the API's update loop as an asyncio coroutine to allow for non-blocking execution.
+        This method should be called within an asyncio event loop context.
+        """
+        loop.create_task(self._run_async())
+
 

@@ -71,4 +71,5 @@ class DataIndexes(Enum):
     DRAW_ARGUMENTS = 67
     CUSTOM_STRING = 68
     CUSTOM_INTEGER = 69
+    POSTURE = 70
     END_OF_DATA = 255

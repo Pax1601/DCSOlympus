@@ -61,9 +61,10 @@ class Unit:
         self.contacts: List[Contact] = []
         self.active_path: List[LatLng] = []
         self.is_leader = False
-        self.operate_as = "blue"
+        self.operate_as = "neutral"
         self.shots_scatter = 2
         self.shots_intensity = 2
+        self.posture = 1
         self.health = 100
         self.racetrack_length = 0.0
         self.racetrack_anchor = LatLng(0, 0, 0)
@@ -687,6 +688,13 @@ class Unit:
                     # Trigger callbacks for property change
                     if "custom_integer" in self.on_property_change_callbacks:
                         self._trigger_callback("custom_integer", self.custom_integer)
+            elif datum_index == DataIndexes.POSTURE.value:
+                posture = data_extractor.extract_uint8()
+                if posture != self.posture:
+                    self.posture = posture
+                    # Trigger callbacks for property change
+                    if "posture" in self.on_property_change_callbacks:
+                        self._trigger_callback("posture", self.posture)
     
     # --- API functions requiring ID ---
     def set_path(self, path: List[LatLng]):
@@ -772,12 +780,18 @@ class Unit:
 
     def miss_on_purpose(self, coalition: str):
         return self.api.send_command({"missOnPurpose": {"ID": self.ID, "coalition": coalition}})
+    
+    def simulate_engagement(self):
+        return self.api.send_command({"simulateEngagement": {"ID": self.ID}})
 
     def land_at_point(self, location: LatLng):
         return self.api.send_command({"landAtPoint": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
     def set_shots_scatter(self, shots_scatter: int):
         return self.api.send_command({"setShotsScatter": {"ID": self.ID, "shotsScatter": shots_scatter}})
+    
+    def set_posture(self, posture: int):
+        return self.api.send_command({"setPosture": {"ID": self.ID, "posture": posture}})
 
     def set_shots_intensity(self, shots_intensity: int):
         return self.api.send_command({"setShotsIntensity": {"ID": self.ID, "shotsIntensity": shots_intensity}})

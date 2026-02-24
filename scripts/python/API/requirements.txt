@@ -1,0 +1,18 @@
+# Core dependencies for DCS Olympus API
+requests>=2.31.0
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.4.0
+
+# Audio processing
+soundfile>=0.12.0
+
+# AI/ML models (optional but recommended)
+openai-whisper>=20231117
+kokoro>=0.3.0
+
+# Build tool
+pyinstaller>=6.0.0
+
+# Additional dependencies that may be needed
+Pillow>=10.0.0

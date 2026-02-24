@@ -15,5 +15,6 @@ states = [
   "simulate-fire-fight",
   "scenic-aaa",
   "miss-on-purpose",
-  "land-at-point"
+  "land-at-point",
+  "simulate-engagement"
   ]

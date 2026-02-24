@@ -484,6 +484,30 @@ void GroundUnit::AIloop()
 						resetActiveDestination();
 					}
 				}
+
+
+				randomValue = RANDOM_ZERO_TO_ONE;
+				if (randomValue < 0.05) {
+					// Randomly throw a grenade at the closest enemy position to simulate more chaotic engagements. This is more for visual effect than anything else, but it can be useful to simulate suppressive fire or area denial.
+					if (closestEnemyPosition != Coords(NULL)) {
+						taskString += "Throwing grenade at closest enemy to simulate chaotic engagement. ";
+						log(unitName + "(" + name + ")" + " throwing grenade at closest enemy to simulate chaotic engagement");
+						
+						// Compute a point 30 meters from the closest enemy position in a random direction to simulate a grenade throw. The scatter of the throw is higher than the scatter of the shots to simulate the inaccuracy of throwing a grenade compared to shooting.
+						Coords grenadeTargetPosition = closestEnemyPosition;
+						double randomBearing = RANDOM_ZERO_TO_ONE * 360;
+						double scatterDistance = 30;
+						Geodesic::WGS84().Direct(grenadeTargetPosition.lat, grenadeTargetPosition.lng, randomBearing, scatterDistance, grenadeTargetPosition.lat, grenadeTargetPosition.lng);
+
+						// Use the explosion command 
+						Command* command = dynamic_cast<Command*>(new Explosion(1, "normal", grenadeTargetPosition));
+						scheduler->appendCommand(command);
+					}
+					else {
+						taskString += "Random grenade throw skipped because there is no enemy. ";
+						log(unitName + "(" + name + ")" + " random grenade throw skipped because there is no enemy");
+					}
+				}
 			}
 		}
 
