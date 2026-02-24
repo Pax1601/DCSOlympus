@@ -144,6 +144,13 @@ export const shotsIntensityDescriptions: string[] = [
   "When performing scenic shooting tasks like simulated firefights, will shoot with a high rate of fire",
 ];
 
+export const postureDescription: string[] = [
+  "When simulating egagements, units will not move automatically",
+  "When simulating engagements, units will defend and run away",
+  "When simulating engagements, units will defend or attack depending on their health and the number of enemies around them",
+  "When simulating engagements, units will attack the enemy regardless of their health or the number of enemies around them",
+];
+
 export const minSpeedValues: { [key: string]: number } = {
   aircraft: 100,
   helicopter: 0,
@@ -564,6 +571,7 @@ export enum DataIndexes {
   drawingArguments,
   customString,
   customInteger,
+  posture,
   endOfData = 255,
 }
 
@@ -576,6 +584,7 @@ export const SPOTS_EDIT_ZOOM_TRANSITION = 13;
 
 export const MAX_SHOTS_SCATTER = 3;
 export const MAX_SHOTS_INTENSITY = 3;
+export const MAX_POSTURE = 4;
 export const SHOTS_SCATTER_DEGREES = 10;
 
 export enum AudioMessageType {

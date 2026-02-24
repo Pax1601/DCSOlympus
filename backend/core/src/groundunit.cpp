@@ -146,7 +146,7 @@ void GroundUnit::setState(unsigned char newState)
 	case State::SIMULATE_ENGAGEMENT: {
 		setTask("Simulating engagement");
 		setEnableTaskCheckFailed(false);
-		// Do not clearActivePath(); to allow the unit to fight and move at the same time
+		clearActivePath();
 		resetActiveDestination();
 		break;
 	}
@@ -172,32 +172,10 @@ void GroundUnit::setState(unsigned char newState)
 	resetTaskFailedCounter();
 	nextTaskingMilliseconds = 0;
 
-	switch (newState) {
-		// Force an initial value of nextTaskingMilliseconds for SIMULATE_ENGAGEMENT to avoid all units shooting at the same time when they start engaging at the same time
-		case State::SIMULATE_ENGAGEMENT: {
-			unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
-
-			// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
-			// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
-			map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
-
-			// Adjust the aim time based on the number of friendlies in range. The more friendlies, the more we can increase the time to wait before shooting again to maintain a constant volume of fire.
-			double aimTime = getAimTime();
-			if (friendliesInRange.size() > 0) {
-				aimTime *= (1 + friendliesInRange.size());
-			}
-
-			// Multiply the aim time by a random factor to avoid all units shooting at the same time and create a more natural effect
-			aimTime *= RANDOM_ZERO_TO_ONE;
-
-			/* Wait an amout of time depending on the shots intensity */
-			unsigned long timeNow = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-			nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(aimTime * 1000);
-			break;
-		} 
-		default: {
-			break;
-		}
+	// For scenic modes we add some variability to the initial tasking milliseconds to avoid all units acting at the same time
+	if (newState == State::SCENIC_AAA || newState == State::MISS_ON_PURPOSE || newState == State::SIMULATE_ENGAGEMENT || newState == State::SIMULATE_FIRE_FIGHT) {
+		unsigned long timeNow = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+		nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(aimTime * 1000 * RANDOM_ZERO_TO_ONE);
 	}
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
@@ -216,15 +194,14 @@ void GroundUnit::AIloop()
 	/* Out of ammo */
 	if (shotsToFire > 0 && currentAmmo < shotsToFire && state != State::IDLE && state != State::REACH_DESTINATION) 
 		setState(State::IDLE);
-
-	// If we are simulating an engagement and we are out of ammo, just ruuuun
-	if (shotsToFire > 0 && currentAmmo < shotsToFire && state == State::SIMULATE_ENGAGEMENT)
-		setState(State::REACH_DESTINATION);
 	
 	/* Account for unit reloading */
 	if (currentAmmo < oldAmmo)
 		totalShellsFired += oldAmmo - currentAmmo;
 	oldAmmo = currentAmmo;
+
+	// Get the coalition of the unit. If the unit is neutral, we use the "operate as" coalition to determine the behavior in scenic modes
+	unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
 
 	switch (state) {
 	case State::IDLE: {
@@ -299,6 +276,7 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		string taskString = "";
 
+		/* Only perform scenic functions when the scheduler is "free" */
 		if (timeNow >= nextTaskingMilliseconds && targetPosition != Coords(NULL)) {
 			if (scheduler->getLoad() > 100) {
 				taskString = "Excessive load, skipping tasking of unit";
@@ -307,50 +285,69 @@ void GroundUnit::AIloop()
 					resetTask();
 			}
 			else {
-				/* Get the distance and bearing to the target */
-				Coords scatteredTargetPosition = targetPosition;
-				double distance;
-				double bearing1;
-				double bearing2;
-				Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, scatteredTargetPosition.lat, scatteredTargetPosition.lng, distance, bearing1, bearing2);
+				float randomValue = RANDOM_ZERO_TO_ONE;
+				float randomThreshold = 0.66;
+				// Log the random value for debug purposes
+				// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
+				// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
+				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
-				/* Apply a scatter to the aim */
-				bearing1 += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter + 1) * 10;
+				// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
+				if (shotsIntensity == ShotsIntensity::LOW)
+					randomThreshold = 1.0 / (1.0 + static_cast<float>(friendliesInRange.size()));
 
-				/* Compute the scattered position applying a random scatter to the shot */
-				double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577 + 2 / 57.29577 /* degs */) * RANDOM_MINUS_ONE_TO_ONE;
-				Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
+				// Multiply the random value depending on the shots intensity to simulate a more aggressive behavior when the shots intensity is higher
+				randomThreshold *= (1.0 + (shotsIntensity - ShotsIntensity::MEDIUM) * 0.5);
 
-				/* Recover the data from the database */
-				bool indirectFire = false;
-				if (database.has_object_field(to_wstring(name))) {
-					json::value databaseEntry = database[to_wstring(name)];
-					if (databaseEntry.has_boolean_field(L"indirectFire"))
-						indirectFire = databaseEntry[L"indirectFire"].as_bool();
+				taskString += "Random value: " + to_string(randomValue) + ", Random threshold: " + to_string(randomThreshold) + ". ";
+
+				// Randomly choose if we want to shoot
+				if ((randomValue > (1 - randomThreshold))) {
+					/* Get the distance and bearing to the target */
+					Coords scatteredTargetPosition = targetPosition;
+					double distance;
+					double bearing1;
+					double bearing2;
+					Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, scatteredTargetPosition.lat, scatteredTargetPosition.lng, distance, bearing1, bearing2);
+
+					/* Apply a scatter to the aim */
+					bearing1 += RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter + 1) * 10;
+
+					/* Compute the scattered position applying a random scatter to the shot */
+					double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577 + 2 / 57.29577 /* degs */) * RANDOM_MINUS_ONE_TO_ONE;
+					Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
+
+					/* Recover the data from the database */
+					bool indirectFire = false;
+					if (database.has_object_field(to_wstring(name))) {
+						json::value databaseEntry = database[to_wstring(name)];
+						if (databaseEntry.has_boolean_field(L"indirectFire"))
+							indirectFire = databaseEntry[L"indirectFire"].as_bool();
+					}
+
+					/* If the unit is of the indirect fire type, like a mortar, simply shoot at the target */
+					if (indirectFire) {
+						taskString += "Simulating fire fight with indirect fire";
+						log(unitName + "(" + name + ")" + " simulating fire fight with indirect fire");
+						std::ostringstream taskSS;
+						taskSS.precision(10);
+						taskSS << "{id = 'FireAtPoint', lat = " << scatteredTargetPosition.lat << ", lng = " << scatteredTargetPosition.lng << ", radius = 0.01}";
+						Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+						scheduler->appendCommand(command);
+						shellsFiredAtTasking = totalShellsFired;
+						setHasTask(true);
+					}
+					/* Otherwise use the aim method */
+					else {
+						taskString += "Simulating fire fight with aim point method. ";
+						log(unitName + "(" + name + ")" + " simulating fire fight with aim at point method");
+						string aimTaskString = aimAtPoint(scatteredTargetPosition);
+						taskString += aimTaskString;
+					}
+
+					/* Wait an amout of time depending on the aim time */
+					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
 				}
-
-				/* If the unit is of the indirect fire type, like a mortar, simply shoot at the target */
-				if (indirectFire) {
-					taskString += "Simulating fire fight with indirect fire";
-					log(unitName + "(" + name + ")" + " simulating fire fight with indirect fire");
-					std::ostringstream taskSS;
-					taskSS.precision(10);
-					taskSS << "{id = 'FireAtPoint', lat = " << scatteredTargetPosition.lat << ", lng = " << scatteredTargetPosition.lng << ", radius = 0.01}";
-					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-					scheduler->appendCommand(command);
-					shellsFiredAtTasking = totalShellsFired;
-					setHasTask(true);
-				}
-				/* Otherwise use the aim method */
-				else {
-					taskString += "Simulating fire fight with aim point method. ";
-					log(unitName + "(" + name + ")" + " simulating fire fight with aim at point method");
-					string aimTaskString = aimAtPoint(scatteredTargetPosition);
-					taskString += aimTaskString;
-				}
-
-				/* Wait an amout of time depending on the shots intensity */
-				nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
 			}
 		}
 
@@ -378,7 +375,13 @@ void GroundUnit::AIloop()
 		// Compute the target position. 
 		// First, consider our coalition or our "operate as" coalition to determine who are the enemies. Then, get the closest enemy unit and set it as target.
 		double distance = 0;
-		unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+
+		if (unitCoalition == 0) {
+			setState(State::IDLE);
+			log("Unit " + unitName + "(" + name + ") is neutral, cannot simulate engagement, switching to IDLE");
+			return;
+		}
+
 		unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
 		Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);
 		
@@ -390,16 +393,9 @@ void GroundUnit::AIloop()
 			setTargetPosition(Coords(NULL));
 		}
 
-		// Write down the difference in shells fired since the last tasking and the shots to fire threshold in the task string for debug purposes
-		taskString += "Shells fired since last tasking: " + to_string(totalShellsFired - shellsFiredAtTasking) + "/" + to_string(shotsToFire) + ". ";
-		// Log the target position and active path size for debug purposes
-		if (targetPosition != Coords(NULL))
-			taskString += "Target position: (" + to_string(targetPosition.lat) + ", " + to_string(targetPosition.lng) + "). ";
-		else
-			taskString += "No target in range. ";
-		taskString += "Active path size: " + to_string(activePath.size()) + ". ";
+		Coords closestEnemyPosition = target != nullptr ? target->getPosition() : Coords(NULL);
 
-		if (timeNow >= nextTaskingMilliseconds) {
+		if (timeNow >= nextTaskingMilliseconds && targetPosition != Coords(NULL)) {
 			if (scheduler->getLoad() > 100) {
 				taskString = "Excessive load, skipping tasking of unit";
 				setTargetPosition(Coords(NULL));
@@ -408,19 +404,21 @@ void GroundUnit::AIloop()
 			}
 			else {
 				float randomValue = RANDOM_ZERO_TO_ONE;
+				float randomThreshold = 0.66;
 				// Log the random value for debug purposes
-				
-				log(unitName + "(" + name + ")" + " random value: " + to_string(randomValue));
-				// If the unit has an active destination, randomly choose if we want to move or we want to shoot
-				if ((randomValue < 0.5 || targetPosition == Coords(NULL)) && activePath.size() > 0) {
-					// Fake a shoot action so that the unit starts moving
-					totalShellsFired += shotsToFire;
-					// Run for 10 seconds
-					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(10 * 1000);
-					// Set the active destination to NULL so that the moving command is reissued
-					resetActiveDestination();
-				}
-				else {
+				// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
+				// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
+				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+
+				// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
+				if (shotsIntensity == ShotsIntensity::LOW)
+					randomThreshold = 1.0 / (1.0 + static_cast<float>(friendliesInRange.size()));
+
+				// Multiply the random value depending on the shots intensity to simulate a more aggressive behavior when the shots intensity is higher
+				randomThreshold *= (1.0 + (shotsIntensity - ShotsIntensity::MEDIUM) * 0.5);
+
+				// Randomly choose if we want to shoot
+				if (randomValue > (1 - randomThreshold)) {
 					// If we don't have an active destination or we randomly chose to shoot, try to shoot at the target if there is one in range
 					if (targetPosition != Coords(NULL)) {
 						/* Get the distance and bearing to the target */
@@ -459,30 +457,28 @@ void GroundUnit::AIloop()
 						}
 						/* Otherwise use the aim method */
 						else {
-							taskString += "Simulating fire fight with aim point method. ";
-							log(unitName + "(" + name + ")" + " simulating fire fight with aim at point method");
-							string aimTaskString = aimAtPoint(scatteredTargetPosition);
-							taskString += aimTaskString;
+							// If the distance is less than the targeting range and the scatter is low, attack the target
+							if (distance < 0.3 * engagementRange && shotsScatter == ShotsScatter::LOW) {
+								taskString += "Range (" + to_string((int)round(distance)) + "m) is less than engagement range(" + to_string((int)round(0.3 * engagementRange)) + "m) and scatter is LOW, aiming at target.";
+
+								/* Send the command */
+								std::ostringstream taskSS;
+								taskSS.precision(10);
+								taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
+								Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+								scheduler->appendCommand(command);
+								shellsFiredAtTasking = totalShellsFired;
+								setHasTask(true);
+							}
+							else {
+								taskString += "Simulating fire fight with aim point method. ";
+								log(unitName + "(" + name + ")" + " simulating fire fight with aim at point method");
+								string aimTaskString = aimAtPoint(scatteredTargetPosition);
+								taskString += aimTaskString;
+							}
 						}
 
-						// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
-						// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
-						map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
-
-						// Adjust the aim time based on the number of friendlies in range. The more friendlies, the more we can increase the time to wait before shooting again to maintain a constant volume of fire.
-						double aimTime = getAimTime();
-						if (friendliesInRange.size() > 0) {
-							aimTime *= (1 + friendliesInRange.size());
-						}
-
-						// Multiply the aim time by a random factor to avoid all units shooting at the same time and create a more natural effect
-						aimTime *= RANDOM_ZERO_TO_ONE;
-
-						/* Wait an amout of time depending on the shots intensity */
-						nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(aimTime * 1000);
-
-						// Multiply the next tasking time depending on the selected intensity
-						nextTaskingMilliseconds *= (1 + (ShotsIntensity::MEDIUM - shotsIntensity) * 0.5);
+						nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
 
 						// Reset the active destination to NULL so that the moving command is reissued after shooting
 						resetActiveDestination();
@@ -495,41 +491,12 @@ void GroundUnit::AIloop()
 		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire)
 		{	
 			// Reset the task to stop shooting
-			if (getHasTask() && activeDestination == NULL)
+			if (getHasTask())
 				resetTask();
-
-			string enrouteTask = "";
-			bool looping = false;
-
-			std::ostringstream taskSS;
-			taskSS << "{ id = 'FollowRoads', value = " << (getFollowRoads() ? "true" : "false") << " }";
-			enrouteTask = taskSS.str();
-
-			if (activePath.size() > 0) {
-				if (activeDestination == NULL || !getHasTask())
-				{
-					if (setActiveDestination())
-						goToDestination(enrouteTask);
-				}
-				else {
-					if (isDestinationReached(GROUND_DEST_DIST_THR)) {
-						if (updateActivePath(looping) && setActiveDestination())
-							goToDestination(enrouteTask);
-					}
-				}
-			}
-			else {
-				if (getHasTask())
-					resetTask();
-			}
 		}
 		else {
 			// If we are not done shooting but there is no target, set the unit to do nothing but do not leave this state
 			if (targetPosition == Coords(NULL) && getHasTask())
-				resetTask();
-
-			// If there is no destination to reach, reset the task to do nothing but do not leave this state
-			if (activePath.size() == 0 && getHasTask())
 				resetTask();
 		}
 
@@ -557,65 +524,83 @@ void GroundUnit::AIloop()
 					resetTask();
 			}
 			else {
-				double distance = 0;
-				unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
-				unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
-				Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "Aircraft", "Helicopter" }, distance);
+				float randomValue = RANDOM_ZERO_TO_ONE;
+				float randomThreshold = 0.66;
+				// Log the random value for debug purposes
+				// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
+				// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
+				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
-				/* Recover the data from the database */
-				bool flak = false;
-				if (database.has_object_field(to_wstring(name))) {
-					json::value databaseEntry = database[to_wstring(name)];
-					if (databaseEntry.has_boolean_field(L"flak"))
-						flak = databaseEntry[L"flak"].as_bool();
-				}
+				// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
+				if (shotsIntensity == ShotsIntensity::LOW)
+					randomThreshold = 1.0 / (1.0 + static_cast<float>(friendliesInRange.size()));
 
-				/* Only run if an enemy air unit is closer than 20km to avoid useless load */
-				double activationDistance = 20000;
-				if (2 * engagementRange > activationDistance)
-					activationDistance = 2 * engagementRange;
+				// Multiply the random value depending on the shots intensity to simulate a more aggressive behavior when the shots intensity is higher
+				randomThreshold *= (1.0 + (shotsIntensity - ShotsIntensity::MEDIUM) * 0.5);
 
-				if (target != nullptr && distance < activationDistance /* m */) {
-					double r = 15; /* m */
-					double barrelElevation = position.alt + barrelHeight + r * tan(acos(((double)(rand()) / (double)(RAND_MAX))));
+				// Randomly choose if we want to shoot
+				if (randomValue > (1 - randomThreshold)) {
 
-					double lat = 0;
-					double lng = 0;
-					double randomBearing = ((double)(rand()) / (double)(RAND_MAX)) * 360;
-					Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
+					double distance = 0;
+					unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+					unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
+					Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "Aircraft", "Helicopter" }, distance);
 
-					if (flak) {
-						lat = position.lat + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
-						lng = position.lng + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
-						barrelElevation = target->getPosition().alt + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 1000;
-						taskString += "Flak box mode";
+					/* Recover the data from the database */
+					bool flak = false;
+					if (database.has_object_field(to_wstring(name))) {
+						json::value databaseEntry = database[to_wstring(name)];
+						if (databaseEntry.has_boolean_field(L"flak"))
+							flak = databaseEntry[L"flak"].as_bool();
+					}
+
+					/* Only run if an enemy air unit is closer than 20km to avoid useless load */
+					double activationDistance = 20000;
+					if (2 * engagementRange > activationDistance)
+						activationDistance = 2 * engagementRange;
+
+					if (target != nullptr && distance < activationDistance /* m */) {
+						double r = 15; /* m */
+						double barrelElevation = position.alt + barrelHeight + r * tan(acos(((double)(rand()) / (double)(RAND_MAX))));
+
+						double lat = 0;
+						double lng = 0;
+						double randomBearing = ((double)(rand()) / (double)(RAND_MAX)) * 360;
+						Geodesic::WGS84().Direct(position.lat, position.lng, randomBearing, r, lat, lng);
+
+						if (flak) {
+							lat = position.lat + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+							lng = position.lng + RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+							barrelElevation = target->getPosition().alt + RANDOM_MINUS_ONE_TO_ONE * (ShotsScatter::LOW - shotsScatter) * 1000;
+							taskString += "Flak box mode";
+						}
+						else {
+							taskString += "Scenic AAA. Bearing: " + to_string((int)round(randomBearing)) + "deg";
+						}
+
+						taskString += ". Aim point elevation " + to_string((int)round(barrelElevation - position.alt)) + "m AGL";
+
+						std::ostringstream taskSS;
+						taskSS.precision(10);
+						taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << barrelElevation << ", radius = 0.001 }";
+						Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+						scheduler->appendCommand(command);
+						shellsFiredAtTasking = totalShellsFired;
+						setHasTask(true);
+
+						/* Wait an amout of time depending on the shots intensity */
+						nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
 					}
 					else {
-						taskString += "Scenic AAA. Bearing: " + to_string((int)round(randomBearing)) + "deg";
+						setTargetPosition(Coords(NULL));
+						if (target == nullptr)
+							taskString += "Scenic AAA. No valid target.";
+						else
+							taskString += "Scenic AAA. Target outside max range: " + to_string((int)round(distance)) + "m.";
+
+						if (getHasTask())
+							resetTask();
 					}
-
-					taskString += ". Aim point elevation " + to_string((int)round(barrelElevation - position.alt)) + "m AGL";
-
-					std::ostringstream taskSS;
-					taskSS.precision(10);
-					taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << barrelElevation << ", radius = 0.001 }";
-					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-					scheduler->appendCommand(command);
-					shellsFiredAtTasking = totalShellsFired;
-					setHasTask(true);
-
-					/* Wait an amout of time depending on the shots intensity */
-					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
-				}
-				else {
-					setTargetPosition(Coords(NULL));
-					if (target == nullptr)
-						taskString += "Scenic AAA. No valid target.";
-					else
-						taskString += "Scenic AAA. Target outside max range: " + to_string((int)round(distance)) + "m.";
-
-					if (getHasTask())
-						resetTask();
 				}
 			}
 		}
@@ -663,111 +648,128 @@ void GroundUnit::AIloop()
 						resetTask();
 				}
 				else {
-					double distance = 0;
-					unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
-					unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
+					float randomValue = RANDOM_ZERO_TO_ONE;
+					float randomThreshold = 0.66;
+					// Log the random value for debug purposes
+					// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
+					// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
+					map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
-					/* Get all the units in range and select one at random */
-					double range = max(max(engagementRange, aimMethodRange), acquisitionRange);
-					map<Unit*, double> targets = unitsManager->getUnitsInRange(this, targetCoalition, { "Aircraft", "Helicopter" }, range);
+					// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
+					if (shotsIntensity == ShotsIntensity::LOW)
+						randomThreshold = 1.0 / (1.0 + static_cast<float>(friendliesInRange.size()));
 
-					Unit* target = nullptr;
-					unsigned int index = static_cast<unsigned int>((RANDOM_ZERO_TO_ONE * (targets.size() - 1)));
-					for (auto const& p : targets) {
-						if (index-- == 0) {
-							target = p.first;
-							distance = p.second;
-						}
-					}
+					// Multiply the random value depending on the shots intensity to simulate a more aggressive behavior when the shots intensity is higher
+					randomThreshold *= (1.0 + (shotsIntensity - ShotsIntensity::MEDIUM) * 0.5);
 
-					/* Only do if we have a valid target close enough for AAA */
-					if (target != nullptr) {
-						taskString += "Missing on purpose. Valid target at range: " + to_string((int)round(distance)) + "m";
+					// Randomly choose if we want to shoot
+					if (randomValue > (1 - randomThreshold)) {
+						double distance = 0;
+						unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+						unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
 
-						// Very simplified algorithm ignoring drag
-						double correctedAimTime = aimTime + distance / muzzleVelocity;
+						/* Get all the units in range and select one at random */
+						double range = max(max(engagementRange, aimMethodRange), acquisitionRange);
+						map<Unit*, double> targets = unitsManager->getUnitsInRange(this, targetCoalition, { "Aircraft", "Helicopter" }, range);
 
-						/* If the target is in targeting range and we are in highest precision mode, target it */
-						if (distance < targetingRange && shotsScatter == ShotsScatter::LOW) {
-							taskString += ". Range is less than targeting range (" + to_string((int)round(targetingRange)) + "m) and scatter is LOW, aiming at target.";
-
-							/* Send the command */
-							std::ostringstream taskSS;
-							taskSS.precision(10);
-							taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
-							Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-							scheduler->appendCommand(command);
-							shellsFiredAtTasking = totalShellsFired;
-							setHasTask(true);
-
-							nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
-						}
-						/* Else, do miss on purpose */
-						else {
-							/* Compute where the target will be in aimTime seconds. */
-							double aimDistance = target->getHorizontalVelocity() * correctedAimTime;
-							double aimLat = 0;
-							double aimLng = 0;
-							Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getTrack() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util to convert degrees and radians function */
-							double aimAlt = target->getPosition().alt + target->getVerticalVelocity();
-
-							if (flak) {
-								aimLat += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
-								aimLng += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
-								aimAlt += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 1000;
+						Unit* target = nullptr;
+						unsigned int index = static_cast<unsigned int>((RANDOM_ZERO_TO_ONE * (targets.size() - 1)));
+						for (auto const& p : targets) {
+							if (index-- == 0) {
+								target = p.first;
+								distance = p.second;
 							}
+						}
 
-							/* Send the command */
-							if (distance < engagementRange) {
-								taskString += ". Range is less than engagement range (" + to_string((int)round(engagementRange)) + "m), using FIRE AT POINT method";
+						/* Only do if we have a valid target close enough for AAA */
+						if (target != nullptr) {
+							taskString += "Missing on purpose. Valid target at range: " + to_string((int)round(distance)) + "m";
 
-								/* If the unit is closer than the engagement range, use the fire at point method */
+							// Very simplified algorithm ignoring drag
+							double correctedAimTime = aimTime + distance / muzzleVelocity;
+
+							/* If the target is in targeting range and we are in highest precision mode, target it */
+							if (distance < targetingRange && shotsScatter == ShotsScatter::LOW) {
+								taskString += ". Range is less than targeting range (" + to_string((int)round(targetingRange)) + "m) and scatter is LOW, aiming at target.";
+
+								/* Send the command */
 								std::ostringstream taskSS;
 								taskSS.precision(10);
-								taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << aimAlt << ", radius = 0.001 }";
-
-								taskString += ". Aiming altitude " + to_string((int)round((aimAlt - position.alt) / 0.3048)) + "ft AGL";
+								taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
 								Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 								scheduler->appendCommand(command);
 								shellsFiredAtTasking = totalShellsFired;
 								setHasTask(true);
-								setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+
 								nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
 							}
-							else if (distance < aimMethodRange) {
-								taskString += ". Range is less than aim method range (" + to_string((int)round(aimMethodRange / 0.3048)) + "ft), using AIM method.";
-
-								/* If the unit is closer than the aim method range, use the aim method range */
-								string aimMethodTask = aimAtPoint(Coords(aimLat, aimLng, aimAlt));
-								taskString += aimMethodTask;
-
-								setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
-								nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
-							}
+							/* Else, do miss on purpose */
 							else {
-								taskString += ". Target is not in range of weapon, waking up unit to get ready for tasking.";
+								/* Compute where the target will be in aimTime seconds. */
+								double aimDistance = target->getHorizontalVelocity() * correctedAimTime;
+								double aimLat = 0;
+								double aimLng = 0;
+								Geodesic::WGS84().Direct(target->getPosition().lat, target->getPosition().lng, target->getTrack() * 57.29577, aimDistance, aimLat, aimLng); /* TODO make util to convert degrees and radians function */
+								double aimAlt = target->getPosition().alt + target->getVerticalVelocity();
 
-								/* Else just wake the unit up with an impossible command */
-								std::ostringstream taskSS;
-								taskSS.precision(10);
-								taskSS << "{id = 'FireAtPoint', lat = " << 0 << ", lng = " << 0 << ", alt = " << 0 << ", radius = 0.001, expendQty = " << 0 << " }";
-								Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-								scheduler->appendCommand(command);
-								shellsFiredAtTasking = totalShellsFired;
-								setHasTask(true);
-								setTargetPosition(Coords(NULL));
+								if (flak) {
+									aimLat += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+									aimLng += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 0.01;
+									aimAlt += RANDOM_MINUS_ONE_TO_ONE * (1 + (ShotsScatter::LOW - shotsScatter)) * 1000;
+								}
 
-								/* Don't wait too long before checking again */
-								nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(5 * 1000);
+								/* Send the command */
+								if (distance < engagementRange) {
+									taskString += ". Range is less than engagement range (" + to_string((int)round(engagementRange)) + "m), using FIRE AT POINT method";
+
+									/* If the unit is closer than the engagement range, use the fire at point method */
+									std::ostringstream taskSS;
+									taskSS.precision(10);
+									taskSS << "{id = 'FireAtPoint', lat = " << aimLat << ", lng = " << aimLng << ", alt = " << aimAlt << ", radius = 0.001 }";
+
+									taskString += ". Aiming altitude " + to_string((int)round((aimAlt - position.alt) / 0.3048)) + "ft AGL";
+									Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+									scheduler->appendCommand(command);
+									shellsFiredAtTasking = totalShellsFired;
+									setHasTask(true);
+									setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+									nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
+								}
+								else if (distance < aimMethodRange) {
+									taskString += ". Range is less than aim method range (" + to_string((int)round(aimMethodRange / 0.3048)) + "ft), using AIM method.";
+
+									/* If the unit is closer than the aim method range, use the aim method range */
+									string aimMethodTask = aimAtPoint(Coords(aimLat, aimLng, aimAlt));
+									taskString += aimMethodTask;
+
+									setTargetPosition(Coords(aimLat, aimLng, target->getPosition().alt));
+									nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
+								}
+								else {
+									taskString += ". Target is not in range of weapon, waking up unit to get ready for tasking.";
+
+									/* Else just wake the unit up with an impossible command */
+									std::ostringstream taskSS;
+									taskSS.precision(10);
+									taskSS << "{id = 'FireAtPoint', lat = " << 0 << ", lng = " << 0 << ", alt = " << 0 << ", radius = 0.001, expendQty = " << 0 << " }";
+									Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+									scheduler->appendCommand(command);
+									shellsFiredAtTasking = totalShellsFired;
+									setHasTask(true);
+									setTargetPosition(Coords(NULL));
+
+									/* Don't wait too long before checking again */
+									nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(5 * 1000);
+								}
 							}
+							missOnPurposeTarget = target;
 						}
-						missOnPurposeTarget = target;
-					}
-					else {
-						taskString += "Missing on purpose. No target in range.";
-						setTargetPosition(Coords(NULL));
-						if (getHasTask())
-							resetTask();
+						else {
+							taskString += "Missing on purpose. No target in range.";
+							setTargetPosition(Coords(NULL));
+							if (getHasTask())
+								resetTask();
+						}
 					}
 				}
 			}

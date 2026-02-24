@@ -179,9 +179,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			}
 
 			unit->setActivePath(newPath);
-			// Only change the state to REACH_DESTINATION if we are not in SIMULATE_ENGAGEMENT state, because in this state the unit can move.
-			if (unit->getState() != State::SIMULATE_ENGAGEMENT)
-				unit->setState(State::REACH_DESTINATION);
+			unit->setState(State::REACH_DESTINATION);
 			log(username + " updated destination path for unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
 		}
 	}
@@ -201,6 +199,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setState(State::IDLE);
 
 			log(username + " stopped unit " + unit->getUnitName() + "(" + unit->getName() + ")", true);
+		}
 	}
 	/************************/
 	else if (key.compare("smoke") == 0)
@@ -792,6 +791,18 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") shots intensity to " + to_string(shotsIntensity), true);
 		}
 	}
+	/************************/
+	else if (key.compare("setPosture") == 0)
+	{
+		unsigned int ID = value[L"ID"].as_integer();
+		unitsManager->acquireControl(ID);
+		Unit* unit = unitsManager->getGroupLeader(ID);
+		if (unit != nullptr) {
+			unsigned char posture = value[L"posture"].as_number().to_uint32();
+			unit->setPosture(posture);
+			log(username + " set unit " + unit->getUnitName() + "(" + unit->getName() + ") posture to " + to_string(posture), true);
+		}
+		}
 	/************************/
 	else if (key.compare("fireLaser") == 0)
 	{

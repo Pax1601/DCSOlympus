@@ -63,10 +63,9 @@ import { OlStringInput } from "../components/olstringinput";
 import { OlFrequencyInput } from "../components/olfrequencyinput";
 import { UnitSink } from "../../audio/unitsink";
 import { AudioManagerStateChangedEvent, SelectedUnitsChangedEvent, SelectionClearedEvent, UnitsUpdatedEvent } from "../../events";
-import { faCog, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { OlExpandingTooltip } from "../components/olexpandingtooltip";
 import { OlLocation } from "../components/ollocation";
-import { OlStateButton } from "../components/olstatebutton";
 
 export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     function initializeUnitsData() {
@@ -82,6 +81,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             missOnPurpose: undefined as undefined | boolean,
             shotsScatter: undefined as undefined | number,
             shotsIntensity: undefined as undefined | number,
+            posture: undefined as undefined | number,
             operateAs: undefined as undefined | Coalition,
             followRoads: undefined as undefined | boolean,
             isActiveAWACS: undefined as undefined | boolean,
@@ -178,6 +178,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
             simualteEngagement: (unit: Unit) => unit.getState() === "simulate-engagement",
             shotsScatter: (unit: Unit) => unit.getShotsScatter(),
             shotsIntensity: (unit: Unit) => unit.getShotsIntensity(),
+            posture: (unit: Unit) => unit.getPosture(),
             operateAs: (unit: Unit) => unit.getOperateAs(),
             followRoads: (unit: Unit) => unit.getFollowRoads(),
             isActiveAWACS: (unit: Unit) => unit.getIsActiveAWACS(),
@@ -1974,7 +1975,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                         {/* ============== Simulate engagement toggle END ============== */}
                                                         <div
                                                             className={`
-                                                              flex gap-4
+                                                              flex flex-col
+                                                              gap-4
                                                             `}
                                                         >
                                                             {/* ============== Shots scatter START ============== */}
@@ -2019,7 +2021,8 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                             {/* ============== Shots scatter END ============== */}
                                                             {/* ============== Shots intensity START ============== */}
                                                             <div className={`
-                                                              flex flex-col
+                                                              flex w-full
+                                                              justify-between
                                                               gap-2
                                                             `}>
                                                                 <span
@@ -2054,6 +2057,46 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 </OlButtonGroup>
                                                             </div>
                                                             {/* ============== Shots intensity END ============== */}
+                                                            {/* ============== Posture START ============== }
+                                                            <div
+                                                                className={`
+                                                                  flex w-full
+                                                                  justify-between
+                                                                  gap-2
+                                                                `}
+                                                            >
+                                                                <span
+                                                                    className={`
+                                                                      my-auto
+                                                                      font-normal
+                                                                      dark:text-white
+                                                                    `}
+                                                                >
+                                                                    Posture
+                                                                </span>
+                                                                <OlButtonGroup>
+                                                                    {[olButtonsIntensity1, olButtonsIntensity1, olButtonsIntensity2, olButtonsIntensity3].map((icon, idx) => {
+                                                                        return (
+                                                                            <OlButtonGroupItem
+                                                                                key={idx}
+                                                                                onClick={() => {
+                                                                                    getApp()
+                                                                                        .getUnitsManager()
+                                                                                        .setPosture(idx + 1, null, () =>
+                                                                                            setForcedUnitsData({
+                                                                                                ...forcedUnitsData,
+                                                                                                posture: idx + 1,
+                                                                                            }),
+                                                                                        );
+                                                                                }}
+                                                                                active={selectedUnitsData.posture === idx + 1}
+                                                                                icon={icon}
+                                                                            />
+                                                                        );
+                                                                    })}
+                                                                </OlButtonGroup>
+                                                            </div>
+                                                            { ============== Posture END ============== */}
                                                             {/*<OlStateButton
                                 className="mt-auto"
                                 checked={showEngagementSettings}
@@ -2083,12 +2126,21 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                 <OlCoalitionToggle
                                                                     coalition={selectedUnitsData.operateAs as Coalition}
                                                                     onClick={() => {
+                                                                        let newOperateAs: string;
+                                                                        if (selectedUnitsData.operateAs === "neutral") {
+                                                                            newOperateAs = "blue";
+                                                                        } else if (selectedUnitsData.operateAs === "blue") {
+                                                                            newOperateAs = "red";
+                                                                        } else {
+                                                                            newOperateAs = "neutral";
+                                                                        }
+
                                                                         getApp()
                                                                             .getUnitsManager()
-                                                                            .setOperateAs(selectedUnitsData.operateAs === "blue" ? "red" : "blue", null, () =>
+                                                                            .setOperateAs(newOperateAs, null, () =>
                                                                                 setForcedUnitsData({
                                                                                     ...forcedUnitsData,
-                                                                                    operateAs: selectedUnitsData.operateAs === "blue" ? "red" : "blue",
+                                                                                    operateAs: newOperateAs as Coalition,
                                                                                 }),
                                                                             );
                                                                     }}

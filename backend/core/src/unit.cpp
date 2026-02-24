@@ -234,6 +234,7 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::shotsScatter:				updateValue(shotsScatter, leader->shotsScatter, datumIndex); break;
 					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
 					case DataIndex::alarmState:					updateValue(alarmState, leader->alarmState, datumIndex); break;
+					case DataIndex::posture:					updateValue(posture, leader->posture, datumIndex); break;	
 					}
 				}
 			}
@@ -328,6 +329,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
 					case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
 					case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
+					case DataIndex::posture:					appendNumeric(ss, datumIndex, posture); break;
 					case DataIndex::health:						appendNumeric(ss, datumIndex, health); break;
 					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
 					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;

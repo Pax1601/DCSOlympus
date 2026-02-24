@@ -74,6 +74,7 @@ namespace DataIndex {
 		drawArguments,
 		customString,
 		customInteger,
+		posture,
 		lastIndex,
 		endOfData = 255
 	};
@@ -123,6 +124,18 @@ namespace ShotsIntensity
 		LOW,
 		MEDIUM,
 		HIGH
+	};
+};
+
+namespace Posture
+{
+	enum Postures
+	{
+		NONE = 0,
+		STATIC,
+		DEFENSIVE,
+		AUTO,
+		OFFENSIVE
 	};
 };
 

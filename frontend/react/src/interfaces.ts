@@ -295,6 +295,7 @@ export interface UnitData {
     operateAs: string;
     shotsScatter: number;
     shotsIntensity: number;
+    posture: number;
     health: number;
     racetrackLength: number;
     racetrackAnchor: LatLng;

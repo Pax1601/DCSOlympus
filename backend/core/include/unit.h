@@ -113,6 +113,7 @@ public:
 	virtual void setOperateAs(unsigned char newValue) { updateValue(operateAs, newValue, DataIndex::operateAs); }
 	virtual void setShotsScatter(unsigned char newValue) { updateValue(shotsScatter, newValue, DataIndex::shotsScatter); }
 	virtual void setShotsIntensity(unsigned char newValue) { updateValue(shotsIntensity, newValue, DataIndex::shotsIntensity); }
+	virtual void setPosture(unsigned char newValue) { updateValue(posture, newValue, DataIndex::posture); }
 	virtual void setHealth(unsigned char newValue) { updateValue(health, newValue, DataIndex::health); }
 	virtual void setRacetrackLength(double newValue) { updateValue(racetrackLength, newValue, DataIndex::racetrackLength); }
 	virtual void setRacetrackAnchor(Coords newValue) { updateValue(racetrackAnchor, newValue, DataIndex::racetrackAnchor); }
@@ -184,6 +185,7 @@ public:
 	virtual unsigned char getOperateAs() { return operateAs;  }
 	virtual unsigned char getShotsScatter() { return shotsScatter; }
 	virtual unsigned char getShotsIntensity() { return shotsIntensity; }
+	virtual unsigned char getPosture() { return posture; }
 	virtual unsigned char getHealth() { return health; }
 	virtual double getRacetrackLength() { return racetrackLength; }
 	virtual Coords getRacetrackAnchor() { return racetrackAnchor; }
@@ -258,10 +260,11 @@ protected:
 	vector<DataTypes::Contact> contacts;
 	list<Coords> activePath;
 	bool isLeader = false;
-	unsigned char operateAs = 2;
+	unsigned char operateAs = 0;
 	Coords activeDestination = Coords(NULL);
-	unsigned char shotsScatter = 2;
-	unsigned char shotsIntensity = 2;
+	unsigned char shotsScatter = ShotsScatter::MEDIUM;
+	unsigned char shotsIntensity = ShotsIntensity::MEDIUM;
+	unsigned char posture = Posture::STATIC;
 	unsigned char health = 100;
 	double timeToNextTasking = 0;
 	double barrelHeight = 0; 

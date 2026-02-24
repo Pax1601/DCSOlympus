@@ -558,6 +558,12 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  setPosture(ID: number, posture: number, callback: CallableFunction = () => {}) {
+    var command = { ID: ID, posture: posture };
+    var data = { setPosture: command };
+    this.PUT(data, callback);
+  }
+
   setRacetrack(ID: number, length: number, latlng: LatLng, bearing: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, location: latlng, bearing: bearing, length: length };
     var data = { setRacetrack: command };

@@ -152,9 +152,10 @@ export abstract class Unit extends CustomMarker {
   #contacts: Contact[] = [];
   #activePath: LatLng[] = [];
   #isLeader: boolean = false;
-  #operateAs: string = "blue";
+  #operateAs: string = "neutral";
   #shotsScatter: number = 2;
   #shotsIntensity: number = 2;
+  #posture: number = 1;
   #health: number = 100;
   #racetrackLength: number = 0;
   #racetrackAnchor: LatLng = new LatLng(0, 0);
@@ -422,6 +423,9 @@ export abstract class Unit extends CustomMarker {
   }
   getCustomInteger() {
     return this.#customInteger;
+  }
+  getPosture() {
+    return this.#posture;
   }
 
   static getConstructor(type: string) {
@@ -826,6 +830,9 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.customInteger:
           this.#customInteger = dataExtractor.extractUInt32();
           break;
+        case DataIndexes.posture:
+          this.#posture = dataExtractor.extractUInt8();
+          break;
         default:
           break;
       }
@@ -952,7 +959,8 @@ export abstract class Unit extends CustomMarker {
       cargoWeight: this.#cargoWeight,
       drawingArguments: this.#drawingArguments,
       customString: this.#customString,
-      customInteger: this.#customInteger
+      customInteger: this.#customInteger,
+      posture: this.#posture,
     };
   }
 
@@ -1671,6 +1679,10 @@ export abstract class Unit extends CustomMarker {
     if (!this.#human) getApp().getServerManager().setShotsIntensity(this.ID, shotsIntensity);
   }
 
+  setPosture(posture: number) {
+    if (!this.#human) getApp().getServerManager().setPosture(this.ID, posture);
+  }
+
   setRacetrack(length: number, anchor: LatLng, bearing: number, callback: () => void) {
     if (!this.#human) getApp().getServerManager().setRacetrack(this.ID, length, anchor, bearing, callback);
   }
@@ -2000,9 +2012,7 @@ export abstract class Unit extends CustomMarker {
         .querySelector(".unit")
         ?.setAttribute(
           "data-operate-as",
-          this.getState() === UnitState.MISS_ON_PURPOSE || this.getState() === UnitState.SCENIC_AAA || this.getState() === UnitState.SIMULATE_FIRE_FIGHT || this.getState() === UnitState.SIMULATE_ENGAGEMENT
-            ? this.#operateAs
-            : "neutral"
+          this.#operateAs
         );
     }
 
@@ -2491,7 +2501,7 @@ export abstract class Unit extends CustomMarker {
     if (!getApp().getMap().hasLayer(this.#targetPositionPolyline)) this.#targetPositionPolyline.addTo(getApp().getMap());
     this.#targetPositionMarker.setLatLng(new LatLng(targetPosition.lat, targetPosition.lng));
 
-    if (this.getState() === "simulate-fire-fight" && this.getShotsScatter() != MAX_SHOTS_SCATTER) {
+    if ((this.getState() === "simulate-fire-fight" || this.getState() === "simulate-engagement") && this.getShotsScatter() != MAX_SHOTS_SCATTER) {
       let turfUnitPosition = turf.point([this.getPosition().lng, this.getPosition().lat]);
       let turfTargetPosition = turf.point([targetPosition.lng, targetPosition.lat]);
 
