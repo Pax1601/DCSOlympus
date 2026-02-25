@@ -9,6 +9,8 @@ import asyncio
 from enum import Enum
 from typing import Dict, Any, Optional
 import logging
+import threading
+import time
 
 
 class PluginStatus(Enum):
@@ -47,6 +49,32 @@ class Plugin(ABC):
         self.description = plugin_info.get("description", "")
         self.status = PluginStatus.INITIALIZED
         self.logger = logging.getLogger(f"Plugin.{self.name}")
+        self._watchdog_lock = threading.Lock()
+        self._watchdog_counter = 0
+        self._watchdog_last_heartbeat = 0.0
+
+    def watchdog_tick(self):
+        """
+        Increment the watchdog heartbeat counter for this plugin.
+
+        Plugins should call this method periodically while running.
+        """
+        with self._watchdog_lock:
+            self._watchdog_counter += 1
+            self._watchdog_last_heartbeat = time.time()
+
+    def get_watchdog_state(self) -> Dict[str, Any]:
+        """
+        Return current watchdog state for this plugin.
+
+        Returns:
+            Dictionary with watchdog counter and last heartbeat timestamp.
+        """
+        with self._watchdog_lock:
+            return {
+                "counter": self._watchdog_counter,
+                "last_heartbeat": self._watchdog_last_heartbeat
+            }
         
     @abstractmethod
     def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
@@ -110,6 +138,7 @@ class Plugin(ABC):
             result = self.on_start(loop)
             if result:
                 self.status = PluginStatus.RUNNING
+                self.watchdog_tick()
                 self.logger.info(f"Plugin {self.name} started successfully")
             else:
                 self.status = PluginStatus.ERROR
@@ -186,6 +215,7 @@ class Plugin(ABC):
             result = self.on_resume()
             if result:
                 self.status = PluginStatus.RUNNING
+                self.watchdog_tick()
                 self.logger.info(f"Plugin {self.name} resumed successfully")
             else:
                 self.logger.error(f"Plugin {self.name} failed to resume")
@@ -217,5 +247,6 @@ class Plugin(ABC):
             "author": self.author,
             "description": self.description,
             "status": self.status.value,
+            "watchdog": self.get_watchdog_state(),
             "info": self.plugin_info
         }

@@ -138,6 +138,7 @@ class ExamplePlugin(Plugin):
         while self.running:
             if not self.paused:
                 self.counter += 1
+                self.watchdog_tick()
                 self.logger.info(f"Example plugin is running... (tick {self.counter})")
             else:
                 self.logger.debug("Example plugin is paused")

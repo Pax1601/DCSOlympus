@@ -71,8 +71,12 @@ def signal_handler(signum, frame):
     
     # Stop all plugins
     if 'plugin_manager' in globals():
+        logger.info("Stopping watchdog...")
+        plugin_manager.stop_watchdog()
         logger.info("Stopping all plugins...")
         plugin_manager.stop_all_plugins()
+        logger.info("Stopping management server...")
+        plugin_manager.stop_management_server()
     
     sys.exit(0)
 
@@ -179,6 +183,30 @@ def main():
         plugins_directory=str(plugins_dir),
         global_config=global_config
     )
+    plugin_manager.set_event_loop(loop)
+
+    # Configure and start watchdog
+    watchdog_config = config_manager.get_watchdog_config()
+    plugin_manager.configure_watchdog(
+        enabled=watchdog_config.get('enabled', True),
+        check_interval_seconds=watchdog_config.get('check_interval_seconds', 5),
+        timeout_seconds=watchdog_config.get('timeout_seconds', 30),
+        auto_restart=watchdog_config.get('auto_restart', True)
+    )
+    plugin_manager.start_watchdog()
+
+    # Start management server
+    management_server = config_manager.get_management_server_config()
+    if management_server.get('enabled', True):
+        host = str(management_server.get('host', '127.0.0.1'))
+        port = int(management_server.get('port', 8765))
+        started = plugin_manager.start_management_server(host=host, port=port)
+        if started:
+            logger.info(f"Plugin management UI/API available at http://{host}:{port}")
+        else:
+            logger.warning("Plugin management server failed to start")
+    else:
+        logger.info("Management server is disabled in configuration")
     
     # Load all plugins
     logger.info("Loading plugins...")

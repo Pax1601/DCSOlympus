@@ -1807,6 +1807,14 @@ function handler:onEvent(event)
 				deleted = true
 			}
 		end
+	elseif event.id == 23 then
+		-- Shooting start
+		if Olympus ~= nil and event.initiator ~= nil and event.weapon_name ~= nil and event.target ~= nil then
+			local shooterUnit = event.initiator
+			local weapon_name  = event.weapon_name 
+			local target = event.target
+			Olympus.notify("Unit " .. shooterUnit:getName() .. " started shooting " .. weapon_name .. " at target " .. target:getName(), 2)
+		end
 	end
 end
 world.addEventHandler(handler)

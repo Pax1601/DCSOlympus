@@ -28,6 +28,17 @@ class ConfigManager:
         "plugins_directory": "scripts",
         "log_level": "INFO",
         "auto_start_plugins": True,
+        "management_server": {
+            "enabled": True,
+            "host": "127.0.0.1",
+            "port": 8765
+        },
+        "watchdog": {
+            "enabled": True,
+            "check_interval_seconds": 5,
+            "timeout_seconds": 30,
+            "auto_restart": True
+        },
         "plugin_settings": {
             "example": "Configuration for specific plugins can go here"
         }
@@ -244,6 +255,62 @@ class ConfigManager:
             True if plugins should auto-start
         """
         return self.config.get('auto_start_plugins', True)
+
+    def get_management_server_config(self) -> Dict[str, Any]:
+        """
+        Get management server configuration.
+
+        Returns:
+            Dictionary with server configuration keys:
+            - enabled (bool)
+            - host (str)
+            - port (int)
+        """
+        default_config = self.DEFAULT_CONFIG.get('management_server', {})
+        configured = self.config.get('management_server', {})
+
+        if not isinstance(configured, dict):
+            configured = {}
+
+        merged = {
+            'enabled': configured.get('enabled', default_config.get('enabled', True)),
+            'host': configured.get('host', default_config.get('host', '127.0.0.1')),
+            'port': configured.get('port', default_config.get('port', 8765))
+        }
+
+        return merged
+
+    def get_watchdog_config(self) -> Dict[str, Any]:
+        """
+        Get watchdog configuration.
+
+        Returns:
+            Dictionary with watchdog configuration keys:
+            - enabled (bool)
+            - check_interval_seconds (int)
+            - timeout_seconds (int)
+            - auto_restart (bool)
+        """
+        default_config = self.DEFAULT_CONFIG.get('watchdog', {})
+        configured = self.config.get('watchdog', {})
+
+        if not isinstance(configured, dict):
+            configured = {}
+
+        merged = {
+            'enabled': configured.get('enabled', default_config.get('enabled', True)),
+            'check_interval_seconds': configured.get(
+                'check_interval_seconds',
+                default_config.get('check_interval_seconds', 5)
+            ),
+            'timeout_seconds': configured.get(
+                'timeout_seconds',
+                default_config.get('timeout_seconds', 30)
+            ),
+            'auto_restart': configured.get('auto_restart', default_config.get('auto_restart', True))
+        }
+
+        return merged
     
     def validate(self) -> tuple[bool, list[str]]:
         """

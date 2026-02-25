@@ -185,6 +185,7 @@ class AdvancedGroundUnitControl(Plugin):
             return
         
         try:
+            self.watchdog_tick()
             # Get control of units
             self._get_control_of_ground_units(api)
             
