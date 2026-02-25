@@ -428,7 +428,7 @@ private:
 class Explosion : public Command
 {
 public:
-	Explosion(unsigned int intensity, string explosionType, Coords location, function<void(void)> callback = [](){}) :
+	Explosion(double intensity, string explosionType, Coords location, function<void(void)> callback = [](){}) :
 		Command(callback),
 		location(location),
 		intensity(intensity),
@@ -441,7 +441,7 @@ public:
 
 private:
 	const Coords location;
-	const unsigned int intensity;
+	const double intensity;
 	const string explosionType;
 };
 

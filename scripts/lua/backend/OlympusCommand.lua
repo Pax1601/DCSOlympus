@@ -500,10 +500,10 @@ function Olympus.explosion(intensity, explosionType, lat, lng, alt)
 		Olympus.phosphorous(vec3)
 	elseif explosionType == "napalm" then
 		Olympus.napalm(vec3)
-	elseif explosionType == "secondary" then
+	elseif explosionType == "secondaries" then
 		Olympus.secondaries(vec3)
 	elseif explosionType == "fire" then
-		Olympus.createFire(vec3)
+		Olympus.createFire(vec3, 2, 1)
 	elseif explosionType == "depthCharge" then
 
 	end
@@ -545,10 +545,10 @@ function Olympus.removeNapalm(staticName)
 	StaticObject.getByName(staticName):destroy()
 end
 
-function Olympus.createFire(vec3)
+function Olympus.createFire(vec3, preset, density)
 	local smokeName = "smokeName" .. Olympus.fireCounter
 	Olympus.fireCounter = Olympus.fireCounter + 1
-	trigger.action.effectSmokeBig(vec3, 2 , 1, smokeName)
+	trigger.action.effectSmokeBig(vec3, preset , density, smokeName)
 	trigger.action.explosion(vec3, 1) -- looks wierd to spawn in on flat land without this
 	timer.scheduleFunction(Olympus.removeFire, smokeName, timer.getTime() + 20)
 end
@@ -558,16 +558,16 @@ function Olympus.removeFire (smokeName)
 end
 
 function Olympus.secondaries(vec3) 
-	Olympus.randomDebries(vec3)
-	--trigger.action.explosion(vec3, 1)
-	--for i =	1, 10 do 
-	--	timer.scheduleFunction(Olympus.randomDebries, vec3, timer.getTime() + math.random(0, 180))
-	--end
+	trigger.action.explosion(vec3, 1)
+	for i =	1, 10 do 
+		timer.scheduleFunction(Olympus.randomDebries, vec3, timer.getTime() + 20 * i + (5 - math.random(0, 10)))
+	end
 end
 
 function Olympus.randomDebries(vec3) 
 	trigger.action.explosion(vec3, 1)
-	for i =	1,math.random(3, 10) do
+	Olympus.createFire(vec3, 1, 0.5)
+	for i =	1, math.random(1, 3) do
 		angle = mist.utils.toRadian((math.random(1, 360)))
 		local randVec = mist.utils.makeVec3GL((mist.getRandPointInCircle(vec3, 5, 1, 0, 360)))
 		trigger.action.signalFlare(randVec, 3, angle)

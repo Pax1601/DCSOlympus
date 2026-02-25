@@ -19,7 +19,7 @@ export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; c
         <span className="text-white">Explosion type</span>
 
         <OlDropdown label={explosionType} className="w-full">
-          {["High explosive", "Napalm", "White phosphorous", "Fire"].map((optionExplosionType) => {
+          {["High explosive", "Small explosion", "Napalm", "White phosphorous", "Fire", "Secondaries"].map((optionExplosionType) => {
             return (
               <OlDropdownItem
                 key={optionExplosionType}
@@ -42,6 +42,10 @@ export function UnitExplosionMenu(props: { open: boolean; onClose: () => void; c
                 getApp()?.getUnitsManager().delete(true, "napalm", units);
               } else if (explosionType === "White phosphorous") {
                 getApp()?.getUnitsManager().delete(true, "phosphorous", units);
+              } else if (explosionType === "Fire") {
+                getApp()?.getUnitsManager().delete(true, "fire", units);
+              } else if (explosionType === "Secondaries") {
+                getApp()?.getUnitsManager().delete(true, "secondaries", units);
               }
               props.onClose();
             }}

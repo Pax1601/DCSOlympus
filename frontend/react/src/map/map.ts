@@ -1086,8 +1086,10 @@ export class Map extends L.Map {
         if (this.#effectRequestTable !== null) {
           if (this.#effectRequestTable.type === "explosion") {
             if (this.#effectRequestTable.explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", e.latlng);
+            else if (this.#effectRequestTable.explosionType === "Small explosion") getApp().getServerManager().spawnExplosion(1, "normal", e.latlng);
             else if (this.#effectRequestTable.explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", e.latlng);
             else if (this.#effectRequestTable.explosionType === "White phosphorous") getApp().getServerManager().spawnExplosion(50, "phosphorous", e.latlng);
+            else if (this.#effectRequestTable.explosionType === "Secondaries") getApp().getServerManager().spawnExplosion(50, "secondaries", e.latlng);
             else if (this.#effectRequestTable.explosionType === "Fire") getApp().getServerManager().spawnExplosion(50, "fire", e.latlng);
             this.addExplosionMarker(e.latlng);
           } else if (this.#effectRequestTable.type === "smoke") {

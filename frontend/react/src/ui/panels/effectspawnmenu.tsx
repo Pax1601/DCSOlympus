@@ -72,7 +72,7 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                   <span className="my-auto text-white">Explosion type</span>
                 </div>
                 <OlDropdown label={explosionType} className="w-full">
-                  {["High explosive", "Napalm", "White phosphorous", "Fire"].map((optionExplosionType) => {
+                  {["High explosive", "Small explosion", "Napalm", "White phosphorous", "Fire", "Secondaries"].map((optionExplosionType) => {
                     return (
                       <OlDropdownItem
                         key={optionExplosionType}
@@ -94,9 +94,11 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                       Click on the map to generate an explosion effect. The type of explosion will be the one selected above. The possible explosion effects
                       are:
                       <li>High explosive: a normal explosion, like the one from a conventional bomb;</li>
+                      <li>Small explosion: a smaller version of the high explosive effect, like the one from a small bomb;</li>
                       <li>Napalm: an explosion with a longer lasting fire effect;</li>
                       <li>White phosphorous: an explosion with multiple white flares ejecting from the blast;</li>
                       <li>Fire: a long lasting static fire.</li>
+                      <li>Secondaries: an explosion with multiple smaller explosions ejecting from the blast, simulating a destroyed vehicle burning and cooking ammunition.</li>
                     </div>
                   </div>
                 )}
@@ -158,8 +160,10 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                   if (props.latlng) {
                     if (props.effect === "explosion") {
                       if (explosionType === "High explosive") getApp().getServerManager().spawnExplosion(50, "normal", props.latlng);
+                      else if (explosionType === "Small explosion") getApp().getServerManager().spawnExplosion(1, "normal", props.latlng);
                       else if (explosionType === "Napalm") getApp().getServerManager().spawnExplosion(50, "napalm", props.latlng);
                       else if (explosionType === "White phosphorous") getApp().getServerManager().spawnExplosion(50, "phosphorous", props.latlng);
+                      else if (explosionType === "Secondaries") getApp().getServerManager().spawnExplosion(50, "secondaries", props.latlng);
                       else if (explosionType === "Fire") getApp().getServerManager().spawnExplosion(50, "fire", props.latlng);
                       getApp().getMap().addExplosionMarker(props.latlng);
                     } else if (props.effect === "smoke") {

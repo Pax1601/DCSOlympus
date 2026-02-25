@@ -500,7 +500,7 @@ void GroundUnit::AIloop()
 						Geodesic::WGS84().Direct(grenadeTargetPosition.lat, grenadeTargetPosition.lng, randomBearing, scatterDistance, grenadeTargetPosition.lat, grenadeTargetPosition.lng);
 
 						// Use the explosion command 
-						Command* command = dynamic_cast<Command*>(new Explosion(1, "normal", grenadeTargetPosition));
+						Command* command = dynamic_cast<Command*>(new Explosion(0.1, "normal", grenadeTargetPosition));
 						scheduler->appendCommand(command);
 					}
 					else {
