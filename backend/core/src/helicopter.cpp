@@ -36,6 +36,36 @@ Helicopter::Helicopter(json::value json, unsigned int ID) : AirUnit(json, ID)
 	setDesiredAltitude(ftToM(5000));
 };
 
+void Helicopter::setDefaults(bool force)
+{
+	AirUnit::setDefaults(force);
+	/* Load values from database */
+	if (database.has_object_field(to_wstring(name))) {
+		json::value databaseEntry = database[to_wstring(name)];
+
+		// Iterate on all the loadouts
+		if (databaseEntry.has_array_field(L"loadouts")) {
+			json::array loadouts = databaseEntry[L"loadouts"].as_array();
+			for (auto& loadout : loadouts) {
+				// Check in the roles if the world "Transport" is present. If so, set canTransportUnits to true
+				if (loadout.has_array_field(L"roles")) {
+					json::array roles = loadout[L"roles"].as_array();
+					for (auto const& role : roles) {
+						if (role.as_string().compare(L"Transport") == 0)
+							setCanTransportUnits(true, force);
+					}
+				}
+			}
+		}
+	}
+	if (canTransportUnits) {
+		log("Helicopter " + getUnitName() + " can transport units");
+	}
+	else {
+		log("Helicopter " + getUnitName() + " cannot transport units");
+	}
+}
+
 void Helicopter::changeSpeed(string change)
 {
 	if (change.compare("stop") == 0)

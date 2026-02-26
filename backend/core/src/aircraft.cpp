@@ -36,6 +36,30 @@ Aircraft::Aircraft(json::value json, unsigned int ID) : AirUnit(json, ID)
 	setDesiredAltitude(ftToM(20000));
 };
 
+void Aircraft::setDefaults(bool force)
+{
+	AirUnit::setDefaults(force);
+	/* Load values from database */
+	if (database.has_object_field(to_wstring(name))) {
+		json::value databaseEntry = database[to_wstring(name)];
+		
+		// Iterate on all the loadouts
+		if (databaseEntry.has_array_field(L"loadouts")) {
+			json::array loadouts = databaseEntry[L"loadouts"].as_array();
+			for (auto& loadout : loadouts) {
+				// Check in the roles if the world "Transport" is present. If so, set canTransportUnits to true
+				if (loadout.has_array_field(L"roles")) {
+					json::array roles = loadout[L"roles"].as_array();
+					for (auto const& role : roles) {
+						if (role.as_string().compare(L"Transport") == 0)
+							setCanTransportUnits(true, force);
+					}
+				}
+			}
+		}
+	}
+}
+
 void Aircraft::changeSpeed(string change)
 {
 	if (change.compare("stop") == 0)

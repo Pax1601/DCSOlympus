@@ -1073,6 +1073,34 @@ export class UnitsManager {
             this.#protectionCallback = callback;
         } else callback(units);
     }
+
+
+    embarkUnits(transportUnit: Unit, units: Unit[] | null = null, onExecution: () => void = () => {}) {
+        if (units === null) units = this.getSelectedUnits();
+        units = units.filter((unit) => !unit.getHuman());
+        let callback = (units: Unit[]) => {
+            onExecution();
+            transportUnit.embarkUnits(units.map((unit) => unit.ID));
+            this.#showActionMessage(units, `embarking on unit ${transportUnit.getUnitName()}`);
+        }
+        if (getApp().getMap().getOptions().protectDCSUnits && !units.every((unit) => unit.isControlledByOlympus())) {
+            getApp().setState(OlympusState.UNIT_CONTROL, UnitControlSubState.PROTECTION);
+            this.#protectionCallback = callback;
+        } else callback(units);
+    }
+
+    disembarkUnits(units: Unit[] | null = null, onExecution: () => void = () => {}) {
+        if (units === null) units = this.getSelectedUnits();
+        let callback = (units: Unit[]) => {
+            onExecution();
+            units.forEach((unit) => unit.disembarkUnits());
+            this.#showActionMessage(units, `disembarking units`);
+        }
+        callback(units);
+    }
+
+
+
     /** Instruct the selected units to perform carpet bombing of specific coordinates
      *
      * @param latlng Location to bomb

@@ -5,6 +5,9 @@
 #include "utils.h"
 #include "unit.h"
 
+#include <GeographicLib/Geodesic.hpp>
+using namespace GeographicLib;
+
 extern UnitsManager* unitsManager;
 
 Scheduler::Scheduler(lua_State* L)
@@ -936,6 +939,106 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			double customNumber = value[L"customInteger"].as_double();
 			unit->setCustomInteger(customNumber);
 			log(username + " set custom number to unit " + unit->getUnitName() + "(" + unit->getName() + "), " + to_string(customNumber), true);
+		}
+	}/************************/
+	else if (key.compare("embarkUnits") == 0)
+	{
+		// The json for the loadTroops command is expected to be in the following format:
+		// {
+		//   "command": "loadTroops",
+		//   "ID": 123, // ID of the transport unit
+		//   "unitIDs": [ 345, 678 ] // Array of unit IDs to be loaded as troops
+		//  }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		vector<unsigned int> unitIDs;
+		for (auto unitID : value[L"unitIDs"].as_array()) {
+			unitIDs.push_back(unitID.as_integer());
+		}
+
+		// Check that the transport unit exists and is a valid transport unit
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+		if (transportUnit != nullptr && transportUnit->getCanTransportUnits()) {
+			// Loop on all the units to be loaded
+			for (unsigned int unitID : unitIDs) {
+				Unit* unit = unitsManager->getUnit(unitID);
+				if (unit != nullptr) {
+					// Compute the distance between the transport and the unit
+					double dist;
+					double bearing1;
+					double bearing2;
+					Geodesic::WGS84().Inverse(unit->getPosition().lat, unit->getPosition().lng, transportUnit->getPosition().lat, transportUnit->getPosition().lng, dist, bearing1, bearing2);
+
+					// Iterate on all the units and check if this unit is already in any transport
+					bool unitAlreadyTransported = false;
+					for (auto& u : unitsManager->getUnits()) {
+						if (u.second->getCanTransportUnits()) {
+							for (unsigned int onBoardUnitID : u.second->getOnBoardUnitsIDs()) {
+								if (onBoardUnitID == unitID) {
+									unitAlreadyTransported = true;
+									break;
+								}
+							}
+						}
+					}
+
+					// If the unit is not already being transported, set its targetID to the transport unit and set its state to EMBARK
+					if (!unitAlreadyTransported) {
+						unit->setTargetID(transportID);
+						unit->setState(State::EMBARKING);
+					}
+					else {
+						log("Error while loading troops. Unit with ID " + to_string(unitID) + " is already being transported by another transport unit.");
+					}
+				}
+				else {
+					log("Error while loading troops. Unit with ID " + to_string(unitID) + " does not exist.");
+				}
+			}
+		}
+		else {
+			log("Error while loading troops. Transport unit with ID " + to_string(transportID) + " does not exist or is not a valid transport unit.");
+		}
+	}
+	/************************/
+	else if (key.compare("disembarkUnits") == 0)
+	{
+		// The json for the unloadTroops command is expected to be in the following format:
+		// {
+		//   "command": "unloadTroops",
+		//   "ID": 123, // ID of the transport unit
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		// Check that the transport unit exists, is alive, is transporting units, is on the ground, and the speed is less than 2 m/s
+		if (transportUnit != nullptr && 
+			transportUnit->getAlive() && 
+			transportUnit->getOnBoardUnitsIDs().size() > 0 && 
+			!transportUnit->getAirborne() && 
+			transportUnit->getSpeed() < 2) {
+			int unitIndex = 0;
+			// Loop on all the units being transported and add them back to the map at the position of the transport unit
+			for (unsigned int unitID : transportUnit->getOnBoardUnitsIDs()) {
+				// Compute the position of the new units to be in front of the transport at a distance of 10 meters + 1 meter for each unit already unloaded (to avoid them being on top of each other)
+				Coords newUnitPosition;
+				Geodesic::WGS84().Direct(transportUnit->getPosition().lat, transportUnit->getPosition().lng, transportUnit->getHeading() * 57.29577, 10 + unitIndex, newUnitPosition.lat, newUnitPosition.lng);
+
+				// Clone the unit by ID and add it back to the map at the position of the transport unit
+				Command* command = dynamic_cast<Command*>(new Clone({ { unitID, newUnitPosition } }, false));
+				appendCommand(command);
+
+				// Increment the unit index
+				unitIndex++;
+			}
+			// Decrease the weight of the transport by 100 kg for each unloaded unit
+			transportUnit->setCargoWeight(transportUnit->getCargoWeight() - (100 * transportUnit->getOnBoardUnitsIDs().size()));
+			// Clear the transport on-board units list
+			transportUnit->setOnBoardUnitsIDs({});
+		}
+		else {
+			log("Error while unloading troops. Transport unit with ID " + to_string(transportID) + " does not exist, is not alive, or is not transporting any units.");
 		}
 	}
 	/************************/

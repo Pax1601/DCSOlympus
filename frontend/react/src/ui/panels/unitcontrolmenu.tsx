@@ -246,23 +246,43 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
     }, [selectedUnits]);
 
     /* Count how many units are selected of each type, divided by coalition */
-    var unitOccurences: {
+    type UnitOccurencesByCoalition = {
         blue: { [key: string]: { label: string; occurences: number } };
         red: { [key: string]: { label: string; occurences: number } };
         neutral: { [key: string]: { label: string; occurences: number } };
         all: { [key: string]: { label: string; occurences: number } };
-    } = {
-        blue: {},
-        red: {},
-        neutral: {},
-        all: {},
     };
 
-    selectedUnits.forEach((unit) => {
-        if (!(unit.getName() in unitOccurences[unit.getCoalition()]))
-            unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label ?? "" };
-        else unitOccurences[unit.getCoalition()][unit.getName()].occurences++;
-    });
+    function createUnitOccurencesByCoalition() {
+        return {
+            blue: {},
+            red: {},
+            neutral: {},
+            all: {},
+        } as UnitOccurencesByCoalition;
+    }
+
+    function getUnitsOccurencesByTypeAndCoalition(units: Unit[]) {
+        const unitOccurences = createUnitOccurencesByCoalition();
+        units.forEach((unit) => {
+            if (!(unit.getName() in unitOccurences[unit.getCoalition()]))
+                unitOccurences[unit.getCoalition()][unit.getName()] = { occurences: 1, label: unit.getBlueprint()?.label ?? "" };
+            else unitOccurences[unit.getCoalition()][unit.getName()].occurences++;
+        });
+        return unitOccurences;
+    }
+
+    const unitOccurences = getUnitsOccurencesByTypeAndCoalition(selectedUnits);
+
+    const boardedUnits =
+        selectedUnits.length === 1
+            ? selectedUnits[0]
+                  .getOnBoardUnitsIDs()
+                  .map((ID) => getApp()?.getUnitsManager()?.getUnitByID(ID))
+                  .filter((unit): unit is Unit => unit !== null && unit !== undefined)
+            : [];
+    const boardedUnitOccurences = getUnitsOccurencesByTypeAndCoalition(boardedUnits);
+    const boardedUnitsCount = boardedUnits.length;
 
     const selectedCategories = getApp()?.getUnitsManager()?.getSelectedUnitsCategories() ?? [];
 
@@ -3512,6 +3532,96 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 </div>
                                             </>
                                         )}
+                                        {(selectedUnits[0].getCanTransportUnits() || boardedUnitsCount > 0) && (
+                                            <div
+                                                className={`
+                                                  flex flex-col gap-2 border-b-2
+                                                  border-b-white/10 pb-2
+                                                `}
+                                            >
+                                                <div
+                                                    className={`
+                                                      flex justify-between
+                                                    `}
+                                                >
+                                                    <div
+                                                        className={`
+                                                          my-auto text-sm
+                                                          dark:text-gray-300
+                                                        `}
+                                                    >
+                                                        Boarded units
+                                                    </div>
+                                                    <div
+                                                        className={`
+                                                          my-auto text-sm
+                                                          font-bold
+                                                          dark:text-gray-500
+                                                        `}
+                                                    >
+                                                        x{boardedUnitsCount}
+                                                    </div>
+                                                </div>
+
+                                                {boardedUnitsCount === 0 && (
+                                                    <div
+                                                        className={`
+                                                          my-auto text-sm
+                                                          dark:text-gray-500
+                                                        `}
+                                                    >
+                                                        None
+                                                    </div>
+                                                )}
+
+                                                {boardedUnitsCount > 0 && (
+                                                    <>
+                                                        {(["blue", "red", "neutral"] as Coalition[]).map((coalition) => {
+                                                            return Object.keys(boardedUnitOccurences[coalition]).map((name, idx) => {
+                                                                return (
+                                                                    <div
+                                                                        key={`boarded-${coalition}-${name}-${idx}`}
+                                                                        data-coalition={coalition}
+                                                                        className={`
+                                                                          flex
+                                                                          content-center
+                                                                          justify-between
+                                                                          border-l-4
+                                                                          py-2
+                                                                          pl-3
+                                                                          pr-2
+                                                                          data-[coalition='blue']:border-blue-500
+                                                                          data-[coalition='neutral']:border-gray-500
+                                                                          data-[coalition='red']:border-red-500
+                                                                        `}
+                                                                    >
+                                                                        <span
+                                                                            className={`
+                                                                              my-auto
+                                                                              font-normal
+                                                                              dark:text-white
+                                                                            `}
+                                                                        >
+                                                                            {boardedUnitOccurences[coalition][name].label}
+                                                                        </span>
+                                                                        <span
+                                                                            className={`
+                                                                              my-auto
+                                                                              font-bold
+                                                                              dark:text-gray-500
+                                                                            `}
+                                                                        >
+                                                                            x{boardedUnitOccurences[coalition][name].occurences}
+                                                                        </span>
+                                                                    </div>
+                                                                );
+                                                            });
+                                                        })}
+                                                    </>
+                                                )}
+                                            </div>
+                                        )}
+
                                         {/* ============== Payload section START ============== */}
                                         {!selectedUnits[0].isTanker() &&
                                             !selectedUnits[0].isAWACS() &&

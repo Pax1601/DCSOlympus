@@ -329,12 +329,11 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
 					case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
 					case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
-					case DataIndex::posture:					appendNumeric(ss, datumIndex, posture); break;
 					case DataIndex::health:						appendNumeric(ss, datumIndex, health); break;
 					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
 					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
 					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
-					case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	//Useful for debugging, but useless in production and very data hungry
+					//case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	//Useful for debugging, but useless in production and very data hungry
 					case DataIndex::barrelHeight:				appendNumeric(ss, datumIndex, barrelHeight); break;
 					case DataIndex::muzzleVelocity:				appendNumeric(ss, datumIndex, muzzleVelocity); break;
 					case DataIndex::aimTime:					appendNumeric(ss, datumIndex, aimTime); break;
@@ -350,6 +349,10 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::drawArguments:				appendVector(ss, datumIndex, drawArguments); break;
 					case DataIndex::customString:				appendString(ss, datumIndex, customString); break;
 					case DataIndex::customInteger: 				appendNumeric(ss, datumIndex, customInteger); break;
+					case DataIndex::posture:					appendNumeric(ss, datumIndex, posture); break;
+					case DataIndex::canTransportUnits:			appendNumeric(ss, datumIndex, canTransportUnits); break;
+					case DataIndex::onBoardUnitIDs:				appendVector(ss, datumIndex, onBoardUnitsIDs); break;
+					case DataIndex::maximumTransportableUnits:	appendNumeric(ss, datumIndex, maximumTransportableUnits); break;
 				}
 			}
 		}
@@ -701,7 +704,7 @@ void Unit::setRadio(DataTypes::Radio newRadio, bool force)
 
 void Unit::setGeneralSettings(DataTypes::GeneralSettings newGeneralSettings, bool force)
 {
-	if (generalSettings != newGeneralSettings)
+	if (generalSettings != newGeneralSettings || force)
 	{
 		generalSettings = newGeneralSettings;
 
@@ -737,6 +740,24 @@ void Unit::setDrawArguments(vector<DataTypes::DrawArgument> newDrawArguments)
 	}
 	drawArguments = newDrawArguments;
 	triggerUpdate(DataIndex::drawArguments);
+}
+
+void Unit::setOnBoardUnitsIDs(vector<unsigned int> newOnBoardUnitsIDs)
+{
+	if (onBoardUnitsIDs.size() == newOnBoardUnitsIDs.size()) {
+		bool equal = true;
+		for (int i = 0; i < onBoardUnitsIDs.size(); i++) {
+			if (onBoardUnitsIDs.at(i) != newOnBoardUnitsIDs.at(i))
+			{
+				equal = false;
+				break;
+			}
+		}
+		if (equal)
+			return;
+	}
+	onBoardUnitsIDs = newOnBoardUnitsIDs;
+	triggerUpdate(DataIndex::onBoardUnitIDs);
 }
 
 void Unit::setDesiredSpeed(double newDesiredSpeed)
@@ -893,6 +914,15 @@ void Unit::setHasTaskAssigned(bool newHasTaskAssigned) {
 		log(unitName + " no task assigned");
 }
 
+void Unit::setCanTransportUnits(bool newCanTransportUnits, bool force)
+{
+	if (canTransportUnits != newCanTransportUnits || force) {
+		canTransportUnits = newCanTransportUnits;
+		/* Apply the change */
+		triggerUpdate(DataIndex::canTransportUnits);
+	}
+}
+
 void Unit::triggerUpdate(unsigned char datumIndex) {
 	updateTimeMap[datumIndex] = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
@@ -904,3 +934,5 @@ unsigned int Unit::computeTotalAmmo()
 		totalShells += ammoItem.quantity;
 	return totalShells;
 }
+
+

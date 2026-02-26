@@ -647,6 +647,18 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  embarkUnits(transportID: number, unitIDs: number[], callback: CallableFunction = () => {}) {
+    var command = { ID: transportID, unitIDs: unitIDs };
+    var data = { embarkUnits: command };
+    this.PUT(data, callback);
+  }
+
+  disembarkUnits(transportID: number, callback: CallableFunction = () => {}) {
+    var command = { ID: transportID };
+    var data = { disembarkUnits: command };
+    this.PUT(data, callback);
+  }
+
   reloadDatabases(callback: CallableFunction = () => {}) {
     var data = { reloadDatabases: {} };
     this.PUT(data, callback);

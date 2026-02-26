@@ -89,6 +89,11 @@ void GroundUnit::setState(unsigned char newState)
 		case State::REACH_DESTINATION: {
 			break;
 		}
+		case State::EMBARKING:
+		case State::DISEMBARKING: {
+			setTargetID(NULL);
+			break;
+		}
 		case State::ATTACK: {
 			setTargetID(NULL);
 			break;
@@ -119,6 +124,67 @@ void GroundUnit::setState(unsigned char newState)
 		setTask("Reaching destination");
 		setEnableTaskCheckFailed(true);
 		resetActiveDestination();
+		break;
+	}
+	case State::EMBARKING: {
+		if (targetID == NULL) {
+			log("Cannot set state to EMBARKING for unit " + unitName + " because it has no targetID");
+		}
+		else {
+			Unit* target = unitsManager->getUnit(targetID);
+			setTask("Embarking on unit " + target->getName());
+			setEnableTaskCheckFailed(true);
+			clearActivePath();
+			resetActiveDestination();
+			setFollowRoads(false);
+
+			// Compute the path to reach the target. 
+			list<Coords> path;
+			Coords targetPosition = target->getPosition();
+
+			// Make the unit go to a point 10 meters in front of the target, then 20 meters behind
+			Coords point1, point2;
+
+			// Check if the unit is to the left or to the right of the target, i.e. check if it left or right of the line defined by the target heading.
+			double dist;
+			double bearing1;
+			double bearing2;
+			bool left = false;
+			bool right = false;
+
+			Geodesic::WGS84().Inverse(targetPosition.lat, targetPosition.lng, position.lat, position.lng, dist, bearing1, bearing2);
+
+			if (bearing1 < 0)
+				bearing1 += 360;
+
+			double rotatedBearing = bearing1 - target->getHeading() * 57.29577;
+
+			// Normalize the rotated bearing to be between 0 and 360
+			if (rotatedBearing < 0)
+				rotatedBearing += 360;
+			else if (rotatedBearing >= 360)
+				rotatedBearing -= 360;
+
+			if (rotatedBearing > 0 && rotatedBearing < 180)
+				right = true;
+			else if (rotatedBearing >= 180 && rotatedBearing < 360)
+				left = true;
+
+			double deltaAngle = left ? -10 : right ? 10 : 0;
+
+			// Compute the coordinates of the points in front and behind the target based on its heading
+			Geodesic::WGS84().Direct(targetPosition.lat, targetPosition.lng, target->getHeading() * 57.29577 + deltaAngle, 20, point1.lat, point1.lng);
+			Geodesic::WGS84().Direct(targetPosition.lat, targetPosition.lng, (target->getHeading() * 57.29577 + 180) - deltaAngle, 20, point2.lat, point2.lng);
+
+			// Set a threshold of 3 meters for both points to avoid precision issues when reaching the target
+			point1.threshold = 3;
+			point2.threshold = 3;
+
+			path.push_back(point1);
+			path.push_back(point2);
+
+			setActivePath(path);
+		}
 		break;
 	}
 	case State::ATTACK: {
@@ -210,7 +276,8 @@ void GroundUnit::AIloop()
 
 		break;
 	}
-	case State::REACH_DESTINATION: {
+	case State::REACH_DESTINATION:
+	case State::EMBARKING: {
 		string enrouteTask = "";
 		bool looping = false;
 
@@ -233,6 +300,61 @@ void GroundUnit::AIloop()
 					setState(State::IDLE);
 			}
 		}
+
+		if (state == State::EMBARKING) {
+			Unit* target = unitsManager->getUnit(getTargetID());
+			if (target == nullptr || !target->getAlive()) {
+				setState(State::IDLE);
+			}
+			else {
+				// Check that:
+				// - The transport unit is alive
+				// - The transport unit is capable of transporting units
+				// - The transport unit is on the ground
+				// - The transport unit speed is less than 2 m/s
+				// - The transport is not full
+				double dist;
+				double bearing1;
+				double bearing2;
+				Geodesic::WGS84().Inverse(target->getPosition().lat, target->getPosition().lng, getPosition().lat, getPosition().lng, dist, bearing1, bearing2);
+
+				// Make the unit disappear if it is behind the "9-3" line of the transport
+				// To determine if the unit is behind the "9-3" line of the transport, we can compute the bearing between the transport and the unit and compare it with the bearing of the transport. 
+				// If the difference between the two bearings is between 90 and 270 degrees, then the unit is behind the "9-3" line of the transport.
+
+				bool behindNineThreeLine = false;
+				double bearingDiff = fabs(bearing1 - target->getHeading() * 57.29577);
+				if (bearingDiff > 180)
+					bearingDiff = 360 - bearingDiff;
+				if (bearingDiff > 90 && bearingDiff < 270)
+					behindNineThreeLine = true;
+
+				if (dist < 10 &&
+					behindNineThreeLine &&
+					target->getAlive() &&
+					target->getCanTransportUnits() &&
+					!target->getAirborne() &&
+					target->getSpeed() < 2 && 
+					target->getOnBoardUnitsIDs().size() < target->getMaximumTransportableUnits()
+					) {
+
+					// Add the unit ID to the transport on-board units list (do it this way to trigger an update)
+					auto newOnBoardUnitsIDs = target->getOnBoardUnitsIDs();
+					newOnBoardUnitsIDs.push_back(ID);
+					target->setOnBoardUnitsIDs(newOnBoardUnitsIDs);
+
+					// Remove the unit from the map
+					unitsManager->deleteUnit(ID, false, "", true);
+
+					// Increase the weight of the transport by 100 kg
+					target->setCargoWeight(target->getCargoWeight() + 100);
+
+					log("Loaded unit " + getUnitName() + "(" + getName() + ") into transport " + target->getUnitName() + "(" + target->getName() + ")", true);
+				}
+			}
+		}
+
+
 		break;
 	}
 	case State::ATTACK: {
@@ -903,5 +1025,14 @@ void GroundUnit::setFollowRoads(bool newFollowRoads, bool force)
 	if (newFollowRoads != followRoads || force) {
 		Unit::setFollowRoads(newFollowRoads, force);
 		resetActiveDestination(); /* Reset active destination to apply option*/
+	}
+}
+
+string GroundUnit::getType() {
+	// Get the unit type from the database if it exists, otherwise return "GroundUnit" as default
+	if (database.has_object_field(to_wstring(name))) {
+		json::value databaseEntry = database[to_wstring(name)];
+		if (databaseEntry.has_string_field(L"type"))
+			return to_string(databaseEntry[L"type"].as_string());
 	}
 }

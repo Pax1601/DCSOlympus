@@ -10,6 +10,8 @@ public:
 
 	static void loadDatabase(string path);
 
+	virtual void setDefaults(bool force = false);
+
 	virtual void changeSpeed(string change);
 	virtual void changeAltitude(string change);
 

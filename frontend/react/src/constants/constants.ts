@@ -14,6 +14,7 @@ import {
   faPlaneArrival,
   faRoute,
   faTrash,
+  faTruckPlane,
   faWifi,
   faXmarksLines,
 } from "@fortawesome/free-solid-svg-icons";
@@ -572,6 +573,9 @@ export enum DataIndexes {
   customString,
   customInteger,
   posture,
+  canTransportUnits,
+  onBoardUnitsIDs,
+  maximumTransportableUnits,
   endOfData = 255,
 }
 
@@ -897,6 +901,31 @@ export namespace ContextActions {
         getApp().getUnitsManager().bombPoint(targetPosition, getApp().getMap().getKeepRelativePositions(), getApp().getMap().getDestinationRotation(), units);
     },
     { type: ContextActionType.ENGAGE, code: "KeyB", ctrlKey: false, shiftKey: false }
+  );
+
+  export const EMBARK = new ContextAction(
+    "embark",
+    "Embark units",
+    "Click on a unit to embark on it. The unit must be capable of transporting the embarking units and have enough free capacity.",
+    faTruckPlane,
+    ContextActionTarget.UNIT,
+    (units: Unit[], targetUnit: Unit | null, _) => {
+      if (targetUnit)
+        getApp().getUnitsManager().embarkUnits(targetUnit, units);
+    },
+    { type: ContextActionType.ENGAGE, code: "KeyE", ctrlKey: true, shiftKey: false }
+  );
+
+  export const DISEMBARK = new ContextAction(
+    "disembark",
+    "Disembark units",
+    "Click on a unit to have it disembark all units from it. The unit must be on the ground, stationary, and having embarked units.",
+    faTruckPlane,
+    ContextActionTarget.NONE,
+    (units: Unit[], _1: Unit | null, _2) => {
+      getApp().getUnitsManager().disembarkUnits(units);
+    },
+    { type: ContextActionType.ENGAGE, code: "KeyD", ctrlKey: true, shiftKey: false }
   );
 
   export const CARPET_BOMB = new ContextAction(

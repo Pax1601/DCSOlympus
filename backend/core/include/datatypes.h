@@ -75,6 +75,9 @@ namespace DataIndex {
 		customString,
 		customInteger,
 		posture,
+		canTransportUnits,
+		onBoardUnitIDs,
+		maximumTransportableUnits,
 		lastIndex,
 		endOfData = 255
 	};
@@ -101,7 +104,9 @@ namespace State
 		SCENIC_AAA,
 		MISS_ON_PURPOSE,
 		LAND_AT_POINT,
-		SIMULATE_ENGAGEMENT
+		SIMULATE_ENGAGEMENT,
+		EMBARKING,
+		DISEMBARKING
 	};
 };
 

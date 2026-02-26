@@ -295,7 +295,6 @@ export interface UnitData {
     operateAs: string;
     shotsScatter: number;
     shotsIntensity: number;
-    posture: number;
     health: number;
     racetrackLength: number;
     racetrackAnchor: LatLng;
@@ -316,6 +315,10 @@ export interface UnitData {
     drawingArguments: DrawingArgument[];
     customString: string;
     customInteger: number;
+    posture: number;
+    canTransportUnits: boolean;
+    onBoardUnitsIDs: number[];
+    maximumTransportableUnits: number;
 }
 
 export interface LoadoutItemBlueprint {

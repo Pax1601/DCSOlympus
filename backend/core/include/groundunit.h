@@ -19,6 +19,8 @@ public:
 
 	string aimAtPoint(Coords aimTarget);
 
+	virtual string getType();
+
 protected:
 	virtual void AIloop();
 	static json::value database;

@@ -178,4 +178,13 @@ export class DataExtractor {
     }
     return value;
   }
+
+  extractOnBoardUnitsIDs() {
+    const value: number[] = [];
+    const size = this.extractUInt16();
+    for (let idx = 0; idx < size; idx++) {
+      value.push(this.extractUInt32());
+    }
+    return value;
+  }
 }

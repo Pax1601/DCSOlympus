@@ -155,7 +155,6 @@ export abstract class Unit extends CustomMarker {
   #operateAs: string = "neutral";
   #shotsScatter: number = 2;
   #shotsIntensity: number = 2;
-  #posture: number = 1;
   #health: number = 100;
   #racetrackLength: number = 0;
   #racetrackAnchor: LatLng = new LatLng(0, 0);
@@ -165,6 +164,10 @@ export abstract class Unit extends CustomMarker {
   #drawingArguments: DrawingArgument[] = [];
   #customString: string = "";
   #customInteger: number = 0;
+  #posture: number = 1;
+  #canTransportUnits: boolean = false;
+  #onBoardUnitsIDs: number[] = [];
+  #maximumTransportableUnits: number = 0;
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
   #blueprint: UnitBlueprint | null = null;
@@ -426,6 +429,15 @@ export abstract class Unit extends CustomMarker {
   }
   getPosture() {
     return this.#posture;
+  }
+  getCanTransportUnits() {
+    return this.#canTransportUnits;
+  }
+  getOnBoardUnitsIDs() {
+    return this.#onBoardUnitsIDs;
+  }
+  getMaximumTransportableUnits() {
+    return this.#maximumTransportableUnits;
   }
 
   static getConstructor(type: string) {
@@ -833,6 +845,15 @@ export abstract class Unit extends CustomMarker {
         case DataIndexes.posture:
           this.#posture = dataExtractor.extractUInt8();
           break;
+        case DataIndexes.canTransportUnits:
+          this.#canTransportUnits = dataExtractor.extractBool();
+          break;
+        case DataIndexes.onBoardUnitsIDs:
+          this.#onBoardUnitsIDs = dataExtractor.extractOnBoardUnitsIDs();
+          break;
+        case DataIndexes.maximumTransportableUnits:
+          this.#maximumTransportableUnits = dataExtractor.extractUInt8();
+          break;
         default:
           break;
       }
@@ -961,6 +982,9 @@ export abstract class Unit extends CustomMarker {
       customString: this.#customString,
       customInteger: this.#customInteger,
       posture: this.#posture,
+      canTransportUnits: this.#canTransportUnits,
+      onBoardUnitsIDs: this.#onBoardUnitsIDs,
+      maximumTransportableUnits: this.#maximumTransportableUnits,
     };
   }
 
@@ -1151,6 +1175,7 @@ export abstract class Unit extends CustomMarker {
     contextActionSet.addContextAction(this, ContextActions.ATTACK);
     contextActionSet.addContextAction(this, ContextActions.FIRE_LASER);
     contextActionSet.addContextAction(this, ContextActions.FIRE_INFRARED);
+    contextActionSet.addContextAction(this, ContextActions.EMBARK);
 
     contextActionSet.addDefaultContextAction(this, ContextActions.MOVE);
   }
@@ -1685,6 +1710,14 @@ export abstract class Unit extends CustomMarker {
 
   setRacetrack(length: number, anchor: LatLng, bearing: number, callback: () => void) {
     if (!this.#human) getApp().getServerManager().setRacetrack(this.ID, length, anchor, bearing, callback);
+  }
+
+  embarkUnits(unitIDs: number[]) {
+    getApp().getServerManager().embarkUnits(this.ID, unitIDs);
+  }
+
+  disembarkUnits() {
+    getApp().getServerManager().disembarkUnits(this.ID);
   }
 
   /** Show temporary engagement ring when unit is selected */
@@ -2574,6 +2607,11 @@ export abstract class AirUnit extends Unit {
       /* Context actions that require a target position */
       contextActionSet.addContextAction(this, ContextActions.BOMB);
       contextActionSet.addContextAction(this, ContextActions.CARPET_BOMB);
+    }
+
+    if (this.getCanTransportUnits() && this.getOnBoardUnitsIDs().length > 0) {
+      /* Context actions related to transport */
+      contextActionSet.addContextAction(this, ContextActions.DISEMBARK);
     }
 
     contextActionSet.addContextAction(this, ContextActions.LAND);
