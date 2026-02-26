@@ -131,59 +131,8 @@ void GroundUnit::setState(unsigned char newState)
 			log("Cannot set state to EMBARKING for unit " + unitName + " because it has no targetID");
 		}
 		else {
-			Unit* target = unitsManager->getUnit(targetID);
-			setTask("Embarking on unit " + target->getName());
-			setEnableTaskCheckFailed(true);
-			clearActivePath();
-			resetActiveDestination();
-			setFollowRoads(false);
-
-			// Compute the path to reach the target. 
-			list<Coords> path;
-			Coords targetPosition = target->getPosition();
-
-			// Make the unit go to a point 10 meters in front of the target, then 20 meters behind
-			Coords point1, point2;
-
-			// Check if the unit is to the left or to the right of the target, i.e. check if it left or right of the line defined by the target heading.
-			double dist;
-			double bearing1;
-			double bearing2;
-			bool left = false;
-			bool right = false;
-
-			Geodesic::WGS84().Inverse(targetPosition.lat, targetPosition.lng, position.lat, position.lng, dist, bearing1, bearing2);
-
-			if (bearing1 < 0)
-				bearing1 += 360;
-
-			double rotatedBearing = bearing1 - target->getHeading() * 57.29577;
-
-			// Normalize the rotated bearing to be between 0 and 360
-			if (rotatedBearing < 0)
-				rotatedBearing += 360;
-			else if (rotatedBearing >= 360)
-				rotatedBearing -= 360;
-
-			if (rotatedBearing > 0 && rotatedBearing < 180)
-				right = true;
-			else if (rotatedBearing >= 180 && rotatedBearing < 360)
-				left = true;
-
-			double deltaAngle = left ? -10 : right ? 10 : 0;
-
-			// Compute the coordinates of the points in front and behind the target based on its heading
-			Geodesic::WGS84().Direct(targetPosition.lat, targetPosition.lng, target->getHeading() * 57.29577 + deltaAngle, 20, point1.lat, point1.lng);
-			Geodesic::WGS84().Direct(targetPosition.lat, targetPosition.lng, (target->getHeading() * 57.29577 + 180) - deltaAngle, 20, point2.lat, point2.lng);
-
-			// Set a threshold of 3 meters for both points to avoid precision issues when reaching the target
-			point1.threshold = 3;
-			point2.threshold = 3;
-
-			path.push_back(point1);
-			path.push_back(point2);
-
-			setActivePath(path);
+			computePathToEmbark();
+			log("Computing path to embark for unit " + unitName);
 		}
 		break;
 	}
@@ -238,10 +187,16 @@ void GroundUnit::setState(unsigned char newState)
 	resetTaskFailedCounter();
 	nextTaskingMilliseconds = 0;
 
+	unsigned long timeNow = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+
 	// For scenic modes we add some variability to the initial tasking milliseconds to avoid all units acting at the same time
 	if (newState == State::SCENIC_AAA || newState == State::MISS_ON_PURPOSE || newState == State::SIMULATE_ENGAGEMENT || newState == State::SIMULATE_FIRE_FIGHT) {
-		unsigned long timeNow = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
 		nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(aimTime * 1000 * RANDOM_ZERO_TO_ONE);
+	}
+
+	// In embarking mode we set a timer to check if the unit is stuck
+	if (newState == State::EMBARKING) {
+		nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(20 * 1000);
 	}
 
 	log(unitName + " setting state from " + to_string(state) + " to " + to_string(newState));
@@ -303,10 +258,26 @@ void GroundUnit::AIloop()
 
 		if (state == State::EMBARKING) {
 			Unit* target = unitsManager->getUnit(getTargetID());
-			if (target == nullptr || !target->getAlive()) {
+			if (target == nullptr || !target->getAlive() || target->getOnBoardUnitsIDs().size() == target->getMaximumTransportableUnits()) {
 				setState(State::IDLE);
 			}
 			else {
+				// If the unit is not moving after timeToNextTasking, add a destination to try and unlock it
+				if (timeNow >= nextTaskingMilliseconds && getSpeed() < 0.1) {
+					// Start by computing a new point to try and unlock the unit
+					Coords newPoint;
+					Geodesic::WGS84().Direct(getPosition().lat, getPosition().lng, target->getHeading() * 57.29577, 15, newPoint.lat, newPoint.lng);
+
+					// Put the new point in front of the path
+					activePath.push_front(newPoint);
+
+					// Reset the active destination to reissue the command
+					resetActiveDestination();
+
+					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(10 * 1000);
+					setTimeToNextTasking(((nextTaskingMilliseconds - timeNow) / 1000.0));
+				}
+
 				// Check that:
 				// - The transport unit is alive
 				// - The transport unit is capable of transporting units
@@ -1035,4 +1006,69 @@ string GroundUnit::getType() {
 		if (databaseEntry.has_string_field(L"type"))
 			return to_string(databaseEntry[L"type"].as_string());
 	}
+}
+
+void GroundUnit::computePathToEmbark() {
+	Unit* target = unitsManager->getUnit(targetID);
+	setTask("Embarking on unit " + target->getName());
+	setEnableTaskCheckFailed(true);
+	clearActivePath();
+	resetActiveDestination();
+	setFollowRoads(false);
+
+	// Compute the path to reach the target. 
+	list<Coords> path;
+	Coords targetPosition = target->getPosition();
+
+	// Make the unit go to a point 10 meters in front of the target, then 20 meters behind
+	Coords point0, point1, point2;
+
+	// Check if the unit is to the left or to the right of the target, i.e. check if it left or right of the line defined by the target heading.
+	double dist;
+	double bearing1;
+	double bearing2;
+	bool left = false;
+	bool right = false;
+
+	Geodesic::WGS84().Inverse(targetPosition.lat, targetPosition.lng, position.lat, position.lng, dist, bearing1, bearing2);
+
+	if (bearing1 < 0)
+		bearing1 += 360;
+
+	double rotatedBearing = bearing1 - target->getHeading() * 57.29577;
+
+	// Normalize the rotated bearing to be between 0 and 360
+	if (rotatedBearing < 0)
+		rotatedBearing += 360;
+	else if (rotatedBearing >= 360)
+		rotatedBearing -= 360;
+
+	if (rotatedBearing > 0 && rotatedBearing < 180)
+		right = true;
+	else if (rotatedBearing >= 180 && rotatedBearing < 360)
+		left = true;
+
+	double deltaAngle = left ? -10 : right ? 10 : 0;
+
+	// Compute the coordinates of the points in front and behind the target based on its heading
+	Geodesic::WGS84().Direct(targetPosition.lat, targetPosition.lng, target->getHeading() * 57.29577 + deltaAngle, 20, point1.lat, point1.lng);
+	Geodesic::WGS84().Direct(targetPosition.lat, targetPosition.lng, (target->getHeading() * 57.29577 + 180) - deltaAngle, 20, point2.lat, point2.lng);
+
+	// Compute the distance between the unit and point1
+	Geodesic::WGS84().Inverse(getPosition().lat, getPosition().lng, point1.lat, point2.lng, dist);
+
+	// If the distance is less than 10 meters, have the unit first go to another position to avoid deadlocking
+	if (dist < 10) {
+		Geodesic::WGS84().Direct(getPosition().lat, getPosition().lng, target->getHeading() * 57.29577, 15, point0.lat, point0.lng);
+		path.push_back(point0);
+	}
+
+	// Set a threshold of 3 meters for both points to avoid precision issues when reaching the target
+	point1.threshold = 3;
+	point2.threshold = 3;
+
+	path.push_back(point1);
+	path.push_back(point2);
+
+	setActivePath(path);
 }

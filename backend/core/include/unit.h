@@ -139,7 +139,7 @@ public:
 	virtual void setCustomInteger(unsigned long newValue) { updateValue(customInteger, newValue, DataIndex::customInteger); }
 	virtual void setCanTransportUnits(bool newValue, bool force = false);
 	virtual void setOnBoardUnitsIDs(vector<unsigned int> newValue);
-	virtual void setMaximumTransportableUnits(unsigned int newValue) { updateValue(maximumTransportableUnits, newValue, DataIndex::maximumTransportableUnits); }
+	virtual void setMaximumTransportableUnits(unsigned int newValue, bool force = false);
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; }
@@ -215,6 +215,10 @@ public:
 	virtual bool getCanTransportUnits() { return canTransportUnits; }
 	virtual vector<unsigned int> getOnBoardUnitsIDs() { return onBoardUnitsIDs; }
 	virtual int getMaximumTransportableUnits() { return maximumTransportableUnits; }
+
+	/* Other getters */
+	double getLength() { return length; }
+	bool getDropsUnitsFromTheRear() { return dropUnitsFromTheRear; }
 
 protected:
 	unsigned int ID;
@@ -307,6 +311,8 @@ protected:
 	unsigned int totalShellsFired = 0;
 	unsigned int shellsFiredAtTasking = 0;
 	unsigned int oldAmmo = 0;
+	bool dropUnitsFromTheRear = false;
+	double length = 10;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

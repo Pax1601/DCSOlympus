@@ -57,13 +57,20 @@ void Helicopter::setDefaults(bool force)
 				}
 			}
 		}
+
+		// If it can transport units, set the maximum transport capacity from the database
+		if (getCanTransportUnits() && databaseEntry.has_number_field(L"maximumTransportableUnits")) {
+			setMaximumTransportableUnits(databaseEntry[L"maximumTransportableUnits"].as_number().to_uint32(), force);
+
+			// If available, read the length of the unit
+			if (databaseEntry.has_double_field(L"length"))
+				length = databaseEntry[L"length"].as_number().to_double() * 0.3048; // Its stored in feet in the database
+
+			if (databaseEntry.has_boolean_field(L"dropUnitsFromTheRear"))
+				dropUnitsFromTheRear = databaseEntry[L"dropUnitsFromTheRear"].as_bool();
+		}
 	}
-	if (canTransportUnits) {
-		log("Helicopter " + getUnitName() + " can transport units");
-	}
-	else {
-		log("Helicopter " + getUnitName() + " cannot transport units");
-	}
+	
 }
 
 void Helicopter::changeSpeed(string change)

@@ -760,6 +760,14 @@ void Unit::setOnBoardUnitsIDs(vector<unsigned int> newOnBoardUnitsIDs)
 	triggerUpdate(DataIndex::onBoardUnitIDs);
 }
 
+void Unit::setMaximumTransportableUnits(unsigned int newMaximumTransportableUnits, bool force)
+{
+	if (maximumTransportableUnits != newMaximumTransportableUnits || force) {
+		maximumTransportableUnits = newMaximumTransportableUnits;
+		triggerUpdate(DataIndex::maximumTransportableUnits);
+	}
+}
+
 void Unit::setDesiredSpeed(double newDesiredSpeed)
 {
 	if (desiredSpeed != newDesiredSpeed) {

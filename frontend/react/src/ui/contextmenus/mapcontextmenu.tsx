@@ -1,17 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Unit } from "../../unit/unit";
 import { ContextAction } from "../../unit/contextaction";
-import { CONTEXT_ACTION_COLORS, ContextActionTarget, NO_SUBSTATE, OlympusState, OlympusSubState, UnitControlSubState } from "../../constants/constants";
+import { CONTEXT_ACTION_COLORS, ContextActions, ContextActionTarget, NO_SUBSTATE, OlympusState, OlympusSubState, UnitControlSubState } from "../../constants/constants";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LatLng } from "leaflet";
 import {
   AppStateChangedEvent,
-  ContextActionChangedEvent,
   ContextActionSetChangedEvent,
   MapContextMenuRequestEvent,
   SelectedUnitsChangedEvent,
-  SelectionClearedEvent,
   UnitContextMenuRequestEvent,
 } from "../../events";
 import { ContextActionSet } from "../../unit/contextactionset";
@@ -94,6 +92,33 @@ export function MapContextMenu(props: {}) {
       ).sort((a: ContextAction, b: ContextAction) => (a.getOptions().type < b.getOptions().type ? -1 : 1))
     : [];
 
+  // If the clicked unit is not capable of transporting troops, is in the air, is not standing still or is full, disable the "EMBARK" action
+  if (appSubState === UnitControlSubState.UNIT_CONTEXT_MENU) {
+    const embarkActionIndex = reorderedActions.findIndex((action) => action === ContextActions.EMBARK);
+    if (embarkActionIndex !== -1 && unit) {
+      const embarkAction = reorderedActions[embarkActionIndex];
+      if (!unit.getCanTransportUnits() || unit.getAirborne() || unit.getSpeed() > 2 || unit.getOnBoardUnitsIDs().length >= unit.getMaximumTransportableUnits()) {
+        embarkAction.setDisabled(true);
+      } else {
+        embarkAction.setDisabled(false);
+      }
+    }
+  }
+
+  // If the unit is in the air, is not standing still, or has no troops on board, disable the "DISEMBARK" action
+  if (appSubState === UnitControlSubState.UNIT_CONTEXT_MENU) {
+    const disembarkActionIndex = reorderedActions.findIndex((action) => action === ContextActions.DISEMBARK);
+    if (disembarkActionIndex !== -1 && unit) {
+      const disembarkAction = reorderedActions[disembarkActionIndex];
+      if (unit.getAirborne() || unit.getSpeed() > 2 || unit.getOnBoardUnitsIDs().length === 0) {
+        disembarkAction.setDisabled(true);
+      }
+      else {
+        disembarkAction.setDisabled(false);
+      }
+    }
+  }
+
   return (
     <>
       {appState === OlympusState.UNIT_CONTROL &&
@@ -138,6 +163,7 @@ export function MapContextMenu(props: {}) {
                             }, 200);
                           }
                         }}
+                        disabled={contextActionIt.getDisabled()}
                       >
                         <FontAwesomeIcon className="my-auto" icon={contextActionIt.getIcon()} />
                         <div>{contextActionIt.getLabel()}</div>

@@ -2881,6 +2881,7 @@
 		"canTargetPoint": true,
 		"canRearm": false,
 		"length": 57.5,
+		"maximumTransportableUnits": 8,
 		"acceptedPayloads": {
 			"1": [
 				{
@@ -3473,7 +3474,9 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 131,
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 90,
+		"dropUnitsFromTheRear": true
 	},
 	"Mi-28N": {
 		"name": "Mi-28N",
@@ -4780,6 +4783,8 @@
 		"type": "Helicopter",
 		"description": "2 engine, 3 crew transport helicopter. Hip",
 		"abilities": "Transport",
+		"maximumTransportableUnits": 30,
+		"dropUnitsFromTheRear": true,
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 60.7,
@@ -6531,6 +6536,7 @@
 		"type": "Helicopter",
 		"description": "2 engine, 3 crew transport helicopter. Seahawk",
 		"abilities": "Transport",
+		"maximumTransportableUnits": 12,
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 64.8,
@@ -6877,6 +6883,7 @@
 		"type": "Helicopter",
 		"description": "2 engine, 2 crew transport helicopter. Huey",
 		"abilities": "Transport",
+		"maximumTransportableUnits": 8,
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 57.1,
@@ -7080,6 +7087,7 @@
 		"type": "Helicopter",
 		"description": "2 engine, 3 crew transport helicopter. Blackhawk",
 		"abilities": "Transport",
+		"maximumTransportableUnits": 12,
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 64.8,
@@ -8080,7 +8088,9 @@
 		},
 		"length": 99,
 		"filename": "ch-53.png",
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 28,
+		"dropUnitsFromTheRear": true
 	},
 	"CH-47D": {
 		"name": "CH-47D",
@@ -8147,7 +8157,9 @@
 		},
 		"length": 98.8,
 		"filename": "ch-47.png",
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 33,
+		"dropUnitsFromTheRear": true
 	},
 	"SH-3W": {
 		"name": "SH-3W",
@@ -8179,7 +8191,9 @@
 		"description": "2 engine, 2 crew scout helicopter. SH-3 Sea King.",
 		"length": 72.7,
 		"filename": "sh-3.png",
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 15,
+		"dropUnitsFromTheRear": true
 	},
 	"AH-64A": {
 		"name": "AH-64A",

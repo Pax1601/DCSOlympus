@@ -1023,7 +1023,22 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			for (unsigned int unitID : transportUnit->getOnBoardUnitsIDs()) {
 				// Compute the position of the new units to be in front of the transport at a distance of 10 meters + 1 meter for each unit already unloaded (to avoid them being on top of each other)
 				Coords newUnitPosition;
-				Geodesic::WGS84().Direct(transportUnit->getPosition().lat, transportUnit->getPosition().lng, transportUnit->getHeading() * 57.29577, 10 + unitIndex, newUnitPosition.lat, newUnitPosition.lng);
+
+				// If the transportr is an aircraft, disembark the troops behind the transport
+				if (transportUnit->getDropsUnitsFromTheRear()) {
+					// Disembark the troops in a line, with rows of 5 units, behind the transport and 1 meter between each unit
+					double disembarkDistance = transportUnit->getLength() / 2 + 5 + (unitIndex / 5) * 2; // Increase the distance for each row of 5 units
+					double lateralOffset = (unitIndex % 5 - 2) * 2; // Offset the units laterally, with the middle unit being on the center of the transport
+					Geodesic::WGS84().Direct(transportUnit->getPosition().lat, transportUnit->getPosition().lng, transportUnit->getHeading() * 57.29577 + 180, disembarkDistance, newUnitPosition.lat, newUnitPosition.lng);
+					Geodesic::WGS84().Direct(newUnitPosition.lat, newUnitPosition.lng, transportUnit->getHeading() * 57.29577 + 90, lateralOffset, newUnitPosition.lat, newUnitPosition.lng);
+				}
+				// If the transportr is an helicopter, disembark the troops on the two sides of the transport, in a line parallel to the heading of the transport. The first unit will be on the right of the transport, the second on the left, the third on the right, and so on, at a distance of 10 meters from the transport and 1 meter between each unit.
+				else {
+					double lateralOffset = (unitIndex % 2 == 0 ? 5 : -5); // Alternate the units on the right and left
+					Geodesic::WGS84().Direct(transportUnit->getPosition().lat, transportUnit->getPosition().lng, transportUnit->getHeading() * 57.29577 + 90, lateralOffset, newUnitPosition.lat, newUnitPosition.lng);
+					Geodesic::WGS84().Direct(newUnitPosition.lat, newUnitPosition.lng, transportUnit->getHeading() * 57.29577 + 180, unitIndex - unitIndex % 2, newUnitPosition.lat, newUnitPosition.lng);
+				}
+
 
 				// Clone the unit by ID and add it back to the map at the position of the transport unit
 				Command* command = dynamic_cast<Command*>(new Clone({ { unitID, newUnitPosition } }, false));

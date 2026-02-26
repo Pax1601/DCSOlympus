@@ -22,6 +22,7 @@ export class ContextAction {
   #icon: IconDefinition;
   #options: ContextActionOptions;
   #target: ContextActionTarget;
+  #disabled: boolean = false;
 
   constructor(id: string, label: string, description: string, icon: IconDefinition, target: ContextActionTarget, callback: ContextActionCallback, options: ContextActionOptions) {
     this.#id = id;
@@ -69,5 +70,13 @@ export class ContextAction {
 
   executeCallback(targetUnit: Unit | null, targetPosition: LatLng | null, originalEvent?: MouseEvent) {
     if (this.#callback) this.#callback(this.#units, targetUnit, targetPosition, originalEvent);
+  }
+
+  setDisabled(disabled: boolean) {
+    this.#disabled = disabled;
+  }
+
+  getDisabled() {
+    return this.#disabled;
   }
 }

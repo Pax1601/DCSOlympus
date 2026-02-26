@@ -76,6 +76,8 @@ export enum UnitState {
   MISS_ON_PURPOSE = "miss-on-purpose",
   LAND_AT_POINT = "land-at-point",
   SIMULATE_ENGAGEMENT = "simulate-engagement",
+  EMBARKING = "embarking",
+  DISEMBARKING = "disembarking",
 }
 
 export const states: string[] = [
@@ -97,6 +99,8 @@ export const states: string[] = [
   UnitState.MISS_ON_PURPOSE,
   UnitState.LAND_AT_POINT,
   UnitState.SIMULATE_ENGAGEMENT,
+  UnitState.EMBARKING,
+  UnitState.DISEMBARKING,
 ];
 
 export const ROEs: string[] = ["", "free", "designated", "return", "hold"];

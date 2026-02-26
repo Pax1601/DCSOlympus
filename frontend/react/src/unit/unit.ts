@@ -167,7 +167,7 @@ export abstract class Unit extends CustomMarker {
   #posture: number = 1;
   #canTransportUnits: boolean = false;
   #onBoardUnitsIDs: number[] = [];
-  #maximumTransportableUnits: number = 0;
+  #maximumTransportableUnits: number = 10;
 
   /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
   #blueprint: UnitBlueprint | null = null;
@@ -1343,6 +1343,10 @@ export abstract class Unit extends CustomMarker {
       var BRAA = document.createElement("div");
       BRAA.classList.add("unit-braa");
       summary.appendChild(BRAA);
+
+      var capacity = document.createElement("div");
+      capacity.classList.add("unit-capacity");
+      summary.appendChild(capacity);
     }
 
     this.getElement()?.appendChild(el);
@@ -1972,6 +1976,13 @@ export abstract class Unit extends CustomMarker {
         (element.querySelector(".unit-altitude") as HTMLElement).innerText = "FL" + zeroAppend(Math.floor(mToFt(this.#position.alt as number) / 100), 3);
       if (element.querySelector(".unit-speed"))
         (element.querySelector(".unit-speed") as HTMLElement).innerText = String(Math.floor(msToKnots(this.#speed))) + "GS";
+
+      /* Set capacity */
+      if (element.querySelector(".unit-capacity")) {
+        if (this.#canTransportUnits) {
+          (element.querySelector(".unit-capacity") as HTMLElement).innerText = `${this.#onBoardUnitsIDs.length}/${this.#maximumTransportableUnits}`;
+        }
+      }
 
       /* Rotate elements according to heading */
       element.querySelectorAll("[data-rotate-to-heading]").forEach((el) => {

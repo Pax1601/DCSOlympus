@@ -8939,7 +8939,9 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 78,
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 40,
+		"dropUnitsFromTheRear": true
 	},
 	"An-30M": {
 		"name": "An-30M",
@@ -8988,7 +8990,8 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 80,
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 10
 	},
 	"B-1B": {
 		"name": "B-1B",
@@ -11366,7 +11369,9 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 97,
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 92,
+		"dropUnitsFromTheRear": true
 	},
 	"C-17A": {
 		"name": "C-17A",
@@ -11403,7 +11408,9 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 174,
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 102,
+		"dropUnitsFromTheRear": true
 	},
 	"E-2C": {
 		"name": "E-2C",
@@ -28636,7 +28643,9 @@
 		"canTargetPoint": false,
 		"canRearm": false,
 		"length": 152,
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableUnits": 140,
+		"dropUnitsFromTheRear": true
 	},
 	"IL-78M": {
 		"name": "IL-78M",
@@ -120433,7 +120442,8 @@
 				]
 			}
 		],
-		"acceptedPayloads": {}
+		"acceptedPayloads": {},
+		"maximumTransportableTroops": 20
 	},
 	"TF-51D": {
 		"name": "TF-51D",
@@ -135368,7 +135378,10 @@
 					"weight": 1
 				}
 			]
-		}
+		},
+		"abilities": "Transport",
+		"maximumTransportableUnits": 120,
+		"dropUnitsFromTheRear": true
 	},
 	"QF-4E": {
 		"name": "QF-4E",

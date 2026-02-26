@@ -16,6 +16,7 @@ public:
 	virtual void changeSpeed(string change);
 	virtual void setOnOff(bool newOnOff, bool force = false);
 	virtual void setFollowRoads(bool newFollowRoads, bool force = false);
+	virtual void computePathToEmbark();
 
 	string aimAtPoint(Coords aimTarget);
 
