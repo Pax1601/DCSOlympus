@@ -258,7 +258,7 @@ void GroundUnit::AIloop()
 
 		if (state == State::EMBARKING) {
 			Unit* target = unitsManager->getUnit(getTargetID());
-			if (target == nullptr || !target->getAlive() || target->getOnBoardUnitsIDs().size() == target->getMaximumTransportableUnits()) {
+			if (target == nullptr || !target->getAlive() || target->getOnBoardUnitsIDs().size() == target->getMaximumTransportableUnits() || target->getAirborne() || target->getSpeed() > 2) {
 				setState(State::IDLE);
 			}
 			else {
@@ -469,11 +469,12 @@ void GroundUnit::AIloop()
 		// First, consider our coalition or our "operate as" coalition to determine who are the enemies. Then, get the closest enemy unit and set it as target.
 		double distance = 0;
 
-		if (unitCoalition == 0) {
-			setState(State::IDLE);
-			log("Unit " + unitName + "(" + name + ") is neutral, cannot simulate engagement, switching to IDLE");
-			return;
-		}
+		// Disabled because it annoyingly resets the state when toggling the states
+		// if (unitCoalition == 0) {
+		//	setState(State::IDLE);
+		//	log("Unit " + unitName + "(" + name + ") is neutral, cannot simulate engagement, switching to IDLE");
+		//	return;
+		//}
 
 		unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
 		Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);

@@ -140,6 +140,7 @@ public:
 	virtual void setCanTransportUnits(bool newValue, bool force = false);
 	virtual void setOnBoardUnitsIDs(vector<unsigned int> newValue);
 	virtual void setMaximumTransportableUnits(unsigned int newValue, bool force = false);
+	virtual void setPickupLocation(Coords newValue) { updateValue(pickupLocation, newValue, DataIndex::pickupLocation); }	
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; }
@@ -215,6 +216,7 @@ public:
 	virtual bool getCanTransportUnits() { return canTransportUnits; }
 	virtual vector<unsigned int> getOnBoardUnitsIDs() { return onBoardUnitsIDs; }
 	virtual int getMaximumTransportableUnits() { return maximumTransportableUnits; }
+	virtual Coords getPickupLocation() { return pickupLocation; }
 
 	/* Other getters */
 	double getLength() { return length; }
@@ -294,6 +296,7 @@ protected:
 	bool canTransportUnits = false;
 	vector<unsigned int> onBoardUnitsIDs;
 	unsigned int maximumTransportableUnits = 10;
+	Coords pickupLocation = Coords(NULL);
 	vector<DataTypes::DrawArgument> drawArguments;
 	
 	string customString = "";

@@ -191,3 +191,35 @@ extern "C" DllExport int coreSetExecutionResults(lua_State* L)
     luaTableToJSON(L, -1, executionResults);
     return(0);
 }
+
+extern "C" DllExport int coreCallSchedulerFunction(lua_State* L)
+{
+    /* Lock for thread safety */
+    lock_guard<mutex> guard(mutexLock);
+
+	log("coreCallSchedulerFunction called successfully");
+
+	// The first argument is the function key, the second argument is the function arguments as a lua table to be converted into a json string, and the third argument is the username of the player that called the function
+    if (lua_isstring(L, -3) && lua_istable(L, -2) && lua_isstring(L, -1)) {
+        string functionKey = lua_tostring(L, -3);
+        json::value functionArgs = json::value::object();
+        luaTableToJSON(L, -2, functionArgs);
+        string username = lua_tostring(L, -1);
+
+		web::json::value answer = web::json::value::object();
+        scheduler->handleRequest(functionKey, functionArgs, username, answer);
+
+		// Extract the "response" field from the answer and return it as a string
+        if (answer.has_string_field(L"response")) {
+            string response = to_string(answer[L"response"].as_string());
+            lua_pushstring(L, response.c_str());
+			log("coreCallSchedulerFunction response: " + response);
+            return 1;
+        }
+        else {
+            lua_pushstring(L, "");
+		}
+	}
+
+    return(0);
+}

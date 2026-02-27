@@ -983,7 +983,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 					}
 
 					// If the unit is not already being transported, set its targetID to the transport unit and set its state to EMBARK
-					if (!unitAlreadyTransported) {
+					if (!unitAlreadyTransported && unit->getType() == "Infantry") {
 						unit->setTargetID(transportID);
 						unit->setState(State::EMBARKING);
 					}
@@ -1039,8 +1039,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 					Geodesic::WGS84().Direct(newUnitPosition.lat, newUnitPosition.lng, transportUnit->getHeading() * 57.29577 + 180, unitIndex - unitIndex % 2, newUnitPosition.lat, newUnitPosition.lng);
 				}
 
-
 				// Clone the unit by ID and add it back to the map at the position of the transport unit
+				// Add a callback to the command to set the state of the unit to IDLE once the clone is created and on the map
 				Command* command = dynamic_cast<Command*>(new Clone({ { unitID, newUnitPosition } }, false));
 				appendCommand(command);
 
@@ -1051,9 +1051,314 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			transportUnit->setCargoWeight(transportUnit->getCargoWeight() - (100 * transportUnit->getOnBoardUnitsIDs().size()));
 			// Clear the transport on-board units list
 			transportUnit->setOnBoardUnitsIDs({});
+
+			log(username + " tasked transport unit " + transportUnit->getUnitName() + "(" + transportUnit->getName() + ") to disembark " + to_string(unitIndex) + " units", true);
+			answer[L"response"] = json::value(to_wstring("Disembarked " + to_string(unitIndex) + " units"));
 		}
 		else {
+			if (transportUnit == nullptr)
+				answer[L"response"] = json::value(to_wstring("Transport unit does not exist"));
+			else if (!transportUnit->getAlive())
+				answer[L"response"] = json::value(to_wstring("Transport unit is not alive"));
+			else if (transportUnit->getOnBoardUnitsIDs().size() == 0)
+				answer[L"response"] = json::value(to_wstring("Transport unit is not transporting any units"));
+			else if (transportUnit->getAirborne())
+				answer[L"response"] = json::value(to_wstring("Transport unit is airborne"));
+			else if (transportUnit->getSpeed() >= 2)
+				answer[L"response"] = json::value(to_wstring("Transport unit is moving too fast"));
+
 			log("Error while unloading troops. Transport unit with ID " + to_string(transportID) + " does not exist, is not alive, or is not transporting any units.");
+		}
+	}
+	/************************/
+	else if (key.compare("embarkNearbyUnits") == 0) {
+		// The json for the embarkNearbyUnits command is expected to be in the following format:
+		// {
+		//   "command": "embarkNearbyUnits",
+		//   "ID": 123, // ID of the transport unit
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		if (transportUnit != nullptr &&
+			transportUnit->getCanTransportUnits() &&
+			transportUnit->getAlive() &&
+			transportUnit->getMaximumTransportableUnits() > transportUnit->getOnBoardUnitsIDs().size() &&
+			!transportUnit->getAirborne() &&
+			transportUnit->getSpeed() < 2) {
+			// Get the position of the transport unit
+			Coords transportPosition = transportUnit->getPosition();
+
+			// Loop on all the units and check if they are within a radius of 200 meters from the transport unit and can be transported
+			unsigned int unitsToEmbarkCount = transportUnit->getMaximumTransportableUnits() - transportUnit->getOnBoardUnitsIDs().size();
+			unsigned int embarkedUnits = 0;
+
+			unsigned char transportCoalition = transportUnit->getCoalition() == 0? transportUnit->getOperateAs(): transportUnit->getCoalition();
+
+			// Collect eligible infantry units within 200m, sort them by distance and embark the closest ones first
+			std::vector<std::pair<double, Unit*>> candidates;
+			for (auto& u : unitsManager->getUnits()) {
+				unsigned char unitCoalition = u.second->getCoalition() == 0? u.second->getOperateAs() : u.second->getCoalition();
+
+				if (u.second->getType() == "Infantry" && unitCoalition == transportCoalition && u.second->getState() == State::IDLE && u.second->getAlive()) {
+					double dist;
+					double bearing1;
+					double bearing2;
+					Geodesic::WGS84().Inverse(u.second->getPosition().lat, u.second->getPosition().lng, transportPosition.lat, transportPosition.lng, dist, bearing1, bearing2);
+
+					if (dist <= 200) {
+						candidates.emplace_back(dist, u.second);
+					}
+				}
+			}
+
+			// Sort by distance (closest first)
+			std::sort(candidates.begin(), candidates.end(), [](auto& a, auto& b) { return a.first < b.first; });
+
+			// Embark up to the available capacity, taking the closest units
+			for (size_t i = 0; i < candidates.size() && embarkedUnits < unitsToEmbarkCount; ++i) {
+				Unit* candidateUnit = candidates[i].second;
+				candidateUnit->setTargetID(transportID);
+				candidateUnit->setState(State::EMBARKING);
+				embarkedUnits++;
+			}
+			answer[L"response"] = json::value(to_wstring(to_string(embarkedUnits) + " units tasked to embark"));
+		}
+		else {
+			if (!transportUnit->getCanTransportUnits()) 
+				answer[L"response"] = json::value(to_wstring("Unit is not capable of transporting troops"));
+			if (!transportUnit->getAlive())
+				answer[L"response"] = json::value(to_wstring("Unit is not alive"));
+			if (transportUnit->getMaximumTransportableUnits() - transportUnit->getOnBoardUnitsIDs().size() == 0)
+				answer[L"response"] = json::value(to_wstring("Unit has no space available"));
+			if (transportUnit->getAirborne())
+				answer[L"response"] = json::value(to_wstring("Unit is airborne"));
+			if (transportUnit->getSpeed() >= 2)
+				answer[L"response"] = json::value(to_wstring("Unit is moving too fast"));
+		}
+	}
+	/************************/
+	else if (key.compare("getTransportableUnitsNearby") == 0) {
+		// The json for the getTransportableUnitsNearby command is expected to be in the following format:
+		// {
+		//   "command": "getTransportableUnitsNearby",
+		//   "ID": 123, // ID of the transport unit
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		if (transportUnit != nullptr &&
+			transportUnit->getCanTransportUnits() &&
+			transportUnit->getAlive() &&
+			!transportUnit->getAirborne() &&
+			transportUnit->getSpeed() < 2) {
+			// Get the position of the transport unit
+			Coords transportPosition = transportUnit->getPosition();
+
+			// Loop on all the units and check if they are within a radius of 200 meters from the transport unit and can be transported
+			unsigned int unitsToEmbarkCount = transportUnit->getMaximumTransportableUnits() - transportUnit->getOnBoardUnitsIDs().size();
+			unsigned int embarkableUnits = 0;
+
+			unsigned char transportCoalition = transportUnit->getCoalition() == 0 ? transportUnit->getOperateAs() : transportUnit->getCoalition();
+			for (auto& u : unitsManager->getUnits()) {
+				unsigned char unitCoalition = u.second->getCoalition() == 0 ? u.second->getOperateAs() : u.second->getCoalition();
+
+				if (u.second->getType() == "Infantry" && unitCoalition == transportCoalition && u.second->getState() == State::IDLE && u.second->getAlive() && u.second->getControlled()) {
+					double dist;
+					double bearing1;
+					double bearing2;
+					Geodesic::WGS84().Inverse(u.second->getPosition().lat, u.second->getPosition().lng, transportPosition.lat, transportPosition.lng, dist, bearing1, bearing2);
+
+					if (dist <= 200) {
+						embarkableUnits++;
+					}
+				}
+
+				if (embarkableUnits >= unitsToEmbarkCount) {
+					break;
+				}
+			}
+
+			answer[L"response"] = json::value(to_wstring(to_string(embarkableUnits) + " units available to be embarked nearby"));
+		}
+		else {
+			if (!transportUnit->getCanTransportUnits())
+				answer[L"response"] = json::value(to_wstring("Unit is not capable of transporting troops"));
+			if (!transportUnit->getAlive())
+				answer[L"response"] = json::value(to_wstring("Unit is not alive"));
+			if (transportUnit->getAirborne())
+				answer[L"response"] = json::value(to_wstring("Unit is airborne"));
+			if (transportUnit->getSpeed() >= 2)
+				answer[L"response"] = json::value(to_wstring("Unit is moving too fast"));
+		}
+	}
+	/************************/
+	else if (key.compare("generatePickupPoint") == 0) {
+		// The json for the generatePickupPoint command is expected to be in the following format:
+		// {
+		//   "command": "generatePickupPoint",
+		//   "ID": 123, // ID of the transport unit
+		//	 "location": {
+		//		"lat": X,
+		//		"lng": Y
+		//		}
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		if (transportUnit != nullptr) {
+			double lat = value[L"location"][L"lat"].as_double();
+			double lng = value[L"location"][L"lng"].as_double();
+			Coords pickupLocation; pickupLocation.lat = lat; pickupLocation.lng = lng;
+			transportUnit->setPickupLocation(pickupLocation);
+			log(username + " set pickup location for unit " + transportUnit->getUnitName() + "(" + transportUnit->getName() + ") to (" + to_string(lat) + ", " + to_string(lng) + ")", true);
+
+			// Add a smoke of the coalition color at the pickup location for 30 seconds to make it visible for players in the game
+			unsigned char transportCoalition = transportUnit->getCoalition() == 0 ? transportUnit->getOperateAs() : transportUnit->getCoalition();
+			if (transportCoalition == 1) {
+				// Red coalition
+				command = dynamic_cast<Command*>(new Smoke("red", pickupLocation));
+			}
+			else if (transportCoalition == 2) {
+				// Blue coalition
+				command = dynamic_cast<Command*>(new Smoke("blue", pickupLocation));
+			}
+			else {
+				// Neutral or unknown coalition, use white smoke
+				command = dynamic_cast<Command*>(new Smoke("white", pickupLocation));
+			}
+		}
+		answer[L"response"] = json::value(to_wstring("Pickup location set"));
+	}
+	/************************/
+	else if (key.compare("smokePickupLocation") == 0) {
+		// The json for the setPickupLocation command is expected to be in the following format:
+		// {
+		//   "command": "setPickupLocation",
+		//   "ID": 123, // ID of the transport unit
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		if (transportUnit != nullptr) {
+			Coords pickupLocation = transportUnit->getPickupLocation();
+
+			if (pickupLocation != Coords(NULL)) {
+
+				// Add a smoke of the coalition color at the pickup location for 30 seconds to make it visible for players in the game
+				unsigned char transportCoalition = transportUnit->getCoalition() == 0 ? transportUnit->getOperateAs() : transportUnit->getCoalition();
+				if (transportCoalition == 1) {
+					// Red coalition
+					command = dynamic_cast<Command*>(new Smoke("red", pickupLocation));
+				}
+				else if (transportCoalition == 2) {
+					// Blue coalition
+					command = dynamic_cast<Command*>(new Smoke("blue", pickupLocation));
+				}
+				else {
+					// Neutral or unknown coalition, use white smoke
+					command = dynamic_cast<Command*>(new Smoke("white", pickupLocation));
+				}
+				answer[L"response"] = json::value(to_wstring("Smoke added at pickup location"));
+			}
+			else {
+				log("Transport unit with ID " + to_string(transportID) + " does not have a pickup location set.");
+				answer[L"response"] = json::value(to_wstring("Transport unit does not have a pickup location set"));
+			}
+		}
+	}
+	/************************/
+	else if (key.compare("requestTroopsNearPickupPoint") == 0) {
+		// The json for the requestTroopsNearPickupPoint command is expected to be in the following format:
+		// {
+		//   "command": "requestTroopsNearPickupPoint",
+		//   "ID": 123, // ID of the transport unit
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		if (transportUnit != nullptr) {
+			Coords pickupLocation = transportUnit->getPickupLocation();
+
+			if (pickupLocation != Coords(NULL)) {
+				// Count the number of transportable units within a radius of 1000 meters from the pickup location
+				unsigned int transportableUnitsCount = 0;
+				double averageDistance = 0;
+
+				unsigned char transportCoalition = transportUnit->getCoalition() == 0 ? transportUnit->getOperateAs() : transportUnit->getCoalition();
+				for (auto& u : unitsManager->getUnits()) {
+					unsigned char unitCoalition = u.second->getCoalition() == 0 ? u.second->getOperateAs() : u.second->getCoalition();
+					if (transportCoalition == unitCoalition && u.second->getType() == "Infantry" && u.second->getAlive() && u.second->getControlled()) {
+						double dist;
+						double bearing1;
+						double bearing2;
+						Geodesic::WGS84().Inverse(u.second->getPosition().lat, u.second->getPosition().lng, pickupLocation.lat, pickupLocation.lng, dist, bearing1, bearing2);
+						if (dist <= 1000) {
+							transportableUnitsCount++;
+							averageDistance += dist;
+						}
+					}
+				}
+
+				if (transportableUnitsCount > 0) {
+					averageDistance /= transportableUnitsCount;
+				}
+
+				answer[L"response"] = json::value(to_wstring(to_string(transportableUnitsCount) + " units near pickup point. Average distance: " + to_string(averageDistance) + " meters"));
+			}
+			else {
+				log("Transport unit with ID " + to_string(transportID) + " does not have a pickup location set.");
+				answer[L"response"] = json::value(to_wstring("Transport unit does not have a pickup location set"));
+			}
+		}
+	}
+	/************************/
+	else if (key.compare("moveTroopsToPickupPoint") == 0) {
+		// The json for the moveTroopsNearPickupPoint command is expected to be in the following format:
+		// {
+		//   "command": "requestTroopsNearPickupPoint",
+		//   "ID": 123, // ID of the transport unit
+		// }
+
+		unsigned int transportID = value[L"ID"].as_integer();
+		Unit* transportUnit = unitsManager->getUnit(transportID);
+
+		if (transportUnit != nullptr) {
+			Coords pickupLocation = transportUnit->getPickupLocation();
+
+			if (pickupLocation != Coords(NULL)) {
+				// Count the number of transportable units within a radius of 1000 meters from the pickup location
+				unsigned int transportableUnitsCount = 0;
+
+				unsigned char transportCoalition = transportUnit->getCoalition() == 0 ? transportUnit->getOperateAs() : transportUnit->getCoalition();
+				for (auto& u : unitsManager->getUnits()) {
+					unsigned char unitCoalition = u.second->getCoalition() == 0 ? u.second->getOperateAs() : u.second->getCoalition();
+					if (transportCoalition == unitCoalition && u.second->getType() == "Infantry" && u.second->getAlive() && u.second->getControlled()) {
+						double dist;
+						double bearing1;
+						double bearing2;
+						Geodesic::WGS84().Inverse(u.second->getPosition().lat, u.second->getPosition().lng, pickupLocation.lat, pickupLocation.lng, dist, bearing1, bearing2);
+						if (dist <= 1000) {
+							transportableUnitsCount++;
+							
+							// Move the unit to the pickup location by setting its target position to the pickup location and its state to MOVING_TO_PICKUP
+							u.second->setActivePath({ pickupLocation });
+							u.second->setState(State::REACH_DESTINATION);
+						}
+					}
+				}
+
+				answer[L"response"] = json::value(to_wstring(to_string(transportableUnitsCount) + " units moving to pickup point."));
+			}
+			else {
+				log("Transport unit with ID " + to_string(transportID) + " does not have a pickup location set.");
+				answer[L"response"] = json::value(to_wstring("Transport unit does not have a pickup location set"));
+			}
 		}
 	}
 	/************************/

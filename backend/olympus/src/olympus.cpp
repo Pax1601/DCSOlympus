@@ -13,6 +13,7 @@ typedef int(__stdcall* f_coreWeaponsData)(lua_State* L);
 typedef int(__stdcall* f_coreMissionData)(lua_State* L);
 typedef int(__stdcall* f_coreDrawingsData)(lua_State* L);
 typedef int(__stdcall* f_coreSetExecutionResults)(lua_State* L);
+typedef int(__stdcall* f_coreCallSchedulerFunction)(lua_State* L);
 f_coreInit coreInit = nullptr;
 f_coreDeinit coreDeinit = nullptr;
 f_coreFrame coreFrame = nullptr;
@@ -21,6 +22,7 @@ f_coreWeaponsData coreWeaponsData = nullptr;
 f_coreMissionData coreMissionData = nullptr;
 f_coreDrawingsData coreDrawingsData = nullptr;
 f_coreSetExecutionResults coreExecutionResults = nullptr;
+f_coreCallSchedulerFunction coreCallSchedulerFunction = nullptr;
 
 string modPath;
 
@@ -123,6 +125,13 @@ static int onSimulationStart(lua_State* L)
     if (!coreExecutionResults)
     {
         LogError(L, "Error getting coreSetExecutionResults ProcAddress from DLL");
+        goto error;
+	}
+
+	coreCallSchedulerFunction = (f_coreCallSchedulerFunction)GetProcAddress(hGetProcIDDLL, "coreCallSchedulerFunction");
+    if (!coreCallSchedulerFunction)
+    {
+        LogError(L, "Error getting coreCallSchedulerFunction ProcAddress from DLL");
         goto error;
 	}
 
@@ -231,6 +240,15 @@ static int setExecutionResults(lua_State* L)
     return 0;
 }
 
+static int callSchedulerFunction(lua_State* L)
+{
+    if (coreCallSchedulerFunction)
+    {
+        return coreCallSchedulerFunction(L);
+    }
+    return 0;
+}
+
 static const luaL_Reg Map[] = {
 	{"onSimulationStart", onSimulationStart},
     {"onSimulationFrame", onSimulationFrame},
@@ -240,6 +258,7 @@ static const luaL_Reg Map[] = {
     {"setMissionData", setMissionData },
     {"setDrawingsData", setDrawingsData },
 	{"setExecutionResults", setExecutionResults },
+	{"callSchedulerFunction", callSchedulerFunction },
 	{NULL, NULL}
 };
 

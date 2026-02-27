@@ -78,6 +78,7 @@ namespace DataIndex {
 		canTransportUnits,
 		onBoardUnitIDs,
 		maximumTransportableUnits,
+		pickupLocation,
 		lastIndex,
 		endOfData = 255
 	};

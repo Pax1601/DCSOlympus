@@ -113,7 +113,7 @@ int dostring_in(lua_State* L, string target, string command, string &result)
     lua_pushstring(L, command.c_str());
     int res = lua_pcall(L, 2, 0, 0);
 
-    // Get the first result in the stack
+	// Get the first result in the stack. Even if setting the correct number of results in the pcall, it still appears that the results are not correctly popped from the stack, so this does not work at the moment.
     if (lua_isstring(L, -1)) {
         result = lua_tostring(L, -1);
     }
