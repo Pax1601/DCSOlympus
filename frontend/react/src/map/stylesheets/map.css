@@ -153,6 +153,14 @@
   filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
 }
 
+.ol-pickup-icon {
+  background-image: url("/images/markers/pickup.svg");
+  height: 100%;
+  width: 100%;
+
+  filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.2));
+}
+
 .ol-spot-icon {
   background-image: url("/images/markers/target.svg");
   height: 100%;

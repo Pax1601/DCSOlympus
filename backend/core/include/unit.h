@@ -21,6 +21,7 @@ public:
 	/********** Methods **********/
 	virtual void initialize(json::value json) final;
 	virtual void setDefaults(bool force = false);
+	virtual void executeOnSpawnCallback();
 
 	void runAILoop();
 
@@ -142,6 +143,9 @@ public:
 	virtual void setMaximumTransportableUnits(unsigned int newValue, bool force = false);
 	virtual void setPickupLocation(Coords newValue) { updateValue(pickupLocation, newValue, DataIndex::pickupLocation); }	
 
+	/* Other setters */
+	virtual void setRequestHash(string newValue) { requestHash = newValue; }
+
 	/********** Getters **********/
 	virtual string getCategory() { return category; }
 	virtual bool getAlive() { return alive; }
@@ -221,6 +225,7 @@ public:
 	/* Other getters */
 	double getLength() { return length; }
 	bool getDropsUnitsFromTheRear() { return dropUnitsFromTheRear; }
+	string getRequestHash() { return requestHash; }
 
 protected:
 	unsigned int ID;
@@ -316,6 +321,7 @@ protected:
 	unsigned int oldAmmo = 0;
 	bool dropUnitsFromTheRear = false;
 	double length = 10;
+	string requestHash = "";
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

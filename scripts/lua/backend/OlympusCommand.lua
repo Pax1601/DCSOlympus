@@ -15,6 +15,7 @@ Olympus.unitsData = {}
 Olympus.weaponsData = {}
 Olympus.drawingsByLayer = {}
 Olympus.executionResults = {}
+Olympus.groupIDsrequestHashes = {}	-- Table to keep track which group was created for which request
 
 -- Units data structures
 Olympus.unitCounter = 1			-- Counter to generate unique names
@@ -38,6 +39,7 @@ Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
 Olympus.fireCounter = 1
 Olympus.markers = {}
+Olympus.unitIDsWithF10 = {}		-- Table to keep track of units that have the F10 menu enabled, to avoid enabling it multiple times
 
 -- Load the lua file system
 local lfs = require('lfs')
@@ -57,6 +59,15 @@ end
 function Olympus.notify(message, displayFor)
 	Olympus.log:info(message)
     trigger.action.outText(message, displayFor)
+end
+
+-- Send a message to a specific unit
+function Olympus.messageToUnit(unitID, message)
+	Olympus.debug("Message to unit:" .. unitID .. " - " .. message, 5)
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		trigger.action.outTextForUnit(unit:getID(), message, 10, false)
+	end
 end
 
 -- Loads the olympus .dll
@@ -736,6 +747,8 @@ function Olympus.spawnUnits(spawnTable, requestHash)
 	end
 
 	Olympus.executionResults[requestHash] = newGroup.groupId
+	Olympus.groupIDsrequestHashes[newGroup.groupId] = requestHash
+	return tostring(newGroup.groupId)
 end
 
 -- Generates unit table for air units 
@@ -926,7 +939,7 @@ end
 	-- ID: (number) ID of the unit to clone
 	-- lat: (number)
 	-- lng: (number)
-function Olympus.clone(cloneTable, deleteOriginal)
+function Olympus.clone(cloneTable, deleteOriginal, requestHash)
 	Olympus.debug("Olympus.clone " .. Olympus.serializeTable(cloneTable), 2)
 
 	local unitsTable = {}
@@ -1022,10 +1035,15 @@ function Olympus.clone(cloneTable, deleteOriginal)
 	end
 
 	Olympus.debug(Olympus.serializeTable(vars), 2)
-	mist.dynAdd(vars)
+	local newGroup = mist.dynAdd(vars)
+
 	Olympus.unitCounter = Olympus.unitCounter + 1
 
 	Olympus.debug("Olympus.clone completed successfully", 2)
+
+	Olympus.executionResults[requestHash] = newGroup.groupId
+	Olympus.groupIDsrequestHashes[newGroup.groupId] = requestHash
+	return tostring(newGroup.groupId)
 end
 
 -- Delete a unit by ID, optionally use an explosion
@@ -1279,6 +1297,12 @@ function Olympus.setUnitsData(arg, time)
 					elseif Olympus.modsList ~= nil and Olympus.modsList[unit:getDesc().typeName] ~= nil then
 						table["category"] = Olympus.modsList[unit:getDesc().typeName]
 					end
+
+					-- If this is a human controlled unit, append the F10 Radio options
+					if (Olympus.unitIDsWithF10[ID] == nil and unit:getPlayerName() ~= nil and (unit:getDesc().category == Unit.Category.AIRPLANE or unit:getDesc().category == Unit.Category.HELICOPTER)) then
+						Olympus.unitIDsWithF10[ID] = true
+						Olympus.addF10Options(unit, ID)
+					end
 				else
 					local status, description = pcall(getUnitDescription, unit)
 					if status and Olympus.modsList ~= nil and Olympus.modsList[description.typeName] ~= nil then
@@ -1396,6 +1420,12 @@ function Olympus.setUnitsData(arg, time)
 							table["fuel"] = unit:getFuel()
 							table["health"] = unit:getLife() / initialLife * 100
 							table["contacts"] = contacts
+
+							-- Check if there is an execution request for this unit 
+							if Olympus.groupIDsrequestHashes[group:getID()] ~= nil then
+								local requestHash = Olympus.groupIDsrequestHashes[group:getID()]
+								table["requestHash"] = requestHash
+							end
 
 							local name = unit:getName()
 
@@ -1742,6 +1772,181 @@ function Olympus.hasKey(tab, key)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- F10 functions
+------------------------------------------------------------------------------------------------------
+
+function Olympus.addF10Options(unit, ID)
+	-- Get the unit group
+	local group = unit:getGroup()
+	if group ~= nil then
+		-- Get the groupID of the group
+		local groupID = group:getID()
+
+		-- Create the menu for the troops options
+		local olympusOptions = missionCommands.addSubMenuForGroup(groupID, "Olympus Troops Options for " .. unit:getName())
+
+		-- Troop embarking
+		missionCommands.addCommandForGroup(groupID, 'Embark nearby units', olympusOptions, Olympus.requestEmbarking, ID)
+
+		-- Request troops nearby
+		missionCommands.addCommandForGroup(groupID, 'Request nearby troops ', olympusOptions, Olympus.requestTroopsNearby, ID)
+
+		-- Disembark troops
+		missionCommands.addCommandForGroup(groupID, 'Disembark troops', olympusOptions, Olympus.requestDisembarking, ID)
+
+		-- Generate pickup point
+		missionCommands.addCommandForGroup(groupID, 'Generate pickup point', olympusOptions, Olympus.generatePickupPoint, ID)
+
+		-- Smoke pickup point
+		missionCommands.addCommandForGroup(groupID, 'Smoke pickup point', olympusOptions, Olympus.smokePickupPoint, ID)
+
+		-- Request troops near pickup point
+		missionCommands.addCommandForGroup(groupID, 'Request troops near pickup point', olympusOptions, Olympus.requestTroopsNearPickupPoint, ID)
+
+		-- Move troops to pickup point
+		missionCommands.addCommandForGroup(groupID, 'Move troops to pickup point', olympusOptions, Olympus.moveTroopsToPickupPoint, ID)
+	end
+end
+
+function Olympus.requestEmbarking(unitID)
+	Olympus.debug("Olympus.requestEmbarking " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Requesting nearby troops to embark", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("embarkNearbyUnits", {
+			ID = unitID
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+function Olympus.requestTroopsNearby(unitID)
+	Olympus.debug("Olympus.requestTroopsNearby " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Requesting nearby troops", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("getTransportableUnitsNearby", {
+			ID = unitID
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+function Olympus.requestDisembarking(unitID)
+	Olympus.debug("Olympus.requestDisembarking " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Requesting troops to disembark", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("disembarkUnits", {
+			ID = unitID
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+function Olympus.generatePickupPoint(unitID)
+	Olympus.debug("Olympus.generatePickupPoint " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Generating pickup point", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("generatePickupPoint", {
+			ID = unitID, 
+			location = {
+				lat = lat,
+				lng = lng,
+				alt = alt
+			}
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+function Olympus.smokePickupPoint(unitID)
+	Olympus.debug("Olympus.smokePickupPoint " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Generating smoke at pickup point", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("smokePickupPoint", {
+			ID = unitID
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+function Olympus.requestTroopsNearPickupPoint(unitID)
+	Olympus.debug("Olympus.requestTroopsNearPickupPoint " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Requesting troops near pickup point", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("requestTroopsNearPickupPoint", {
+			ID = unitID
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+function Olympus.moveTroopsToPickupPoint(unitID)
+	Olympus.debug("Olympus.moveTroopsToPickupPoint " .. unitID, 2)
+	Olympus.messageToUnit(unitID, "Moving troops to pickup point", 5)
+
+	-- Get the unit by ID
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		-- Convert the unit location to lat lng
+		local lat, lng, alt = coord.LOtoLL(unit:getPoint())
+
+		-- Create a simple smoke at the position of the unit
+		local response = Olympus.OlympusDLL.callSchedulerFunction("moveTroopsToPickupPoint", {
+			ID = unitID
+		}, unit:getName())
+
+		Olympus.messageToUnit(unitID, tostring(response), 5)
+	end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Olympus startup script
 ------------------------------------------------------------------------------------------------------
 Olympus.instancePath = lfs.writedir().."Mods\\Services\\Olympus\\bin\\"
@@ -1808,12 +2013,14 @@ function handler:onEvent(event)
 			}
 		end
 	elseif event.id == 23 then
-		-- Shooting start
-		if Olympus ~= nil and event.initiator ~= nil and event.weapon_name ~= nil and event.target ~= nil then
+		if Olympus ~= nil and event.initiator ~= nil and event.weapon_name ~= nil then
 			local shooterUnit = event.initiator
-			local weapon_name  = event.weapon_name 
-			local target = event.target
-			Olympus.notify("Unit " .. shooterUnit:getName() .. " started shooting " .. weapon_name .. " at target " .. target:getName(), 2)
+			local weaponName = event.weapon_name
+		end
+	elseif event.id == 24 then
+		if Olympus ~= nil and event.initiator ~= nil and event.weapon_name ~= nil then
+			local shooterUnit = event.initiator
+			local weaponName = event.weapon_name
 		end
 	end
 end

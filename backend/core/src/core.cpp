@@ -25,6 +25,9 @@ json::value missionData = json::value::object();
 json::value drawingsByLayer = json::value::object();
 json::value executionResults = json::value::object();
 
+/* On spawn options table */
+map<string, function<void(Unit*)>> onSpawnCallbacks;
+
 mutex mutexLock;
 string sessionHash;
 string instancePath;

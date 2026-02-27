@@ -9,6 +9,7 @@
 using namespace GeographicLib;
 
 extern UnitsManager* unitsManager;
+extern map<string, function<void(Unit*)>> onSpawnCallbacks;
 
 Scheduler::Scheduler(lua_State* L)
 {
@@ -1043,6 +1044,14 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 				// Add a callback to the command to set the state of the unit to IDLE once the clone is created and on the map
 				Command* command = dynamic_cast<Command*>(new Clone({ { unitID, newUnitPosition } }, false));
 				appendCommand(command);
+
+				// Register the request to set the units to ROE hold fire once the are cloned
+				// The callback is a lambda function accepts a pointer to the created unit and sets its state to IDLE and its ROE to HOLD_FIRE, then logs this action
+				onSpawnCallbacks[command->getHash()] = [=](Unit* createdUnit) {
+					createdUnit->setState(State::IDLE);
+					createdUnit->setROE(ROE::WEAPON_HOLD);
+					log("Unit " + createdUnit->getUnitName() + "(" + createdUnit->getName() + ") disembarked from transport " + transportUnit->getUnitName() + "(" + transportUnit->getName() + ") and set to HOLD_FIRE", true);
+				};
 
 				// Increment the unit index
 				unitIndex++;

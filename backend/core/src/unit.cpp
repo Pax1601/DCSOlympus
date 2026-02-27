@@ -14,6 +14,7 @@ using namespace GeographicLib;
 
 extern Scheduler* scheduler;
 extern UnitsManager* unitsManager;
+extern map<string, function<void(Unit*)>> onSpawnCallbacks;
 
 Unit::Unit(json::value json, unsigned int ID) :
 	ID(ID)
@@ -30,6 +31,7 @@ void Unit::initialize(json::value json)
 {
 	update(json, 0);
 	setDefaults();
+	executeOnSpawnCallback();
 }
 
 
@@ -170,12 +172,27 @@ void Unit::update(json::value json, double dt)
 	if (json.has_boolean_field(L"airborne"))
 		setAirborne(json[L"airborne"].as_bool());
 
+	if (json.has_string_field(L"requestHash")) 
+		setRequestHash(to_string(json[L"requestHash"].as_string()));
+	
+
 	runAILoop();
 }
 
 void Unit::setDefaults(bool force)
 {
 	setAlarmState(AlarmState::AUTO, force);
+}
+
+void Unit::executeOnSpawnCallback() {
+	// Check if there is a callback registered for this unit request hash and execute it if there is
+	if (!getRequestHash().empty()) {
+		auto it = onSpawnCallbacks.find(getRequestHash());
+		if (it != onSpawnCallbacks.end()) {
+			log("Executing on spawn callback for unit " + getUnitName() + " with request hash " + getRequestHash());
+			it->second(this);
+		}
+	}
 }
 
 void Unit::runAILoop() {
@@ -353,6 +370,7 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 					case DataIndex::canTransportUnits:			appendNumeric(ss, datumIndex, canTransportUnits); break;
 					case DataIndex::onBoardUnitIDs:				appendVector(ss, datumIndex, onBoardUnitsIDs); break;
 					case DataIndex::maximumTransportableUnits:	appendNumeric(ss, datumIndex, maximumTransportableUnits); break;
+					case DataIndex::pickupLocation:				appendNumeric(ss, datumIndex, pickupLocation); break;
 				}
 			}
 		}

@@ -580,6 +580,7 @@ export enum DataIndexes {
   canTransportUnits,
   onBoardUnitsIDs,
   maximumTransportableUnits,
+  pickupLocation,
   endOfData = 255,
 }
 

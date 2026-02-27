@@ -167,6 +167,7 @@ string Clone::getString()
     commandSS << "Olympus.clone, "
         << "{" << unitsSS.str() << "}" << ", "
         << (deleteOriginal ? "true" : "false");
+    commandSS << ", \"" << this->getHash() << "\"";
     return commandSS.str();
 
 }

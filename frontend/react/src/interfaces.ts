@@ -319,6 +319,7 @@ export interface UnitData {
     canTransportUnits: boolean;
     onBoardUnitsIDs: number[];
     maximumTransportableUnits: number;
+    pickupLocation: LatLng | null;
 }
 
 export interface LoadoutItemBlueprint {
