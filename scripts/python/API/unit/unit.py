@@ -86,6 +86,11 @@ class Unit:
         self.draw_arguments: List[DrawArgument] = []
         self.custom_string = ""
         self.custom_integer = 0
+        self.posture = 1
+        self.can_transport_units = False
+        self.on_board_units_IDs: List[int] = []
+        self.maximum_transportable_units = 10
+        self.pickup_location = LatLng(0, 0, 0)
         
         self.previous_total_ammo = 0
         self.total_ammo = 0
@@ -695,6 +700,34 @@ class Unit:
                     # Trigger callbacks for property change
                     if "posture" in self.on_property_change_callbacks:
                         self._trigger_callback("posture", self.posture)
+            elif datum_index == DataIndexes.CAN_TRANSPORT_UNITS.value:
+                can_transport_units = data_extractor.extract_bool()
+                if can_transport_units != self.can_transport_units:
+                    self.can_transport_units = can_transport_units
+                    # Trigger callbacks for property change
+                    if "can_transport_units" in self.on_property_change_callbacks:
+                        self._trigger_callback("can_transport_units", self.can_transport_units)
+            elif datum_index == DataIndexes.ON_BOARD_UNITS_IDS.value:
+                on_board_units_ids = data_extractor.extract_on_board_units_ids()
+                if on_board_units_ids != self.on_board_units_IDs:
+                    self.on_board_units_IDs = on_board_units_ids
+                    # Trigger callbacks for property change
+                    if "on_board_units_IDs" in self.on_property_change_callbacks:
+                        self._trigger_callback("on_board_units_IDs", self.on_board_units_IDs)
+            elif datum_index == DataIndexes.MAXIMUM_TRANSPORTABLE_UNITS.value:
+                maximum_transportable_units = data_extractor.extract_uint32()
+                if maximum_transportable_units != self.maximum_transportable_units:
+                    self.maximum_transportable_units = maximum_transportable_units
+                    # Trigger callbacks for property change
+                    if "maximum_transportable_units" in self.on_property_change_callbacks:
+                        self._trigger_callback("maximum_transportable_units", self.maximum_transportable_units)
+            elif datum_index == DataIndexes.PICKUP_LOCATION.value:
+                pickup_location = data_extractor.extract_lat_lng()
+                if pickup_location != self.pickup_location:
+                    self.pickup_location = pickup_location
+                    # Trigger callbacks for property change
+                    if "pickup_location" in self.on_property_change_callbacks:
+                        self._trigger_callback("pickup_location", self.pickup_location)
     
     # --- API functions requiring ID ---
     def set_path(self, path: List[LatLng]):

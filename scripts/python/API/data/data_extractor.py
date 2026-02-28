@@ -148,3 +148,10 @@ class DataExtractor:
                 value=self.extract_float64()
             ))
         return value
+    
+    def extract_on_board_units_IDs(self) -> List[int]:
+        value = []
+        size = self.extract_uint16()
+        for _ in range(size):
+            value.append(self.extract_uint32())
+        return value
