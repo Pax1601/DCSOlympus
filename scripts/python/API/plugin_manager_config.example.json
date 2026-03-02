@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "dcs_saved_games_folder": "C:\\Users\\YourUsername\\Saved Games\\DCS.openbeta",
-  "plugins_directory": "scripts",
+  "plugins_directory": "plugins",
   "log_level": "INFO",
   "auto_start_plugins": true,
   "management_server": {

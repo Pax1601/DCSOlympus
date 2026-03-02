@@ -2,7 +2,7 @@
 DCS Olympus API - Main Entry Point
 
 This script initializes and manages the plugin system for DCS Olympus.
-It discovers, loads, and starts all plugins located in the 'scripts' folder.
+It discovers, loads, and starts all plugins located in the 'plugins' folder.
 """
 
 import asyncio
@@ -213,9 +213,9 @@ def main():
     loaded_count = plugin_manager.load_all_plugins()
     
     if loaded_count == 0:
-        logger.warning("No plugins loaded. Ensure plugins are in the 'scripts' folder.")
+        logger.warning("No plugins loaded. Ensure plugins are in the 'plugins' folder.")
         logger.info("Each plugin should have:")
-        logger.info("  - A folder in the 'scripts' directory")
+        logger.info("  - A folder in the 'plugins' directory")
         logger.info("  - A .json descriptor file")
         logger.info("  - A main.py file (or file specified in descriptor)")
         logger.info("  - A class that inherits from Plugin")

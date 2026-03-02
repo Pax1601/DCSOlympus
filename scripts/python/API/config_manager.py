@@ -25,7 +25,7 @@ class ConfigManager:
     DEFAULT_CONFIG = {
         "version": "1.0",
         "dcs_saved_games_folder": "",
-        "plugins_directory": "scripts",
+        "plugins_directory": "plugins",
         "log_level": "INFO",
         "auto_start_plugins": True,
         "management_server": {
@@ -88,7 +88,7 @@ class ConfigManager:
             
             # Log important settings
             dcs_folder = self.config.get('dcs_saved_games_folder', 'Not set')
-            plugins_dir = self.config.get('plugins_directory', 'scripts')
+            plugins_dir = self.config.get('plugins_directory', 'plugins')
             self.logger.info(f"DCS Saved Games Folder: {dcs_folder if dcs_folder else 'Not configured'}")
             self.logger.info(f"Plugins Directory: {plugins_dir}")
             
@@ -236,7 +236,7 @@ class ConfigManager:
         Returns:
             Plugins directory path
         """
-        return self.config.get('plugins_directory', 'scripts')
+        return self.config.get('plugins_directory', 'plugins')
     
     def get_log_level(self) -> str:
         """

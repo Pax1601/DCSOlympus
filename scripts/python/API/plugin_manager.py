@@ -27,13 +27,13 @@ class PluginManager:
     Manages the lifecycle of all plugins in the DCS Olympus API.
     
     Responsibilities:
-    - Discover plugins in the scripts folder
+    - Discover plugins in the plugins folder
     - Load plugin descriptors and main scripts
     - Start, stop, pause, and resume plugins
     - Track plugin status
     """
     
-    def __init__(self, plugins_directory: str = "scripts", global_config: Optional[Dict[str, Any]] = None):
+    def __init__(self, plugins_directory: str = "plugins", global_config: Optional[Dict[str, Any]] = None):
         """
         Initialize the Plugin Manager.
         
