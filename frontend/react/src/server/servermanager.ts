@@ -497,7 +497,7 @@ export class ServerManager {
   }
 
   fireAtArea(ID: number, latlng: LatLng, callback: CallableFunction = () => {}) {
-    var command = { ID: ID, location: latlng };
+    var command = { ID: ID, location: latlng, radius: 1, shotsToFire: 10 };
     var data = { fireAtArea: command };
     this.PUT(data, callback);
   }

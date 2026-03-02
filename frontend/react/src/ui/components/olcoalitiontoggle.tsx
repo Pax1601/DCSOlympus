@@ -49,8 +49,7 @@ export function OlCoalitionToggle(props: {
       >
         <button className="peer sr-only" />
         <div
-          data-flash={props.coalition === undefined}
-          data-coalition={props.coalition ?? "blue"}
+          data-coalition={props.coalition ? props.coalition : "undefined"}
           className={`
             ${props.className ?? ""}
             peer relative h-7 w-14 rounded-full bg-gray-200
@@ -65,9 +64,12 @@ export function OlCoalitionToggle(props: {
             data-[coalition='red']:bg-red-500
             data-[coalition='red']:after:translate-x-full
             data-[coalition='red']:after:border-white
+            data-[coalition='undefined']:bg-gray-800
+            data-[coalition='undefined']:after:translate-x-[50%]
             peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300
             rtl:data-[coalition='neutral']:after:-translate-x-[50%]
             rtl:data-[coalition='red']:after:-translate-x-full
+            rtl:data-[coalition='undefined']:after:bg-transparent
           `}
         ></div>
         {props.showLabel && (
@@ -75,7 +77,6 @@ export function OlCoalitionToggle(props: {
             className={`
               ms-3 overflow-hidden text-ellipsis text-nowrap text-gray-900
               dark:text-white
-              data-[flash='true']:after:animate-pulse
             `}
           >
             {props.coalition ? `${props.coalition[0].toLocaleUpperCase() + props.coalition.substring(1)}` : "Diff. values"}

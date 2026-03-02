@@ -1790,8 +1790,10 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 >
                                                     <div
                                                         className={`
-                                                          flex justify-between
+                                                          flex cursor-pointer
+                                                          justify-between
                                                         `}
+                                                        onClick={() => setShowScenicModes(!showScenicModes)}
                                                     >
                                                         <span
                                                             className={`
@@ -1811,7 +1813,6 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                               transition-transform
                                                               data-[open='true']:-rotate-90
                                                             `}
-                                                            onClick={() => setShowScenicModes(!showScenicModes)}
                                                         />
                                                     </div>
                                                     {showScenicModes && (
@@ -2117,9 +2118,9 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                                     onClick={() => {
                                                                         let newOperateAs: string;
                                                                         if (selectedUnitsData.operateAs === "neutral") {
-                                                                            newOperateAs = "blue";
-                                                                        } else if (selectedUnitsData.operateAs === "blue") {
                                                                             newOperateAs = "red";
+                                                                        } else if (selectedUnitsData.operateAs === "red") {
+                                                                            newOperateAs = "blue";
                                                                         } else {
                                                                             newOperateAs = "neutral";
                                                                         }
@@ -2583,6 +2584,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                     </>
                                                 )}
                                             </div>
+                                            {/* Temporarily disabled
                                             <div
                                                 className={`
                                                   flex flex-col gap-4 rounded-md
@@ -3345,7 +3347,7 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                                 })}
                                         </div>
                                         {
-                                            /* Useful for debugging but very data hungry */
+                                            /* Useful for debugging but very data hungry 
 
                                             (
                                                 [

@@ -796,8 +796,8 @@ class Unit:
     def bomb_building(self, location: LatLng):
         return self.api.send_command({"bombBuilding": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
 
-    def fire_at_area(self, location: LatLng):
-        return self.api.send_command({"fireAtArea": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
+    def fire_at_area(self, location: LatLng, shots_to_fire: int = 1000, radius: float = 0):
+        return self.api.send_command({"fireAtArea": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}, "shotsToFire": shots_to_fire, "radius": radius}})
 
     def fire_laser(self, location: LatLng, code: int):
         return self.api.send_command({"fireLaser": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}, "code": code}})

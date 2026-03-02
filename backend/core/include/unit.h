@@ -145,6 +145,8 @@ public:
 
 	/* Other setters */
 	virtual void setRequestHash(string newValue) { requestHash = newValue; }
+	virtual void setArtilleryShotsToFire(unsigned int newValue) { artilleryShotsToFire = newValue; }
+	virtual void setArtilleryRadius(double newValue) { artilleryRadius = newValue; }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; }
@@ -226,6 +228,8 @@ public:
 	double getLength() { return length; }
 	bool getDropsUnitsFromTheRear() { return dropUnitsFromTheRear; }
 	string getRequestHash() { return requestHash; }
+	unsigned int getArtilleryShotsToFire() { return artilleryShotsToFire; }
+	double getArtilleryRadius() { return artilleryRadius; }
 
 protected:
 	unsigned int ID;
@@ -322,6 +326,8 @@ protected:
 	bool dropUnitsFromTheRear = false;
 	double length = 10;
 	string requestHash = "";
+	unsigned int artilleryShotsToFire = 1000;
+	double artilleryRadius = 0;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

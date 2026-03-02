@@ -1783,28 +1783,28 @@ function Olympus.addF10Options(unit, ID)
 		local groupID = group:getID()
 
 		-- Create the menu for the troops options
-		local olympusOptions = missionCommands.addSubMenuForGroup(groupID, "Olympus Troops Options for " .. unit:getName())
+		local olympusOptions = missionCommands.addSubMenuForGroup(groupID, "TROOPS OPTIONS FOR " .. unit:getName())
 
 		-- Troop embarking
-		missionCommands.addCommandForGroup(groupID, 'Embark nearby units', olympusOptions, Olympus.requestEmbarking, ID)
-
-		-- Request troops nearby
-		missionCommands.addCommandForGroup(groupID, 'Request nearby troops ', olympusOptions, Olympus.requestTroopsNearby, ID)
+		missionCommands.addCommandForGroup(groupID, 'EMBARK', olympusOptions, Olympus.requestEmbarking, ID)
 
 		-- Disembark troops
-		missionCommands.addCommandForGroup(groupID, 'Disembark troops', olympusOptions, Olympus.requestDisembarking, ID)
+		missionCommands.addCommandForGroup(groupID, 'DISEMBARK', olympusOptions, Olympus.requestDisembarking, ID)
+
+		-- Request troops nearby
+		missionCommands.addCommandForGroup(groupID, 'REQUEST TROOPS NEARBY', olympusOptions, Olympus.requestTroopsNearby, ID)
 
 		-- Generate pickup point
-		missionCommands.addCommandForGroup(groupID, 'Generate pickup point', olympusOptions, Olympus.generatePickupPoint, ID)
+		missionCommands.addCommandForGroup(groupID, 'GENERATE PICKUP POINT', olympusOptions, Olympus.generatePickupPoint, ID)
 
 		-- Smoke pickup point
-		missionCommands.addCommandForGroup(groupID, 'Smoke pickup point', olympusOptions, Olympus.smokePickupPoint, ID)
+		missionCommands.addCommandForGroup(groupID, 'SMOKE PICKUP POINT', olympusOptions, Olympus.smokePickupPoint, ID)
 
 		-- Request troops near pickup point
-		missionCommands.addCommandForGroup(groupID, 'Request troops near pickup point', olympusOptions, Olympus.requestTroopsNearPickupPoint, ID)
+		missionCommands.addCommandForGroup(groupID, 'REQUEST TROOPS NEAR PICKUP POINT', olympusOptions, Olympus.requestTroopsNearPickupPoint, ID)
 
 		-- Move troops to pickup point
-		missionCommands.addCommandForGroup(groupID, 'Move troops to pickup point', olympusOptions, Olympus.moveTroopsToPickupPoint, ID)
+		missionCommands.addCommandForGroup(groupID, 'MOVE TROOPS TO PICKUP POINT', olympusOptions, Olympus.moveTroopsToPickupPoint, ID)
 	end
 end
 

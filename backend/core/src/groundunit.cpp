@@ -148,6 +148,19 @@ void GroundUnit::setState(unsigned char newState)
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
+
+		std::ostringstream taskSS;
+		taskSS.precision(10);
+		if (targetPosition.alt == NULL) {
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = " << artilleryRadius << ", expendQty = " << artilleryShotsToFire << " }";
+		}
+		else {
+			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", alt = " << targetPosition.alt << ", radius = " << artilleryRadius << " expendQty = " << artilleryShotsToFire << "}";
+		}
+		Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+		scheduler->appendCommand(command);
+		setHasTask(true);
+
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
@@ -222,7 +235,7 @@ void GroundUnit::AIloop()
 	oldAmmo = currentAmmo;
 
 	// Get the coalition of the unit. If the unit is neutral, we use the "operate as" coalition to determine the behavior in scenic modes
-	unsigned char unitCoalition = coalition == 0 ? getOperateAs() : coalition;
+	unsigned char unitEffectiveCoalition = coalition == 0 ? getOperateAs() : coalition;
 
 	switch (state) {
 	case State::IDLE: {
@@ -325,7 +338,6 @@ void GroundUnit::AIloop()
 			}
 		}
 
-
 		break;
 	}
 	case State::ATTACK: {
@@ -349,23 +361,6 @@ void GroundUnit::AIloop()
 
 		break;
 	}
-	case State::FIRE_AT_AREA: {
-		if (!getHasTask()) {
-			std::ostringstream taskSS;
-			taskSS.precision(10);
-			if (targetPosition.alt == NULL) {
-				taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 100}";
-			}
-			else {
-				taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", alt = " << targetPosition.alt << ", radius = 100}";
-			}
-			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-			scheduler->appendCommand(command);
-			setHasTask(true);
-		}
-
-		break;
-	}
 	case State::SIMULATE_FIRE_FIGHT: {
 		string taskString = "";
 
@@ -383,7 +378,7 @@ void GroundUnit::AIloop()
 				// Log the random value for debug purposes
 				// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
 				// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
-				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitEffectiveCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
 				// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
 				if (shotsIntensity == ShotsIntensity::LOW)
@@ -469,14 +464,14 @@ void GroundUnit::AIloop()
 		// First, consider our coalition or our "operate as" coalition to determine who are the enemies. Then, get the closest enemy unit and set it as target.
 		double distance = 0;
 
-		// Disabled because it annoyingly resets the state when toggling the states
-		// if (unitCoalition == 0) {
-		//	setState(State::IDLE);
-		//	log("Unit " + unitName + "(" + name + ") is neutral, cannot simulate engagement, switching to IDLE");
-		//	return;
-		//}
+		// Do nothing if true neutral unit
+		if (unitEffectiveCoalition == 0) {
+			setTargetID(NULL);
+			setTargetPosition(Coords(NULL));
+			return;
+		}
 
-		unsigned char targetCoalition = unitCoalition == 2 ? 1 : 2;
+		unsigned char targetCoalition = unitEffectiveCoalition == 2 ? 1 : 2;
 		Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);
 		
 		// Set the target position as the target unit position
@@ -502,7 +497,7 @@ void GroundUnit::AIloop()
 				// Log the random value for debug purposes
 				// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
 				// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
-				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitEffectiveCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
 				// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
 				if (shotsIntensity == ShotsIntensity::LOW)
@@ -647,7 +642,7 @@ void GroundUnit::AIloop()
 				// Log the random value for debug purposes
 				// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
 				// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
-				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+				map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitEffectiveCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
 				// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
 				if (shotsIntensity == ShotsIntensity::LOW)
@@ -771,7 +766,7 @@ void GroundUnit::AIloop()
 					// Log the random value for debug purposes
 					// The next tasking time depends on how many units are present in the area so that a constant "volume" of fire is maintained independently from the number of units engaging.
 					// Start by counting how many friendly units are present in 3*engagementRange so that we can adjust the aim time accordingly. This is a very basic way to simulate a more complex behavior where units would coordinate to maintain a certain volume of fire on the target.
-					map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitCoalition, { "GroundUnit" }, 3 * engagementRange, false);
+					map<Unit*, double> friendliesInRange = unitsManager->getUnitsInRange(this, unitEffectiveCoalition, { "GroundUnit" }, 3 * engagementRange, false);
 
 					// If we are in the lowest intesity mode, adjust the chances that the unit will shoot depending on the number of friendlies in range. The more friendlies, the less chances to shoot to maintain a constant volume of fire.
 					if (shotsIntensity == ShotsIntensity::LOW)

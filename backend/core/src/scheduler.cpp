@@ -682,12 +682,17 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		double lng = value[L"location"][L"lng"].as_double();
 		Coords loc; loc.lat = lat; loc.lng = lng;
 
+		unsigned int shotsToFire = value[L"shotsToFire"].as_number().to_uint32();
+		double radius = value[L"radius"].as_number().to_double();
+
 		if (value[L"location"].has_number_field(L"alt")) {
 			loc.alt = value[L"location"][L"alt"].as_double();
 		}
 
 		Unit* unit = unitsManager->getGroupLeader(ID);
 		if (unit != nullptr) {
+			unit->setArtilleryShotsToFire(shotsToFire);
+			unit->setArtilleryRadius(radius);
 			unit->setTargetPosition(loc);
 			unit->setState(State::FIRE_AT_AREA);
 			log(username + " tasked unit " + unit->getUnitName() + "(" + unit->getName() + ") to fire at area", true);
@@ -1224,29 +1229,14 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			Coords pickupLocation; pickupLocation.lat = lat; pickupLocation.lng = lng;
 			transportUnit->setPickupLocation(pickupLocation);
 			log(username + " set pickup location for unit " + transportUnit->getUnitName() + "(" + transportUnit->getName() + ") to (" + to_string(lat) + ", " + to_string(lng) + ")", true);
-
-			// Add a smoke of the coalition color at the pickup location for 30 seconds to make it visible for players in the game
-			unsigned char transportCoalition = transportUnit->getCoalition() == 0 ? transportUnit->getOperateAs() : transportUnit->getCoalition();
-			if (transportCoalition == 1) {
-				// Red coalition
-				command = dynamic_cast<Command*>(new Smoke("red", pickupLocation));
-			}
-			else if (transportCoalition == 2) {
-				// Blue coalition
-				command = dynamic_cast<Command*>(new Smoke("blue", pickupLocation));
-			}
-			else {
-				// Neutral or unknown coalition, use white smoke
-				command = dynamic_cast<Command*>(new Smoke("white", pickupLocation));
-			}
 		}
 		answer[L"response"] = json::value(to_wstring("Pickup location set"));
 	}
 	/************************/
-	else if (key.compare("smokePickupLocation") == 0) {
-		// The json for the setPickupLocation command is expected to be in the following format:
+	else if (key.compare("smokePickupPoint") == 0) {
+		// The json for the smokePickupPoint command is expected to be in the following format:
 		// {
-		//   "command": "setPickupLocation",
+		//   "command": "smokePickupPoint",
 		//   "ID": 123, // ID of the transport unit
 		// }
 
