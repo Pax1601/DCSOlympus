@@ -12,6 +12,8 @@ const { logger } = require("./filesystem");
 const { getManager } = require("./managerfactory");
 const { sleep } = require("./utils");
 
+// TODO: Also check the version of the release-candidate branch to force an update regardless of date if we are behing and forcing beta updates. 
+
 const VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 logger.log(`Running in ${__dirname}`);
 function checkVersion(forceBeta) {
@@ -83,6 +85,8 @@ function checkVersion(forceBeta) {
  *
  */
 async function updateOlympusBeta() {
+  const request = new Request("https://raw.githubusercontent.com/Pax1601/DCSOlympus/main/version.json");
+  
   /* Get a list of build artifacts */
   const octokit = new Octokit({});
   const res = await octokit.request("GET /repos/{owner}/{repo}/actions/artifacts", {
