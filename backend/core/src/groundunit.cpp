@@ -1002,6 +1002,9 @@ string GroundUnit::getType() {
 		if (databaseEntry.has_string_field(L"type"))
 			return to_string(databaseEntry[L"type"].as_string());
 	}
+	else {
+		return "GroundUnit";
+	}
 }
 
 void GroundUnit::computePathToEmbark() {

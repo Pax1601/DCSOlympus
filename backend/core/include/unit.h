@@ -234,7 +234,7 @@ public:
 protected:
 	unsigned int ID;
 
-	string category;
+	string category = "Unknown";
 	bool alive = false;
 	bool human = false;
 	bool controlled = false;

@@ -1101,6 +1101,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			transportUnit->getMaximumTransportableUnits() > transportUnit->getOnBoardUnitsIDs().size() &&
 			!transportUnit->getAirborne() &&
 			transportUnit->getSpeed() < 2) {
+
+			log(username + " tasked transport unit " + transportUnit->getUnitName() + "(" + transportUnit->getName() + ") to embark nearby units", true);
+
 			// Get the position of the transport unit
 			Coords transportPosition = transportUnit->getPosition();
 
@@ -1137,6 +1140,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 				candidateUnit->setState(State::EMBARKING);
 				embarkedUnits++;
 			}
+
+			log(username + " embarked " + to_string(embarkedUnits) + " units to transport unit " + transportUnit->getUnitName() + "(" + transportUnit->getName() + ")", true);
 			answer[L"response"] = json::value(to_wstring(to_string(embarkedUnits) + " units tasked to embark"));
 		}
 		else {
