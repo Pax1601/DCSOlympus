@@ -16,5 +16,6 @@ states = [
   "scenic-aaa",
   "miss-on-purpose",
   "land-at-point",
-  "simulate-engagement"
+  "simulate-engagement",
+  "embarking"
   ]

@@ -708,9 +708,9 @@ class Unit:
                     if "can_transport_units" in self.on_property_change_callbacks:
                         self._trigger_callback("can_transport_units", self.can_transport_units)
             elif datum_index == DataIndexes.ON_BOARD_UNITS_IDS.value:
-                on_board_units_ids = data_extractor.extract_on_board_units_ids()
-                if on_board_units_ids != self.on_board_units_IDs:
-                    self.on_board_units_IDs = on_board_units_ids
+                on_board_units_IDs = data_extractor.extract_on_board_units_IDs()
+                if on_board_units_IDs != self.on_board_units_IDs:
+                    self.on_board_units_IDs = on_board_units_IDs
                     # Trigger callbacks for property change
                     if "on_board_units_IDs" in self.on_property_change_callbacks:
                         self._trigger_callback("on_board_units_IDs", self.on_board_units_IDs)
@@ -849,3 +849,18 @@ class Unit:
 
     def set_custom_integer(self, custom_integer: int):
         return self.api.send_command({"setCustomInteger": {"ID": self.ID, "customInteger": custom_integer}})
+    
+    def embark_nearby_units(self):
+        return self.api.send_command({"embarkNearbyUnits": {"ID": self.ID}})
+    
+    def disembark_units(self):
+        return self.api.send_command({"disembarkUnits": {"ID": self.ID}})
+    
+    def set_pickup_location(self, location: LatLng):
+        return self.api.send_command({"generatePickupPoint": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}}})
+    
+    def smoke_pickup_location(self):
+        return self.api.send_command({"smokePickupPoint": {"ID": self.ID}})
+    
+    def move_to_pickup_location(self):
+        return self.api.send_command({"moveTroopsToPickupPoint": {"ID": self.ID}})

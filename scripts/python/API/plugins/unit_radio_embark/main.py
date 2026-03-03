@@ -6,6 +6,8 @@ import asyncio
 import sys
 from pathlib import Path
 
+from unit.unit import Unit
+
 # Add the API directory to the path so we can import the Plugin base class
 api_dir = Path(__file__).parent.parent.parent
 if str(api_dir) not in sys.path:
@@ -68,6 +70,11 @@ class UnitRadioEmbark(Plugin):
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'))
             self.blue_listener = self.api.create_radio_listener()
             self.red_listener = self.api.create_radio_listener()
+            
+            prompt = "Checking for unit embarking or disembarking."
+            
+            self.blue_listener.set_prompt(prompt)
+            self.red_listener.set_prompt(prompt)
             
             self.api.register_on_update_callback(self.on_update)
 
@@ -138,8 +145,118 @@ class UnitRadioEmbark(Plugin):
             self.logger.error(f"Failed to resume UnitRadioEmbark plugin: {e}", exc_info=True)
             return False
         
+    def on_update(self, api: API):
+        self.watchdog_tick()
+        
     def on_message_callback(self, message, unitID):
         self.logger.info(f"Received radio message: {message}")
         
-    def on_update(self, api: API):
-        self.watchdog_tick()
+        units = self.api.get_units()
+        
+        if unitID not in units:
+            self.logger.warning(f"UnitID {unitID} not found in game units.")
+            return
+        
+        unit = units[unitID]
+        
+        if "disembark" in message.lower():
+            self.logger.info(f"Unit {unitID} requesting disembarking.")
+            response = self.disembark_units(unit)
+        elif "embark" in message.lower():
+            self.logger.info(f"Unit {unitID} requesting embarking.")
+            response = self.embark_units(unit)
+        elif "smoke" in message.lower():
+            self.logger.info(f"Unit {unitID} requesting smoke.")
+            response = self.smoke_pickup_point(unit)
+        elif "move" in message.lower() or "group" in message.lower():
+            self.logger.info(f"Unit {unit} requesting move to pickup point.")
+            response = self.move_to_pickup_point(unit)
+        elif "pickup" in message.lower() or "pick up" in message.lower():
+            self.logger.info(f"Unit {unitID} requesting pickup point.")
+            response = self.set_pickup_point(unit)
+        else:
+            response = "I did not understand your request sir."
+            
+        message_filename = self.api.generate_audio_message(response)
+        self.blue_listener.transmit_on_frequency(message_filename, self.blue_embark_frequency_hz, self.blue_modulation, self.blue_encryption)
+        
+    def embark_units(self, unit: Unit):
+        self.logger.info(f"Embarking units for unitID {unit.ID}")
+        
+        if (not unit.can_transport_units):
+            self.logger.warning(f"UnitID {unit.ID} cannot transport units.")
+            response = "You cannot embark units on this unit sir."
+            return response
+        
+        if (unit.airborne):
+            self.logger.warning(f"UnitID {unit.ID} is airborne and cannot embark units.")
+            response = "You cannot embark units while airborne sir."
+            return response
+        
+        if (unit.speed > 2):
+            self.logger.warning(f"UnitID {unit.ID} is moving at speed {unit.speed} and cannot embark units.")
+            response = "You need to be stationary to embark units sir."
+            return response
+        
+        if (not unit.alive):
+            self.logger.warning(f"UnitID {unit.ID} is not alive and cannot embark units.")
+            response = "You cannot embark units on a destroyed unit sir."
+            return response
+        
+        if (len(unit.on_board_units_IDs) >= unit.maximum_transportable_units):
+            self.logger.warning(f"UnitID {unit.ID} is already at maximum capacity and cannot embark more units.")
+            response = "You cannot embark more units on this unit sir, it is already at maximum capacity."
+            return response
+        
+        unit.embark_nearby_units()
+        response = "Embarking units sir."
+        return response
+        
+    def disembark_units(self, unit: Unit):
+        self.logger.info(f"Disembarking units for unitID {unit.ID}")
+
+        
+        if (len(unit.on_board_units_IDs) == 0):
+            self.logger.warning(f"UnitID {unit.ID} has no units on board to disembark.")
+            response = "You have no units on board to disembark sir."
+            return response
+        
+        if (not unit.alive):
+            self.logger.warning(f"UnitID {unit.ID} is not alive and cannot disembark units.")
+            response = "You cannot disembark units from a destroyed unit sir."
+            return response
+        
+        if (unit.airborne):
+            self.logger.warning(f"UnitID {unit.ID} is airborne and cannot disembark units.")
+            response = "You cannot disembark units while airborne sir."
+            return response
+        
+        if (unit.speed > 2):
+            self.logger.warning(f"UnitID {unit.ID} is moving at speed {unit.speed} and cannot disembark units.")
+            response = "You need to be stationary to disembark units sir."
+            return response
+        
+        unit.disembark_units()
+        response = "Disembarking units sir."
+        return response
+        
+    def smoke_pickup_point(self, unit: Unit):
+        self.logger.info(f"Smokig pickup point for unitID {unit.ID}")
+        
+        unit.smoke_pickup_location()
+        response = "Smokig pickup point sir."
+        return response
+        
+    def move_to_pickup_point(self, unit: Unit):
+        self.logger.info(f"Moving units to pickup point for unitID {unit.ID}")
+        
+        unit.move_to_pickup_location()
+        response = "Moving to pickup point sir."
+        return response
+        
+    def set_pickup_point(self, unit: Unit):
+        self.logger.info(f"Setting pickup point for unitID {unit.ID}")
+        
+        unit.set_pickup_location(unit.position)
+        response = "Setting pickup point sir."
+        return response
