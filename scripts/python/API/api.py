@@ -1021,6 +1021,7 @@ class API:
             self.logger.info(f"Command sent successfully: {command}")
         else:
             self.logger.error(f"Failed to send command: {response.status_code} - {response.text}")
+        return response
     
     def stop(self):
         """

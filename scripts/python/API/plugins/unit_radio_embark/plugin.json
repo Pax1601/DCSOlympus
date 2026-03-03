@@ -8,6 +8,7 @@
   "config": {
     "blue_embark_frequency_hz": 32e6,
     "red_embark_frequency_hz": null,
+    "kokoro_voice_model": "bm_daniel",
     "blue_modulation": 1,
     "red_modulation": 0,
     "blue_encryption": 0,

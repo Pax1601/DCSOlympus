@@ -11,6 +11,7 @@ import logging
 import threading
 from typing import Dict, Optional, Callable, Any
 import json
+import os
 
 from api import API
 from audio.audio_packet import AudioPacket, MessageType
@@ -175,19 +176,28 @@ class RadioListener:
                 import traceback
                 self.logger.error(f"Traceback: {traceback.format_exc()}")
             finally:
-                # Clean up the temporary file after processing
-                try:
-                    import os
-                    if os.path.exists(wav_filename):
-                        os.remove(wav_filename)
-                        self.logger.debug(f"Cleaned up temporary file: {wav_filename}")
-                except Exception as cleanup_error:
-                    self.logger.warning(f"Failed to clean up temporary file {wav_filename}: {cleanup_error}")
+                # Clean up the temporary file after processing, but only if something was transcribed.
+                # If transcription failed, we might want to keep the file for debugging purposes. 
+                # Move the file to a "failed_transcriptions" folder instead of deleting it, to avoid losing potentially important debugging information.
+                if recognized_text:
+                    try:
+                        if os.path.exists(wav_filename):
+                            os.remove(wav_filename)
+                    except Exception as e:
+                        self.logger.error(f"Failed to delete temporary audio file {wav_filename}: {e}", exc_info=True)
+                else:
+                    failed_dir = "failed_transcriptions"
+                    os.makedirs(failed_dir, exist_ok=True)
+                    failed_path = os.path.join(failed_dir, os.path.basename(wav_filename))
+                    try:
+                        os.rename(wav_filename, failed_path)
+                        self.logger.info(f"Moved failed transcription audio to {failed_path} for debugging")
+                    except Exception as e:
+                        self.logger.error(f"Failed to move failed transcription audio file {wav_filename}: {e}", exc_info=True)
         else:
             self.logger.warning("No message callback registered to handle recorded audio")
             # Still clean up the file even if no callback is registered
             try:
-                import os
                 if os.path.exists(wav_filename):
                     os.remove(wav_filename)
             except Exception:
@@ -503,6 +513,14 @@ class RadioListener:
             prompt (str): The prompt string
         """
         self.prompt = prompt
+        
+    def set_coalition(self, coalition: str) -> None:
+        """Set the coalition for this radio listener (e.g. 'blue' or 'red').
+        
+        Args:
+            coalition (str): The coalition name
+        """
+        self.coalition = coalition
         
     def set_prepend_calling_callsign(self, prepend: bool) -> None:
         """Set whether to prepend the calling unit's callsign to the transcription prompt.

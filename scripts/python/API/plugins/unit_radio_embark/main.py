@@ -3,8 +3,12 @@ Unit Radio Embark Plugin for DCS Olympus API.
 """
 
 import asyncio
+import json
 import sys
 from pathlib import Path
+import os
+
+from requests import Response
 
 from unit.unit import Unit
 
@@ -28,6 +32,7 @@ class UnitRadioEmbark(Plugin):
         self.config = plugin_info.get("config", {})
         self.blue_embark_frequency_hz = self._read_frequency_hz("blue_embark_frequency_hz")
         self.red_embark_frequency_hz = self._read_frequency_hz("red_embark_frequency_hz")
+        self.kokoro_voice_model = self._read_voice_model("kokoro_voice_model", default="bm_daniel")
         self.blue_modulation = self._read_modulation("blue_modulation", default=0)
         self.red_modulation = self._read_modulation("red_modulation", default=0)
         self.blue_encryption = int(self.config.get("blue_encryption", 0))
@@ -58,18 +63,34 @@ class UnitRadioEmbark(Plugin):
             self.logger.warning("Invalid modulation value for %s: %s", key, value)
             return default
 
+    def _read_voice_model(self, key: str, default: str = "bm_daniel") -> str:
+        value = self.config.get(key, default)
+        if value is None:
+            return default
+
+        voice_model = str(value).strip()
+        if not voice_model:
+            self.logger.warning("Invalid voice model for %s: %s", key, value)
+            return default
+
+        return voice_model
+
     def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
         try:
             self.running = True
             self.paused = False
             self.logger.info("Blue embark frequency (Hz): %s", self.blue_embark_frequency_hz)
             self.logger.info("Red embark frequency (Hz): %s", self.red_embark_frequency_hz)
+            self.logger.info("Kokoro voice model: %s", self.kokoro_voice_model)
             self.logger.info("Blue modulation: %s", self.blue_modulation)
             self.logger.info("Red modulation: %s", self.red_modulation)
 
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'))
             self.blue_listener = self.api.create_radio_listener()
             self.red_listener = self.api.create_radio_listener()
+            
+            self.blue_listener.set_coalition("blue")
+            self.red_listener.set_coalition("red")
             
             prompt = "Checking for unit embarking or disembarking."
             
@@ -95,8 +116,8 @@ class UnitRadioEmbark(Plugin):
                     encryption=self.red_encryption,
                 )
                 
-            self.blue_listener.register_message_callback(self.on_message_callback)
-            self.red_listener.register_message_callback(self.on_message_callback)
+            self.blue_listener.register_message_callback(lambda message, unitID, listener=self.blue_listener: self.on_message_callback(message, unitID, listener))
+            self.red_listener.register_message_callback(lambda message, unitID, listener=self.red_listener: self.on_message_callback(message, unitID, listener))
             
             self.api.register_asyncio_coroutine(loop)
     
@@ -148,8 +169,15 @@ class UnitRadioEmbark(Plugin):
     def on_update(self, api: API):
         self.watchdog_tick()
         
-    def on_message_callback(self, message, unitID):
+    def on_message_callback(self, message, unitID, listener: RadioListener):
         self.logger.info(f"Received radio message: {message}")
+        normalized_message = message.lower()
+
+        disembark_keywords = ["disembark", "get off"]
+        embark_keywords = ["embark", "get on", "board", "load", "get in"]
+        smoke_keywords = ["smoke"]
+        move_keywords = ["move", "group"]
+        pickup_keywords = ["pickup", "pick up"]
         
         units = self.api.get_units()
         
@@ -159,26 +187,32 @@ class UnitRadioEmbark(Plugin):
         
         unit = units[unitID]
         
-        if "disembark" in message.lower():
+        if any(keyword in normalized_message for keyword in disembark_keywords):
             self.logger.info(f"Unit {unitID} requesting disembarking.")
             response = self.disembark_units(unit)
-        elif "embark" in message.lower():
+        elif any(keyword in normalized_message for keyword in embark_keywords):
             self.logger.info(f"Unit {unitID} requesting embarking.")
             response = self.embark_units(unit)
-        elif "smoke" in message.lower():
+        elif any(keyword in normalized_message for keyword in smoke_keywords):
             self.logger.info(f"Unit {unitID} requesting smoke.")
             response = self.smoke_pickup_point(unit)
-        elif "move" in message.lower() or "group" in message.lower():
-            self.logger.info(f"Unit {unit} requesting move to pickup point.")
+        elif any(keyword in normalized_message for keyword in move_keywords):
+            self.logger.info(f"Unit {unitID} requesting move to pickup point.")
             response = self.move_to_pickup_point(unit)
-        elif "pickup" in message.lower() or "pick up" in message.lower():
+        elif any(keyword in normalized_message for keyword in pickup_keywords):
             self.logger.info(f"Unit {unitID} requesting pickup point.")
             response = self.set_pickup_point(unit)
         else:
             response = "I did not understand your request sir."
             
-        message_filename = self.api.generate_audio_message(response)
-        self.blue_listener.transmit_on_frequency(message_filename, self.blue_embark_frequency_hz, self.blue_modulation, self.blue_encryption)
+        message_filename = self.api.generate_audio_message(response, voice=self.kokoro_voice_model)
+        listener.transmit_on_frequency(message_filename, self.blue_embark_frequency_hz, self.blue_modulation, self.blue_encryption)
+        
+        # Delete the file after transmission to avoid cluttering the disk. Use os functions
+        try:
+            os.remove(message_filename)
+        except Exception as e:
+            self.logger.error(f"Failed to delete temporary audio file {message_filename}: {e}", exc_info=True)
         
     def embark_units(self, unit: Unit):
         self.logger.info(f"Embarking units for unitID {unit.ID}")
@@ -208,9 +242,7 @@ class UnitRadioEmbark(Plugin):
             response = "You cannot embark more units on this unit sir, it is already at maximum capacity."
             return response
         
-        unit.embark_nearby_units()
-        response = "Embarking units sir."
-        return response
+        return self.extract_response(unit.embark_nearby_units())
         
     def disembark_units(self, unit: Unit):
         self.logger.info(f"Disembarking units for unitID {unit.ID}")
@@ -236,27 +268,24 @@ class UnitRadioEmbark(Plugin):
             response = "You need to be stationary to disembark units sir."
             return response
         
-        unit.disembark_units()
-        response = "Disembarking units sir."
-        return response
+        return self.extract_response(unit.disembark_units())
         
     def smoke_pickup_point(self, unit: Unit):
         self.logger.info(f"Smokig pickup point for unitID {unit.ID}")
         
-        unit.smoke_pickup_location()
-        response = "Smokig pickup point sir."
-        return response
+        return self.extract_response(unit.smoke_pickup_location())
         
     def move_to_pickup_point(self, unit: Unit):
         self.logger.info(f"Moving units to pickup point for unitID {unit.ID}")
         
-        unit.move_to_pickup_location()
-        response = "Moving to pickup point sir."
-        return response
-        
+        return self.extract_response(unit.move_to_pickup_location())
+               
     def set_pickup_point(self, unit: Unit):
         self.logger.info(f"Setting pickup point for unitID {unit.ID}")
         
-        unit.set_pickup_location(unit.position)
-        response = "Setting pickup point sir."
-        return response
+        return self.extract_response(unit.set_pickup_location(unit.position))
+    
+    def extract_response(self, response: Response):
+        json_response = response.content.decode('utf-8') if isinstance(response.content, bytes) else str(response.content)
+        dict_response = json.loads(json_response)
+        return dict_response.get("response", "Command executed sir.")

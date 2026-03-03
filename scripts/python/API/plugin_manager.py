@@ -598,8 +598,7 @@ class PluginManager:
         """
         Reload a specific plugin by name.
 
-        This stops the current instance (if loaded), loads a fresh instance
-        from the descriptor, and restarts it if it was previously running.
+        Reload is only allowed when the plugin is currently STOPPED.
 
         Args:
             plugin_name: Name of the plugin to reload
@@ -623,15 +622,13 @@ class PluginManager:
                 self.logger.error(f"Plugin descriptor not found for reload: {plugin_name}")
                 return False
 
-            should_restart = False
             if existing_plugin is not None:
                 existing_status = existing_plugin.get_status()
-                should_restart = existing_status in (PluginStatus.RUNNING, PluginStatus.PAUSED)
-
                 if existing_status != PluginStatus.STOPPED:
-                    stop_ok = existing_plugin.stop()
-                    if not stop_ok:
-                        self.logger.warning(f"Plugin {plugin_name} did not stop cleanly before reload")
+                    self.logger.warning(
+                        f"Reload denied for plugin {plugin_name}: plugin must be stopped first (current status={existing_status.value})"
+                    )
+                    return False
 
             new_plugin = self.load_plugin(descriptor)
             if new_plugin is None:
@@ -639,16 +636,6 @@ class PluginManager:
                 return False
 
             self.plugins[plugin_name] = new_plugin
-
-            if should_restart:
-                if self.loop is None:
-                    self.logger.warning(
-                        f"Plugin {plugin_name} reloaded but not restarted (event loop not set)"
-                    )
-                    return True
-
-                return new_plugin.start(self.loop)
-
             return True
     
     def start_all_plugins(self, loop: asyncio.AbstractEventLoop) -> Dict[str, bool]:
@@ -762,6 +749,7 @@ class PluginManager:
         .pause { background: #e8b100; color: #111; }
         .stop { background: #cf3b3b; color: #fff; }
         .reload { background: #2f7ad8; color: #fff; }
+        .reload:disabled { opacity: 0.45; cursor: not-allowed; }
         .logs { background: #555; color: #fff; }
         #message { margin: 12px 0; min-height: 20px; color: #9bd18d; }
         #logs-panel { margin-top: 18px; padding: 12px; border: 1px solid #2d2d2d; background: #191919; }
@@ -828,6 +816,7 @@ class PluginManager:
                 const restartedText = restartCount > 0 ? `yes (${restartCount})` : 'no';
                 const restartTs = wd.last_auto_restart_timestamp;
                 const restartAt = restartTs ? new Date(restartTs * 1000).toLocaleTimeString() : 'n/a';
+                const canReload = plugin.status === 'stopped';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -840,7 +829,7 @@ class PluginManager:
                         <button class=\"start\" data-action=\"start\" data-name=\"${plugin.name}\">Start</button>
                         <button class=\"pause\" data-action=\"pause\" data-name=\"${plugin.name}\">Pause</button>
                         <button class=\"stop\" data-action=\"stop\" data-name=\"${plugin.name}\">Stop</button>
-                        <button class=\"reload\" data-action=\"reload\" data-name=\"${plugin.name}\">Reload</button>
+                        <button class=\"reload\" data-action=\"reload\" data-name=\"${plugin.name}\" ${canReload ? '' : 'disabled title=\"Stop plugin before reloading\"'}>Reload</button>
                         <button class=\"logs\" data-action=\"logs\" data-name=\"${plugin.name}\">Logs</button>
                     </td>
                 `;
@@ -1024,6 +1013,16 @@ class PluginManager:
                     elif action == "stop":
                         success = manager.stop_plugin(plugin_name)
                     elif action == "reload":
+                        status = manager.get_plugin_status(plugin_name)
+                        if status is not PluginStatus.STOPPED:
+                            self._send_json(
+                                400,
+                                {
+                                    "success": False,
+                                    "message": f"Action 'reload' failed for plugin '{plugin_name}': stop the plugin first"
+                                }
+                            )
+                            return
                         success = manager.reload_plugin(plugin_name)
                     else:
                         self._send_json(400, {"error": f"Unsupported action: {action}"})

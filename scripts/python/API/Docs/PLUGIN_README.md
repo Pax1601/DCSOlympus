@@ -170,6 +170,9 @@ plugin_manager.pause_plugin("PluginName")
 # Resume specific plugin
 plugin_manager.resume_plugin("PluginName")
 
+# Reload specific plugin (plugin must already be stopped)
+plugin_manager.reload_plugin("PluginName")
+
 # Start all plugins
 plugin_manager.start_all_plugins()
 
@@ -188,6 +191,12 @@ plugin_names = plugin_manager.list_plugins()
 # Get plugin instance
 plugin = plugin_manager.get_plugin("PluginName")
 ```
+
+### Reload Behavior
+
+- Reload is only allowed when a plugin is in the **STOPPED** state.
+- Running or paused plugins must be stopped by the user before reload.
+- The management web UI disables the **Reload** action until the plugin is stopped.
 
 ## Logging
 
