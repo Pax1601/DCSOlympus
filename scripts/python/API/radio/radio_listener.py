@@ -12,6 +12,7 @@ import threading
 from typing import Dict, Optional, Callable, Any
 import json
 
+from api import API
 from audio.audio_packet import AudioPacket, MessageType
 from audio.audio_recorder import AudioRecorder
 from utils.utils import coalition_to_enum
@@ -20,13 +21,15 @@ import wave
 import opuslib
 import time
 
+test_counter = 1
+
 class RadioListener:
     """
     WebSocket audio listener that connects to a specified address and port
     to receive audio messages with graceful shutdown handling.
     """
     
-    def __init__(self, api, address: str, port: int | None):
+    def __init__(self, api: API, address: str, port: int | None):
         """
         Initialize the RadioListener.
         
@@ -51,6 +54,9 @@ class RadioListener:
         self.encryption = 0
         self.coalition = "blue"
         self.intercom_ID = None
+        
+        self.prompt = ""
+        self.prepend_calling_callsign = False
                 
         self.audio_recorders: Dict[str, AudioRecorder] = {}
         
@@ -120,12 +126,36 @@ class RadioListener:
             wav_filename: Path to the recorded WAV file
             unit_id: The unit ID that recorded the audio
         """
+        global test_counter
         self.logger.info(f"Recording callback triggered with file: {wav_filename}, unit_id: {unit_id}")
+
+        # If a unit id with this id does not exit, add it as a test unit
+        units = self.api.get_units()
+        if unit_id not in units:
+            from unit.unit import Unit
+            test_unit = Unit(int(unit_id), self.api)
+            test_unit.callsign = f"Test{test_counter}"
+            test_counter += 1
+            test_unit.human = True
+            test_unit.alive = True
+            test_unit.airborne = False
+            self.api.add_test_unit(test_unit)
+            self.logger.info(f"Added test unit with ID {unit_id} for recording callback")
         
         if self.message_callback:
             try:
+                prompt = self.prompt
+                # Find the unit's callsign to prepend if needed
+                if self.prepend_calling_callsign:
+                    units = self.api.get_units()
+                    if unit_id in units:
+                        callsign = units[unit_id].callsign
+                        if callsign:
+                            prompt = f"The following message is from callsign {callsign}. {prompt}"
+                            self.logger.debug(f"Prepended callsign to prompt: {prompt}")
+                
                 # Use API's centralized transcription service
-                recognized_text = self.api.transcribe_audio(wav_filename)
+                recognized_text = self.api.transcribe_audio(wav_filename, prompt)
                 
                 self.logger.info(f"Transcribed text: '{recognized_text}'")
                 if recognized_text:
@@ -368,7 +398,7 @@ class RadioListener:
         """Set the callback function for handling clients data."""
         self.clients_callback = callback
         
-    def start(self, frequency: int, modulation: int, encryption: int) -> None:
+    def start(self, frequency: int, modulation: int = 0, encryption: int = 0) -> None:
         """Start the audio listener in a separate thread.
         
         Args:
@@ -388,8 +418,7 @@ class RadioListener:
         self.frequency = frequency
         self.modulation = modulation
         self.encryption = encryption
-        
-        
+         
     def start_on_intercom(self, intercom_ID: int) -> None:
         """Start the audio listener in a separate thread.
         Args:
@@ -466,6 +495,22 @@ class RadioListener:
     def is_connected(self) -> bool:
         """Check if WebSocket is currently connected."""
         return self._websocket is not None and not self._websocket.closed
+    
+    def set_prompt(self, prompt: str) -> None:
+        """Set the prompt to use for transcription.
+        
+        Args:
+            prompt (str): The prompt string
+        """
+        self.prompt = prompt
+        
+    def set_prepend_calling_callsign(self, prepend: bool) -> None:
+        """Set whether to prepend the calling unit's callsign to the transcription prompt.
+        
+        Args:
+            prepend (bool): True to prepend callsign, False otherwise
+        """
+        self.prepend_calling_callsign = prepend
         
     def __enter__(self):
         """Context manager entry."""

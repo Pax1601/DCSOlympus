@@ -44,6 +44,9 @@ class API:
         self.should_stop = False
         self.running = False
         self.auto_update_units = True
+
+        # These are test units that are not really in game, but are useful for testing purposes
+        self.test_units: dict[int, Unit] = {}
         
         self.units_update_timestamp = 0
         
@@ -66,7 +69,7 @@ class API:
                 # Load the JSON configuration
                 self.config = json.load(file)
         except FileNotFoundError:
-            self.logger.error("Configuration file olympus.json not found.")
+            self.logger.error(f"Configuration file {self.config_location} not found.")
         
         self.password = self.config.get("authentication").get("gameMasterPassword")
         address = self.config.get("backend").get("address")
@@ -139,7 +142,7 @@ class API:
             self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
             self.kokoro = None
             
-    def _initialize_whisper(self, model_size: str = "tiny"):
+    def _initialize_whisper(self, model_size: str = "base.en"):
         """
         Initialize Whisper speech recognition if available.
         
@@ -326,7 +329,10 @@ class API:
         Returns:
             dict: A dictionary of Unit objects indexed by their unit ID.
         """
-        return self.units
+        # Merge the test units into the main units dictionary for retrieval
+        result = self.units.copy()
+        result.update(self.test_units)
+        return result
     
     def get_logs(self):
         """
@@ -757,12 +763,13 @@ class API:
             self.logger.error(f"Kokoro TTS failed: {e}")
             raise
     
-    def transcribe_audio(self, wav_filename: str) -> str:
+    def transcribe_audio(self, wav_filename: str, prompt: str = "") -> str:
         """
         Transcribe audio from a WAV file using the pre-initialized Whisper model.
         
         Args:
             wav_filename (str): Path to the WAV file to transcribe.
+            prompt (str): Optional prompt to guide transcription.
             
         Returns:
             str: The transcribed text, or empty string if transcription fails or no speech detected.
@@ -818,6 +825,7 @@ class API:
                 audio, 
                 language="en", 
                 verbose=False,
+                initial_prompt=prompt,
                 **self.whisper_options
             )
             
@@ -873,7 +881,7 @@ class API:
         """
         return self.whisper_options.copy()
     
-    def set_whisper_model(self, model_size: str = "tiny"):
+    def set_whisper_model(self, model_size: str = "base.en"):
         """
         Change the Whisper model to a different size.
         
@@ -990,6 +998,16 @@ class API:
         closest_units = closest_units[:max_number]
 
         return closest_units
+    
+    def add_test_unit(self, unit: Unit):
+        """
+        Add a test unit to the API's unit list. This is primarily for testing purposes.
+        
+        Args:
+            unit (Unit): The Unit object to add.
+        """
+        self.units[unit.ID] = unit
+        self.logger.info(f"Test unit added: ID {unit.ID}, Name: {unit.callsign}")
     
     def send_command(self, command: str):
         """
