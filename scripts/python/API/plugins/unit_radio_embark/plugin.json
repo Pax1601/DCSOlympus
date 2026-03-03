@@ -1,0 +1,16 @@
+{
+  "name": "UnitRadioEmbark",
+  "version": "0.1.0",
+  "author": "DCS Olympus",
+  "description": "Unit radio embark plugin scaffold",
+  "main": "main.py",
+  "enabled": true,
+  "config": {
+    "blue_embark_frequency_hz": 32e6,
+    "red_embark_frequency_hz": null,
+    "blue_modulation": 1,
+    "red_modulation": 0,
+    "blue_encryption": 0,
+    "red_encryption": 0
+  }
+}
