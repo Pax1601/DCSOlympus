@@ -1,0 +1,1 @@
+REACTIONS_TO_THREAT = ["none", "manoeuvre", "passive", "evade"]

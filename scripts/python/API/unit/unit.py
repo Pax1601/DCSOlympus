@@ -4,9 +4,11 @@ import asyncio
 from data.data_extractor import DataExtractor
 from data.data_indexes import DataIndexes
 from data.data_types import DrawArgument, LatLng, TACAN, Radio, GeneralSettings, Ammo, Contact, Offset
+from data.emissionsCountermeasures import EMISSIONS_COUNTERMEASURES
+from data.reactionsToThreat import REACTIONS_TO_THREAT
 from data.roes import ROES
 from data.states import states
-from utils.utils import enum_to_coalition
+from utils.utils import alarm_state_to_enum, enum_to_alarm_state, enum_to_coalition
 
 class Unit:
     def __init__(self, id: int, api):
@@ -461,21 +463,21 @@ class Unit:
                     if "roe" in self.on_property_change_callbacks:
                         self._trigger_callback("roe", self.roe)
             elif datum_index == DataIndexes.ALARM_STATE.value:
-                alarm_state = self.enum_to_alarm_state(data_extractor.extract_uint8())
+                alarm_state = enum_to_alarm_state(data_extractor.extract_uint8())
                 if alarm_state != self.alarm_state:
                     self.alarm_state = alarm_state
                     # Trigger callbacks for property change
                     if "alarm_state" in self.on_property_change_callbacks:
                         self._trigger_callback("alarm_state", self.alarm_state)
             elif datum_index == DataIndexes.REACTION_TO_THREAT.value:
-                reaction_to_threat = self.enum_to_reaction_to_threat(data_extractor.extract_uint8())
+                reaction_to_threat = REACTIONS_TO_THREAT[data_extractor.extract_uint8()]
                 if reaction_to_threat != self.reaction_to_threat:
                     self.reaction_to_threat = reaction_to_threat
                     # Trigger callbacks for property change
                     if "reaction_to_threat" in self.on_property_change_callbacks:
                         self._trigger_callback("reaction_to_threat", self.reaction_to_threat)
             elif datum_index == DataIndexes.EMISSIONS_COUNTERMEASURES.value:
-                emissions_countermeasures = self.enum_to_emission_countermeasure(data_extractor.extract_uint8())
+                emissions_countermeasures = EMISSIONS_COUNTERMEASURES[data_extractor.extract_uint8()]
                 if emissions_countermeasures != self.emissions_countermeasures:
                     self.emissions_countermeasures = emissions_countermeasures
                     # Trigger callbacks for property change
@@ -766,14 +768,14 @@ class Unit:
     def set_roe(self, roe: int):
         return self.api.send_command({"setROE": {"ID": self.ID, "ROE": roe}})
 
-    def set_alarm_state(self, alarm_state: int):
-        return self.api.send_command({"setAlarmState": {"ID": self.ID, "alarmState": alarm_state}})
+    def set_alarm_state(self, alarm_state: str):
+        return self.api.send_command({"setAlarmState": {"ID": self.ID, "alarmState": alarm_state_to_enum(alarm_state)}})
 
-    def set_reaction_to_threat(self, reaction_to_threat: int):
-        return self.api.send_command({"setReactionToThreat": {"ID": self.ID, "reactionToThreat": reaction_to_threat}})
+    def set_reaction_to_threat(self, reaction_to_threat: str):
+        return self.api.send_command({"setReactionToThreat": {"ID": self.ID, "reactionToThreat": REACTIONS_TO_THREAT.index(reaction_to_threat)}})
 
-    def set_emissions_countermeasures(self, emissions_countermeasures: int):
-        return self.api.send_command({"setEmissionsCountermeasures": {"ID": self.ID, "emissionsCountermeasures": emissions_countermeasures}})
+    def set_emissions_countermeasures(self, emissions_countermeasures: str):
+        return self.api.send_command({"setEmissionsCountermeasures": {"ID": self.ID, "emissionsCountermeasures": EMISSIONS_COUNTERMEASURES.index(emissions_countermeasures)}})
 
     def set_on_off(self, on_off: bool):
         return self.api.send_command({"setOnOff": {"ID": self.ID, "onOff": on_off}})

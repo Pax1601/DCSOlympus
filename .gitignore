@@ -46,3 +46,4 @@ manager/manager.log
 scripts/python/API/olympus.json
 scripts/python/API/olympus_plugins.log
 /scripts/python/API/plugin_logs
+manager/mods-inventory.json

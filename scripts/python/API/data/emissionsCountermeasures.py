@@ -1,0 +1,1 @@
+EMISSIONS_COUNTERMEASURES = ["silent", "attack", "defend", "free"]

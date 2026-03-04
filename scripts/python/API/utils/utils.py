@@ -19,6 +19,24 @@ def coalition_to_enum(coalition: str) -> int:
         return 2
     return 0
 
+def enum_to_alarm_state(alarm_state_id: int) -> str:
+    if alarm_state_id == 2:
+        return "red"
+    elif alarm_state_id == 1:
+        return "green"
+    elif alarm_state_id == 0:
+        return "auto"
+    return "auto"
+
+def alarm_state_to_enum(alarm_state: str) -> int:
+    if alarm_state == "red":
+        return 2
+    elif alarm_state == "green":
+        return 1
+    elif alarm_state == "auto":
+        return 0
+    return 0
+
 def project_with_bearing_and_distance(lat1, lon1, d, bearing, R=6371000):
     """
     lat: initial latitude, in degrees
