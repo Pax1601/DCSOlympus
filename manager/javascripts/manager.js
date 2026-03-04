@@ -10,6 +10,8 @@ const WizardPage = require("./wizardpage");
 const { fetchWithTimeout } = require("./net");
 const { exec } = require("child_process");
 const { sleep } = require("./utils");
+const { ModInventoryService } = require('./modinventory');
+const { generateConfigs } = require('./modgenerator');
 
 class Manager {
     options = {
@@ -21,7 +23,11 @@ class Manager {
         logLocation: path.join(__dirname, "..", "manager.log"),
         mode: 'basic',
         state: 'IDLE',
-        forceBeta: false
+        forceBeta: false,
+        modManager: {
+            dismissed: false,
+            available: false
+        }
     };
 
     /* Manager pages */
@@ -37,6 +43,12 @@ class Manager {
     resultPage = null;
     instancesPage = null;
     expertSettingsPage = null;
+    modsPage = null;
+    modInventoryService = null;
+    modInventory = [];
+    modImportState = {};
+    currentModSummary = null;
+    modImportStateFile = path.join(__dirname, "..", "mods-import.json");
 
     constructor() {
         /* Simple framework to define callbacks to events directly in the .ejs files. When an event happens, e.g. a button is clicked, the signal function is called with the function
@@ -55,6 +67,8 @@ class Manager {
         window.olympus = {
             manager: this
         };
+
+        this.modImportState = this.loadModImportState();
     }
 
     /** Asynchronously start the manager
@@ -67,6 +81,7 @@ class Manager {
             /* Load the options from the json file */
             try {
                 this.options = { ...this.options, ...JSON.parse(fs.readFileSync("options.json")) };
+                this.options.modManager = { dismissed: false, available: false, ...(this.options.modManager || {}) };
                 this.setConfigLoaded(true);
             } catch (e) {
                 logger.error(`An error occurred while reading the options.json file: ${e}`);
@@ -138,6 +153,9 @@ class Manager {
 
             /* Create all the HTML pages */
             this.menuPage = new ManagerPage(this, "./ejs/menu.ejs");
+            this.menuPage.options.onShow = () => {
+                this.updateModMenuAvailability();
+            };
             this.folderPage = new WizardPage(this, "./ejs/folder.ejs");
             this.settingsPage = new ManagerPage(this, "./ejs/settings.ejs");
             this.typePage = new WizardPage(this, "./ejs/type.ejs");
@@ -211,6 +229,7 @@ class Manager {
 
             /* Send an event on manager started */
             document.dispatchEvent(new CustomEvent("managerStarted"));
+            this.promptModImportIfNeeded();
         }
     }
 
@@ -595,6 +614,79 @@ class Manager {
         document.querySelector('.close').click();
     }
 
+    async onModsImportClicked() {
+        const summary = this.currentModSummary;
+        if (!summary || summary.totalCount === 0) {
+            showErrorPopup("<div class='main-message'>No mods detected.</div><div class='sub-message'>We couldn't find flyable or tech mods in your Saved Games folder.</div>");
+            this.closeModsPrompt();
+            return;
+        }
+        if (summary.pendingCount === 0) {
+            showErrorPopup("<div class='main-message'>Mods already imported.</div><div class='sub-message'>All detected mods are already marked as imported.</div>");
+            this.closeModsPrompt();
+            return;
+        }
+        if (summary.importedCount > 0) {
+            showConfirmPopup(
+                `<div class='main-message'>${summary.importedCount} of ${summary.totalCount} mods already imported.</div><div class='sub-message'>Import the remaining ${summary.pendingCount} mod${summary.pendingCount === 1 ? "" : "s"} now?</div>`,
+                async () => {
+                    await this.applyModImport(summary);
+                }
+            );
+            return;
+        }
+        await this.applyModImport(summary);
+    }
+
+    async applyModImport(summary) {
+        try {
+            await this.markModsImported(summary.modsRoot, summary.pendingIds);
+            await this.generateModConfigs(summary.modsRoot);
+            await this.scanMods();
+            await this.setModPromptDismissed(true);
+            const pendingLabel = `${summary.pendingCount} mod${summary.pendingCount === 1 ? "" : "s"}`;
+            const carriedLabel = summary.importedCount
+                ? `Already had ${summary.importedCount} imported${summary.importedCount === 1 ? "" : " mods"}.`
+                : "Everything was new.";
+            showErrorPopup(`<div class='main-message'>Import completed.</div><div class='sub-message'>${pendingLabel} added. ${carriedLabel}</div>`);
+            this.closeModsPrompt();
+        } catch (error) {
+            logger.error(`[mods] Import failed: ${error}`);
+            const message = error && error.message ? error.message : error;
+            showErrorPopup(`<div class='main-message'>Mod import failed.</div><div class='sub-message'>${message}</div>`);
+        }
+    }
+
+    async onModsReviewClicked() {
+        if (this.modsPage) {
+            const el = this.modsPage.getElement();
+            if (el.classList.contains("review-mode")) {
+                el.classList.remove("review-mode");
+            } else {
+                el.classList.add("review-mode");
+            }
+        }
+    }
+
+    async onModsSkipClicked() {
+        await this.setModPromptDismissed(true);
+        this.closeModsPrompt();
+    }
+
+    async onModsMenuClicked() {
+        const result = await this.scanMods();
+        if (!result) {
+            if (!this.getInstances().length) {
+                showErrorPopup("<div class='main-message'>No DCS instance detected</div><div class='sub-message'>Please add an instance first, then try again.</div>");
+            } else {
+                showErrorPopup("<div class='main-message'>No mods detected</div><div class='sub-message'>We couldn't find flyable or tech mods in your Saved Games folder.</div>");
+            }
+            return;
+        }
+        await this.setModPromptDismissed(false);
+        this.showModsPrompt(result.inventory, result.modsRoot, result.summary);
+    }
+
     async checkPorts() {
         var frontendPortFree = await this.getActiveInstance().checkFrontendPort();
         var backendPortFree = await this.getActiveInstance().checkBackendPort();
@@ -886,6 +978,251 @@ class Manager {
 
     getMode() {
         return this.options.mode;
+    }
+
+    async promptModImportIfNeeded() {
+        try {
+            const result = await this.scanMods();
+            if (!result) {
+                return;
+            }
+            if (this.options.modManager && this.options.modManager.dismissed) {
+                return;
+            }
+            this.showModsPrompt(result.inventory, result.modsRoot, result.summary);
+        } catch (err) {
+            logger.log(`[mods] Unable to prompt for mods: ${err}`);
+        }
+    }
+
+    resolveModsRoot() {
+        const candidate = this.getInstances().find((instance) => {
+            return instance && instance.folder && fs.existsSync(path.join(instance.folder, "Mods"));
+        });
+        if (!candidate) {
+            return undefined;
+        }
+        return path.join(candidate.folder, "Mods");
+    }
+
+    showModsPrompt(inventory, modsRoot, summary) {
+        if (!this.modsPage) {
+            this.modsPage = new ManagerPage(this, "./ejs/mods.ejs");
+        }
+        const effectiveSummary = summary || this.computeModSummary(modsRoot, inventory);
+        this.currentModSummary = effectiveSummary;
+        const importedSet = new Set(effectiveSummary.importedIds);
+        const decoratedInventory = inventory.map((mod) => ({
+            ...mod,
+            imported: importedSet.has(mod.id)
+        }));
+        this.modInventory = decoratedInventory;
+        this.modsPage.options.inventory = decoratedInventory;
+        this.modsPage.options.modsRoot = modsRoot;
+        this.modsPage.options.summary = effectiveSummary;
+        this.modsPage.getElement().classList.remove("review-mode");
+        this.modsPage.show();
+    }
+
+    closeModsPrompt() {
+        if (!this.modsPage) {
+            return;
+        }
+        const previousPage = this.modsPage.previousPage;
+        this.modsPage.hide();
+        if (previousPage) {
+            previousPage.show(true);
+        } else if (this.getMode() === "basic" && this.menuPage) {
+            this.menuPage.show(true);
+        } else if (this.instancesPage) {
+            this.instancesPage.show(true);
+        }
+    }
+
+    async setModPromptDismissed(dismissed) {
+        if (!fs.existsSync("options.json")) {
+            return;
+        }
+        const options = JSON.parse(fs.readFileSync("options.json"));
+        options.modManager = options.modManager || {};
+        options.modManager.dismissed = dismissed;
+        fs.writeFileSync("options.json", JSON.stringify(options, null, 2));
+        this.options.modManager = options.modManager;
+    }
+
+    updateModMenuAvailability() {
+        // Button remains available at all times; hook reserved for future logic.
+    }
+
+    async scanMods() {
+        try {
+            const modsRoot = this.resolveModsRoot();
+            if (!modsRoot) {
+                this.options.modManager.available = false;
+                this.modInventory = [];
+                this.currentModSummary = null;
+                this.updateModMenuAvailability();
+                return undefined;
+            }
+            if (!this.modInventoryService || this.modInventoryService.modsRoot !== modsRoot) {
+                this.modInventoryService = new ModInventoryService({ modsRoot });
+            }
+            const inventory = this.modInventoryService.discover();
+            this.options.modManager.available = inventory && inventory.length > 0;
+            if (!inventory || inventory.length === 0) {
+                this.modInventory = [];
+                this.currentModSummary = null;
+                this.updateModMenuAvailability();
+                return undefined;
+            }
+            const summary = this.computeModSummary(modsRoot, inventory);
+            this.currentModSummary = summary;
+            this.modInventory = inventory.map((mod) => ({
+                ...mod,
+                imported: summary.importedIds.includes(mod.id)
+            }));
+            this.updateModMenuAvailability();
+            return { inventory, modsRoot, summary };
+        } catch (err) {
+            logger.log(`[mods] scan failed: ${err}`);
+            return undefined;
+        }
+    }
+
+    computeModSummary(modsRoot, inventory) {
+        const stored = this.ensureCanonicalImportedMods(modsRoot, inventory);
+        const importedSet = new Set(stored);
+        const importedIds = [];
+        const pendingIds = [];
+        let importedCount = 0;
+        for (const mod of inventory) {
+            if (importedSet.has(mod.id)) {
+                importedCount += 1;
+                importedIds.push(mod.id);
+            } else {
+                pendingIds.push(mod.id);
+            }
+        }
+        const totalCount = inventory.length;
+        return {
+            modsRoot,
+            totalCount,
+            importedCount,
+            pendingCount: pendingIds.length,
+            pendingIds,
+            importedIds
+        };
+    }
+
+    loadModImportState() {
+        try {
+            if (fs.existsSync(this.modImportStateFile)) {
+                const content = JSON.parse(fs.readFileSync(this.modImportStateFile));
+                return content || {};
+            }
+        } catch (err) {
+            logger.log(`[mods] Unable to read mod import state: ${err}`);
+        }
+        return {};
+    }
+
+    saveModImportState() {
+        try {
+            fs.writeFileSync(this.modImportStateFile, JSON.stringify(this.modImportState, null, 2));
+        } catch (err) {
+            logger.log(`[mods] Unable to save mod import state: ${err}`);
+        }
+    }
+
+    getImportedMods(modsRoot) {
+        if (!modsRoot) {
+            return [];
+        }
+        if (!this.modImportState[modsRoot]) {
+            this.modImportState[modsRoot] = [];
+        }
+        return this.modImportState[modsRoot];
+    }
+
+    ensureCanonicalImportedMods(modsRoot, inventory) {
+        const stored = this.getImportedMods(modsRoot);
+        if (!inventory || inventory.length === 0) {
+            return stored;
+        }
+        const storedSet = new Set(stored);
+        let changed = false;
+        inventory.forEach((mod) => {
+            if (storedSet.has(mod.id)) {
+                return;
+            }
+            const aliases = mod.aliases || [];
+            const aliasHit = aliases.find((alias) => storedSet.has(alias));
+            if (aliasHit) {
+                storedSet.add(mod.id);
+                changed = true;
+            }
+        });
+        const aliasMap = new Map();
+        inventory.forEach((mod) => {
+            if (!mod.aliases) {
+                return;
+            }
+            mod.aliases.forEach((alias) => {
+                if (!aliasMap.has(alias)) {
+                    aliasMap.set(alias, mod.id);
+                }
+            });
+        });
+        Array.from(storedSet).forEach((value) => {
+            const normalized = aliasMap.get(value);
+            if (normalized && normalized !== value) {
+                storedSet.delete(value);
+                storedSet.add(normalized);
+                changed = true;
+            }
+        });
+        if (changed) {
+            this.modImportState[modsRoot] = Array.from(storedSet);
+            this.saveModImportState();
+        }
+        return Array.from(storedSet);
+    }
+
+    async markModsImported(modsRoot, modIds) {
+        if (!modsRoot || !Array.isArray(modIds) || modIds.length === 0) {
+            return;
+        }
+        const imported = new Set(this.getImportedMods(modsRoot));
+        modIds.forEach((id) => imported.add(id));
+        this.modImportState[modsRoot] = Array.from(imported);
+        this.saveModImportState();
+    }
+
+    async generateModConfigs(modsRoot) {
+        const importedIds = this.getImportedMods(modsRoot);
+        if (!importedIds || importedIds.length === 0) {
+            await generateConfigs({ modsRoot, descriptors: [] });
+            return;
+        }
+        const descriptors = [];
+        const missing = [];
+        for (const id of importedIds) {
+            const descriptor = this.modInventory.find((mod) => mod.id === id);
+            if (descriptor) {
+                descriptors.push(descriptor);
+            } else {
+                missing.push(id);
+            }
+        }
+        if (missing.length > 0) {
+            this.modImportState[modsRoot] = importedIds.filter((id) => !missing.includes(id));
+            this.saveModImportState();
+        }
+        if (descriptors.length === 0) {
+            await generateConfigs({ modsRoot, descriptors: [], removedIds: missing });
+            return;
+        }
+        generateConfigs({ modsRoot, descriptors, removedIds: missing });
     }
 }
 
