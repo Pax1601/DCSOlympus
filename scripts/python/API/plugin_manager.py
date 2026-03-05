@@ -297,7 +297,24 @@ class PluginManager:
                     continue
 
                 self.logger.warning("Watchdog attempting auto-restart for plugin: %s", plugin_name)
-                restarted = self.reload_plugin(plugin_name)
+                
+                # Stop the plugin
+                self.stop_plugin(plugin_name)
+                
+                # Loop until the plugin is confirmed stopped before attempting reload, with a max wait time to avoid infinite loops
+                max_wait_seconds = 10.0
+                wait_interval_seconds = 0.5
+                elapsed = 0.0
+                while elapsed < max_wait_seconds:
+                    status = self.get_plugin_status(plugin_name)
+                    if status is None or status == PluginStatus.STOPPED:
+                        break
+                    time.sleep(wait_interval_seconds)
+                    elapsed += wait_interval_seconds
+                
+                # Reload the plugin
+                reloaded = self.reload_plugin(plugin_name)
+                restarted = self.start_plugin(plugin_name, loop=self.loop) if reloaded else False
                 with self._lock:
                     self._watchdog_restart_count[plugin_name] = self._watchdog_restart_count.get(plugin_name, 0) + 1
                     self._watchdog_last_restart_time[plugin_name] = time.time()
@@ -415,7 +432,7 @@ class PluginManager:
         
         self.logger.info(f"Discovery complete. Found {len(discovered)} plugin(s)")
         return discovered
-    
+        
     def load_plugin(self, descriptor: Dict[str, Any]) -> Optional[Plugin]:
         """
         Load a single plugin from its descriptor.
@@ -593,6 +610,37 @@ class PluginManager:
                 return False
 
             return plugin.resume()
+        
+    def reload_plugin_descriptor(self, plugin_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Reload the plugin descriptor from disk.
+
+        Args:
+            plugin_name: Name of the plugin
+        Returns:
+            Updated plugin descriptor if successful, None otherwise
+        """
+        with self._lock:
+            descriptor = self.plugin_descriptors.get(plugin_name)
+            if descriptor is None:
+                return None
+
+            descriptor_path = descriptor.get("_descriptor_path")
+            if not descriptor_path or not os.path.exists(descriptor_path):
+                self.logger.error(f"Descriptor file not found for plugin {plugin_name}: {descriptor_path}")
+                return None
+
+            try:
+                with open(descriptor_path, 'r', encoding='utf-8') as f:
+                    updated_descriptor = json.load(f)
+                updated_descriptor["_plugin_dir"] = descriptor.get("_plugin_dir")
+                updated_descriptor["_descriptor_path"] = descriptor_path
+                updated_descriptor["_main_script_path"] = descriptor.get("_main_script_path")
+                self.plugin_descriptors[plugin_name] = updated_descriptor
+                return updated_descriptor
+            except Exception as e:
+                self.logger.error(f"Failed to reload descriptor for plugin {plugin_name}: {e}", exc_info=True)
+                return None
 
     def reload_plugin(self, plugin_name: str) -> bool:
         """
@@ -608,8 +656,10 @@ class PluginManager:
         """
         with self._lock:
             existing_plugin = self.plugins.get(plugin_name)
-            descriptor = self.plugin_descriptors.get(plugin_name)
-
+            
+            # Reload the plugin descriptor in case it was modified since initial load
+            descriptor = self.reload_plugin_descriptor(plugin_name)
+            
             if descriptor is None:
                 # Re-discover in case the plugin was added/renamed after startup
                 for discovered in self.discover_plugins():
@@ -629,7 +679,7 @@ class PluginManager:
                         f"Reload denied for plugin {plugin_name}: plugin must be stopped first (current status={existing_status.value})"
                     )
                     return False
-
+                
             new_plugin = self.load_plugin(descriptor)
             if new_plugin is None:
                 self.logger.error(f"Reload failed while loading plugin: {plugin_name}")
@@ -652,7 +702,13 @@ class PluginManager:
         with self._lock:
             self.loop = loop
             for name, plugin in self.plugins.items():
-                results[name] = plugin.start(loop)
+                # Check if this plugin is enabled
+                enabled = plugin.get_info().get("enabled", True)
+                if enabled:
+                    results[name] = plugin.start(loop)
+                else:
+                    self.logger.info(f"Plugin {name} is disabled and will not be started")
+                    results[name] = False
         return results
     
     def stop_all_plugins(self) -> Dict[str, bool]:

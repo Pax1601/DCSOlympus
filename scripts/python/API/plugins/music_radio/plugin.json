@@ -1,0 +1,13 @@
+{
+  "name": "MusicRadio",
+  "version": "0.1.0",
+  "author": "DCS Olympus",
+  "description": "Music radio plugin",
+  "main": "main.py",
+  "enabled": true,
+  "config": {
+    "music_folder": "C:\\Users\\dpass\\Documents\\GitHub\\DCSOlympus\\scripts\\python\\API\\plugins\\music_radio\\music",
+    "music_frequency_hz": 32e6,
+    "music_modulation": 1
+  }
+}

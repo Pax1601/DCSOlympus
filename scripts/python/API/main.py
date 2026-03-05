@@ -57,6 +57,10 @@ def setup_logging(log_level=logging.INFO, base_path=None):
         ]
     )
 
+# This is needed or the task will stop if all coroutines complete and the loop has nothing to do
+async def running_task():
+    while True:
+        await asyncio.sleep(1)
 
 def signal_handler(signum, frame):
     """
@@ -253,7 +257,9 @@ def main():
         
         # Start the asyncio event loop to keep the main thread alive
         try:
-            asyncio.get_event_loop().run_forever()
+            loop = asyncio.get_event_loop()
+            loop.create_task(running_task())
+            loop.run_forever()
         except KeyboardInterrupt:
             logger.info("Keyboard interrupt received, shutting down...")
             signal_handler(signal.SIGINT, None)

@@ -70,6 +70,7 @@ class RadioListener:
         self._should_stop = False
         self._loop: Optional[asyncio.AbstractEventLoop] = None
         self._thread: Optional[threading.Thread] = None
+        self._debug_packet_timing = False
         
         # Transmission mutex to ensure only one message plays at a time
         self._transmission_lock = threading.Lock()
@@ -215,8 +216,8 @@ class RadioListener:
                 
                 async with websockets.connect(
                     self.websocket_url,
-                    ping_interval=20,
-                    ping_timeout=10,
+                    ping_interval=30,
+                    ping_timeout=60,
                     close_timeout=10
                 ) as websocket:
                     self._websocket = websocket
@@ -285,32 +286,42 @@ class RadioListener:
                 self._loop.close()
             self._loop = None
 
-    async def _sync_radio_settings(self):
+    async def _sync_radio_settings(
+        self,
+        frequency: float | None = None,
+        modulation: int | None = None,
+        intercom_ID: int | None = None,
+        ptt: bool = False,
+    ):
         """Send the radio settings of each radio to the SRS backend"""
+        effective_frequency = self.frequency if frequency is None else frequency
+        effective_modulation = self.modulation if modulation is None else modulation
+        effective_intercom_id = self.intercom_ID if intercom_ID is None else intercom_ID
+
         message = {
             "type": "Settings update",
             "guid": self._guid,
             "coalition": coalition_to_enum(self.coalition),
             "settings": [
                 {
-                    "frequency": self.frequency,
-                    "modulation": self.modulation,
-                    "ptt": False,
+                    "frequency": effective_frequency,
+                    "modulation": effective_modulation,
+                    "ptt": ptt,
                 }
             ]
         }
         
-        if self.intercom_ID is not None:
-            message["unitID"] = self.intercom_ID
+        if effective_intercom_id is not None:
+            message["unitID"] = effective_intercom_id
 
         if self._websocket:
             message_bytes = json.dumps(message).encode('utf-8')
             data = bytes([MessageType.AUDIO.SETTINGS.value]) + message_bytes
             await self._websocket.send(data)
                     
-    def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None, unit_ID: int | None) -> bool:
-        # Acquire the transmission lock to ensure only one message plays at a time
-        acquired = self._transmission_lock.acquire(blocking=True, timeout=30.0)
+    async def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None, unit_ID: int | None) -> bool:
+        # Acquire the transmission lock to ensure only one message plays at a time.
+        acquired = await asyncio.get_event_loop().run_in_executor(None, self._transmission_lock.acquire, True, 30.0)
         if not acquired:
             self.logger.error("Failed to acquire transmission lock within timeout")
             return False
@@ -326,7 +337,7 @@ class RadioListener:
                 if time_since_receive < 2.0:
                     wait_time = 2.0 - time_since_receive
                     self.logger.debug(f"Waiting {wait_time:.2f}s after last received transmission")
-                    time.sleep(wait_time)
+                    await asyncio.sleep(wait_time)
             
             if (intercom_ID is not None):
                 frequency = 100
@@ -336,6 +347,21 @@ class RadioListener:
             if frequency is None or modulation is None or encryption is None:
                 self.logger.error("Frequency, modulation, and encryption must be specified for transmission")
                 return False
+
+            try:
+                # If the websocket is not connected, loop and wait for it to connect before trying to send with a timeout.
+                websocket_connection_timeout = 30.0
+                start_time = time.perf_counter()
+                while self._websocket is None:
+                    if time.perf_counter() - start_time > websocket_connection_timeout:
+                        self.logger.error("WebSocket connection timeout while waiting to send message")
+                        return False
+                    await asyncio.sleep(0.5)
+
+                await self._sync_radio_settings(frequency, modulation, intercom_ID, ptt=True)
+            except Exception as sync_err:
+                self.logger.error(f"Failed to sync radio settings before transmission: {sync_err}")
+                return False
             
             try:
                 # Open WAV file
@@ -343,9 +369,12 @@ class RadioListener:
                     if wf.getnchannels() != 1 or wf.getframerate() != 16000 or wf.getsampwidth() != 2:
                         self.logger.error("Input WAV must be mono, 16kHz, 16-bit (linear16)")
                         return False
+                    
                     frame_size = int(16000 * 0.04)  # 40ms frames = 640 samples
                     encoder = opuslib.Encoder(16000, 1, opuslib.APPLICATION_AUDIO)
                     packet_id = 0
+                    last_packet_sent_at = None
+                    
                     while True:
                         pcm_bytes = wf.readframes(frame_size)
                         if not pcm_bytes or len(pcm_bytes) < frame_size * 2:
@@ -375,11 +404,15 @@ class RadioListener:
                         packet.set_transmission_guid(self._guid)
                         packet.set_client_guid(self._guid)
                         # Serialize and send over websocket
-                        if self._websocket and self._loop and not self._loop.is_closed():
+                        if self._websocket:
                             data = packet.to_byte_array()
-                            fut = asyncio.run_coroutine_threadsafe(self._websocket.send(data), self._loop)
                             try:
-                                fut.result(timeout=2.0)
+                                await self._websocket.send(data)
+                                now = time.perf_counter()
+                                if self._debug_packet_timing and last_packet_sent_at is not None:
+                                    delta_ms = (now - last_packet_sent_at) * 1000.0
+                                    self.logger.debug("Packet %d interval: %.2f ms", packet_id, delta_ms)
+                                last_packet_sent_at = now
                             except Exception as send_err:
                                 self.logger.error(f"Failed to send packet {packet_id}: {send_err}")
                                 return False
@@ -387,15 +420,20 @@ class RadioListener:
                             self.logger.error("WebSocket not connected")
                             return False
                         packet_id += 1
-                        time.sleep(0.04)  # Simulate real-time transmission
+                        await asyncio.sleep(0.04)  # Simulate real-time transmission
                 self.logger.info(f"Transmitted {packet_id} packets from {file_name}")
                 return True
             except Exception as e:
                 self.logger.error(f"Transmit failed: {e}")
                 return False
         finally:
+            if frequency is not None and modulation is not None and self._websocket:
+                try:
+                    await self._sync_radio_settings(frequency, modulation, intercom_ID, ptt=False)
+                except Exception as sync_err:
+                    self.logger.debug(f"Failed to sync radio settings after transmission: {sync_err}")
             # Always release the lock
-            self._transmission_lock.release()
+            await asyncio.get_event_loop().run_in_executor(None, self._transmission_lock.release)
 
             
     def register_message_callback(self, callback: Callable[[str, str], None]) -> None:
@@ -445,6 +483,34 @@ class RadioListener:
         self.logger.info(f"RadioListener started, connecting to {self.websocket_url}")
         self.intercom_ID = intercom_ID
         
+    def register_asyncio_coroutine_frequency(self, loop: asyncio.AbstractEventLoop, frequency: float, modulation: int, encryption: int):
+        """
+        Register the API's update loop as an asyncio coroutine to allow for non-blocking execution.
+        This method should be called within an asyncio event loop context.
+        Args:
+            loop: The asyncio event loop to use for the plugin
+            frequency (float): Transmission frequency in Hz
+            modulation (int): Modulation type (0 for AM, 1 for FM, etc.)
+            encryption (int): Encryption type (0 for none, 1 for simple, etc., TODO)
+        """
+        self.frequency = frequency
+        self.modulation = modulation
+        self.encryption = encryption
+        self._loop = loop
+        loop.create_task(self._listen())    
+        
+    def register_asyncio_coroutine_intercom(self, loop: asyncio.AbstractEventLoop, intercom_ID: int):
+        """
+        Register the API's update loop as an asyncio coroutine to allow for non-blocking execution.
+        This method should be called within an asyncio event loop context.
+        Args:
+            loop: The asyncio event loop to use for the plugin
+            intercom_ID (int): Intercom ID to listen to
+        """
+        self.intercom_ID = intercom_ID
+        self._loop = loop
+        loop.create_task(self._listen())
+        
     def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
         """
         Transmit a WAV file as OPUS frames over the websocket.
@@ -460,7 +526,28 @@ class RadioListener:
         Returns:
             bool: True if transmission succeeded, False otherwise
         """
-        return self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get("unit_ID"))
+        loop = self._loop
+
+        # If we have not created the loop ourselves, try getting the current running loop.
+        if loop is None or loop.is_closed():
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+        if loop is None or loop.is_closed():
+            self.logger.error("Cannot transmit: RadioListener event loop is not available")
+            return False
+
+        try:
+            asyncio.run_coroutine_threadsafe(
+                self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get("unit_ID")),
+                loop,
+            )
+            return True
+        except Exception as e:
+            self.logger.error(f"Failed to schedule transmission: {e}")
+            return False
     
     def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
         """
@@ -471,7 +558,26 @@ class RadioListener:
         Returns:
             bool: True if transmission succeeded, False otherwise
         """
-        return self._send_message(file_name, None, None, None, intercom_ID)
+        loop = self._loop
+        if loop is None or loop.is_closed():
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+        if loop is None or loop.is_closed():
+            self.logger.error("Cannot transmit on intercom: RadioListener event loop is not available")
+            return False
+
+        try:
+            asyncio.run_coroutine_threadsafe(
+                self._send_message(file_name, None, None, None, intercom_ID, None),
+                loop,
+            )
+            return True
+        except Exception as e:
+            self.logger.error(f"Failed to schedule intercom transmission: {e}")
+            return False
 
     def stop(self) -> None:
         """Stop the audio listener gracefully."""
@@ -529,6 +635,19 @@ class RadioListener:
             prepend (bool): True to prepend callsign, False otherwise
         """
         self.prepend_calling_callsign = prepend
+        
+    def is_transmitting(self) -> bool:
+        """Check if a transmission is currently in progress."""
+        return self._transmission_lock.locked()
+
+    def set_debug_packet_timing(self, enabled: bool) -> None:
+        """Enable or disable packet interval timing logs."""
+        self._debug_packet_timing = bool(enabled)
+        self.logger.info("Packet timing debug %s", "enabled" if self._debug_packet_timing else "disabled")
+
+    def is_debug_packet_timing_enabled(self) -> bool:
+        """Check whether packet interval timing logs are enabled."""
+        return self._debug_packet_timing
         
     def __enter__(self):
         """Context manager entry."""

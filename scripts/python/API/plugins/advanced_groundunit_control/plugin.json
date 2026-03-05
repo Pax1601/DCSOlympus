@@ -4,7 +4,7 @@
   "author": "DCS Olympus",
   "description": "Advanced infantry control and management system",
   "main": "main.py",
-  "enabled": true,
+  "enabled": false,
   "config": {
     "update_interval": 1.0,
     "cluster_threshold_m": 100.0,

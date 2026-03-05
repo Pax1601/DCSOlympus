@@ -47,6 +47,7 @@ class Plugin(ABC):
         self.version = plugin_info.get("version", "0.0.0")
         self.author = plugin_info.get("author", "Unknown")
         self.description = plugin_info.get("description", "")
+        self.enabled = plugin_info.get("enabled", True)
         self.status = PluginStatus.INITIALIZED
         self.logger = logging.getLogger(f"Plugin.{self.name}")
         self._watchdog_lock = threading.Lock()
@@ -248,5 +249,6 @@ class Plugin(ABC):
             "description": self.description,
             "status": self.status.value,
             "watchdog": self.get_watchdog_state(),
-            "info": self.plugin_info
+            "info": self.plugin_info,
+            "enabled": self.enabled
         }

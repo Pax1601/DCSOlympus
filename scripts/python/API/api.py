@@ -691,6 +691,20 @@ class API:
             return RadioListener(self, self.config.get("audio").get("WSAddress"), None)
         else:
             return RadioListener(self, self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"))
+        
+    def create_radio_transmitter(self):
+        """
+        Create an audio transmitter instance.
+        
+        Returns:
+            RadioTransmitter: An instance of the RadioTransmitter class.
+        """
+        from radio.radio_transmitter import RadioTransmitter
+
+        if self.config.get("audio").get("WSAddress"):
+            return RadioTransmitter(self.config.get("audio").get("WSAddress"), None)
+        else:
+            return RadioTransmitter(self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"))
     
     def generate_audio_message(self, text: str, voice: str = "bm_daniel", speed: float = 1.0) -> str:
         """
