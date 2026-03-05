@@ -40,14 +40,12 @@ import {
     MAX_SHOTS_SCATTER,
     SHOTS_SCATTER_DEGREES,
     OlympusState,
-    JTACSubState,
     UnitControlSubState,
     ContextActions,
     ContextActionTarget,
     SHORT_PRESS_MILLISECONDS,
     TRAIL_LENGTH,
     colors,
-    UnitState,
     SPOTS_EDIT_ZOOM_TRANSITION,
     CLUSTERING_ZOOM_TRANSITION,
     SpawnSubState,
@@ -182,7 +180,11 @@ export abstract class Unit extends CustomMarker {
     #canTransportUnits: boolean = false;
     #onBoardUnitsIDs: number[] = [];
     #maximumTransportableUnits: number = 10;
-    #pickupLocation: LatLng | null = null;
+    #pickupLocation: LatLng = new LatLng(0, 0);
+    #shootingProjectionLocation: LatLng = new LatLng(0, 0);
+    #shootingProjectionWeaponMass: number = 0;
+    #suppressionLevel: number = 0;
+    #scenicFunctionProbability: number = 0;
 
     /* Other members used to draw the unit, mostly ancillary stuff like targets, ranges and so on */
     #blueprint: UnitBlueprint | null = null;
@@ -200,6 +202,7 @@ export abstract class Unit extends CustomMarker {
     #miniMapMarker: CircleMarker | null = null;
     #targetPositionMarker: TargetMarker;
     #pickupLocationMarker: PickupMarker;
+    #shootingProjectionLocationMarker: TargetMarker;
     #targetPositionPolyline: Polyline;
     #hotgroup: number | null = null;
     #detectionMethods: number[] = [];
@@ -458,6 +461,18 @@ export abstract class Unit extends CustomMarker {
     getPickupLocation() {
         return this.#pickupLocation;
     }
+    getShootingProjectionLocation() {
+        return this.#shootingProjectionLocation;
+    }
+    getShootingProjectionWeaponMass() {
+        return this.#shootingProjectionWeaponMass;
+    }
+    getSuppressionLevel() {
+        return this.#suppressionLevel;
+    }
+    getScenicFunctionProbability() {
+        return this.#scenicFunctionProbability;
+    }
 
     static getConstructor(type: string) {
         if (type === "GroundUnit") return GroundUnit;
@@ -480,6 +495,7 @@ export abstract class Unit extends CustomMarker {
         this.#pathPolyline.addTo(getApp().getMap());
         this.#targetPositionMarker = new TargetMarker(new LatLng(0, 0));
         this.#pickupLocationMarker = new PickupMarker(new LatLng(0, 0));
+        this.#shootingProjectionLocationMarker = new TargetMarker(new LatLng(0, 0));
         this.#targetPositionPolyline = new Polyline([], {
             color: colors.WHITE,
             weight: 3,
@@ -877,6 +893,18 @@ export abstract class Unit extends CustomMarker {
                 case DataIndexes.pickupLocation:
                     this.#pickupLocation = dataExtractor.extractLatLng();
                     break;
+                case DataIndexes.shootingProjectionLocation:
+                    this.#shootingProjectionLocation = dataExtractor.extractLatLng();
+                    break;
+                case DataIndexes.shootingProjectionWeaponMass:
+                    this.#shootingProjectionWeaponMass = dataExtractor.extractFloat64();
+                    break;
+                case DataIndexes.suppressionLevel:
+                    this.#suppressionLevel = dataExtractor.extractFloat64();
+                    break;
+                case DataIndexes.scenicFunctionProbability:
+                    this.#scenicFunctionProbability = dataExtractor.extractFloat64();
+                    break;
                 default:
                     break;
             }
@@ -1009,6 +1037,10 @@ export abstract class Unit extends CustomMarker {
             onBoardUnitsIDs: this.#onBoardUnitsIDs,
             maximumTransportableUnits: this.#maximumTransportableUnits,
             pickupLocation: this.#pickupLocation,
+            shootingProjectionLocation: this.#shootingProjectionLocation,
+            shootingProjectionWeaponMass: this.#shootingProjectionWeaponMass,
+            suppressionLevel: this.#suppressionLevel,
+            scenicFunctionProbability: this.#scenicFunctionProbability,
         };
     }
 
@@ -1050,6 +1082,7 @@ export abstract class Unit extends CustomMarker {
                 this.#clearRacetrack();
                 this.#clearSpots();
                 this.#clearPickupLocation();
+                this.#clearShootingProjectionLocation();
                 this.hideTemporaryEngagementRing();
             }
 
@@ -1214,6 +1247,7 @@ export abstract class Unit extends CustomMarker {
             this.#drawTarget();
             this.#drawSpots();
             this.#drawPickupLocation();
+            this.#drawShootingProjectionLocation();
         }
     }
 
@@ -2610,7 +2644,7 @@ export abstract class Unit extends CustomMarker {
     }
 
     #drawPickupLocation() {
-        if (this.#pickupLocation) {
+        if (this.#pickupLocation.lat != 0 && this.#pickupLocation.lng != 0) {
             if (!getApp().getMap().hasLayer(this.#pickupLocationMarker)) this.#pickupLocationMarker.addTo(getApp().getMap());
             this.#pickupLocationMarker.setLatLng(new LatLng(this.#pickupLocation.lat, this.#pickupLocation.lng));
         } else {
@@ -2620,6 +2654,21 @@ export abstract class Unit extends CustomMarker {
 
     #clearPickupLocation() {
         if (getApp().getMap().hasLayer(this.#pickupLocationMarker)) this.#pickupLocationMarker.removeFrom(getApp().getMap());
+    }
+
+    #drawShootingProjectionLocation() {
+        if (this.#shootingProjectionLocation.lat != 0 && this.#shootingProjectionLocation.lng != 0) {
+            if (!getApp().getMap().hasLayer(this.#shootingProjectionLocationMarker))
+                this.#shootingProjectionLocationMarker.addTo(getApp().getMap());
+            this.#shootingProjectionLocationMarker.setLatLng(new LatLng(this.#shootingProjectionLocation.lat, this.#shootingProjectionLocation.lng));
+        } else {
+            this.#clearShootingProjectionLocation();
+        }
+    }
+    
+    #clearShootingProjectionLocation() {
+        if (getApp().getMap().hasLayer(this.#shootingProjectionLocationMarker))
+            this.#shootingProjectionLocationMarker.removeFrom(getApp().getMap());
     }
 
     #onZoom(e: any) {

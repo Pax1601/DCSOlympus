@@ -3307,6 +3307,20 @@ export function UnitControlMenu(props: { open: boolean; onClose: () => void }) {
                                               my-auto text-sm text-gray-400
                                             `}
                                         >
+                                            Suppression level: {selectedUnits[0].getSuppressionLevel() * 100}%
+                                        </div>
+                                        <div
+                                            className={`
+                                              my-auto text-sm text-gray-400
+                                            `}
+                                        >
+                                            {selectedUnits[0].getScenicFunctionProbability() * 100}% chance to use scenic function
+                                        </div>
+                                        <div
+                                            className={`
+                                              my-auto text-sm text-gray-400
+                                            `}
+                                        >
                                             ID: {selectedUnits[0].ID}
                                         </div>
                                         <div

@@ -175,6 +175,24 @@ void Unit::update(json::value json, double dt)
 	if (json.has_string_field(L"requestHash")) 
 		setRequestHash(to_string(json[L"requestHash"].as_string()));
 	
+	if (json.has_object_field(L"shootingProjection")) {
+		if (json[L"shootingProjection"].has_number_field(L"lat") && 
+			json[L"shootingProjection"].has_number_field(L"lng") && 
+			json[L"shootingProjection"].has_number_field(L"alt"))
+			setShootingProjectionLocation({
+				json[L"shootingProjection"][L"lat"].as_number().to_double(),
+				json[L"shootingProjection"][L"lng"].as_number().to_double(),
+				json[L"shootingProjection"][L"alt"].as_number().to_double()
+				});
+		else 
+			setShootingProjectionLocation(Coords(NULL));
+
+		if (json[L"shootingProjection"].has_number_field(L"weaponMass"))
+			setShootingProjectionWeaponMass(json[L"shootingProjection"][L"weaponMass"].as_number().to_double());
+	} else {
+		setShootingProjectionLocation(Coords(NULL));
+		setShootingProjectionWeaponMass(0);
+	}
 
 	runAILoop();
 }
@@ -252,6 +270,8 @@ void Unit::refreshLeaderData(unsigned long long time) {
 					case DataIndex::shotsIntensity:				updateValue(shotsIntensity, leader->shotsIntensity, datumIndex); break;
 					case DataIndex::alarmState:					updateValue(alarmState, leader->alarmState, datumIndex); break;
 					case DataIndex::posture:					updateValue(posture, leader->posture, datumIndex); break;	
+					case DataIndex::suppressionLevel:			updateValue(suppressionLevel, leader->suppressionLevel, datumIndex); break;
+					case DataIndex::scenicFunctionProbability:	updateValue(scenicFunctionProbability, leader->scenicFunctionProbability, datumIndex); break;
 					}
 				}
 			}
@@ -297,80 +317,84 @@ void Unit::getData(stringstream& ss, unsigned long long time)
 		{
 			if (checkFreshness(datumIndex, time)) {
 				switch (datumIndex) {
-					case DataIndex::category:					appendString(ss, datumIndex, category); break;
-					case DataIndex::alive:						appendNumeric(ss, datumIndex, alive); break;
-					case DataIndex::alarmState:					appendNumeric(ss, datumIndex, alarmState); break;
-					case DataIndex::radarState:					appendNumeric(ss, datumIndex, radarState); break;
-					case DataIndex::human:						appendNumeric(ss, datumIndex, human); break;
-					case DataIndex::controlled:					appendNumeric(ss, datumIndex, controlled); break;
-					case DataIndex::coalition:					appendNumeric(ss, datumIndex, coalition); break;
-					case DataIndex::country:					appendNumeric(ss, datumIndex, country); break;
-					case DataIndex::name:						appendString(ss, datumIndex, name); break;
-					case DataIndex::unitName:					appendString(ss, datumIndex, unitName); break;
-					case DataIndex::callsign:					appendString(ss, datumIndex, callsign); break;
-					case DataIndex::unitID:						appendNumeric(ss, datumIndex, unitID); break;
-					case DataIndex::groupID:					appendNumeric(ss, datumIndex, groupID); break;
-					case DataIndex::groupName:					appendString(ss, datumIndex, groupName); break;
-					case DataIndex::state:						appendNumeric(ss, datumIndex, state); break;
-					case DataIndex::task:						appendString(ss, datumIndex, task); break;
-					case DataIndex::hasTask:					appendNumeric(ss, datumIndex, hasTask); break;
-					case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
-					case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
-					case DataIndex::horizontalVelocity:			appendNumeric(ss, datumIndex, horizontalVelocity); break;
-					case DataIndex::verticalVelocity:			appendNumeric(ss, datumIndex, verticalVelocity); break;
-					case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
-					case DataIndex::track:						appendNumeric(ss, datumIndex, track); break;
-					case DataIndex::isActiveTanker:				appendNumeric(ss, datumIndex, isActiveTanker); break;
-					case DataIndex::isActiveAWACS:				appendNumeric(ss, datumIndex, isActiveAWACS); break;
-					case DataIndex::onOff:						appendNumeric(ss, datumIndex, onOff); break;
-					case DataIndex::followRoads:				appendNumeric(ss, datumIndex, followRoads); break;
-					case DataIndex::fuel:						appendNumeric(ss, datumIndex, fuel); break;
-					case DataIndex::desiredSpeed:				appendNumeric(ss, datumIndex, desiredSpeed); break;
-					case DataIndex::desiredSpeedType:			appendNumeric(ss, datumIndex, desiredSpeedType); break;
-					case DataIndex::desiredAltitude:			appendNumeric(ss, datumIndex, desiredAltitude); break;
-					case DataIndex::desiredAltitudeType:		appendNumeric(ss, datumIndex, desiredAltitudeType); break;
-					case DataIndex::leaderID:					appendNumeric(ss, datumIndex, leaderID); break;
-					case DataIndex::formationOffset:			appendNumeric(ss, datumIndex, formationOffset); break;
-					case DataIndex::targetID:					appendNumeric(ss, datumIndex, targetID); break;
-					case DataIndex::targetPosition:				appendNumeric(ss, datumIndex, targetPosition); break;
-					case DataIndex::ROE:						appendNumeric(ss, datumIndex, ROE); break;
-					case DataIndex::reactionToThreat:			appendNumeric(ss, datumIndex, reactionToThreat); break;
-					case DataIndex::emissionsCountermeasures:	appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
-					case DataIndex::TACAN:						appendNumeric(ss, datumIndex, TACAN); break;
-					case DataIndex::radio:						appendNumeric(ss, datumIndex, radio); break;
-					case DataIndex::generalSettings:			appendNumeric(ss, datumIndex, generalSettings); break;
-					case DataIndex::ammo:						appendVector(ss, datumIndex, ammo); break;
-					case DataIndex::contacts:					appendVector(ss, datumIndex, contacts); break;
-					case DataIndex::activePath:					appendList(ss, datumIndex, activePath); break;
-					case DataIndex::isLeader:					appendNumeric(ss, datumIndex, isLeader); break;
-					case DataIndex::operateAs:					appendNumeric(ss, datumIndex, operateAs); break;
-					case DataIndex::shotsScatter:				appendNumeric(ss, datumIndex, shotsScatter); break;
-					case DataIndex::shotsIntensity:				appendNumeric(ss, datumIndex, shotsIntensity); break;
-					case DataIndex::health:						appendNumeric(ss, datumIndex, health); break;
-					case DataIndex::racetrackLength:			appendNumeric(ss, datumIndex, racetrackLength); break;
-					case DataIndex::racetrackAnchor:			appendNumeric(ss, datumIndex, racetrackAnchor); break;
-					case DataIndex::racetrackBearing:			appendNumeric(ss, datumIndex, racetrackBearing); break;
-					//case DataIndex::timeToNextTasking:			appendNumeric(ss, datumIndex, timeToNextTasking); break;	//Useful for debugging, but useless in production and very data hungry
-					case DataIndex::barrelHeight:				appendNumeric(ss, datumIndex, barrelHeight); break;
-					case DataIndex::muzzleVelocity:				appendNumeric(ss, datumIndex, muzzleVelocity); break;
-					case DataIndex::aimTime:					appendNumeric(ss, datumIndex, aimTime); break;
-					case DataIndex::shotsToFire:				appendNumeric(ss, datumIndex, shotsToFire); break;
-					case DataIndex::shotsBaseInterval:			appendNumeric(ss, datumIndex, shotsBaseInterval); break;
-					case DataIndex::shotsBaseScatter:			appendNumeric(ss, datumIndex, shotsBaseScatter); break;
-					case DataIndex::engagementRange:			appendNumeric(ss, datumIndex, engagementRange); break;
-					case DataIndex::targetingRange:				appendNumeric(ss, datumIndex, targetingRange); break;
-					case DataIndex::aimMethodRange:				appendNumeric(ss, datumIndex, aimMethodRange); break;
-					case DataIndex::acquisitionRange:			appendNumeric(ss, datumIndex, acquisitionRange); break;
-					case DataIndex::airborne:					appendNumeric(ss, datumIndex, airborne); break;
-					case DataIndex::cargoWeight:				appendNumeric(ss, datumIndex, cargoWeight); break;
-					case DataIndex::drawArguments:				appendVector(ss, datumIndex, drawArguments); break;
-					case DataIndex::customString:				appendString(ss, datumIndex, customString); break;
-					case DataIndex::customInteger: 				appendNumeric(ss, datumIndex, customInteger); break;
-					case DataIndex::posture:					appendNumeric(ss, datumIndex, posture); break;
-					case DataIndex::canTransportUnits:			appendNumeric(ss, datumIndex, canTransportUnits); break;
-					case DataIndex::onBoardUnitIDs:				appendVector(ss, datumIndex, onBoardUnitsIDs); break;
-					case DataIndex::maximumTransportableUnits:	appendNumeric(ss, datumIndex, maximumTransportableUnits); break;
-					case DataIndex::pickupLocation:				appendNumeric(ss, datumIndex, pickupLocation); break;
+					case DataIndex::category:							appendString(ss, datumIndex, category); break;
+					case DataIndex::alive:								appendNumeric(ss, datumIndex, alive); break;
+					case DataIndex::alarmState:							appendNumeric(ss, datumIndex, alarmState); break;
+					case DataIndex::radarState:							appendNumeric(ss, datumIndex, radarState); break;
+					case DataIndex::human:								appendNumeric(ss, datumIndex, human); break;
+					case DataIndex::controlled:							appendNumeric(ss, datumIndex, controlled); break;
+					case DataIndex::coalition:							appendNumeric(ss, datumIndex, coalition); break;
+					case DataIndex::country:							appendNumeric(ss, datumIndex, country); break;
+					case DataIndex::name:								appendString(ss, datumIndex, name); break;
+					case DataIndex::unitName:							appendString(ss, datumIndex, unitName); break;
+					case DataIndex::callsign:							appendString(ss, datumIndex, callsign); break;
+					case DataIndex::unitID:								appendNumeric(ss, datumIndex, unitID); break;
+					case DataIndex::groupID:							appendNumeric(ss, datumIndex, groupID); break;
+					case DataIndex::groupName:							appendString(ss, datumIndex, groupName); break;
+					case DataIndex::state:								appendNumeric(ss, datumIndex, state); break;
+					case DataIndex::task:								appendString(ss, datumIndex, task); break;
+					case DataIndex::hasTask:							appendNumeric(ss, datumIndex, hasTask); break;
+					case DataIndex::position:							appendNumeric(ss, datumIndex, position); break;
+					case DataIndex::speed:								appendNumeric(ss, datumIndex, speed); break;
+					case DataIndex::horizontalVelocity:					appendNumeric(ss, datumIndex, horizontalVelocity); break;
+					case DataIndex::verticalVelocity:					appendNumeric(ss, datumIndex, verticalVelocity); break;
+					case DataIndex::heading:							appendNumeric(ss, datumIndex, heading); break;
+					case DataIndex::track:								appendNumeric(ss, datumIndex, track); break;
+					case DataIndex::isActiveTanker:						appendNumeric(ss, datumIndex, isActiveTanker); break;
+					case DataIndex::isActiveAWACS:						appendNumeric(ss, datumIndex, isActiveAWACS); break;
+					case DataIndex::onOff:								appendNumeric(ss, datumIndex, onOff); break;
+					case DataIndex::followRoads:						appendNumeric(ss, datumIndex, followRoads); break;
+					case DataIndex::fuel:								appendNumeric(ss, datumIndex, fuel); break;
+					case DataIndex::desiredSpeed:						appendNumeric(ss, datumIndex, desiredSpeed); break;
+					case DataIndex::desiredSpeedType:					appendNumeric(ss, datumIndex, desiredSpeedType); break;
+					case DataIndex::desiredAltitude:					appendNumeric(ss, datumIndex, desiredAltitude); break;
+					case DataIndex::desiredAltitudeType:				appendNumeric(ss, datumIndex, desiredAltitudeType); break;
+					case DataIndex::leaderID:							appendNumeric(ss, datumIndex, leaderID); break;
+					case DataIndex::formationOffset:					appendNumeric(ss, datumIndex, formationOffset); break;
+					case DataIndex::targetID:							appendNumeric(ss, datumIndex, targetID); break;
+					case DataIndex::targetPosition:						appendNumeric(ss, datumIndex, targetPosition); break;
+					case DataIndex::ROE:								appendNumeric(ss, datumIndex, ROE); break;
+					case DataIndex::reactionToThreat:					appendNumeric(ss, datumIndex, reactionToThreat); break;
+					case DataIndex::emissionsCountermeasures:			appendNumeric(ss, datumIndex, emissionsCountermeasures); break;
+					case DataIndex::TACAN:								appendNumeric(ss, datumIndex, TACAN); break;
+					case DataIndex::radio:								appendNumeric(ss, datumIndex, radio); break;
+					case DataIndex::generalSettings:					appendNumeric(ss, datumIndex, generalSettings); break;
+					case DataIndex::ammo:								appendVector(ss, datumIndex, ammo); break;
+					case DataIndex::contacts:							appendVector(ss, datumIndex, contacts); break;
+					case DataIndex::activePath:							appendList(ss, datumIndex, activePath); break;
+					case DataIndex::isLeader:							appendNumeric(ss, datumIndex, isLeader); break;
+					case DataIndex::operateAs:							appendNumeric(ss, datumIndex, operateAs); break;
+					case DataIndex::shotsScatter:						appendNumeric(ss, datumIndex, shotsScatter); break;
+					case DataIndex::shotsIntensity:						appendNumeric(ss, datumIndex, shotsIntensity); break;
+					case DataIndex::health:								appendNumeric(ss, datumIndex, health); break;
+					case DataIndex::racetrackLength:					appendNumeric(ss, datumIndex, racetrackLength); break;
+					case DataIndex::racetrackAnchor:					appendNumeric(ss, datumIndex, racetrackAnchor); break;
+					case DataIndex::racetrackBearing:					appendNumeric(ss, datumIndex, racetrackBearing); break;
+					//case DataIndex::timeToNextTasking:					appendNumeric(ss, datumIndex, timeToNextTasking); break;	//Useful for debugging, but useless in production and very data hungry
+					case DataIndex::barrelHeight:						appendNumeric(ss, datumIndex, barrelHeight); break;
+					case DataIndex::muzzleVelocity:						appendNumeric(ss, datumIndex, muzzleVelocity); break;
+					case DataIndex::aimTime:							appendNumeric(ss, datumIndex, aimTime); break;
+					case DataIndex::shotsToFire:						appendNumeric(ss, datumIndex, shotsToFire); break;
+					case DataIndex::shotsBaseInterval:					appendNumeric(ss, datumIndex, shotsBaseInterval); break;
+					case DataIndex::shotsBaseScatter:					appendNumeric(ss, datumIndex, shotsBaseScatter); break;
+					case DataIndex::engagementRange:					appendNumeric(ss, datumIndex, engagementRange); break;
+					case DataIndex::targetingRange:						appendNumeric(ss, datumIndex, targetingRange); break;
+					case DataIndex::aimMethodRange:						appendNumeric(ss, datumIndex, aimMethodRange); break;
+					case DataIndex::acquisitionRange:					appendNumeric(ss, datumIndex, acquisitionRange); break;
+					case DataIndex::airborne:							appendNumeric(ss, datumIndex, airborne); break;
+					case DataIndex::cargoWeight:						appendNumeric(ss, datumIndex, cargoWeight); break;
+					case DataIndex::drawArguments:						appendVector(ss, datumIndex, drawArguments); break;
+					case DataIndex::customString:						appendString(ss, datumIndex, customString); break;
+					case DataIndex::customInteger: 						appendNumeric(ss, datumIndex, customInteger); break;
+					case DataIndex::posture:							appendNumeric(ss, datumIndex, posture); break;
+					case DataIndex::canTransportUnits:					appendNumeric(ss, datumIndex, canTransportUnits); break;
+					case DataIndex::onBoardUnitIDs:						appendVector(ss, datumIndex, onBoardUnitsIDs); break;
+					case DataIndex::maximumTransportableUnits:			appendNumeric(ss, datumIndex, maximumTransportableUnits); break;
+					case DataIndex::pickupLocation:						appendNumeric(ss, datumIndex, pickupLocation); break;
+					case DataIndex::shootingProjectionLocation:			appendNumeric(ss, datumIndex, shootingProjectionLocation); break;
+					case DataIndex::shootingProjectionWeaponMass:		appendNumeric(ss, datumIndex, shootingProjectionWeaponMass); break;
+					case DataIndex::suppressionLevel:					appendNumeric(ss, datumIndex, suppressionLevel); break;
+					case DataIndex::scenicFunctionProbability:			appendNumeric(ss, datumIndex, scenicFunctionProbability); break;
 				}
 			}
 		}

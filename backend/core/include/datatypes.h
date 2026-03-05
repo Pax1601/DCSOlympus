@@ -79,6 +79,10 @@ namespace DataIndex {
 		onBoardUnitIDs,
 		maximumTransportableUnits,
 		pickupLocation,
+		shootingProjectionLocation,
+		shootingProjectionWeaponMass,
+		suppressionLevel,
+		scenicFunctionProbability,
 		lastIndex,
 		endOfData = 255
 	};

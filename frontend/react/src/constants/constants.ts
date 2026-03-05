@@ -581,6 +581,10 @@ export enum DataIndexes {
   onBoardUnitsIDs,
   maximumTransportableUnits,
   pickupLocation,
+  shootingProjectionLocation,
+  shootingProjectionWeaponMass,
+  suppressionLevel,
+  scenicFunctionProbability,
   endOfData = 255,
 }
 

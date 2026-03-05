@@ -15,7 +15,19 @@ export class AudioBackend {
     const wss = new WebSocketServer({ port: this.WSPort });
 
     wss.on("connection", (ws) => {
+      console.log("New WebSocket connection established, creating SRS handler. Connection data: ", ws);
       this.handlers.push(new SRSHandler(ws, this.SRSPort));
+
+      // Enable WebSocket keepalive
+
+      ws.on("close", () => {
+        console.log("WebSocket connection closed, removing SRS handler. Connection data: ", ws);
+        this.handlers = this.handlers.filter((handler) => handler.ws !== ws);
+      });
+
+      ws.on("error", (error) => {
+        console.error("WebSocket error: ", error);
+      });
     });
   }
 }

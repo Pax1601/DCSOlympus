@@ -142,6 +142,10 @@ public:
 	virtual void setOnBoardUnitsIDs(vector<unsigned int> newValue);
 	virtual void setMaximumTransportableUnits(unsigned int newValue, bool force = false);
 	virtual void setPickupLocation(Coords newValue) { updateValue(pickupLocation, newValue, DataIndex::pickupLocation); }	
+	virtual void setShootingProjectionLocation(Coords newValue) { updateValue(shootingProjectionLocation, newValue, DataIndex::shootingProjectionLocation); }
+	virtual void setShootingProjectionWeaponMass(double newValue) { updateValue(shootingProjectionWeaponMass, newValue, DataIndex::shootingProjectionWeaponMass); }
+	virtual void setSuppressionLevel(double newValue) { updateValue(suppressionLevel, newValue, DataIndex::suppressionLevel); }
+	virtual void setScenicFunctionProbability(double newValue) { updateValue(scenicFunctionProbability, newValue, DataIndex::scenicFunctionProbability); }
 
 	/* Other setters */
 	virtual void setRequestHash(string newValue) { requestHash = newValue; }
@@ -223,6 +227,10 @@ public:
 	virtual vector<unsigned int> getOnBoardUnitsIDs() { return onBoardUnitsIDs; }
 	virtual int getMaximumTransportableUnits() { return maximumTransportableUnits; }
 	virtual Coords getPickupLocation() { return pickupLocation; }
+	virtual Coords getShootingProjectionLocation() { return shootingProjectionLocation; }
+	virtual double getShootingProjectionWeaponMass() { return shootingProjectionWeaponMass; }
+	virtual double getSuppressionLevel() { return suppressionLevel; }
+	virtual double getScenicFunctionProbability() { return scenicFunctionProbability; }
 
 	/* Other getters */
 	double getLength() { return length; }
@@ -302,14 +310,17 @@ protected:
 	double acquisitionRange = 0; 
 	bool airborne = false;
 	double cargoWeight = 0;
+	vector<DataTypes::DrawArgument> drawArguments;
+	string customString = "";
+	unsigned long customInteger = 0;
 	bool canTransportUnits = false;
 	vector<unsigned int> onBoardUnitsIDs;
 	unsigned int maximumTransportableUnits = 10;
 	Coords pickupLocation = Coords(NULL);
-	vector<DataTypes::DrawArgument> drawArguments;
-	
-	string customString = "";
-	unsigned long customInteger = 0;
+	Coords shootingProjectionLocation = Coords(NULL);
+	double shootingProjectionWeaponMass = 0;
+	double suppressionLevel = 0;
+	double scenicFunctionProbability = 0;
 
 	/********** Other **********/
 	unsigned int taskCheckCounter = 0;

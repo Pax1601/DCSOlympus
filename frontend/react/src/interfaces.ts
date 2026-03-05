@@ -319,7 +319,11 @@ export interface UnitData {
     canTransportUnits: boolean;
     onBoardUnitsIDs: number[];
     maximumTransportableUnits: number;
-    pickupLocation: LatLng | null;
+    pickupLocation: LatLng;
+    shootingProjectionLocation: LatLng;
+    shootingProjectionWeaponMass: number;
+    suppressionLevel: number;
+    scenicFunctionProbability: number;
 }
 
 export interface LoadoutItemBlueprint {

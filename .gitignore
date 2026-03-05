@@ -47,3 +47,5 @@ scripts/python/API/olympus.json
 scripts/python/API/olympus_plugins.log
 /scripts/python/API/plugin_logs
 manager/mods-inventory.json
+/scripts/python/API/plugins/music_radio/music
+/scripts/python/API/failed_transcriptions

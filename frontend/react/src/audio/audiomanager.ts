@@ -120,8 +120,10 @@ export class AudioManager {
       return;
     }
 
-    this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
-    if (!this.#socket) this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
+    if (this.#endpoint !== undefined && this.#endpoint !== "")
+      this.#socket = new WebSocket(`wss://${wsAddress}/${this.#endpoint}`);
+    else 
+      this.#socket = new WebSocket(`ws://${wsAddress}:${this.#port}`);
 
     if (!this.#socket) {
       console.error("Failed to connect to audio websocket");

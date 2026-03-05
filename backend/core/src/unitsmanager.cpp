@@ -197,6 +197,7 @@ Unit* UnitsManager::getClosestUnit(Unit* unit, unsigned char coalition, vector<s
 	return closestUnit;
 }
 
+/* Use 255 to indicate any coalition */
 map<Unit*, double> UnitsManager::getUnitsInRange(Unit* unit, unsigned char coalition, vector<string> categories, double range, bool airborneOnly) {
 	map<Unit*, double> unitsInRange;
 
@@ -214,7 +215,7 @@ map<Unit*, double> UnitsManager::getUnitsInRange(Unit* unit, unsigned char coali
 		}
 
 		/* Check if the unit belongs to the desired coalition, is alive, and is of the category requested */
-		if (requestedCategory && (p.second->getCoalition() == coalition || (p.second->getCoalition() == 0 && p.second->getOperateAs() == coalition)) && p.second->getAlive()) {
+		if (requestedCategory && (p.second->getCoalition() == coalition || (p.second->getCoalition() == 0 && p.second->getOperateAs() == coalition) || coalition == 255) && p.second->getAlive()) {
 			/* Compute the distance from the unit to the tested unit */
 			double dist;
 			double bearing1;

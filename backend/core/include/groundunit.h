@@ -18,13 +18,30 @@ public:
 	virtual void setFollowRoads(bool newFollowRoads, bool force = false);
 	virtual void computePathToEmbark();
 
-	string aimAtPoint(Coords aimTarget);
+	void fireAtArea(Coords aimTarget);
+
+	Coords applyScatterToTarget(Coords aimTarget);
+
+	string aimAtPointMethod(Coords aimTarget);
+	void indirectFireMethod(Coords aimTarget);
+
+	string scenicShootAtCoordinates(Coords aimTarget);
+	string scenicThrowGranadeAtCoordinates(Coords aimTarget);
+
+	string scenicAAA();
+	string missOnPurposeAAA(Unit* target);
+
+	void embarkOnTransport(Unit* transport);
 
 	virtual string getType();
 
 protected:
 	virtual void AIloop();
 	static json::value database;
+
+	void updateScenicFunctionProbability();
+	void updateSuppressionLevel();
+
 
 	bool movingEngagement = false;
 };
