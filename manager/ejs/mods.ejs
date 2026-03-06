@@ -1,0 +1,228 @@
+<style>
+    .manager-page .mod-prompt {
+        position: fixed;
+        inset: 0;
+        background: rgba(3, 10, 20, 0.82);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+
+    .manager-page .mod-dialog {
+        width: 720px;
+        max-width: 100%;
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 32px;
+        color: var(--offwhite);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .manager-page .mod-dialog h1 {
+        font-size: 28px;
+        margin: 0;
+    }
+
+    .manager-page .mod-dialog p {
+        margin: 0;
+        color: var(--lightgray);
+    }
+
+    .manager-page .mods-count {
+        font-weight: bold;
+        color: var(--offwhite);
+    }
+
+    .manager-page .mods-path {
+        font-size: 14px;
+        color: var(--lightgray);
+    }
+
+    .manager-page .mod-list {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        max-height: 170px;
+        overflow: hidden;
+        transition: max-height 0.2s ease;
+    }
+
+    .manager-page.review-mode .mod-list {
+        max-height: 380px;
+        overflow-y: auto;
+    }
+
+    .manager-page .mod-row {
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        align-items: center;
+    }
+
+    .manager-page .mod-row:last-child {
+        border-bottom: none;
+    }
+
+    .manager-page .mod-name {
+        font-weight: 600;
+    }
+
+    .manager-page .mod-info {
+        font-size: 12px;
+        color: var(--lightgray);
+    }
+
+    .manager-page .badge {
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .manager-page .badge.ok {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+    }
+
+    .manager-page .badge.warn {
+        background: rgba(249, 115, 22, 0.15);
+        color: #fb923c;
+    }
+
+    .manager-page .badge.info {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+    }
+
+    .manager-page .mod-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .manager-page .mod-actions button {
+        border: none;
+        border-radius: 6px;
+        padding: 12px 18px;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .manager-page .mod-actions .primary {
+        background: var(--accent, #2563eb);
+        color: #fff;
+    }
+
+    .manager-page .mod-actions .secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--offwhite);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .manager-page .mod-actions .ghost {
+        background: transparent;
+        color: var(--lightgray);
+        text-decoration: underline;
+    }
+
+    .manager-page .mod-summary {
+        font-size: 14px;
+        color: var(--offwhite);
+        font-weight: 600;
+    }
+
+    .manager-page .mod-note {
+        font-size: 13px;
+        color: var(--lightgray);
+        line-height: 1.4;
+    }
+
+    .manager-page .mod-status {
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .manager-page .mod-status.imported {
+        color: #34d399;
+    }
+
+    .manager-page .mod-status.pending {
+        color: #fbbf24;
+    }
+</style>
+<div class="mod-prompt">
+    <div class="mod-dialog">
+        <div>
+            <h1>Custom mods detected</h1>
+            <p>We detected <span class="mods-count"><%= inventory.length %></span> mod<%= inventory.length === 1 ? '' : 's' %> in your Saved Games folder.</p>
+            <p class="mods-path"><%= modsRoot %></p>
+        </div>
+        <div class="mod-summary">
+            <% if (summary && summary.totalCount > 0) { %>
+                <% if (summary.pendingCount === 0) { %>
+                    All <%= summary.totalCount %> detected mods are already imported.
+                <% } else { %>
+                    <%= summary.importedCount %> of <%= summary.totalCount %> mod<%= summary.totalCount === 1 ? '' : 's' %> imported. <%= summary.pendingCount %> pending.
+                <% } %>
+            <% } else { %>
+                No mods detected.
+            <% } %>
+        </div>
+        <div class="mod-note">
+            Would you like to import them into Olympus now? You can always do this later. No configuration files are changed until you confirm.
+        </div>
+        <div class="mod-list">
+            <% inventory.forEach(function(mod) { %>
+                <div class="mod-row">
+                    <div>
+                        <div class="mod-name"><%= mod.displayName %></div>
+                        <div class="mod-info"><%= mod.id %></div>
+                        <% if (mod.liveryCount) { %>
+                            <div class="mod-info">Liveries detected: <%= mod.liveryCount %></div>
+                        <% } %>
+                        <div class="mod-status <%= mod.imported ? 'imported' : 'pending' %>">
+                            <%= mod.imported ? 'Imported' : 'Pending import' %>
+                        </div>
+                    </div>
+                    <% 
+                        let badgeClass = 'warn';
+                        let badgeText = 'Needs payloads';
+                        if (mod.hasPayloads) {
+                            if (mod.payloadStatus === 'new' || mod.payloadStatus === 'updated') {
+                                badgeClass = 'info';
+                                badgeText = 'New payload found!';
+                            } else {
+                                badgeClass = 'ok';
+                                badgeText = 'Payload file found';
+                            }
+                        }
+                    %>
+                    <div class="badge <%= badgeClass %>">
+                        <%= badgeText %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+        <div class="mod-actions">
+            <button class="primary" onclick="signal('onModsImportClicked')">Import detected mods</button>
+            <button class="secondary" onclick="signal('onModsReviewClicked')">Review before enabling</button>
+            <button class="ghost" onclick="signal('onModsSkipClicked')">Skip / do later</button>
+        </div>
+        <div class="mod-note">
+            Tip: selecting “Review before enabling” expands the list so you can double-check each mod entry before the future importer touches your configuration.
+        </div>
+    </div>
+</div>
