@@ -111,7 +111,10 @@ class MusicRadio(Plugin):
             
             # If the filenames start with a number, order the queue by that number to allow custom ordering. Otherwise, order alphabetically
             if self.song_queue and self.song_queue[0].name[0].isdigit():
-                self.song_queue.sort(key=lambda f: int(f.stem.split()[0]))
+                try:
+                    self.song_queue.sort(key=lambda f: int(f.stem.split()[0].remove(".")))
+                except:
+                    self.logger.warning("Unable to sort songs.")
             else:
                 self.song_queue.sort(key=lambda f: f.name)
             

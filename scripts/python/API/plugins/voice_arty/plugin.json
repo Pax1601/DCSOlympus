@@ -1,0 +1,14 @@
+{
+  "name": "VoiceArty",
+  "version": "0.1.0",
+  "author": "DCS Olympus",
+  "description": "Voice-controlled artillery",
+  "main": "main.py",
+  "enabled": false,
+  "config": {
+    "update_interval": 1.0,
+    "cluster_threshold_m": 100.0,
+    "cluster_min_samples": 1,
+    "debug_mode": false
+  }
+}

@@ -200,6 +200,7 @@ class RadioTransmitter:
         """
         # Acquire the transmission lock to ensure only one message plays at a time
         acquired = await asyncio.get_event_loop().run_in_executor(None, self._transmission_lock.acquire, True, 30.0)
+        sleep_amount = 40
         if not acquired:
             self.logger.error("Failed to acquire transmission lock within timeout")
             return False
@@ -281,10 +282,12 @@ class RadioTransmitter:
                             try:
                                 await self._websocket.send(data)
                                 now = time.perf_counter()
-                                if self._debug_packet_timing and last_packet_sent_at is not None:
+                                if last_packet_sent_at is not None:
                                     delta_ms = (now - last_packet_sent_at) * 1000.0
-                                    self.logger.debug("Packet %d interval: %.2f ms", packet_id, delta_ms)
-                                last_packet_sent_at = now
+                                    sleep_amount += 0.01 * (40 - delta_ms)
+                                    if self._debug_packet_timing:
+                                        self.logger.info("Packet %d interval: %.2f ms. Sleep amount: %.2f ms", packet_id, delta_ms, sleep_amount)
+                                last_packet_sent_at = now                                    
                             except Exception as e:
                                 self.logger.error(f"Failed to send packet over WebSocket: {e}")
                                 return False
@@ -293,7 +296,7 @@ class RadioTransmitter:
                             return False
                         
                         packet_id += 1
-                        await asyncio.sleep(0.04)  # Simulate real-time transmission
+                        await asyncio.sleep(sleep_amount / 1000)  # Simulate real-time transmission
                 
                 self.logger.info(f"Transmitted {packet_id} packets from {file_name}")
                 return True
