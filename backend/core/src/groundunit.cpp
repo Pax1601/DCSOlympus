@@ -312,7 +312,7 @@ void GroundUnit::AIloop()
 		}
 
 		/* Transition to idle after firing the shots to avoid firing indefinitely */
-		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire && getHasTask())
+		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire)
 			setState(State::IDLE);
 
 		break;
