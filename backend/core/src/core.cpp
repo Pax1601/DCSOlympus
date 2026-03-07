@@ -220,7 +220,9 @@ extern "C" DllExport int coreCallSchedulerFunction(lua_State* L)
             return 1;
         }
         else {
-            lua_pushstring(L, "");
+            lua_pushstring(L, "An error occurred");
+            log("coreCallSchedulerFunction no response received");
+            return 1;
 		}
 	}
 

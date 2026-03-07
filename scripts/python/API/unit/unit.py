@@ -730,6 +730,34 @@ class Unit:
                     # Trigger callbacks for property change
                     if "pickup_location" in self.on_property_change_callbacks:
                         self._trigger_callback("pickup_location", self.pickup_location)
+            elif datum_index == DataIndexes.SHOOTING_PROJECTION_LOCATION.value:
+                pickup_location = data_extractor.extract_lat_lng()
+                #if pickup_location != self.pickup_location:
+                #    self.pickup_location = pickup_location
+                    # Trigger callbacks for property change
+               #     if "pickup_location" in self.on_property_change_callbacks:
+               #         self._trigger_callback("pickup_location", self.pickup_location)
+            elif datum_index == DataIndexes.SHOOTING_PROJECTION_WEAPON_MASS.value:
+                pickup_location = data_extractor.extract_float64()
+                #if pickup_location != self.pickup_location:
+                #    self.pickup_location = pickup_location
+                    # Trigger callbacks for property change
+               #     if "pickup_location" in self.on_property_change_callbacks:
+               #         self._trigger_callback("pickup_location", self.pickup_location)
+            elif datum_index == DataIndexes.SUPPRESSION_LEVEL.value:
+                pickup_location = data_extractor.extract_float64()
+                #if pickup_location != self.pickup_location:
+                #    self.pickup_location = pickup_location
+                    # Trigger callbacks for property change
+               #     if "pickup_location" in self.on_property_change_callbacks:
+               #         self._trigger_callback("pickup_location", self.pickup_location)
+            elif datum_index == DataIndexes.SCENIC_FUNCTION_PROBABILITY.value:
+                pickup_location = data_extractor.extract_float64()
+                #if pickup_location != self.pickup_location:
+                #    self.pickup_location = pickup_location
+                    # Trigger callbacks for property change
+               #     if "pickup_location" in self.on_property_change_callbacks:
+               #         self._trigger_callback("pickup_location", self.pickup_location)
     
     # --- API functions requiring ID ---
     def set_path(self, path: List[LatLng]):
