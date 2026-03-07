@@ -40,7 +40,7 @@ Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
 Olympus.fireCounter = 1
 Olympus.markers = {}
-Olympus.unitIDsWithF10 = {}		-- Table to keep track of units that have the F10 menu enabled, to avoid enabling it multiple times
+Olympus.F10ItemsByID = {}		-- Table to keep references to the F10 menu items. Each item is a subtable with the groupID and reference to F10 menu item
 
 -- Constants
 Olympus.scanRadius = 100
@@ -1303,12 +1303,6 @@ function Olympus.setUnitsData(arg, time)
 					elseif Olympus.modsList ~= nil and Olympus.modsList[unit:getDesc().typeName] ~= nil then
 						table["category"] = Olympus.modsList[unit:getDesc().typeName]
 					end
-
-					-- If this is a human controlled unit, append the F10 Radio options
-					if (Olympus.unitIDsWithF10[ID] == nil and unit:getPlayerName() ~= nil and (unit:getDesc().category == Unit.Category.AIRPLANE or unit:getDesc().category == Unit.Category.HELICOPTER)) then
-						Olympus.unitIDsWithF10[ID] = true
-						Olympus.addF10Options(unit, ID)
-					end
 				else
 					local status, description = pcall(getUnitDescription, unit)
 					if status and Olympus.modsList ~= nil and Olympus.modsList[description.typeName] ~= nil then
@@ -1316,6 +1310,9 @@ function Olympus.setUnitsData(arg, time)
 					else
 						units[ID] = {isAlive = false}
 						Olympus.units[ID] = nil
+						if Olympus.F10ItemsByID[ID] ~= nil then
+							Olympus.removeF10Options(ID)
+						end
 					end
 				end
 
@@ -1356,6 +1353,18 @@ function Olympus.setUnitsData(arg, time)
 					end
 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
+
+					-- If the unit is alive, check if we need to add the F10 options. If it is dead, check if we need to remove them
+					if table["isAlive"] then
+						-- If this is a human controlled unit, append the F10 Radio options
+						if (Olympus.F10ItemsByID[ID] == nil and unit:getPlayerName() ~= nil and (unit:getDesc().category == Unit.Category.AIRPLANE or unit:getDesc().category == Unit.Category.HELICOPTER)) then
+							Olympus.addF10Options(ID)
+						end
+					else
+						if Olympus.F10ItemsByID[ID] ~= nil then
+							Olympus.removeF10Options(ID)
+						end
+					end
 
 					-- If a unit is shooting, set the the value of the shooting projection if available
 					if Olympus.shootingUnits[ID] ~= nil then
@@ -1502,12 +1511,18 @@ function Olympus.setUnitsData(arg, time)
 						-- If the unit reference is nil it means the unit no longer exits
 						units[ID] = {isAlive = false}
 						Olympus.units[ID] = nil
+						if Olympus.F10ItemsByID[ID] ~= nil then
+							Olympus.removeF10Options(ID)
+						end
 					end
 				end
 			else
 				-- If the unit reference is nil it means the unit no longer exits
 				units[ID] = {isAlive = false}
 				Olympus.units[ID] = nil
+				if Olympus.F10ItemsByID[ID] ~= nil then
+					Olympus.removeF10Options(ID)
+				end
 			end
 		end
 		if index >= endIndex then
@@ -1559,7 +1574,6 @@ function Olympus.setWeaponsData(arg, time)
 					end
 				else
 					weapons[ID] = {isAlive = false}
-					Olympus.weapons[ID] = nil
 				end
 
 				-- If the category is handled by Olympus, get the data
@@ -1790,7 +1804,13 @@ end
 -- F10 functions
 ------------------------------------------------------------------------------------------------------
 
-function Olympus.addF10Options(unit, ID)
+function Olympus.addF10Options(ID)
+	local unit = Olympus.getUnitByID(ID)
+
+	if unit == nil then
+		return
+	end
+
 	-- Get the unit group
 	local group = unit:getGroup()
 	if group ~= nil then
@@ -1820,6 +1840,20 @@ function Olympus.addF10Options(unit, ID)
 
 		-- Move troops to pickup point
 		missionCommands.addCommandForGroup(groupID, 'MOVE TROOPS TO PICKUP POINT', olympusOptions, Olympus.moveTroopsToPickupPoint, ID)
+
+		Olympus.F10ItemsByID[ID] = {
+			groupID = groupID,
+			table = olympusOptions
+		}
+
+	end
+end
+
+function Olympus.removeF10Options(ID)
+	-- Remove the menu for the troops options
+	if Olympus.F10ItemsByID[ID] ~= nil and Olympus.F10ItemsByID[ID]['groupID'] ~= nil and Olympus.F10ItemsByID[ID]['table'] ~= nil then
+		missionCommands.removeItemForGroup(Olympus.F10ItemsByID[ID]['groupID'], Olympus.F10ItemsByID[ID]['table'])
+		Olympus.F10ItemsByID[ID] = nil
 	end
 end
 
