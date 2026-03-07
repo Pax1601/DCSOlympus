@@ -22,6 +22,7 @@ echo D|xcopy /Y /S /E .\databases .\package\mod\databases
 
 REM copy the backend dll
 echo F|xcopy /Y /I .\build\backend\bin\*.dll .\package\mod\bin
+echo F|xcopy /Y /I .\build\backend\bin\*.pbd .\package\mod\bin
 
 REM copy the frontend
 echo D|xcopy /Y /S /E .\build\frontend .\package\frontend
