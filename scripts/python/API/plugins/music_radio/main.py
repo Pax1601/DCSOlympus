@@ -181,6 +181,7 @@ class MusicRadio(Plugin):
                                 self.music_frequency_hz,
                                 self.music_modulation,
                                 0,
+                                keep_file = True
                             )
                         self.song_queue.append(self.current_song)
                     else:

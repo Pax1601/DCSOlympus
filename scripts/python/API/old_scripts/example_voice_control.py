@@ -70,10 +70,7 @@ def on_message_received(recognized_text: str, unit_id: str, api: API, listener: 
         logger.info("Did not understand the message or no disembarkment request found.")
         message_filename = api.generate_audio_message("I did not understand")
         listener.transmit_on_frequency(message_filename, listener.frequency, listener.modulation, listener.encryption)
-        
-    # Delete the message file after processing
-    os.remove(message_filename)
-        
+                
 if __name__ == "__main__":
     api = API()
     logger.info("API initialized")

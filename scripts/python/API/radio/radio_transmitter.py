@@ -10,6 +10,7 @@ import random
 import websockets
 import logging
 import json
+import os
 
 from audio.audio_packet import AudioPacket, MessageType
 from utils.utils import coalition_to_enum
@@ -151,7 +152,7 @@ class RadioTransmitter:
             data = bytes([MessageType.AUDIO.SETTINGS.value]) + message_bytes
             await self._websocket.send(data)
     
-    async def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None, unit_ID: int | None) -> bool:
+    async def _send_message(self, file_name: str, frequency: float | None, modulation: int | None, encryption: int | None, intercom_ID: int | None, unit_ID: int | None, keep_file: bool = False) -> bool:
         """
         Internal method to send a WAV file as OPUS frames over the websocket.
         
@@ -274,6 +275,11 @@ class RadioTransmitter:
                 except Exception as e:
                     self.logger.debug(f"Failed to sync radio settings after transmission: {e}")
                     
+            # Clean up the temporary audio file
+            if os.path.exists(file_name):
+                os.remove(file_name)
+                self.logger.debug(f"Cleaned up audio file: {file_name}")
+                    
             self.transmitting = False
     
     def start(self) -> None:
@@ -303,13 +309,14 @@ class RadioTransmitter:
             encryption (int): Encryption type
 
         Kwargs:
-            unit_ID (int, optional): The unit ID of the source unit to impersonate
+            unit_ID (int, optional): The unit ID of the source unit to impersonate. Default is None
+            keep_file (boolean, option): If true the file will not be deleted at the end of the transmission. Default is False
 
         Returns:
             bool: True if transmission succeeded, False otherwise
         """        
         try:
-            asyncio.create_task(self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID')))
+            asyncio.create_task(self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID', None), kwargs.get('keep_file', False)))
             return True
         except Exception as e:
             self.logger.error(f"Failed to schedule transmission: {e}")

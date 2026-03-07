@@ -70,10 +70,11 @@ class ATISATC(ATCAgency):
                 
                 # Transmit the audio
                 success = self.listener.transmit_on_frequency(
-                    file_name=self.audio_file,
-                    frequency=self.listener.frequency,
-                    modulation=self.listener.modulation,
-                    encryption=self.listener.encryption
+                    self.audio_file,
+                    self.listener.frequency,
+                    self.listener.modulation,
+                    self.listener.encryption,
+                    keep_file = True
                 )
                 
                 if success:

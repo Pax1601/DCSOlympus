@@ -93,6 +93,10 @@ class Unit:
         self.on_board_units_IDs: List[int] = []
         self.maximum_transportable_units = 10
         self.pickup_location = LatLng(0, 0, 0)
+        self.shooting_projection_location = LatLng(0, 0, 0)
+        self.shooting_projection_weapon_mass = 0
+        self.suppression_level = 0
+        self.scenic_function_probability = 0
         
         self.previous_total_ammo = 0
         self.total_ammo = 0
@@ -731,33 +735,33 @@ class Unit:
                     if "pickup_location" in self.on_property_change_callbacks:
                         self._trigger_callback("pickup_location", self.pickup_location)
             elif datum_index == DataIndexes.SHOOTING_PROJECTION_LOCATION.value:
-                pickup_location = data_extractor.extract_lat_lng()
-                #if pickup_location != self.pickup_location:
-                #    self.pickup_location = pickup_location
+                shooting_projection_location = data_extractor.extract_lat_lng()
+                if shooting_projection_location != self.shooting_projection_location:
+                    self.shooting_projection_location = shooting_projection_location
                     # Trigger callbacks for property change
-               #     if "pickup_location" in self.on_property_change_callbacks:
-               #         self._trigger_callback("pickup_location", self.pickup_location)
+                    if "shooting_projection_location" in self.on_property_change_callbacks:
+                        self._trigger_callback("shooting_projection_location", self.shooting_projection_location)
             elif datum_index == DataIndexes.SHOOTING_PROJECTION_WEAPON_MASS.value:
-                pickup_location = data_extractor.extract_float64()
-                #if pickup_location != self.pickup_location:
-                #    self.pickup_location = pickup_location
+                shooting_projection_weapon_mass = data_extractor.extract_float64()
+                if shooting_projection_weapon_mass != self.shooting_projection_weapon_mass:
+                    self.shooting_projection_weapon_mass = shooting_projection_weapon_mass
                     # Trigger callbacks for property change
-               #     if "pickup_location" in self.on_property_change_callbacks:
-               #         self._trigger_callback("pickup_location", self.pickup_location)
+                    if "shooting_projection_weapon_mass" in self.on_property_change_callbacks:
+                        self._trigger_callback("shooting_projection_weapon_mass", self.shooting_projection_weapon_mass)
             elif datum_index == DataIndexes.SUPPRESSION_LEVEL.value:
-                pickup_location = data_extractor.extract_float64()
-                #if pickup_location != self.pickup_location:
-                #    self.pickup_location = pickup_location
+                suppression_level = data_extractor.extract_float64()
+                if suppression_level != self.suppression_level:
+                    self.suppression_level = suppression_level
                     # Trigger callbacks for property change
-               #     if "pickup_location" in self.on_property_change_callbacks:
-               #         self._trigger_callback("pickup_location", self.pickup_location)
+                    if "suppression_level" in self.on_property_change_callbacks:
+                        self._trigger_callback("suppression_level", self.suppression_level)
             elif datum_index == DataIndexes.SCENIC_FUNCTION_PROBABILITY.value:
-                pickup_location = data_extractor.extract_float64()
-                #if pickup_location != self.pickup_location:
-                #    self.pickup_location = pickup_location
+                scenic_function_probability = data_extractor.extract_float64()
+                if scenic_function_probability != self.scenic_function_probability:
+                    self.scenic_function_probability = scenic_function_probability
                     # Trigger callbacks for property change
-               #     if "pickup_location" in self.on_property_change_callbacks:
-               #         self._trigger_callback("pickup_location", self.pickup_location)
+                    if "scenic_function_probability" in self.on_property_change_callbacks:
+                        self._trigger_callback("scenic_function_probability", self.scenic_function_probability)
     
     # --- API functions requiring ID ---
     def set_path(self, path: List[LatLng]):

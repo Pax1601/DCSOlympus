@@ -212,13 +212,7 @@ class RadarATC(ATCAgency):
             self.logger.info("Message transmitted successfully")
         else:
             self.logger.error("Failed to transmit message")
-            
-        # Clean up the temporary audio file
-        import os
-        if os.path.exists(audio_file):
-            os.remove(audio_file)
-            self.logger.debug(f"Cleaned up audio file: {audio_file}")
-    
+                
     def _point_in_polygon(self, lat: float, lng: float, polygon: list) -> bool:
         """Check if a point is inside a polygon using ray-casting algorithm."""
         x, y = lat, lng

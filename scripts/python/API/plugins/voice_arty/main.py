@@ -277,9 +277,6 @@ class VoiceArty(Plugin):
             )
         except Exception as error:
             self.logger.error(f"Failed to transmit voice response: {error}", exc_info=True)
-        finally:
-            if audio_file and os.path.exists(audio_file):
-                os.remove(audio_file)
 
     def _set_prompt_if_supported(self, prompt_text: str):
         if self.listener is None:

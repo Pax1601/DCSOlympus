@@ -207,13 +207,7 @@ class UnitRadioEmbark(Plugin):
             
         message_filename = self.api.generate_audio_message(response, voice=self.kokoro_voice_model)
         listener.transmit_on_frequency(message_filename, self.blue_embark_frequency_hz, self.blue_modulation, self.blue_encryption)
-        
-        # Delete the file after transmission to avoid cluttering the disk. Use os functions
-        try:
-            os.remove(message_filename)
-        except Exception as e:
-            self.logger.error(f"Failed to delete temporary audio file {message_filename}: {e}", exc_info=True)
-        
+                
     def embark_units(self, unit: Unit):
         self.logger.info(f"Embarking units for unitID {unit.ID}")
         
