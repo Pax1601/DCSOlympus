@@ -16,19 +16,20 @@ Olympus.weaponsData = {}
 Olympus.drawingsByLayer = {}
 Olympus.executionResults = {}
 Olympus.groupIDsrequestHashes = {}	-- Table to keep track which group was created for which request
+Olympus.shootingUnits = {}			-- Table to keep track of which units are currently shooting
 
 -- Units data structures
-Olympus.unitCounter = 1			-- Counter to generate unique names
-Olympus.cloneDatabase = {}		-- Database of spawn options, used for units cloning
-Olympus.unitIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS
-Olympus.unitStep = 50			-- Max number of units that get updated each cycle
-Olympus.units = {}				-- Table holding references to all the currently existing units
-Olympus.unitsInitialLife = {}	-- getLife0 returns 0 for ships, so we need to store the initial life of units
-Olympus.drawArguments = {}      -- Table that sets what drawArguments to read for each unit
+Olympus.unitCounter = 1				-- Counter to generate unique names
+Olympus.cloneDatabase = {}			-- Database of spawn options, used for units cloning
+Olympus.unitIndex = 0				-- Counter used to spread the computational load of data retrievial from DCS
+Olympus.unitStep = 50				-- Max number of units that get updated each cycle
+Olympus.units = {}					-- Table holding references to all the currently existing units
+Olympus.unitsInitialLife = {}		-- getLife0 returns 0 for ships, so we need to store the initial life of units
+Olympus.drawArguments = {}      	-- Table that sets what drawArguments to read for each unit
 
-Olympus.weaponIndex = 0			-- Counter used to spread the computational load of data retrievial from DCS			
-Olympus.weaponStep = 50			-- Max number of weapons that get updated each cycle
-Olympus.weapons = {}			-- Table holding references to all the currently existing weapons
+Olympus.weaponIndex = 0				-- Counter used to spread the computational load of data retrievial from DCS			
+Olympus.weaponStep = 50				-- Max number of weapons that get updated each cycle
+Olympus.weapons = {}				-- Table holding references to all the currently existing weapons
 
 -- Spots (laser/IR) data
 Olympus.spots = {}
@@ -40,6 +41,11 @@ Olympus.napalmCounter = 1
 Olympus.fireCounter = 1
 Olympus.markers = {}
 Olympus.unitIDsWithF10 = {}		-- Table to keep track of units that have the F10 menu enabled, to avoid enabling it multiple times
+
+-- Constants
+Olympus.scanRadius = 100
+Olympus.dumpChunkSize = 3500 
+Olympus.ipDistance = 10000
 
 -- Load the lua file system
 local lfs = require('lfs')
@@ -1351,6 +1357,15 @@ function Olympus.setUnitsData(arg, time)
 
 					table["isAlive"] = unit:isExist() and unit:isActive() and unit:getLife() >= 1
 
+					-- If a unit is shooting, set the the value of the shooting projection if available
+					if Olympus.shootingUnits[ID] ~= nil then
+						if Olympus.shootingUnits[ID] ~= nil then
+							table["shootingProjection"] = Olympus.shootingUnits[ID]
+						else 
+							table["shootingProjection"] = nil
+						end
+					end
+
 					--[[ COMMENTING OUT BECAUSE OF CRASHES -- TO BE INVESTIGATED LATER ON ]]--
 					--[[ if unit:isActive() and unit:hasSensors(Unit.SensorType.RADAR) then
 						if unit:getRadar() then
@@ -1946,6 +1961,72 @@ function Olympus.moveTroopsToPickupPoint(unitID)
 	end
 end
 
+function Olympus.findInterceptPoint(obj)
+    local okPoint, origin = pcall(obj.getPoint, obj)
+    local okVelocity, velocity = pcall(obj.getVelocity, obj)
+
+    if okPoint and origin and okVelocity and velocity then
+        local vx = tonumber(velocity.x) or 0
+        local vy = tonumber(velocity.y) or 0
+        local vz = tonumber(velocity.z) or 0
+        local speed = math.sqrt(vx * vx + vy * vy + vz * vz)
+
+        if speed > 0 then
+            local direction = {
+                x = vx / speed,
+                y = vy / speed,
+                z = vz / speed
+            }
+
+            local okIP, ip = pcall(land.getIP, origin, direction, Olympus.ipDistance)
+			if okIP then
+				return ip
+			else 
+				return nil
+			end
+        end
+    end
+
+	return nil
+end
+
+function Olympus.scanAroundShooters()
+	-- Iterate over all the shooting units
+	for unitID, shotTable in pairs(Olympus.shootingUnits) do
+		Olympus.scanAroundShooter(unitID)
+	end
+
+	return timer.getTime() + 0.5
+end
+
+function Olympus.scanAroundShooter(unitID)
+	local unit = Olympus.getUnitByID(unitID)
+	if unit ~= nil and unit:isExist() then
+		local point = unit:getPoint()
+		local volume = {
+			id = world.VolumeType.SPHERE,
+			params = { point = point, radius = Olympus.scanRadius }
+		}
+
+		local firstWeaponName = nil
+		world.searchObjects(Object.Category.WEAPON, volume, function(obj)
+			local IP = Olympus.findInterceptPoint(obj)
+			if IP ~= nil then
+				local lat, lng, alt = coord.LOtoLL(IP)
+				if obj:getDesc().category == Weapon.Category.SHELL then
+					Olympus.shootingUnits[unitID] = {
+						lat = lat,
+						lng = lng,
+						alt = alt,
+						weaponMass = obj:getDesc().warhead.mass,
+					}
+				end
+			end
+			return false -- No idea why its here, maybe to stop searching after the first result?
+		end)
+	end
+end
+
 ------------------------------------------------------------------------------------------------------
 -- Olympus startup script
 ------------------------------------------------------------------------------------------------------
@@ -2016,21 +2097,28 @@ function handler:onEvent(event)
 		if Olympus ~= nil and event.initiator ~= nil and event.weapon_name ~= nil then
 			local shooterUnit = event.initiator
 			local weaponName = event.weapon_name
+
+			Olympus.shootingUnits[shooterUnit["id_"]] = {} -- Initialize empty table
+
+			Olympus.scanAroundShooter(shooterUnit["id_"])
 		end
 	elseif event.id == 24 then
 		if Olympus ~= nil and event.initiator ~= nil and event.weapon_name ~= nil then
 			local shooterUnit = event.initiator
 			local weaponName = event.weapon_name
+
+			Olympus.shootingUnits[shooterUnit["id_"]] = nil
 		end
 	end
 end
 world.addEventHandler(handler)
 
 -- Start the periodic functions
-timer.scheduleFunction(Olympus.setUnitsData, {}, timer.getTime() + 0.05)
-timer.scheduleFunction(Olympus.setWeaponsData, {}, timer.getTime() + 0.25)
+timer.scheduleFunction(Olympus.setUnitsData, {}, timer.getTime() + 1)
+timer.scheduleFunction(Olympus.setWeaponsData, {}, timer.getTime() + 1)
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 timer.scheduleFunction(Olympus.setExecutionResults, {}, timer.getTime() + 1)
+timer.scheduleFunction(Olympus.scanAroundShooters, {}, timer.getTime() + 1)
 
 -- Initialize the ME units
 Olympus.initializeUnits()
