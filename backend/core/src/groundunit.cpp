@@ -312,7 +312,7 @@ void GroundUnit::AIloop()
 		}
 
 		/* Transition to idle after firing the shots to avoid firing indefinitely */
-		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire && getHasTask())
+		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire && getHasTask())
 			setState(State::IDLE);
 
 		break;
@@ -323,7 +323,7 @@ void GroundUnit::AIloop()
 
 		/* If we are in simulate engagement mode we compute the target position dinamically depending on the position of the clostest "enemy" */
 		if (state == State::SIMULATE_ENGAGEMENT) {
-			/* Do nothing if true neutral unit */
+			/* Do nothing if true neutral unit, but don't transition to IDLE */
 			if (unitEffectiveCoalition == 0) {
 				setTargetID(NULL);
 				setTargetPosition(Coords(NULL));
@@ -370,9 +370,13 @@ void GroundUnit::AIloop()
 		if (totalShellsFired - shellsFiredAtTasking >= shotsToFire && getHasTask())
 			resetTask();
 
-		/* If the target position is NULL for some reason drop out of the state */
-		if (targetPosition == Coords(NULL))
-			setState(State::IDLE);
+		/* If the target position is NULL for some reason drop out of the state, but only if not in simulate engagment
+		In that case we keep waiting in case some "enemy" comes into range
+		*/
+		if (state == State::SIMULATE_FIRE_FIGHT) {
+			if (targetPosition == Coords(NULL))
+				setState(State::IDLE);
+		}
 
 		/* Fallback if something went wrong */
 		if (timeNow >= nextTaskingMilliseconds)
@@ -1024,7 +1028,6 @@ void GroundUnit::updateSuppressionLevel() {
 			double suppressionIncrease = 100000 * bulletMass / (distance * distance); /* The suppression increase is proportional to the kinetic energy of the bullet and inversely proportional to the square of the distance. The constant 0.1 is just a tuning parameter to get reasonable values. */
 
 			suppressionLevel += suppressionIncrease;
-			log("Unit " + unitName + "(" + name + ") is being suppressed by unit " + airUnit->getUnitName() + "(" + airUnit->getName() + "). Distance: " + to_string((int)round(distance)) + "m, bullet mass: " + to_string(bulletMass) + "kg, suppression increase: " + to_string(suppressionIncrease) + ", new suppression level: " + to_string(suppressionLevel));
 		}
 	}
 	setSuppressionLevel(min(max(suppressionLevel, 0.0), 1.0));
