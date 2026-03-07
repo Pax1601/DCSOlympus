@@ -5,6 +5,7 @@ Handles discovery, loading, and management of plugins.
 """
 
 import asyncio
+import concurrent.futures
 import os
 import sys
 import json
@@ -45,7 +46,6 @@ class PluginManager:
         self.plugins: Dict[str, Plugin] = {}
         self.plugin_descriptors: Dict[str, Dict[str, Any]] = {}
         self.global_config = global_config or {}
-        self.loop: Optional[asyncio.AbstractEventLoop] = None
         self._lock = threading.RLock()
         self._http_server: Optional[ThreadingHTTPServer] = None
         self._http_thread: Optional[threading.Thread] = None
@@ -64,7 +64,17 @@ class PluginManager:
         self._watchdog_restart_count: Dict[str, int] = {}
         self._watchdog_last_restart_time: Dict[str, float] = {}
         self._watchdog_last_restart_success: Dict[str, bool] = {}
+        self._plugin_action_timeout_seconds = 30.0
+        self._event_loop: Optional[asyncio.AbstractEventLoop] = None
+        self._event_loop_thread_id: Optional[int] = None
         self.logger = logging.getLogger("PluginManager")
+
+        try:
+            self._event_loop = asyncio.get_running_loop()
+            self._event_loop_thread_id = threading.get_ident()
+        except RuntimeError:
+            self._event_loop = None
+            self._event_loop_thread_id = None
         
         # Create plugins directory if it doesn't exist
         if not self.plugins_directory.exists():
@@ -314,7 +324,7 @@ class PluginManager:
                 
                 # Reload the plugin
                 reloaded = self.reload_plugin(plugin_name)
-                restarted = self.start_plugin(plugin_name, loop=self.loop) if reloaded else False
+                restarted = self.start_plugin(plugin_name) if reloaded else False
                 with self._lock:
                     self._watchdog_restart_count[plugin_name] = self._watchdog_restart_count.get(plugin_name, 0) + 1
                     self._watchdog_last_restart_time[plugin_name] = time.time()
@@ -523,7 +533,7 @@ class PluginManager:
         self.logger.info(f"Loaded {loaded_count} plugin(s)")
         return loaded_count
     
-    def start_plugin(self, plugin_name: str, loop: Optional[asyncio.AbstractEventLoop] = None) -> bool:
+    def start_plugin(self, plugin_name: str) -> bool:
         """
         Start a specific plugin by name.
         
@@ -535,27 +545,12 @@ class PluginManager:
         """
         with self._lock:
             plugin = self.plugins.get(plugin_name)
-            if not plugin:
-                self.logger.error(f"Plugin not found: {plugin_name}")
-                return False
 
-            effective_loop = loop or self.loop
-            if effective_loop is None:
-                self.logger.error(f"Cannot start plugin {plugin_name}: event loop is not set")
-                return False
+        if not plugin:
+            self.logger.error(f"Plugin not found: {plugin_name}")
+            return False
 
-            self.loop = effective_loop
-            return plugin.start(effective_loop)
-
-    def set_event_loop(self, loop: asyncio.AbstractEventLoop):
-        """
-        Set the manager event loop used for plugin start operations.
-
-        Args:
-            loop: Asyncio event loop
-        """
-        with self._lock:
-            self.loop = loop
+        return self._invoke_plugin_action(plugin_name, "start", plugin.start)
     
     def stop_plugin(self, plugin_name: str) -> bool:
         """
@@ -569,11 +564,12 @@ class PluginManager:
         """
         with self._lock:
             plugin = self.plugins.get(plugin_name)
-            if not plugin:
-                self.logger.error(f"Plugin not found: {plugin_name}")
-                return False
 
-            return plugin.stop()
+        if not plugin:
+            self.logger.error(f"Plugin not found: {plugin_name}")
+            return False
+
+        return self._invoke_plugin_action(plugin_name, "stop", plugin.stop)
     
     def pause_plugin(self, plugin_name: str) -> bool:
         """
@@ -587,11 +583,12 @@ class PluginManager:
         """
         with self._lock:
             plugin = self.plugins.get(plugin_name)
-            if not plugin:
-                self.logger.error(f"Plugin not found: {plugin_name}")
-                return False
 
-            return plugin.pause()
+        if not plugin:
+            self.logger.error(f"Plugin not found: {plugin_name}")
+            return False
+
+        return self._invoke_plugin_action(plugin_name, "pause", plugin.pause)
     
     def resume_plugin(self, plugin_name: str) -> bool:
         """
@@ -605,11 +602,75 @@ class PluginManager:
         """
         with self._lock:
             plugin = self.plugins.get(plugin_name)
-            if not plugin:
-                self.logger.error(f"Plugin not found: {plugin_name}")
+
+        if not plugin:
+            self.logger.error(f"Plugin not found: {plugin_name}")
+            return False
+
+        return self._invoke_plugin_action(plugin_name, "resume", plugin.resume)
+
+    def _invoke_plugin_action(self, plugin_name: str, action: str, callback) -> bool:
+        """
+        Execute a plugin lifecycle action on the main asyncio loop thread.
+
+        This avoids "no running event loop" errors when the action is triggered
+        from worker threads (for example the HTTP management server threads).
+        """
+        if self._event_loop is None or self._event_loop.is_closed() or not self._event_loop.is_running():
+            try:
+                return bool(callback())
+            except Exception as e:
+                self.logger.error(
+                    "Failed to %s plugin %s without event loop marshalling: %s",
+                    action,
+                    plugin_name,
+                    e,
+                    exc_info=True,
+                )
                 return False
 
-            return plugin.resume()
+        if threading.get_ident() == self._event_loop_thread_id:
+            try:
+                return bool(callback())
+            except Exception as e:
+                self.logger.error(
+                    "Failed to %s plugin %s on event loop thread: %s",
+                    action,
+                    plugin_name,
+                    e,
+                    exc_info=True,
+                )
+                return False
+
+        result: concurrent.futures.Future[bool] = concurrent.futures.Future()
+
+        def _run_action() -> None:
+            try:
+                result.set_result(bool(callback()))
+            except Exception as e:
+                result.set_exception(e)
+
+        self._event_loop.call_soon_threadsafe(_run_action)
+
+        try:
+            return result.result(timeout=self._plugin_action_timeout_seconds)
+        except concurrent.futures.TimeoutError:
+            self.logger.error(
+                "Timed out after %.1fs while waiting to %s plugin %s",
+                self._plugin_action_timeout_seconds,
+                action,
+                plugin_name,
+            )
+            return False
+        except Exception as e:
+            self.logger.error(
+                "Failed to %s plugin %s through event loop marshalling: %s",
+                action,
+                plugin_name,
+                e,
+                exc_info=True,
+            )
+            return False
         
     def reload_plugin_descriptor(self, plugin_name: str) -> Optional[Dict[str, Any]]:
         """
@@ -688,7 +749,7 @@ class PluginManager:
             self.plugins[plugin_name] = new_plugin
             return True
     
-    def start_all_plugins(self, loop: asyncio.AbstractEventLoop) -> Dict[str, bool]:
+    def start_all_plugins(self) -> Dict[str, bool]:
         """
         Start all loaded plugins.
         
@@ -700,15 +761,15 @@ class PluginManager:
         """
         results = {}
         with self._lock:
-            self.loop = loop
-            for name, plugin in self.plugins.items():
-                # Check if this plugin is enabled
-                enabled = plugin.get_info().get("enabled", True)
-                if enabled:
-                    results[name] = plugin.start(loop)
-                else:
-                    self.logger.info(f"Plugin {name} is disabled and will not be started")
-                    results[name] = False
+            plugin_entries = [(name, plugin.get_info().get("enabled", True)) for name, plugin in self.plugins.items()]
+
+        for name, enabled in plugin_entries:
+            if enabled:
+                results[name] = self.start_plugin(name)
+            else:
+                self.logger.info(f"Plugin {name} is disabled and will not be started")
+                results[name] = False
+
         return results
     
     def stop_all_plugins(self) -> Dict[str, bool]:
@@ -720,8 +781,11 @@ class PluginManager:
         """
         results = {}
         with self._lock:
-            for name, plugin in self.plugins.items():
-                results[name] = plugin.stop()
+            plugin_names = list(self.plugins.keys())
+
+        for name in plugin_names:
+            results[name] = self.stop_plugin(name)
+
         return results
     
     def get_plugin_status(self, plugin_name: str) -> Optional[PluginStatus]:

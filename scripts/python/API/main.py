@@ -57,11 +57,6 @@ def setup_logging(log_level=logging.INFO, base_path=None):
         ]
     )
 
-# This is needed or the task will stop if all coroutines complete and the loop has nothing to do
-async def running_task():
-    while True:
-        await asyncio.sleep(1)
-
 def signal_handler(signum, frame):
     """
     Handle shutdown signals gracefully.
@@ -121,7 +116,7 @@ Examples:
     return parser.parse_args()
 
 
-def main():
+async def main():
     """
     Main entry point for DCS Olympus API.
     """
@@ -175,10 +170,7 @@ def main():
     # Register signal handlers for graceful shutdown
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    
-    # Generate the asyncio event loop in the main thread to be used by plugins
-    loop = asyncio.get_event_loop()
-    
+        
     # Initialize the plugin manager with configuration
     logger.info("Initializing Plugin Manager...")
     global plugin_manager
@@ -187,7 +179,6 @@ def main():
         plugins_directory=str(plugins_dir),
         global_config=global_config
     )
-    plugin_manager.set_event_loop(loop)
 
     # Configure and start watchdog
     watchdog_config = config_manager.get_watchdog_config()
@@ -238,7 +229,7 @@ def main():
         if config_manager.should_auto_start_plugins():
             logger.info("=" * 60)
             logger.info("Starting all plugins...")
-            start_results = plugin_manager.start_all_plugins(loop)
+            start_results = plugin_manager.start_all_plugins()
             
             success_count = sum(1 for success in start_results.values() if success)
             logger.info(f"Started {success_count}/{len(start_results)} plugin(s) successfully")
@@ -257,12 +248,11 @@ def main():
         
         # Start the asyncio event loop to keep the main thread alive
         try:
-            loop = asyncio.get_event_loop()
-            loop.create_task(running_task())
-            loop.run_forever()
+            while True:
+                await asyncio.sleep(1)
         except KeyboardInterrupt:
             logger.info("Keyboard interrupt received, shutting down...")
             signal_handler(signal.SIGINT, None)
             
 if __name__ == "__main__":
-    main()
+     asyncio.run(main())

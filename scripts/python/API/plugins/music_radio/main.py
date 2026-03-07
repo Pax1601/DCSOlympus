@@ -1,11 +1,12 @@
 """
-MusicRadio plugin scaffold for DCS Olympus API.
+MusicRadio plugin for DCS Olympus API.
 """
 
 import asyncio
 import concurrent.futures
 import sys
 from pathlib import Path
+import re
 
 from radio.radio_transmitter import RadioTransmitter
 
@@ -33,7 +34,6 @@ class MusicRadio(Plugin):
         
         self.api: API | None = None
         self.transmitter: RadioTransmitter | None = None
-        self.periodic_task: concurrent.futures.Future | None = None
         
         self.song_queue = []
         self.current_song = None
@@ -57,7 +57,7 @@ class MusicRadio(Plugin):
             self.logger.warning("Invalid modulation value for %s: %s", key, value)
             return default
 
-    def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
+    def on_start(self) -> bool:
         try:
             self.running = True
             self.paused = False
@@ -112,7 +112,7 @@ class MusicRadio(Plugin):
             # If the filenames start with a number, order the queue by that number to allow custom ordering. Otherwise, order alphabetically
             if self.song_queue and self.song_queue[0].name[0].isdigit():
                 try:
-                    self.song_queue.sort(key=lambda f: int(f.stem.split()[0].remove(".")))
+                    self.song_queue.sort(key=lambda f: int(re.search("^[0-9]*", f.stem).group()))
                 except:
                     self.logger.warning("Unable to sort songs.")
             else:
@@ -120,9 +120,9 @@ class MusicRadio(Plugin):
             
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_whisper=False, load_kokoro=False)
             self.transmitter = self.api.create_radio_transmitter()
-            self.transmitter.register_asyncio_coroutine(loop)
+            self.transmitter.start()
             
-            loop.create_task(self._periodic_task())
+            asyncio.create_task(self._periodic_task())
             self.logger.info("MusicRadio periodic task scheduled")
             
             return True
@@ -133,12 +133,10 @@ class MusicRadio(Plugin):
     def on_stop(self) -> bool:
         try:
             self.running = False
-            if self.periodic_task and not self.periodic_task.done():
-                self.periodic_task.cancel()
-            self.periodic_task = None
-            self.logger.info("MusicRadio plugin stopped")
             if self.transmitter:
                 self.transmitter.stop()
+                
+            self.logger.info("MusicRadio plugin stopped")
             return True
         except Exception as e:
             self.logger.error(f"Failed to stop MusicRadio plugin: {e}", exc_info=True)
@@ -168,8 +166,8 @@ class MusicRadio(Plugin):
 
     async def _periodic_task(self):
         while self.running:
+            self.watchdog_tick()
             if not self.paused:
-                self.watchdog_tick()
                 if not self.transmitter.is_transmitting():
                     # Get the next song from the queue. Put the played song at the end of the queue to create a loop
                     if self.song_queue:

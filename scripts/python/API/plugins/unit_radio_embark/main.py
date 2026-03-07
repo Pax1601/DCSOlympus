@@ -75,7 +75,7 @@ class UnitRadioEmbark(Plugin):
 
         return voice_model
 
-    def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
+    def on_start(self) -> bool:
         try:
             self.running = True
             self.paused = False
@@ -99,8 +99,8 @@ class UnitRadioEmbark(Plugin):
             
             self.api.register_on_update_callback(self.on_update)
 
-            self.blue_listener.coalition = "blue"
-            self.red_listener.coalition = "red"
+            self.blue_listener.set_coalition("blue")
+            self.red_listener.set_coalition("red")
 
             if self.blue_embark_frequency_hz is not None:
                 self.blue_listener.start(
@@ -119,7 +119,7 @@ class UnitRadioEmbark(Plugin):
             self.blue_listener.register_message_callback(lambda message, unitID, listener=self.blue_listener: self.on_message_callback(message, unitID, listener))
             self.red_listener.register_message_callback(lambda message, unitID, listener=self.red_listener: self.on_message_callback(message, unitID, listener))
             
-            self.api.register_asyncio_coroutine(loop)
+            self.api.run()
     
             self.logger.info("UnitRadioEmbark plugin started")
             return True

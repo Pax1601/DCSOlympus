@@ -9,8 +9,6 @@ import asyncio
 import random
 import websockets
 import logging
-import threading
-from typing import Optional
 import json
 
 from audio.audio_packet import AudioPacket, MessageType
@@ -47,19 +45,13 @@ class RadioTransmitter:
         self._guid = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz0123456789') for _ in range(22))
         
         # Connection and control
-        self._websocket: Optional[websockets.WebSocketServerProtocol] = None
+        self._websocket: websockets.WebSocketServerProtocol | None = None
         self._running = False
         self._should_stop = False
-        self._loop: Optional[asyncio.AbstractEventLoop] = None
-        self._thread: Optional[threading.Thread] = None
         self._paused = False
-        self._pause_event = threading.Event()
-        self._pause_event.set()
         self._debug_packet_timing = False
-        
-        # Transmission mutex to ensure only one message plays at a time
-        self._transmission_lock = threading.Lock()
-        
+        self.transmitting = False
+                
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API.RadioTransmitter")
     
@@ -77,8 +69,7 @@ class RadioTransmitter:
                     self.websocket_url,
                     ping_interval=30,
                     ping_timeout=60,
-                    close_timeout=10,
-                    max_queue=1024,
+                    close_timeout=10
                 ) as websocket:
                     self._websocket = websocket
                     self._running = True
@@ -86,20 +77,14 @@ class RadioTransmitter:
                     
                     self.logger.info("WebSocket connection established")
 
-                    # Drain incoming websocket messages to avoid internal queue buildup and deterministic disconnects.
-                    drain_task = asyncio.create_task(self._drain_incoming_messages(websocket))
-                    try:
-                        while not self._should_stop and not drain_task.done():
-                            await asyncio.sleep(0.5)
-
-                        if drain_task.done():
-                            drain_exception = drain_task.exception()
-                            if drain_exception:
-                                raise drain_exception
-                    finally:
-                        if not drain_task.done():
-                            drain_task.cancel()
-                        await asyncio.gather(drain_task, return_exceptions=True)
+                    # Send the sync radio settings message
+                    await self._sync_radio_settings()
+                    
+                    # Listen for messages
+                    async for message in websocket:
+                        if self._should_stop:
+                            break
+                        await self._handle_message(message)
                         
             except websockets.exceptions.ConnectionClosed:
                 self.logger.warning("WebSocket connection closed")
@@ -134,34 +119,16 @@ class RadioTransmitter:
         self._websocket = None
         self.logger.info("Radio transmitter stopped")
 
-    async def _drain_incoming_messages(self, websocket):
-        """Continuously receive and discard incoming messages to keep protocol state healthy."""
-        while not self._should_stop:
-            try:
-                await asyncio.wait_for(websocket.recv(), timeout=1.0)
-            except asyncio.TimeoutError:
-                continue
-    
-    def _run_event_loop(self) -> None:
-        """Run the asyncio event loop in a separate thread."""
-        try:
-            # Create new event loop for this thread
-            self._loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(self._loop)
-            
-            # Run the connection
-            self._loop.run_until_complete(self._connect_and_maintain())
-            
-        except Exception as e:
-            self.logger.error(f"Error in event loop: {e}")
-        finally:
-            # Clean up
-            if self._loop and not self._loop.is_closed():
-                self._loop.close()
-            self._loop = None
+    async def _handle_message(self, message):
+        # Radio transmitter does not listen to messages
+        pass
 
-    async def _sync_radio_settings(self, frequency: float, modulation: int, intercom_ID: int | None = None, ptt: bool = False):
+    async def _sync_radio_settings(self, frequency: float | None = None, modulation: float | None = None, intercom_ID: int | None = None, ptt: bool = False):
         """Send radio settings update to the SRS backend for this transmitter."""
+        if frequency is None or modulation is None:
+            # Nothing to do
+            return
+        
         message = {
             "type": "Settings update",
             "guid": self._guid,
@@ -175,6 +142,7 @@ class RadioTransmitter:
             ]
         }
 
+        # TODO currently not working
         if intercom_ID is not None:
             message["unitID"] = intercom_ID
 
@@ -199,13 +167,11 @@ class RadioTransmitter:
             bool: True if transmission succeeded, False otherwise
         """
         # Acquire the transmission lock to ensure only one message plays at a time
-        acquired = await asyncio.get_event_loop().run_in_executor(None, self._transmission_lock.acquire, True, 30.0)
-        sleep_amount = 40
-        if not acquired:
-            self.logger.error("Failed to acquire transmission lock within timeout")
-            return False
+        self.transmitting = True
+        sleep_amount = 40 #ms
         
         try:
+            # Force some values in case we are transmitting on intercom. These are set in the SRS Client which I copied over
             if intercom_ID is not None:
                 frequency = 100
                 modulation = 2
@@ -239,9 +205,6 @@ class RadioTransmitter:
                     last_packet_sent_at = None
                     
                     while True:
-                        while not self._pause_event.is_set() and not self._should_stop:
-                            await asyncio.sleep(0.05)
-
                         if self._should_stop:
                             self.logger.info("Transmission interrupted by stop request")
                             return False
@@ -284,7 +247,7 @@ class RadioTransmitter:
                                 now = time.perf_counter()
                                 if last_packet_sent_at is not None:
                                     delta_ms = (now - last_packet_sent_at) * 1000.0
-                                    sleep_amount += 0.01 * (40 - delta_ms)
+                                    sleep_amount += 0.05 * (40 - delta_ms)
                                     if self._debug_packet_timing:
                                         self.logger.info("Packet %d interval: %.2f ms. Sleep amount: %.2f ms", packet_id, delta_ms, sleep_amount)
                                 last_packet_sent_at = now                                    
@@ -310,30 +273,25 @@ class RadioTransmitter:
                     await self._sync_radio_settings(frequency, modulation, intercom_ID, ptt=False)
                 except Exception as e:
                     self.logger.debug(f"Failed to sync radio settings after transmission: {e}")
-            # Always release the lock
-            await asyncio.get_event_loop().run_in_executor(None, self._transmission_lock.release)
+                    
+            self.transmitting = False
     
     def start(self) -> None:
         """Start the radio transmitter in a separate thread."""
-        if self._running or self._thread is not None:
+        if self._running:
             self.logger.warning("RadioTransmitter is already running")
             return
         
         self._should_stop = False
         self._paused = False
-        self._pause_event.set()
-        self._thread = threading.Thread(target=self._run_event_loop, daemon=True)
-        self._thread.start()
+        
+        if asyncio.get_running_loop() is None:
+            self.logger.error("Could not start: no active asyncio loop. If using outside plugin manager make sure to first call api.run()")
+        
+        asyncio.create_task(self._connect_and_maintain())
         
         self.logger.info(f"RadioTransmitter started, connecting to {self.websocket_url}")
-        
-    def register_asyncio_coroutine(self, loop: asyncio.AbstractEventLoop):
-        """
-        Register the API's update loop as an asyncio coroutine to allow for non-blocking execution.
-        This method should be called within an asyncio event loop context.
-        """
-        loop.create_task(self._connect_and_maintain())        
-    
+         
     def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
         """
         Transmit a WAV file as OPUS frames over the websocket.
@@ -349,22 +307,9 @@ class RadioTransmitter:
 
         Returns:
             bool: True if transmission succeeded, False otherwise
-        """
-        loop = self._loop
-        
-        # If we have not created the loop ourselves, try getting the current running loop
-        if loop is None or loop.is_closed():
-            loop = asyncio.get_running_loop()
-        
-        if loop is None or loop.is_closed():
-            self.logger.error("Cannot transmit: RadioTransmitter event loop is not available")
-            return False
-
+        """        
         try:
-            asyncio.run_coroutine_threadsafe(
-                self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID')),
-                loop
-            )
+            asyncio.create_task(self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID')))
             return True
         except Exception as e:
             self.logger.error(f"Failed to schedule transmission: {e}")
@@ -381,16 +326,8 @@ class RadioTransmitter:
         Returns:
             bool: True if transmission succeeded, False otherwise
         """
-        loop = self._loop
-        if loop is None or loop.is_closed():
-            self.logger.error("Cannot transmit on intercom: RadioTransmitter event loop is not available")
-            return False
-
         try:
-            asyncio.run_coroutine_threadsafe(
-                self._send_message(file_name, None, None, None, intercom_ID, None),
-                loop
-            )
+            asyncio.create_task(self._send_message(file_name, None, None, None, intercom_ID, None),)
             return True
         except Exception as e:
             self.logger.error(f"Failed to schedule intercom transmission: {e}")
@@ -398,28 +335,19 @@ class RadioTransmitter:
 
     def stop(self) -> None:
         """Stop the radio transmitter gracefully."""
-        if not self._running and self._thread is None:
+        if not self._running:
             self.logger.info("RadioTransmitter is not running")
             return
         
         self.logger.info("Stopping RadioTransmitter...")
         self._should_stop = True
         self._paused = False
-        self._pause_event.set()
         
         # Close WebSocket connection if active
-        if self._websocket and self._loop:
+        if self._websocket:
             # Schedule the close in the event loop
-            if not self._loop.is_closed():
-                asyncio.run_coroutine_threadsafe(self._websocket.close(), self._loop)
-        
-        # Wait for thread to finish
-        if self._thread:
-            self._thread.join(timeout=5.0)
-            if self._thread.is_alive():
-                self.logger.warning("Thread did not stop gracefully within timeout")
-            self._thread = None
-        
+            self._websocket.close()
+                
         self._running = False
         self.logger.info("RadioTransmitter stopped")
 
@@ -433,8 +361,8 @@ class RadioTransmitter:
             self.logger.info("RadioTransmitter is already paused")
             return
 
+        # TODO: Verify paused works
         self._paused = True
-        self._pause_event.clear()
         self.logger.info("RadioTransmitter paused")
 
     def resume(self) -> None:
@@ -448,7 +376,6 @@ class RadioTransmitter:
             return
 
         self._paused = False
-        self._pause_event.set()
         self.logger.info("RadioTransmitter resumed")
     
     def is_running(self) -> bool:
@@ -461,7 +388,7 @@ class RadioTransmitter:
     
     def is_transmitting(self) -> bool:
         """Check if a transmission is currently in progress."""
-        return self._transmission_lock.locked()
+        return self.transmitting
 
     def is_paused(self) -> bool:
         """Check if the radio transmitter is currently paused."""

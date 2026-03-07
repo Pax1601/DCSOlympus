@@ -78,13 +78,10 @@ class Plugin(ABC):
             }
         
     @abstractmethod
-    def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
+    def on_start(self) -> bool:
         """
         Called when the plugin should start its operation.
-        
-        Args:
-            loop: The asyncio event loop to use for the plugin
-        
+                
         Returns:
             bool: True if started successfully, False otherwise
         """
@@ -120,13 +117,10 @@ class Plugin(ABC):
         """
         pass
     
-    def start(self, loop: asyncio.AbstractEventLoop) -> bool:
+    def start(self) -> bool:
         """
         Start the plugin. Calls on_start() and updates status.
-        
-        Args:
-            loop: The asyncio event loop to use for the plugin
-        
+                
         Returns:
             bool: True if started successfully, False otherwise
         """
@@ -136,7 +130,7 @@ class Plugin(ABC):
             
         try:
             self.logger.info(f"Starting plugin: {self.name}")
-            result = self.on_start(loop)
+            result = self.on_start()
             if result:
                 self.status = PluginStatus.RUNNING
                 self.watchdog_tick()

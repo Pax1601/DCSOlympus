@@ -73,7 +73,7 @@ class AdvancedGroundUnitControl(Plugin):
             dcs_folder = self.global_config.get('dcs_saved_games_folder', 'Not set')
             self.logger.info(f"  DCS Saved Games: {dcs_folder}")
     
-    def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
+    def on_start(self) -> bool:
         """
         Start the Advanced Ground Unit Control plugin.
         
@@ -97,7 +97,7 @@ class AdvancedGroundUnitControl(Plugin):
             self.running = True
             self.paused = False   
             
-            self.api.register_asyncio_coroutine(loop)
+            self.api.run()
             
             self.logger.info("Advanced Ground Unit Control started successfully")
             return True

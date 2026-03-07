@@ -1043,7 +1043,7 @@ class API:
         """
         self.logger.info("Stopping API service...")
         self.should_stop = True
-        
+                
     def run(self):
         """
         Start the API service.
@@ -1051,13 +1051,7 @@ class API:
         This method initializes the API and starts the necessary components.
         Sets up signal handlers for graceful shutdown.
         """
-        asyncio.run(self._run_async())
-        
-    def register_asyncio_coroutine(self, loop: asyncio.AbstractEventLoop):
-        """
-        Register the API's update loop as an asyncio coroutine to allow for non-blocking execution.
-        This method should be called within an asyncio event loop context.
-        """
-        loop.create_task(self._run_async())
-
-
+        if asyncio.get_running_loop():
+            asyncio.create_task(self._run_async())
+        else:
+            asyncio.run(self._run_async())

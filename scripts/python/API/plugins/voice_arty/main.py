@@ -58,7 +58,7 @@ class VoiceArty(Plugin):
             "rady": "ready",
         }
 
-    def on_start(self, loop: asyncio.AbstractEventLoop) -> bool:
+    def on_start(self) -> bool:
         try:
             saved_games = self.global_config.get("dcs_saved_games_folder", ".")
             self.api = API(saved_games_folder=saved_games)
@@ -73,7 +73,7 @@ class VoiceArty(Plugin):
             )
             self.listener.register_message_callback(self._on_message_received)
 
-            self.api.register_asyncio_coroutine(loop)
+            self.api.run()
 
             self.running = True
             self.paused = False
