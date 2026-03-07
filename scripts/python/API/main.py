@@ -17,6 +17,9 @@ from plugin_manager import PluginManager
 from config_manager import ConfigManager
 
 
+plugin_manager: PluginManager | None = None
+
+
 def get_base_path():
     """
     Get the base path for the application.
@@ -56,29 +59,6 @@ def setup_logging(log_level=logging.INFO, base_path=None):
             logging.FileHandler(str(log_file), encoding='utf-8')
         ]
     )
-
-def signal_handler(signum, frame):
-    """
-    Handle shutdown signals gracefully.
-    
-    Args:
-        signum: Signal number
-        frame: Current stack frame
-    """
-    logger = logging.getLogger("Main")
-    logger.info(f"Received signal {signum}, shutting down...")
-    
-    # Stop all plugins
-    if 'plugin_manager' in globals():
-        logger.info("Stopping watchdog...")
-        plugin_manager.stop_watchdog()
-        logger.info("Stopping all plugins...")
-        plugin_manager.stop_all_plugins()
-        logger.info("Stopping management server...")
-        plugin_manager.stop_management_server()
-    
-    sys.exit(0)
-
 
 def parse_arguments():
     """
@@ -167,9 +147,15 @@ async def main():
             logger.warning(f"  - {issue}")
         logger.warning("Some features may not work correctly")
     
+    shutdown_event = asyncio.Event()
+
+    def request_shutdown(signum, frame):
+        logger.info(f"Received signal {signum}, shutting down...")
+        shutdown_event.set()
+
     # Register signal handlers for graceful shutdown
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, request_shutdown)
+    signal.signal(signal.SIGTERM, request_shutdown)
         
     # Initialize the plugin manager with configuration
     logger.info("Initializing Plugin Manager...")
@@ -195,7 +181,7 @@ async def main():
     if management_server.get('enabled', True):
         host = str(management_server.get('host', '127.0.0.1'))
         port = int(management_server.get('port', 8765))
-        started = plugin_manager.start_management_server(host=host, port=port)
+        started = await plugin_manager.start_management_server(host=host, port=port)
         if started:
             logger.info(f"Plugin management UI/API available at http://{host}:{port}")
         else:
@@ -229,7 +215,7 @@ async def main():
         if config_manager.should_auto_start_plugins():
             logger.info("=" * 60)
             logger.info("Starting all plugins...")
-            start_results = plugin_manager.start_all_plugins()
+            start_results = await plugin_manager.start_all_plugins()
             
             success_count = sum(1 for success in start_results.values() if success)
             logger.info(f"Started {success_count}/{len(start_results)} plugin(s) successfully")
@@ -246,13 +232,16 @@ async def main():
         logger.info("=" * 60)
         logger.info("DCS Olympus API is running. Press Ctrl+C to stop.")
         
-        # Start the asyncio event loop to keep the main thread alive
-        try:
-            while True:
-                await asyncio.sleep(1)
-        except KeyboardInterrupt:
-            logger.info("Keyboard interrupt received, shutting down...")
-            signal_handler(signal.SIGINT, None)
+        # Keep the main coroutine alive until a shutdown signal is received.
+        await shutdown_event.wait()
+
+    logger.info("Stopping watchdog...")
+    await plugin_manager.stop_watchdog()
+    logger.info("Stopping all plugins...")
+    await plugin_manager.stop_all_plugins()
+    logger.info("Stopping management server...")
+    await plugin_manager.stop_management_server()
+    logger.info("Shutdown complete")
             
 if __name__ == "__main__":
      asyncio.run(main())

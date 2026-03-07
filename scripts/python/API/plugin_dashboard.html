@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DCS Olympus Plugin Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #111; color: #f5f5f5; }
+        h1 { margin-bottom: 8px; }
+        .hint { color: #aaa; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; background: #1b1b1b; }
+        th, td { padding: 10px; border-bottom: 1px solid #2d2d2d; text-align: left; }
+        th { background: #222; }
+        .status { font-weight: bold; text-transform: uppercase; }
+        .watchdog { font-family: Consolas, monospace; font-size: 12px; }
+        button { margin-right: 8px; padding: 6px 12px; border: 0; border-radius: 4px; cursor: pointer; }
+        .start { background: #2a9d5a; color: #fff; }
+        .pause { background: #e8b100; color: #111; }
+        .stop { background: #cf3b3b; color: #fff; }
+        .reload { background: #2f7ad8; color: #fff; }
+        .reload:disabled { opacity: 0.45; cursor: not-allowed; }
+        .logs { background: #555; color: #fff; }
+        #message { margin: 12px 0; min-height: 20px; color: #9bd18d; }
+        #logs-panel { margin-top: 18px; padding: 12px; border: 1px solid #2d2d2d; background: #191919; }
+        #logs-title { margin: 0 0 10px 0; }
+        #logs-content {
+            margin: 0;
+            max-height: 320px;
+            overflow: auto;
+            background: #101010;
+            border: 1px solid #2a2a2a;
+            padding: 10px;
+            font-family: Consolas, monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plugin Manager</h1>
+    <div class="hint">Live view of active plugins. Updates every 2 seconds.</div>
+    <div id="message"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Watchdog</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="plugins"></tbody>
+    </table>
+
+    <div id="logs-panel">
+        <h3 id="logs-title">Plugin Logs</h3>
+        <pre id="logs-content">Click "Logs" for a plugin to view recent lines.</pre>
+    </div>
+
+    <script>
+        const pluginsBody = document.getElementById('plugins');
+        const message = document.getElementById('message');
+        const logsTitle = document.getElementById('logs-title');
+        const logsContent = document.getElementById('logs-content');
+        let selectedLogPlugin = null;
+
+        async function loadPlugins() {
+            const response = await fetch('/api/plugins');
+            const data = await response.json();
+            const plugins = data.plugins || [];
+
+            pluginsBody.innerHTML = '';
+
+            for (const plugin of plugins) {
+                const wd = plugin.watchdog_status || {};
+                const heartbeatAge = wd.heartbeat_age_seconds;
+                const heartbeatText = (heartbeatAge === null || heartbeatAge === undefined)
+                    ? 'n/a'
+                    : `${heartbeatAge.toFixed(1)}s`;
+                const tickingText = wd.heartbeat_ticking ? 'ticking' : 'stale';
+                const restartCount = wd.auto_restart_count || 0;
+                const restartedText = restartCount > 0 ? `yes (${restartCount})` : 'no';
+                const restartTs = wd.last_auto_restart_timestamp;
+                const restartAt = restartTs ? new Date(restartTs * 1000).toLocaleTimeString() : 'n/a';
+                const canReload = plugin.status === 'stopped';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${plugin.name}</td>
+                    <td>${plugin.version}</td>
+                    <td>${plugin.author}</td>
+                    <td class="status">${plugin.status}</td>
+                    <td class="watchdog">${tickingText}<br/>heartbeat: ${heartbeatText}<br/>auto-restarted: ${restartedText}<br/>last restart: ${restartAt}</td>
+                    <td>
+                        <button class="start" data-action="start" data-name="${plugin.name}">Start</button>
+                        <button class="pause" data-action="pause" data-name="${plugin.name}">Pause</button>
+                        <button class="stop" data-action="stop" data-name="${plugin.name}">Stop</button>
+                        <button class="reload" data-action="reload" data-name="${plugin.name}" ${canReload ? '' : 'disabled title="Stop plugin before reloading"'}>Reload</button>
+                        <button class="logs" data-action="logs" data-name="${plugin.name}">Logs</button>
+                    </td>
+                `;
+                pluginsBody.appendChild(tr);
+            }
+        }
+
+        async function loadLogs(pluginName) {
+            try {
+                const response = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/logs?limit=300`);
+                const result = await response.json();
+                const lines = result.lines || [];
+                logsTitle.textContent = `Plugin Logs: ${pluginName}`;
+                logsContent.textContent = lines.length ? lines.join('\n') : '(No logs yet)';
+                logsContent.scrollTop = logsContent.scrollHeight;
+            } catch (err) {
+                logsTitle.textContent = `Plugin Logs: ${pluginName}`;
+                logsContent.textContent = `Failed to load logs: ${err}`;
+            }
+        }
+
+        async function sendAction(pluginName, action) {
+            message.textContent = `${action} ${pluginName}...`;
+            try {
+                const response = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/${action}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                message.textContent = result.message || `${action} completed for ${pluginName}`;
+            } catch (err) {
+                message.textContent = `Request failed: ${err}`;
+            }
+
+            await loadPlugins();
+        }
+
+        document.body.addEventListener('click', async (event) => {
+            const button = event.target.closest('button[data-action]');
+            if (!button) return;
+
+            const pluginName = button.dataset.name;
+            const action = button.dataset.action;
+
+            if (action === 'logs') {
+                selectedLogPlugin = pluginName;
+                await loadLogs(pluginName);
+                return;
+            }
+
+            await sendAction(pluginName, action);
+
+            if (selectedLogPlugin === pluginName) {
+                await loadLogs(pluginName);
+            }
+        });
+
+        loadPlugins();
+        setInterval(async () => {
+            await loadPlugins();
+            if (selectedLogPlugin) {
+                await loadLogs(selectedLogPlugin);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -5,17 +5,15 @@ Handles discovery, loading, and management of plugins.
 """
 
 import asyncio
-import concurrent.futures
 import os
 import sys
 import json
 import importlib.util
+import inspect
 import logging
-import threading
 import re
 import time
 from collections import deque
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, unquote, parse_qs
 from typing import Dict, List, Optional, Any
 from pathlib import Path
@@ -46,35 +44,24 @@ class PluginManager:
         self.plugins: Dict[str, Plugin] = {}
         self.plugin_descriptors: Dict[str, Dict[str, Any]] = {}
         self.global_config = global_config or {}
-        self._lock = threading.RLock()
-        self._http_server: Optional[ThreadingHTTPServer] = None
-        self._http_thread: Optional[threading.Thread] = None
+        self._http_server: Optional[asyncio.AbstractServer] = None
         self._server_host: Optional[str] = None
         self._server_port: Optional[int] = None
+        self._dashboard_html_path = Path(__file__).with_name("plugin_dashboard.html")
         self.plugin_log_directory = Path("plugin_logs")
         self.plugin_log_paths: Dict[str, Path] = {}
         self._watchdog_enabled = True
         self._watchdog_check_interval = 5.0
         self._watchdog_timeout = 30.0
         self._watchdog_auto_restart = True
-        self._watchdog_thread: Optional[threading.Thread] = None
-        self._watchdog_stop_event = threading.Event()
+        self._watchdog_task: Optional[asyncio.Task] = None
+        self._watchdog_stop_event = asyncio.Event()
         self._watchdog_restart_cooldown: Dict[str, float] = {}
         self._watchdog_last_check_time: float = 0.0
         self._watchdog_restart_count: Dict[str, int] = {}
         self._watchdog_last_restart_time: Dict[str, float] = {}
         self._watchdog_last_restart_success: Dict[str, bool] = {}
-        self._plugin_action_timeout_seconds = 30.0
-        self._event_loop: Optional[asyncio.AbstractEventLoop] = None
-        self._event_loop_thread_id: Optional[int] = None
         self.logger = logging.getLogger("PluginManager")
-
-        try:
-            self._event_loop = asyncio.get_running_loop()
-            self._event_loop_thread_id = threading.get_ident()
-        except RuntimeError:
-            self._event_loop = None
-            self._event_loop_thread_id = None
         
         # Create plugins directory if it doesn't exist
         if not self.plugins_directory.exists():
@@ -168,29 +155,28 @@ class PluginManager:
         Returns:
             List of log lines if available, None if plugin not found
         """
-        with self._lock:
-            if plugin_name not in self.plugins:
-                return None
+        if plugin_name not in self.plugins:
+            return None
 
-            path = self.plugin_log_paths.get(plugin_name)
-            if path is None:
-                path = self._get_plugin_log_path(plugin_name)
-                self.plugin_log_paths[plugin_name] = path
+        path = self.plugin_log_paths.get(plugin_name)
+        if path is None:
+            path = self._get_plugin_log_path(plugin_name)
+            self.plugin_log_paths[plugin_name] = path
 
-            if not path.exists():
-                return []
+        if not path.exists():
+            return []
 
-            max_lines = max(1, min(limit, 2000))
+        max_lines = max(1, min(limit, 2000))
 
-            try:
-                tail = deque(maxlen=max_lines)
-                with open(path, "r", encoding="utf-8", errors="replace") as handle:
-                    for line in handle:
-                        tail.append(line.rstrip("\n"))
-                return list(tail)
-            except Exception as e:
-                self.logger.error(f"Failed to read logs for plugin {plugin_name}: {e}", exc_info=True)
-                return []
+        try:
+            tail = deque(maxlen=max_lines)
+            with open(path, "r", encoding="utf-8", errors="replace") as handle:
+                for line in handle:
+                    tail.append(line.rstrip("\n"))
+            return list(tail)
+        except Exception as e:
+            self.logger.error(f"Failed to read logs for plugin {plugin_name}: {e}", exc_info=True)
+            return []
 
     def configure_watchdog(
         self,
@@ -208,91 +194,94 @@ class PluginManager:
             timeout_seconds: Heartbeat timeout threshold
             auto_restart: Auto-restart crashed plugins
         """
-        with self._lock:
-            self._watchdog_enabled = bool(enabled)
-            self._watchdog_check_interval = max(1.0, float(check_interval_seconds))
-            self._watchdog_timeout = max(2.0, float(timeout_seconds))
-            self._watchdog_auto_restart = bool(auto_restart)
+        self._watchdog_enabled = bool(enabled)
+        self._watchdog_check_interval = max(1.0, float(check_interval_seconds))
+        self._watchdog_timeout = max(2.0, float(timeout_seconds))
+        self._watchdog_auto_restart = bool(auto_restart)
 
     def start_watchdog(self) -> bool:
         """
-        Start the watchdog monitoring thread.
+        Start the watchdog monitoring task.
 
         Returns:
             True when watchdog is running or disabled by config.
         """
-        with self._lock:
-            if not self._watchdog_enabled:
-                self.logger.info("Watchdog is disabled by configuration")
-                return True
-
-            if self._watchdog_thread is not None and self._watchdog_thread.is_alive():
-                return True
-
-            self._watchdog_stop_event.clear()
-            self._watchdog_thread = threading.Thread(
-                target=self._watchdog_loop,
-                name="PluginWatchdog",
-                daemon=True
-            )
-            self._watchdog_thread.start()
-            self.logger.info(
-                "Watchdog started (check_interval=%ss, timeout=%ss, auto_restart=%s)",
-                self._watchdog_check_interval,
-                self._watchdog_timeout,
-                self._watchdog_auto_restart
-            )
+        if not self._watchdog_enabled:
+            self.logger.info("Watchdog is disabled by configuration")
             return True
 
-    def stop_watchdog(self):
+        if self._watchdog_task is not None and not self._watchdog_task.done():
+            return True
+
+        self._watchdog_stop_event.clear()
+        self._watchdog_task = asyncio.create_task(self._watchdog_loop(), name="PluginWatchdog")
+        self.logger.info(
+            "Watchdog started (check_interval=%ss, timeout=%ss, auto_restart=%s)",
+            self._watchdog_check_interval,
+            self._watchdog_timeout,
+            self._watchdog_auto_restart
+        )
+        return True
+
+    async def stop_watchdog(self):
         """
-        Stop the watchdog monitoring thread.
+        Stop the watchdog monitoring task.
         """
-        with self._lock:
-            if self._watchdog_thread is None:
-                return
+        if self._watchdog_task is None:
+            return
 
-            self._watchdog_stop_event.set()
-            thread = self._watchdog_thread
-
-        if thread.is_alive():
-            thread.join(timeout=2.0)
-
-        with self._lock:
-            self._watchdog_thread = None
+        self._watchdog_stop_event.set()
+        task = self._watchdog_task
+        try:
+            await asyncio.wait_for(task, timeout=2.0)
+        except asyncio.TimeoutError:
+            task.cancel()
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
+        finally:
+            self._watchdog_task = None
 
         self.logger.info("Watchdog stopped")
 
-    def _watchdog_loop(self):
+    async def _watchdog_loop(self):
         """
         Periodically detect stale heartbeats for running plugins.
         """
-        while not self._watchdog_stop_event.wait(self._watchdog_check_interval):
+        while True:
+            try:
+                await asyncio.wait_for(
+                    self._watchdog_stop_event.wait(),
+                    timeout=self._watchdog_check_interval,
+                )
+                break
+            except asyncio.TimeoutError:
+                pass
+
             stale_plugins: List[str] = []
             current_time = time.time()
             self._watchdog_last_check_time = current_time
 
-            with self._lock:
-                for name, plugin in self.plugins.items():
-                    if plugin.get_status() != PluginStatus.RUNNING:
-                        continue
+            for name, plugin in self.plugins.items():
+                if plugin.get_status() != PluginStatus.RUNNING:
+                    continue
 
-                    state = plugin.get_watchdog_state()
-                    last_heartbeat = float(state.get("last_heartbeat", 0.0) or 0.0)
-                    if last_heartbeat <= 0:
-                        continue
+                state = plugin.get_watchdog_state()
+                last_heartbeat = float(state.get("last_heartbeat", 0.0) or 0.0)
+                if last_heartbeat <= 0:
+                    continue
 
-                    elapsed = current_time - last_heartbeat
-                    if elapsed > self._watchdog_timeout:
-                        stale_plugins.append(name)
+                elapsed = current_time - last_heartbeat
+                if elapsed > self._watchdog_timeout:
+                    stale_plugins.append(name)
 
             for plugin_name in stale_plugins:
                 should_attempt_restart = False
-                with self._lock:
-                    cooldown_deadline = self._watchdog_restart_cooldown.get(plugin_name, 0.0)
-                    if current_time >= cooldown_deadline:
-                        self._watchdog_restart_cooldown[plugin_name] = current_time + self._watchdog_timeout
-                        should_attempt_restart = True
+                cooldown_deadline = self._watchdog_restart_cooldown.get(plugin_name, 0.0)
+                if current_time >= cooldown_deadline:
+                    self._watchdog_restart_cooldown[plugin_name] = current_time + self._watchdog_timeout
+                    should_attempt_restart = True
 
                 if not should_attempt_restart:
                     continue
@@ -309,7 +298,7 @@ class PluginManager:
                 self.logger.warning("Watchdog attempting auto-restart for plugin: %s", plugin_name)
                 
                 # Stop the plugin
-                self.stop_plugin(plugin_name)
+                await self.stop_plugin(plugin_name)
                 
                 # Loop until the plugin is confirmed stopped before attempting reload, with a max wait time to avoid infinite loops
                 max_wait_seconds = 10.0
@@ -319,16 +308,15 @@ class PluginManager:
                     status = self.get_plugin_status(plugin_name)
                     if status is None or status == PluginStatus.STOPPED:
                         break
-                    time.sleep(wait_interval_seconds)
+                    await asyncio.sleep(wait_interval_seconds)
                     elapsed += wait_interval_seconds
                 
                 # Reload the plugin
                 reloaded = self.reload_plugin(plugin_name)
-                restarted = self.start_plugin(plugin_name) if reloaded else False
-                with self._lock:
-                    self._watchdog_restart_count[plugin_name] = self._watchdog_restart_count.get(plugin_name, 0) + 1
-                    self._watchdog_last_restart_time[plugin_name] = time.time()
-                    self._watchdog_last_restart_success[plugin_name] = restarted
+                restarted = await self.start_plugin(plugin_name) if reloaded else False
+                self._watchdog_restart_count[plugin_name] = self._watchdog_restart_count.get(plugin_name, 0) + 1
+                self._watchdog_last_restart_time[plugin_name] = time.time()
+                self._watchdog_last_restart_success[plugin_name] = restarted
                 if restarted:
                     self.logger.info("Watchdog auto-restarted plugin: %s", plugin_name)
                 else:
@@ -360,7 +348,7 @@ class PluginManager:
 
         return {
             "enabled": self._watchdog_enabled,
-            "running": self._watchdog_thread is not None and self._watchdog_thread.is_alive(),
+            "running": self._watchdog_task is not None and not self._watchdog_task.done(),
             "check_interval_seconds": self._watchdog_check_interval,
             "timeout_seconds": self._watchdog_timeout,
             "auto_restart": self._watchdog_auto_restart,
@@ -515,25 +503,24 @@ class PluginManager:
         descriptors = self.discover_plugins()
         loaded_count = 0
 
-        with self._lock:
-            self.plugins.clear()
-            self.plugin_descriptors.clear()
+        self.plugins.clear()
+        self.plugin_descriptors.clear()
 
-            for descriptor in descriptors:
-                plugin_name = descriptor.get("name", "Unknown")
-                plugin = self.load_plugin(descriptor)
+        for descriptor in descriptors:
+            plugin_name = descriptor.get("name", "Unknown")
+            plugin = self.load_plugin(descriptor)
 
-                if plugin:
-                    self.plugins[plugin_name] = plugin
-                    self.plugin_descriptors[plugin_name] = descriptor
-                    loaded_count += 1
-                else:
-                    self.logger.warning(f"Failed to load plugin: {plugin_name}")
+            if plugin:
+                self.plugins[plugin_name] = plugin
+                self.plugin_descriptors[plugin_name] = descriptor
+                loaded_count += 1
+            else:
+                self.logger.warning(f"Failed to load plugin: {plugin_name}")
         
         self.logger.info(f"Loaded {loaded_count} plugin(s)")
         return loaded_count
     
-    def start_plugin(self, plugin_name: str) -> bool:
+    async def start_plugin(self, plugin_name: str) -> bool:
         """
         Start a specific plugin by name.
         
@@ -543,16 +530,15 @@ class PluginManager:
         Returns:
             True if started successfully, False otherwise
         """
-        with self._lock:
-            plugin = self.plugins.get(plugin_name)
+        plugin = self.plugins.get(plugin_name)
 
         if not plugin:
             self.logger.error(f"Plugin not found: {plugin_name}")
             return False
 
-        return self._invoke_plugin_action(plugin_name, "start", plugin.start)
+        return await self._invoke_plugin_action(plugin_name, "start", plugin.start)
     
-    def stop_plugin(self, plugin_name: str) -> bool:
+    async def stop_plugin(self, plugin_name: str) -> bool:
         """
         Stop a specific plugin by name.
         
@@ -562,16 +548,15 @@ class PluginManager:
         Returns:
             True if stopped successfully, False otherwise
         """
-        with self._lock:
-            plugin = self.plugins.get(plugin_name)
+        plugin = self.plugins.get(plugin_name)
 
         if not plugin:
             self.logger.error(f"Plugin not found: {plugin_name}")
             return False
 
-        return self._invoke_plugin_action(plugin_name, "stop", plugin.stop)
+        return await self._invoke_plugin_action(plugin_name, "stop", plugin.stop)
     
-    def pause_plugin(self, plugin_name: str) -> bool:
+    async def pause_plugin(self, plugin_name: str) -> bool:
         """
         Pause a specific plugin by name.
         
@@ -581,16 +566,15 @@ class PluginManager:
         Returns:
             True if paused successfully, False otherwise
         """
-        with self._lock:
-            plugin = self.plugins.get(plugin_name)
+        plugin = self.plugins.get(plugin_name)
 
         if not plugin:
             self.logger.error(f"Plugin not found: {plugin_name}")
             return False
 
-        return self._invoke_plugin_action(plugin_name, "pause", plugin.pause)
+        return await self._invoke_plugin_action(plugin_name, "pause", plugin.pause)
     
-    def resume_plugin(self, plugin_name: str) -> bool:
+    async def resume_plugin(self, plugin_name: str) -> bool:
         """
         Resume a specific plugin by name.
         
@@ -600,71 +584,26 @@ class PluginManager:
         Returns:
             True if resumed successfully, False otherwise
         """
-        with self._lock:
-            plugin = self.plugins.get(plugin_name)
+        plugin = self.plugins.get(plugin_name)
 
         if not plugin:
             self.logger.error(f"Plugin not found: {plugin_name}")
             return False
 
-        return self._invoke_plugin_action(plugin_name, "resume", plugin.resume)
+        return await self._invoke_plugin_action(plugin_name, "resume", plugin.resume)
 
-    def _invoke_plugin_action(self, plugin_name: str, action: str, callback) -> bool:
+    async def _invoke_plugin_action(self, plugin_name: str, action: str, callback) -> bool:
         """
-        Execute a plugin lifecycle action on the main asyncio loop thread.
-
-        This avoids "no running event loop" errors when the action is triggered
-        from worker threads (for example the HTTP management server threads).
+        Execute a plugin lifecycle action on the active event loop.
         """
-        if self._event_loop is None or self._event_loop.is_closed() or not self._event_loop.is_running():
-            try:
-                return bool(callback())
-            except Exception as e:
-                self.logger.error(
-                    "Failed to %s plugin %s without event loop marshalling: %s",
-                    action,
-                    plugin_name,
-                    e,
-                    exc_info=True,
-                )
-                return False
-
-        if threading.get_ident() == self._event_loop_thread_id:
-            try:
-                return bool(callback())
-            except Exception as e:
-                self.logger.error(
-                    "Failed to %s plugin %s on event loop thread: %s",
-                    action,
-                    plugin_name,
-                    e,
-                    exc_info=True,
-                )
-                return False
-
-        result: concurrent.futures.Future[bool] = concurrent.futures.Future()
-
-        def _run_action() -> None:
-            try:
-                result.set_result(bool(callback()))
-            except Exception as e:
-                result.set_exception(e)
-
-        self._event_loop.call_soon_threadsafe(_run_action)
-
         try:
-            return result.result(timeout=self._plugin_action_timeout_seconds)
-        except concurrent.futures.TimeoutError:
-            self.logger.error(
-                "Timed out after %.1fs while waiting to %s plugin %s",
-                self._plugin_action_timeout_seconds,
-                action,
-                plugin_name,
-            )
-            return False
+            result = callback()
+            if inspect.isawaitable(result):
+                result = await result
+            return bool(result)
         except Exception as e:
             self.logger.error(
-                "Failed to %s plugin %s through event loop marshalling: %s",
+                "Failed to %s plugin %s: %s",
                 action,
                 plugin_name,
                 e,
@@ -681,27 +620,26 @@ class PluginManager:
         Returns:
             Updated plugin descriptor if successful, None otherwise
         """
-        with self._lock:
-            descriptor = self.plugin_descriptors.get(plugin_name)
-            if descriptor is None:
-                return None
+        descriptor = self.plugin_descriptors.get(plugin_name)
+        if descriptor is None:
+            return None
 
-            descriptor_path = descriptor.get("_descriptor_path")
-            if not descriptor_path or not os.path.exists(descriptor_path):
-                self.logger.error(f"Descriptor file not found for plugin {plugin_name}: {descriptor_path}")
-                return None
+        descriptor_path = descriptor.get("_descriptor_path")
+        if not descriptor_path or not os.path.exists(descriptor_path):
+            self.logger.error(f"Descriptor file not found for plugin {plugin_name}: {descriptor_path}")
+            return None
 
-            try:
-                with open(descriptor_path, 'r', encoding='utf-8') as f:
-                    updated_descriptor = json.load(f)
-                updated_descriptor["_plugin_dir"] = descriptor.get("_plugin_dir")
-                updated_descriptor["_descriptor_path"] = descriptor_path
-                updated_descriptor["_main_script_path"] = descriptor.get("_main_script_path")
-                self.plugin_descriptors[plugin_name] = updated_descriptor
-                return updated_descriptor
-            except Exception as e:
-                self.logger.error(f"Failed to reload descriptor for plugin {plugin_name}: {e}", exc_info=True)
-                return None
+        try:
+            with open(descriptor_path, 'r', encoding='utf-8') as f:
+                updated_descriptor = json.load(f)
+            updated_descriptor["_plugin_dir"] = descriptor.get("_plugin_dir")
+            updated_descriptor["_descriptor_path"] = descriptor_path
+            updated_descriptor["_main_script_path"] = descriptor.get("_main_script_path")
+            self.plugin_descriptors[plugin_name] = updated_descriptor
+            return updated_descriptor
+        except Exception as e:
+            self.logger.error(f"Failed to reload descriptor for plugin {plugin_name}: {e}", exc_info=True)
+            return None
 
     def reload_plugin(self, plugin_name: str) -> bool:
         """
@@ -715,41 +653,40 @@ class PluginManager:
         Returns:
             True if reloaded successfully, False otherwise
         """
-        with self._lock:
-            existing_plugin = self.plugins.get(plugin_name)
-            
-            # Reload the plugin descriptor in case it was modified since initial load
-            descriptor = self.reload_plugin_descriptor(plugin_name)
-            
-            if descriptor is None:
-                # Re-discover in case the plugin was added/renamed after startup
-                for discovered in self.discover_plugins():
-                    if discovered.get("name") == plugin_name:
-                        descriptor = discovered
-                        self.plugin_descriptors[plugin_name] = discovered
-                        break
+        existing_plugin = self.plugins.get(plugin_name)
 
-            if descriptor is None:
-                self.logger.error(f"Plugin descriptor not found for reload: {plugin_name}")
+        # Reload the plugin descriptor in case it was modified since initial load
+        descriptor = self.reload_plugin_descriptor(plugin_name)
+
+        if descriptor is None:
+            # Re-discover in case the plugin was added/renamed after startup
+            for discovered in self.discover_plugins():
+                if discovered.get("name") == plugin_name:
+                    descriptor = discovered
+                    self.plugin_descriptors[plugin_name] = discovered
+                    break
+
+        if descriptor is None:
+            self.logger.error(f"Plugin descriptor not found for reload: {plugin_name}")
+            return False
+
+        if existing_plugin is not None:
+            existing_status = existing_plugin.get_status()
+            if existing_status != PluginStatus.STOPPED:
+                self.logger.warning(
+                    f"Reload denied for plugin {plugin_name}: plugin must be stopped first (current status={existing_status.value})"
+                )
                 return False
 
-            if existing_plugin is not None:
-                existing_status = existing_plugin.get_status()
-                if existing_status != PluginStatus.STOPPED:
-                    self.logger.warning(
-                        f"Reload denied for plugin {plugin_name}: plugin must be stopped first (current status={existing_status.value})"
-                    )
-                    return False
-                
-            new_plugin = self.load_plugin(descriptor)
-            if new_plugin is None:
-                self.logger.error(f"Reload failed while loading plugin: {plugin_name}")
-                return False
+        new_plugin = self.load_plugin(descriptor)
+        if new_plugin is None:
+            self.logger.error(f"Reload failed while loading plugin: {plugin_name}")
+            return False
 
-            self.plugins[plugin_name] = new_plugin
-            return True
+        self.plugins[plugin_name] = new_plugin
+        return True
     
-    def start_all_plugins(self) -> Dict[str, bool]:
+    async def start_all_plugins(self) -> Dict[str, bool]:
         """
         Start all loaded plugins.
         
@@ -760,19 +697,18 @@ class PluginManager:
             Dictionary mapping plugin names to their start success status
         """
         results = {}
-        with self._lock:
-            plugin_entries = [(name, plugin.get_info().get("enabled", True)) for name, plugin in self.plugins.items()]
+        plugin_entries = [(name, plugin.get_info().get("enabled", True)) for name, plugin in self.plugins.items()]
 
         for name, enabled in plugin_entries:
             if enabled:
-                results[name] = self.start_plugin(name)
+                results[name] = await self.start_plugin(name)
             else:
                 self.logger.info(f"Plugin {name} is disabled and will not be started")
                 results[name] = False
 
         return results
     
-    def stop_all_plugins(self) -> Dict[str, bool]:
+    async def stop_all_plugins(self) -> Dict[str, bool]:
         """
         Stop all running plugins.
         
@@ -780,11 +716,10 @@ class PluginManager:
             Dictionary mapping plugin names to their stop success status
         """
         results = {}
-        with self._lock:
-            plugin_names = list(self.plugins.keys())
+        plugin_names = list(self.plugins.keys())
 
         for name in plugin_names:
-            results[name] = self.stop_plugin(name)
+            results[name] = await self.stop_plugin(name)
 
         return results
     
@@ -798,11 +733,10 @@ class PluginManager:
         Returns:
             PluginStatus if plugin exists, None otherwise
         """
-        with self._lock:
-            plugin = self.plugins.get(plugin_name)
-            if not plugin:
-                return None
-            return plugin.get_status()
+        plugin = self.plugins.get(plugin_name)
+        if not plugin:
+            return None
+        return plugin.get_status()
     
     def get_all_plugin_status(self) -> Dict[str, Dict[str, Any]]:
         """
@@ -812,11 +746,10 @@ class PluginManager:
             Dictionary mapping plugin names to their info dictionaries
         """
         status_dict = {}
-        with self._lock:
-            for name, plugin in self.plugins.items():
-                info = plugin.get_info()
-                info["watchdog_status"] = self._get_watchdog_plugin_status(name, plugin)
-                status_dict[name] = info
+        for name, plugin in self.plugins.items():
+            info = plugin.get_info()
+            info["watchdog_status"] = self._get_watchdog_plugin_status(name, plugin)
+            status_dict[name] = info
         return status_dict
     
     def get_plugin(self, plugin_name: str) -> Optional[Plugin]:
@@ -829,8 +762,7 @@ class PluginManager:
         Returns:
             Plugin instance if found, None otherwise
         """
-        with self._lock:
-            return self.plugins.get(plugin_name)
+        return self.plugins.get(plugin_name)
     
     def list_plugins(self) -> List[str]:
         """
@@ -839,8 +771,7 @@ class PluginManager:
         Returns:
             List of plugin names
         """
-        with self._lock:
-            return list(self.plugins.keys())
+        return list(self.plugins.keys())
 
     def _build_web_dashboard_html(self) -> str:
         """
@@ -849,176 +780,24 @@ class PluginManager:
         Returns:
             HTML string for the dashboard
         """
-        return """<!doctype html>
+        try:
+            return self._dashboard_html_path.read_text(encoding="utf-8")
+        except Exception as e:
+            self.logger.error("Failed to load dashboard HTML template: %s", e, exc_info=True)
+            return """<!doctype html>
 <html lang=\"en\">
 <head>
     <meta charset=\"utf-8\" />
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
     <title>DCS Olympus Plugin Manager</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #111; color: #f5f5f5; }
-        h1 { margin-bottom: 8px; }
-        .hint { color: #aaa; margin-bottom: 16px; }
-        table { width: 100%; border-collapse: collapse; background: #1b1b1b; }
-        th, td { padding: 10px; border-bottom: 1px solid #2d2d2d; text-align: left; }
-        th { background: #222; }
-        .status { font-weight: bold; text-transform: uppercase; }
-        .watchdog { font-family: Consolas, monospace; font-size: 12px; }
-        button { margin-right: 8px; padding: 6px 12px; border: 0; border-radius: 4px; cursor: pointer; }
-        .start { background: #2a9d5a; color: #fff; }
-        .pause { background: #e8b100; color: #111; }
-        .stop { background: #cf3b3b; color: #fff; }
-        .reload { background: #2f7ad8; color: #fff; }
-        .reload:disabled { opacity: 0.45; cursor: not-allowed; }
-        .logs { background: #555; color: #fff; }
-        #message { margin: 12px 0; min-height: 20px; color: #9bd18d; }
-        #logs-panel { margin-top: 18px; padding: 12px; border: 1px solid #2d2d2d; background: #191919; }
-        #logs-title { margin: 0 0 10px 0; }
-        #logs-content {
-            margin: 0;
-            max-height: 320px;
-            overflow: auto;
-            background: #101010;
-            border: 1px solid #2a2a2a;
-            padding: 10px;
-            font-family: Consolas, monospace;
-            font-size: 12px;
-            white-space: pre-wrap;
-            line-height: 1.4;
-        }
-    </style>
 </head>
 <body>
     <h1>Plugin Manager</h1>
-    <div class=\"hint\">Live view of active plugins. Updates every 2 seconds.</div>
-    <div id=\"message\"></div>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Version</th>
-                <th>Author</th>
-                <th>Status</th>
-                <th>Watchdog</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id=\"plugins\"></tbody>
-    </table>
-
-    <div id=\"logs-panel\">
-        <h3 id=\"logs-title\">Plugin Logs</h3>
-        <pre id=\"logs-content\">Click \"Logs\" for a plugin to view recent lines.</pre>
-    </div>
-
-    <script>
-        const pluginsBody = document.getElementById('plugins');
-        const message = document.getElementById('message');
-        const logsTitle = document.getElementById('logs-title');
-        const logsContent = document.getElementById('logs-content');
-        let selectedLogPlugin = null;
-
-        async function loadPlugins() {
-            const response = await fetch('/api/plugins');
-            const data = await response.json();
-            const plugins = data.plugins || [];
-
-            pluginsBody.innerHTML = '';
-
-            for (const plugin of plugins) {
-                const wd = plugin.watchdog_status || {};
-                const heartbeatAge = wd.heartbeat_age_seconds;
-                const heartbeatText = (heartbeatAge === null || heartbeatAge === undefined)
-                    ? 'n/a'
-                    : `${heartbeatAge.toFixed(1)}s`;
-                const tickingText = wd.heartbeat_ticking ? 'ticking' : 'stale';
-                const restartCount = wd.auto_restart_count || 0;
-                const restartedText = restartCount > 0 ? `yes (${restartCount})` : 'no';
-                const restartTs = wd.last_auto_restart_timestamp;
-                const restartAt = restartTs ? new Date(restartTs * 1000).toLocaleTimeString() : 'n/a';
-                const canReload = plugin.status === 'stopped';
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${plugin.name}</td>
-                    <td>${plugin.version}</td>
-                    <td>${plugin.author}</td>
-                    <td class=\"status\">${plugin.status}</td>
-                    <td class=\"watchdog\">${tickingText}<br/>heartbeat: ${heartbeatText}<br/>auto-restarted: ${restartedText}<br/>last restart: ${restartAt}</td>
-                    <td>
-                        <button class=\"start\" data-action=\"start\" data-name=\"${plugin.name}\">Start</button>
-                        <button class=\"pause\" data-action=\"pause\" data-name=\"${plugin.name}\">Pause</button>
-                        <button class=\"stop\" data-action=\"stop\" data-name=\"${plugin.name}\">Stop</button>
-                        <button class=\"reload\" data-action=\"reload\" data-name=\"${plugin.name}\" ${canReload ? '' : 'disabled title=\"Stop plugin before reloading\"'}>Reload</button>
-                        <button class=\"logs\" data-action=\"logs\" data-name=\"${plugin.name}\">Logs</button>
-                    </td>
-                `;
-                pluginsBody.appendChild(tr);
-            }
-        }
-
-        async function loadLogs(pluginName) {
-            try {
-                const response = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/logs?limit=300`);
-                const result = await response.json();
-                const lines = result.lines || [];
-                logsTitle.textContent = `Plugin Logs: ${pluginName}`;
-                logsContent.textContent = lines.length ? lines.join('\\n') : '(No logs yet)';
-                logsContent.scrollTop = logsContent.scrollHeight;
-            } catch (err) {
-                logsTitle.textContent = `Plugin Logs: ${pluginName}`;
-                logsContent.textContent = `Failed to load logs: ${err}`;
-            }
-        }
-
-        async function sendAction(pluginName, action) {
-            message.textContent = `${action} ${pluginName}...`;
-            try {
-                const response = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/${action}`, {
-                    method: 'POST'
-                });
-                const result = await response.json();
-                message.textContent = result.message || `${action} completed for ${pluginName}`;
-            } catch (err) {
-                message.textContent = `Request failed: ${err}`;
-            }
-
-            await loadPlugins();
-        }
-
-        document.body.addEventListener('click', async (event) => {
-            const button = event.target.closest('button[data-action]');
-            if (!button) return;
-
-            const pluginName = button.dataset.name;
-            const action = button.dataset.action;
-
-            if (action === 'logs') {
-                selectedLogPlugin = pluginName;
-                await loadLogs(pluginName);
-                return;
-            }
-
-            await sendAction(pluginName, action);
-
-            if (selectedLogPlugin === pluginName) {
-                await loadLogs(pluginName);
-            }
-        });
-
-        loadPlugins();
-        setInterval(async () => {
-            await loadPlugins();
-            if (selectedLogPlugin) {
-                await loadLogs(selectedLogPlugin);
-            }
-        }, 2000);
-    </script>
+    <p>Dashboard template is unavailable. Check logs for details.</p>
 </body>
 </html>
 """
 
-    def start_management_server(self, host: str = "127.0.0.1", port: int = 8765) -> bool:
+    async def start_management_server(self, host: str = "127.0.0.1", port: int = 8765) -> bool:
         """
         Start an embedded HTTP management server.
 
@@ -1039,178 +818,199 @@ class PluginManager:
         Returns:
             True if started successfully, False otherwise
         """
-        with self._lock:
-            if self._http_server is not None:
-                self.logger.info(
-                    f"Management server already running on {self._server_host}:{self._server_port}"
-                )
-                return True
+        if self._http_server is not None:
+            self.logger.info(
+                f"Management server already running on {self._server_host}:{self._server_port}"
+            )
+            return True
 
-            manager = self
+        try:
+            self._http_server = await asyncio.start_server(self._handle_management_client, host, port)
+            self._server_host = host
+            self._server_port = port
+            self.logger.info(f"Management server started at http://{host}:{port}")
+            return True
+        except Exception as e:
+            self.logger.error(f"Failed to start management server: {e}", exc_info=True)
+            self._http_server = None
+            self._server_host = None
+            self._server_port = None
+            return False
 
-            class ManagementRequestHandler(BaseHTTPRequestHandler):
-                def _send_json(self, status_code: int, payload: Dict[str, Any]):
-                    body = json.dumps(payload).encode("utf-8")
-                    self.send_response(status_code)
-                    self.send_header("Content-Type", "application/json; charset=utf-8")
-                    self.send_header("Content-Length", str(len(body)))
-                    self.end_headers()
-                    self.wfile.write(body)
+    async def _send_http_response(
+        self,
+        writer: asyncio.StreamWriter,
+        status_code: int,
+        content_type: str,
+        body: bytes,
+    ):
+        reason_phrases = {
+            200: "OK",
+            400: "Bad Request",
+            404: "Not Found",
+            405: "Method Not Allowed",
+            500: "Internal Server Error",
+        }
+        reason = reason_phrases.get(status_code, "OK")
+        headers = [
+            f"HTTP/1.1 {status_code} {reason}",
+            f"Content-Type: {content_type}",
+            f"Content-Length: {len(body)}",
+            "Connection: close",
+            "",
+            "",
+        ]
+        writer.write("\r\n".join(headers).encode("utf-8") + body)
+        await writer.drain()
 
-                def _send_html(self, status_code: int, html: str):
-                    body = html.encode("utf-8")
-                    self.send_response(status_code)
-                    self.send_header("Content-Type", "text/html; charset=utf-8")
-                    self.send_header("Content-Length", str(len(body)))
-                    self.end_headers()
-                    self.wfile.write(body)
+    async def _send_json_response(self, writer: asyncio.StreamWriter, status_code: int, payload: Dict[str, Any]):
+        body = json.dumps(payload).encode("utf-8")
+        await self._send_http_response(writer, status_code, "application/json; charset=utf-8", body)
 
-                def _parse_api_path(self) -> List[str]:
-                    parsed = urlparse(self.path)
-                    return [segment for segment in parsed.path.split("/") if segment]
+    async def _send_html_response(self, writer: asyncio.StreamWriter, status_code: int, html: str):
+        await self._send_http_response(writer, status_code, "text/html; charset=utf-8", html.encode("utf-8"))
 
-                def do_GET(self):
-                    parts = self._parse_api_path()
-                    parsed = urlparse(self.path)
-                    query = parse_qs(parsed.query)
+    async def _handle_management_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
+        peer = writer.get_extra_info("peername")
+        try:
+            request_line = await reader.readline()
+            if not request_line:
+                writer.close()
+                await writer.wait_closed()
+                return
 
-                    if len(parts) == 0:
-                        self._send_html(200, manager._build_web_dashboard_html())
-                        return
+            parts = request_line.decode("utf-8", errors="replace").strip().split(" ")
+            if len(parts) < 2:
+                await self._send_json_response(writer, 400, {"error": "Malformed request line"})
+                writer.close()
+                await writer.wait_closed()
+                return
 
-                    if len(parts) == 2 and parts[0] == "api" and parts[1] == "plugins":
-                        plugins = list(manager.get_all_plugin_status().values())
-                        self._send_json(200, {"plugins": plugins})
-                        return
+            method = parts[0].upper()
+            target = parts[1]
 
-                    if len(parts) == 3 and parts[0] == "api" and parts[1] == "plugins":
-                        plugin_name = unquote(parts[2])
-                        plugin = manager.get_plugin(plugin_name)
-                        if plugin is None:
-                            self._send_json(404, {"error": f"Plugin not found: {plugin_name}"})
+            # Consume headers. We do not currently need request headers/body.
+            while True:
+                header_line = await reader.readline()
+                if not header_line or header_line in (b"\r\n", b"\n"):
+                    break
+
+            parsed = urlparse(target)
+            route = [segment for segment in parsed.path.split("/") if segment]
+            query = parse_qs(parsed.query)
+
+            if method == "GET":
+                if len(route) == 0:
+                    await self._send_html_response(writer, 200, self._build_web_dashboard_html())
+                elif len(route) == 2 and route[0] == "api" and route[1] == "plugins":
+                    plugins = list(self.get_all_plugin_status().values())
+                    await self._send_json_response(writer, 200, {"plugins": plugins})
+                elif len(route) == 3 and route[0] == "api" and route[1] == "plugins":
+                    plugin_name = unquote(route[2])
+                    plugin = self.get_plugin(plugin_name)
+                    if plugin is None:
+                        await self._send_json_response(writer, 404, {"error": f"Plugin not found: {plugin_name}"})
+                    else:
+                        await self._send_json_response(writer, 200, {"plugin": plugin.get_info()})
+                elif len(route) == 4 and route[0] == "api" and route[1] == "plugins" and route[3] == "logs":
+                    plugin_name = unquote(route[2])
+                    limit = 300
+                    if "limit" in query:
+                        try:
+                            limit = int(query["limit"][0])
+                        except (ValueError, IndexError):
+                            limit = 300
+
+                    lines = self.get_plugin_logs(plugin_name, limit)
+                    if lines is None:
+                        await self._send_json_response(writer, 404, {"error": f"Plugin not found: {plugin_name}"})
+                    else:
+                        await self._send_json_response(writer, 200, {"plugin": plugin_name, "lines": lines})
+                else:
+                    await self._send_json_response(writer, 404, {"error": "Endpoint not found"})
+
+            elif method == "POST":
+                if len(route) != 4 or route[0] != "api" or route[1] != "plugins":
+                    await self._send_json_response(writer, 404, {"error": "Endpoint not found"})
+                else:
+                    plugin_name = unquote(route[2])
+                    action = route[3].lower()
+
+                    if self.get_plugin(plugin_name) is None:
+                        await self._send_json_response(writer, 404, {"error": f"Plugin not found: {plugin_name}"})
+                    else:
+                        if action == "start":
+                            success = await self.start_plugin(plugin_name)
+                        elif action == "pause":
+                            success = await self.pause_plugin(plugin_name)
+                        elif action == "stop":
+                            success = await self.stop_plugin(plugin_name)
+                        elif action == "reload":
+                            status = self.get_plugin_status(plugin_name)
+                            if status is not PluginStatus.STOPPED:
+                                await self._send_json_response(
+                                    writer,
+                                    400,
+                                    {
+                                        "success": False,
+                                        "message": f"Action 'reload' failed for plugin '{plugin_name}': stop the plugin first"
+                                    }
+                                )
+                                writer.close()
+                                await writer.wait_closed()
+                                return
+                            success = self.reload_plugin(plugin_name)
+                        else:
+                            await self._send_json_response(writer, 400, {"error": f"Unsupported action: {action}"})
+                            writer.close()
+                            await writer.wait_closed()
                             return
 
-                        self._send_json(200, {"plugin": plugin.get_info()})
-                        return
-
-                    if len(parts) == 4 and parts[0] == "api" and parts[1] == "plugins" and parts[3] == "logs":
-                        plugin_name = unquote(parts[2])
-                        limit = 300
-                        if "limit" in query:
-                            try:
-                                limit = int(query["limit"][0])
-                            except (ValueError, IndexError):
-                                limit = 300
-
-                        lines = manager.get_plugin_logs(plugin_name, limit)
-                        if lines is None:
-                            self._send_json(404, {"error": f"Plugin not found: {plugin_name}"})
-                            return
-
-                        self._send_json(200, {"plugin": plugin_name, "lines": lines})
-                        return
-
-                    self._send_json(404, {"error": "Endpoint not found"})
-
-                def do_POST(self):
-                    parts = self._parse_api_path()
-
-                    if len(parts) != 4 or parts[0] != "api" or parts[1] != "plugins":
-                        self._send_json(404, {"error": "Endpoint not found"})
-                        return
-
-                    plugin_name = unquote(parts[2])
-                    action = parts[3].lower()
-
-                    if manager.get_plugin(plugin_name) is None:
-                        self._send_json(404, {"error": f"Plugin not found: {plugin_name}"})
-                        return
-
-                    if action == "start":
-                        success = manager.start_plugin(plugin_name)
-                    elif action == "pause":
-                        success = manager.pause_plugin(plugin_name)
-                    elif action == "stop":
-                        success = manager.stop_plugin(plugin_name)
-                    elif action == "reload":
-                        status = manager.get_plugin_status(plugin_name)
-                        if status is not PluginStatus.STOPPED:
-                            self._send_json(
+                        if not success:
+                            await self._send_json_response(
+                                writer,
                                 400,
                                 {
                                     "success": False,
-                                    "message": f"Action 'reload' failed for plugin '{plugin_name}': stop the plugin first"
+                                    "message": f"Action '{action}' failed for plugin '{plugin_name}'"
                                 }
                             )
-                            return
-                        success = manager.reload_plugin(plugin_name)
-                    else:
-                        self._send_json(400, {"error": f"Unsupported action: {action}"})
-                        return
-
-                    if not success:
-                        self._send_json(
-                            400,
-                            {
-                                "success": False,
-                                "message": f"Action '{action}' failed for plugin '{plugin_name}'"
-                            }
-                        )
-                        return
-
-                    plugin = manager.get_plugin(plugin_name)
-                    status = plugin.get_info() if plugin else {"name": plugin_name, "status": "unknown"}
-                    self._send_json(
-                        200,
-                        {
-                            "success": True,
-                            "message": f"Action '{action}' completed for plugin '{plugin_name}'",
-                            "plugin": status
-                        }
-                    )
-
-                def log_message(self, format: str, *args):
-                    manager.logger.debug("HTTP %s - %s", self.address_string(), format % args)
-
+                        else:
+                            plugin = self.get_plugin(plugin_name)
+                            status = plugin.get_info() if plugin else {"name": plugin_name, "status": "unknown"}
+                            await self._send_json_response(
+                                writer,
+                                200,
+                                {
+                                    "success": True,
+                                    "message": f"Action '{action}' completed for plugin '{plugin_name}'",
+                                    "plugin": status
+                                }
+                            )
+            else:
+                await self._send_json_response(writer, 405, {"error": f"Unsupported method: {method}"})
+        except Exception as e:
+            self.logger.error("HTTP request handling failed: %s", e, exc_info=True)
             try:
-                server = ThreadingHTTPServer((host, port), ManagementRequestHandler)
-                thread = threading.Thread(
-                    target=server.serve_forever,
-                    name="PluginManagementServer",
-                    daemon=True
-                )
-                thread.start()
+                await self._send_json_response(writer, 500, {"error": "Internal server error"})
+            except Exception:
+                pass
+        finally:
+            if peer is not None:
+                self.logger.debug("HTTP %s served", peer)
+            writer.close()
+            await writer.wait_closed()
 
-                self._http_server = server
-                self._http_thread = thread
-                self._server_host = host
-                self._server_port = port
-                self.logger.info(f"Management server started at http://{host}:{port}")
-                return True
-            except Exception as e:
-                self.logger.error(f"Failed to start management server: {e}", exc_info=True)
-                self._http_server = None
-                self._http_thread = None
-                self._server_host = None
-                self._server_port = None
-                return False
-
-    def stop_management_server(self):
+    async def stop_management_server(self):
         """
         Stop the embedded HTTP management server.
         """
-        with self._lock:
-            if self._http_server is None:
-                return
+        if self._http_server is None:
+            return
 
-            self._http_server.shutdown()
-            self._http_server.server_close()
-
-            if self._http_thread is not None and self._http_thread.is_alive():
-                self._http_thread.join(timeout=2)
-
-            self.logger.info("Management server stopped")
-            self._http_server = None
-            self._http_thread = None
-            self._server_host = None
-            self._server_port = None
+        self._http_server.close()
+        await self._http_server.wait_closed()
+        self.logger.info("Management server stopped")
+        self._http_server = None
+        self._server_host = None
+        self._server_port = None

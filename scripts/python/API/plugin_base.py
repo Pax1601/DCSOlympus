@@ -5,11 +5,9 @@ All plugins must inherit from this class and implement the required methods.
 """
 
 from abc import ABC, abstractmethod
-import asyncio
 from enum import Enum
 from typing import Dict, Any, Optional
 import logging
-import threading
 import time
 
 
@@ -50,7 +48,6 @@ class Plugin(ABC):
         self.enabled = plugin_info.get("enabled", True)
         self.status = PluginStatus.INITIALIZED
         self.logger = logging.getLogger(f"Plugin.{self.name}")
-        self._watchdog_lock = threading.Lock()
         self._watchdog_counter = 0
         self._watchdog_last_heartbeat = 0.0
 
@@ -60,9 +57,8 @@ class Plugin(ABC):
 
         Plugins should call this method periodically while running.
         """
-        with self._watchdog_lock:
-            self._watchdog_counter += 1
-            self._watchdog_last_heartbeat = time.time()
+        self._watchdog_counter += 1
+        self._watchdog_last_heartbeat = time.time()
 
     def get_watchdog_state(self) -> Dict[str, Any]:
         """
@@ -71,11 +67,10 @@ class Plugin(ABC):
         Returns:
             Dictionary with watchdog counter and last heartbeat timestamp.
         """
-        with self._watchdog_lock:
-            return {
-                "counter": self._watchdog_counter,
-                "last_heartbeat": self._watchdog_last_heartbeat
-            }
+        return {
+            "counter": self._watchdog_counter,
+            "last_heartbeat": self._watchdog_last_heartbeat
+        }
         
     @abstractmethod
     def on_start(self) -> bool:

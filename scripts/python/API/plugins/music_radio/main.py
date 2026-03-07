@@ -3,7 +3,7 @@ MusicRadio plugin for DCS Olympus API.
 """
 
 import asyncio
-import concurrent.futures
+from random import randrange
 import sys
 from pathlib import Path
 import re
@@ -29,6 +29,7 @@ class MusicRadio(Plugin):
         self.music_folder = str(self.config.get("music_folder", "")).strip()
         self.music_frequency_hz = self._read_frequency_hz("music_frequency_hz")
         self.music_modulation = self._read_modulation("music_modulation", default=0)
+        self.start_at_random_point = self.config.get("start_at_random_point", True)
         self.running = False
         self.paused = False
         
@@ -56,7 +57,7 @@ class MusicRadio(Plugin):
         except (TypeError, ValueError):
             self.logger.warning("Invalid modulation value for %s: %s", key, value)
             return default
-
+        
     def on_start(self) -> bool:
         try:
             self.running = True
@@ -117,6 +118,12 @@ class MusicRadio(Plugin):
                     self.logger.warning("Unable to sort songs.")
             else:
                 self.song_queue.sort(key=lambda f: f.name)
+                
+            # If we want to start at a random point, quickly run through the queue
+            if self.start_at_random_point:
+                for i in range(randrange(len(self.song_queue))):
+                    current_song = self.song_queue.pop(0)
+                    self.song_queue.append(current_song)
             
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_whisper=False, load_kokoro=False)
             self.transmitter = self.api.create_radio_transmitter()

@@ -1,10 +1,6 @@
 # UnitRadioEmbark
 
-Scaffold plugin for DCS Olympus plugin manager.
-
-## Status
-
-Structure initialized. Runtime logic intentionally left empty.
+DCS Olympus Unit Embark/Disembark control.
 
 ## Config
 

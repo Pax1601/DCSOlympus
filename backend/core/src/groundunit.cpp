@@ -337,7 +337,7 @@ void GroundUnit::AIloop()
 			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);
 
 			/* Set the target position as the target unit position */
-			if (target != nullptr && distance < engagementRange)
+			if (target != nullptr && distance < 3 * engagementRange)
 				setTargetPosition(target->getPosition());
 			else
 				setTargetPosition(Coords(NULL));

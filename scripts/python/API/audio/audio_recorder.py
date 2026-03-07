@@ -1,8 +1,8 @@
-import threading
 import opuslib # TODO: important, setup dll recognition
 import wave
 import logging
 from typing import Callable
+import asyncio
 
 from audio.audio_packet import AudioPacket
 import tempfile
@@ -101,7 +101,10 @@ class AudioRecorder:
             self.silence_timer.cancel()
         
         # Set a timer for 2 seconds
-        self.silence_timer = threading.Timer(0.5, self.stop_recording)
-        self.silence_timer.start()
+        self.silence_timer = asyncio.create_task(self._wait_for_silence())
+        
+    async def _wait_for_silence(self):
+        await asyncio.sleep(2)
+        self.stop_recording()
 
     
