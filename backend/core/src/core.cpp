@@ -209,7 +209,7 @@ extern "C" DllExport int coreCallSchedulerFunction(lua_State* L)
         luaTableToJSON(L, -2, functionArgs);
         string username = lua_tostring(L, -1);
 
-		web::json::value answer = web::json::value::object();
+	    json::value answer = web::json::value::object();
         scheduler->handleRequest(functionKey, functionArgs, username, answer);
 
 		// Extract the "response" field from the answer and return it as a string

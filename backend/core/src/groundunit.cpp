@@ -830,6 +830,7 @@ string GroundUnit::missOnPurposeAAA(Unit* target) {
 		}
 	}
 	missOnPurposeTarget = target;
+	return taskString;
 }
 
 void GroundUnit::changeSpeed(string change)
