@@ -24,9 +24,10 @@ import {
   ContextActions,
   DrawSubState,
   colors,
+  ImportExportSubstate,
 } from "../constants/constants";
 import { MapHiddenTypes, MapOptions } from "../types/types";
-import { EffectRequestTable, OlympusConfig, SpawnRequestTable } from "../interfaces";
+import { EffectRequestTable, OlympusConfig, SpawnRequestTable, StaticRequestTable } from "../interfaces";
 import { ContextAction } from "../unit/contextaction";
 
 /* Stylesheets */
@@ -36,6 +37,7 @@ import "./markers/stylesheets/units.css";
 import "./markers/stylesheets/spot.css";
 import "./markers/stylesheets/measure.css";
 import "./markers/stylesheets/navpoint.css";
+import "./markers/stylesheets/static.css";
 import "./stylesheets/map.css";
 
 import { initDraggablePath } from "./coalitionarea/draggablepath";
@@ -69,6 +71,8 @@ import { SmokeMarker } from "./markers/smokemarker";
 import { Measure } from "./measure";
 import { FlakMarker } from "./markers/flakmarker";
 import { MapMouseHandler } from "./mapmousehandler";
+import { TemporaryStaticMarker } from "./markers/temporarystaticmarker";
+import { Static } from "../mission/static";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -142,6 +146,7 @@ export class Map extends L.Map {
   #spawnRequestTable: SpawnRequestTable | null = null;
   #starredSpawnRequestTables: { [key: string]: SpawnRequestTable } = {};
   #effectRequestTable: EffectRequestTable | null = null;
+  #staticRequestTable: StaticRequestTable | null = null;
   #temporaryMarkers: TemporaryUnitMarker[] = [];
   #currentSpawnMarker: TemporaryUnitMarker | null = null;
   #currentEffectMarker: ExplosionMarker | SmokeMarker | null = null;
@@ -159,6 +164,9 @@ export class Map extends L.Map {
   /* State variables */
   #previousAppState: OlympusState = OlympusState.IDLE;
   #previousAppSubstate: OlympusSubState = NO_SUBSTATE;
+
+  /* Temporary statics marker */
+  #temporaryStaticMarkers: TemporaryStaticMarker[] = [];
 
   /**
    *
@@ -335,8 +343,8 @@ export class Map extends L.Map {
         this.panBy(
           new L.Point(
             ((this.#panLeft ? -1 : 0) + (this.#panRight ? 1 : 0)) * this.defaultPanDelta * (this.#panFast ? 3 : 1),
-            ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.defaultPanDelta * (this.#panFast ? 3 : 1)
-          )
+            ((this.#panUp ? -1 : 0) + (this.#panDown ? 1 : 0)) * this.defaultPanDelta * (this.#panFast ? 3 : 1),
+          ),
         );
     }, 20);
 
@@ -545,7 +553,7 @@ export class Map extends L.Map {
         new L.TileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
           minZoom: 1,
           maxZoom: 19,
-        })
+        }),
       );
 
       /* Load the configuration file */
@@ -573,7 +581,7 @@ export class Map extends L.Map {
                   ...layerConfig,
                   crossOrigin: "",
                 });
-              })
+              }),
             );
           }
           this.#layer = new L.LayerGroup(layers);
@@ -651,6 +659,10 @@ export class Map extends L.Map {
         this.#currentEffectMarker = new SmokeMarker(new L.LatLng(0, 0), this.#effectRequestTable.smokeColor ?? "white");
       this.#currentEffectMarker?.addTo(this);
     }
+  }
+
+  setStaticRequestTable(staticRequestTable: StaticRequestTable) {
+    this.#staticRequestTable = staticRequestTable;
   }
 
   setContextActionSet(contextActionSet: ContextActionSet | null) {
@@ -788,6 +800,13 @@ export class Map extends L.Map {
     return smokeMarker;
   }
 
+  addTemporaryStaticMarker(latlng: L.LatLng, commandHash: string) {
+    const staticMarker = new TemporaryStaticMarker(latlng, 10, commandHash);
+    staticMarker.addTo(this);
+    this.#temporaryStaticMarkers.push(staticMarker);
+    return staticMarker;
+  }
+
   setOption<K extends keyof MapOptions>(key: K, value: MapOptions[K]) {
     this.#options[key] = value;
     MapOptionsChangedEvent.dispatch(this.#options, key as keyof MapOptions);
@@ -910,6 +929,7 @@ export class Map extends L.Map {
     this.getContainer().classList.remove(`plus-cursor`);
     this.getContainer().classList.remove(`measure-cursor`);
     this.getContainer().classList.remove(`pointer-cursor`);
+    this.getContainer().classList.remove(`static-cursor`);
 
     /* Clear the last measure if the state is changed */
     if (this.#previousAppState === OlympusState.MEASURE) {
@@ -939,7 +959,7 @@ export class Map extends L.Map {
           new L.LatLng(0, 0),
           this.#spawnRequestTable?.unit.unitType ?? "",
           this.#spawnRequestTable?.coalition ?? "neutral",
-          true
+          true,
         );
         this.#currentSpawnMarker.addTo(this);
       } else if (subState === SpawnSubState.SPAWN_EFFECT) {
@@ -950,6 +970,10 @@ export class Map extends L.Map {
         } else if (this.#effectRequestTable?.type === "smoke") {
           this.getContainer().classList.add(`smoke-${this.#effectRequestTable?.smokeColor?.toLowerCase()}-cursor`);
         }
+      } else if (subState === SpawnSubState.SPAWN_STATIC) {
+        console.log(`Static request table:`);
+        console.log(this.#staticRequestTable);
+        this.getContainer().classList.add(`static-cursor`);
       }
     } else if (state === OlympusState.UNIT_CONTROL) {
       console.log(`Context action:`);
@@ -981,7 +1005,11 @@ export class Map extends L.Map {
   }
 
   #onSelectionEnd(e: any) {
-    getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
+    if (!(getApp().getState() === OlympusState.IMPORT_EXPORT && getApp().getSubState() === ImportExportSubstate.SELECT_STATICS)) {
+      getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
+    } else {
+      getApp().getMissionManager().selectStaticsFromBounds(e.selectionBounds);
+    }
 
     this.setSelectionEnabled(false);
     this.#isSelecting = false;
@@ -1060,13 +1088,18 @@ export class Map extends L.Map {
             .getUnitsManager()
             .spawnUnits(
               this.#spawnRequestTable.category,
-              Array(this.#spawnRequestTable.amount).fill(this.#spawnRequestTable.unit).map((unit, index) => {
-                return {
-                  ...unit,
-                  location: new L.LatLng(unit.location.lat + (this.#spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index), unit.location.lng),
-                  heading: this.#spawnHeading,
-                };
-              }),
+              Array(this.#spawnRequestTable.amount)
+                .fill(this.#spawnRequestTable.unit)
+                .map((unit, index) => {
+                  return {
+                    ...unit,
+                    location: new L.LatLng(
+                      unit.location.lat + (this.#spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index),
+                      unit.location.lng,
+                    ),
+                    heading: deg2rad(this.#spawnHeading),
+                  };
+                }),
               this.#spawnRequestTable.coalition,
               false,
               undefined,
@@ -1077,9 +1110,9 @@ export class Map extends L.Map {
                   this.#spawnRequestTable?.unit.unitType ?? "unknown",
                   this.#spawnRequestTable?.coalition ?? "blue",
                   false,
-                  hash
+                  hash,
                 );
-              }
+              },
             );
         }
       } else if (getApp().getSubState() === SpawnSubState.SPAWN_EFFECT) {
@@ -1098,6 +1131,16 @@ export class Map extends L.Map {
               .spawnSmoke(this.#effectRequestTable.smokeColor ?? "white", e.latlng);
             this.addSmokeMarker(e.latlng, this.#effectRequestTable.smokeColor ?? "white");
           }
+        }
+      } else if (getApp().getSubState() === SpawnSubState.SPAWN_STATIC) {
+        if (this.#staticRequestTable !== null) {
+          this.#staticRequestTable.heading = deg2rad(this.#spawnHeading);
+          getApp()
+            .getServerManager()
+            .spawnStatic(e.latlng, this.#staticRequestTable, false, (commandHash: string) => {
+              getApp().getMap()?.addTemporaryStaticMarker(e.latlng, commandHash);
+              getApp().getServerManager()?.requestStaticsRefresh();
+            });
         }
       }
     } else if (getApp().getState() === OlympusState.DRAW) {
@@ -1190,7 +1233,8 @@ export class Map extends L.Map {
       }
     } else {
       if (getApp().getState() !== OlympusState.DRAW) {
-        getApp().setState(OlympusState.IDLE);
+        if (!(getApp().getState() === OlympusState.IMPORT_EXPORT && getApp().getSubState() === ImportExportSubstate.SELECT_STATICS))
+          getApp().setState(OlympusState.IDLE);
         this.setSelectionEnabled(true);
       }
 
@@ -1333,7 +1377,7 @@ export class Map extends L.Map {
             lng: this.getCenter().lng,
             alt: alt + groundElevation,
             mode: this.#cameraControlMode,
-          })
+          }),
         );
       } catch {
         console.warn("broadcastPosition: could not retrieve ground elevation");

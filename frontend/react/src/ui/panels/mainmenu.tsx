@@ -167,6 +167,31 @@ export function MainMenu(props: { open: boolean; onClose: () => void; children?:
             />
           </div>
         </div>
+        {/* 
+        <div
+          className={`
+            group flex cursor-pointer select-none content-center gap-3
+            rounded-md p-2
+            dark:hover:bg-olympus-500
+            hover:bg-gray-900/10
+          `}
+          onClick={() => {
+            getApp().setState(OlympusState.IMPORT_EXPORT, ImportExportSubstate.EXPORT_STATICS);
+          }}
+        >
+          Export statics to file
+          <div className={`ml-auto flex items-center`}>
+            <FontAwesomeIcon
+              icon={faArrowRightLong}
+              className={`
+                my-auto px-2 text-right text-gray-800 transition-transform
+                dark:text-olympus-50
+                group-hover:translate-x-2
+              `}
+            />
+          </div>
+        </div>
+         */}
       </div>
     </Menu>
   );

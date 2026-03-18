@@ -1366,6 +1366,46 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 	}
 	/************************/
+	else if (key.compare("spawnStaticObject") == 0)
+	{
+		bool immediate = value[L"immediate"].as_bool();
+
+		// Check the presence of all fields
+		if (!value.has_string_field(L"type"))
+			log("Missing type field for spawnStaticObject command");
+		if (!value.has_object_field(L"location") || !value[L"location"].has_number_field(L"lat") || !value[L"location"].has_number_field(L"lng"))
+			log("Missing or invalid location field for spawnStaticObject command");
+		if (!value.has_string_field(L"shapeName"))
+			log("Missing shapeName field for spawnStaticObject command");
+		if (!value.has_string_field(L"coalition"))
+			log("Missing coalition field for spawnStaticObject command");
+		if (!value.has_number_field(L"heading"))
+			log("Missing heading field for spawnStaticObject command");
+		if (!value.has_boolean_field(L"canCargo"))
+			log("Missing canCargo field for spawnStaticObject command");
+		if (!value.has_boolean_field(L"linkOffset"))
+			log("Missing linkOffset field for spawnStaticObject command");
+		if (!value.has_boolean_field(L"dead"))
+			log("Missing dead field for spawnStaticObject command");
+		if (!value.has_number_field(L"mass"))
+			log("Missing mass field for spawnStaticObject command");
+
+		string type = to_string(value[L"type"]);
+		Coords location;
+		location.lat = value[L"location"][L"lat"].as_double();
+		location.lng = value[L"location"][L"lng"].as_double();
+		string shapeName = to_string(value[L"shapeName"]);
+		string coalition = to_string(value[L"coalition"]);
+		double heading = value[L"heading"].as_double();
+		bool canCargo = value[L"canCargo"].as_bool();
+		bool linkOffset = value[L"linkOffset"].as_bool();
+		bool dead = value[L"dead"].as_bool();
+		double mass = value[L"mass"].as_double();
+
+		log("Spawning static object of type " + type + " at (" + to_string(location.lat) + ", " + to_string(location.lng) + ") with shape " + shapeName);
+		command = new SpawnStaticObject(type, location, shapeName, coalition, heading, canCargo, linkOffset, dead, mass, immediate);
+	}
+	/************************/
 	else
 	{
 		log("Unknown command: " + key);

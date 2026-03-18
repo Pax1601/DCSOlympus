@@ -136,6 +136,9 @@ void Server::handle_get(http_request request)
                     /* Markers data */
                     else if (URI.compare(MARKERS_URI) == 0 && missionData.has_object_field(L"markers"))
                         answer[L"markers"] = missionData[L"markers"];
+                    /* Statics data */
+                    else if (URI.compare(STATICS_URI) == 0 && missionData.has_object_field(L"statics"))
+                        answer[L"statics"] = missionData[L"statics"];
                     /* Mission data */
                     else if (URI.compare(MISSION_URI) == 0 && missionData.has_object_field(L"mission")) {
                         answer[L"mission"] = missionData[L"mission"];

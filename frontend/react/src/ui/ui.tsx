@@ -7,7 +7,7 @@ import { UnitControlMenu } from "./panels/unitcontrolmenu";
 import { MainMenu } from "./panels/mainmenu";
 import { SideBar } from "./panels/sidebar";
 import { OptionsMenu } from "./panels/optionsmenu";
-import { NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
+import { ImportExportSubstate, NO_SUBSTATE, OlympusState, OlympusSubState, OptionsSubstate, SpawnSubState, UnitControlSubState } from "../constants/constants";
 import { getApp, setupApp } from "../olympusapp";
 import { LoginModal } from "./modals/loginmodal";
 
@@ -33,6 +33,7 @@ import { TrainingModal } from "./modals/trainingmodal";
 import { AdminModal } from "./modals/adminmodal";
 import { ImageOverlayModal } from "./modals/imageoverlaymodal";
 import { LoadoutWizardModal } from "./modals/loadoutwizardmodal";
+import { StaticsImportExportModal } from "./modals/staticsimportexportmodal";
 
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -72,7 +73,10 @@ export function UI() {
             <LoginModal open={appState === OlympusState.LOGIN} />
             <ProtectionPromptModal open={appState === OlympusState.UNIT_CONTROL && appSubState == UnitControlSubState.PROTECTION} />
             <KeybindModal open={appState === OlympusState.OPTIONS && appSubState === OptionsSubstate.KEYBIND} />
-            <ImportExportModal open={appState === OlympusState.IMPORT_EXPORT} />
+            <ImportExportModal
+              open={appState === OlympusState.IMPORT_EXPORT && (appSubState === ImportExportSubstate.IMPORT || appSubState === ImportExportSubstate.EXPORT)}
+            />
+            <StaticsImportExportModal open={appState === OlympusState.IMPORT_EXPORT && (appSubState === ImportExportSubstate.EXPORT_STATICS || appSubState === ImportExportSubstate.SELECT_STATICS)} />
             <WarningModal open={appState === OlympusState.WARNING} />
             <TrainingModal open={appState === OlympusState.TRAINING} />
             <AdminModal open={appState === OlympusState.ADMIN} />
@@ -103,10 +107,7 @@ export function UI() {
             <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
-            <UnitExplosionMenu
-              open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU}
-              onClose={() => {}}
-            />
+            <UnitExplosionMenu open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU} onClose={() => {}} />
             {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AWACSMenu open={appState === OlympusState.AWACS} onClose={() => getApp().setState(OlympusState.IDLE)} />{*/}
 
@@ -137,9 +138,11 @@ export function UI() {
             `}
           >
             <div className="bouncing-ball">
-              <img src="images/olympus-500x500.png" alt="Olympus Logo" className={`
-                ball-logo
-              `} />
+              <img
+                src="images/olympus-500x500.png"
+                alt="Olympus Logo"
+                className={`ball-logo`}
+              />
             </div>
             {!connectedOnce && <div>Establishing connection</div>}
             {connectedOnce && <div>Connection lost</div>}

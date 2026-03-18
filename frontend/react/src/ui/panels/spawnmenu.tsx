@@ -22,11 +22,21 @@ import {
 import { faExplosion, faSmog, faStar } from "@fortawesome/free-solid-svg-icons";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
 import { EffectSpawnMenu } from "./effectspawnmenu";
-import { BLUE_COMMANDER, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState, SpawnSubState } from "../../constants/constants";
+import {
+  BLUE_COMMANDER,
+  COMMAND_MODE_OPTIONS_DEFAULTS,
+  GAME_MASTER,
+  NO_SUBSTATE,
+  OlympusState,
+  SpawnSubState,
+  staticObjectsShapes,
+} from "../../constants/constants";
 import { AppStateChangedEvent, CommandModeOptionsChangedEvent, StarredSpawnsChangedEvent, UnitDatabaseLoadedEvent } from "../../events";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlDropdownItem } from "../components/oldropdown";
 import { FaXmark } from "react-icons/fa6";
+import { OlStaticListEntry } from "../components/olstaticlistentry";
+import { StaticsSpawnMenu } from "./staticsspawnmenu";
 
 enum CategoryAccordion {
   NONE,
@@ -37,6 +47,7 @@ enum CategoryAccordion {
   GROUND_UNIT,
   NAVY_UNIT,
   EFFECT,
+  STATIC,
   STARRED,
 }
 
@@ -53,6 +64,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
   const [commandModeOptions, setCommandModeOptions] = useState(COMMAND_MODE_OPTIONS_DEFAULTS);
   const [showCost, setShowCost] = useState(false);
   const [starredSpawns, setStarredSpawns] = useState({} as { [key: string]: SpawnRequestTable });
+  const [staticObject, setStaticObject] = useState(null as null | string);
+  const [slingLoadableOnly, setSlingLoadableOnly] = useState(false);
 
   useEffect(() => {
     if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
@@ -89,6 +102,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       if (subState === NO_SUBSTATE) {
         setBlueprint(null);
         setEffect(null);
+        setStaticObject(null);
       }
     });
 
@@ -116,6 +130,8 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       if (blueprint !== null) setBlueprint(null);
       if (effect !== null) setEffect(null);
       if (filterString !== "") setFilterString("");
+      if (staticObject !== null) setStaticObject(null);
+      if (slingLoadableOnly !== false) setSlingLoadableOnly(false);
       if (openAccordion !== CategoryAccordion.NONE) setOpenAccordion(CategoryAccordion.NONE);
     }
   });
@@ -124,7 +140,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
     <Menu
       {...props}
       title="Spawn menu"
-      showBackButton={blueprint !== null || effect !== null}
+      showBackButton={blueprint !== null || effect !== null || staticObject !== null}
       onBack={() => {
         getApp().setState(OlympusState.SPAWN);
         setBlueprint(null);
@@ -175,7 +191,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
       }}
     >
       <>
-        {blueprint === null && effect === null && (
+        {blueprint === null && effect === null && staticObject === null && (
           <div className="p-5">
             <OlSearchBar onChange={(value) => setFilterString(value)} text={filterString} />
             <OlAccordion
@@ -351,9 +367,13 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                       />
                     );
                   })}
-                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && <span className={`
-                  text-gray-400
-                `}>No AAA unit available</span>}
+                {filteredBlueprints.filter((blueprint) => blueprint.canAAA).length === 0 && (
+                  <span
+                    className={`text-gray-400`}
+                  >
+                    No AAA unit available
+                  </span>
+                )}
               </div>
             </OlAccordion>
             <OlAccordion
@@ -559,21 +579,74 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
                         <div>
                           {getApp().getUnitsManager().getDatabase().getByName(spawnRequestTable.unit.unitType)?.label} ({spawnRequestTable.quickAccessName})
                         </div>
-                        <FaXmark className={`
-                          my-auto ml-auto min-h-4 min-w-4 text-gray-400
-                          hover:text-white
-                        `} onClick={
-                          (ev) => {
+                        <FaXmark
+                          className={`
+                            my-auto ml-auto min-h-4 min-w-4 text-gray-400
+                            hover:text-white
+                          `}
+                          onClick={(ev) => {
                             getApp().getMap().removeStarredSpawnRequestTable(key);
                             ev.stopPropagation();
-                          }
-                        }/>
+                          }}
+                        />
                       </OlDropdownItem>
                     );
                   })
                 ) : (
                   <div className="p-2 text-sm text-white">No starred spawns, use the spawn menu to create a quick access spawn</div>
                 )}
+              </div>
+            </OlAccordion>
+            <OlAccordion
+              title={"Static objects"}
+              open={openAccordion == CategoryAccordion.STATIC}
+              onClick={() => {
+                setOpenAccordion(openAccordion === CategoryAccordion.STATIC ? CategoryAccordion.NONE : CategoryAccordion.STATIC);
+                setSelectedRole(null);
+                setSelectedType(null);
+              }}
+            >
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-2">
+                        <div
+                          data-selected={slingLoadableOnly}
+                          className={`
+                            cursor-pointer rounded-full bg-olympus-800 px-2
+                            py-0.5 text-xs font-bold text-olympus-50
+                            data-[selected='true']:bg-blue-500
+                            data-[selected='true']:text-gray-200
+                          `}
+                          onClick={() => {
+                            setSlingLoadableOnly(!slingLoadableOnly);
+                          }}
+                        >
+                          Sling loadable
+                        </div>
+                      </div>
+                <div
+                  className={`
+                    flex max-h-[350px] flex-col gap-1 overflow-y-scroll
+                    no-scrollbar
+                  `}
+                >
+                  {Object.keys(staticObjectsShapes)
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((key) => {
+                      const shape = staticObjectsShapes[key as keyof typeof staticObjectsShapes];
+                      if (filterString !== "" && !key.toLowerCase().includes(filterString.toLowerCase())) return null;
+                      if (slingLoadableOnly && !shape.endsWith("_cargo")) return null;
+                      return (
+                        <OlStaticListEntry
+                          key={key}
+                          objectName={key}
+                          onClick={() => {
+                            setStaticObject(key);
+                          }}
+                          slingload={shape.endsWith("_cargo")}
+                        />
+                      );
+                    })}
+                </div>
               </div>
             </OlAccordion>
           </div>
@@ -588,6 +661,7 @@ export function SpawnMenu(props: { open: boolean; onClose: () => void; children?
         />
 
         <EffectSpawnMenu visible={effect !== null} compact={false} effect={effect} />
+        <StaticsSpawnMenu visible={staticObject !== null} compact={false} staticObject={staticObject} onBack={() => setStaticObject(null)} />
       </>
     </Menu>
   );

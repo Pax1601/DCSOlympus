@@ -41,6 +41,7 @@ export const LOGS_URI = "logs";
 export const AIRBASES_URI = "airbases";
 export const BULLSEYE_URI = "bullseyes";
 export const SPOTS_URI = "spots";
+export const STATICS_URI = "statics";
 export const MISSION_URI = "mission";
 export const COMMANDS_URI = "commands";
 export const DRAWINGS_URI = "drawings";
@@ -422,6 +423,7 @@ export enum SpawnSubState {
   NO_SUBSTATE = "No substate",
   SPAWN_UNIT = "Unit",
   SPAWN_EFFECT = "Effect",
+  SPAWN_STATIC = "Static",
   LOADOUT_WIZARD = "Loadout wizard"
 }
 
@@ -434,6 +436,9 @@ export enum ImportExportSubstate {
   NO_SUBSTATE = "No substate",
   IMPORT = "IMPORT",
   EXPORT = "EXPORT",
+  SELECT_STATICS = "SELECT_STATICS",
+  EXPORT_STATICS = "EXPORT_STATICS",
+  IMPORT_STATICS = "IMPORT_STATICS"
 }
 
 export enum WarningSubstate {
@@ -443,7 +448,7 @@ export enum WarningSubstate {
   ERROR_UPLOADING_CONFIG = "Error uploading config",
 }
 
-export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | string;
+export type OlympusSubState = DrawSubState | JTACSubState | SpawnSubState | OptionsSubstate | ImportExportSubstate | string;
 
 export const IADSTypes = ["AAA", "SAM Site", "Radar (EWR)"];
 export const IADSDensities: { [key: string]: number } = {
@@ -1081,9 +1086,146 @@ export namespace ContextActions {
   );
 }
 
-
 export enum AudioManagerState {
   STOPPED = "Stopped",
   RUNNING = "Running",
   ERROR = "Error"
+}
+
+export const staticObjectsShapes = {
+  "Landmine": "landmine",
+  "FARP CP Blindage": "kp_ug",
+  "Subsidiary structure C": "saray-c",
+  "Barracks 2": "kazarma2",
+  "Small house 2C": "dom2c",
+  "Military staff": "aviashtab",
+  "Tech hangar A": "ceh_ang_a",
+  "Oil derrick": "neftevyshka",
+  "Tech combine": "kombinat",
+  "Garage B": "garage_b",
+  "Airshow Crowd": "Crowd1",
+  "Hangar A": "angar_a",
+  "Repair workshop": "tech",
+  "Subsidiary structure D": "saray-d",
+  "FARP Ammo Dump Coating": "SetkaKP",
+  "Small house 1C area": "dom2c-all",
+  "Tank 2": "airbase_tbilisi_tank_01",
+  "Boiler-house A": "kotelnaya_a",
+  "Workshop A": "tec_a",
+  "Small werehouse 1": "s1",
+  "Garage small B": "garagh-small-b",
+  "Small werehouse 4": "s4",
+  "Shop": "magazin",
+  "Subsidiary structure B": "saray-b",
+  "FARP Fuel Depot": "GSM Rus",
+  "Coach cargo": "wagon-gruz",
+  "Electric power box": "tr_budka",
+  "Tank 3": "airbase_tbilisi_tank_02",
+  "Red Flag": "H-flag_R",
+  "Container red 3": "konteiner_red3",
+  "Garage A": "garage_a",
+  "Hangar B": "angar_b",
+  "Black Tyre": "H-tyre_B",
+  "Cafe": "stolovaya",
+  "Restaurant 1": "restoran1",
+  "Subsidiary structure A": "saray-a",
+  "Container white": "konteiner_white",
+  "Warehouse": "sklad",
+  "Tank": "bak",
+  "Railway crossing B": "pereezd_small",
+  "Subsidiary structure F": "saray-f",
+  "Farm A": "ferma_a",
+  "Small werehouse 3": "s3",
+  "Water tower A": "wodokachka_a",
+  "Railway station": "r_vok_sd",
+  "Coach a tank blue": "wagon-cisterna_blue",
+  "Supermarket A": "uniwersam_a",
+  "Coach aA platform": "wagon-platforma",
+  "Garage small A": "garagh-small-a",
+  "TV tower": "tele_bash",
+  "Comms tower M": "tele_bash_m",
+  "Small house 1A": "domik1a",
+  "Farm B": "ferma_b",
+  "Generator F": "GeneratorF",
+  "Cargo1": "ab-212_cargo",
+  "Container red 2": "konteiner_red2",
+  "Subsidiary structure E": "saray-e",
+  "Coach a passenger": "wagon-pass",
+  "Black Tyre WF": "H-tyre_B_WF",
+  "Electric locomotive": "elektrowoz",
+  "Shelter": "ukrytie",
+  "Coach a tank yellow": "wagon-cisterna_yellow",
+  "Railway crossing A": "pereezd_big",
+  "Ammunition depot": "SkladC",
+  "Small werehouse 2": "s2",
+  "Windsock": "H-Windsock_RW",
+  "Shelter B": "ukrytie_b",
+  "Fuel tank": "toplivo-bak",
+  "Locomotive": "teplowoz",
+  "Command Center": "ComCenter",
+  "Pump station": "nasos",
+  "Black_Tyre_RF": "H-tyre_B_RF",
+  "Coach cargo open": "wagon-gruz-otkr",
+  "Subsidiary structure 3": "hozdomik3",
+  "FARP Tent": "PalatkaB",
+  "White_Tyre": "H-tyre_W",
+  "Subsidiary structure G": "saray-g",
+  "Container red 1": "konteiner_red1",
+  "Small house 1B area": "domik1b-all",
+  "Subsidiary structure 1": "hozdomik1",
+  "Container brown": "konteiner_brown",
+  "Small house 1B": "domik1b",
+  "Subsidiary structure 2": "hozdomik2",
+  "Chemical tank A": "him_bak_a",
+  "WC": "WC",
+  "Small house 1A area": "domik1a-all",
+  "White Flag": "H-Flag_W",
+  "Airshow Cone": "Comp_cone",
+  "Bulk Cargo Ship Ivanov": "barge-1",
+  "Bulk Cargo Ship Yakushev": "barge-2",
+  "Outpost": "block",
+  "Road outpost": "block-onroad",
+  "Container camo": "bw_container_cargo",
+  "Tech Hangar A": "ceh_ang_a",
+  "Bunker 1": "dot",
+  "Bunker 2": "dot2",
+  "Tanker Elnya 160": "elnya",
+  "F-shape barrier": "f_bar_cargo",
+  "Helipad Single": "farp",
+  "FARP": "farps",
+  "Fueltank": "fueltank_cargo",
+  "Gate": "gate",
+  "Armed house": "home1_a",
+  "FARP Command Post": "kp-ug",
+  "Watch Tower Armed": "ohr-vyshka",
+  "Oil Tank": "oiltank_cargo",
+  "Pipes small": "pipes_small_cargo",
+  "Pipes big": "pipes_big_cargo",
+  "Oil platform": "plavbaza",
+  "Tetrapod": "tetrapod_cargo",
+  "Trunks long": "trunks_long_cargo",
+  "Trunks small": "trunks_small_cargo",
+  "Passenger liner": "yastrebow",
+  "Passenger boat": "zwezdny",
+  "Oil rig": "oil_platform",
+  "Gas platform": "gas_platform",
+  "Container 20ft": "container_20ft",
+  "Container 40ft": "container_40ft",
+  "Downed pilot": "cadaver",
+  "Parachute": "parash",
+  "Pilot F15 Parachute": "pilot_f15_parachute",
+  "Pilot standing": "pilot_parashut",
+  "M117": "m117_cargo",
+  "L118": "l118_cargo",
+  "Container": "iso_container_small_cargo",
+  "Barrels": "barrels_cargo",
+  "Ammo box": "ammo_box_cargo"
+}
+
+
+export const shapeNameToType = {
+  "ammo_box_cargo": "ammo_cargo",
+  "ab-212_cargo": "uh1h_cargo",
+  "l118_cargo": "l118",
+  "iso_container_small_cargo": "iso_container_small"
 }

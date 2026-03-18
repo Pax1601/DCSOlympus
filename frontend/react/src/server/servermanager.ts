@@ -10,6 +10,7 @@ import {
   NONE,
   ROEs,
   SPOTS_URI,
+  STATICS_URI,
   UNITS_URI,
   WEAPONS_URI,
   emissionsCountermeasures,
@@ -25,6 +26,8 @@ import {
   ServerRequestOptions,
   ServerStatus,
   SpotsData,
+  StaticRequestTable,
+  StaticsData,
   TACAN,
 } from "../interfaces";
 import { MapOptionsChangedEvent, ServerStatusUpdatedEvent, WrongCredentialsEvent } from "../events";
@@ -45,6 +48,7 @@ export class ServerManager {
   #updateMode = "normal"; // normal or awacs
   #activeCommandMode = "";
   #failedRequestEpoch: number | null = null;
+  #staticsRefreshTimeout: number | null = null;
 
   constructor() {
     this.#lastUpdateTimes[UNITS_URI] = Date.now();
@@ -97,7 +101,7 @@ export class ServerManager {
     uri: string,
     options?: ServerRequestOptions,
     responseType: string = "text",
-    force: boolean = false
+    force: boolean = false,
   ) {
     var xmlHttp = new XMLHttpRequest();
 
@@ -212,6 +216,10 @@ export class ServerManager {
     this.GET(callback, errorCallback, SPOTS_URI);
   }
 
+  getStatics(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
+    this.GET(callback, errorCallback, STATICS_URI);
+  }
+
   getLogs(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, LOGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[LOGS_URI] }, "text", refresh);
   }
@@ -273,7 +281,7 @@ export class ServerManager {
     country: string,
     immediate: boolean,
     spawnPoints: number,
-    callback: CallableFunction = () => {}
+    callback: CallableFunction = () => {},
   ) {
     var command = {
       units: units,
@@ -294,7 +302,7 @@ export class ServerManager {
     country: string,
     immediate: boolean,
     spawnPoints: number,
-    callback: CallableFunction = () => {}
+    callback: CallableFunction = () => {},
   ) {
     var command = {
       units: units,
@@ -332,6 +340,16 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  spawnStatic(latlng: L.LatLng, staticTable: StaticRequestTable, immediate: boolean, callback: CallableFunction = () => {}) {
+    var command = {
+      location: latlng,
+      immediate: immediate,
+      ...staticTable,
+    };
+    var data = { spawnStaticObject: command };
+    this.PUT(data, callback);
+  }
+
   attackUnit(ID: number, targetID: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, targetID: targetID };
     var data = { attackUnit: command };
@@ -359,7 +377,7 @@ export class ServerManager {
     deleteOriginal: boolean,
     spawnPoints: number,
     coalition: Coalition,
-    callback: CallableFunction = () => {}
+    callback: CallableFunction = () => {},
   ) {
     var command = {
       units: units,
@@ -577,7 +595,7 @@ export class ServerManager {
     TACAN: TACAN,
     radio: Radio,
     generalSettings: GeneralSettings,
-    callback: CallableFunction = () => {}
+    callback: CallableFunction = () => {},
   ) {
     var command = {
       ID: ID,
@@ -604,7 +622,7 @@ export class ServerManager {
     targetingRange: number,
     aimMethodRange: number,
     acquisitionRange: number,
-    callback: CallableFunction = () => {}
+    callback: CallableFunction = () => {},
   ) {
     var command = {
       ID: ID,
@@ -672,7 +690,7 @@ export class ServerManager {
           getApp().getDrawingsManager()?.initDrawings(drawingsData);
         }
       },
-      () => {}
+      () => {},
     );
 
     // TODO: load navPoints
@@ -697,7 +715,7 @@ export class ServerManager {
             return data.time;
           });
         }
-      }, 1000)
+      }, 1000),
     );
 
     this.#intervals.push(
@@ -709,7 +727,7 @@ export class ServerManager {
             return data.time;
           });
         }
-      }, 10000)
+      }, 10000),
     );
 
     this.#intervals.push(
@@ -721,7 +739,7 @@ export class ServerManager {
             return data.time;
           });
         }
-      }, 10000)
+      }, 10000),
     );
 
     this.#intervals.push(
@@ -733,7 +751,19 @@ export class ServerManager {
             return data.time;
           });
         }
-      }, 2000)
+      }, 2000),
+    );
+
+    this.#intervals.push(
+      window.setInterval(() => {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
+          this.getStatics((data: StaticsData) => {
+            this.checkSessionHash(data.sessionHash);
+            getApp().getMissionManager()?.updateStatics(data);
+            return data.time;
+          });
+        }
+      }, 5000),
     );
 
     this.#intervals.push(
@@ -745,7 +775,7 @@ export class ServerManager {
             return data.time;
           });
         }
-      }, 1000)
+      }, 1000),
     );
 
     this.#intervals.push(
@@ -758,8 +788,8 @@ export class ServerManager {
             }, false);
           }
         },
-        this.#updateMode === "normal" ? 250 : 2000
-      )
+        this.#updateMode === "normal" ? 250 : 2000,
+      ),
     );
 
     this.#intervals.push(
@@ -772,8 +802,8 @@ export class ServerManager {
             }, false);
           }
         },
-        this.#updateMode === "normal" ? 250 : 2000
-      )
+        this.#updateMode === "normal" ? 250 : 2000,
+      ),
     );
 
     this.#intervals.push(
@@ -784,7 +814,7 @@ export class ServerManager {
             return time;
           }, true);
         }
-      }, 5000)
+      }, 5000),
     );
 
     //  Mission clock and elapsed time
@@ -802,7 +832,7 @@ export class ServerManager {
           connected: this.getConnected(),
           paused: this.getPaused(),
         } as ServerStatus);
-      }, 1000)
+      }, 1000),
     );
 
     this.#intervals.push(
@@ -813,7 +843,7 @@ export class ServerManager {
             return time;
           }, true);
         }
-      }, 5000)
+      }, 5000),
     );
   }
 
@@ -885,5 +915,21 @@ export class ServerManager {
 
   getRequests() {
     return this.#requests;
+  }
+
+  requestStaticsRefresh(timeout: number = 1000) {
+    if (this.#staticsRefreshTimeout) {
+      // Do nothing, a refresh is already scheduled
+      return;
+    } else {
+      this.#staticsRefreshTimeout = window.setTimeout(() => {
+        this.getStatics((data: StaticsData) => {
+          this.checkSessionHash(data.sessionHash);
+          getApp().getMissionManager()?.updateStatics(data);
+          this.#staticsRefreshTimeout = null;
+          return data.time;
+        });
+      }, timeout);
+    }
   }
 }

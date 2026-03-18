@@ -150,6 +150,25 @@ string SpawnHelicopters::getString()
     return commandSS.str();
 }
 
+/* Spawn static object command */
+string SpawnStaticObject::getString() {
+    std::ostringstream commandSS;
+	commandSS.precision(10);
+    commandSS << "Olympus.spawnStaticObject, {"
+        << "type = " << "\"" << type << "\"" << ", "
+        << "lat = " << location.lat << ", "
+        << "lng = " << location.lng << ", "
+        << "shapeName = " << "\"" << shapeName << "\"" << ", "
+        << "coalition = " << "\"" << coalition << "\"" << ", "
+        << "heading = " << heading << ", "
+        << "canCargo = " << (canCargo ? "true" : "false") << ", "
+        << "linkOffset = " << (linkOffset ? "true" : "false") << ", "
+        << "dead = " << (dead ? "true" : "false") << ", "
+        << "mass = " << mass << "}";
+	return commandSS.str();
+}
+
+
 /* Clone unit command */
 string Clone::getString()
 {

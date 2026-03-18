@@ -3,7 +3,7 @@ import { getApp } from "../olympusapp";
 import { Airbase } from "./airbase";
 import { Bullseye } from "./bullseye";
 import { BLUE_COMMANDER, GAME_MASTER, NONE, RED_COMMANDER } from "../constants/constants";
-import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData, SpotsData } from "../interfaces";
+import { AirbasesData, BullseyesData, CommandModeOptions, DateAndTime, MissionData, SpotsData, StaticsData } from "../interfaces";
 import { Coalition } from "../types/types";
 import { Carrier } from "./carrier";
 import {
@@ -13,14 +13,17 @@ import {
   CommandModeOptionsChangedEvent,
   EnabledCommandModesChangedEvent,
   MissionDataChangedEvent,
+  SelectedStaticsChangedEvent,
 } from "../events";
 import { Spot } from "./spot";
+import { Static } from "./static";
 
 /** The MissionManager  */
 export class MissionManager {
   #bullseyes: { [name: string]: Bullseye } = {};
   #spots: { [key: string]: Spot } = {};
   #airbases: { [name: string]: Airbase | Carrier } = {};
+  #statics: { [ID: number]: Static} = {};
   #theatre: string = "";
   #dateAndTime: DateAndTime = {
     date: { Year: 0, Month: 0, Day: 0 },
@@ -46,6 +49,7 @@ export class MissionManager {
   constructor() {
     AppStateChangedEvent.on((state, subState) => {
       if (this.getSelectedAirbase() !== null) AirbaseSelectedEvent.dispatch(null);
+      SelectedStaticsChangedEvent.dispatch([]);
     });
   }
 
@@ -149,6 +153,32 @@ export class MissionManager {
       /* Set the command mode options */
       this.#setcommandModeOptions(data.mission.commandModeOptions);
       this.#remainingSetupTime = this.getCommandModeOptions().setupTime - this.getDateAndTime().elapsedTime;
+    }
+  }
+
+   /** Update statics information
+   *
+   * @param object <StaticsData>
+   */
+  updateStatics(data: StaticsData) {
+    for (let idx in data.statics) {
+      var staticObject = data.statics[idx];
+      if (this.#statics[staticObject.ID] === undefined) {
+        if (staticObject.name != "") {
+          this.#statics[staticObject.ID] = new Static({
+            ID: staticObject.ID,
+            latlng: new LatLng(staticObject.position.lat, staticObject.position.lng),
+            name: staticObject.name,
+            heading: staticObject.heading,
+            coalition: staticObject.coalition,
+            size1: staticObject.size1,
+            size2: staticObject.size2,
+          }).addTo(getApp().getMap());
+          this.#statics[staticObject.ID].updateSize();
+        }
+      }
+
+      // TODO: remove deleted statics
     }
   }
 
@@ -268,6 +298,15 @@ export class MissionManager {
 
   getEnabledCommandModes() {
     return this.#enabledCommandModes;
+  }
+
+  selectStaticsFromBounds(bounds: L.LatLngBounds) {
+    Object.values(this.#statics).forEach((staticObject: Static) => {
+      if (bounds.contains(staticObject.getLatLng())) {
+        staticObject.setSelected(true);
+      }
+    });
+    SelectedStaticsChangedEvent.dispatch(Object.values(this.#statics).filter((staticObject: Static) => staticObject.getSelected()));
   }
 
   #setcommandModeOptions(commandModeOptions: CommandModeOptions) {

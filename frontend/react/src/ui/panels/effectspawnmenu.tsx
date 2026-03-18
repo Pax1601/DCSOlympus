@@ -98,7 +98,10 @@ export function EffectSpawnMenu(props: { visible: boolean; compact: boolean; eff
                       <li>Napalm: an explosion with a longer lasting fire effect;</li>
                       <li>White phosphorous: an explosion with multiple white flares ejecting from the blast;</li>
                       <li>Fire: a long lasting static fire.</li>
-                      <li>Secondaries: an explosion with multiple smaller explosions ejecting from the blast, simulating a destroyed vehicle burning and cooking ammunition.</li>
+                      <li>
+                        Secondaries: an explosion with multiple smaller explosions ejecting from the blast, simulating a destroyed vehicle burning and cooking
+                        ammunition.
+                      </li>
                     </div>
                   </div>
                 )}

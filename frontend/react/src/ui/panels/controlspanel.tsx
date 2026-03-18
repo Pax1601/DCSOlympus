@@ -116,6 +116,11 @@ export function ControlsPanel(props: {}) {
           actions: [touch ? faHandPointer : "LMB"],
           text: "Spawn effect",
         });
+      } else if (appSubState === SpawnSubState.SPAWN_STATIC) {
+        controls.unshift({
+          actions: [touch ? faHandPointer : "LMB"],
+          text: "Spawn static object",
+        });
       }
     } else if (appState === OlympusState.DRAW) {
       controls = [

@@ -13,6 +13,7 @@ import { ContextActionSet } from "./unit/contextactionset";
 import { Unit } from "./unit/unit";
 import { LatLng } from "leaflet";
 import { Weapon } from "./weapon/weapon";
+import { Static } from "./mission/static";
 
 const DEBUG = false;
 
@@ -957,3 +958,21 @@ export class CustomLoadoutsUpdatedEvent {
         if (DEBUG) console.log(`Event ${this.name} dispatched`);
     }
 }
+
+export class SelectedStaticsChangedEvent {
+    static on(callback: (statics: Static[]) => void, singleShot = false) {
+        document.addEventListener(
+            this.name,
+            (ev: CustomEventInit) => {
+                callback(ev.detail.statics);
+            },
+            { once: singleShot }
+        );
+    }
+
+    static dispatch(statics: Static[]) {
+        document.dispatchEvent(new CustomEvent(this.name, { detail: { statics } }));
+        if (DEBUG) console.log(`Event ${this.name} dispatched`);
+    }
+}
+

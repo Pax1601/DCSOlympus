@@ -1,0 +1,30 @@
+.static-icon::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.static-icon[data-coalition="red"]::after {
+  background-color: var(--unit-background-red);
+  border-radius: 10%;
+  opacity: 0.5;
+}
+
+.static-icon[data-coalition="blue"]::after {
+  background-color: var(--unit-background-blue);
+  border-radius: 10%;
+  opacity: 0.5;
+}
+
+.static-icon[data-coalition="neutral"]::after {
+  background-color: var(--unit-background-neutral);
+  border-radius: 10%;
+  opacity: 0.5;
+}
+
+.static-icon[data-is-selected]::after {
+background-color: var(--unit-spotlight-fill);
+  opacity: 1;
+}

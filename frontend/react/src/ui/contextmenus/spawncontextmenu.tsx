@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { BLUE_COMMANDER, colors, COMMAND_MODE_OPTIONS_DEFAULTS, GAME_MASTER, NO_SUBSTATE, OlympusState, OlympusSubState } from "../../constants/constants";
+import {
+  BLUE_COMMANDER,
+  colors,
+  COMMAND_MODE_OPTIONS_DEFAULTS,
+  GAME_MASTER,
+  NO_SUBSTATE,
+  OlympusState,
+  OlympusSubState,
+  staticObjectsShapes,
+} from "../../constants/constants";
 import { LatLng } from "leaflet";
 import {
   AppStateChangedEvent,
@@ -10,7 +19,7 @@ import {
 } from "../../events";
 import { getApp } from "../../olympusapp";
 import { SpawnRequestTable, UnitBlueprint } from "../../interfaces";
-import { faEllipsisVertical, faExplosion, faSearch, faSmog, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisVertical, faExplosion, faHouseChimney, faSearch, faSmog, faStar } from "@fortawesome/free-solid-svg-icons";
 import { EffectSpawnMenu } from "../panels/effectspawnmenu";
 import { UnitSpawnMenu } from "../panels/unitspawnmenu";
 import { OlEffectListEntry } from "../components/oleffectlistentry";
@@ -36,8 +45,10 @@ import { OlDropdownItem } from "../components/oldropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
 import { Coalition } from "../../types/types";
-import { spawn } from "child_process";
 import { FaXmark } from "react-icons/fa6";
+import { StaticsSpawnMenu } from "../panels/staticsspawnmenu";
+import { OlStaticListEntry } from "../components/olstaticlistentry";
+import { OlToggle } from "../components/oltoggle";
 
 enum CategoryGroup {
   NONE,
@@ -47,6 +58,7 @@ enum CategoryGroup {
   GROUND_UNIT,
   NAVY_UNIT,
   EFFECT,
+  STATIC,
   SEARCH,
   STARRED,
 }
@@ -74,6 +86,9 @@ export function SpawnContextMenu(props: {}) {
   const [showMore, setShowMore] = useState(false);
   const [height, setHeight] = useState(0);
   const [translated, setTranslated] = useState(false);
+  const [staticObject, setStaticObject] = useState(null as null | string);
+  const [staticObjectSearchString, setStaticObjectSearchString] = useState("");
+  const [slingLoadableOnly, setSlingLoadableOnly] = useState(false);
 
   useEffect(() => {
     if (selectedRole) setBlueprints(getApp()?.getUnitsManager().getDatabase().getByRole(selectedRole));
@@ -137,8 +152,11 @@ export function SpawnContextMenu(props: {}) {
   useEffect(() => {
     setBlueprint(null);
     setEffect(null);
+    setStaticObject(null);
     setSelectedType(null);
     setSelectedRole(null);
+    setStaticObjectSearchString("");
+    setSlingLoadableOnly(false);
   }, [openAccordion]);
 
   const translateMenu = useCallback(() => {
@@ -273,6 +291,12 @@ export function SpawnContextMenu(props: {}) {
                   className="ml-auto"
                 />
                 <OlStateButton
+                  checked={openAccordion === CategoryGroup.STATIC}
+                  onClick={() => (openAccordion !== CategoryGroup.STATIC ? setOpenAccordion(CategoryGroup.STATIC) : setOpenAccordion(CategoryGroup.NONE))}
+                  icon={faHouseChimney}
+                  tooltip="Show static objects"
+                />
+                <OlStateButton
                   checked={openAccordion === CategoryGroup.SEARCH}
                   onClick={() => (openAccordion !== CategoryGroup.SEARCH ? setOpenAccordion(CategoryGroup.SEARCH) : setOpenAccordion(CategoryGroup.NONE))}
                   icon={faSearch}
@@ -282,12 +306,12 @@ export function SpawnContextMenu(props: {}) {
                   checked={openAccordion === CategoryGroup.STARRED}
                   onClick={() => (openAccordion !== CategoryGroup.STARRED ? setOpenAccordion(CategoryGroup.STARRED) : setOpenAccordion(CategoryGroup.NONE))}
                   icon={faStar}
-                  tooltip="Show starred spanws"
+                  tooltip="Show starred spawns"
                 />
               </>
             )}
           </div>
-          {blueprint === null && effect === null && openAccordion !== CategoryGroup.NONE && (
+          {blueprint === null && effect === null && staticObject === null && openAccordion !== CategoryGroup.NONE && (
             <div className="mb-3 flex flex-col gap-4">
               <>
                 <>
@@ -610,7 +634,55 @@ export function SpawnContextMenu(props: {}) {
                     </>
                   )}
                   {openAccordion === CategoryGroup.EFFECT && commandModeOptions.commandMode !== GAME_MASTER && (
-                    <div className="text-white">Not available in this mode</div>
+                    <div className="text-white">Not available in this game mode. Must be Game Master.</div>
+                  )}
+                  {openAccordion === CategoryGroup.STATIC && commandModeOptions.commandMode === GAME_MASTER && (
+                    <div className="flex flex-col gap-2">
+                      <OlSearchBar onChange={(value) => setStaticObjectSearchString(value)} text={staticObjectSearchString} />
+                      <div className="flex items-center justify-between gap-2">
+                        <div
+                          data-selected={slingLoadableOnly}
+                          className={`
+                            cursor-pointer rounded-full bg-olympus-900 px-2
+                            py-0.5 text-xs font-bold text-olympus-50
+                            data-[selected='true']:bg-blue-500
+                            data-[selected='true']:text-gray-200
+                          `}
+                          onClick={() => {
+                            setSlingLoadableOnly(!slingLoadableOnly);
+                          }}
+                        >
+                          Sling loadable
+                        </div>
+                      </div>
+                      <div
+                        className={`
+                          flex max-h-[350px] flex-col gap-1 overflow-y-scroll
+                          no-scrollbar
+                        `}
+                      >
+                        {Object.keys(staticObjectsShapes)
+                          .sort((a, b) => a.localeCompare(b))
+                          .map((key) => {
+                            const shape = staticObjectsShapes[key as keyof typeof staticObjectsShapes];
+                            if (staticObjectSearchString !== "" && !key.toLowerCase().includes(staticObjectSearchString.toLowerCase())) return null;
+                            if (slingLoadableOnly && !shape.endsWith("_cargo")) return null;
+                            return (
+                              <OlStaticListEntry
+                                key={key}
+                                objectName={key}
+                                onClick={() => {
+                                  setStaticObject(key);
+                                }}
+                                slingload={shape.endsWith("_cargo")}
+                              />
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+                  {openAccordion === CategoryGroup.STATIC && commandModeOptions.commandMode !== GAME_MASTER && (
+                    <div className="text-white">Not available in this game mode. Must be Game Master.</div>
                   )}
                   {openAccordion === CategoryGroup.SEARCH && (
                     <div className="flex flex-col gap-2">
@@ -660,15 +732,20 @@ export function SpawnContextMenu(props: {}) {
                                     .getUnitsManager()
                                     .spawnUnits(
                                       spawnRequestTable.category,
-                                      Array(spawnRequestTable.amount).fill(spawnRequestTable.unit).map((unit, index) => {
-                                        return {
-                                          ...unit,
-                                           location: new LatLng(unit.location.lat + (spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index), unit.location.lng),
-                                          heading: unit.heading || 0,
-                                        };
-                                      }),
+                                      Array(spawnRequestTable.amount)
+                                        .fill(spawnRequestTable.unit)
+                                        .map((unit, index) => {
+                                          return {
+                                            ...unit,
+                                            location: new LatLng(
+                                              unit.location.lat + (spawnRequestTable?.category === "groundunit" ? 0.00025 * index : 0.005 * index),
+                                              unit.location.lng,
+                                            ),
+                                            heading: unit.heading || 0,
+                                          };
+                                        }),
                                       spawnRequestTable.coalition,
-                                      false
+                                      false,
                                     );
                                   getApp().setState(OlympusState.IDLE);
                                 }
@@ -720,6 +797,14 @@ export function SpawnContextMenu(props: {}) {
             onBack={() => setBlueprint(null)}
           />
           <EffectSpawnMenu visible={effect !== null} compact={true} effect={effect} latlng={latlng} onBack={() => setEffect(null)} />
+          <StaticsSpawnMenu
+            visible={staticObject !== null}
+            compact={true}
+            staticObject={staticObject}
+            latlng={latlng}
+            onBack={() => setStaticObject(null)}
+            coalition={spawnCoalition}
+          />
         </div>
       </div>
     </>

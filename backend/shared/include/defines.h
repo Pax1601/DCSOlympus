@@ -12,6 +12,7 @@
 #define BULLSEYE_URI "bullseyes"
 #define SPOTS_URI "spots"
 #define MARKERS_URI "markers"
+#define STATICS_URI "statics"
 #define MISSION_URI "mission"
 #define COMMANDS_URI "commands"
 #define DRAWINGS_URI "drawings"

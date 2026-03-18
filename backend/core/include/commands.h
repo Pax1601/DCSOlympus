@@ -271,6 +271,41 @@ private:
 	const bool immediate;
 };
 
+/* Spawn static object command */ 
+class SpawnStaticObject : public Command
+{
+public:
+	SpawnStaticObject(string type, Coords location, string shapeName, string coalition, double heading, bool canCargo, bool linkOffset, bool dead, double mass, bool immediate, function <void(void)> callback = [](){}) :
+		Command(callback),
+		type(type), 
+		location(location), 
+		shapeName(shapeName), 
+		coalition(coalition), 
+		heading(heading), 
+		canCargo(canCargo), 
+		linkOffset(linkOffset), 
+		dead(dead), 
+		mass(mass), 
+		immediate(immediate)
+	{ 
+		priority = immediate? CommandPriority::IMMEDIATE: CommandPriority::LOW; 
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return immediate ? 5 : 30; }
+
+private:
+	const string type;
+	const Coords location;
+	const string shapeName;
+	const string coalition;
+	const double heading;
+	const bool canCargo;
+	const bool linkOffset;
+	const bool dead;
+	const double mass;
+	const bool immediate;
+};
+
 /* Clone unit command */
 class Clone : public Command
 {
