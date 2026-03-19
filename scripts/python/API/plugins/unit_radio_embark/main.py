@@ -37,8 +37,6 @@ class UnitRadioEmbark(Plugin):
         self.red_modulation = self._read_modulation("red_modulation", default=0)
         self.blue_encryption = int(self.config.get("blue_encryption", 0))
         self.red_encryption = int(self.config.get("red_encryption", 0))
-        self.running = False
-        self.paused = False
 
         self.api: API | None = None  # Will be set when the plugin is started
         self.blue_listener: RadioListener | None = None
@@ -77,8 +75,6 @@ class UnitRadioEmbark(Plugin):
 
     def on_start(self) -> bool:
         try:
-            self.running = True
-            self.paused = False
             self.logger.info("Blue embark frequency (Hz): %s", self.blue_embark_frequency_hz)
             self.logger.info("Red embark frequency (Hz): %s", self.red_embark_frequency_hz)
             self.logger.info("Kokoro voice model: %s", self.kokoro_voice_model)
@@ -98,9 +94,6 @@ class UnitRadioEmbark(Plugin):
             self.red_listener.set_prompt(prompt)
             
             self.api.register_on_update_callback(self.on_update)
-
-            self.blue_listener.set_coalition("blue")
-            self.red_listener.set_coalition("red")
 
             if self.blue_embark_frequency_hz is not None:
                 self.blue_listener.start(
@@ -129,8 +122,6 @@ class UnitRadioEmbark(Plugin):
 
     def on_stop(self) -> bool:
         try:
-            self.running = False
-
             if self.blue_listener:
                 self.blue_listener.stop()
                 self.blue_listener = None
@@ -150,8 +141,8 @@ class UnitRadioEmbark(Plugin):
 
     def on_pause(self) -> bool:
         try:
-            self.paused = True
             self.logger.info("UnitRadioEmbark plugin paused")
+            # TODO
             return True
         except Exception as e:
             self.logger.error(f"Failed to pause UnitRadioEmbark plugin: {e}", exc_info=True)
@@ -159,8 +150,8 @@ class UnitRadioEmbark(Plugin):
 
     def on_resume(self) -> bool:
         try:
-            self.paused = False
             self.logger.info("UnitRadioEmbark plugin resumed")
+            # TODO
             return True
         except Exception as e:
             self.logger.error(f"Failed to resume UnitRadioEmbark plugin: {e}", exc_info=True)
@@ -173,7 +164,7 @@ class UnitRadioEmbark(Plugin):
         self.logger.info(f"Received radio message: {message}")
         normalized_message = message.lower()
 
-        disembark_keywords = ["disembark", "get off"]
+        disembark_keywords = ["disembark", "get off", "unload", "get out", "leave", "drop off"]
         embark_keywords = ["embark", "get on", "board", "load", "get in"]
         smoke_keywords = ["smoke"]
         move_keywords = ["move", "group"]

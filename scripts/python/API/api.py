@@ -53,6 +53,7 @@ class API:
         # Initialize Kokoro TTS and Whisper (will be set up after logger)
         self.kokoro = None
         self.whisper = None
+        self.whisper_model = None
         
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API")
@@ -160,15 +161,16 @@ class API:
         
         try:
             import whisper
-            self.whisper = whisper.load_model(model_size)
+            self.whisper = whisper
+            self.whisper_model = whisper.load_model(model_size)
             self.logger.info(f"Whisper speech recognition initialized with '{model_size}' model")
-            self.logger.debug(f"Whisper model device: {self.whisper.device}")
+            self.logger.debug(f"Whisper model device: {self.whisper_model.device}")
         except ImportError:
             self.logger.warning("OpenAI whisper not installed. Speech recognition unavailable.")
-            self.whisper = None
+            self.whisper_model = None
         except Exception as e:
             self.logger.error(f"Failed to initialize Whisper: {e}")
-            self.whisper = None
+            self.whisper_model = None
         
     def _get(self, endpoint):
         credentials = f"{self.username}:{self.password}"
@@ -792,7 +794,7 @@ class API:
             RuntimeError: If Whisper model is not available.
             FileNotFoundError: If the audio file doesn't exist.
         """
-        if self.whisper is None:
+        if self.whisper_model is None:
             raise RuntimeError("Whisper model not available")
             
         # Check if audio libraries are available
@@ -808,34 +810,11 @@ class API:
             # Get absolute path
             abs_wav_filename = os.path.abspath(wav_filename)
             
-            # Verify file can be opened and get properties
-            with wave.open(abs_wav_filename, 'rb') as test_wav:
-                channels = test_wav.getnchannels()
-                sample_rate = test_wav.getframerate()
-                sample_width = test_wav.getsampwidth()
-                frames = test_wav.getnframes()
-                duration = frames / sample_rate
-                
-            self.logger.debug(f"WAV file properties - Channels: {channels}, Sample Rate: {sample_rate}, "
-                            f"Sample Width: {sample_width}, Duration: {duration:.2f}s")
-            
-            # Load audio data directly from WAV file
-            with wave.open(abs_wav_filename, 'rb') as wav_file:
-                # Read all frames
-                frames = wav_file.readframes(wav_file.getnframes())
-                # Convert bytes to numpy array
-                if wav_file.getsampwidth() == 2:  # 16-bit
-                    audio = np.frombuffer(frames, dtype=np.int16)
-                else:
-                    audio = np.frombuffer(frames, dtype=np.int32)
-                
-                # Convert to float32 and normalize to [-1, 1] range
-                audio = audio.astype(np.float32) / (2**(wav_file.getsampwidth() * 8 - 1))
-            
-            self.logger.debug(f"Loaded audio: {len(audio)} samples")
+            audio = self.whisper.load_audio(abs_wav_filename)  # Preload the audio file to cache it in Whisper's internal storage
+            audio = self.whisper.pad_or_trim(audio)  # Ensure the audio is the correct length for Whisper
             
             # Use Whisper with the audio array
-            result = self.whisper.transcribe(
+            result = self.whisper_model.transcribe(
                 audio, 
                 language="en", 
                 verbose=False,
@@ -914,17 +893,18 @@ class API:
         """
         try:
             import whisper
+            self.whisper = whisper
             
             # Store old model reference for cleanup
-            old_model = self.whisper
+            old_model = self.whisper_model
             
             self.logger.info(f"Loading Whisper model: {model_size}")
             new_model = whisper.load_model(model_size)
             
             # Only update if loading was successful
-            self.whisper = new_model
+            self.whisper_model = new_model
             self.logger.info(f"Whisper model changed to '{model_size}' successfully")
-            self.logger.debug(f"New Whisper model device: {self.whisper.device}")
+            self.logger.debug(f"New Whisper model device: {self.whisper_model.device}")
             
             # Clean up old model if it exists
             if old_model is not None:
@@ -947,13 +927,13 @@ class API:
         Returns:
             dict: Information about the current model including device and available models.
         """
-        if self.whisper is None:
+        if self.whisper_model is None:
             return {"status": "not_available", "current_model": None, "device": None}
         
         # Try to determine model size from the model's name or dims
         model_size = "unknown"
-        if hasattr(self.whisper, 'dims'):
-            dims = self.whisper.dims
+        if hasattr(self.whisper_model, 'dims'):
+            dims = self.whisper_model.dims
             # Map common dimensions to model sizes (approximate)
             if dims.n_text_layer == 4:
                 model_size = "tiny"
@@ -969,12 +949,12 @@ class API:
         return {
             "status": "available",
             "current_model": model_size,
-            "device": str(self.whisper.device),
+            "device": str(self.whisper_model.device),
             "available_models": ["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"],
             "model_dims": {
-                "n_mels": self.whisper.dims.n_mels if hasattr(self.whisper, 'dims') else None,
-                "n_text_layer": self.whisper.dims.n_text_layer if hasattr(self.whisper, 'dims') else None,
-                "n_vocab": self.whisper.dims.n_vocab if hasattr(self.whisper, 'dims') else None
+                "n_mels": self.whisper_model.dims.n_mels if hasattr(self.whisper_model, 'dims') else None,
+                "n_text_layer": self.whisper_model.dims.n_text_layer if hasattr(self.whisper_model, 'dims') else None,
+                "n_vocab": self.whisper_model.dims.n_vocab if hasattr(self.whisper_model, 'dims') else None
             }
         }
        

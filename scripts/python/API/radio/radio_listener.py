@@ -111,6 +111,7 @@ class RadioListener(RadioTransmitter):
             self.api.add_test_unit(test_unit)
             self.logger.info(f"Added test unit with ID {unit_id} for recording callback")
         
+        keep_message = False
         if self.message_callback:
             try:
                 prompt = self.prompt
@@ -128,7 +129,7 @@ class RadioListener(RadioTransmitter):
                 
                 self.logger.info(f"Transcribed text: '{recognized_text}'")
                 if recognized_text:
-                    self.message_callback(recognized_text, unit_id)
+                    keep_message = self.message_callback(recognized_text, unit_id) or False
                 else:
                     self.logger.debug("No speech detected in audio")
                     
@@ -147,21 +148,21 @@ class RadioListener(RadioTransmitter):
                 # Clean up the temporary file after processing, but only if something was transcribed.
                 # If transcription failed, we might want to keep the file for debugging purposes. 
                 # Move the file to a "failed_transcriptions" folder instead of deleting it, to avoid losing potentially important debugging information.
-                if recognized_text:
+                if recognized_text and not keep_message:
                     try:
                         if os.path.exists(wav_filename):
                             os.remove(wav_filename)
                     except Exception as e:
                         self.logger.error(f"Failed to delete temporary audio file {wav_filename}: {e}", exc_info=True)
                 else:
-                    failed_dir = "failed_transcriptions"
-                    os.makedirs(failed_dir, exist_ok=True)
-                    failed_path = os.path.join(failed_dir, os.path.basename(wav_filename))
+                    store_dir = "failed_transcriptions" if not keep_message else "kept_transcriptions"
+                    os.makedirs(store_dir, exist_ok=True)
+                    store_path = os.path.join(store_dir, os.path.basename(wav_filename))
                     try:
-                        os.rename(wav_filename, failed_path)
-                        self.logger.info(f"Moved failed transcription audio to {failed_path} for debugging")
+                        os.rename(wav_filename, store_path)
+                        self.logger.info(f"Moved transcription audio to {store_path} for debugging")
                     except Exception as e:
-                        self.logger.error(f"Failed to move failed transcription audio file {wav_filename}: {e}", exc_info=True)
+                        self.logger.error(f"Failed to move transcription audio file {wav_filename}: {e}", exc_info=True)
         else:
             self.logger.warning("No message callback registered to handle recorded audio")
             # Still clean up the file even if no callback is registered

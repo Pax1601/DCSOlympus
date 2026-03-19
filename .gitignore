@@ -49,3 +49,5 @@ scripts/python/API/olympus_plugins.log
 manager/mods-inventory.json
 /scripts/python/API/plugins/music_radio/music
 /scripts/python/API/failed_transcriptions
+/scripts/python/API/kept_transcriptions
+scripts/python/API/whisper_test.py

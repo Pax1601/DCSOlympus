@@ -1,0 +1,24 @@
+{
+  "name": "LuaLink",
+  "version": "0.1.0",
+  "author": "DCS Olympus",
+  "description": "LuaLink plugin",
+  "main": "main.py",
+  "enabled": true,
+  "config": {
+    "kokoro_voice_model": "bm_daniel",
+    "link_file_path": "C:\\Users\\veltro\\Documents\\olympus\\olympus_link_data.txt",
+    "bases": {
+      "Orote": {
+        "frequency_hz": 34e6,
+        "modulation": 1,
+        "encryption": 0
+      },
+      "Vera": {
+        "frequency_hz": 34.5e6,
+        "modulation": 1,
+        "encryption": 0
+      }
+    }
+  }
+}

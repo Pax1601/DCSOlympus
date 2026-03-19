@@ -14,7 +14,7 @@ api_dir = Path(__file__).parent.parent.parent
 if str(api_dir) not in sys.path:
     sys.path.insert(0, str(api_dir))
 
-from plugin_base import Plugin
+from plugin_base import Plugin, PluginStatus
 
 from api import API
 
@@ -30,8 +30,6 @@ class MusicRadio(Plugin):
         self.music_frequency_hz = self._read_frequency_hz("music_frequency_hz")
         self.music_modulation = self._read_modulation("music_modulation", default=0)
         self.start_at_random_point = self.config.get("start_at_random_point", True)
-        self.running = False
-        self.paused = False
         
         self.api: API | None = None
         self.transmitter: RadioTransmitter | None = None
@@ -60,8 +58,6 @@ class MusicRadio(Plugin):
         
     def on_start(self) -> bool:
         try:
-            self.running = True
-            self.paused = False
             self.logger.info("MusicRadio plugin started")
             self.logger.info("Music folder: %s", self.music_folder or "<not configured>")
             self.logger.info("Music frequency (Hz): %s", self.music_frequency_hz)
@@ -139,7 +135,6 @@ class MusicRadio(Plugin):
 
     def on_stop(self) -> bool:
         try:
-            self.running = False
             if self.transmitter:
                 self.transmitter.stop()
                 
@@ -172,7 +167,7 @@ class MusicRadio(Plugin):
             return False
 
     async def _periodic_task(self):
-        while self.running:
+        while self.get_status() == PluginStatus.RUNNING:
             self.watchdog_tick()
             if not self.paused:
                 if not self.transmitter.is_transmitting():
