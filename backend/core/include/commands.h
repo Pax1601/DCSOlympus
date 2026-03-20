@@ -652,3 +652,20 @@ private:
 	const unsigned int argument;
 	const bool active;
 };
+
+/* Execute a file from the local machine */
+class ExecuteFile : public Command
+{
+	public:
+		ExecuteFile(string filePath, function<void(void)> callback = []() {}) :
+			Command(callback),
+			filePath(filePath)
+		{
+			priority = CommandPriority::LOW;
+		};
+		virtual string getString();
+		virtual unsigned int getLoad() { return 500; }
+
+	private:	
+		const string filePath;
+};

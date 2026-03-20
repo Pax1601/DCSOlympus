@@ -1406,6 +1406,19 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		command = new SpawnStaticObject(type, location, shapeName, coalition, heading, canCargo, linkOffset, dead, mass, immediate);
 	}
 	/************************/
+	else if (key.compare("executeFile") == 0)
+	{
+		// Check the presence of all fields
+		if (!value.has_string_field(L"filePath"))
+			log("Missing filePath field for executeFile command");
+		
+
+		string filePath = to_string(value[L"filePath"]);
+
+		log("Executing lua file at " + filePath);
+		command = new ExecuteFile(filePath);
+	}
+	/************************/
 	else
 	{
 		log("Unknown command: " + key);

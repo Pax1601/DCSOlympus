@@ -125,6 +125,8 @@ class LuaLink(Plugin):
         self.api.register_on_update_callback(lambda api: self.watchdog_tick())
         self.api.run()
 
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "link.lua"))
+
         self.logger.info("LuaLink plugin started")
         return True
 

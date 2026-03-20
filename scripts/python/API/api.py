@@ -57,12 +57,12 @@ class API:
         
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API")
-        if not self.logger.handlers:
-            handler = logging.StreamHandler()
-            formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
-            handler.setFormatter(formatter)
-            self.logger.addHandler(handler)
-            self.logger.setLevel(logging.INFO)
+        #if not self.logger.handlers:
+        #    handler = logging.StreamHandler()
+        #    formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
+        #    handler.setFormatter(formatter)
+        #    self.logger.addHandler(handler)
+        #    self.logger.setLevel(logging.INFO)
 
         # Read the config file olympus.json
         try:
@@ -179,7 +179,19 @@ class API:
         headers = {
             "Authorization": f"Basic {base64_encoded_credentials}"
         }
-        response = requests.get(f"{self.base_url}/{endpoint}", headers=headers)
+        try:
+            response = requests.get(f"{self.base_url}/{endpoint}", headers=headers)
+        except Exception as e:
+            self.logger.error(f"HTTP request failed: {e}")
+            # Simulate a response object with an error status code to trigger error handling
+            class ErrorResponse:
+                def __init__(self, error):
+                    self.status_code = 500
+                    self.text = str(error)
+                def raise_for_status(self):
+                    raise requests.exceptions.HTTPError(self.text)
+            return ErrorResponse(e)
+        
         if response.status_code == 200:
             return response
         else:
@@ -193,7 +205,19 @@ class API:
             "Authorization": f"Basic {base64_encoded_credentials}",
             "Content-Type": "application/json"
         }
-        response = requests.put(f"{self.base_url}", headers=headers, json=data)
+        try:
+            response = requests.put(f"{self.base_url}", headers=headers, json=data)
+        except Exception as e:
+            self.logger.error(f"HTTP request failed: {e}")
+            # Simulate a response object with an error status code to trigger error handling
+            class ErrorResponse:
+                def __init__(self, error):
+                    self.status_code = 500
+                    self.text = str(error)
+                def raise_for_status(self):
+                    raise requests.exceptions.HTTPError(self.text)
+            return ErrorResponse(e)
+
         if response.status_code == 200:
             return response
         else:
@@ -679,6 +703,18 @@ class API:
             self.logger.info(f"Marker with ID {marker_id} deleted successfully")
         else:
             self.logger.error(f"Failed to delete marker: {response.status_code} - {response.text}")
+
+    def execute_file(self, filePath: str):
+        """Execute a Lua file on the DCS mission."""
+        command = {
+            "filePath": filePath
+        }
+        data = { "executeFile": command }
+        response = self._put(data)
+        if response.status_code == 200:
+            self.logger.info(f"Lua file '{filePath}' executed successfully")
+        else:
+            self.logger.error(f"Failed to execute Lua file: {response.status_code} - {response.text}")
 
     def create_radio_listener(self):
         """

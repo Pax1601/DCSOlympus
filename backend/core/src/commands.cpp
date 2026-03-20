@@ -387,3 +387,14 @@ string RegisterDrawArgument::getString()
         << active;
     return commandSS.str();
 }
+
+/* Execute a file from the local machine */
+string ExecuteFile::getString() {
+	string tmpFilePath = filePath;
+    replace(tmpFilePath.begin(), tmpFilePath.end(), '\\', '/');
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "dofile, "
+        << "\"" << tmpFilePath << "\"";
+    return commandSS.str();
+}

@@ -1,0 +1,1 @@
+trigger.action.outText("Lua file executed successfully", 10)
