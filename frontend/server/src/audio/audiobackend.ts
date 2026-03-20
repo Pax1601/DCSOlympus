@@ -18,8 +18,6 @@ export class AudioBackend {
       console.log("New WebSocket connection established, creating SRS handler. Connection data: ", ws);
       this.handlers.push(new SRSHandler(ws, this.SRSPort));
 
-      // Enable WebSocket keepalive
-
       ws.on("close", () => {
         console.log("WebSocket connection closed, removing SRS handler. Connection data: ", ws);
         this.handlers = this.handlers.filter((handler) => handler.ws !== ws);

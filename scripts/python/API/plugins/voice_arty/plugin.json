@@ -4,7 +4,6 @@
   "author": "DCS Olympus",
   "description": "Voice-controlled artillery",
   "main": "main.py",
-  "enabled": true,
   "config": {
     "update_interval": 1.0,
     "cluster_threshold_m": 100.0,

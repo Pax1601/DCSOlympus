@@ -4,7 +4,6 @@
   "author": "DCS Olympus",
   "description": "Unit radio embark plugin scaffold",
   "main": "main.py",
-  "enabled": false,
   "config": {
     "blue_embark_frequency_hz": 32e6,
     "red_embark_frequency_hz": null,

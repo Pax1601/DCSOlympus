@@ -45,7 +45,7 @@ class Plugin(ABC):
         self.version = plugin_info.get("version", "0.0.0")
         self.author = plugin_info.get("author", "Unknown")
         self.description = plugin_info.get("description", "")
-        self.enabled = plugin_info.get("enabled", True)
+        self.enabled = plugin_info.get("enabled", global_config.get("plugin_settings", {}).get(self.name, {}).get("enabled", True))
         self.status = PluginStatus.INITIALIZED
         self.logger = logging.getLogger(f"Plugin.{self.name}")
         self._watchdog_counter = 0
