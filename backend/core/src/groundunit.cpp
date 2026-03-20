@@ -148,6 +148,7 @@ void GroundUnit::setState(unsigned char newState)
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
+		shellsFiredAtTasking = totalShellsFired;
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
@@ -300,20 +301,21 @@ void GroundUnit::AIloop()
 		break;
 	}
 	case State::FIRE_AT_AREA: {
+		/* Transition to idle after firing the shots to avoid firing indefinitely 
+			Keep this BEFORE so that if the expendQty option in DCS works and the task is removed from the unit it does not reissue it uselessly. */
+		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire)
+			setState(State::IDLE);
+
+
 		if (targetPosition != Coords(NULL)) {
 			setTask("Firing at area");
 			if (!getHasTask()) {
 				fireAtArea(targetPosition);
-				setHasTask(true);
 			}
 		}
 		else {
 			setState(State::IDLE);
 		}
-
-		/* Transition to idle after firing the shots to avoid firing indefinitely */
-		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire)
-			setState(State::IDLE);
 
 		break;
 	}
@@ -530,7 +532,6 @@ void GroundUnit::fireAtArea(Coords aimTarget) {
 	}
 	Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
 	scheduler->appendCommand(command);
-	shellsFiredAtTasking = totalShellsFired;
 	setHasTask(true);
 }
 
