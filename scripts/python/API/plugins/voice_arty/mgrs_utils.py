@@ -2,6 +2,10 @@ import math
 import re
 
 from data.data_types import LatLng
+try:
+    from .speech_normalizer import normalize_grid_text, normalize_grid_token
+except ImportError:
+    from speech_normalizer import normalize_grid_text, normalize_grid_token
 
 
 NATO_TO_LETTER = {
@@ -28,36 +32,77 @@ UTM_K0 = 0.9996
 
 
 def format_grid_for_readback(text: str) -> str:
-    match = re.search(r"\b([A-Za-z]{2})\s*(\d{4})\s*(\d{4})\b", text.strip())
+    match = re.search(r"\b([A-Za-z]{2})\s*(\d{3,5})\s*(\d{3,5})\b", text.strip())
     if not match:
         return ""
 
     letters, easting, northing = match.groups()
+    if len(easting) != len(northing) or len(easting) not in (3, 4, 5):
+        return ""
+
     phonetic_letters = [LETTER_TO_NATO[letter] for letter in letters.upper()]
     digits = list(easting + northing)
     return " ".join(phonetic_letters + digits)
 
 
-def extract_mgrs_100k(text: str) -> str:
-    tokens = re.findall(r"[a-z0-9]+", text.lower())
+def extract_mgrs_100k(text: str, digits: int = None) -> str:
+    normalized_text = normalize_grid_text(text)
 
+    tokens = re.findall(r"[a-z0-9]+", normalized_text)
+
+    letter_count = 0
+    digit_count = 0
     normalized = []
+    max_digits = digits if digits else 10
+    
     for token in tokens:
+        token = normalize_grid_token(token)
+        
         if token in NATO_TO_LETTER:
             normalized.append(NATO_TO_LETTER[token])
+            letter_count += 1
+            if letter_count == 2:
+                digit_count = 0
         elif token in WORD_TO_DIGIT:
-            normalized.append(WORD_TO_DIGIT[token])
+            if letter_count >= 2:
+                normalized.append(WORD_TO_DIGIT[token])
+                digit_count += 1
+                if digit_count >= max_digits:
+                    break
         elif token.isdigit():
-            normalized.append(token)
+            if letter_count >= 2:
+                for digit_char in token:
+                    normalized.append(digit_char)
+                    digit_count += 1
+                    if digit_count >= max_digits:
+                        break
+                if digit_count >= max_digits:
+                    break
+        else:
+            if letter_count >= 2 and digit_count > 0:
+                break
 
     merged = "".join(normalized)
-    match = re.search(r"([A-Z]{2})(\d{4})(\d{4})", merged)
+    
+    # Try to match in order of preference (10, 8, 6)
+    ten_match = re.search(r"([A-Z]{2})(\d{5})(\d{5})", merged)
+    eight_match = re.search(r"([A-Z]{2})(\d{4})(\d{4})", merged)
+    six_match = re.search(r"([A-Z]{2})(\d{3})(\d{3})", merged)
+    
+    if ten_match:
+        match = ten_match
+    elif eight_match:
+        match = eight_match
+    elif six_match:
+        match = six_match
+    else:
+        match = None
+    
     if not match:
         return ""
 
     letters, easting, northing = match.groups()
     return f"{letters} {easting} {northing}"
-
 
 def utm_zone_from_longitude(longitude: float) -> int:
     return int((longitude + 180) // 6) + 1
@@ -149,7 +194,7 @@ def utm_to_latlng(zone_number: int, easting: float, northing: float, southern_he
 
 
 def mgrs_100k_to_latlng(mgrs_grid: str, reference_position: LatLng):
-    match = re.fullmatch(r"\s*([A-Za-z]{2})\s*(\d{4,5})\s*(\d{4,5})\s*", mgrs_grid)
+    match = re.fullmatch(r"\s*([A-Za-z]{2})\s*(\d{3,5})\s*(\d{3,5})\s*", mgrs_grid)
     if not match:
         return None
 
