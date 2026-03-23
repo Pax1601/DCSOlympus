@@ -15,6 +15,7 @@ if str(api_dir) not in sys.path:
 
 from plugin_base import Plugin
 from api import API
+from utils.utils import lua_table_file_to_dict
 
 class LuaLink(Plugin):
     """
@@ -25,70 +26,10 @@ class LuaLink(Plugin):
         super().__init__(plugin_info, global_config)
         self.config = plugin_info.get("config", {})
 
-        self.bases = self._read_bases()
-        self.kokoro_voice_model = self._read_voice_model("kokoro_voice_model", default="bm_daniel")
-        self.link_file_path = self.config.get("link_file_path", "olympus_link_data.txt")
+        self.bases_data = {}
 
         self.listeners: list[RadioListener] = []
         self.api: API | None = None
-
-    def _read_bases(self, key: str = "bases") -> dict:
-        bases_config = self.config.get(key, {})
-        if not isinstance(bases_config, dict):
-            self.logger.warning("Invalid bases configuration: expected a dictionary, got %s", type(bases_config).__name__)
-            return {}
-
-        valid_bases = {}
-        for base_name, base_info in bases_config.items():
-            if not isinstance(base_info, dict):
-                self.logger.warning("Invalid base info for %s: expected a dictionary, got %s", base_name, type(base_info).__name__)
-                continue
-
-            frequency_hz = self._read_frequency_hz(base_info, "frequency_hz")
-            modulation = self._read_modulation(base_info, "modulation", default=0)
-            encryption = 0  # Currently not used, but can be added in the future if needed
-
-            if frequency_hz is not None:
-                valid_bases[base_name] = {
-                    "frequency_hz": frequency_hz,
-                    "modulation": modulation,
-                    "encryption": encryption,
-                }
-            else:
-                self.logger.warning("Base %s is missing a valid frequency_hz and will be skipped", base_name)
-
-        return valid_bases
-
-    def _read_frequency_hz(self, base_info: dict, key: str):
-        value = base_info.get(key)
-        if value is None:
-            return None
-
-        try:
-            return float(value)
-        except (TypeError, ValueError):
-            self.logger.warning("Invalid frequency value for %s: %s", key, value)
-            return None
-        
-    def _read_modulation(self, base_info: dict, key: str, default: int = 0) -> int:
-        value = base_info.get(key, default)
-        try:
-            return int(value)
-        except (TypeError, ValueError):
-            self.logger.warning("Invalid modulation value for %s: %s", key, value)
-            return default
-
-    def _read_voice_model(self, key: str, default: str = "bm_daniel") -> str:
-        value = self.config.get(key, default)
-        if value is None:
-            return default
-
-        voice_model = str(value).strip()
-        if not voice_model:
-            self.logger.warning("Invalid voice model for %s: %s", key, value)
-            return default
-
-        return voice_model
 
     def on_start(self) -> bool:
         """
@@ -98,17 +39,28 @@ class LuaLink(Plugin):
             bool: True if started successfully, False otherwise
         """
 
-        self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'))
+        self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=False, load_whisper=False)
         
-        for base_name, base_info in self.bases.items():
-            self.logger.info("Frequency (Hz): %s", base_info["frequency_hz"])
-            self.logger.info("Kokoro voice model: %s", self.kokoro_voice_model)
+        # Load all the lua files
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "init.lua"))
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "config.lua"))
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "constants.lua"))
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "utils.lua"))
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "functions.lua"))
+        self.api.execute_file(str(Path(__file__).parent / "lua" / "main.lua"))
+        
+        # Read the configuration file and print it
+        self.bases_data = lua_table_file_to_dict(str(Path(__file__).parent / "lua" / "config.lua"))
+        
+        for base_name, base_info in self.bases_data.items():
+            self.logger.info("Frequency (Hz): %s", base_info["frequency"])
+            self.logger.info("Kokoro voice model: %s", base_info["voiceModel"])
             self.logger.info("Modulation: %s", base_info["modulation"])
 
-            if base_info["frequency_hz"] is not None and base_info["modulation"] is not None:
+            if base_info["frequency"] is not None and base_info["modulation"] is not None:
                 listener = self.api.create_radio_listener()
                 listener.start(
-                    frequency=base_info["frequency_hz"],
+                    frequency=base_info["frequency"],
                     modulation=base_info["modulation"],
                     encryption=0,
                 )
@@ -116,16 +68,12 @@ class LuaLink(Plugin):
                 listener.register_message_callback(lambda message, unitID, listener=listener, base_name=base_name: self.on_message_callback(message, unitID, listener, base_name))
                 self.listeners.append(listener)
 
-                # TODO prompt = "Listening for ."
-        
                 # TODO self.listener.set_prompt(prompt)
             else:
                 self.logger.warning("Skipping base %s due to invalid configuration", base_name)
 
         self.api.register_on_update_callback(lambda api: self.watchdog_tick())
         self.api.run()
-
-        self.api.execute_file(str(Path(__file__).parent / "lua" / "link.lua"))
 
         self.logger.info("LuaLink plugin started")
         return True
@@ -323,3 +271,4 @@ class LuaLink(Plugin):
         except Exception as e:
             self.logger.error(f"Error reading from file: {e}")
             return ""
+                

@@ -1,4 +1,10 @@
 from math import asin, atan2, cos, degrees, radians, sin, sqrt
+import json
+import re
+from pathlib import Path
+from typing import Any
+
+from slpp import slpp as lua
 
 def enum_to_coalition(coalition_id: int) -> str:
     if coalition_id == 0:
@@ -99,3 +105,69 @@ def bearing_to(lat1, lng1, lat2, lng2):
 
     return brng
     
+    
+
+def _strip_lua_comments(lua_text: str) -> str:
+    # Remove block comments first, then line comments.
+    no_block_comments = re.sub(r"--\[\[.*?\]\]", "", lua_text, flags=re.DOTALL)
+    return re.sub(r"--.*$", "", no_block_comments, flags=re.MULTILINE)
+
+
+def _extract_first_table(lua_text: str) -> str:
+    start = lua_text.find("{")
+    if start == -1:
+        raise ValueError("No Lua table found in file.")
+
+    depth = 0
+    in_string = False
+    quote_char = ""
+    escaped = False
+
+    for i in range(start, len(lua_text)):
+        ch = lua_text[i]
+
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == quote_char:
+                in_string = False
+            continue
+
+        if ch in ('"', "'"):
+            in_string = True
+            quote_char = ch
+            continue
+
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return lua_text[start : i + 1]
+
+    raise ValueError("Unbalanced Lua table braces in file.")
+
+
+def lua_table_file_to_dict(input_file: str | Path, output_file: str | Path | None = None, indent: int = 2) -> dict:
+    """
+    Read a file that contains a Lua table and return it as dict.
+
+    Args:
+        input_file: Path to a file containing Lua table text (for example, "x = { ... }").
+        output_file: Optional path for output JSON. Defaults to input file stem + ".json".
+        indent: JSON indentation level.
+
+    Returns:
+        Equivalent dict file
+    """
+    input_path = Path(input_file)
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file not found: {input_path}")
+
+    cleaned = _strip_lua_comments(input_path.read_text(encoding="utf-8"))
+    table_text = _extract_first_table(cleaned)
+    decoded: Any = lua.decode(table_text)
+
+    return decoded

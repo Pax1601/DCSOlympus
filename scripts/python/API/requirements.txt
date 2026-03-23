@@ -16,3 +16,4 @@ pyinstaller>=6.0.0
 
 # Additional dependencies that may be needed
 Pillow>=10.0.0
+slpp>=1.2.3
