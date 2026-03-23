@@ -17,11 +17,11 @@ export abstract class Weapon extends CustomMarker {
   #position: LatLng = new LatLng(0, 0, 0);
   #speed: number = 0;
   #heading: number = 0;
+  #launcherID: number | null = null;
 
   #hidden: boolean = false;
   #detectionMethods: number[] = [];
   #speedVector: number[] = [];
-  #altitude: number[] = [];
   
   getAlive() {
     return this.#alive;
@@ -40,6 +40,9 @@ export abstract class Weapon extends CustomMarker {
   }
   getHeading() {
     return this.#heading;
+  }
+  getLauncherID() {
+    return this.#launcherID;
   }
 
   static getConstructor(type: string) {
@@ -95,6 +98,9 @@ export abstract class Weapon extends CustomMarker {
           this.#heading = dataExtractor.extractFloat64();
           updateMarker = true;
           break;
+        case DataIndexes.launcherID:
+          this.#launcherID = dataExtractor.extractUInt32();
+          break;
       }
     }
 
@@ -111,6 +117,7 @@ export abstract class Weapon extends CustomMarker {
       position: this.#position,
       speed: this.#speed,
       heading: this.#heading,
+      launcherID: this.#launcherID
     };
   }
   
@@ -120,7 +127,7 @@ export abstract class Weapon extends CustomMarker {
     }
     this.#alive = newAlive;
     if (this.#speedVector.length > 0 && newAlive === false) {
-      let asd = 1;
+      // TODO?
     }
   }
 

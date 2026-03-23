@@ -1,3 +1,5 @@
+import asyncio
+
 from radio.radio_transmitter import RadioTransmitter
 from audio.audio_recorder import AudioRecorder
 
@@ -63,7 +65,7 @@ class RadioListener(RadioTransmitter):
                     if audio_packet.get_transmission_guid() not in self.audio_recorders:
                         recorder = AudioRecorder(self.api)
                         self.audio_recorders[audio_packet.get_transmission_guid()] = recorder
-                        recorder.register_recording_callback(self._recording_callback)
+                        recorder.register_recording_callback(lambda wav_filename, unit_id: asyncio.create_task(self._recording_callback(wav_filename, unit_id)))
                         
                     self.audio_recorders[audio_packet.get_transmission_guid()].add_packet(audio_packet)
             elif message_type == MessageType.CLIENTS_DATA.value:
@@ -87,7 +89,7 @@ class RadioListener(RadioTransmitter):
             
         return super()._sync_radio_settings(frequency, modulation, intercom_ID, ptt)
             
-    def _recording_callback(self, wav_filename: str, unit_id: str) -> None:
+    async def _recording_callback(self, wav_filename: str, unit_id: str) -> None:
         """
         Callback for when audio data is recorded.
         
@@ -125,13 +127,10 @@ class RadioListener(RadioTransmitter):
                             self.logger.debug(f"Prepended callsign to prompt: {prompt}")
                 
                 # Use API's centralized transcription service
-                recognized_text = self.api.transcribe_audio(wav_filename, prompt)
+                recognized_text = await self.api.transcribe_audio_in_executor(wav_filename, prompt)
                 
                 self.logger.info(f"Transcribed text: '{recognized_text}'")
-                if recognized_text:
-                    keep_message = self.message_callback(recognized_text, unit_id) or False
-                else:
-                    self.logger.debug("No speech detected in audio")
+                keep_message = self.message_callback(recognized_text, unit_id) or False
                     
             except RuntimeError as e:
                 self.logger.error(f"Whisper model not available: {e}")
@@ -205,6 +204,9 @@ class RadioListener(RadioTransmitter):
             prepend (bool): True to prepend callsign, False otherwise
         """
         self.prepend_calling_callsign = prepend
+
+    def transmit_on_frequency(self, file_name, frequency=None, modulation=None, encryption=None, **kwargs):
+        return super().transmit_on_frequency(file_name, frequency or self.frequency, modulation or self.modulation, encryption or self.encryption, **kwargs)
         
     def start(self, frequency: float | None = None, modulation: int | None = None, encryption: int | None = None, intercom_ID: int | None = None):
         """Start the listener. This requires an active asyncio loop. If used in a plugin this will be handled by the manager. Otherwise, first run api.run() to create a loop.

@@ -51,6 +51,9 @@ void Weapon::update(json::value json, double dt)
 
 	if (json.has_boolean_field(L"isAlive"))
 		setAlive(json[L"isAlive"].as_bool());
+
+	if (json.has_number_field(L"launcherID"))
+		setLauncherID(json[L"launcherID"].as_number().to_int32());
 }
 
 bool Weapon::checkFreshness(unsigned char datumIndex, unsigned long long time) {
@@ -90,6 +93,7 @@ void Weapon::getData(stringstream& ss, unsigned long long time)
 				case DataIndex::position:					appendNumeric(ss, datumIndex, position); break;
 				case DataIndex::speed:						appendNumeric(ss, datumIndex, speed); break;
 				case DataIndex::heading:					appendNumeric(ss, datumIndex, heading); break;
+				case DataIndex::launcherID:					appendNumeric(ss, datumIndex, launcherID); break;
 				}
 			}
 		}

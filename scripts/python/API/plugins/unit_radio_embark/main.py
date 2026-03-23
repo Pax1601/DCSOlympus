@@ -160,7 +160,7 @@ class UnitRadioEmbark(Plugin):
     def on_update(self, api: API):
         self.watchdog_tick()
         
-    def on_message_callback(self, message, unitID, listener: RadioListener):
+    def on_message_callback(self, message: str, unitID, listener: RadioListener):
         self.logger.info(f"Received radio message: {message}")
         normalized_message = message.lower()
 
@@ -195,10 +195,10 @@ class UnitRadioEmbark(Plugin):
             response = self.set_pickup_point(unit)
         else:
             response = "I did not understand your request sir."
-            
-        message_filename = self.api.generate_audio_message(response, voice=self.kokoro_voice_model)
-        listener.transmit_on_frequency(message_filename, self.blue_embark_frequency_hz, self.blue_modulation, self.blue_encryption)
-                
+
+        future = self.api.generate_audio_message_in_executor(response, voice=self.kokoro_voice_model)
+        future.add_done_callback(lambda f: listener.transmit_on_frequency(file_name=f.result()))
+                    
     def embark_units(self, unit: Unit):
         self.logger.info(f"Embarking units for unitID {unit.ID}")
         

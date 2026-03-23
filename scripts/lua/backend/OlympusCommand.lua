@@ -1569,8 +1569,10 @@ function Olympus.setWeaponsData(arg, time)
 						table["category"] = "Missile"
 					elseif weapon:getDesc().category == Weapon.Category.BOMB then
 						table["category"] = "Bomb"
-					--elseif weapon:getDesc().category == Weapon.Category.SHELL then
-					--	table["category"] = "Shell"	-- Useful for debugging but has no real use and has big impact on performance
+					elseif weapon:getDesc().category == Weapon.Category.SHELL then
+						if weapon:getDesc().warhead.caliber > 30 then
+							table["category"] = "Shell"
+						end	
 					end
 				else
 					weapons[ID] = {isAlive = false}
@@ -1593,6 +1595,15 @@ function Olympus.setWeaponsData(arg, time)
 					table["speed"] = mist.vec.mag(weapon:getVelocity())
 					table["heading"] = heading 
 					table["isAlive"] = weapon:isExist()
+
+					local launcher = weapon:getLauncher()
+
+					for ID, unit in pairs(Olympus.units) do
+						if launcher == unit then
+							table["launcherID"] = ID
+							break
+						end
+					end
 					
 					weapons[ID] = table
 				end

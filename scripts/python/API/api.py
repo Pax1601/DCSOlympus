@@ -9,6 +9,8 @@ import tempfile
 import asyncio
 import wave
 
+from weapon.weapon import Weapon
+
 # Audio processing imports (moved to top level for performance)
 try:
     import soundfile as sf
@@ -32,6 +34,7 @@ class API:
         self.config = None
         self.logs = {}
         self.units: dict[str, Unit] = {}
+        self.weapons: dict[str, Weapon] = {}
         self.mission = {}
         self.markers = {}
         self.spots = {}
@@ -44,11 +47,13 @@ class API:
         self.should_stop = False
         self.running = False
         self.auto_update_units = True
+        self.auto_update_weapons = True
 
         # These are test units that are not really in game, but are useful for testing purposes
         self.test_units: dict[int, Unit] = {}
         
         self.units_update_timestamp = 0
+        self.weapons_update_timestamp = 0
         
         # Initialize Kokoro TTS and Whisper (will be set up after logger)
         self.kokoro = None
@@ -70,7 +75,8 @@ class API:
                 # Load the JSON configuration
                 self.config = json.load(file)
         except FileNotFoundError:
-            self.logger.error(f"Configuration file {self.config_location} not found.")
+            self.logger.error(f"Configuration file {os.path.join(saved_games_folder, 'Config', 'olympus.json')} not found.")
+            return
         
         self.password = self.config.get("authentication").get("gameMasterPassword")
         address = self.config.get("backend").get("address")
@@ -297,6 +303,9 @@ class API:
                 # Update units from the last update timestamp
                 if self.auto_update_units:
                     self.update_units(self.units_update_timestamp)
+
+                if self.auto_update_weapons:
+                    self.update_weapons(self.weapons_update_timestamp)
                 
                 if self.on_update_callback:
                     await self._run_callback_async(self.on_update_callback, self)
@@ -359,6 +368,14 @@ class API:
         result = self.units.copy()
         result.update(self.test_units)
         return result
+    
+    def get_weapons(self):
+        """
+        Get all weapons from the API. Notice that if the API is not running, update_weapons() must be manually called first.
+        Returns:
+            dict: A dictionary of Weapon objects indexed by their weapon ID.
+        """
+        return self.weapons
     
     def get_logs(self):
         """
@@ -434,6 +451,41 @@ class API:
                 self.logger.error("Failed to parse JSON response")
         else:
             self.logger.error(f"Failed to fetch units: {response.status_code} - {response.text}")
+
+    def update_weapons(self, time=0):
+        """
+        Fetch the list of weapons from the API.
+        Args:
+            time (int): The time in milliseconds from Unix epoch to fetch weapons from. Default is 0, which fetches all weapons.
+        If time is greater than 0, it fetches weapons updated after that time.
+        Returns:
+            dict: A dictionary of Weapon objects indexed by their weapon ID.
+        """
+        response = self._get("weapons")
+        if response.status_code == 200 and len(response.content) > 0:
+            try:
+                data_extractor = DataExtractor(response.content)
+                
+                # Extract the update timestamp
+                self.weapons_update_timestamp  = data_extractor.extract_uint64()
+                self.logger.debug(f"Weapons Update Timestamp: {self.weapons_update_timestamp}")
+
+                while data_extractor.get_seek_position() < len(response.content):
+                    # Extract the weapon ID
+                    weapon_id = data_extractor.extract_uint32()
+                    
+                    if weapon_id not in self.weapons:
+                        # Create a new Weapon instance if it doesn't exist
+                        self.weapons[weapon_id] = Weapon(weapon_id, self)
+                    
+                    self.weapons[weapon_id].update_from_data_extractor(data_extractor)
+                    
+                return self.weapons
+                    
+            except ValueError:
+                self.logger.error("Failed to parse JSON response")
+        else:
+            self.logger.error(f"Failed to fetch weapons: {response.status_code} - {response.text}")
              
     def update_logs(self, time = 0):
         """
@@ -815,6 +867,24 @@ class API:
             self.logger.error(f"Kokoro TTS failed: {e}")
             raise
     
+    def generate_audio_message_in_executor(self, text: str, voice: str = "bm_daniel", speed: float = 1.0):
+        """
+        Asynchronous version of generate_audio_message.
+        
+        Args:
+            text (str): The text to synthesize.
+            voice (str): The voice name to use (e.g., af_bella, af_nicole, am_adam, bm_daniel, etc.).
+            speed (float): Speech speed multiplier (default 1.0, higher = faster).
+
+        Returns:
+            str: The filename of the generated WAV file.
+            
+        Raises:
+            Exception: If Kokoro TTS fails or is not available.
+        """
+        loop = asyncio.get_event_loop()
+        return loop.run_in_executor(None, self.generate_audio_message, text, voice, speed)
+
     def transcribe_audio(self, wav_filename: str, prompt: str = "") -> str:
         """
         Transcribe audio from a WAV file using the pre-initialized Whisper model.
@@ -868,6 +938,20 @@ class API:
             import traceback
             self.logger.error(f"Traceback: {traceback.format_exc()}")
             return ""
+        
+    def transcribe_audio_in_executor(self, wav_filename: str, prompt: str = ""):
+        """
+        Asynchronous version of transcribe_audio.
+        
+        Args:
+            wav_filename (str): Path to the WAV file to transcribe.
+            prompt (str): Optional prompt to guide transcription.
+            
+        Returns:
+            str: The transcribed text, or empty string if transcription fails or no speech detected.
+        """
+        loop = asyncio.get_event_loop()
+        return loop.run_in_executor(None, self.transcribe_audio, wav_filename, prompt)
     
     def configure_whisper_options(self, fp16: bool = None, no_speech_threshold: float = None, 
                                  logprob_threshold: float = None, compression_ratio_threshold: float = None):

@@ -33,6 +33,7 @@ public:
 	virtual void setPosition(Coords newValue) { updateValue(position, newValue, DataIndex::position); }
 	virtual void setSpeed(double newValue) { updateValue(speed, newValue, DataIndex::speed); }
 	virtual void setHeading(double newValue) { updateValue(heading, newValue, DataIndex::heading); }
+	virtual void setLauncherID(unsigned int newValue) { updateValue(launcherID, newValue, DataIndex::launcherID); }
 
 	/********** Getters **********/
 	virtual string getCategory() { return category; };
@@ -42,6 +43,7 @@ public:
 	virtual Coords getPosition() { return position; }
 	virtual double getSpeed() { return speed; }
 	virtual double getHeading() { return heading; }
+	virtual unsigned int getLauncherID() { return launcherID; }
 	
 protected:
 	unsigned int ID;
@@ -53,6 +55,7 @@ protected:
 	Coords position = Coords(NULL);
 	double speed = NULL;
 	double heading = NULL;
+	unsigned int launcherID = NULL; // ID of the weapon's launcher (if applicable)
 	
 	/********** Other **********/
 	map<unsigned char, unsigned long long> updateTimeMap;

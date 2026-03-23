@@ -83,6 +83,7 @@ namespace DataIndex {
 		shootingProjectionWeaponMass,
 		suppressionLevel,
 		scenicFunctionProbability,
+		launcherID,
 		lastIndex,
 		endOfData = 255
 	};

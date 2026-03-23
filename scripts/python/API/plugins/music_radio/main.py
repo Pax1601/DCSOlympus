@@ -169,7 +169,7 @@ class MusicRadio(Plugin):
     async def _periodic_task(self):
         while self.get_status() == PluginStatus.RUNNING:
             self.watchdog_tick()
-            if not self.paused:
+            if not self.get_status() == PluginStatus.PAUSED:
                 if not self.transmitter.is_transmitting():
                     # Get the next song from the queue. Put the played song at the end of the queue to create a loop
                     if self.song_queue:

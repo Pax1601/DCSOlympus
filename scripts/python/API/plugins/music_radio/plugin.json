@@ -5,8 +5,8 @@
   "description": "Music radio plugin",
   "main": "main.py",
   "config": {
-    "music_folder": "C:\\Users\\dpass\\Documents\\GitHub\\DCSOlympus\\scripts\\python\\API\\plugins\\music_radio\\music",
-    "music_frequency_hz": 32e6,
-    "music_modulation": 1
+    "music_folder": "C:\\Users\\veltro\\Documents\\olympus\\DCSOlympus\\scripts\\python\\API\\plugins\\music_radio\\music",
+    "music_frequency_hz": 116e6,
+    "music_modulation": 0
   }
 }

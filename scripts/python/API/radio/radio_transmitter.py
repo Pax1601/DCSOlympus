@@ -276,7 +276,7 @@ class RadioTransmitter:
                     self.logger.debug(f"Failed to sync radio settings after transmission: {e}")
                     
             # Clean up the temporary audio file
-            if os.path.exists(file_name):
+            if os.path.exists(file_name) and not keep_file:
                 os.remove(file_name)
                 self.logger.debug(f"Cleaned up audio file: {file_name}")
                     

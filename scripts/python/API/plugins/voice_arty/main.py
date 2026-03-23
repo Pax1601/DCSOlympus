@@ -1,13 +1,13 @@
 """
 Voice-controlled artillery plugin for DCS Olympus API.
 """
-
-import asyncio
 import math
-import os
 import re
 import sys
 from pathlib import Path
+
+from unit.unit import Unit
+from weapon.weapon import Weapon
 
 api_dir = Path(__file__).parent.parent.parent
 if str(api_dir) not in sys.path:
@@ -56,6 +56,9 @@ class VoiceArty(Plugin):
             "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "Xray",
             "Yankee", "Zulu"
         ]
+
+        self.firing_units: set[Unit] = set()  
+        self.tracked_shells: set[Weapon] = set()  # Keep track of shells we've registered callbacks for
 
     def on_start(self) -> bool:
         try:
@@ -115,6 +118,38 @@ class VoiceArty(Plugin):
         if not self.running or self.paused:
             return
         self.watchdog_tick()
+
+        battery_units = self._get_battery_units()
+
+        # Iterate over the existing weapons and check the launcher ID to retrieve the firing unit
+        for weapon in api.get_weapons().values():
+            firing_unit = next((unit for unit in battery_units if unit.ID == weapon.launcher_ID), None)
+
+            # If we have a firing unit, the weapon is alive, and we are not already tracking this shell, add the shell to the tracked shells.
+            if firing_unit and weapon.alive and weapon not in self.tracked_shells:
+                self.logger.debug(f"Tracking new shell from unit {weapon.launcher_ID}, weapon ID {weapon.ID}.")
+                self.tracked_shells.add(weapon)
+
+                # If we have not already registered the unit as a firing unit, do it now. Also register the callback for the destruction of the shell. This way, only the first shell is registered.
+                if not firing_unit in self.firing_units:
+                    weapon.register_on_property_change_callback("alive", lambda weapon, _: self._on_shell_alive_change(weapon, firing_unit))
+                    self.firing_units.add(firing_unit)
+                    self.logger.debug(f"Unit {firing_unit.ID} added to firing units set.")
+                    self._send_voice(f"{self.battery_callsign}, shot, out.")
+
+        # Iterate over the firing units. If the unit is in idle state and there is no tracked shells from it, we can remove it from the firing units set to reset for the next time it fires.
+        for unit in list(self.firing_units):
+            if unit.state == "idle":
+                tracked_shells_from_unit = [weapon for weapon in self.tracked_shells if weapon.launcher_ID == unit.ID and weapon.alive]
+                if not tracked_shells_from_unit:
+                    self.firing_units.remove(unit)
+                    self.logger.debug(f"Unit {unit.ID} is idle and has no tracked shells, removing from firing units set.")
+
+                    # Remove all the shells from this unit that are in the tracked shells set, as they are no longer relevant for tracking.
+                    for weapon in list(self.tracked_shells):
+                        if weapon.launcher_ID == unit.ID:
+                            self.tracked_shells.remove(weapon)
+                            self.logger.debug(f"Weapon ID {weapon.ID} from unit {unit.ID} removed from tracked shells set.")
 
     def _on_message_received(self, recognized_text: str, unit_id: str):
         if not self.running or self.paused or self.api is None or self.listener is None:
@@ -210,6 +245,10 @@ class VoiceArty(Plugin):
 
             },
         )
+
+        if message == "":
+            self._send_voice(f"Say again.")
+            return
 
         try:
             if state["phase"] == "1":
@@ -543,7 +582,6 @@ class VoiceArty(Plugin):
 
         for unit in self.api.get_units().values():
             if unit.name == self.artillery_fire_unit_name and unit.coalition == self.friendly_coalition:
-                #unit.fire_at_area(target_latlng)
                 print(f"UNIT NAME: {unit.name}, SHOTS: {shots}, RADIUS: {radius}")
                 unit.fire_at_area(target_latlng, shots, radius)
                 if singleshot:
@@ -553,15 +591,10 @@ class VoiceArty(Plugin):
         if self.api is None or self.listener is None:
             return
 
-        audio_file = None
         try:
-            audio_file = self.api.generate_audio_message(text, voice=self.voice)
-            self.listener.transmit_on_frequency(
-                file_name=audio_file,
-                frequency=self.listener.frequency,
-                modulation=self.listener.modulation,
-                encryption=self.listener.encryption,
-            )
+            future = self.api.generate_audio_message_in_executor(text, voice=self.voice)
+            future.add_done_callback(lambda f: self.listener.transmit_on_frequency(file_name=f.result()))
+            
         except Exception as error:
             self.logger.error(f"Failed to transmit voice response: {error}", exc_info=True)
 
@@ -682,4 +715,16 @@ class VoiceArty(Plugin):
         tokens = re.findall(r"[a-z0-9]+", text.lower())
         normalized_tokens = [self.intent_token_map.get(token, token) for token in tokens]
         return normalize_common_phrases(" ".join(normalized_tokens))
+    
+    def _get_battery_units(self):
+        battery_units: list[Unit] = []
+        for unit in self.api.get_units().values():
+            if unit.name == self.artillery_fire_unit_name and unit.coalition == self.friendly_coalition:
+                battery_units.append(unit)
+        return battery_units
             
+    def _on_shell_alive_change(self, weapon: Weapon, firing_unit: Unit):
+        if not weapon.alive:
+            self.logger.debug(f"Shell impact detected for weapon {weapon.name}.")
+            self._send_voice(f"{self.battery_callsign}, splash, out.")
+    

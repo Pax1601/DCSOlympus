@@ -171,8 +171,9 @@ class LuaLink(Plugin):
             response = "I did not understand your request sir."
             keep_message = True  # Keep the message for debugging unrecognized commands
             
-        message_filename = self.api.generate_audio_message(response, voice=self.kokoro_voice_model)
-        listener.transmit_on_frequency(message_filename, listener.frequency, listener.modulation, listener.encryption)
+        future = self.api.generate_audio_message_in_executor(response, voice=self.kokoro_voice_model)
+        future.add_done_callback(lambda audio_file: listener.transmit_on_frequency(file_name=audio_file))
+
         return keep_message
                 
     def fireteam(self, unit: Unit, base_name: str):

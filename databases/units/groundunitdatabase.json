@@ -13774,7 +13774,7 @@
 		"label": "L118 Light Artillery Gun",
 		"shortLabel": "L118 Light Artillery Gun",
 		"type": "Artillery",
-		"enabled": false,
+		"enabled": true,
 		"liveries": {
 			"desert": {
 				"name": "Desert",
@@ -13782,7 +13782,8 @@
 			}
 		},
 		"acquisitionRange": 17500,
-		"engagementRange": 17200
+		"engagementRange": 17200,
+		"canTargetPoint": true
 	},
 	"HQ-7_LN_P": {
 		"name": "HQ-7_LN_P",

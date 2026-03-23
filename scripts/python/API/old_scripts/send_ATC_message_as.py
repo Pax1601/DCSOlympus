@@ -2,6 +2,8 @@ from api import API
 
 # Setup a logger for the module
 import logging
+
+from radio.radio_listener import RadioListener
 logger = logging.getLogger("send_ATC_message_as")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
@@ -14,7 +16,7 @@ logger.propagate = False
 waiting_for_input = False
 last_message = "No message"
     
-def generate_text(text, listener, unit_ID): 
+def generate_text(text, listener: RadioListener, unit_ID): 
     try:
         # Generate audio using Kokoro TTS (now built into the API)
         audio_file = api.generate_audio_message(text, voice="bm_daniel")

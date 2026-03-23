@@ -51,3 +51,4 @@ manager/mods-inventory.json
 /scripts/python/API/failed_transcriptions
 /scripts/python/API/kept_transcriptions
 scripts/python/API/whisper_test.py
+scripts/python/API/plugin_manager_config.json

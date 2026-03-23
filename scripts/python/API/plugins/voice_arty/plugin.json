@@ -4,7 +4,6 @@
   "author": "DCS Olympus",
   "description": "Voice-controlled artillery",
   "main": "main.py",
-  "enabled": true,
   "config": {
     "frequency_hz": 30.000e6,
     "battery_callsign": "Hammer",

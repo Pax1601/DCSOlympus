@@ -590,6 +590,7 @@ export enum DataIndexes {
   shootingProjectionWeaponMass,
   suppressionLevel,
   scenicFunctionProbability,
+  launcherID,
   endOfData = 255,
 }
 
