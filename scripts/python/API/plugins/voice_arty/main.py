@@ -124,6 +124,10 @@ class VoiceArty(Plugin):
 
         # Iterate over the existing weapons and check the launcher ID to retrieve the firing unit
         for weapon in api.get_weapons().values():
+            # Check that the shell has not exploded already
+            if not weapon.alive:
+                continue
+
             # Check if we are already tracking the shell. If so, skip, else add it to the tracked shells.
             if weapon in self.tracked_shells:
                 continue
@@ -134,10 +138,6 @@ class VoiceArty(Plugin):
             firing_unit = next((unit for unit in battery_units if unit.ID == weapon.launcher_ID), None)
             if firing_unit is None:
                 self.logger.warning(f"Could not find firing unit for weapon ID {weapon.ID} with launcher ID {weapon.launcher_ID}")
-                continue
-            
-            # Check that the shell has not exploded already
-            if not weapon.alive:
                 continue
             
             # Check if the unit has already been registered
@@ -152,8 +152,14 @@ class VoiceArty(Plugin):
                 self.logger.info(f"Unit {firing_unit.ID} has same target as already registered unit {already_registered_unit_with_same_target.ID}, skipping callback registration.")
                 continue
 
+            # Get the target of the firing unit
+            target = self.state_by_unit.get(firing_unit.unit_id, {}).get("target_location")
+            if target is None:
+                self.logger.warning(f"No target location found in state for firing unit {firing_unit.ID}, skipping callback registration.")
+                continue
+
             # Register a callback for when the position of the shell changes. Register the unit as a firing unit. Report the shot.
-            weapon.register_on_property_change_callback("position", lambda weapon, _: self._on_shell_position_change(weapon, firing_unit))
+            weapon.register_on_property_change_callback("position", lambda weapon, position, target=target: self._on_shell_position_change(weapon, position, target))
             self.firing_units.add(firing_unit)
             self.logger.info(f"Unit {firing_unit.ID} added to firing units set.")
             self._send_voice(f"Shot, over.")
@@ -751,11 +757,9 @@ class VoiceArty(Plugin):
                 battery_units.append(unit)
         return battery_units
             
-    def _on_shell_position_change(self, weapon: Weapon, firing_unit: Unit):
-        target_location = self.state_by_unit[firing_unit.unit_id]["target_location"]
-
+    def _on_shell_position_change(self, weapon: Weapon, position: LatLng, target: LatLng):
         # Check if the shell is within 5 seconds of impact
-        time_to_impact = weapon.position.distance_to(target_location) / weapon.speed if weapon.speed > 0 else float('inf')
+        time_to_impact = position.distance_to(target) / weapon.speed if weapon.speed > 0 else float('inf')
         if time_to_impact <= 5.0:  
             self.logger.info(f"Shell impact projected in 5 seconds for weapon {weapon.name}.")
             self._send_voice(f"Splash, over.")
