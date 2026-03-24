@@ -128,7 +128,7 @@ class VoiceArty(Plugin):
             if weapon in self.tracked_shells:
                 continue
             self.tracked_shells.add(weapon)
-            self.logger.debug(f"Tracking new shell from unit {weapon.launcher_ID}, weapon ID {weapon.ID}.")
+            self.logger.info(f"Tracking new shell from unit {weapon.launcher_ID}, weapon ID {weapon.ID}.")
 
             # Get the firing unit
             firing_unit = next((unit for unit in battery_units if unit.ID == weapon.launcher_ID), None)
@@ -136,26 +136,26 @@ class VoiceArty(Plugin):
                 self.logger.warning(f"Could not find firing unit for weapon ID {weapon.ID} with launcher ID {weapon.launcher_ID}")
                 continue
             
-            # Check that the shell has not exploded already or we are not already tracking it
-            if not weapon.alive or weapon in self.tracked_shells:
+            # Check that the shell has not exploded already
+            if not weapon.alive:
                 continue
             
             # Check if the unit has already been registered
             if firing_unit in self.firing_units:
-                self.logger.debug(f"Unit {firing_unit.ID} is already in firing units set, skipping callback registration.")
+                self.logger.info(f"Unit {firing_unit.ID} is already in firing units set, skipping callback registration.")
                 continue
 
             # Check if the target of this firing unit is the same as one of the already registered firing units. If so, skip this unit as we will already have a callback registered.
             # This is used to avoid reporting multiple shots from different units from the same battery
             already_registered_unit_with_same_target = next((unit for unit in self.firing_units if self.state_by_unit.get(unit.unit_id, {}).get("target_location") == self.state_by_unit.get(firing_unit.unit_id, {}).get("target_location")), None)
             if already_registered_unit_with_same_target:
-                self.logger.debug(f"Unit {firing_unit.ID} has same target as already registered unit {already_registered_unit_with_same_target.ID}, skipping callback registration.")
+                self.logger.info(f"Unit {firing_unit.ID} has same target as already registered unit {already_registered_unit_with_same_target.ID}, skipping callback registration.")
                 continue
 
             # Register a callback for when the position of the shell changes. Register the unit as a firing unit. Report the shot.
             weapon.register_on_property_change_callback("position", lambda weapon, _: self._on_shell_position_change(weapon, firing_unit))
             self.firing_units.add(firing_unit)
-            self.logger.debug(f"Unit {firing_unit.ID} added to firing units set.")
+            self.logger.info(f"Unit {firing_unit.ID} added to firing units set.")
             self._send_voice(f"Shot, over.")
 
         # Iterate over the firing units.
@@ -163,7 +163,7 @@ class VoiceArty(Plugin):
             # Safety check, ignore dead units
             if not unit.alive:
                 self.firing_units.remove(unit)
-                self.logger.debug(f"Unit {unit.ID} is no longer alive, removing from firing units set.")
+                self.logger.info(f"Unit {unit.ID} is no longer alive, removing from firing units set.")
                 continue
 
             # If the unit is still firing, wait
@@ -177,7 +177,7 @@ class VoiceArty(Plugin):
 
             # If the unit is in idle state and there are no more shells from it in the air we can safely remove it from the firing units set to be ready to track the next shot from it
             self.firing_units.remove(unit)
-            self.logger.debug(f"Unit {unit.ID} is idle and has no tracked shells, removing from firing units set.")
+            self.logger.info(f"Unit {unit.ID} is idle and has no tracked shells, removing from firing units set.")
 
     def _on_message_received(self, recognized_text: str, unit_id: str):
         if not self.running or self.paused or self.api is None or self.listener is None:
@@ -610,7 +610,7 @@ class VoiceArty(Plugin):
 
         for unit in self.api.get_units().values():
             if unit.name == self.artillery_fire_unit_name and unit.coalition == self.friendly_coalition:
-                self.logger.debug(f"UNIT NAME: {unit.name}, SHOTS: {shots}, RADIUS: {radius}")
+                self.logger.info(f"UNIT NAME: {unit.name}, SHOTS: {shots}, RADIUS: {radius}")
                 unit.fire_at_area(target_latlng, shots, radius)
                 if singleshot:
                     break
