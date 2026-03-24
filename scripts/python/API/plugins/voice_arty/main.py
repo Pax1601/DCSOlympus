@@ -60,6 +60,7 @@ class VoiceArty(Plugin):
 
         self.firing_units: set[Unit] = set()  
         self.tracked_shells: set[Weapon] = set()  # Keep track of shells we've registered callbacks for
+        self.gun_targets: dict[int, LatLng] = {}  # Maps gun unit ID to current target LatLng
 
     def on_start(self) -> bool:
         try:
@@ -147,13 +148,13 @@ class VoiceArty(Plugin):
 
             # Check if the target of this firing unit is the same as one of the already registered firing units. If so, skip this unit as we will already have a callback registered.
             # This is used to avoid reporting multiple shots from different units from the same battery
-            already_registered_unit_with_same_target = next((unit for unit in self.firing_units if self.state_by_unit.get(unit.unit_id, {}).get("target_location") == self.state_by_unit.get(firing_unit.unit_id, {}).get("target_location")), None)
+            already_registered_unit_with_same_target = next((unit for unit in self.firing_units if self.gun_targets.get(unit.ID) == self.gun_targets.get(firing_unit.ID)), None)
             if already_registered_unit_with_same_target:
                 self.logger.info(f"Unit {firing_unit.ID} has same target as already registered unit {already_registered_unit_with_same_target.ID}, skipping callback registration.")
                 continue
 
             # Get the target of the firing unit
-            target = self.state_by_unit.get(firing_unit.unit_id, {}).get("target_location")
+            target = self.gun_targets.get(firing_unit.ID)
             if target is None:
                 self.logger.warning(f"No target location found in state for firing unit {firing_unit.ID}, skipping callback registration.")
                 continue
@@ -618,6 +619,7 @@ class VoiceArty(Plugin):
             if unit.name == self.artillery_fire_unit_name and unit.coalition == self.friendly_coalition:
                 self.logger.info(f"UNIT NAME: {unit.name}, SHOTS: {shots}, RADIUS: {radius}")
                 unit.fire_at_area(target_latlng, shots, radius)
+                self.gun_targets[unit.ID] = target_latlng
                 if singleshot:
                     break
 
