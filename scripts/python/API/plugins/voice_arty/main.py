@@ -6,6 +6,7 @@ import re
 import sys
 from pathlib import Path
 
+from data.data_types import LatLng
 from unit.unit import Unit
 from weapon.weapon import Weapon
 
@@ -123,33 +124,60 @@ class VoiceArty(Plugin):
 
         # Iterate over the existing weapons and check the launcher ID to retrieve the firing unit
         for weapon in api.get_weapons().values():
+            # Check if we are already tracking the shell. If so, skip, else add it to the tracked shells.
+            if weapon in self.tracked_shells:
+                continue
+            self.tracked_shells.add(weapon)
+            self.logger.debug(f"Tracking new shell from unit {weapon.launcher_ID}, weapon ID {weapon.ID}.")
+
+            # Get the firing unit
             firing_unit = next((unit for unit in battery_units if unit.ID == weapon.launcher_ID), None)
+            if firing_unit is None:
+                self.logger.warning(f"Could not find firing unit for weapon ID {weapon.ID} with launcher ID {weapon.launcher_ID}")
+                continue
+            
+            # Check that the shell has not exploded already or we are not already tracking it
+            if not weapon.alive or weapon in self.tracked_shells:
+                continue
+            
+            # Check if the unit has already been registered
+            if firing_unit in self.firing_units:
+                self.logger.debug(f"Unit {firing_unit.ID} is already in firing units set, skipping callback registration.")
+                continue
 
-            # If we have a firing unit, the weapon is alive, and we are not already tracking this shell, add the shell to the tracked shells.
-            if firing_unit and weapon.alive and weapon not in self.tracked_shells:
-                self.logger.debug(f"Tracking new shell from unit {weapon.launcher_ID}, weapon ID {weapon.ID}.")
-                self.tracked_shells.add(weapon)
+            # Check if the target of this firing unit is the same as one of the already registered firing units. If so, skip this unit as we will already have a callback registered.
+            # This is used to avoid reporting multiple shots from different units from the same battery
+            already_registered_unit_with_same_target = next((unit for unit in self.firing_units if self.state_by_unit.get(unit.unit_id, {}).get("target_location") == self.state_by_unit.get(firing_unit.unit_id, {}).get("target_location")), None)
+            if already_registered_unit_with_same_target:
+                self.logger.debug(f"Unit {firing_unit.ID} has same target as already registered unit {already_registered_unit_with_same_target.ID}, skipping callback registration.")
+                continue
 
-                # If we have not already registered the unit as a firing unit, do it now. Also register the callback for the destruction of the shell. This way, only the first shell is registered.
-                if not firing_unit in self.firing_units:
-                    weapon.register_on_property_change_callback("alive", lambda weapon, _: self._on_shell_alive_change(weapon, firing_unit))
-                    self.firing_units.add(firing_unit)
-                    self.logger.debug(f"Unit {firing_unit.ID} added to firing units set.")
-                    self._send_voice(f"{self.battery_callsign}, shot, out.")
+            # Register a callback for when the position of the shell changes. Register the unit as a firing unit. Report the shot.
+            weapon.register_on_property_change_callback("position", lambda weapon, _: self._on_shell_position_change(weapon, firing_unit))
+            self.firing_units.add(firing_unit)
+            self.logger.debug(f"Unit {firing_unit.ID} added to firing units set.")
+            self._send_voice(f"Shot, over.")
 
-        # Iterate over the firing units. If the unit is in idle state and there is no tracked shells from it, we can remove it from the firing units set to reset for the next time it fires.
+        # Iterate over the firing units.
         for unit in list(self.firing_units):
-            if unit.state == "idle":
-                tracked_shells_from_unit = [weapon for weapon in self.tracked_shells if weapon.launcher_ID == unit.ID and weapon.alive]
-                if not tracked_shells_from_unit:
-                    self.firing_units.remove(unit)
-                    self.logger.debug(f"Unit {unit.ID} is idle and has no tracked shells, removing from firing units set.")
+            # Safety check, ignore dead units
+            if not unit.alive:
+                self.firing_units.remove(unit)
+                self.logger.debug(f"Unit {unit.ID} is no longer alive, removing from firing units set.")
+                continue
 
-                    # Remove all the shells from this unit that are in the tracked shells set, as they are no longer relevant for tracking.
-                    for weapon in list(self.tracked_shells):
-                        if weapon.launcher_ID == unit.ID:
-                            self.tracked_shells.remove(weapon)
-                            self.logger.debug(f"Weapon ID {weapon.ID} from unit {unit.ID} removed from tracked shells set.")
+            # If the unit is still firing, wait
+            if not unit.state == "idle":
+                continue
+
+            # Get all the shells that were shot from this unit and check if any of them is still alive. If so, wait
+            tracked_shells_from_unit = [weapon for weapon in self.tracked_shells if weapon.launcher_ID == unit.ID and weapon.alive]
+            if any(weapon.alive for weapon in tracked_shells_from_unit):
+                continue
+
+            # If the unit is in idle state and there are no more shells from it in the air we can safely remove it from the firing units set to be ready to track the next shot from it
+            self.firing_units.remove(unit)
+            self.logger.debug(f"Unit {unit.ID} is idle and has no tracked shells, removing from firing units set.")
 
     def _on_message_received(self, recognized_text: str, unit_id: str):
         if not self.running or self.paused or self.api is None or self.listener is None:
@@ -582,7 +610,7 @@ class VoiceArty(Plugin):
 
         for unit in self.api.get_units().values():
             if unit.name == self.artillery_fire_unit_name and unit.coalition == self.friendly_coalition:
-                print(f"UNIT NAME: {unit.name}, SHOTS: {shots}, RADIUS: {radius}")
+                self.logger.debug(f"UNIT NAME: {unit.name}, SHOTS: {shots}, RADIUS: {radius}")
                 unit.fire_at_area(target_latlng, shots, radius)
                 if singleshot:
                     break
@@ -613,7 +641,7 @@ class VoiceArty(Plugin):
             return None
         return mils_value
 
-    def _amend_target_by_mils(self, target_latlng, mils_direction: int, distance_meters: float = None):
+    def _amend_target_by_mils(self, target_latlng: LatLng, mils_direction: int, distance_meters: float = None):
         if target_latlng is None:
             return None
 
@@ -635,7 +663,7 @@ class VoiceArty(Plugin):
             return 0
         return int(meters_text)
 
-    def _apply_correction_to_target(self, target_latlng, direction_mils: int, normalized_message: str):
+    def _apply_correction_to_target(self, target_latlng: LatLng, direction_mils: int, normalized_message: str):
         if target_latlng is None:
             return None
 
@@ -723,8 +751,15 @@ class VoiceArty(Plugin):
                 battery_units.append(unit)
         return battery_units
             
-    def _on_shell_alive_change(self, weapon: Weapon, firing_unit: Unit):
-        if not weapon.alive:
-            self.logger.debug(f"Shell impact detected for weapon {weapon.name}.")
-            self._send_voice(f"{self.battery_callsign}, splash, out.")
+    def _on_shell_position_change(self, weapon: Weapon, firing_unit: Unit):
+        target_location = self.state_by_unit[firing_unit.unit_id]["target_location"]
+
+        # Check if the shell is within 5 seconds of impact
+        time_to_impact = weapon.position.distance_to(target_location) / weapon.speed if weapon.speed > 0 else float('inf')
+        if time_to_impact <= 5.0:  
+            self.logger.info(f"Shell impact projected in 5 seconds for weapon {weapon.name}.")
+            self._send_voice(f"Splash, over.")
+
+            # Remove the callback after it has triggered to avoid multiple calls for the same shell
+            weapon.unregister_on_property_change_callback("position")
     
