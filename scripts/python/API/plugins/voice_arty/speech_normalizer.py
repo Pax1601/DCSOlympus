@@ -4,7 +4,8 @@ import re
 COMMON_PHRASE_ALIASES = {
     variation: canonical
     for canonical, variations in {
-        "grid": ["read", "red"],
+        "grid": ["read", "red","great"],
+        "right": ["write", "wright"],
     }.items()
     for variation in variations
 }

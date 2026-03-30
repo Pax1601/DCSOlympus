@@ -2,6 +2,7 @@
 Voice-controlled artillery plugin for DCS Olympus API.
 """
 import math
+import random
 import re
 import sys
 from pathlib import Path
@@ -22,7 +23,6 @@ try:
 except ImportError:
     from mgrs_utils import extract_mgrs_100k, format_grid_for_readback, mgrs_100k_to_latlng
     from speech_normalizer import normalize_common_phrases
-
 
 class VoiceArty(Plugin):
     def __init__(self, plugin_info, global_config=None):
@@ -57,6 +57,7 @@ class VoiceArty(Plugin):
             "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "Xray",
             "Yankee", "Zulu"
         ]
+        self.target_second_letter_offset = random.randint(1, len(self.nato_phonetic) - 1)
 
         self.firing_units: set[Unit] = set()  
         self.tracked_shells: set[Weapon] = set()  # Keep track of shells we've registered callbacks for
@@ -507,29 +508,61 @@ class VoiceArty(Plugin):
                         self._send_voice(f"Say again correction.")
                         return
                     elif add_distance > 0 and left_distance == 0 and right_distance == 0:
-                        self._send_voice(f"Add {add_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Add {add_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Add {add_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif drop_distance > 0 and left_distance == 0 and right_distance == 0:
-                        self._send_voice(f"Drop {drop_distance}, out.")#
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Drop {drop_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Drop {drop_distance}, out.")#
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif add_distance == 0 and drop_distance == 0 and right_distance > 0:
-                        self._send_voice(f"Right {right_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Right {right_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Right {right_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif add_distance == 0 and drop_distance == 0 and left_distance > 0:
-                        self._send_voice(f"Left {left_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Left {left_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Left {left_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif add_distance > 0 and right_distance > 0 and left_distance == 0 and drop_distance == 0:
-                        self._send_voice(f"Add {add_distance}, right {right_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Add {add_distance}, right {right_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Add {add_distance}, right {right_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif add_distance > 0 and left_distance > 0 and right_distance == 0 and drop_distance == 0:
-                        self._send_voice(f"Add {add_distance}, left {left_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Add {add_distance}, left {left_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Add {add_distance}, left {left_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif drop_distance > 0 and right_distance > 0 and left_distance == 0 and add_distance == 0:
-                        self._send_voice(f"Drop {drop_distance}, right {right_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Drop {drop_distance}, right {right_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Drop {drop_distance}, right {right_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     elif drop_distance > 0 and left_distance > 0 and right_distance == 0 and add_distance == 0:
-                        self._send_voice(f"Drop {drop_distance}, left {left_distance}, out.")
-                        self._fire_artillery(target_latlng, 1, 1, True)
+                        if "effect" in normalized_message:
+                            self._send_voice(f"Drop {drop_distance}, left {left_distance}, fire for effect, out.")
+                            self._fire_artillery(state["target_location"], 5, 1, True)
+                        else:
+                            self._send_voice(f"Drop {drop_distance}, left {left_distance}, out.")
+                            self._fire_artillery(state["target_location"], 1, 1, True)
                     else:
                         self._send_voice(f"Say again correction.")  
 
@@ -701,7 +734,8 @@ class VoiceArty(Plugin):
         # Generate letter pair index (cycles through 26x26 = 676 combinations)
         letter_pair_index = self.target_counter // 10000
         first_letter_index = (letter_pair_index // 26) % 26
-        second_letter_index = letter_pair_index % 26
+        second_letter_index = (first_letter_index + self.target_second_letter_offset) % len(self.nato_phonetic)
+
         
         # Generate four-digit number (1000-9999)
         four_digit = 1000 + (self.target_counter % 10000)
