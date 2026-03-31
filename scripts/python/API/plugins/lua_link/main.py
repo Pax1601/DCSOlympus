@@ -31,6 +31,8 @@ class LuaLink(Plugin):
         self.listeners: list[RadioListener] = []
         self.api: API | None = None
 
+        self.session_hash = None
+
     def on_start(self) -> bool:
         """
         Called when the plugin should start its operation.
@@ -39,7 +41,9 @@ class LuaLink(Plugin):
             bool: True if started successfully, False otherwise
         """
 
-        self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=False, load_whisper=False)
+        # Initialize the API if not already done
+        if self.api is None:
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=False, load_whisper=False)
         
         # Load all the lua files
         self.api.execute_file(str(Path(__file__).parent / "lua" / "init.lua"))
@@ -72,15 +76,31 @@ class LuaLink(Plugin):
             else:
                 self.logger.warning("Skipping base %s due to invalid configuration", base_name)
 
-        self.api.register_on_update_callback(lambda api: self.watchdog_tick())
+        self.api.register_on_update_callback(lambda api: self.on_api_update(api))
         self.api.run()
 
         self.logger.info("LuaLink plugin started")
         return True
+    
+    def on_api_update(self, api: API):
+        # Watchdog to ensure the plugin is running and responsive
+        self.watchdog_tick()
+
+        result = self.api.update_custom_mission_data("luaLink")
+
+        custom_data = result["customData"]
+        session_hash = result["sessionHash"]
+
+        if self.session_hash is None:
+            self.session_hash = session_hash
+        elif self.session_hash != session_hash:
+            self.logger.warning("Session hash changed, resetting plugin state")
+            self.session_hash = session_hash
+            self.on_start()  # Restart the plugin to reset state
 
     def on_stop(self) -> bool:
         """
-        Called when the plugin should stop.
+        Called when the plugin should stop its operation.
         
         Returns:
             bool: True if stopped successfully, False otherwise

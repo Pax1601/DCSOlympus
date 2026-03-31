@@ -571,6 +571,19 @@ class API:
         else:
             self.logger.error(f"Failed to fetch bullseyes data: {response.status_code} - {response.text}")
 
+    def update_custom_mission_data(self, data_table: str):
+        """
+        Fetch a custom table from the mission data structure
+        """
+        response = self._get(f"customMissionData?tableName={data_table}")
+        if response.status_code == 200:
+            try:
+                return json.loads(response.content.decode('utf-8'))
+            except ValueError:
+                self.logger.error("Failed to parse JSON response")
+        else:
+            self.logger.error(f"Failed to fetch custom data: {response.status_code} - {response.text}")
+
     def spawn_aircrafts(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
         """
         Spawn aircraft units at the specified location or airbase.

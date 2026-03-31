@@ -8,6 +8,14 @@ function olyLink.contains(list, value)
     return false
 end
 
+function olyLink.getBaseNames()
+    local baseNames = {}
+    for baseName, _ in pairs(olyLink.bases) do
+        table.insert(baseNames, baseName)
+    end
+    return baseNames
+end
+
 function olyLink.formatFrequency(frequency)
 
 end

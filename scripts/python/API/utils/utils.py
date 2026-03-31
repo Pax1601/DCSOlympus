@@ -171,3 +171,28 @@ def lua_table_file_to_dict(input_file: str | Path, output_file: str | Path | Non
     decoded: Any = lua.decode(table_text)
 
     return decoded
+
+def dict_to_lua_table_file(data: dict, output_file: str | Path, indent: int = 2):
+    """
+    Write a dict to a file as a Lua table.
+
+    Args:
+        data: Dict to write as Lua table.
+        output_file: Path for output Lua file.
+        indent: Indentation level for Lua table.
+    """
+    output_path = Path(output_file)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Read existing content to preserve any multiline comments located at the start of the file
+    content = ""
+    if output_path.exists():
+        content = output_path.read_text(encoding="utf-8")
+        # Extract any leading comments before the first table
+        match = re.match(r"^(--.*?(\r?\n|$))*", content, flags=re.DOTALL)
+        leading_comments = match.group(0) if match else ""
+    else:
+        leading_comments = ""
+
+    lua_table_str = lua.encode(data, indent=indent)
+    output_path.write_text(leading_comments + lua_table_str, encoding="utf-8")

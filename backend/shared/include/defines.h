@@ -16,6 +16,7 @@
 #define MISSION_URI "mission"
 #define COMMANDS_URI "commands"
 #define DRAWINGS_URI "drawings"
+#define CUSTOM_MISSION_DATA_URI "customMissionData"
 
 #define FRAMERATE_TIME_INTERVAL 0.05
 

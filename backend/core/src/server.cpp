@@ -154,6 +154,13 @@ void Server::handle_get(http_request request)
                         else 
                             answer[L"mission"][L"commandModeOptions"][L"commandMode"] = json::value(L"Observer");
                     }
+                    /* Custom mission data */
+                    else if (URI.compare(CUSTOM_MISSION_DATA_URI) == 0 && query.find(L"tableName") != query.end()) {
+                        string tableName = to_string(query[L"tableName"]);
+                        if (missionData.has_object_field(to_wstring(tableName))) 
+                            answer[L"customData"] = missionData[to_wstring(tableName)];
+                    }
+                    /* Commands */
                     else if (URI.compare(COMMANDS_URI) == 0 && query.find(L"commandHash") != query.end()) {
                         answer[L"commandExecuted"] = json::value(scheduler->isCommandExecuted(to_string(query[L"commandHash"])));
                         if (executionResults.has_field(query[L"commandHash"]))
