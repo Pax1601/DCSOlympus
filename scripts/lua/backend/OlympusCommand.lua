@@ -35,6 +35,10 @@ Olympus.weapons = {}				-- Table holding references to all the currently existin
 Olympus.spots = {}
 Olympus.spotsCounter = 1
 
+-- Statics
+Olympus.staticsData = {}
+Olympus.staticsCounter = 0			
+
 -- Miscellaneous initializations
 Olympus.missionStartTime = DCS.getRealTime()
 Olympus.napalmCounter = 1
@@ -925,6 +929,35 @@ function Olympus.generateNavyUnitsTable(units)
 	return unitsTable
 end  
 
+function Olympus.spawnStaticObject(staticTable)
+	Olympus.notify("Olympus.spawnStaticObject " .. Olympus.serializeTable(staticTable), 2)
+	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(staticTable.lat, staticTable.lng, 0))
+
+	local countryId = Olympus.getCountryIDByCoalition(staticTable.coalition)
+
+	local staticObjectTable = 
+	{
+		countryId = countryId,
+		heading = staticTable.heading,
+		type = staticTable.type,
+		shapeName = staticTable.shapeName,
+		x = spawnLocation.x,
+		y = spawnLocation.z,
+		z = staticTable.alt,
+		name = "Olympus-" .. Olympus.staticsCounter .. "-Static-" .. staticTable.type,
+		mass = staticTable.mass,
+		canCargo = staticTable.canCargo,
+		dead = staticTable.dead
+	}
+	Olympus.staticsCounter = Olympus.staticsCounter + 1
+	local newStatic = mist.dynAddStatic(staticObjectTable)
+	if newStatic == nil then
+		Olympus.notify("Olympus.spawnStaticObject failed to spawn static object: " .. Olympus.serializeTable(staticTable), 30)
+		return nil
+	end
+	return newStatic:getID()
+end
+
 -- Add the unit data to the database, used for unit cloning
 function Olympus.addToDatabase(unitTable)
 	Olympus.cloneDatabase[unitTable.name] = unitTable
@@ -1321,7 +1354,7 @@ function Olympus.setUnitsData(arg, time)
 					-- Compute unit position and heading
 					local lat, lng, alt = coord.LOtoLL(unit:getPoint())
 					local position = unit:getPosition()
-					local heading = math.atan2( position.x.z, position.x.x )
+					local heading = mist.getHeading(unit, true)
 					local velocity = unit:getVelocity();
 					local airborne = unit:inAir()
 					
@@ -1583,7 +1616,7 @@ function Olympus.setWeaponsData(arg, time)
 					-- Compute weapon position and heading
 					local lat, lng, alt = coord.LOtoLL(weapon:getPoint())
 					local position = weapon:getPosition()
-					local heading = math.atan2( position.x.z, position.x.x )
+					local heading = mist.getHeading(weapon, true)
 
 					-- Fill the data table
 					table["name"] = weapon:getTypeName()
@@ -1720,13 +1753,32 @@ function Olympus.setMissionData(arg, time)
 		markers[idx].deleted = marker.deleted
 	end
 
+	-- Statics 
+	local statics = {}
+	for idx, staticData in pairs(Olympus.staticsData) do
+		statics[idx] = {
+			ID = staticData["ID"],
+			name = staticData["name"],
+			position = {
+				lat = staticData["position"]["lat"],
+				lng = staticData["position"]["lng"],
+				alt = staticData["position"]["alt"]
+			},
+			heading = staticData["heading"],
+			coalition = staticData["coalition"],
+			size1 = staticData["size1"],
+			size2 = staticData["size2"]
+		}
+	end
+
 	-- Assemble table
 	Olympus.missionData["bullseyes"] = bullseyes
 	Olympus.missionData["airbases"] = airbases
 	Olympus.missionData["mission"] = mission
 	Olympus.missionData["spots"] = spots
 	Olympus.missionData["markers"] = markers
-
+	Olympus.missionData["statics"] = statics
+	
 	Olympus.OlympusDLL.setMissionData()
 	return time + 1	-- For perfomance reasons mission data is updated once every second
 end
@@ -2072,6 +2124,32 @@ function Olympus.scanAroundShooter(unitID)
 	end
 end
 
+function Olympus.initializeStatics()
+	for coaName, coaId in pairs(coalition.side) do
+		local st = coalition.getStaticObjects(coaId)
+		for i = 1, #st do
+			local s = st[i]
+			if StaticObject.isExist(s) then
+				local name = s:getName()
+				local lat, lng, alt = coord.LOtoLL(s:getPoint())
+				Olympus.staticsData[s:getID()] = {
+					ID = s:getID(),
+					position = {
+						lat = lat,
+						lng = lng,
+						alt = alt
+					},
+					heading = mist.getHeading(s, true),
+					name = name,
+					coalition = Olympus.getCoalitionByCoalitionID(coaId),
+					size1 = s:getDesc().box.max.x - s:getDesc().box.min.x,
+					size2 = s:getDesc().box.max.y - s:getDesc().box.min.y
+				}				
+			end
+		end
+	end
+end
+
 ------------------------------------------------------------------------------------------------------
 -- Olympus startup script
 ------------------------------------------------------------------------------------------------------
@@ -2100,10 +2178,35 @@ function handler:onEvent(event)
 			Olympus.debug("New weapon created " .. weapon["id_"], 2)
 		end
 	elseif event.id == 15 then
-		local unit = event.initiator
-		if Olympus ~= nil and Olympus.units ~= nil then
-			Olympus.units[unit["id_"]] = unit
-			Olympus.debug("New unit created " .. unit["id_"], 2)
+		local initiator = event.initiator
+
+		if initiator ~= nil and initiator:isExist() then
+			if initiator:getCategory() == Object.Category.UNIT then
+				if Olympus ~= nil and Olympus.units ~= nil then
+					Olympus.units[initiator["id_"]] = initiator
+					Olympus.debug("New unit created " .. initiator["id_"], 2)
+				end
+			end
+			if initiator:getCategory() == Object.Category.STATIC or initiator:getCategory() == 6 then -- Also listen for Cargo
+				if Olympus ~= nil and Olympus.staticsData ~= nil then
+					local name = initiator:getName()
+					local lat, lng, alt = coord.LOtoLL(initiator:getPoint())
+					Olympus.staticsData[initiator:getID()] = {
+						ID = initiator:getID(),
+						position = {
+							lat = lat,
+							lng = lng,
+							alt = alt
+						},
+						heading = mist.getHeading(initiator, true),
+						name = name,
+						coalition = Olympus.getCoalitionByCoalitionID(initiator:getCoalition()),
+						size1 = initiator:getDesc().box.max.x - initiator:getDesc().box.min.x,
+						size2 = initiator:getDesc().box.max.y - initiator:getDesc().box.min.y
+					}		
+					Olympus.debug("New static object created " .. initiator["id_"], 2)
+				end
+			end
 		end
 	elseif event.id == 25 then
 		-- Marker created
@@ -2170,6 +2273,9 @@ Olympus.initializeUnits()
 
 -- Initialize the Drawings
 Olympus.initializeDrawings()
+
+-- Initialize the statics data
+Olympus.initializeStatics()
 
 Olympus.notify("OlympusCommand script " .. version .. " loaded successfully", 2, true)
 

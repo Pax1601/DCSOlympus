@@ -4,7 +4,7 @@ import { StaticOptions } from "../interfaces";
 import { Map } from "../map/map";
 import { ImportExportSubstate, OlympusState } from "../constants/constants";
 import { getApp } from "../olympusapp";
-import { AppStateChangedEvent, StaticSelectedEvent } from "../events";
+import { AppStateChangedEvent } from "../events";
 
 // TODO add ability to select the marker
 export class Static extends CustomMarker {
