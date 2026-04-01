@@ -1155,6 +1155,7 @@ class API:
         Spawn a static object in the mission.
         
         Args:
+            location (LatLng): The latitude and longitude where the static object should be spawned.
             type (str): The type of static object to spawn (e.g., "SAM", "Vehicle", "Infantry").
             shapeName (str): The name of the shape/model to use for the static object.
             coalition (Coalition): The coalition to which the static object belongs.
