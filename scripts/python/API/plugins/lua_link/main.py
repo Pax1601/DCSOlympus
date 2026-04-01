@@ -5,6 +5,7 @@ LuaLink plugin for DCS Olympus API.
 import re
 import sys
 from pathlib import Path
+import time
 
 from radio.radio_listener import RadioListener
 from unit.unit import Unit
@@ -15,7 +16,7 @@ if str(api_dir) not in sys.path:
 
 from plugin_base import Plugin
 from api import API
-from utils.utils import lua_table_file_to_dict
+from utils.utils import lua_table_file_to_dict, dict_to_lua_table_file
 
 class LuaLink(Plugin):
     """
@@ -32,6 +33,7 @@ class LuaLink(Plugin):
         self.api: API | None = None
 
         self.session_hash = None
+        self.start_time = None
 
     def on_start(self) -> bool:
         """
@@ -79,6 +81,8 @@ class LuaLink(Plugin):
         self.api.register_on_update_callback(lambda api: self.on_api_update(api))
         self.api.run()
 
+        self.start_time = time.time()
+
         self.logger.info("LuaLink plugin started")
         return True
     
@@ -88,9 +92,19 @@ class LuaLink(Plugin):
 
         result = self.api.update_custom_mission_data("luaLink")
 
-        custom_data = result["customData"]
+        # Save the current supply and fuel levels for each base to the config file for the Lua script to read and use in its logic
+        if "customData" in result and result["customData"] is not None:
+            # Check if at least 30 seconds have passed since the plugin started to avoid overwriting the initial config values before the Lua script has a chance to read them
+            if self.start_time is not None and time.time() - self.start_time < 30:
+                return
+
+            custom_data = result["customData"]
+            # Write the custom data to the link file for the Lua script to read
+            dict_to_lua_table_file(custom_data, str(Path(__file__).parent / "lua" / "config.lua"), "olyLink.bases")
+       
         session_hash = result["sessionHash"]
 
+        # Check if the mission has been restarted and if so reset the plugin state
         if self.session_hash is None:
             self.session_hash = session_hash
         elif self.session_hash != session_hash:
@@ -105,7 +119,6 @@ class LuaLink(Plugin):
         Returns:
             bool: True if stopped successfully, False otherwise
         """
-
         try:
             for listener in self.listeners:
                 listener.stop()
@@ -293,3 +306,9 @@ class LuaLink(Plugin):
             self.logger.error(f"Error reading from file: {e}")
             return ""
                 
+    def _write_data_to_file(self, data: str):
+        try:
+            with open(self.link_file_path, "w", encoding="utf-8") as f:
+                f.write(data)
+        except Exception as e:
+            self.logger.error(f"Error writing to file: {e}")

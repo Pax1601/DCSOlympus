@@ -945,9 +945,7 @@ function Olympus.spawnStaticObject(staticTable)
 		y = spawnLocation.z,
 		z = staticTable.alt,
 		name = "Olympus-" .. Olympus.staticsCounter .. "-Static-" .. staticTable.type,
-		mass = staticTable.mass,
-		canCargo = staticTable.canCargo,
-		dead = staticTable.dead
+		mass = staticTable.mass
 	}
 	Olympus.staticsCounter = Olympus.staticsCounter + 1
 	local newStatic = mist.dynAddStatic(staticObjectTable)
@@ -1713,10 +1711,39 @@ function Olympus.setMissionData(arg, time)
 		["blue"] = {},
 		["neutral"] = {}
 	}
+	
 	for countryName, countryId in pairs(country["id"]) do
 		local coalitionName = Olympus.getCoalitionByCoalitionID(coalition.getCountryCoalition(countryId))
 		mission.coalitions[coalitionName][#mission.coalitions[coalitionName] + 1] = countryName 
 	end
+
+	mission.triggers = {}
+	if env and env.mission and env.mission.triggers and env.mission.triggers.zones then
+        for _, z in pairs(env.mission.triggers.zones) do
+			local lat = 0
+			local lng = 0
+			local alt = 0
+			if z.point then
+				lat, lng, alt = coord.LOtoLL({x = z.point.x, y = 0, z = z.point.z})
+			end
+			mission.triggers[#mission.triggers + 1] = {
+				location = {lat = lat, lng = lng, alt = alt},
+				radius = z.radius,
+				name = z.name,
+				zoneId = z.zoneId,
+				color = z.color,
+				type = z.type
+			}
+
+			if z.verticies then
+				mission.triggers[#mission.triggers].vertices = {}
+				for _, vert in pairs(z.verticies) do
+					local vertLat, vertLng, vertAlt = coord.LOtoLL({x = vert.x, y = 0, z = vert.z})
+					mission.triggers[#mission.triggers].vertices[#mission.triggers[#mission.triggers].vertices + 1] = {lat = vertLat, lng = vertLng, alt = vertAlt}
+				end
+			end
+        end
+    end
 
 	-- Spots 
 	-- Initialize an empty table to store spots
@@ -1778,7 +1805,6 @@ function Olympus.setMissionData(arg, time)
 	Olympus.missionData["spots"] = spots
 	Olympus.missionData["markers"] = markers
 	Olympus.missionData["statics"] = statics
-	
 	Olympus.OlympusDLL.setMissionData()
 	return time + 1	-- For perfomance reasons mission data is updated once every second
 end

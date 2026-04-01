@@ -172,14 +172,14 @@ def lua_table_file_to_dict(input_file: str | Path, output_file: str | Path | Non
 
     return decoded
 
-def dict_to_lua_table_file(data: dict, output_file: str | Path, indent: int = 2):
+def dict_to_lua_table_file(data: dict, output_file: str | Path, table_name: str) -> None:
     """
     Write a dict to a file as a Lua table.
 
     Args:
         data: Dict to write as Lua table.
         output_file: Path for output Lua file.
-        indent: Indentation level for Lua table.
+        table_name: Name of the Lua table to write (e.g. "config"). The output will be in the format "table_name = { ... }".
     """
     output_path = Path(output_file)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -194,5 +194,5 @@ def dict_to_lua_table_file(data: dict, output_file: str | Path, indent: int = 2)
     else:
         leading_comments = ""
 
-    lua_table_str = lua.encode(data, indent=indent)
-    output_path.write_text(leading_comments + lua_table_str, encoding="utf-8")
+    lua_table_str = lua.encode(data)
+    output_path.write_text(leading_comments + f"{table_name} = {lua_table_str}", encoding="utf-8")

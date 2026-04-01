@@ -7,9 +7,9 @@ import logging
 import os
 import tempfile
 import asyncio
-import wave
 
 from weapon.weapon import Weapon
+from data.data_types import LatLng, Coalition
 
 # Audio processing imports (moved to top level for performance)
 try:
@@ -1149,6 +1149,41 @@ class API:
         else:
             self.logger.error(f"Failed to send command: {response.status_code} - {response.text}")
         return response
+    
+    def spawn_static_object(self, location: LatLng, type: str, shapeName: str, coalition: Coalition, heading: float, canCargo: bool, linkOffset: bool, dead: bool, mass: float):
+        """
+        Spawn a static object in the mission.
+        
+        Args:
+            type (str): The type of static object to spawn (e.g., "SAM", "Vehicle", "Infantry").
+            shapeName (str): The name of the shape/model to use for the static object.
+            coalition (Coalition): The coalition to which the static object belongs.
+            heading (float): The heading/direction the static object should face, in degrees.
+            canCargo (bool): Whether the static object can be used as cargo or not.
+            linkOffset (bool): Whether to link the static object with an offset or not.
+            dead (bool): Whether the static object should be spawned as destroyed/dead or not.
+            mass (float): The mass of the static object in kilograms.
+        """
+        command = {
+            "location": {
+                "lat": location.lat,
+                "lng": location.lng
+            },
+            "type": type,
+            "shapeName": shapeName,
+            "coalition": coalition.value,
+            "heading": heading,
+            "canCargo": canCargo,
+            "linkOffset": linkOffset,
+            "dead": dead,
+            "mass": mass
+        }
+        data = { "spawnStaticObject": command }
+        response = self._put(data)
+        if response.status_code == 200:
+            self.logger.info(f"Static object of type '{type}' spawned successfully with shape '{shapeName}'")
+        else:
+            self.logger.error(f"Failed to spawn static object: {response.status_code} - {response.text}")
     
     def stop(self):
         """
