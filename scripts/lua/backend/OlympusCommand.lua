@@ -1723,9 +1723,7 @@ function Olympus.setMissionData(arg, time)
 			local lat = 0
 			local lng = 0
 			local alt = 0
-			if z.point then
-				lat, lng, alt = coord.LOtoLL({x = z.point.x, y = 0, z = z.point.z})
-			end
+			lat, lng, alt = coord.LOtoLL({x = z.x, y = 0, z = z.y})
 			mission.triggers[#mission.triggers + 1] = {
 				location = {lat = lat, lng = lng, alt = alt},
 				radius = z.radius,
@@ -1738,7 +1736,7 @@ function Olympus.setMissionData(arg, time)
 			if z.verticies then
 				mission.triggers[#mission.triggers].vertices = {}
 				for _, vert in pairs(z.verticies) do
-					local vertLat, vertLng, vertAlt = coord.LOtoLL({x = vert.x, y = 0, z = vert.z})
+					local vertLat, vertLng, vertAlt = coord.LOtoLL({x = vert.x, y = 0, z = vert.y})
 					mission.triggers[#mission.triggers].vertices[#mission.triggers[#mission.triggers].vertices + 1] = {lat = vertLat, lng = vertLng, alt = vertAlt}
 				end
 			end
