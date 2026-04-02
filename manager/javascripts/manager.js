@@ -986,6 +986,9 @@ class Manager {
             if (!result) {
                 return;
             }
+            if (result.summary && result.summary.pendingCount === 0) {
+                return;
+            }
             if (this.options.modManager && this.options.modManager.dismissed) {
                 return;
             }
@@ -1081,6 +1084,7 @@ class Manager {
                 ...mod,
                 imported: summary.importedIds.includes(mod.id)
             }));
+            await this.autoApplyModInventory(modsRoot, this.modInventory);
             this.updateModMenuAvailability();
             return { inventory, modsRoot, summary };
         } catch (err) {
@@ -1196,6 +1200,28 @@ class Manager {
         modIds.forEach((id) => imported.add(id));
         this.modImportState[modsRoot] = Array.from(imported);
         this.saveModImportState();
+    }
+
+    async replaceImportedMods(modsRoot, modIds) {
+        if (!modsRoot) {
+            return;
+        }
+        const normalized = Array.isArray(modIds) ? Array.from(new Set(modIds)) : [];
+        this.modImportState[modsRoot] = normalized;
+        this.saveModImportState();
+    }
+
+    async autoApplyModInventory(modsRoot, inventory) {
+        if (!modsRoot) {
+            return;
+        }
+        try {
+            const modIds = Array.isArray(inventory) && inventory.length > 0 ? inventory.map((mod) => mod.id) : [];
+            await this.replaceImportedMods(modsRoot, modIds);
+            await this.generateModConfigs(modsRoot);
+        } catch (err) {
+            logger.log(`[mods] auto-apply failed: ${err}`);
+        }
     }
 
     async generateModConfigs(modsRoot) {
