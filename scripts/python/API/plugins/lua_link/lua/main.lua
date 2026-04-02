@@ -11,6 +11,6 @@ olyLink.setInitialData()
 timer.scheduleFunction(olyLink.periodicFunction, {}, timer.getTime() + 1)
 
 -- Test function, after 30 seconds spawn a fuel barrel in the fuel pickup zone for the Orote base, to test that the zones are being read correctly from the config file and that the spawn function works correctly. This will be removed later.
-timer.scheduleFunction(olyLink.spawnFuelBarrel, "Orote", timer.getTime() + 30)
+timer.scheduleFunction(olyLink.spawnFuelBarrel, "Orote", timer.getTime() + 10)
 
 Olympus.notify("LuaLink lua file executed correctly", 10)

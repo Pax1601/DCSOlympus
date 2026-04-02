@@ -930,7 +930,7 @@ function Olympus.generateNavyUnitsTable(units)
 end  
 
 function Olympus.spawnStaticObject(staticTable)
-	Olympus.notify("Olympus.spawnStaticObject " .. Olympus.serializeTable(staticTable), 2)
+	Olympus.debug("Olympus.spawnStaticObject " .. Olympus.serializeTable(staticTable), 2)
 	local spawnLocation = mist.utils.makeVec3GL(coord.LLtoLO(staticTable.lat, staticTable.lng, 0))
 
 	local countryId = Olympus.getCountryIDByCoalition(staticTable.coalition)
@@ -944,7 +944,7 @@ function Olympus.spawnStaticObject(staticTable)
 		x = spawnLocation.x,
 		y = spawnLocation.z,
 		z = staticTable.alt,
-		name = "Olympus-" .. Olympus.staticsCounter .. "-Static-" .. staticTable.type,
+		name = staticTable.name or ("Olympus-" .. Olympus.staticsCounter .. "-Static-" .. staticTable.type),
 		mass = staticTable.mass
 	}
 	Olympus.staticsCounter = Olympus.staticsCounter + 1
@@ -953,7 +953,7 @@ function Olympus.spawnStaticObject(staticTable)
 		Olympus.notify("Olympus.spawnStaticObject failed to spawn static object: " .. Olympus.serializeTable(staticTable), 30)
 		return nil
 	end
-	return newStatic:getID()
+	return true
 end
 
 -- Add the unit data to the database, used for unit cloning

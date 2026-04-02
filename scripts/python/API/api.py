@@ -9,7 +9,7 @@ import tempfile
 import asyncio
 
 from weapon.weapon import Weapon
-from data.data_types import LatLng, Coalition
+from data.data_types import LatLng
 
 # Audio processing imports (moved to top level for performance)
 try:
@@ -1150,7 +1150,7 @@ class API:
             self.logger.error(f"Failed to send command: {response.status_code} - {response.text}")
         return response
     
-    def spawn_static_object(self, location: LatLng, type: str, shapeName: str, coalition: Coalition, heading: float, canCargo: bool, linkOffset: bool, dead: bool, mass: float):
+    def spawn_static_object(self, location: LatLng, type: str, shapeName: str, coalition: str, heading: float, canCargo: bool, linkOffset: bool, dead: bool, mass: float):
         """
         Spawn a static object in the mission.
         
@@ -1158,7 +1158,7 @@ class API:
             location (LatLng): The latitude and longitude where the static object should be spawned.
             type (str): The type of static object to spawn (e.g., "SAM", "Vehicle", "Infantry").
             shapeName (str): The name of the shape/model to use for the static object.
-            coalition (Coalition): The coalition to which the static object belongs.
+            coalition (str): The coalition to which the static object belongs.
             heading (float): The heading/direction the static object should face, in degrees.
             canCargo (bool): Whether the static object can be used as cargo or not.
             linkOffset (bool): Whether to link the static object with an offset or not.

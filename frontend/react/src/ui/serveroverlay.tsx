@@ -27,7 +27,7 @@ export function ServerOverlay() {
   }, []);
 
   let loadColor = colors.OLYMPUS_GREEN;
-  if (serverStatus.load > 1000) loadColor = colors.OLYMPUS_RED;
+  if (serverStatus.load >= 1000) loadColor = colors.OLYMPUS_RED;
   else if (serverStatus.load >= 100 && serverStatus.load < 1000) loadColor = colors.OLYMPUS_ORANGE;
 
   let frameRateColor = colors.OLYMPUS_GREEN;

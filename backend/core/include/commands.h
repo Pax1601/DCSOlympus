@@ -664,7 +664,7 @@ class ExecuteFile : public Command
 			priority = CommandPriority::LOW;
 		};
 		virtual string getString();
-		virtual unsigned int getLoad() { return 500; }
+		virtual unsigned int getLoad() { return 50; }
 
 	private:	
 		const string filePath;
