@@ -353,7 +353,7 @@ class RadioTransmitter:
         # Close WebSocket connection if active
         if self._websocket:
             # Schedule the close in the event loop
-            self._websocket.close()
+            asyncio.create_task(self._websocket.close())
                 
         self._running = False
         self.logger.info("RadioTransmitter stopped")

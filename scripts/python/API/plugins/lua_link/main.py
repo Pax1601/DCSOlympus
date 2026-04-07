@@ -34,6 +34,7 @@ class LuaLink(Plugin):
 
         self.session_hash = None
         self.start_time = None
+        self.mission_started = False
 
     def on_start(self) -> bool:
         """
@@ -43,10 +44,25 @@ class LuaLink(Plugin):
             bool: True if started successfully, False otherwise
         """
 
+        self.mission_started = False
+
         # Initialize the API if not already done
         if self.api is None:
-            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=False, load_whisper=False)
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=True, load_whisper=True)
         
+        self.api.register_on_update_callback(lambda api: self.on_api_update(api))
+        self.api.run()
+
+        self.logger.info("LuaLink plugin started")
+        return True
+    
+    def check_mission_started(self):
+        result = self.api.update_mission()
+        if not result or result['dateAndTime']['elapsedTime'] < 30:
+            return False
+        return True
+    
+    def initialize_lua(self):
         # Load all the lua files
         self.api.execute_file(str(Path(__file__).parent / "lua" / "init.lua"))
         self.api.execute_file(str(Path(__file__).parent / "lua" / "config.lua"))
@@ -78,27 +94,31 @@ class LuaLink(Plugin):
             else:
                 self.logger.warning("Skipping base %s due to invalid configuration", base_name)
 
-        self.api.register_on_update_callback(lambda api: self.on_api_update(api))
-        self.api.run()
-
-        self.start_time = time.time()
-
-        self.logger.info("LuaLink plugin started")
-        return True
-    
     def on_api_update(self, api: API):
         # Watchdog to ensure the plugin is running and responsive
         self.watchdog_tick()
 
+        # Check if the mission has started, if not don't do anything to avoid potential issues with the Lua script trying to read config values before they are set for the first time
+        if not self.mission_started:
+            if self.check_mission_started():
+                self.logger.info("Mission has started, initializing lua")
+                self.mission_started = True
+                self.initialize_lua()
+                self.start_time = time.time()
+            else:
+                return  # Don't do anything
+        
+        # Get the custom mission data from the API 
         result = self.api.update_custom_mission_data("luaLink")
 
         # Save the current supply and fuel levels for each base to the config file for the Lua script to read and use in its logic
         if "customData" in result and result["customData"] is not None:
-            # Check if at least 30 seconds have passed since the plugin started to avoid overwriting the initial config values before the Lua script has a chance to read them
+            # Check if at least 30 seconds have passed since the mission started to avoid overwriting the initial config values before the Lua script has a chance to read them
             if self.start_time is not None and time.time() - self.start_time < 30:
                 return
 
             custom_data = result["customData"]
+            self.bases_data = custom_data
             # Write the custom data to the link file for the Lua script to read
             dict_to_lua_table_file(custom_data, str(Path(__file__).parent / "lua" / "config.lua"), "olyLink.bases")
        
@@ -110,7 +130,16 @@ class LuaLink(Plugin):
         elif self.session_hash != session_hash:
             self.logger.warning("Session hash changed, resetting plugin state")
             self.session_hash = session_hash
+            self.on_stop()  # Stop the plugin to clean up any existing state
             self.on_start()  # Restart the plugin to reset state
+
+        # If the server load is zero it means that all commands have been exectued, so we can clear the commands directory to avoid clutter and potential confusion from old command files
+        if "load" in result and result["load"] == 0:
+            commands_dir = Path(__file__).parent / "lua" / "commands"
+            if commands_dir.exists() and commands_dir.is_dir():
+                for command_file in commands_dir.iterdir():
+                    if command_file.is_file():
+                        command_file.unlink()
 
     def on_stop(self) -> bool:
         """
@@ -157,14 +186,14 @@ class LuaLink(Plugin):
         self.logger.info(f"Received radio message: {message}")
         normalized_message = message.lower()
 
-        fireteam_keywords = ["fire team"]
-        status_keywords = ["status", "report", "situation", "sitch", "sitrep"]
+        fireteam_keywords = ["fire", "team"]
+        status_keywords = ["status", "report", "situation", "sitrep"]
         
         fuel_keywords = ["fuel"]
-        ammo_keywords = ["ammo", "munitions"]
-        explosives_keywords = ["explosive", "rockets"]
+        ammo_keywords = ["ammo", "munition"]
+        explosives_keywords = ["explosive", "HE"]
         smoke_keywords = ["smoke"]
-        supplies_keywords = ["supplies", "resupply", "logistics"]
+        supplies_keywords = ["supplies", "resupply"]
         clear_keywords = ["clear"]
 
         units = self.api.get_units()
@@ -176,12 +205,12 @@ class LuaLink(Plugin):
         unit = units[unitID]
         
         keep_message = False
-        if any(keyword in normalized_message for keyword in fireteam_keywords):
-            self.logger.info(f"Unit {unitID} requesting fire team.")
-            response = self.fireteam(unit, base_name)
-        elif any(keyword in normalized_message for keyword in status_keywords):
+        if any(keyword in normalized_message for keyword in status_keywords):
             self.logger.info(f"Unit {unitID} requesting status report.")
             response = self.status_report(unit, base_name)
+        elif any(keyword in normalized_message for keyword in fireteam_keywords):
+            self.logger.info(f"Unit {unitID} requesting fire team.")
+            response = self.fireteam(unit, base_name)  
         elif any(keyword in normalized_message for keyword in fuel_keywords):
             self.logger.info(f"Unit {unitID} requesting fuel.")
             response = self.fuel(unit, base_name)
@@ -204,111 +233,60 @@ class LuaLink(Plugin):
             response = "I did not understand your request sir."
             keep_message = True  # Keep the message for debugging unrecognized commands
             
-        future = self.api.generate_audio_message_in_executor(response, voice=self.kokoro_voice_model)
-        future.add_done_callback(lambda audio_file: listener.transmit_on_frequency(file_name=audio_file))
+        voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and "voiceModel" in self.bases_data[base_name] else None
+        future = self.api.generate_audio_message_in_executor(response, voice=voice_model)
+        future.add_done_callback(lambda audio_file: listener.transmit_on_frequency(file_name=audio_file.result()))
 
         return keep_message
-                
-    def fireteam(self, unit: Unit, base_name: str):
-        self._ammend_file_command("troops", base_name)
-        return f"{unit.callsign}, a fire team is being deployed"
     
     def status_report(self, unit: Unit, base_name: str):
-        current_values = self._read_data_from_file()
-        troop_deployed = re.search(r"<troopDeployed>(.*?)</troopDeployed>", current_values, re.S)
-        troop_deployed_value = int(round(float(troop_deployed.group(1)))) if troop_deployed else 0
-        base_blocks = re.findall(r"<base>(.*?)</base>", current_values, re.S)
-        base_block = next((block for block in base_blocks if base_name.lower() in block.lower()), base_blocks[0] if base_blocks else "")
-        fuel_match = re.search(r"<liquid>(.*?)</liquid>", base_block, re.S) if base_block else None
-        fuel_value = int(round(float(fuel_match.group(1)))) if fuel_match else 0
-        supplies_match = re.search(r"<supplies>(.*?)</supplies>", base_block, re.S) if base_block else None
-        supplies_value = int(round(float(supplies_match.group(1)))) if supplies_match else 0        
-        # TODO put back troop cap
-        return f"{unit.callsign}, command, current base status is fuel {fuel_value} kilograms, supplies {supplies_value} kilograms, and we have {troop_deployed_value} infantry deployed in the field currently out."
- 
+        return f"{unit.callsign}, base logistics, current base situation is as follows. " \
+               f"We currently have {self.bases_data[base_name]['fuel']} liters of fuel, " \
+               f"{self.bases_data[base_name]['shells']} artillery shells, and " \
+               f"{self.bases_data[base_name]['supplies']} kilograms of supplies. " \
+               f"Over."
+                
+    def fireteam(self, unit: Unit, base_name: str):
+        self.execute_command(f"olyLink.spawnFireTeam(\"{base_name}\")")
+        return f"{unit.callsign}, base logistics, we're getting a fire team ready for you."
+    
     def fuel(self, unit: Unit, base_name: str):
-        self._ammend_file_command("fuel", base_name)
-        return f"{unit.callsign}, base logistics, we're getting some fuel ready for you at the tanker."
+        self.execute_command(f"olyLink.spawnFuelBarrel(\"{base_name}\")")
+        return f"{unit.callsign}, base logistics, we're getting some fuel ready for you."
     
     def ammo(self, unit: Unit, base_name: str):
-        self._ammend_file_command("ammoGuns", base_name)
-        return f"{unit.callsign}, base logistics, we're getting some ammo ready for you at the cargo ship."
+        self.execute_command(f"olyLink.spawnShellCrate(\"{base_name}\")")
+        return f"{unit.callsign}, base logistics, we're getting some shells ready for you."
     
     def explosives(self, unit: Unit, base_name: str):
-        self._ammend_file_command("HE", base_name)
-        return f"{unit.callsign}, base logistics, we're getting some H E rockets ready for you at the cargo ship."
+        self.execute_command(f"olyLink.spawnWeaponCrate(\"{base_name}\", 'RocketHE')")
+        return f"{unit.callsign}, base logistics, we're getting some H E rockets ready for you."
     
     def smoke(self, unit: Unit, base_name: str):
-        self._ammend_file_command("SM", base_name)
-        return f"{unit.callsign}, base logistics, we're getting some smoke and illumination rockets ready for you at the cargo ship."
+        self.execute_command(f"olyLink.spawnWeaponCrate(\"{base_name}\", 'RocketOther')")
+        return f"{unit.callsign}, base logistics, we're getting some smoke rockets ready for you."
     
     def supplies(self, unit: Unit, base_name: str):
-        self._ammend_file_command("supplies", base_name)
-        return f"{unit.callsign}, base logistics, we're getting some supplies ready for you at the cargo ship."
+        self.execute_command(f"olyLink.spawnSupplyCrate(\"{base_name}\")")
+        return f"{unit.callsign}, base logistics, we're getting some supplies ready for you."
     
     def clear(self, unit: Unit, base_name: str):
-        self._ammend_file_command("clear", base_name)
-        return f"{unit.callsign}, we are clearing the cargo areas for you now."
+        self.execute_command(f"olyLink.clearBasePickupZones(\"{base_name}\")")
+        return f"{unit.callsign}, base logistics, we're clearing the pickup zones for you."
     
-    def _ammend_file_command(self, command_type: str, base_name: str):
-        try:
-            with open(self.link_file_path, "r", encoding="utf-8") as f:
-                content = f.read()
-        except Exception as e:
-            self.logger.error(f"Failed to read link file: {e}", exc_info=True)
-            return
+    def execute_command(self, command: str):
+        # Create a tmp file with the command for the Lua script to read and execute
+        # Use a random filename
+        random_filename = f"command_{int(time.time() * 1000)}.lua"
 
-        match = re.search(r"(<commandToLua>)(.*?)(</commandToLua>)", content, re.S)
-        if not match:
-            self.logger.warning("No <commandToLua> block found in Olympus link file")
-            return
+        # Create the commands directory if it doesn't exist
+        if not (Path(__file__).parent / "lua" / "commands").exists():
+            (Path(__file__).parent / "lua" / "commands").mkdir(parents=True)
 
-        def set_tag(block: str, tag: str, value: str) -> str:
-            pattern = rf"(<{tag}>)(.*?)(</{tag}>)"
-            if re.search(pattern, block, re.S):
-                return re.sub(pattern, rf"\1{value}\3", block, flags=re.S)
-            return block + f"  <{tag}>{value}</{tag}>\n"
+        # Save the command string
+        command_file = Path(__file__).parent / "lua" / "commands" / random_filename
+        command_file.write_text(command)
 
-        block = match.group(1) + match.group(2) + match.group(3)
-        if command_type == "fuel":
-            block = set_tag(block, "order", "Spawn Fuel")
-        elif command_type == "HE":
-            block = set_tag(block, "order", "Spawn Rocket HE")
-        elif command_type == "SM":
-            block = set_tag(block, "order", "Spawn Rocket SMIL")
-        elif command_type == "ammoGuns":
-            block = set_tag(block, "order", "Spawn Ammo")
-        elif command_type == "supplies":
-            block = set_tag(block, "order", "Spawn Supplies")
-        elif command_type == "clear":
-            block = set_tag(block, "order", "Clear Area")
-        elif command_type == "troops":
-            block = set_tag(block, "order", "Troops created")
-        else:
-            block = set_tag(block, "order", "Spawn Supplies")
-
-        block = set_tag(block, "read", "false")
-        block = set_tag(block, "base", base_name)
-
-        new_content = content[: match.start()] + block + content[match.end() :]
-        try:
-            with open(self.link_file_path, "w", encoding="utf-8") as f:
-                f.write(new_content)
-        except Exception as e:
-            self.logger.error(f"Failed to write link file: {e}", exc_info=True)
-
-    def _read_data_from_file(self) -> str:
-        try:
-            with open(self.link_file_path, "r", encoding="utf-8") as f:
-                content = f.read()
-                return content
-        except Exception as e:
-            self.logger.error(f"Error reading from file: {e}")
-            return ""
-                
-    def _write_data_to_file(self, data: str):
-        try:
-            with open(self.link_file_path, "w", encoding="utf-8") as f:
-                f.write(data)
-        except Exception as e:
-            self.logger.error(f"Error writing to file: {e}")
+        # Execute the Lua command file  
+        self.api.execute_file(str(command_file))
+        

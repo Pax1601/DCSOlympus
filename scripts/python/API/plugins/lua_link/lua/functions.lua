@@ -63,6 +63,155 @@ function olyLink.spawnFuelBarrel(baseName)
     })
 end
 
+-- Spawn supply crates at a given base
+function olyLink.spawnSupplyCrate(baseName)
+    Olympus.notify("Spawning supply crate at " .. baseName .. " base", 10)
+
+    -- Check tat the base is in the config file
+    if not olyLink.contains(olyLink.getBaseNames(), baseName) then
+        Olympus.notify("Base " .. baseName .. " not found in config file, cannot spawn supply crate", 10)
+        return
+    end
+
+    -- Read from the config the trigger zone name for the supplies pickup for this base, and spawn a supply crate there
+    local suppliesZoneName = olyLink.bases[baseName].suppliesZoneName
+    local suppliesZone = trigger.misc.getZone(suppliesZoneName)
+    if suppliesZone == nil then
+        Olympus.notify("Supplies zone " .. suppliesZoneName .. " not found for base " .. baseName .. ", cannot spawn supply crate", 10)
+        return
+    end
+
+    local spawnLocation = suppliesZone.point
+    local lat, lng, alt = coord.LOtoLL(spawnLocation)
+
+    local countryId = Olympus.getCountryIDByCoalition("blue")
+    Olympus.spawnStaticObject({
+        countryId = countryId,
+        heading = 0,
+        type = "uh1h_cargo",
+        shapeName = "uh1h_cargo",
+        lat = lat,
+        lng = lng,
+        name = "Supplies-" .. Olympus.staticsCounter .. "-" .. baseName,
+        mass = 1000,
+        canCargo = true,
+        dead = false
+    })
+end
+
+-- Spawn shell crates at a given base
+function olyLink.spawnShellCrate(baseName)
+    Olympus.notify("Spawning shell crate at " .. baseName .. " base", 10)
+
+    -- Check tat the base is in the config file
+    if not olyLink.contains(olyLink.getBaseNames(), baseName) then
+        Olympus.notify("Base " .. baseName .. " not found in config file, cannot spawn shell crate", 10)
+        return
+    end
+
+    -- Read from the config the trigger zone name for the shells pickup for this base, and spawn a shell crate there
+    local shellsZoneName = olyLink.bases[baseName].ammoZoneName
+    local shellsZone = trigger.misc.getZone(shellsZoneName)
+    if shellsZone == nil then
+        Olympus.notify("Shells zone " .. shellsZoneName .. " not found for base " .. baseName .. ", cannot spawn shell crate", 10)
+        return
+    end
+
+    local spawnLocation = shellsZone.point
+    local lat, lng, alt = coord.LOtoLL(spawnLocation)
+
+    local countryId = Olympus.getCountryIDByCoalition("blue")
+    Olympus.spawnStaticObject({
+        countryId = countryId,
+        heading = 0,
+        type = "uh1h_cargo",
+        shapeName = "uh1h_cargo",
+        lat = lat,
+        lng = lng,
+        name = "Shells-" .. Olympus.staticsCounter .. "-" .. baseName,
+        mass = 1000,
+        canCargo = true,
+        dead = false
+    })
+end
+
+-- Spawn a weapon crate at a given base. The type of weapon crate is determined by the type parameter, which can be "RocketHE", "RocketOther", "AmmoGuns"
+function olyLink.spawnWeaponCrate(baseName, weaponType)
+    Olympus.notify("Spawning weapon crate of type " .. weaponType .. " at " .. baseName .. " base", 10)
+
+    -- Check tat the base is in the config file
+    if not olyLink.contains(olyLink.getBaseNames(), baseName) then
+        Olympus.notify("Base " .. baseName .. " not found in config file, cannot spawn weapon crate", 10)
+        return
+    end
+
+    -- Read from the config the trigger zone name for the weapons pickup for this base, and spawn a weapon crate there
+    local weaponsZoneName = olyLink.bases[baseName].ammoZoneName
+    local weaponsZone = trigger.misc.getZone(weaponsZoneName)
+    if weaponsZone == nil then
+        Olympus.notify("Weapons zone " .. weaponsZoneName .. " not found for base " .. baseName .. ", cannot spawn weapon crate", 10)
+        return
+    end
+
+    local spawnLocation = weaponsZone.point
+    local lat, lng, alt = coord.LOtoLL(spawnLocation)
+
+    local countryId = Olympus.getCountryIDByCoalition("blue")
+
+    Olympus.spawnStaticObject({
+        countryId = countryId,
+        heading = 0,
+        type = "ammo_cargo",
+        shapeName = "ammo_cargo",
+        lat = lat,
+        lng = lng,
+        name = weaponType .. "-" .. Olympus.staticsCounter .. "-" .. baseName,
+        mass = 1000,
+        canCargo = true,
+        dead = false
+    })
+end
+
+-- Spawn a fireteam at the given base
+function olyLink.spawnFireTeam(baseName)
+    Olympus.notify("Spawning fireteam at " .. baseName .. " base", 10)
+
+    -- Check tat the base is in the config file
+    if not olyLink.contains(olyLink.getBaseNames(), baseName) then
+        Olympus.notify("Base " .. baseName .. " not found in config file, cannot spawn fireteam", 10)
+        return
+    end
+
+    -- Read from the config the trigger zone name for the fireteam pickup for this base, and spawn a fireteam there
+    local fireTeamZoneName = olyLink.bases[baseName].fireTeamZoneName
+    local fireTeamZone = trigger.misc.getZone(fireTeamZoneName)
+    if fireTeamZone == nil then
+        Olympus.notify("Fireteam zone " .. fireTeamZoneName .. " not found for base " .. baseName .. ", cannot spawn fireteam", 10)
+        return
+    end
+
+    local spawnLocation = fireTeamZone.point
+    local randomOffsetZ = math.random(-15, 15) -- add a random offset of up to 1 meter in x direction to avoid perfect line
+    -- Spawn a group for 8 soldiers in a line
+    for i = 1, 8 do
+        local offset = (i - 1) * 2 -- 2 meters apart
+        local lat, lng, alt = coord.LOtoLL({x = spawnLocation.x + offset, y = spawnLocation.y, z = spawnLocation.z + randomOffsetZ})
+
+        Olympus.spawnUnits({
+            category = "GroundUnit",
+            coalition = "blue",
+            units = {
+                {
+                    unitType = "Soldier M4",
+                    lat = lat,
+                    lng = lng,
+                    heading = 0
+                }
+            }
+        })
+    end
+end
+
 -- Read the current weapons and fuel levels and update the olyLink.bases table with this data, 
 -- then save it in the Olympus mission table to be read back in the plugin.
 function olyLink.readCurrentWarehouseData()
@@ -231,6 +380,35 @@ function olyLink.removeStaticsFromDropoffZone(baseName)
     world.searchObjects(Object.Category.CARGO, volume, tryRemove)
     if Object.Category.CARGO then
         world.searchObjects(Object.Category.CARGO, volume, tryRemove)
+    end
+end
+
+function olyLink.clearBasePickupZones(baseName)
+    local fuelZoneName = olyLink.bases[baseName].fuelZoneName
+    local suppliesZoneName = olyLink.bases[baseName].suppliesZoneName
+    local weaponsZoneName = olyLink.bases[baseName].ammoZoneName
+
+    local zonesToClear = {fuelZoneName, suppliesZoneName, weaponsZoneName}
+    for i, zoneName in ipairs(zonesToClear) do
+        local zone = trigger.misc.getZone(zoneName)
+        if zone then
+            local volume = {
+                id = world.VolumeType.SPHERE,
+                params = {
+                    point = zone.point,
+                    radius = zone.radius
+                }
+            }
+    
+            local function tryRemove(obj)
+                if obj and obj:isExist() then
+                        obj:destroy()
+                end
+                return true
+            end
+    
+            world.searchObjects(Object.Category.CARGO, volume, tryRemove)
+        end
     end
 end
 

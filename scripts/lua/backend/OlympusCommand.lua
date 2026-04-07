@@ -756,8 +756,10 @@ function Olympus.spawnUnits(spawnTable, requestHash)
 		return nil
 	end
 
-	Olympus.executionResults[requestHash] = newGroup.groupId
-	Olympus.groupIDsrequestHashes[newGroup.groupId] = requestHash
+	if requestHash then
+		Olympus.executionResults[requestHash] = newGroup.groupId
+		Olympus.groupIDsrequestHashes[newGroup.groupId] = requestHash
+	end
 	return tostring(newGroup.groupId)
 end
 
