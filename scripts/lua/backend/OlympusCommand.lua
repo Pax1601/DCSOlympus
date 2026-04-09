@@ -947,7 +947,8 @@ function Olympus.spawnStaticObject(staticTable)
 		y = spawnLocation.z,
 		z = staticTable.alt,
 		name = staticTable.name or ("Olympus-" .. Olympus.staticsCounter .. "-Static-" .. staticTable.type),
-		mass = staticTable.mass
+		mass = staticTable.mass,
+		canCargo = staticTable.canCargo
 	}
 	Olympus.staticsCounter = Olympus.staticsCounter + 1
 	local newStatic = mist.dynAddStatic(staticObjectTable)
