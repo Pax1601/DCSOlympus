@@ -51,7 +51,7 @@ class Group:
 class FriendlyPatrols(Plugin):
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
-        self.config = plugin_info.get("config", {})
+        self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
         self.frequency_hz = self._read_frequency_hz("frequency_hz")
         self.kokoro_voice_model = self._read_voice_model("kokoro_voice_model", default="am_fenrir")
         self.modulation = self._read_modulation("modulation", default=1)

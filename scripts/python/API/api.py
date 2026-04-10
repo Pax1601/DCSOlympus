@@ -186,9 +186,10 @@ class API:
             "Authorization": f"Basic {base64_encoded_credentials}"
         }
         try:
-            response = requests.get(f"{self.base_url}/{endpoint}", headers=headers)
+            response = requests.get(f"{self.base_url}/{endpoint}", headers=headers, timeout=0.5)
         except Exception as e:
-            self.logger.error(f"HTTP request failed: {e}")
+            self.logger.error(f"HTTP request failed")
+            self.logger.debug(f"HTTP request failed: {e}")
             # Simulate a response object with an error status code to trigger error handling
             class ErrorResponse:
                 def __init__(self, error):
@@ -212,9 +213,10 @@ class API:
             "Content-Type": "application/json"
         }
         try:
-            response = requests.put(f"{self.base_url}", headers=headers, json=data)
+            response = requests.put(f"{self.base_url}", headers=headers, json=data, timeout=0.5)
         except Exception as e:
-            self.logger.error(f"HTTP request failed: {e}")
+            self.logger.error(f"HTTP request failed")
+            self.logger.debug(f"HTTP request failed: {e}")
             # Simulate a response object with an error status code to trigger error handling
             class ErrorResponse:
                 def __init__(self, error):
@@ -257,8 +259,8 @@ class API:
                     elif data.get("status") == "failed":
                         self.logger.error(f"Command {command_hash} failed to execute.")
                         break
-                except ValueError:
-                    self.logger.error("Failed to parse JSON response")
+                except Exception as e:
+                    self.logger.error(f"Failed to parse JSON response: {e}")
             if time.time() - start_time > max_wait_time:
                 self.logger.warning(f"Timeout: Command {command_hash} did not complete within {max_wait_time} seconds.")
                 break
@@ -446,11 +448,10 @@ class API:
                     self.units[unit_id].update_from_data_extractor(data_extractor)
                     
                 return self.units
-                    
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch units: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch units: {response.status_code}")
 
     def update_weapons(self, time=0):
         """
@@ -482,10 +483,10 @@ class API:
                     
                 return self.weapons
                     
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch weapons: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch weapons: {response.status_code}")
              
     def update_logs(self, time = 0):
         """
@@ -502,10 +503,10 @@ class API:
             try:
                 self.logs = json.loads(response.content.decode('utf-8'))
                 return self.logs
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch logs: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch logs: {response.status_code}")
             
     def update_mission(self):
         """
@@ -518,10 +519,10 @@ class API:
             try:
                 self.mission = json.loads(response.content.decode('utf-8'))['mission']
                 return self.mission
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch mission data: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch mission data: {response.status_code}")
             
     def update_markers(self):
         """
@@ -534,10 +535,10 @@ class API:
             try:
                 self.markers = json.loads(response.content.decode('utf-8'))['markers']
                 return self.markers
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch markers data: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch markers data: {response.status_code}")
             
     def update_spots(self):
         """
@@ -550,10 +551,10 @@ class API:
             try:
                 self.spots = json.loads(response.content.decode('utf-8'))['spots']
                 return self.spots
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch spots data: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch spots data: {response.status_code}")
             
     def update_bullseyes(self):
         """
@@ -566,10 +567,10 @@ class API:
             try:
                 self.bullseyes = json.loads(response.content.decode('utf-8'))['bullseyes']
                 return self.bullseyes
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch bullseyes data: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch bullseyes data: {response.status_code}")
 
     def update_custom_mission_data(self, data_table: str):
         """
@@ -579,10 +580,10 @@ class API:
         if response.status_code == 200:
             try:
                 return json.loads(response.content.decode('utf-8'))
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         else:
-            self.logger.error(f"Failed to fetch custom data: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to fetch custom data: {response.status_code}")
 
     def spawn_aircrafts(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
         """
@@ -618,8 +619,8 @@ class API:
                     asyncio.create_task(self._check_command_executed(command_hash, execution_callback, wait_for_result=True))
                 else:
                     self.logger.error("Command hash not found in response")
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         
     def spawn_helicopters(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
         """
@@ -655,8 +656,8 @@ class API:
                     asyncio.create_task(self._check_command_executed(command_hash, execution_callback, wait_for_result=True))
                 else:
                     self.logger.error("Command hash not found in response")
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
         
     def spawn_ground_units(self, units: list[UnitSpawnTable], coalition: str, country: str, immediate: bool, spawnPoints: int, execution_callback):
         """
@@ -689,10 +690,8 @@ class API:
                 asyncio.create_task(self._check_command_executed(command_hash, execution_callback, wait_for_result=True,))
             else:
                 self.logger.error("Command hash not found in response")
-            
-                
-        except ValueError:
-            self.logger.error("Failed to parse JSON response")
+        except Exception as e:
+            self.logger.error(f"Failed to parse JSON response: {e}")
             
     def spawn_navy_units(self, units: list[UnitSpawnTable], coalition: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
         """
@@ -726,8 +725,8 @@ class API:
                     asyncio.create_task(self._check_command_executed(command_hash, execution_callback, wait_for_result=True))
                 else:
                     self.logger.error("Command hash not found in response")
-            except ValueError:
-                self.logger.error("Failed to parse JSON response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
                 
     def create_marker(self, markerID: int, latlng: LatLng, text: str):
         """
@@ -750,7 +749,7 @@ class API:
         if response.status_code == 200:
             self.logger.info(f"Marker created at ({latlng.lat}, {latlng.lng}) with text: '{text}'")
         else:
-            self.logger.error(f"Failed to create marker: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to create marker: {response.status_code}")
             
     def delete_marker(self, marker_id: int):
         """
@@ -767,7 +766,7 @@ class API:
         if response.status_code == 200:
             self.logger.info(f"Marker with ID {marker_id} deleted successfully")
         else:
-            self.logger.error(f"Failed to delete marker: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to delete marker: {response.status_code}")
 
     def execute_file(self, filePath: str):
         """Execute a Lua file on the DCS mission."""
@@ -779,7 +778,7 @@ class API:
         if response.status_code == 200:
             self.logger.info(f"Lua file '{filePath}' executed successfully")
         else:
-            self.logger.error(f"Failed to execute Lua file: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to execute Lua file: {response.status_code}")
 
     def create_radio_listener(self):
         """
@@ -1147,7 +1146,7 @@ class API:
         if response.status_code == 200:
             self.logger.info(f"Command sent successfully: {command}")
         else:
-            self.logger.error(f"Failed to send command: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to send command: {response.status_code}")
         return response
     
     def spawn_static_object(self, location: LatLng, type: str, shapeName: str, coalition: str, heading: float, canCargo: bool, linkOffset: bool, dead: bool, mass: float):
@@ -1184,7 +1183,7 @@ class API:
         if response.status_code == 200:
             self.logger.info(f"Static object of type '{type}' spawned successfully with shape '{shapeName}'")
         else:
-            self.logger.error(f"Failed to spawn static object: {response.status_code} - {response.text}")
+            self.logger.error(f"Failed to spawn static object: {response.status_code}")
     
     def stop(self):
         """

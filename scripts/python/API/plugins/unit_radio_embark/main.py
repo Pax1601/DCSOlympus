@@ -24,12 +24,12 @@ from radio.radio_listener import RadioListener
 
 class UnitRadioEmbark(Plugin):
     """
-    UnitRadioEmbark plugin scaffold.
+    UnitRadioEmbark plugin.
     """
 
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
-        self.config = plugin_info.get("config", {})
+        self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
         self.blue_embark_frequency_hz = self._read_frequency_hz("blue_embark_frequency_hz")
         self.red_embark_frequency_hz = self._read_frequency_hz("red_embark_frequency_hz")
         self.kokoro_voice_model = self._read_voice_model("kokoro_voice_model", default="bm_daniel")

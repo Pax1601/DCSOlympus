@@ -48,9 +48,8 @@ function olyLink.spawnFuelBarrel(baseName)
     local spawnLocation = fuelZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    local countryId = Olympus.getCountryIDByCoalition("blue")
     Olympus.spawnStaticObject({
-        countryId = countryId,
+        coalition = "blue",
 		heading = 0,
 		type = "barrels_cargo",
 		shapeName = "barrels_cargo",

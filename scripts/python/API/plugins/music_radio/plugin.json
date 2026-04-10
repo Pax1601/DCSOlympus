@@ -3,10 +3,5 @@
   "version": "0.1.0",
   "author": "DCS Olympus",
   "description": "Music radio plugin",
-  "main": "main.py",
-  "config": {
-    "music_folder": "C:\\Users\\veltro\\Documents\\olympus\\DCSOlympus\\scripts\\python\\API\\plugins\\music_radio\\music",
-    "music_frequency_hz": 116e6,
-    "music_modulation": 0
-  }
+  "main": "main.py"
 }

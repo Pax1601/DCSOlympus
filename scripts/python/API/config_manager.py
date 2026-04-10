@@ -36,8 +36,7 @@ class ConfigManager:
         "watchdog": {
             "enabled": True,
             "check_interval_seconds": 5,
-            "timeout_seconds": 30,
-            "auto_restart": True
+            "timeout_seconds": 30
         },
         "plugin_settings": {
             "example": "Configuration for specific plugins can go here"
@@ -289,7 +288,6 @@ class ConfigManager:
             - enabled (bool)
             - check_interval_seconds (int)
             - timeout_seconds (int)
-            - auto_restart (bool)
         """
         default_config = self.DEFAULT_CONFIG.get('watchdog', {})
         configured = self.config.get('watchdog', {})
@@ -306,8 +304,7 @@ class ConfigManager:
             'timeout_seconds': configured.get(
                 'timeout_seconds',
                 default_config.get('timeout_seconds', 30)
-            ),
-            'auto_restart': configured.get('auto_restart', default_config.get('auto_restart', True))
+            )
         }
 
         return merged

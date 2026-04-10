@@ -81,10 +81,6 @@
                     ? 'n/a'
                     : `${heartbeatAge.toFixed(1)}s`;
                 const tickingText = wd.heartbeat_ticking ? 'ticking' : 'stale';
-                const restartCount = wd.auto_restart_count || 0;
-                const restartedText = restartCount > 0 ? `yes (${restartCount})` : 'no';
-                const restartTs = wd.last_auto_restart_timestamp;
-                const restartAt = restartTs ? new Date(restartTs * 1000).toLocaleTimeString() : 'n/a';
                 const canReload = plugin.status === 'stopped';
 
                 const tr = document.createElement('tr');
@@ -93,7 +89,7 @@
                     <td>${plugin.version}</td>
                     <td>${plugin.author}</td>
                     <td class="status">${plugin.status}</td>
-                    <td class="watchdog">${tickingText}<br/>heartbeat: ${heartbeatText}<br/>auto-restarted: ${restartedText}<br/>last restart: ${restartAt}</td>
+                    <td class="watchdog">${tickingText}<br/>heartbeat: ${heartbeatText}</td>
                     <td>
                         <button class="start" data-action="start" data-name="${plugin.name}">Start</button>
                         <button class="pause" data-action="pause" data-name="${plugin.name}">Pause</button>

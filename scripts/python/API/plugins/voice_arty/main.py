@@ -28,7 +28,7 @@ class VoiceArty(Plugin):
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
 
-        self.config = plugin_info.get("config", {})
+        self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
         self.update_interval = float(self.config.get("update_interval", 1.0))
         self.frequency = float(self.config.get("frequency_hz", 33.000e6))
         self.battery_callsign = str(self.config.get("battery_callsign", "Hammer"))

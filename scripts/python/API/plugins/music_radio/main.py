@@ -25,7 +25,7 @@ class MusicRadio(Plugin):
 
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
-        self.config = plugin_info.get("config", {})
+        self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
         self.music_folder = str(self.config.get("music_folder", "")).strip()
         self.music_frequency_hz = self._read_frequency_hz("music_frequency_hz")
         self.music_modulation = self._read_modulation("music_modulation", default=0)
