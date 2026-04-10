@@ -1199,7 +1199,8 @@ class API:
         This method initializes the API and starts the necessary components.
         Sets up signal handlers for graceful shutdown.
         """
-        if asyncio.get_running_loop():
+        try:
             asyncio.create_task(self._run_async())
-        else:
+        except Exception as e:
+            self.logger.info(f"Failed to register async task: {e}. Creating own event loop.")
             asyncio.run(self._run_async())
