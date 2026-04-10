@@ -177,7 +177,7 @@ class EnemyPatrols(Plugin):
                                 town_centre["location"]["lng"],
                                 town_centre["location"].get("alt", 0),
                             )
-                            enemy_patrols_plugin_state = random.choices(["fight", "ambush", "patrol", "hide", "retreat"],weights=[0.3, 0.2, 0.2, 0.2, 0.1], k=1)[0] #we randomise the state a bit so we get a mix of different states in the units that spawn, this is just for testing and can be changed later to be based on the red blueness score and other factors, e.g. if the score is really bad then we have more fight and less hide etc, this is just a random choice for now
+                            enemy_patrols_plugin_state = random.choices(["fight", "ambush", "patrol", "hide", "retreat"],weights=[0.5, 0.3, 0.1, 0.05, 0.05], k=1)[0] #we randomise the state a bit so we get a mix of different states in the units that spawn, this is just for testing and can be changed later to be based on the red blueness score and other factors, e.g. if the score is really bad then we have more fight and less hide etc, this is just a random choice for now
                             #enemy_patrols_plugin_state = "patrol"#random.choice(["fight", "ambush", "patrol", "hide", "retreat"]) #used for testing specifics or even weights
                             for i in range(total_town_groups_of_units):
                                 project_new_position_from_centre = centre_zone_pos.project_with_bearing_and_distance(centre_zone_radius, random.randint(0, 360))
@@ -407,7 +407,7 @@ class EnemyPatrols(Plugin):
             self._handle_retreat_state(unit_object, enemy_nearby)
 
     def _handle_fight_state(self, unit_object, enemy_nearby):
-        air_or_ground = random.choices(["mop", "sim"], weights=[0.6, 0.4], k=1)[0]
+        air_or_ground = random.choices(["mop", "sim"], weights=[0.7, 0.3], k=1)[0]
         if air_or_ground == "mop":
             self._start_mop_engagement(unit_object, enemy_nearby, "fight")
         else:
@@ -508,16 +508,27 @@ class EnemyPatrols(Plugin):
             enemy_coalition = "blue"
         else:
             return None
-        #print(f"Didn't expected to see this {enemy_coalition}")
-        closest_units = self.api.get_closest_units(
-            coalitions=[enemy_coalition],
-            categories=["ground", "aircraft", "helicopter"],
-            position=unit_object.position,
-            operate_as = unit_object.operate_as,
-            max_number=1,
-            max_distance=max_distance,
-        )
-        return closest_units[0] if closest_units else None
+            nearest_unit = None
+            nearest_distance = max_distance
+
+            for candidate_unit in self.api.units.values():
+                if not candidate_unit.alive:
+                    continue
+                if candidate_unit.coalition != enemy_coalition:
+                    continue
+                if candidate_unit.category.lower() not in ["ground", "aircraft", "helicopter"]:
+                    continue
+                if not getattr(candidate_unit, "human", False):
+                    continue
+                if unit_object.operate_as is not None and candidate_unit.operate_as != unit_object.operate_as and candidate_unit.coalition == "neutral":
+                    continue
+
+                distance = unit_object.position.distance_to(candidate_unit.position)
+                if distance < nearest_distance:
+                    nearest_distance = distance
+                    nearest_unit = candidate_unit
+
+            return nearest_unit
 
     def get_all_zones(self):
         try:

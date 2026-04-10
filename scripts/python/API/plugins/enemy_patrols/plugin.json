@@ -4,6 +4,7 @@
   "author": "DCS Olympus",
   "description": "Enemy patrol management",
   "main": "main.py",
+  "enabled": false,
   "config": {
     "update_interval": 1.0,
     "red_spawn_threshold": -66,
