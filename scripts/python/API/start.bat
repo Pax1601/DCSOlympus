@@ -1,0 +1,1 @@
+python main.py -c .\plugin_manager_config.json
