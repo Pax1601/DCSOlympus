@@ -61,7 +61,7 @@ class EnemyPatrols(Plugin):
 
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
-        self.config = plugin_info.get("config", {})
+        self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
         self.red_spawn_threshold = int(self.config.get("red_spawn_threshold", -66))
         self.red_owned_threshold = int(self.config.get("red_owned_threshold", -33))
         self.min_group_size = int(self.config.get("min_group_size", 2))

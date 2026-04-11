@@ -25,7 +25,7 @@ class LuaLink(Plugin):
 
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
-        self.config = plugin_info.get("config", {})
+        self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
 
         self.bases_data = {}
 

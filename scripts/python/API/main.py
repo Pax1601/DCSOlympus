@@ -171,8 +171,7 @@ async def main():
     plugin_manager.configure_watchdog(
         enabled=watchdog_config.get('enabled', True),
         check_interval_seconds=watchdog_config.get('check_interval_seconds', 5),
-        timeout_seconds=watchdog_config.get('timeout_seconds', 30),
-        auto_restart=watchdog_config.get('auto_restart', True)
+        timeout_seconds=watchdog_config.get('timeout_seconds', 30)
     )
     plugin_manager.start_watchdog()
 
@@ -210,18 +209,7 @@ async def main():
             plugin_info = plugin_manager.get_plugin(plugin_name).get_info()
             logger.info(f"  - {plugin_info['name']} v{plugin_info['version']} by {plugin_info['author']}")
             logger.info(f"    {plugin_info['description']}")
-        
-        # Start plugins if configured to auto-start
-        if config_manager.should_auto_start_plugins():
-            logger.info("=" * 60)
-            logger.info("Starting all plugins...")
-            start_results = await plugin_manager.start_all_plugins()
-            
-            success_count = sum(1 for success in start_results.values() if success)
-            logger.info(f"Started {success_count}/{len(start_results)} plugin(s) successfully")
-        else:
-            logger.info("Auto-start disabled. Plugins loaded but not started.")
-        
+                
         # Display status
         logger.info("=" * 60)
         logger.info("Plugin Status:")

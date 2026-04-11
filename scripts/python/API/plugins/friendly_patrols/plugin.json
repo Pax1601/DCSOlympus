@@ -4,29 +4,5 @@
   "author": "DCS Olympus",
   "description": "Friendly patrols plugin",
   "main": "main.py",
-  "enabled": true,
-  "config": {
-    "frequency_hz": 40.000e6,
-    "modulation": 1,
-    "encryption": 0,
-    "update_interval": 1.0,
-    "kokoro_voice_model": "am_puck",
-    "default_patrol_distance": 1000.0,
-    "default_select_radius": 800.0,
-    "patrol_step_distance": 75.0,
-    "engagement_duration_seconds": 15.0,
-    "engagement_range": 900.0,
-    "destination_threshold": 10.0,
-    "contact_report_cooldown_seconds": 900.0,
-    "contact_detail_report_delay_min_seconds": 30.0,
-    "contact_detail_report_delay_max_seconds": 60.0,
-    "zone_search_report_delay_min_seconds": 120.0,
-    "zone_search_report_delay_max_seconds": 300.0,
-    "zone_search_move_interval_min_seconds": 20.0,
-    "zone_search_move_interval_max_seconds": 40.0,
-    "zone_search_group_spread_radius": 50.0,
-    "regroup_target_radius": 50.0,
-    "extraction_health_threshold": 50.0,
-    "extraction_ammo_ratio_threshold": 0.25
-  }
+  "enabled": true
 }

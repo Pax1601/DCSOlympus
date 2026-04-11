@@ -12,10 +12,12 @@
   "watchdog": {
     "enabled": true,
     "check_interval_seconds": 5,
-    "timeout_seconds": 30,
-    "auto_restart": true
+    "timeout_seconds": 30
   },
   "plugin_settings": {
-    "example": "Configuration for specific plugins can go here"
+    "example_plugin": {
+      "enabled": false,
+      "example_setting": "value"
+    }
   }
 }

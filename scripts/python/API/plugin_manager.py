@@ -18,6 +18,7 @@ from urllib.parse import urlparse, unquote, parse_qs
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 
+from api import API
 from plugin_base import Plugin, PluginStatus
 
 
@@ -53,15 +54,16 @@ class PluginManager:
         self._watchdog_enabled = True
         self._watchdog_check_interval = 5.0
         self._watchdog_timeout = 30.0
-        self._watchdog_auto_restart = True
         self._watchdog_task: Optional[asyncio.Task] = None
         self._watchdog_stop_event = asyncio.Event()
-        self._watchdog_restart_cooldown: Dict[str, float] = {}
         self._watchdog_last_check_time: float = 0.0
-        self._watchdog_restart_count: Dict[str, int] = {}
-        self._watchdog_last_restart_time: Dict[str, float] = {}
-        self._watchdog_last_restart_success: Dict[str, bool] = {}
         self.logger = logging.getLogger("PluginManager")
+
+        # Initialize the API to periodically check if the the DCS mission is running
+        self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=False, load_whisper=False)
+
+        self._should_auto_start_plugins = self.global_config.get('auto_start_plugins', True)
+        self._running_plugins_on_mission_stop: List[str] = []
         
         # Create plugins directory if it doesn't exist
         if not self.plugins_directory.exists():
@@ -182,8 +184,7 @@ class PluginManager:
         self,
         enabled: bool = True,
         check_interval_seconds: float = 5.0,
-        timeout_seconds: float = 30.0,
-        auto_restart: bool = True
+        timeout_seconds: float = 30.0
     ):
         """
         Configure plugin watchdog behavior.
@@ -192,12 +193,10 @@ class PluginManager:
             enabled: Enable watchdog monitoring
             check_interval_seconds: Interval between watchdog checks
             timeout_seconds: Heartbeat timeout threshold
-            auto_restart: Auto-restart crashed plugins
         """
         self._watchdog_enabled = bool(enabled)
         self._watchdog_check_interval = max(1.0, float(check_interval_seconds))
         self._watchdog_timeout = max(2.0, float(timeout_seconds))
-        self._watchdog_auto_restart = bool(auto_restart)
 
     def start_watchdog(self) -> bool:
         """
@@ -216,10 +215,9 @@ class PluginManager:
         self._watchdog_stop_event.clear()
         self._watchdog_task = asyncio.create_task(self._watchdog_loop(), name="PluginWatchdog")
         self.logger.info(
-            "Watchdog started (check_interval=%ss, timeout=%ss, auto_restart=%s)",
+            "Watchdog started (check_interval=%ss, timeout=%ss)",
             self._watchdog_check_interval,
-            self._watchdog_timeout,
-            self._watchdog_auto_restart
+            self._watchdog_timeout
         )
         return True
 
@@ -245,6 +243,16 @@ class PluginManager:
 
         self.logger.info("Watchdog stopped")
 
+    def check_mission_started(self):
+        result = self.api.update_mission()
+        if not result:
+            self.logger.info("Failed to check mission status via API")
+            return False
+        if result['dateAndTime']['elapsedTime'] < 30:
+            self.logger.info("Mission elapsed time is less than 30 seconds, treating as not started")
+            return False
+        return True
+
     async def _watchdog_loop(self):
         """
         Periodically detect stale heartbeats for running plugins.
@@ -263,6 +271,39 @@ class PluginManager:
             current_time = time.time()
             self._watchdog_last_check_time = current_time
 
+            # ====== Mission Detection Logic ======
+            if self.check_mission_started():
+                # If the are plugins that were automatically stopped due to mission end, attempt to restart them now that a new mission has started
+                if self._running_plugins_on_mission_stop:
+                    self.logger.info(
+                        "Mission detected. Attempting to restart %d plugin(s) that were stopped on mission end: %s",
+                        len(self._running_plugins_on_mission_stop),
+                        ", ".join(self._running_plugins_on_mission_stop)
+                    )
+                    for plugin_name in self._running_plugins_on_mission_stop:
+                        if plugin_name in self.plugins and self.plugins[plugin_name].get_status() != PluginStatus.RUNNING:
+                            await self.start_plugin(plugin_name)
+                    self._running_plugins_on_mission_stop.clear()
+            else:
+                # Count the number of running plugins before stopping to avoid log spam
+                running_plugins = [name for name, plugin in self.plugins.items() if plugin.get_status() == PluginStatus.RUNNING]
+
+                if running_plugins:
+                    self.logger.warning(
+                        "No active mission detected. Stopping %d running plugin(s): %s",
+                        len(running_plugins),
+                        ", ".join(running_plugins)
+                    )
+                    self._running_plugins_on_mission_stop = running_plugins
+
+                # Stop any plugin that is currently running
+                for name, plugin in self.plugins.items():
+                    if plugin.get_status() == PluginStatus.RUNNING:
+                        self.logger.info(f"Mission not detected. Stopping plugin: {name}")
+                        await self.stop_plugin(name)
+                continue
+
+            # ===== Stale Heartbeat Detection Logic =====
             for name, plugin in self.plugins.items():
                 if plugin.get_status() != PluginStatus.RUNNING:
                     continue
@@ -273,54 +314,18 @@ class PluginManager:
                     continue
 
                 elapsed = current_time - last_heartbeat
-                if elapsed > self._watchdog_timeout:
+                if elapsed > self._watchdog_timeout and plugin.get_status() == PluginStatus.RUNNING:
                     stale_plugins.append(name)
 
             for plugin_name in stale_plugins:
-                should_attempt_restart = False
-                cooldown_deadline = self._watchdog_restart_cooldown.get(plugin_name, 0.0)
-                if current_time >= cooldown_deadline:
-                    self._watchdog_restart_cooldown[plugin_name] = current_time + self._watchdog_timeout
-                    should_attempt_restart = True
-
-                if not should_attempt_restart:
-                    continue
-
                 self.logger.error(
                     "Watchdog detected stale plugin heartbeat: %s (timeout %.1fs)",
                     plugin_name,
                     self._watchdog_timeout
                 )
 
-                if not self._watchdog_auto_restart:
-                    continue
-
-                self.logger.warning("Watchdog attempting auto-restart for plugin: %s", plugin_name)
-                
                 # Stop the plugin
                 await self.stop_plugin(plugin_name)
-                
-                # Loop until the plugin is confirmed stopped before attempting reload, with a max wait time to avoid infinite loops
-                max_wait_seconds = 10.0
-                wait_interval_seconds = 0.5
-                elapsed = 0.0
-                while elapsed < max_wait_seconds:
-                    status = self.get_plugin_status(plugin_name)
-                    if status is None or status == PluginStatus.STOPPED:
-                        break
-                    await asyncio.sleep(wait_interval_seconds)
-                    elapsed += wait_interval_seconds
-                
-                # Reload the plugin
-                reloaded = self.reload_plugin(plugin_name)
-                restarted = await self.start_plugin(plugin_name) if reloaded else False
-                self._watchdog_restart_count[plugin_name] = self._watchdog_restart_count.get(plugin_name, 0) + 1
-                self._watchdog_last_restart_time[plugin_name] = time.time()
-                self._watchdog_last_restart_success[plugin_name] = restarted
-                if restarted:
-                    self.logger.info("Watchdog auto-restarted plugin: %s", plugin_name)
-                else:
-                    self.logger.error("Watchdog failed to auto-restart plugin: %s", plugin_name)
 
     def _get_watchdog_plugin_status(self, plugin_name: str, plugin: Plugin) -> Dict[str, Any]:
         """
@@ -343,23 +348,16 @@ class PluginManager:
         if plugin.get_status() == PluginStatus.RUNNING and heartbeat_age is not None:
             heartbeat_ticking = heartbeat_age <= self._watchdog_timeout
 
-        restart_count = self._watchdog_restart_count.get(plugin_name, 0)
-        last_restart_time = self._watchdog_last_restart_time.get(plugin_name)
-
         return {
             "enabled": self._watchdog_enabled,
             "running": self._watchdog_task is not None and not self._watchdog_task.done(),
             "check_interval_seconds": self._watchdog_check_interval,
             "timeout_seconds": self._watchdog_timeout,
-            "auto_restart": self._watchdog_auto_restart,
             "last_check_timestamp": self._watchdog_last_check_time,
             "counter": counter,
             "last_heartbeat_timestamp": last_heartbeat,
             "heartbeat_age_seconds": heartbeat_age,
-            "heartbeat_ticking": heartbeat_ticking,
-            "auto_restart_count": restart_count,
-            "last_auto_restart_timestamp": last_restart_time,
-            "last_auto_restart_success": self._watchdog_last_restart_success.get(plugin_name)
+            "heartbeat_ticking": heartbeat_ticking
         }
     
     def discover_plugins(self) -> List[Dict[str, Any]]:
@@ -429,6 +427,7 @@ class PluginManager:
                 self.logger.error(f"Error processing plugin {plugin_name}: {e}", exc_info=True)
         
         self.logger.info(f"Discovery complete. Found {len(discovered)} plugin(s)")
+
         return discovered
         
     def load_plugin(self, descriptor: Dict[str, Any]) -> Optional[Plugin]:
@@ -518,6 +517,10 @@ class PluginManager:
                 self.logger.warning(f"Failed to load plugin: {plugin_name}")
         
         self.logger.info(f"Loaded {loaded_count} plugin(s)")
+
+        # Initialize the list of plugins so that the watchdog will start them when a running mission is detected
+        self._running_plugins_on_mission_stop = [name for name, plugin in self.plugins.items() if plugin.get_info().get("enabled", True)]
+
         return loaded_count
     
     async def start_plugin(self, plugin_name: str) -> bool:
