@@ -937,6 +937,9 @@ function Olympus.spawnStaticObject(staticTable)
 
 	local countryId = Olympus.getCountryIDByCoalition(staticTable.coalition)
 
+	-- Check if the word "cargo" is in the shapeName
+	local shapeNameHasCargo = staticTable.shapeName ~= nil and string.find(string.lower(staticTable.shapeName), "cargo") ~= nil
+
 	local staticObjectTable = 
 	{
 		countryId = countryId,
@@ -949,9 +952,12 @@ function Olympus.spawnStaticObject(staticTable)
 		name = staticTable.name or ("Olympus-" .. Olympus.staticsCounter .. "-Static-" .. staticTable.type),
 		mass = staticTable.mass,
 		canCargo = staticTable.canCargo,
-		category = "Cargos",
 		tasks = {}
 	}
+
+	if shapeNameHasCargo then
+		staticObjectTable['category'] = "Cargos"
+	end
 	
 	Olympus.staticsCounter = Olympus.staticsCounter + 1
 	local newStatic = mist.dynAddStatic(staticObjectTable)

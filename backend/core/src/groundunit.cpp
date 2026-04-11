@@ -196,7 +196,7 @@ void GroundUnit::setState(unsigned char newState)
 	}
 
 	/* In embarking mode we set a timer to check if the unit is stuck */
-	if (newState == State::EMBARKING) {
+	if (newState == State::EMBARKING || newState == State::REACH_DESTINATION) {
 		nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(20 * 1000);
 	}
 
@@ -274,6 +274,19 @@ void GroundUnit::AIloop()
 			}
 			else {
 				embarkOnTransport(transport);
+			}
+		}
+
+		/* If we are in reaching destination state check if the unit is stuck */
+		if (state == State::REACH_DESTINATION) {
+			// If the unit is not moving after timeToNextTasking, reset the destination to try and get it unstuck
+			if (timeNow >= nextTaskingMilliseconds && getSpeed() < 0.1) {
+				log(unitName + " seems to be stuck, resetting destination");
+				resetActiveDestination();
+
+				// Set the next tasking time to a bit in the future to give time for the unit to move after resetting the destination. We don't want to reset the destination again immediately if the unit is still stuck after resetting it.
+				nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(10 * 1000);
+				setTimeToNextTasking(((nextTaskingMilliseconds - timeNow) / 1000.0));
 			}
 		}
 
