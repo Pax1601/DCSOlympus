@@ -83,9 +83,8 @@ function olyLink.spawnSupplyCrate(baseName)
     local spawnLocation = suppliesZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    local countryId = Olympus.getCountryIDByCoalition("blue")
     Olympus.spawnStaticObject({
-        countryId = countryId,
+        coalition = "blue",
         heading = 0,
         type = "uh1h_cargo",
         shapeName = "uh1h_cargo",
@@ -119,9 +118,8 @@ function olyLink.spawnShellCrate(baseName)
     local spawnLocation = shellsZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    local countryId = Olympus.getCountryIDByCoalition("blue")
     Olympus.spawnStaticObject({
-        countryId = countryId,
+        coalition = "blue",
         heading = 0,
         type = "uh1h_cargo",
         shapeName = "uh1h_cargo",
@@ -155,10 +153,8 @@ function olyLink.spawnWeaponCrate(baseName, weaponType)
     local spawnLocation = weaponsZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    local countryId = Olympus.getCountryIDByCoalition("blue")
-
     Olympus.spawnStaticObject({
-        countryId = countryId,
+        coalition = "blue",
         heading = 0,
         type = "ammo_cargo",
         shapeName = "ammo_cargo",
@@ -201,7 +197,7 @@ function olyLink.spawnFireTeam(baseName)
             coalition = "blue",
             units = {
                 {
-                    unitType = "Soldier M4",
+                    unitType = "Soldier M4 GRG",
                     lat = lat,
                     lng = lng,
                     heading = 0
@@ -383,10 +379,11 @@ function olyLink.removeStaticsFromDropoffZone(baseName)
 end
 
 function olyLink.clearBasePickupZones(baseName)
+    Olympus.notify("Clearing all zones", 2)
     local fuelZoneName = olyLink.bases[baseName].fuelZoneName
     local suppliesZoneName = olyLink.bases[baseName].suppliesZoneName
     local weaponsZoneName = olyLink.bases[baseName].ammoZoneName
-
+    
     local zonesToClear = {fuelZoneName, suppliesZoneName, weaponsZoneName}
     for i, zoneName in ipairs(zonesToClear) do
         local zone = trigger.misc.getZone(zoneName)
@@ -395,18 +392,24 @@ function olyLink.clearBasePickupZones(baseName)
                 id = world.VolumeType.SPHERE,
                 params = {
                     point = zone.point,
-                    radius = zone.radius
+                    radius = 1000
                 }
             }
     
+            local foundObjects = 0
             local function tryRemove(obj)
+                foundObjects = foundObjects + 1
                 if obj and obj:isExist() then
-                        obj:destroy()
+                    obj:destroy()
                 end
                 return true
             end
     
             world.searchObjects(Object.Category.CARGO, volume, tryRemove)
+            if Object.Category.CARGO then
+                world.searchObjects(Object.Category.CARGO, volume, tryRemove)
+            end
+            Olympus.notify(zoneName .. " cleared " .. foundObjects .. " objects", 2)
         end
     end
 end
