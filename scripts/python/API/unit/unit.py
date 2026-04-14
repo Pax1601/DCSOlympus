@@ -100,6 +100,7 @@ class Unit:
         
         self.previous_total_ammo = 0
         self.total_ammo = 0
+        self.max_ammo = 100
         
         self.on_property_change_callbacks = {}
         self.on_destination_reached_callback = None
@@ -514,6 +515,8 @@ class Unit:
                     self.ammo = ammo
                     self.previous_total_ammo = self.total_ammo
                     self.total_ammo = sum(ammo.quantity for ammo in self.ammo)
+                    if self.max_ammo < self.total_ammo:
+                        self.max_ammo = self.total_ammo
                     # Trigger callbacks for property change
                     if "ammo" in self.on_property_change_callbacks:
                         self._trigger_callback("ammo", self.ammo)

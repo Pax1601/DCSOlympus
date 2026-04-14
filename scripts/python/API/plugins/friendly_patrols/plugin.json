@@ -3,6 +3,5 @@
   "version": "0.1.0",
   "author": "DCS Olympus",
   "description": "Friendly patrols plugin",
-  "main": "main.py",
-  "enabled": true
+  "main": "main.py"
 }

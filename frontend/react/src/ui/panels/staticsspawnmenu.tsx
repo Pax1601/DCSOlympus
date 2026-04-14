@@ -13,6 +13,7 @@ import { deg2rad, normalizeAngle } from "../../other/utils";
 import { OlNumberInput } from "../components/olnumberinput";
 import { OlToggle } from "../components/oltoggle";
 import { OlCoalitionToggle } from "../components/olcoalitiontoggle";
+import { OlStringInput } from "../components/olstringinput";
 
 export function StaticsSpawnMenu(props: {
   visible: boolean;
@@ -29,6 +30,7 @@ export function StaticsSpawnMenu(props: {
   const [dead, setDead] = useState(false);
   const [mass, setMass] = useState(1000);
   const [spawnCoalition, setSpawnCoalition] = useState("blue" as Coalition);
+  const [staticName, setStaticName] = useState<string | null>(null);
 
   /* Heading compass */
   const [compassAngle, setCompassAngle] = useState(0);
@@ -149,6 +151,21 @@ export function StaticsSpawnMenu(props: {
                   />
                 </div>
               )}
+
+              <div className={`flex content-center justify-between`}>
+                <span
+                  className={`
+                    my-auto font-normal
+                    dark:text-gray-400
+                  `}
+                >
+                  Name
+                </span>
+                <OlStringInput
+                  value={staticName ?? ""}
+                  onChange={(e) => setStaticName(e.currentTarget.value)}
+                />
+              </div>
 
               <div className={`flex content-center justify-between`}>
                 <span
@@ -286,20 +303,24 @@ export function StaticsSpawnMenu(props: {
                   const shapeName = staticObjectsShapes[props.staticObject as keyof typeof staticObjectsShapes] ?? "";
                   const type = shapeNameToType[shapeName as keyof typeof shapeNameToType] ?? shapeName;
                   if (props.latlng) {
-                    getApp()
-                      .getServerManager()
-                      .spawnStatic(
-                        props.latlng,
-                        {
+                    const requestTable: StaticRequestTable = {
                           type: type,
                           shapeName: shapeName,
-                          coalition: props.coalition,
+                          coalition: props.coalition as Coalition,
                           heading: deg2rad(compassAngle),
                           canCargo: canCargo,
                           linkOffset: true,
                           dead: dead,
                           mass: mass,
-                        } as StaticRequestTable,
+                        };
+                    
+                    if (staticName) requestTable.name = staticName;
+
+                    getApp()
+                      .getServerManager()
+                      .spawnStatic(
+                        props.latlng,
+                        requestTable,
                         false,
                         (commandHash: string) => {
                           if (props.latlng) getApp().getMap()?.addTemporaryStaticMarker(props.latlng, commandHash);

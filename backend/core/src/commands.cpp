@@ -154,8 +154,13 @@ string SpawnHelicopters::getString()
 string SpawnStaticObject::getString() {
     std::ostringstream commandSS;
 	commandSS.precision(10);
-    commandSS << "Olympus.spawnStaticObject, {"
-        << "type = " << "\"" << type << "\"" << ", "
+    commandSS << "Olympus.spawnStaticObject, {";
+	    // Only include the name if it's not empty, as it is optional
+        if (!name.empty()) {
+            commandSS
+                << "name = " << "\"" << name << "\"" << ", ";
+        }
+        commandSS << "type = " << "\"" << type << "\"" << ", "
         << "lat = " << location.lat << ", "
         << "lng = " << location.lng << ", "
         << "shapeName = " << "\"" << shapeName << "\"" << ", "

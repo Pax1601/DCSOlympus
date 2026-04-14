@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 import time
 
+from data.data_types import LatLng
 from radio.radio_listener import RadioListener
 from unit.unit import Unit
 
@@ -26,6 +27,7 @@ class LuaLink(Plugin):
     def __init__(self, plugin_info, global_config=None):
         super().__init__(plugin_info, global_config)
         self.config = global_config.get("plugin_settings", {}).get(plugin_info.get("name"), {})
+        self.active_lua_config = self.config.get("active_lua_config", "config.lua")
 
         self.bases_data = {}
 
@@ -46,6 +48,13 @@ class LuaLink(Plugin):
 
         self.mission_started = False
 
+        # Clean up old command files
+        commands_dir = Path(__file__).parent / "lua" / "commands"
+        if commands_dir.exists() and commands_dir.is_dir():
+            for command_file in commands_dir.iterdir():
+                if command_file.is_file():
+                    command_file.unlink()
+
         # Initialize the API if not already done
         if self.api is None:
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=True, load_whisper=True)
@@ -65,14 +74,14 @@ class LuaLink(Plugin):
     def initialize_lua(self):
         # Load all the lua files
         self.api.execute_file(str(Path(__file__).parent / "lua" / "init.lua"))
-        self.api.execute_file(str(Path(__file__).parent / "lua" / "config.lua"))
+        self.api.execute_file(self.active_lua_config)
         self.api.execute_file(str(Path(__file__).parent / "lua" / "constants.lua"))
         self.api.execute_file(str(Path(__file__).parent / "lua" / "utils.lua"))
         self.api.execute_file(str(Path(__file__).parent / "lua" / "functions.lua"))
         self.api.execute_file(str(Path(__file__).parent / "lua" / "main.lua"))
         
-        # Read the configuration file and print it
-        self.bases_data = lua_table_file_to_dict(str(Path(__file__).parent / "lua" / "config.lua"))
+        # Read the configuration file
+        self.bases_data = lua_table_file_to_dict(self.active_lua_config)
         
         for base_name, base_info in self.bases_data.items():
             self.logger.info("Frequency (Hz): %s", base_info["frequency"])
@@ -113,34 +122,21 @@ class LuaLink(Plugin):
 
         # Save the current supply and fuel levels for each base to the config file for the Lua script to read and use in its logic
         if "customData" in result and result["customData"] is not None:
-            # Check if at least 30 seconds have passed since the mission started to avoid overwriting the initial config values before the Lua script has a chance to read them
-            if self.start_time is not None and time.time() - self.start_time < 30:
+            # Check if at least 10 seconds have passed since the mission started to avoid overwriting the initial config values before the Lua script has a chance to read them
+            if self.start_time is not None and time.time() - self.start_time < 10:
                 return
 
             custom_data = result["customData"]
             self.bases_data = custom_data
+
+            # Perform periodic functions
+            if result.get("load") < 10:  # Only perform these functions if the server load is less than 100% to avoid potential performance issues
+                self.send_units_to_spawn_point()
+                self.rearm_artillery_pieces()
+
             # Write the custom data to the link file for the Lua script to read
-            dict_to_lua_table_file(custom_data, str(Path(__file__).parent / "lua" / "config.lua"), "olyLink.bases")
+            dict_to_lua_table_file(custom_data, self.active_lua_config, "olyLink.bases")
        
-        session_hash = result["sessionHash"]
-
-        # Check if the mission has been restarted and if so reset the plugin state
-        if self.session_hash is None:
-            self.session_hash = session_hash
-        elif self.session_hash != session_hash:
-            self.logger.warning("Session hash changed, resetting plugin state")
-            self.session_hash = session_hash
-            self.on_stop()  # Stop the plugin to clean up any existing state
-            self.on_start()  # Restart the plugin to reset state
-
-        # If the server load is zero it means that all commands have been exectued, so we can clear the commands directory to avoid clutter and potential confusion from old command files
-        if "load" in result and result["load"] == 0:
-            commands_dir = Path(__file__).parent / "lua" / "commands"
-            if commands_dir.exists() and commands_dir.is_dir():
-                for command_file in commands_dir.iterdir():
-                    if command_file.is_file():
-                        command_file.unlink()
-
     def on_stop(self) -> bool:
         """
         Called when the plugin should stop its operation.
@@ -197,7 +193,6 @@ class LuaLink(Plugin):
         clear_keywords = ["clear"]
 
         units = self.api.get_units()
-        
         if unitID not in units:
             self.logger.warning(f"UnitID {unitID} not found in game units.")
             return
@@ -230,7 +225,7 @@ class LuaLink(Plugin):
             self.logger.info(f"Unit {unitID} requesting clear.")
             response = self.clear(unit, base_name)
         else:
-            response = "I did not understand your request sir."
+            response = "Say again. Over."
             keep_message = True  # Keep the message for debugging unrecognized commands
             
         voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and "voiceModel" in self.bases_data[base_name] else None
@@ -242,37 +237,48 @@ class LuaLink(Plugin):
     def status_report(self, unit: Unit, base_name: str):
         return f"{unit.callsign}, base logistics, current base situation is as follows. " \
                f"We currently have {self.bases_data[base_name]['fuel']} liters of fuel, " \
-               f"{self.bases_data[base_name]['shells']} artillery shells, and " \
-               f"{self.bases_data[base_name]['supplies']} kilograms of supplies. " \
-               f"Over."
+               f"{self.bases_data[base_name]['shells']} artillery shells, " \
+               f"{self.bases_data[base_name]['supplies']} kilograms of supplies, and " \
+               f"{self.bases_data[base_name]['troopsAvailable']} troops available. Over."
                 
     def fireteam(self, unit: Unit, base_name: str):
-        self.execute_command(f"olyLink.spawnFireTeam(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting a fire team ready for you."
+        # Check how many troops we have available at the base
+        troopsAvailable = max(0, self.bases_data[base_name].get("troopsAvailable", 0) - 8) 
+
+        # Check if we have enought supplies
+        required_supplies = self.bases_data[base_name].get("suppliesPerTroop", 0) * 8
+
+        if troopsAvailable <= 0:
+            return f"{unit.callsign}, base logistics, no troops available at the barracks. Over."
+        elif self.bases_data[base_name].get("supplies", 0) < required_supplies:
+            return f"{unit.callsign}, base logistics, we don't have enough supplies to send a fire team right now. Over."
+        else:
+            self.execute_command(f"olyLink.spawnFireTeam(\"{base_name}\")") 
+            return f"{unit.callsign}, base logistics, we're getting a fire team ready for you. Over."
     
     def fuel(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnFuelBarrel(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting some fuel ready for you."
+        return f"{unit.callsign}, base logistics, we're getting some fuel ready for you. Over."
     
     def ammo(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnShellCrate(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting some shells ready for you."
+        return f"{unit.callsign}, base logistics, we're getting some shells ready for you. Over."
     
     def explosives(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnWeaponCrate(\"{base_name}\", 'RocketHE')")
-        return f"{unit.callsign}, base logistics, we're getting some H E rockets ready for you."
+        return f"{unit.callsign}, base logistics, we're getting some H E rockets ready for you. Over."
     
     def smoke(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnWeaponCrate(\"{base_name}\", 'RocketOther')")
-        return f"{unit.callsign}, base logistics, we're getting some smoke rockets ready for you."
+        return f"{unit.callsign}, base logistics, we're getting some smoke rockets ready for you. Over."
     
     def supplies(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnSupplyCrate(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting some supplies ready for you."
+        return f"{unit.callsign}, base logistics, we're getting some supplies ready for you. Over."
     
     def clear(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.clearBasePickupZones(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're clearing the pickup zones for you."
+        return f"{unit.callsign}, base logistics, we're clearing the pickup zones for you. Over."
     
     def execute_command(self, command: str):
         # Create a tmp file with the command for the Lua script to read and execute
@@ -289,4 +295,75 @@ class LuaLink(Plugin):
 
         # Execute the Lua command file  
         self.api.execute_file(str(command_file))
-        
+
+    def send_units_to_spawn_point(self):
+        # Iterate on all the bases
+        for base_name, base_info in self.bases_data.items():
+            # Iterate on all the zones
+            zones = self.api.get_mission().get("triggers", {})
+            for zone in zones.values():
+                if "name" in zone and zone["name"] == base_info.get("fireTeamZoneName", ""):
+                    spawn_location = zone.get("location", {})
+                    spawn_radius = zone.get("radius", 50)     
+                    spawn_latlng = LatLng(spawn_location.get("lat", 0), spawn_location.get("lng", 0), spawn_location.get("alt", 0))
+
+                    # Get all the units in the mission that are within 200 meters of the spawn point BUT are outside it
+                    # Also check that the unit is an infantry unit, belongs to the blue coalition, is idle and is controlled by Olympus
+                    units = self.api.get_units()
+                    for unit in units.values():
+                        if unit.category == "GroundUnit":
+                            unit_type = self.api.groundunit_database.get(unit.name, {}).get("type", "")
+                            if spawn_latlng.distance_to(unit.position) <= 200 and spawn_latlng.distance_to(unit.position) > spawn_radius and unit_type == "Infantry" and unit.coalition == "blue" and unit.state == "idle" and unit.controlled and unit.alive:
+                                self.logger.info(f"Unit {unit.ID} is nearby the spawn point of base {base_name}, sending it to the spawn point")
+                                unit.set_path([spawn_latlng])
+                                unit.register_on_destination_reached_callback(lambda unit, reached, base_name=base_name: self.on_unit_destination_reached(unit, base_name), destination=spawn_latlng, threshold=spawn_radius)
+
+    def on_unit_destination_reached(self, unit: Unit, base_name: str):
+        self.logger.info(f"Unit {unit.ID} has reached the spawn point of base {base_name}")
+        unit.delete_unit()
+
+        # Notify the Lua script that the unit has reached its destination so it can update the number of available troops at the base
+        self.execute_command(f"olyLink.onFireTeamUnitReachedDestination(\"{base_name}\")")
+
+    def rearm_artillery_pieces(self):
+        # Iterate on all the bases
+        for base_name, base_info in self.bases_data.items():
+            required_shells = self.bases_data[base_name].get("shellsPerArtilleryPiece", 0)
+            available_shells = self.bases_data[base_name].get("shells", 0)
+
+            # Iterate on all the zones
+            zones = self.api.get_mission().get("triggers", {})
+            for zone in zones.values():
+                if "name" in zone and zone["name"] == base_info.get("dropoffZoneName", ""):
+                    dropoff_location = zone.get("location", {})
+                    dropoff_latlng = LatLng(dropoff_location.get("lat", 0), dropoff_location.get("lng", 0), dropoff_location.get("alt", 0), threshold=30)
+                    
+
+                    # Get all the units in the mission that are within 200 meters the dropoff point
+                    units = self.api.get_units()
+                    for unit in units.values():
+                        if unit.category == "GroundUnit":
+                            if available_shells < required_shells:
+                                self.logger.debug(f"Not enough shells available to rearm unit {unit.ID} at base {base_name}, skipping")
+                                continue
+
+                            unit_type = self.api.groundunit_database.get(unit.name, {}).get("type", "")
+                            if dropoff_latlng.distance_to(unit.position) <= 200 and unit_type == "Artillery" and unit.coalition == "blue" and unit.alive:
+                                # Check if the unit needs rearming
+                                if unit.total_ammo <= 0.1 * unit.max_ammo:
+                                    self.logger.info(f"Unit {unit.ID} is nearby base {base_name} and needs rearming, rearming it")
+                                    
+                                    # Clone the original unit to reset its ammo
+                                    self.api.clone_units([{"ID": unit.ID, "location": {
+                                        "lat": unit.position.lat,
+                                        "lng": unit.position.lng,
+                                        "alt": unit.position.alt
+                                    }}], delete_original=True)
+
+                                    # Update the value of available shells
+                                    self.execute_command(f"olyLink.rearmArtilleryPiece(\"{base_name}\")")
+
+                                    # Decrease the available shells by the required shells to rearm one artillery piece
+                                    available_shells -= required_shells
+
+

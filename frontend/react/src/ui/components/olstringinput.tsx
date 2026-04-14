@@ -12,6 +12,7 @@ export function OlStringInput(props: { value: string; className?: string; onChan
         <input
           type="text"
           onChange={props.onChange}
+          placeholder="Keep default"
           className={`
             block h-10 w-full rounded-md border-[2px] bg-gray-50 py-2.5
             text-center text-sm text-gray-900

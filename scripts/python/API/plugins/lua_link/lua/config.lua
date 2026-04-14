@@ -4,31 +4,32 @@
 -- Don't alter this files format and don't add other variables other than olyLink.bases. You can add other bases and change the values inside the table.
 -- Any comments that are not part of this block will be deleted.
 olyLink.bases = {
-	["Orote"] = {
-		["ammoZoneName"] = "Pickup-Weapons",
-		["dropoffZoneName"] = "Dropoff",
-		["fireTeamZoneName"] = "Pickup-Fireteam",
-		["frequency"] = 34000000,
-		["fuel"] = 1000000,
-		["fuelZoneName"] = "Pickup-Oil",
-		["modulation"] = 1,
-		["shells"] = 2000,
-		["supplies"] = 4000,
-		["suppliesZoneName"] = "Pickup-Supplies",
-		["voiceModel"] = "bm_daniel",
-		["weapons"] = 	{
-			["weapons.containers.M134_L"] = 0,
-			["weapons.containers.M134_R"] = 0,
-			["weapons.containers.M60_SIDE_L"] = 0,
-			["weapons.containers.M60_SIDE_R"] = 0,
-			["weapons.containers.SPRD-99"] = 0,
-			["weapons.nurs.HYDRA_70_M151"] = 114,
-			["weapons.nurs.HYDRA_70_M156"] = 14,
-			["weapons.nurs.HYDRA_70_M257"] = 14,
-			["weapons.torpedoes.LTF_5B"] = 0,
-			["weapons.torpedoes.Mark_46"] = 0,
-			["weapons.torpedoes.YU-6"] = 0,
-			["weapons.torpedoes.mk46torp_name"] = 0
-		}
-	}
+	--["Example"] = {
+	--	["ammoZoneName"] = "Pickup-Weapons",
+	--	["dropoffZoneName"] = "Dropoff",
+	--	["fireTeamZoneName"] = "TroopSpawn",
+	--	["frequency"] = 34000000,
+	--	["fuel"] = 0,
+	--	["fuelZoneName"] = "Pickup-Oil",
+	--	["modulation"] = 1,
+	--	["shells"] = 0,
+	--	["supplies"] = 0,
+	--	["suppliesZoneName"] = "Pickup-Supplies",
+	--	["voiceModel"] = "bm_daniel",
+	-- 	["troopsAvailable"] = 100,
+	--	["weapons"] = 	{
+	--		["weapons.containers.M134_L"] = 0,
+	--		["weapons.containers.M134_R"] = 0,
+	--		["weapons.containers.M60_SIDE_L"] = 0,
+	--		["weapons.containers.M60_SIDE_R"] = 0,
+	--		["weapons.containers.SPRD-99"] = 0,
+	--		["weapons.nurs.HYDRA_70_M151"] = 0,
+	--		["weapons.nurs.HYDRA_70_M156"] = 0,
+	--		["weapons.nurs.HYDRA_70_M257"] = 0,
+	--		["weapons.torpedoes.LTF_5B"] = 0,
+	--		["weapons.torpedoes.Mark_46"] = 0,
+	--		["weapons.torpedoes.YU-6"] = 0,
+	--		["weapons.torpedoes.mk46torp_name"] = 0
+	--	}
+	--}
 }

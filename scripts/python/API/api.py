@@ -1184,6 +1184,43 @@ class API:
             self.logger.info(f"Static object of type '{type}' spawned successfully with shape '{shapeName}'")
         else:
             self.logger.error(f"Failed to spawn static object: {response.status_code}")
+
+    def clone_units(self, to_clone: list[dict], delete_original=False, coalition="all", spawn_points: int = 0, execution_callback=None):
+        """
+        Clone existing units based on specified options.
+        
+        Args:
+            to_clone (list[dict]): A list of dictionaries specifying the units to clone. Each dictionary should contain:
+                - "ID": The ID of the unit to clone.
+                - "location": A LatLng object specifying the new position for the cloned unit.
+            delete_original (bool): Whether to delete the original units after cloning. Default is False.
+            coalition (str): The coalition for the cloned units ("blue", "red", "neutral", or "all"). Default is "all".
+            spawn_points (int): Amount of spawn points to use for the cloned units. Default is 0.
+            execution_callback (function): An optional async callback function to execute after the command is processed.
+        """
+        data = { "cloneUnits": 
+                {
+                "units": to_clone,
+                "deleteOriginal": delete_original,
+                "coalition": coalition,
+                "spawnPoints": spawn_points
+            } 
+        }
+        response = self._put(data)
+        
+        # Parse the response as JSON if callback is provided
+        if execution_callback:
+            try:
+                response_data = response.json()
+                command_hash = response_data.get("commandHash", None)
+                if command_hash:
+                    self.logger.info(f"Unit cloning command sent successfully. Command Hash: {command_hash}")
+                    # Start a background task to check if the command was executed
+                    asyncio.create_task(self._check_command_executed(command_hash, execution_callback, wait_for_result=True))
+                else:
+                    self.logger.error("Command hash not found in response")
+            except Exception as e:
+                self.logger.error(f"Failed to parse JSON response: {e}")
     
     def stop(self):
         """

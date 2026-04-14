@@ -45,6 +45,10 @@ function olyLink.spawnFuelBarrel(baseName)
         return
     end
 
+    -- Clear the zone
+    olyLink.clearZone(fuelZoneName)
+
+    -- Spawn the barrel
     local spawnLocation = fuelZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
@@ -80,6 +84,10 @@ function olyLink.spawnSupplyCrate(baseName)
         return
     end
 
+    -- Clear the zone
+    olyLink.clearZone(suppliesZoneName)
+
+    -- Spawn the crate
     local spawnLocation = suppliesZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
@@ -115,6 +123,10 @@ function olyLink.spawnShellCrate(baseName)
         return
     end
 
+    -- Clear the zone
+    olyLink.clearZone(shellsZoneName)
+
+    -- Spawn the crate
     local spawnLocation = shellsZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
@@ -150,6 +162,10 @@ function olyLink.spawnWeaponCrate(baseName, weaponType)
         return
     end
 
+    -- Clear the zone
+    olyLink.clearZone(weaponsZoneName)
+
+    -- Spawn the crate
     local spawnLocation = weaponsZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
@@ -185,10 +201,24 @@ function olyLink.spawnFireTeam(baseName)
         return
     end
 
+    -- Check how many troops are still available for this base in the config, and if there are no troops left, don't spawn anything
+    if olyLink.bases[baseName].troopsAvailable == nil or olyLink.bases[baseName].troopsAvailable <= 0 then
+        Olympus.notify("No troops available for base " .. baseName .. ", cannot spawn fireteam", 10)
+        return
+    end
+    local troopsToSpawn = math.min(8, olyLink.bases[baseName].troopsAvailable) -- spawn a maximum of 8 troops at a time
+
+    -- Check how many supplies are still available
+    local requiredSupplies = (olyLink.bases[baseName].suppliesPerTroop or 0) * troopsToSpawn
+    if olyLink.bases[baseName].supplies == nil or olyLink.bases[baseName].supplies < requiredSupplies then
+        Olympus.notify("Not enough supplies available for base " .. baseName .. ", cannot spawn fireteam", 10)
+        return
+    end
+
     local spawnLocation = fireTeamZone.point
     local randomOffsetZ = math.random(-15, 15) -- add a random offset of up to 1 meter in x direction to avoid perfect line
     -- Spawn a group for 8 soldiers in a line
-    for i = 1, 8 do
+    for i = 1, troopsToSpawn do
         local offset = (i - 1) * 2 -- 2 meters apart
         local lat, lng, alt = coord.LOtoLL({x = spawnLocation.x + offset, y = spawnLocation.y, z = spawnLocation.z + randomOffsetZ})
 
@@ -205,6 +235,10 @@ function olyLink.spawnFireTeam(baseName)
             }
         })
     end
+
+    -- Decrease the number of available troops for this base in the config, and the supplies as well
+    olyLink.bases[baseName].troopsAvailable = olyLink.bases[baseName].troopsAvailable - troopsToSpawn
+    olyLink.bases[baseName].supplies = olyLink.bases[baseName].supplies - requiredSupplies
 end
 
 -- Read the current weapons and fuel levels and update the olyLink.bases table with this data, 
@@ -245,7 +279,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     local volume = {
         id = world.VolumeType.SPHERE,
         params = {
-            point = dropoffZone.point,
+            point = mist.utils.makeVec3GL(dropoffZone.point),
             radius = dropoffZone.radius
         }
     }
@@ -260,7 +294,17 @@ function olyLink.checkIfSuppliesDelivered(baseName)
             objectInformation = obj:getDesc()
             objectName = obj:getName()
             objectWeight = obj:getCargoWeight()
-            cargoType = obj:getDesc().typeName            
+            cargoType = obj:getDesc().typeName   
+            
+            -- Get the ground elevation of the cargo
+            local cargoPosition = obj:getPosition().p
+            local cargoElevation = land.getHeight({x = cargoPosition.x, y = cargoPosition.z})
+
+            -- If the cargo is above the ground more than 5 meter, we consider it not delivered yet
+            if cargoPosition.y - cargoElevation > 5 then
+                hasCargo = false
+                return false
+            end
             return true
         end
         return false
@@ -281,6 +325,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     local inventory = nil
 
     for i = 1, #friendlyAirbases do
+        Olympus.notify("Checking base " .. friendlyAirbases[i]:getName(), 2)
         if friendlyAirbases[i]:getName() == baseName then
             warehouse = friendlyAirbases[i]:getWarehouse()
             inventory = warehouse:getInventory()
@@ -359,7 +404,7 @@ function olyLink.removeStaticsFromDropoffZone(baseName)
     local volume = {
         id = world.VolumeType.SPHERE,
         params = {
-            point = dropoffZone.point,
+            point = mist.utils.makeVec3GL(dropoffZone.point),
             radius = dropoffZone.radius
         }
     }
@@ -386,32 +431,52 @@ function olyLink.clearBasePickupZones(baseName)
     
     local zonesToClear = {fuelZoneName, suppliesZoneName, weaponsZoneName}
     for i, zoneName in ipairs(zonesToClear) do
-        local zone = trigger.misc.getZone(zoneName)
-        if zone then
-            local volume = {
-                id = world.VolumeType.SPHERE,
-                params = {
-                    point = zone.point,
-                    radius = 1000
-                }
-            }
-    
-            local foundObjects = 0
-            local function tryRemove(obj)
-                foundObjects = foundObjects + 1
-                if obj and obj:isExist() then
-                    obj:destroy()
-                end
-                return true
-            end
-    
-            world.searchObjects(Object.Category.CARGO, volume, tryRemove)
-            if Object.Category.CARGO then
-                world.searchObjects(Object.Category.CARGO, volume, tryRemove)
-            end
-            Olympus.notify(zoneName .. " cleared " .. foundObjects .. " objects", 2)
-        end
+        olyLink.clearZone(zoneName)
     end
+end
+
+function olyLink.clearZone(zoneName)
+    local zone = trigger.misc.getZone(zoneName)
+    if zone then
+        local volume = {
+            id = world.VolumeType.SPHERE,
+            params = {
+                point = mist.utils.makeVec3GL(zone.point),
+                radius = zone.radius
+            }
+        }
+
+        local foundObjects = 0
+        local function tryRemove(obj)
+            foundObjects = foundObjects + 1
+            if obj and obj:isExist() then
+                obj:destroy()
+            end
+            return true
+        end
+
+        world.searchObjects(Object.Category.CARGO, volume, tryRemove)
+        if Object.Category.CARGO then
+            world.searchObjects(Object.Category.CARGO, volume, tryRemove)
+        end
+        Olympus.notify(zoneName .. " cleared " .. foundObjects .. " objects", 2)
+    end
+end
+
+function olyLink.onFireTeamUnitReachedDestination(baseName)
+    -- When a fireteam unit reaches the destination increase the number of available troops for this base in the config, to allow spawning more troops, and decrease the supplies as well
+    olyLink.bases[baseName].troopsAvailable = olyLink.bases[baseName].troopsAvailable + 1
+end
+
+function olyLink.rearmArtilleryPiece(baseName)
+    -- When an artillery piece is rearmed, decrease the number of available shells for this base in the config
+    local requiredShells = olyLink.bases[baseName].shellsPerArtilleryPiece or 0
+    if olyLink.bases[baseName].shells == nil or olyLink.bases[baseName].shells < requiredShells then
+        Olympus.notify("Not enough shells available for base " .. baseName .. " to rearm artillery piece", 10)
+        return
+    end
+
+    olyLink.bases[baseName].shells = olyLink.bases[baseName].shells - requiredShells
 end
 
 -- Run all the periodic functions. This approach allows to avoid problems when reloading the plugin, 

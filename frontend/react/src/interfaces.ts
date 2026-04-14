@@ -179,6 +179,7 @@ export interface EffectRequestTable {
 }
 
 export interface StaticRequestTable {
+  name?: string;
   type: string;
   shapeName: string;
   coalition: Coalition;

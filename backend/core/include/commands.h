@@ -275,8 +275,9 @@ private:
 class SpawnStaticObject : public Command
 {
 public:
-	SpawnStaticObject(string type, Coords location, string shapeName, string coalition, double heading, bool canCargo, bool linkOffset, bool dead, double mass, bool immediate, function <void(void)> callback = [](){}) :
+	SpawnStaticObject(string name, string type, Coords location, string shapeName, string coalition, double heading, bool canCargo, bool linkOffset, bool dead, double mass, bool immediate, function <void(void)> callback = [](){}) :
 		Command(callback),
+		name(name),
 		type(type), 
 		location(location), 
 		shapeName(shapeName), 
@@ -294,6 +295,7 @@ public:
 	virtual unsigned int getLoad() { return immediate ? 5 : 30; }
 
 private:
+	const string name;
 	const string type;
 	const Coords location;
 	const string shapeName;
