@@ -33,7 +33,6 @@ import { TrainingModal } from "./modals/trainingmodal";
 import { AdminModal } from "./modals/adminmodal";
 import { ImageOverlayModal } from "./modals/imageoverlaymodal";
 import { LoadoutWizardModal } from "./modals/loadoutwizardmodal";
-import { StaticsImportExportModal } from "./modals/staticsimportexportmodal";
 
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
@@ -76,7 +75,6 @@ export function UI() {
             <ImportExportModal
               open={appState === OlympusState.IMPORT_EXPORT && (appSubState === ImportExportSubstate.IMPORT || appSubState === ImportExportSubstate.EXPORT)}
             />
-            <StaticsImportExportModal open={appState === OlympusState.IMPORT_EXPORT && (appSubState === ImportExportSubstate.EXPORT_STATICS || appSubState === ImportExportSubstate.SELECT_STATICS)} />
             <WarningModal open={appState === OlympusState.WARNING} />
             <TrainingModal open={appState === OlympusState.TRAINING} />
             <AdminModal open={appState === OlympusState.ADMIN} />

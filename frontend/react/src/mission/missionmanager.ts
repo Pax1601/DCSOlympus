@@ -49,8 +49,21 @@ export class MissionManager {
   constructor() {
     AppStateChangedEvent.on((state, subState) => {
       if (this.getSelectedAirbase() !== null) AirbaseSelectedEvent.dispatch(null);
-      SelectedStaticsChangedEvent.dispatch([]);
+      this.deselectAllStatics();
     });
+
+    getApp()
+      .getShortcutManager()
+      .addShortcut("deleteStatics", {
+        label: "Delete all selected statics on the map",
+        keyUpCallback: () => {
+          this.deleteSelectedStatics();
+        },
+        code: "Delete",
+        shiftKey: false,
+        altKey: true,
+        ctrlKey: false,
+      });
   }
 
   /** Update location of bullseyes
@@ -177,9 +190,37 @@ export class MissionManager {
           this.#statics[staticObject.ID].updateSize();
         }
       }
-
-      // TODO: remove deleted statics
     }
+
+    // Iterate all the statics and remove the ones that are not in the new data anymore
+    Object.values(this.#statics).forEach((staticObject: Static) => {
+      if (!Object.keys(data.statics).some((key: string) => parseInt(key) === staticObject.getID())) {
+        getApp().getMap().removeLayer(staticObject);
+        delete this.#statics[staticObject.getID()];
+      }
+    });
+  }
+
+  /**
+   * Deselect all statics on the map and dispatch an event with the new selected statics (empty array)
+   */
+  deselectAllStatics() {
+    Object.values(this.#statics).forEach((staticObject: Static) => {
+      staticObject.setSelected(false);
+    }
+    );
+    SelectedStaticsChangedEvent.dispatch([]);
+  }
+
+  /**
+   * Delete all selected statics on the map
+   */
+  deleteSelectedStatics() {
+    const selectedStatics = Object.values(this.#statics).filter((staticObject: Static) => staticObject.getSelected());
+    selectedStatics.forEach((staticObject: Static) => {
+      getApp().getServerManager().deleteStatic(staticObject.getName());
+    });
+    getApp().addInfoMessage(`Deleted ${selectedStatics.length} static` + (selectedStatics.length > 1 ? "s" : ""));
   }
 
   /** Get the bullseyes set in this theatre
@@ -301,6 +342,7 @@ export class MissionManager {
   }
 
   selectStaticsFromBounds(bounds: L.LatLngBounds) {
+    getApp().getMissionManager().deselectAllStatics();
     Object.values(this.#statics).forEach((staticObject: Static) => {
       if (bounds.contains(staticObject.getLatLng())) {
         staticObject.setSelected(true);

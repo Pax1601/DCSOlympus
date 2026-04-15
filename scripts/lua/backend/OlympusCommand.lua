@@ -1114,6 +1114,15 @@ function Olympus.delete(ID, explosion, explosionType)
 	end
 end
 
+function Olympus.deleteStaticObject(staticName)
+	Olympus.debug("Olympus.deleteStatic " .. staticName, 2)
+	local staticObject = StaticObject.getByName(staticName)
+	if staticObject ~= nil and staticObject:isExist() then
+		staticObject:destroy()
+		Olympus.debug("Olympus.deleteStatic completed successfully", 2)
+	end
+end
+
 -- Set a DCS main task to a group
 function Olympus.setTask(groupName, taskOptions)
 	Olympus.debug("Olympus.setTask " .. groupName .. " " .. Olympus.serializeTable(taskOptions), 2)
@@ -1793,19 +1802,24 @@ function Olympus.setMissionData(arg, time)
 	-- Statics 
 	local statics = {}
 	for idx, staticData in pairs(Olympus.staticsData) do
-		statics[idx] = {
-			ID = staticData["ID"],
-			name = staticData["name"],
-			position = {
-				lat = staticData["position"]["lat"],
-				lng = staticData["position"]["lng"],
-				alt = staticData["position"]["alt"]
-			},
-			heading = staticData["heading"],
-			coalition = staticData["coalition"],
-			size1 = staticData["size1"],
-			size2 = staticData["size2"]
-		}
+		if StaticObject.getByName(staticData["name"]) ~= nil and StaticObject.getByName(staticData["name"]):isExist() then
+			statics[idx] = {
+				ID = staticData["ID"],
+				name = staticData["name"],
+				position = {
+					lat = staticData["position"]["lat"],
+					lng = staticData["position"]["lng"],
+					alt = staticData["position"]["alt"]
+				},
+				heading = staticData["heading"],
+				coalition = staticData["coalition"],
+				size1 = staticData["size1"],
+				size2 = staticData["size2"]
+			}
+		else
+			-- If the static object no longer exists, we remove it from the table
+			Olympus.staticsData[idx] = nil
+		end
 	end
 
 	-- Assemble table

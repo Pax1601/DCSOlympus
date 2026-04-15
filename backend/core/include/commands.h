@@ -351,6 +351,25 @@ private:
 	const bool immediate;
 };
 
+/* Delete static object */
+class DeleteStaticObject : public Command
+{
+public:
+	DeleteStaticObject(string name, bool immediate, function<void(void)> callback = []() {}) :
+		Command(callback),
+		name(name),
+		immediate(immediate)
+	{
+		priority = immediate ? CommandPriority::IMMEDIATE : CommandPriority::LOW;
+	};
+	virtual string getString();
+	virtual unsigned int getLoad() { return immediate ? 5 : 30; }
+
+private:
+	const string name;
+	const bool immediate;
+};
+
 /* SetTask command */
 class SetTask : public Command
 {

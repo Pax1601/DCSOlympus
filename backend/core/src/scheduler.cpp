@@ -1412,6 +1412,21 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		command = new SpawnStaticObject(name, type, location, shapeName, coalition, heading, canCargo, linkOffset, dead, mass, immediate);
 	}
 	/************************/
+	else if (key.compare("deleteStaticObject") == 0)
+	{
+		// Check the presence of all fields
+		if (!value.has_string_field(L"name"))
+			log("Missing name field for deleteStaticObject command");
+		if (!value.has_boolean_field(L"immediate"))
+			log("Missing immediate field for deleteStaticObject command");
+
+		string name = to_string(value[L"name"]);
+		bool immediate = value[L"immediate"].as_bool();
+
+		log("Deleting static object with name " + name);
+		command = new DeleteStaticObject(name, immediate);
+	}
+	/************************/
 	else if (key.compare("executeFile") == 0)
 	{
 		// Check the presence of all fields

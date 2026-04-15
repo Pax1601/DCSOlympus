@@ -350,6 +350,12 @@ export class ServerManager {
     this.PUT(data, callback);
   }
 
+  deleteStatic(staticName: string, immediate: boolean = false, callback: CallableFunction = () => {}) {
+    var command = { name: staticName, immediate: immediate };
+    var data = { deleteStaticObject: command };
+    this.PUT(data, callback);
+  }
+
   attackUnit(ID: number, targetID: number, callback: CallableFunction = () => {}) {
     var command = { ID: ID, targetID: targetID };
     var data = { attackUnit: command };
