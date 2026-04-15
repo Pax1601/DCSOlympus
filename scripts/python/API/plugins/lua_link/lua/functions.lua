@@ -446,7 +446,7 @@ function olyLink.clearZone(zoneName)
             id = world.VolumeType.SPHERE,
             params = {
                 point = mist.utils.makeVec3GL(zone.point),
-                radius = zone.radius
+                radius = 5000
             }
         }
 
@@ -454,7 +454,12 @@ function olyLink.clearZone(zoneName)
         local function tryRemove(obj)
             foundObjects = foundObjects + 1
             if obj and obj:isExist() then
-                obj:destroy()
+                -- Check if the distance between the object and the zone center is less than the zone radius, ignoring height
+                local objPosition = obj:getPosition().p
+                local distance = math.sqrt((objPosition.x - zone.point.x)^2 + (objPosition.z - zone.point.z)^2)
+                if distance <= zone.radius then
+                    obj:destroy()
+                end
             end
             return true
         end
