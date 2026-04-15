@@ -48,22 +48,25 @@ function olyLink.spawnFuelBarrel(baseName)
     -- Clear the zone
     olyLink.clearZone(fuelZoneName)
 
-    -- Spawn the barrel
-    local spawnLocation = fuelZone.point
-    local lat, lng, alt = coord.LOtoLL(spawnLocation)
+    function spawnFuelBarrelNow()
+        -- Spawn the barrel
+        local spawnLocation = fuelZone.point
+        local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    Olympus.spawnStaticObject({
-        coalition = "blue",
-		heading = 0,
-		type = "barrels_cargo",
-		shapeName = "barrels_cargo",
-		lat = lat,
-        lng = lng,
-		name = "Fuel-" .. Olympus.staticsCounter .. "-" .. baseName,
-		mass = 1000,
-		canCargo = true,
-		dead = false
-    })
+        Olympus.spawnStaticObject({
+            coalition = "blue",
+            heading = 0,
+            type = "barrels_cargo",
+            shapeName = "barrels_cargo",
+            lat = lat,
+            lng = lng,
+            name = "Fuel-" .. Olympus.staticsCounter .. "-" .. baseName,
+            mass = 1000,
+            canCargo = true,
+            dead = false
+        })
+    end
+    timer.scheduleFunction(spawnFuelBarrelNow, {}, timer.getTime() + 1) -- add a delay
 end
 
 -- Spawn supply crates at a given base
