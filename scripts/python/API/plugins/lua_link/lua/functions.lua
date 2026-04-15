@@ -301,7 +301,8 @@ function olyLink.checkIfSuppliesDelivered(baseName)
             local cargoElevation = land.getHeight({x = cargoPosition.x, y = cargoPosition.z})
 
             -- If the cargo is above the ground more than 5 meter, we consider it not delivered yet
-            if cargoPosition.y - cargoElevation > 5 then
+            -- We also check if we already supplied the static for this object name, to avoid problems with the cargo being detected multiple times while it is still in the dropoff zone
+            if cargoPosition.y - cargoElevation > 5 and olyLink.alreadySuppliedStatics[objectName] == nil then
                 hasCargo = false
                 return false
             end
@@ -314,6 +315,9 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     if not hasCargo then
         return
     end
+
+    -- Register that we already supplied the static for this object name
+    olyLink.alreadySuppliedStatics[objectName] = true
 
     if objectInformation == nil or objectName == nil or cargoType == nil then
         Olympus.notify("Could not get information about the object in the dropoff zone " .. dropoffZoneName .. " for base " .. baseName .. ", cannot check for supplies delivery", 10)

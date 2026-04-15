@@ -286,18 +286,24 @@ function olyLink.removeStaticsInZone(zone)
         return
     end
 
+    -- Get all the statics in a 5000 meter radius around the zone center
     local volume = {
         id = world.VolumeType.SPHERE,
         params = {
             point = zone.point,
-            radius = zone.radius
+            radius = 5000
         }
     }
 
     local removedCount = 0
     local function tryRemove(obj)
         if obj and obj:isExist() then
+            -- Check if the distance between the object and the zone center is less than the zone radius, ignoring height
+            local objPosition = obj:getPosition().p
+            local distance = math.sqrt((objPosition.x - zone.point.x)^2 + (objPosition.z - zone.point.z)^2)
+            if distance <= zone.radius then
                 obj:destroy()
+            end
         end
         return true
     end
