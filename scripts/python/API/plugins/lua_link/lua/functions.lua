@@ -452,12 +452,12 @@ function olyLink.clearZone(zoneName)
 
         local foundObjects = 0
         local function tryRemove(obj)
-            foundObjects = foundObjects + 1
             if obj and obj:isExist() then
                 -- Check if the distance between the object and the zone center is less than the zone radius, ignoring height
                 local objPosition = obj:getPosition().p
                 local distance = math.sqrt((objPosition.x - zone.point.x)^2 + (objPosition.z - zone.point.z)^2)
                 if distance <= zone.radius then
+                    foundObjects = foundObjects + 1
                     obj:destroy()
                 end
             end
