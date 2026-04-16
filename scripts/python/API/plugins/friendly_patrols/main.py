@@ -260,13 +260,13 @@ class FriendlyPatrols(Plugin):
             radius_match = re.search(r"(\d+)\s*(meters|m)?", normalized_message)
             radius_match_commas = re.search(r"(\d+)\s*(,|\s)?(\d+)\s*(meters|m)?", normalized_message)
             joined_radius = None
-            if radius_match_commas.group(2) == ",":
+            if radius_match_commas is not None and radius_match_commas.group(2) == ",":
                 joined_radius = radius_match_commas.group(1) + radius_match_commas.group(3)
                 if joined_radius is not None:
                     radius = int(joined_radius)
                 else:
                     radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
-            else:   
+            else:
                 radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
 
             get_units_within_radius = self.get_units_within_radius(unit, radius)
@@ -356,7 +356,18 @@ class FriendlyPatrols(Plugin):
                 if controlled_group is None:
                     response = "That squad no longer exists. Say show squads to hear the current squad list."
                 else:
-                    response = self._report_group_position(controlled_group)
+                    if "last" in normalized_message and "contact" in normalized_message:
+                        if hasattr(controlled_group, "last_zone_contact_report"):
+                            response = controlled_group.last_zone_contact_report if controlled_group.last_zone_contact_report else "No recent contact reports available for that squad."
+                        else:
+                            response = "No contact reports available for that squad."
+                    elif "last" in normalized_message and "recon" in normalized_message:
+                        if hasattr(controlled_group, "last_zone_search_report"):
+                            response = controlled_group.last_zone_search_report if controlled_group.last_zone_search_report else "No recent recon reports available for that squad."
+                        else:
+                            response = "No recent recon reports available for that squad."
+                    else:
+                        response = self._report_group_position(controlled_group)
             else:
                 response = "Please specify which squad should report position."
         elif any(keyword in normalized_message for keyword in patrol_keywords):
@@ -422,6 +433,48 @@ class FriendlyPatrols(Plugin):
                 response = "Please specify which squad to control."
             # Implement patrol logic here
 
+
+        # Handle generic 'report' or 'send report' commands for better UX
+        elif "report" in normalized_message:
+            self.logger.info(f"Unit {unitID} requested a generic report.")
+            if self.groups is None or len(self.groups) == 0:
+                response = "No squads available to report."
+            elif any(group_name in normalized_message for group_name in self.group_names):
+                controlled_group = self._find_group_by_name(normalized_message)
+                if controlled_group is None:
+                    response = "That squad no longer exists. Say show squads to hear the current squad list."
+                else:
+                    # If user asks for last contact or last recon, honor that
+                    if "last" in normalized_message and "contact" in normalized_message:
+                        last_contact = getattr(controlled_group, "last_zone_contact_report", None)
+                        response = last_contact if last_contact else "No recent contact reports available for that squad."
+                    elif "last" in normalized_message and "recon" in normalized_message:
+                        last_recon = getattr(controlled_group, "last_zone_search_report", None)
+                        response = last_recon if last_recon else "No recent recon reports available for that squad."
+                    else:
+                        # Always provide a status report for generic report requests
+                        movement_order = getattr(controlled_group, "movement_order", None) or {}
+                        status = None
+                        if movement_order.get("patrolling"):
+                            # If moving, estimate distance to go
+                            final_dest = movement_order.get("final_destination")
+                            unit = self._resolve_unit(controlled_group.units[0].ID) if controlled_group.units else None
+                            if unit and final_dest and hasattr(unit, "position") and unit.position:
+                                meters_to_go = int(unit.position.distance_to(final_dest))
+                                status = f"{controlled_group.name} is patrolling, {meters_to_go} meters to go."
+                            else:
+                                status = f"{controlled_group.name} is patrolling."
+                        elif movement_order.get("search_zone") or movement_order.get("target_zone"):
+                            status = f"{controlled_group.name} is searching a zone."
+                        elif movement_order.get("hold_position") or movement_order.get("holding"):
+                            status = f"{controlled_group.name} is holding position."
+                        elif movement_order.get("regroup"):
+                            status = f"{controlled_group.name} is regrouping."
+                        else:
+                            status = f"{controlled_group.name} is awaiting orders."
+                        response = status
+            else:
+                response = "Please specify which squad should report."
         else:
             response = "Say again."
 
@@ -907,7 +960,8 @@ class FriendlyPatrols(Plugin):
             if current_time < due_time:
                 continue
 
-            self._transmit_response(message)
+            group.last_zone_contact_report = message
+            self._transmit_response(message)            
             group.pending_contact_detail_time = None
             group.pending_contact_detail_message = None
 
@@ -923,7 +977,9 @@ class FriendlyPatrols(Plugin):
 
             movement_order = group.movement_order or {}
             search_zone = movement_order.get("search_zone") or movement_order.get("target_zone")
-            self._transmit_response(self._build_zone_search_report(group, search_zone, zone_name))
+            report_message = self._build_zone_search_report(group, search_zone, zone_name)
+            group.last_zone_search_report = report_message  
+            self._transmit_response(report_message)
             group.pending_zone_search_report_time = None
             group.pending_zone_search_report_message = None
             self._transition_group_to_post_search_hold(group)
@@ -1068,7 +1124,39 @@ class FriendlyPatrols(Plugin):
         primary_enemy = enemy_units[0]
         grid_text = self._format_mgrs_for_readback(self._format_enemy_mgrs(primary_enemy.position)) or "unknown"
         enemy_force_text = self._describe_enemy_forces(enemy_units)
-        return f"{group.name}, contact report, grid {grid_text}, {enemy_force_text}, engaging."
+
+        # Calculate direction and distance
+        direction_text = "unknown direction"
+        distance_text = "unknown distance"
+        try:
+            if contact_unit.position and primary_enemy.position:
+                # Calculate bearing
+                lat1 = math.radians(contact_unit.position.lat)
+                lon1 = math.radians(self._get_position_lng(contact_unit.position))
+                lat2 = math.radians(primary_enemy.position.lat)
+                lon2 = math.radians(self._get_position_lng(primary_enemy.position))
+                dlon = lon2 - lon1
+                x = math.sin(dlon) * math.cos(lat2)
+                y = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+                initial_bearing = math.atan2(x, y)
+                bearing_deg = (math.degrees(initial_bearing) + 360) % 360
+                # Compass directions
+                compass_sectors = [
+                    (22.5, "north"), (67.5, "northeast"), (112.5, "east"), (157.5, "southeast"),
+                    (202.5, "south"), (247.5, "southwest"), (292.5, "west"), (337.5, "northwest"), (360, "north")
+                ]
+                for angle, direction in compass_sectors:
+                    if bearing_deg < angle:
+                        direction_text = direction
+                        break
+                # Calculate distance (meters)
+                distance = contact_unit.position.distance_to(primary_enemy.position)
+                rounded_distance = int(round(distance / 100.0) * 100)
+                distance_text = f"{rounded_distance} meters"
+        except Exception:
+            pass
+
+        return f"{group.name}, contact report, grid {grid_text}, {enemy_force_text}, enemy {direction_text} at {distance_text}, engaging."
 
     def _get_group_contact_snapshot(self, group: Group) -> tuple[Unit | None, list[Unit]]:
         if self.api is None:
