@@ -220,13 +220,13 @@ class FriendlyPatrols(Plugin):
         select_store_check_keywords = ["yes", "no"]
         show_keywords = ["show", "list"]
         hold_keywords = ["hold", "defend"]
-        regroup_keywords = ["regroup", "rally up", "close up", "form up"]
+        regroup_keywords = ["regroup"]
         position_report_keywords = ["position", "pos"]
-        position_request_keywords = ["say", "read", "report", "where"]
+        position_request_keywords = ["read", "report"]
         patrol_keywords = ["patrol","move", "control"]
         settlement_keywords = ["search","village", "town", "building", "buildings", "hut", "huts", "house", "town centre", "town center", "zone"]
         smoke_keywords = ["smoke"]
-        remove_group_keywords = ["remove", "delete", "dissolve", "disband"]
+        remove_group_keywords = ["remove", "delete"]
         unit = self._resolve_unit(unitID)
         response = None
 
@@ -258,7 +258,17 @@ class FriendlyPatrols(Plugin):
         if any(keyword in normalized_message for keyword in select_keywords):
             self.logger.info(f"Unit {unitID} wants to select.")
             radius_match = re.search(r"(\d+)\s*(meters|m)?", normalized_message)
-            radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
+            radius_match_commas = re.search(r"(\d+)\s*(,|\s)?(\d+)\s*(meters|m)?", normalized_message)
+            joined_radius = None
+            if radius_match_commas.group(2) == ",":
+                joined_radius = radius_match_commas.group(1) + radius_match_commas.group(3)
+                if joined_radius is not None:
+                    radius = int(joined_radius)
+                else:
+                    radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
+            else:   
+                radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
+
             get_units_within_radius = self.get_units_within_radius(unit, radius)
             if self.get_units_within_radius is None or len(get_units_within_radius) == 0:
                 self.logger.warning(f"Failed to get any nearby units for unitID {unitID}.")
