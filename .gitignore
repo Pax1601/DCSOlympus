@@ -53,3 +53,5 @@ manager/mods-inventory.json
 scripts/python/API/whisper_test.py
 scripts/python/API/plugin_manager_config.json
 scripts/python/API/start.bat
+/scripts/python/API/plugins/lua_link/lua/commands
+/scripts/python/API/plugins/lua_link/lua/configs
