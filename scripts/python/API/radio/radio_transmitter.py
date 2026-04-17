@@ -316,7 +316,10 @@ class RadioTransmitter:
             bool: True if transmission succeeded, False otherwise
         """        
         try:
-            asyncio.create_task(self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID', None), kwargs.get('keep_file', False)))
+            def coroutine_send_message(file_name, frequency, modulation, encryption, intercom_ID, unit_ID, keep_file):
+                asyncio.run(self._send_message(file_name, frequency, modulation, encryption, intercom_ID, unit_ID, keep_file))
+            loop = asyncio.get_event_loop()
+            loop.run_in_executor(None, coroutine_send_message, file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID', None), kwargs.get('keep_file', False))
             return True
         except Exception as e:
             self.logger.error(f"Failed to schedule transmission: {e}")

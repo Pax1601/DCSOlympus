@@ -33,7 +33,7 @@ class API:
     kokoro = None
     whisper = None
     whisper_model = None
-    kokoro_cache = {}
+    audio_cache = {}
 
     def __init__(self, username: str = "API", saved_games_folder: str = ".", load_whisper: bool = True, load_kokoro: bool = True):
         self.base_url = None
@@ -115,13 +115,13 @@ class API:
         
         # Initialize Kokoro TTS and Whisper after logger and databases are set up
         if load_kokoro:
-            if self.kokoro is None:
+            if API.kokoro is None:
                 self._initialize_kokoro()
             else:
                 self.logger.info("Kokoro TTS already initialized, skipping re-initialization")
 
         if load_whisper:
-            if self.whisper_model is None:
+            if API.whisper_model is None:
                 self._initialize_whisper()
             else:
                 self.logger.info("Whisper speech recognition already initialized, skipping re-initialization")
@@ -142,7 +142,7 @@ class API:
             warnings.filterwarnings("ignore", message='dropout option adds dropout after all but last recurrent layer.*')
             warnings.filterwarnings("ignore", message='.*torch.nn.utils.weight_norm.*is deprecated.*')
             
-            self.kokoro = KPipeline(lang_code=lang_code, repo_id=repo_id)
+            API.kokoro = KPipeline(lang_code=lang_code, repo_id=repo_id)
             self.kokoro_lang_code = lang_code
             
             # Available voices for reference
@@ -151,10 +151,10 @@ class API:
             self.logger.info("Available voices: af_* (American Female), am_* (American Male), bf_* (British Female), bm_* (British Male), etc.")
         except ImportError:
             self.logger.warning("kokoro not installed. TTS unavailable.")
-            self.kokoro = None
+            API.kokoro = None
         except Exception as e:
             self.logger.error(f"Failed to initialize Kokoro TTS: {e}")
-            self.kokoro = None
+            API.kokoro = None
             
     def _initialize_whisper(self, model_size: str = "base.en"):
         """
@@ -165,7 +165,7 @@ class API:
         """
         
         # Whisper configuration options
-        self.whisper_options = {
+        API.whisper_options = {
             "fp16": False,  # Use FP32 for better compatibility on some systems
             "no_speech_threshold": 0.6,  # Skip processing if no speech detected
             "logprob_threshold": -1.0,  # Skip low confidence segments
@@ -174,16 +174,16 @@ class API:
         
         try:
             import whisper
-            self.whisper = whisper
-            self.whisper_model = whisper.load_model(model_size)
+            API.whisper = whisper
+            API.whisper_model = whisper.load_model(model_size)
             self.logger.info(f"Whisper speech recognition initialized with '{model_size}' model")
-            self.logger.debug(f"Whisper model device: {self.whisper_model.device}")
+            self.logger.debug(f"Whisper model device: {API.whisper_model.device}")
         except ImportError:
             self.logger.warning("OpenAI whisper not installed. Speech recognition unavailable.")
-            self.whisper_model = None
+            API.whisper_model = None
         except Exception as e:
             self.logger.error(f"Failed to initialize Whisper: {e}")
-            self.whisper_model = None
+            API.whisper_model = None
         
     def _get(self, endpoint):
         credentials = f"{self.username}:{self.password}"
@@ -835,19 +835,19 @@ class API:
             # Check if the audio for this text and voice combination is already in the cache
             cache_key = f"{text}_{voice}_{speed}"
             file_name = None
-            if cache_key in self.audio_cache:
+            if cache_key in API.audio_cache:
                 self.logger.debug(f"Audio for text '{text}' with voice '{voice}' retrieved from cache")
 
                 # Save the cached audio to a temporary file and return the filename
                 temp_dir = tempfile.gettempdir()
                 file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
-                sf.write(file_name, self.audio_cache[cache_key], 16000, subtype='PCM_16')
+                sf.write(file_name, API.audio_cache[cache_key], 16000, subtype='PCM_16')
 
             else:
                 self.logger.debug(f"Audio for text '{text}' with voice '{voice}' not found in cache, generating new audio")
 
                 # Check if Kokoro is available
-                if self.kokoro is None:
+                if API.kokoro is None:
                     raise RuntimeError("Kokoro TTS not available. Install with: pip install kokoro-onnx")
                 
                 # Fast preprocessing
@@ -889,7 +889,7 @@ class API:
 
                 # Save to the in memory cache to reuse if needed again, using the original text and voice as the key
                 cache_key = f"{original_text}_{voice}_{speed}"
-                self.audio_cache[cache_key] = audio_16k
+                API.audio_cache[cache_key] = audio_16k
                 
                 # Save to temporary file
                 temp_dir = tempfile.gettempdir()
@@ -936,7 +936,7 @@ class API:
             RuntimeError: If Whisper model is not available.
             FileNotFoundError: If the audio file doesn't exist.
         """
-        if self.whisper_model is None:
+        if API.whisper_model is None:
             raise RuntimeError("Whisper model not available")
             
         # Check if audio libraries are available
@@ -952,16 +952,16 @@ class API:
             # Get absolute path
             abs_wav_filename = os.path.abspath(wav_filename)
             
-            audio = self.whisper.load_audio(abs_wav_filename)  # Preload the audio file to cache it in Whisper's internal storage
-            audio = self.whisper.pad_or_trim(audio)  # Ensure the audio is the correct length for Whisper
+            audio = API.whisper.load_audio(abs_wav_filename)  # Preload the audio file to cache it in Whisper's internal storage
+            audio = API.whisper.pad_or_trim(audio)  # Ensure the audio is the correct length for Whisper
             
             # Use Whisper with the audio array
-            result = self.whisper_model.transcribe(
+            result = API.whisper_model.transcribe(
                 audio, 
                 language="en", 
                 verbose=False,
                 initial_prompt=prompt,
-                **self.whisper_options
+                **API.whisper_options
             )
             
             recognized_text = result["text"].strip()
@@ -1007,19 +1007,19 @@ class API:
             dict: The updated Whisper options configuration.
         """
         if fp16 is not None:
-            self.whisper_options["fp16"] = fp16
+            API.whisper_options["fp16"] = fp16
             
         if no_speech_threshold is not None:
-            self.whisper_options["no_speech_threshold"] = no_speech_threshold
+            API.whisper_options["no_speech_threshold"] = no_speech_threshold
             
         if logprob_threshold is not None:
-            self.whisper_options["logprob_threshold"] = logprob_threshold
+            API.whisper_options["logprob_threshold"] = logprob_threshold
             
         if compression_ratio_threshold is not None:
-            self.whisper_options["compression_ratio_threshold"] = compression_ratio_threshold
+            API.whisper_options["compression_ratio_threshold"] = compression_ratio_threshold
         
-        self.logger.info(f"Whisper options updated: {self.whisper_options}")
-        return self.whisper_options.copy()
+        self.logger.info(f"Whisper options updated: {API.whisper_options}")
+        return API.whisper_options.copy()
     
     def get_whisper_options(self):
         """
@@ -1028,7 +1028,7 @@ class API:
         Returns:
             dict: A copy of the current Whisper options configuration.
         """
-        return self.whisper_options.copy()
+        return API.whisper_options.copy()
     
     def set_whisper_model(self, model_size: str = "base.en"):
         """
@@ -1049,18 +1049,18 @@ class API:
         """
         try:
             import whisper
-            self.whisper = whisper
+            API.whisper = whisper
             
             # Store old model reference for cleanup
-            old_model = self.whisper_model
+            old_model = API.whisper_model
             
             self.logger.info(f"Loading Whisper model: {model_size}")
             new_model = whisper.load_model(model_size)
             
             # Only update if loading was successful
-            self.whisper_model = new_model
+            API.whisper_model = new_model
             self.logger.info(f"Whisper model changed to '{model_size}' successfully")
-            self.logger.debug(f"New Whisper model device: {self.whisper_model.device}")
+            self.logger.debug(f"New Whisper model device: {API.whisper_model.device}")
             
             # Clean up old model if it exists
             if old_model is not None:
@@ -1083,13 +1083,13 @@ class API:
         Returns:
             dict: Information about the current model including device and available models.
         """
-        if self.whisper_model is None:
+        if API.whisper_model is None:
             return {"status": "not_available", "current_model": None, "device": None}
         
         # Try to determine model size from the model's name or dims
         model_size = "unknown"
-        if hasattr(self.whisper_model, 'dims'):
-            dims = self.whisper_model.dims
+        if hasattr(API.whisper_model, 'dims'):
+            dims = API.whisper_model.dims
             # Map common dimensions to model sizes (approximate)
             if dims.n_text_layer == 4:
                 model_size = "tiny"
@@ -1105,12 +1105,12 @@ class API:
         return {
             "status": "available",
             "current_model": model_size,
-            "device": str(self.whisper_model.device),
+            "device": str(API.whisper_model.device),
             "available_models": ["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"],
             "model_dims": {
-                "n_mels": self.whisper_model.dims.n_mels if hasattr(self.whisper_model, 'dims') else None,
-                "n_text_layer": self.whisper_model.dims.n_text_layer if hasattr(self.whisper_model, 'dims') else None,
-                "n_vocab": self.whisper_model.dims.n_vocab if hasattr(self.whisper_model, 'dims') else None
+                "n_mels": API.whisper_model.dims.n_mels if hasattr(API.whisper_model, 'dims') else None,
+                "n_text_layer": API.whisper_model.dims.n_text_layer if hasattr(API.whisper_model, 'dims') else None,
+                "n_vocab": API.whisper_model.dims.n_vocab if hasattr(API.whisper_model, 'dims') else None
             }
         }
        

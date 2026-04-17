@@ -99,7 +99,7 @@ class LuaLink(Plugin):
                 listener.register_message_callback(lambda message, unitID, listener=listener, base_name=base_name: self.on_message_callback(message, unitID, listener, base_name))
                 self.listeners.append(listener)
 
-                self.listener.set_prompt(f"Possible commands are: status report, fire team, fuel, ammo, explosives, smoke, supplies, clear. Over.")
+                listener.set_prompt(f"Possible commands are: status report, fire team, fuel, ammo, explosives, smoke, supplies, clear. Over.")
             else:
                 self.logger.warning("Skipping base %s due to invalid configuration", base_name)
 
