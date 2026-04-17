@@ -27,13 +27,20 @@ export class Static extends CustomMarker {
     this.#name = options.name;
 
     this.on("click", (e) => {
-      if (getApp().getState() === OlympusState.IMPORT_EXPORT && getApp().getSubState() === ImportExportSubstate.SELECT_STATICS) 
-        this.setSelected(!this.#selected);
+      // Check if ctrl is being pressed
+      if (!e.originalEvent.ctrlKey) {
+        getApp().getMissionManager().deselectAllStatics();
+      }
+      this.setSelected(!this.#selected);
+
       DomEvent.stopPropagation(e);
     });
 
     AppStateChangedEvent.on((state, subState) => {
-      this.setSelected(false);
+      const el = this.getElement();
+      if (el === undefined || el === null) return;
+      if (state === OlympusState.IDLE) el.classList.remove("static-disable-pointer-events");
+      else el.classList.add("static-disable-pointer-events");
     });
   }
 

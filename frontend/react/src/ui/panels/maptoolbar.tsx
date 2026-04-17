@@ -18,10 +18,11 @@ import {
   SelectionEnabledChangedEvent,
   ShortcutsChangedEvent,
 } from "../../events";
-import { faCopy, faEraser, faMinus, faObjectGroup, faPaste, faPlus, faTape } from "@fortawesome/free-solid-svg-icons";
+import { faCopy, faEraser, faHouseChimney, faMinus, faObjectGroup, faPaste, faPlus, faTape } from "@fortawesome/free-solid-svg-icons";
 import { Shortcut } from "../../shortcut/shortcut";
 import { ShortcutOptions, UnitData } from "../../interfaces";
 import { Unit } from "../../unit/unit";
+import { olOthersDeleteStatics } from "../components/olicons";
 
 export function MapToolBar(props: {}) {
   const [appState, setAppState] = useState(OlympusState.IDLE);
@@ -149,7 +150,7 @@ export function MapToolBar(props: {}) {
           )}
           <div
             className={`
-              pointer-events-auto flex flex-col gap-2 overflow-y-auto
+              pointer-events-auto flex flex-col gap-1 overflow-y-auto
               no-scrollbar p-2
             `}
             onScroll={(ev) => onScroll(ev.target)}
@@ -278,6 +279,24 @@ export function MapToolBar(props: {}) {
                   }}
                 />
               </div>
+              <div className="flex flex-col gap-1">
+                <OlStateButton
+                  key={"deleteStatics"}
+                  checked={false}
+                  icon={olOthersDeleteStatics}
+                  tooltip={() => (
+                    <div className="flex content-center gap-2">
+                      {shortcutCombination(shortcuts["deleteStatics"]?.getOptions())}
+                      <div className="my-auto">Delete selected statics</div>
+                    </div>
+                  )}
+                  tooltipPosition="side"
+                  onClick={() => {
+                    getApp().getMissionManager().deleteSelectedStatics();
+                  }}
+                />
+              </div>
+                  
             </>
 
             {reorderedActions.map((contextActionIt: ContextAction) => {

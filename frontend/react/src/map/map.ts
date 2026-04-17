@@ -23,8 +23,7 @@ import {
   ContextActionType,
   ContextActions,
   DrawSubState,
-  colors,
-  ImportExportSubstate,
+  colors
 } from "../constants/constants";
 import { MapHiddenTypes, MapOptions } from "../types/types";
 import { EffectRequestTable, OlympusConfig, SpawnRequestTable, StaticRequestTable } from "../interfaces";
@@ -72,7 +71,6 @@ import { Measure } from "./measure";
 import { FlakMarker } from "./markers/flakmarker";
 import { MapMouseHandler } from "./mapmousehandler";
 import { TemporaryStaticMarker } from "./markers/temporarystaticmarker";
-import { Static } from "../mission/static";
 
 /* Register the handler for the box selection */
 L.Map.addInitHook("addHandler", "boxSelect", BoxSelect);
@@ -1005,12 +1003,9 @@ export class Map extends L.Map {
   }
 
   #onSelectionEnd(e: any) {
-    if (!(getApp().getState() === OlympusState.IMPORT_EXPORT && getApp().getSubState() === ImportExportSubstate.SELECT_STATICS)) {
-      getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
-    } else {
-      getApp().getMissionManager().selectStaticsFromBounds(e.selectionBounds);
-    }
-
+    getApp().getUnitsManager().selectFromBounds(e.selectionBounds);
+    getApp().getMissionManager().selectStaticsFromBounds(e.selectionBounds);
+    
     this.setSelectionEnabled(false);
     this.#isSelecting = false;
   }
@@ -1233,8 +1228,7 @@ export class Map extends L.Map {
       }
     } else {
       if (getApp().getState() !== OlympusState.DRAW) {
-        if (!(getApp().getState() === OlympusState.IMPORT_EXPORT && getApp().getSubState() === ImportExportSubstate.SELECT_STATICS))
-          getApp().setState(OlympusState.IDLE);
+        getApp().setState(OlympusState.IDLE);
         this.setSelectionEnabled(true);
       }
 

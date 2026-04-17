@@ -173,7 +173,6 @@ string SpawnStaticObject::getString() {
 	return commandSS.str();
 }
 
-
 /* Clone unit command */
 string Clone::getString()
 {
@@ -205,6 +204,15 @@ string Delete::getString()
         << ID << ", "
         << (explosion ? "true" : "false") << ", "
         << "\"" << explosionType << "\"";
+    return commandSS.str();
+}
+
+/* Delete static object */
+string DeleteStaticObject::getString() {
+    std::ostringstream commandSS;
+    commandSS.precision(10);
+    commandSS << "Olympus.deleteStaticObject, "
+        << "\"" << name << "\"";
     return commandSS.str();
 }
 

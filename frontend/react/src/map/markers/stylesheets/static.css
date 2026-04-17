@@ -4,6 +4,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  cursor: url("/images/cursors/pointer.svg") 13 5, auto;
 }
 
 .static-icon[data-coalition="red"]::after {
@@ -27,4 +28,8 @@
 .static-icon[data-is-selected]::after {
 background-color: var(--unit-spotlight-fill);
   opacity: 1;
+}
+
+#map-container .leaflet-static-marker.static-disable-pointer-events {
+  pointer-events: none;
 }
