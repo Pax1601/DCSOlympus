@@ -875,7 +875,7 @@ class API:
             audio = np.array([], dtype=np.float32)
 
             # Split the text using punctuation for caching. Punctuation must be followed by a space to avoid problems with abbreviations and numbers.
-            chunks = re.split(r'([.,!?;:](?:\s|$))', text)
+            chunks = re.split(r'([.!?](?:\s|$))', text)
 
             # Iterate through the chunks and generate audio for each, concatenating them together. 
             for i in range(0, len(chunks), 2):
