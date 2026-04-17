@@ -7,6 +7,7 @@ import logging
 import os
 import tempfile
 import asyncio
+import re
 
 from weapon.weapon import Weapon
 from data.data_types import LatLng
@@ -807,7 +808,52 @@ class API:
             return RadioTransmitter(self.config.get("audio").get("WSAddress"), None)
         else:
             return RadioTransmitter(self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"))
+        
     
+    def _text_to_speech(self, text: str, voice: str = "bm_daniel", speed: float = 1.0):
+        try:
+            # Check if Kokoro is available
+            if API.kokoro is None:
+                raise RuntimeError("Kokoro TTS not available. Install with: pip install kokoro-onnx")
+            
+            # Strip the text and check if it's empty after stripping to avoid generating audio for empty text
+            original_text = text
+            text = text.strip()
+            if not text:
+                raise ValueError("Empty text provided for TTS")
+                                    
+            # Check if audio libraries are available
+            if not AUDIO_LIBS_AVAILABLE:
+                raise RuntimeError("Audio processing libraries (soundfile, numpy, scipy) not available")
+            
+            # Generate audio using KPipeline streaming
+            self.logger.debug(f"Generating audio for: '{text}' with voice: {voice} at speed: {speed}")
+            
+            chunk_list = []
+            try:
+                # Use KPipeline to generate audio in streaming fashion
+                for _, _, audio in self.kokoro(text, voice=voice, speed=speed):
+                    chunk_list.append(np.array(audio.tolist(), dtype=np.float32))
+            except Exception as e:
+                self.logger.error(f"Message generation failed: {e}")
+                raise RuntimeError(f"Failed to generate audio: {e}")
+            
+            if not chunk_list:
+                raise ValueError(f"No audio generated for text: '{original_text}'")
+            
+            # Concatenate all chunks
+            audio = np.concatenate(chunk_list)
+            self.logger.debug(f"Generated {len(audio)} audio samples")
+            
+            # Resample from Kokoro's 24kHz to 16kHz for radio compatibility
+            target_length = int(len(audio) * 16000 / 24000)
+            audio_16k = scipy_signal.resample(audio, target_length)
+
+            return audio_16k
+        except Exception as e:
+            self.logger.error(f"Message generation failed: {e}")
+            raise
+
     def generate_audio_message(self, text: str, voice: str = "bm_daniel", speed: float = 1.0) -> str:
         """
         Generate a WAV file from text using Kokoro TTS with streaming for faster response.
@@ -825,76 +871,51 @@ class API:
             Exception: If Kokoro TTS fails or is not available.
         """
         try:
-            # Check if the audio for this text and voice combination is already in the cache
-            cache_key = f"{text}_{voice}_{speed}"
-            file_name = None
-            if cache_key in API.audio_cache:
-                self.logger.debug(f"Audio for text '{text}' with voice '{voice}' retrieved from cache")
+            # Initialize the empty audio signal to which chunks will be concatenated
+            audio = np.array([], dtype=np.float32)
 
-                # Save the cached audio to a temporary file and return the filename
-                temp_dir = tempfile.gettempdir()
-                file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
-                sf.write(file_name, API.audio_cache[cache_key], 16000, subtype='PCM_16')
+            # Split the text using punctuation for caching. Punctuation must be followed by a space to avoid problems with abbreviations and numbers.
+            chunks = re.split(r'([.,!?;:](?:\s|$))', text)
 
-            else:
-                self.logger.debug(f"Audio for text '{text}' with voice '{voice}' not found in cache, generating new audio")
+            # Iterate through the chunks and generate audio for each, concatenating them together. 
+            for i in range(0, len(chunks), 2):
+                chunk_text = chunks[i].strip()
+                if i + 1 < len(chunks):
+                    chunk_text += chunks[i + 1]  # Add the punctuation back to the chunk
+                
+                if chunk_text:
+                    self.logger.debug(f"Processing chunk for TTS: '{chunk_text}'")
 
-                # Check if Kokoro is available
-                if API.kokoro is None:
-                    raise RuntimeError("Kokoro TTS not available. Install with: pip install kokoro-onnx")
-                
-                # Fast preprocessing
-                original_text = text
-                text = text.strip()
-                if not text:
-                    raise ValueError("Empty text provided for TTS")
-                
-                # Quick punctuation fix for better prosody
-                if text[-1] not in '.!?':
-                    text += '.'
-                            
-                # Check if audio libraries are available
-                if not AUDIO_LIBS_AVAILABLE:
-                    raise RuntimeError("Audio processing libraries (soundfile, numpy, scipy) not available")
-                
-                # Generate audio using KPipeline streaming
-                self.logger.debug(f"Generating audio for: '{text}' with voice: {voice} at speed: {speed}")
-                
-                chunk_list = []
-                try:
-                    # Use KPipeline to generate audio in streaming fashion
-                    for _, _, audio in self.kokoro(text, voice=voice, speed=speed):
-                        chunk_list.append(np.array(audio.tolist(), dtype=np.float32))
-                except Exception as e:
-                    self.logger.error(f"Message generation failed: {e}")
-                    raise RuntimeError(f"Failed to generate audio: {e}")
-                
-                if not chunk_list:
-                    raise ValueError(f"No audio generated for text: '{original_text}'")
-                
-                # Concatenate all chunks
-                audio = np.concatenate(chunk_list)
-                self.logger.debug(f"Generated {len(audio)} audio samples")
-                
-                # Resample from Kokoro's 24kHz to 16kHz for radio compatibility
-                target_length = int(len(audio) * 16000 / 24000)
-                audio_16k = scipy_signal.resample(audio, target_length)
+                    # Check if the audio for this text and voice combination is already in the cache
+                    cache_key = f"{chunk_text}_{voice}_{speed}"
+                    if cache_key in API.audio_cache:
+                        self.logger.info(f"Audio for text '{text}' with voice '{voice}' retrieved from cache")
+                        
+                        # Concatenate the cached audio to the final audio signal
+                        audio = np.concatenate((audio, API.audio_cache[cache_key]))
+                    else:
+                        self.logger.info(f"Audio for text '{text}' with voice '{voice}' not in cache, generating with Kokoro")
+                        new_audio = self._text_to_speech(chunk_text, voice, speed)
+                        audio = np.concatenate((audio, new_audio))
 
-                # Save to the in memory cache to reuse if needed again, using the original text and voice as the key
-                cache_key = f"{original_text}_{voice}_{speed}"
-                API.audio_cache[cache_key] = audio_16k
-                
+                        # Save to the in memory cache to reuse if needed again, using the original text and voice as the key
+                        API.audio_cache[cache_key] = new_audio
+
+                # Check that the audio signal is not empty before trying to save it, to avoid creating empty files
+                if len(audio) == 0:
+                    raise ValueError(f"No audio generated for text: '{text}'")
+
                 # Save to temporary file
                 temp_dir = tempfile.gettempdir()
                 file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
                 
                 # Fast WAV writing
-                sf.write(file_name, audio_16k, 16000, subtype='PCM_16')
+                sf.write(file_name, audio, 16000, subtype='PCM_16')
             return file_name
             
         except Exception as e:
             self.logger.error(f"Message generation failed: {e}")
-            raise
+            raise RuntimeError(f"Failed to generate audio message: {e}")
     
     def generate_audio_message_in_executor(self, text: str, voice: str = "bm_daniel", speed: float = 1.0):
         """

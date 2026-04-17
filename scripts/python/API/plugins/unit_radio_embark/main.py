@@ -232,7 +232,6 @@ class UnitRadioEmbark(Plugin):
     def disembark_units(self, unit: Unit):
         self.logger.info(f"Disembarking units for unitID {unit.ID}")
 
-        
         if (len(unit.on_board_units_IDs) == 0):
             self.logger.warning(f"UnitID {unit.ID} has no units on board to disembark.")
             response = "You have no units on board to disembark sir."
@@ -257,17 +256,14 @@ class UnitRadioEmbark(Plugin):
         
     def smoke_pickup_point(self, unit: Unit):
         self.logger.info(f"Smokig pickup point for unitID {unit.ID}")
-        
         return self.extract_response(unit.smoke_pickup_location())
         
     def move_to_pickup_point(self, unit: Unit):
         self.logger.info(f"Moving units to pickup point for unitID {unit.ID}")
-        
         return self.extract_response(unit.move_to_pickup_location())
                
     def set_pickup_point(self, unit: Unit):
         self.logger.info(f"Setting pickup point for unitID {unit.ID}")
-        
         return self.extract_response(unit.set_pickup_location(unit.position))
     
     def extract_response(self, response: Response):

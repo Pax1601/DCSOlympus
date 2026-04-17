@@ -19,6 +19,20 @@ from plugin_base import Plugin
 from api import API
 from utils.utils import lua_table_file_to_dict, dict_to_lua_table_file
 
+RESPONSE_TEMPLATES = {
+    "status_report": "{callsign}. Base logistics, current base situation is as follows. Fuel: {fuel} liters. Artillery shells: {shells}. Supplies: {supplies} kilograms. Troops available: {troopsAvailable}. Over.",
+    "fireteam": "{callsign}. Base logistics, we're getting a fire team ready for you. Over.",
+    "fuel": "{callsign}. Base logistics, we're getting some fuel ready for you. Over.",
+    "ammo": "{callsign}. Base logistics, we're getting some shells ready for you. Over.",
+    "explosives": "{callsign}. Base logistics, we're getting some H E rockets ready for you. Over.",
+    "smoke": "{callsign}. Base logistics, we're getting some smoke rockets ready for you. Over.",
+    "supplies": "{callsign}. Base logistics, we're getting some supplies ready for you. Over.",
+    "clear": "{callsign}. Base logistics, we're clearing the pickup zones for you. Over.",
+    "no_troops": "{callsign}. Base logistics, no troops available at the barracks. Over.",
+    "not_enough_supplies": "{callsign}. Base logistics, we don't have enough supplies to send a fire team right now. Over.",
+    "unrecognized": "Say again. Over."
+}
+
 class LuaLink(Plugin):
     """
     LuaLink plugin.
@@ -61,6 +75,11 @@ class LuaLink(Plugin):
         
         self.api.register_on_update_callback(lambda api: self.on_api_update(api))
         self.api.run()
+
+        # Pregenerate all the possible responses to have them ready
+        # Use dummy values
+        for response_key in RESPONSE_TEMPLATES.keys():
+            self.api.generate_audio_message(RESPONSE_TEMPLATES[response_key].format(callsign="TestUnit", fuel=1000, shells=100, supplies=500, troopsAvailable=20), voice="bm_daniel")
 
         self.logger.info("LuaLink plugin started")
         return True
@@ -151,7 +170,7 @@ class LuaLink(Plugin):
             self.api.stop()
             self.api = None
 
-            self.logger.info(f"LuaLink plugin stopped")
+            self.logger.info("LuaLink plugin stopped")
         except Exception as e:
             self.logger.error(f"Failed to stop LuaLink plugin: {e}", exc_info=True)
             return False
@@ -165,7 +184,7 @@ class LuaLink(Plugin):
         Returns:
             bool: True if paused successfully, False otherwise
         """
-        self.logger.info(f"LuaLink plugin paused")
+        self.logger.info("LuaLink plugin paused")
         return True
 
     def on_resume(self) -> bool:
@@ -175,7 +194,7 @@ class LuaLink(Plugin):
         Returns:
             bool: True if resumed successfully, False otherwise
         """
-        self.logger.info(f"LuaLink plugin resumed")
+        self.logger.info("LuaLink plugin resumed")
         return True
     
     def on_message_callback(self, message, unitID, listener: RadioListener, base_name: str):
@@ -225,7 +244,7 @@ class LuaLink(Plugin):
             self.logger.info(f"Unit {unitID} requesting clear.")
             response = self.clear(unit, base_name)
         else:
-            response = "Say again. Over."
+            response = RESPONSE_TEMPLATES["unrecognized"].format(callsign=unit.callsign)
             keep_message = True  # Keep the message for debugging unrecognized commands
             
         voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and "voiceModel" in self.bases_data[base_name] else None
@@ -235,11 +254,13 @@ class LuaLink(Plugin):
         return keep_message
     
     def status_report(self, unit: Unit, base_name: str):
-        return f"{unit.callsign}, base logistics, current base situation is as follows. " \
-               f"We currently have {self.bases_data[base_name]['fuel']} liters of fuel, " \
-               f"{self.bases_data[base_name]['shells']} artillery shells, " \
-               f"{self.bases_data[base_name]['supplies']} kilograms of supplies, and " \
-               f"{self.bases_data[base_name]['troopsAvailable']} troops available. Over."
+        return RESPONSE_TEMPLATES["status_report"].format(
+            callsign=unit.callsign,
+            fuel=self.bases_data[base_name].get("fuel", 0),
+            shells=self.bases_data[base_name].get("shells", 0),
+            supplies=self.bases_data[base_name].get("supplies", 0),
+            troopsAvailable=self.bases_data[base_name].get("troopsAvailable", 0)
+        )
                 
     def fireteam(self, unit: Unit, base_name: str):
         # Check how many troops we have available at the base
@@ -249,36 +270,36 @@ class LuaLink(Plugin):
         required_supplies = self.bases_data[base_name].get("suppliesPerTroop", 0) * 8
 
         if troopsAvailable <= 0:
-            return f"{unit.callsign}, base logistics, no troops available at the barracks. Over."
+            return RESPONSE_TEMPLATES["no_troops"].format(callsign=unit.callsign)
         elif self.bases_data[base_name].get("supplies", 0) < required_supplies:
-            return f"{unit.callsign}, base logistics, we don't have enough supplies to send a fire team right now. Over."
+            return RESPONSE_TEMPLATES["not_enough_supplies"].format(callsign=unit.callsign)
         else:
             self.execute_command(f"olyLink.spawnFireTeam(\"{base_name}\")") 
-            return f"{unit.callsign}, base logistics, we're getting a fire team ready for you. Over."
+            return RESPONSE_TEMPLATES["fireteam_ready"].format(callsign=unit.callsign)
     
     def fuel(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnFuelBarrel(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting some fuel ready for you. Over."
+        return RESPONSE_TEMPLATES["fuel"].format(callsign=unit.callsign)
     
     def ammo(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnShellCrate(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting some shells ready for you. Over."
+        return RESPONSE_TEMPLATES["ammo"].format(callsign=unit.callsign)
     
     def explosives(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnWeaponCrate(\"{base_name}\", 'RocketHE')")
-        return f"{unit.callsign}, base logistics, we're getting some H E rockets ready for you. Over."
+        return RESPONSE_TEMPLATES["explosives"].format(callsign=unit.callsign)
     
     def smoke(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnWeaponCrate(\"{base_name}\", 'RocketOther')")
-        return f"{unit.callsign}, base logistics, we're getting some smoke rockets ready for you. Over."
+        return RESPONSE_TEMPLATES["smoke"].format(callsign=unit.callsign)
     
     def supplies(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.spawnSupplyCrate(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're getting some supplies ready for you. Over."
+        return RESPONSE_TEMPLATES["supplies"].format(callsign=unit.callsign)
     
     def clear(self, unit: Unit, base_name: str):
         self.execute_command(f"olyLink.clearBasePickupZones(\"{base_name}\")")
-        return f"{unit.callsign}, base logistics, we're clearing the pickup zones for you. Over."
+        return RESPONSE_TEMPLATES["clear"].format(callsign=unit.callsign)
     
     def execute_command(self, command: str):
         # Create a tmp file with the command for the Lua script to read and execute
