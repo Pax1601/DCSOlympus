@@ -205,6 +205,8 @@ class RadioTransmitter:
                     packet_id = 0
                     last_packet_sent_at = None
                     
+
+                    packets: list[AudioPacket] = []
                     while True:
                         if self._should_stop:
                             self.logger.info("Transmission interrupted by stop request")
@@ -239,7 +241,14 @@ class RadioTransmitter:
                         }])
                         packet.set_transmission_guid(self._guid)
                         packet.set_client_guid(self._guid)
-                        
+                        packet_id += 1
+                        packets.append(packet)
+                    
+                    for packet in packets:
+                        if self._should_stop:
+                            self.logger.info("Transmission interrupted by stop request")
+                            return False
+
                         # Serialize and send over websocket
                         if self._websocket:
                             data = packet.to_byte_array()
