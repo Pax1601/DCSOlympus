@@ -29,7 +29,7 @@ class AudioRecorder:
     def add_packet(self, packet: AudioPacket):
         self.packets.append(packet)
         
-        # Start a countdown timer to stop recording after 2 seconds of silence
+        # Start a countdown timer to stop recording after 0.5 seconds of silence
         self.start_silence_timer()
         
     def stop_recording(self):
@@ -43,7 +43,10 @@ class AudioRecorder:
         # Process the recorded packets
         if self.packets:
             self.logger.info(f"Stopping recording, total packets: {len(self.packets)}")
-            
+
+            if len(self.packets) < 20:
+                self.logger.info(f"Not enough packets, ignoring")
+                return 
             try:
                 # Reorder the packets according to their packet ID
                 self.packets.sort(key=lambda p: p.get_packet_id())
@@ -100,11 +103,11 @@ class AudioRecorder:
         if self.silence_timer:
             self.silence_timer.cancel()
         
-        # Set a timer for 2 seconds
+        # Set a timer for 0.5 seconds
         self.silence_timer = asyncio.create_task(self._wait_for_silence())
         
     async def _wait_for_silence(self):
-        await asyncio.sleep(2)
+        await asyncio.sleep(0.5)
         self.stop_recording()
 
     

@@ -190,7 +190,7 @@ class RadioTransmitter:
                     if time.perf_counter() - start_time > websocket_connection_timeout:
                         self.logger.error("WebSocket connection timeout while waiting to send message")
                         return False
-                    await asyncio.sleep(0.5)          
+                    time.sleep(0.5)         
                     
                 await self._sync_radio_settings(frequency, modulation, intercom_ID, ptt=True)      
                 
@@ -204,7 +204,6 @@ class RadioTransmitter:
                     encoder = opuslib.Encoder(16000, 1, opuslib.APPLICATION_AUDIO)
                     packet_id = 0
                     last_packet_sent_at = None
-                    
 
                     packets: list[AudioPacket] = []
                     while True:
@@ -269,7 +268,7 @@ class RadioTransmitter:
                             return False
                         
                         packet_id += 1
-                        await asyncio.sleep(sleep_amount / 1000)  # Simulate real-time transmission
+                        time.sleep(sleep_amount / 1000)  # Simulate real-time transmission
                 
                 self.logger.info(f"Transmitted {packet_id} packets from {file_name}")
                 return True

@@ -162,22 +162,15 @@ class API:
         
         Args:
             model_size (str): Size of the Whisper model to use (tiny, base, small, medium, large).
-        """
-        
-        # Whisper configuration options
-        API.whisper_options = {
-            "fp16": False,  # Use FP32 for better compatibility on some systems
-            "no_speech_threshold": 0.6,  # Skip processing if no speech detected
-            "logprob_threshold": -1.0,  # Skip low confidence segments
-            "compression_ratio_threshold": 2.4,  # Skip repetitive segments
-        }
+        """    
         
         try:
             import whisper
+            from faster_whisper import WhisperModel
+
             API.whisper = whisper
-            API.whisper_model = whisper.load_model(model_size)
+            API.whisper_model = WhisperModel("base", compute_type="int8")
             self.logger.info(f"Whisper speech recognition initialized with '{model_size}' model")
-            self.logger.debug(f"Whisper model device: {API.whisper_model.device}")
         except ImportError:
             self.logger.warning("OpenAI whisper not installed. Speech recognition unavailable.")
             API.whisper_model = None
@@ -944,7 +937,6 @@ class API:
             raise RuntimeError("Audio processing libraries (numpy) not available")
             
         try:
-            
             # Check if file exists
             if not os.path.exists(wav_filename):
                 raise FileNotFoundError(f"Audio file not found: {wav_filename}")
@@ -956,15 +948,15 @@ class API:
             audio = API.whisper.pad_or_trim(audio)  # Ensure the audio is the correct length for Whisper
             
             # Use Whisper with the audio array
-            result = API.whisper_model.transcribe(
+            segments, info = API.whisper_model.transcribe(
                 audio, 
                 language="en", 
-                verbose=False,
-                initial_prompt=prompt,
-                **API.whisper_options
+                initial_prompt=prompt
             )
-            
-            recognized_text = result["text"].strip()
+            recognized_text = ""
+            for segment in segments:
+                recognized_text += segment.text
+
             self.logger.debug(f"Transcribed text: '{recognized_text}'")
             
             return recognized_text
@@ -989,47 +981,6 @@ class API:
         loop = asyncio.get_event_loop()
         return loop.run_in_executor(None, self.transcribe_audio, wav_filename, prompt)
     
-    def configure_whisper_options(self, fp16: bool = None, no_speech_threshold: float = None, 
-                                 logprob_threshold: float = None, compression_ratio_threshold: float = None):
-        """
-        Configure Whisper transcription options.
-        
-        Args:
-            fp16 (bool, optional): Use FP16 precision. If None, keeps current setting.
-            no_speech_threshold (float, optional): Threshold for skipping segments with no speech. 
-                                                 Higher values make it more likely to skip segments. If None, keeps current setting.
-            logprob_threshold (float, optional): Threshold for skipping segments with low confidence.
-                                               Lower values make it more likely to skip segments. If None, keeps current setting.
-            compression_ratio_threshold (float, optional): Threshold for skipping repetitive segments.
-                                                         Higher values make it more likely to skip segments. If None, keeps current setting.
-        
-        Returns:
-            dict: The updated Whisper options configuration.
-        """
-        if fp16 is not None:
-            API.whisper_options["fp16"] = fp16
-            
-        if no_speech_threshold is not None:
-            API.whisper_options["no_speech_threshold"] = no_speech_threshold
-            
-        if logprob_threshold is not None:
-            API.whisper_options["logprob_threshold"] = logprob_threshold
-            
-        if compression_ratio_threshold is not None:
-            API.whisper_options["compression_ratio_threshold"] = compression_ratio_threshold
-        
-        self.logger.info(f"Whisper options updated: {API.whisper_options}")
-        return API.whisper_options.copy()
-    
-    def get_whisper_options(self):
-        """
-        Get the current Whisper transcription options.
-        
-        Returns:
-            dict: A copy of the current Whisper options configuration.
-        """
-        return API.whisper_options.copy()
-    
     def set_whisper_model(self, model_size: str = "base.en"):
         """
         Change the Whisper model to a different size.
@@ -1049,18 +1000,19 @@ class API:
         """
         try:
             import whisper
+            from faster_whisper import WhisperModel
             API.whisper = whisper
             
             # Store old model reference for cleanup
             old_model = API.whisper_model
             
             self.logger.info(f"Loading Whisper model: {model_size}")
-            new_model = whisper.load_model(model_size)
+             
+            new_model = WhisperModel("base", compute_type="int8")
             
             # Only update if loading was successful
             API.whisper_model = new_model
             self.logger.info(f"Whisper model changed to '{model_size}' successfully")
-            self.logger.debug(f"New Whisper model device: {API.whisper_model.device}")
             
             # Clean up old model if it exists
             if old_model is not None:
@@ -1075,44 +1027,6 @@ class API:
         except Exception as e:
             self.logger.error(f"Failed to load Whisper model '{model_size}': {e}")
             return False
-    
-    def get_whisper_model_info(self):
-        """
-        Get information about the current Whisper model.
-        
-        Returns:
-            dict: Information about the current model including device and available models.
-        """
-        if API.whisper_model is None:
-            return {"status": "not_available", "current_model": None, "device": None}
-        
-        # Try to determine model size from the model's name or dims
-        model_size = "unknown"
-        if hasattr(API.whisper_model, 'dims'):
-            dims = API.whisper_model.dims
-            # Map common dimensions to model sizes (approximate)
-            if dims.n_text_layer == 4:
-                model_size = "tiny"
-            elif dims.n_text_layer == 6:
-                model_size = "base"
-            elif dims.n_text_layer == 12:
-                model_size = "small"
-            elif dims.n_text_layer == 24:
-                model_size = "medium"
-            elif dims.n_text_layer == 32:
-                model_size = "large"
-        
-        return {
-            "status": "available",
-            "current_model": model_size,
-            "device": str(API.whisper_model.device),
-            "available_models": ["tiny", "base", "small", "medium", "large", "large-v2", "large-v3"],
-            "model_dims": {
-                "n_mels": API.whisper_model.dims.n_mels if hasattr(API.whisper_model, 'dims') else None,
-                "n_text_layer": API.whisper_model.dims.n_text_layer if hasattr(API.whisper_model, 'dims') else None,
-                "n_vocab": API.whisper_model.dims.n_vocab if hasattr(API.whisper_model, 'dims') else None
-            }
-        }
        
     def get_closest_units(self, coalitions: list[str], categories: list[str], position: LatLng, operate_as: str | None = None, max_number: int = 1, max_distance: float = 10000) -> list[Unit]:
         """
