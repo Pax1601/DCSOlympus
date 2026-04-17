@@ -21,16 +21,16 @@ from utils.utils import lua_table_file_to_dict, dict_to_lua_table_file
 
 RESPONSE_TEMPLATES = {
     "status_report": "{callsign}. Base logistics, current base situation is as follows. Fuel: {fuel} liters. Artillery shells: {shells}. Supplies: {supplies} kilograms. Troops available: {troopsAvailable}. Over.",
-    "fireteam": "{callsign}. Base logistics, we're getting a fire team ready for you. Over.",
-    "fuel": "{callsign}. Base logistics, we're getting some fuel ready for you. Over.",
-    "ammo": "{callsign}. Base logistics, we're getting some shells ready for you. Over.",
-    "explosives": "{callsign}. Base logistics, we're getting some H E rockets ready for you. Over.",
-    "smoke": "{callsign}. Base logistics, we're getting some smoke rockets ready for you. Over.",
-    "supplies": "{callsign}. Base logistics, we're getting some supplies ready for you. Over.",
-    "clear": "{callsign}. Base logistics, we're clearing the pickup zones for you. Over.",
-    "no_troops": "{callsign}. Base logistics, no troops available at the barracks. Over.",
-    "not_enough_supplies": "{callsign}. Base logistics, we don't have enough supplies to send a fire team right now. Over.",
-    "unrecognized": "Say again. Over."
+    "fireteam_ready": "{callsign}. Base logistics, we're getting a fire team ready for you, over.",
+    "fuel": "{callsign}. Base logistics, we're getting some fuel ready for you, over.",
+    "ammo": "{callsign}. Base logistics, we're getting some shells ready for you, over.",
+    "explosives": "{callsign}. Base logistics, we're getting some H E rockets ready for you, over.",
+    "smoke": "{callsign}. Base logistics, we're getting some smoke rockets ready for you, over.",
+    "supplies": "{callsign}. Base logistics, we're getting some supplies ready for you, over.",
+    "clear": "{callsign}. Base logistics, we're clearing the pickup zones for you, over.",
+    "no_troops": "{callsign}. Base logistics, no troops available at the barracks, over.",
+    "not_enough_supplies": "{callsign}. Base logistics, we don't have enough supplies to send a fire team right now, over.",
+    "unrecognized": "Say again, over."
 }
 
 class LuaLink(Plugin):

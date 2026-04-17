@@ -889,12 +889,12 @@ class API:
                     # Check if the audio for this text and voice combination is already in the cache
                     cache_key = f"{chunk_text}_{voice}_{speed}"
                     if cache_key in API.audio_cache:
-                        self.logger.info(f"Audio for text '{text}' with voice '{voice}' retrieved from cache")
+                        self.logger.info(f"Audio for text '{chunk_text}' with voice '{voice}' retrieved from cache")
                         
                         # Concatenate the cached audio to the final audio signal
                         audio = np.concatenate((audio, API.audio_cache[cache_key]))
                     else:
-                        self.logger.info(f"Audio for text '{text}' with voice '{voice}' not in cache, generating with Kokoro")
+                        self.logger.info(f"Audio for text '{chunk_text}' with voice '{voice}' not in cache, generating with Kokoro")
                         new_audio = self._text_to_speech(chunk_text, voice, speed)
                         audio = np.concatenate((audio, new_audio))
 
