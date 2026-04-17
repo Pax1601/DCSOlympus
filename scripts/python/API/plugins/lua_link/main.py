@@ -20,7 +20,7 @@ from api import API
 from utils.utils import lua_table_file_to_dict, dict_to_lua_table_file
 
 RESPONSE_TEMPLATES = {
-    "status_report": "{callsign}. Base logistics, current base situation is as follows. Fuel: {fuel} liters. Artillery shells: {shells}. Supplies: {supplies} kilograms. Troops available: {troopsAvailable}. Over.",
+    "status_report": "{callsign}. Base logistics, current base situation is as follows. Fuel: {fuel} liters. Artillery shells: {shells}. Supplies: {supplies} kilograms. Troops available: {troopsAvailable}, over.",
     "fireteam_ready": "{callsign}. Base logistics, we're getting a fire team ready for you, over.",
     "fuel": "{callsign}. Base logistics, we're getting some fuel ready for you, over.",
     "ammo": "{callsign}. Base logistics, we're getting some shells ready for you, over.",
