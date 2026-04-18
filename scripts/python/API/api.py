@@ -170,7 +170,7 @@ class API:
             from faster_whisper import WhisperModel
 
             API.whisper = whisper
-            API.whisper_model = WhisperModel("base", compute_type="int8")
+            API.whisper_model = WhisperModel("base", device="cpu", compute_type="int8")
             self.logger.info(f"Whisper speech recognition initialized with '{model_size}' model")
         except ImportError:
             self.logger.warning("OpenAI whisper not installed. Speech recognition unavailable.")
@@ -1029,7 +1029,7 @@ class API:
             
             self.logger.info(f"Loading Whisper model: {model_size}")
              
-            new_model = WhisperModel("base", compute_type="int8")
+            new_model = WhisperModel("base", device="cpu", compute_type="int8")
             
             # Only update if loading was successful
             API.whisper_model = new_model

@@ -190,7 +190,7 @@ class RadioTransmitter:
                     if time.perf_counter() - start_time > websocket_connection_timeout:
                         self.logger.error("WebSocket connection timeout while waiting to send message")
                         return False
-                    time.sleep(0.5)         
+                    await asyncio.sleep(0.5)         
                     
                 await self._sync_radio_settings(frequency, modulation, intercom_ID, ptt=True)      
                 
@@ -257,8 +257,8 @@ class RadioTransmitter:
                                 if last_packet_sent_at is not None:
                                     delta_ms = (now - last_packet_sent_at) * 1000.0
                                     sleep_amount += 0.05 * (40 - delta_ms)
-                                    if self._debug_packet_timing:
-                                        self.logger.info("Packet %d interval: %.2f ms. Sleep amount: %.2f ms", packet_id, delta_ms, sleep_amount)
+                                    if self._debug_packet_timing and abs(delta_ms - 40) > 5:
+                                        self.logger.info("Bad packet interval %d: %.2f ms. Sleep amount: %.2f ms", packet_id, delta_ms, sleep_amount)
                                 last_packet_sent_at = now                                    
                             except Exception as e:
                                 self.logger.error(f"Failed to send packet over WebSocket: {e}")
@@ -268,7 +268,7 @@ class RadioTransmitter:
                             return False
                         
                         packet_id += 1
-                        time.sleep(sleep_amount / 1000)  # Simulate real-time transmission
+                        await asyncio.sleep(sleep_amount / 1000)  # Simulate real-time transmission
                 
                 self.logger.info(f"Transmitted {packet_id} packets from {file_name}")
                 return True
@@ -324,10 +324,7 @@ class RadioTransmitter:
             bool: True if transmission succeeded, False otherwise
         """        
         try:
-            def coroutine_send_message(file_name, frequency, modulation, encryption, intercom_ID, unit_ID, keep_file):
-                asyncio.run(self._send_message(file_name, frequency, modulation, encryption, intercom_ID, unit_ID, keep_file))
-            loop = asyncio.get_event_loop()
-            loop.run_in_executor(None, coroutine_send_message, file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID', None), kwargs.get('keep_file', False))
+            asyncio.create_task(self._send_message(file_name, frequency, modulation, encryption, None, kwargs.get('unit_ID', None), kwargs.get('keep_file', False)))
             return True
         except Exception as e:
             self.logger.error(f"Failed to schedule transmission: {e}")
