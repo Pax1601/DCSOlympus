@@ -63,7 +63,8 @@ function olyLink.spawnFuelBarrel(baseName)
             name = "Fuel-" .. Olympus.staticsCounter .. "-" .. baseName,
             mass = 1000,
             canCargo = true,
-            dead = false
+            dead = false,
+            linkOffset = true
         })
     end
     timer.scheduleFunction(spawnFuelBarrelNow, {}, timer.getTime() + 1) -- add a delay
@@ -104,7 +105,8 @@ function olyLink.spawnSupplyCrate(baseName)
         name = "Supplies-" .. Olympus.staticsCounter .. "-" .. baseName,
         mass = 1000,
         canCargo = true,
-        dead = false
+        dead = false,
+        linkOffset = true
     })
 end
 
@@ -143,7 +145,8 @@ function olyLink.spawnShellCrate(baseName)
         name = "Shells-" .. Olympus.staticsCounter .. "-" .. baseName,
         mass = 1000,
         canCargo = true,
-        dead = false
+        dead = false,
+        linkOffset = true
     })
 end
 
@@ -182,7 +185,8 @@ function olyLink.spawnWeaponCrate(baseName, weaponType)
         name = weaponType .. "-" .. Olympus.staticsCounter .. "-" .. baseName,
         mass = 1000,
         canCargo = true,
-        dead = false
+        dead = false,
+        linkOffset = true
     })
 end
 
@@ -315,7 +319,14 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     end
 
     world.searchObjects(Object.Category.CARGO, volume, checkCargo)
+
+    -- Return if no cargo in the volume
     if not hasCargo then
+        return
+    end
+
+    -- Check there is at least one helicopter in the volume also
+    if not olyLink.checkHelicopterInVolume(volume) then
         return
     end
 
@@ -401,6 +412,20 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     end
 end
 
+function olyLink.checkHelicopterInVolume(volume)
+    -- Check if any helicopter unit is inside the search area
+    local hasHelicopter = false
+    local function checkHelicopter()
+        if obj and obj:isExist() and obj:getCategory() == Object.Category.UNIT and obj:getDesc().category == Unit.Category.HELICOPTER then
+            hasHelicopter = true
+            return true            
+        end
+        return false
+    end
+    world.searchObjects(Object.Category.UNIT, volume, checkHelicopter)
+    return hasHelicopter
+end
+
 function olyLink.removeStaticsFromDropoffZone(baseName)
     local dropoffZoneName = olyLink.bases[baseName].dropoffZoneName
     local dropoffZone = trigger.misc.getZone(dropoffZoneName)
@@ -415,6 +440,11 @@ function olyLink.removeStaticsFromDropoffZone(baseName)
             radius = dropoffZone.radius
         }
     }
+
+    -- Check there are no helicopters in the volume
+    if olyLink.checkHelicopterInVolume(volume) then
+        return
+    end
 
     local removedCount = 0
     local function tryRemove(obj)
