@@ -7,6 +7,8 @@ end
 -- Force the initial data
 olyLink.setInitialData()
 
+olyLink.initialized = true
+
 -- Schedule the periodic function
 timer.scheduleFunction(olyLink.periodicFunction, {}, timer.getTime() + 1)
 

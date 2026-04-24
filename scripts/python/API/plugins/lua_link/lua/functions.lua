@@ -23,13 +23,16 @@ function olyLink.setInitialData()
 
             -- Initialize the fuel to the value according to the config file, or 0 if it is not set
             warehouse:setLiquidAmount(0, olyLink.bases[baseName].fuel or 0)
+
+            -- Initialize the detected dropoffs to 0
+            olyLink.bases[baseName].detectedDropoffs = 0
         end
     end
 end
 
 -- Spawn fuel barrels at a given base
 function olyLink.spawnFuelBarrel(baseName)
-    Olympus.notify("Spawning fuel barrel at " .. baseName .. " base", 10)
+    Olympus.debug("Spawning fuel barrel at " .. baseName .. " base", 10)
 
     -- Check tat the base is in the config file
     if not olyLink.contains(olyLink.getBaseNames(), baseName) then
@@ -48,7 +51,7 @@ function olyLink.spawnFuelBarrel(baseName)
     -- Clear the zone
     olyLink.clearZone(fuelZoneName)
 
-    function spawnFuelBarrelNow()
+    local function spawnFuelBarrelNow()
         -- Spawn the barrel
         local spawnLocation = fuelZone.point
         local lat, lng, alt = coord.LOtoLL(spawnLocation)
@@ -72,7 +75,7 @@ end
 
 -- Spawn supply crates at a given base
 function olyLink.spawnSupplyCrate(baseName)
-    Olympus.notify("Spawning supply crate at " .. baseName .. " base", 10)
+    Olympus.debug("Spawning supply crate at " .. baseName .. " base", 10)
 
     -- Check tat the base is in the config file
     if not olyLink.contains(olyLink.getBaseNames(), baseName) then
@@ -95,24 +98,27 @@ function olyLink.spawnSupplyCrate(baseName)
     local spawnLocation = suppliesZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    Olympus.spawnStaticObject({
-        coalition = "blue",
-        heading = 0,
-        type = "uh1h_cargo",
-        shapeName = "uh1h_cargo",
-        lat = lat,
-        lng = lng,
-        name = "Supplies-" .. Olympus.staticsCounter .. "-" .. baseName,
-        mass = 1000,
-        canCargo = true,
-        dead = false,
-        linkOffset = true
-    })
+    local function spawnSupplyCrateNow()
+        Olympus.spawnStaticObject({
+            coalition = "blue",
+            heading = 0,
+            type = "uh1h_cargo",
+            shapeName = "uh1h_cargo",
+            lat = lat,
+            lng = lng,
+            name = "Supplies-" .. Olympus.staticsCounter .. "-" .. baseName,
+            mass = 1000,
+            canCargo = true,
+            dead = false,
+            linkOffset = true
+        })
+    end
+    timer.scheduleFunction(spawnSupplyCrateNow, {}, timer.getTime() + 1) -- add a delay
 end
 
 -- Spawn shell crates at a given base
 function olyLink.spawnShellCrate(baseName)
-    Olympus.notify("Spawning shell crate at " .. baseName .. " base", 10)
+    Olympus.debug("Spawning shell crate at " .. baseName .. " base", 10)
 
     -- Check tat the base is in the config file
     if not olyLink.contains(olyLink.getBaseNames(), baseName) then
@@ -135,24 +141,27 @@ function olyLink.spawnShellCrate(baseName)
     local spawnLocation = shellsZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    Olympus.spawnStaticObject({
-        coalition = "blue",
-        heading = 0,
-        type = "uh1h_cargo",
-        shapeName = "uh1h_cargo",
-        lat = lat,
-        lng = lng,
-        name = "Shells-" .. Olympus.staticsCounter .. "-" .. baseName,
-        mass = 1000,
-        canCargo = true,
-        dead = false,
-        linkOffset = true
-    })
+    local function spawnShellCrateNow()
+        Olympus.spawnStaticObject({
+            coalition = "blue",
+            heading = 0,
+            type = "uh1h_cargo",
+            shapeName = "uh1h_cargo",
+            lat = lat,
+            lng = lng,
+            name = "Shells-" .. Olympus.staticsCounter .. "-" .. baseName,
+            mass = 1000,
+            canCargo = true,
+            dead = false,
+            linkOffset = true
+        })
+    end
+    timer.scheduleFunction(spawnShellCrateNow, {}, timer.getTime() + 1) -- add a delay
 end
 
 -- Spawn a weapon crate at a given base. The type of weapon crate is determined by the type parameter, which can be "RocketHE", "RocketOther", "AmmoGuns"
 function olyLink.spawnWeaponCrate(baseName, weaponType)
-    Olympus.notify("Spawning weapon crate of type " .. weaponType .. " at " .. baseName .. " base", 10)
+    Olympus.debug("Spawning weapon crate of type " .. weaponType .. " at " .. baseName .. " base", 10)
 
     -- Check tat the base is in the config file
     if not olyLink.contains(olyLink.getBaseNames(), baseName) then
@@ -175,24 +184,27 @@ function olyLink.spawnWeaponCrate(baseName, weaponType)
     local spawnLocation = weaponsZone.point
     local lat, lng, alt = coord.LOtoLL(spawnLocation)
 
-    Olympus.spawnStaticObject({
-        coalition = "blue",
-        heading = 0,
-        type = "ammo_cargo",
-        shapeName = "ammo_cargo",
-        lat = lat,
-        lng = lng,
-        name = weaponType .. "-" .. Olympus.staticsCounter .. "-" .. baseName,
-        mass = 1000,
-        canCargo = true,
-        dead = false,
-        linkOffset = true
-    })
+    local function spawnWeaponCrateNow()
+        Olympus.spawnStaticObject({
+            coalition = "blue",
+            heading = 0,
+            type = "ammo_cargo",
+            shapeName = "ammo_cargo",
+            lat = lat,
+            lng = lng,
+            name = weaponType .. "-" .. Olympus.staticsCounter .. "-" .. baseName,
+            mass = 1000,
+            canCargo = true,
+            dead = false,
+            linkOffset = true
+        })
+    end
+    timer.scheduleFunction(spawnWeaponCrateNow, {}, timer.getTime() + 1) -- add a delay
 end
 
 -- Spawn a fireteam at the given base
 function olyLink.spawnFireTeam(baseName)
-    Olympus.notify("Spawning fireteam at " .. baseName .. " base", 10)
+    Olympus.debug("Spawning fireteam at " .. baseName .. " base", 10)
 
     -- Check tat the base is in the config file
     if not olyLink.contains(olyLink.getBaseNames(), baseName) then
@@ -297,7 +309,6 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     local cargoType = nil
     local function checkCargo(obj)
         if obj and obj:isExist() and obj:getCategory() == Object.Category.CARGO then
-            hasCargo = true
             objectInformation = obj:getDesc()
             objectName = obj:getName()
             objectWeight = obj:getCargoWeight()
@@ -305,17 +316,21 @@ function olyLink.checkIfSuppliesDelivered(baseName)
             
             -- Get the ground elevation of the cargo
             local cargoPosition = obj:getPosition().p
-            local cargoElevation = land.getHeight({x = cargoPosition.x, y = cargoPosition.z})
+            local groundElevation = land.getHeight({x = cargoPosition.x, y = cargoPosition.z})
 
-            -- If the cargo is above the ground more than 5 meter, we consider it not delivered yet
-            -- We also check if we already supplied the static for this object name, to avoid problems with the cargo being detected multiple times while it is still in the dropoff zone
-            if cargoPosition.y - cargoElevation > 5 and olyLink.alreadySuppliedStatics[objectName] == nil then
-                hasCargo = false
-                return false
+            --local pointZone = mist.utils.makeVec3GL(dropoffZone.point)
+            --local deltaX = cargoPosition.x - pointZone.x
+            --local deltaY = cargoPosition.y - pointZone.y
+            --local deltaZ = cargoPosition.z - pointZone.z
+            --local distance = math.sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ)
+            --Olympus.notify("Detected cargo " .. objectName .. " heigh above ground " .. (cargoPosition.y - groundElevation) .. " distance " .. distance, 1)
+
+            -- If the cargo is above the ground more than 1 meter, we consider it not delivered yet
+            if cargoPosition.y - groundElevation < 1 then
+                hasCargo = true
             end
-            return true
         end
-        return false
+        return true
     end
 
     world.searchObjects(Object.Category.CARGO, volume, checkCargo)
@@ -327,6 +342,10 @@ function olyLink.checkIfSuppliesDelivered(baseName)
 
     -- Check there is at least one helicopter in the volume also
     if not olyLink.checkHelicopterInVolume(volume) then
+        return
+    end
+
+    if olyLink.alreadySuppliedStatics[objectName] == true then
         return
     end
 
@@ -343,7 +362,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     local inventory = nil
 
     for i = 1, #friendlyAirbases do
-        Olympus.notify("Checking base " .. friendlyAirbases[i]:getName(), 2)
+        Olympus.debug("Checking base " .. friendlyAirbases[i]:getName(), 2)
         if friendlyAirbases[i]:getName() == baseName then
             warehouse = friendlyAirbases[i]:getWarehouse()
             inventory = warehouse:getInventory()
@@ -356,6 +375,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     end
 
     if hasCargo then
+        olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
         if cargoType == "ammo_cargo" and string.match(objectName, "^RocketHE.+") then
             rocketValue = 0
             for k,v in pairs(inventory["weapon"]) do
@@ -364,7 +384,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
                 end
             end 
             warehouse:setItem("weapons.nurs.HYDRA_70_M151", rocketValue + 19*2)
-            Olympus.notify("Delivered 19 rockets to " .. baseName .. " base!", 10)
+            Olympus.notify("Delivered 38 rockets to " .. baseName .. " base!", 10)
         elseif cargoType == "ammo_cargo" and string.match(objectName, "^RocketOther.+") then
             rocketValueIllum = 0
             rocketValueSmoke = 0
@@ -415,12 +435,12 @@ end
 function olyLink.checkHelicopterInVolume(volume)
     -- Check if any helicopter unit is inside the search area
     local hasHelicopter = false
-    local function checkHelicopter()
-        if obj and obj:isExist() and obj:getCategory() == Object.Category.UNIT and obj:getDesc().category == Unit.Category.HELICOPTER then
+    local function checkHelicopter(obj)
+        if obj and obj:isExist() and obj:getDesc().category == Unit.Category.HELICOPTER then
             hasHelicopter = true
             return true            
         end
-        return false
+        return true
     end
     world.searchObjects(Object.Category.UNIT, volume, checkHelicopter)
     return hasHelicopter
@@ -449,7 +469,10 @@ function olyLink.removeStaticsFromDropoffZone(baseName)
     local removedCount = 0
     local function tryRemove(obj)
         if obj and obj:isExist() then
+            local objectName = obj:getName()
+            if olyLink.alreadySuppliedStatics[objectName] == true then
                 obj:destroy()
+            end
         end
         return true
     end
@@ -461,7 +484,7 @@ function olyLink.removeStaticsFromDropoffZone(baseName)
 end
 
 function olyLink.clearBasePickupZones(baseName)
-    Olympus.notify("Clearing all zones", 2)
+    Olympus.debug("Clearing all zones", 2)
     local fuelZoneName = olyLink.bases[baseName].fuelZoneName
     local suppliesZoneName = olyLink.bases[baseName].suppliesZoneName
     local weaponsZoneName = olyLink.bases[baseName].ammoZoneName
@@ -501,7 +524,7 @@ function olyLink.clearZone(zoneName)
         if Object.Category.CARGO then
             world.searchObjects(Object.Category.CARGO, volume, tryRemove)
         end
-        Olympus.notify(zoneName .. " cleared " .. foundObjects .. " objects", 2)
+        Olympus.debug(zoneName .. " cleared " .. foundObjects .. " objects", 2)
     end
 end
 
@@ -523,7 +546,7 @@ end
 
 -- Run all the periodic functions. This approach allows to avoid problems when reloading the plugin, 
 -- when some functions might be nil because they are being reloaded, so we can check if they are nil.
-function olyLink.periodicFunction()
+function olyLink.periodicFunction()    
     if olyLink.readCurrentWarehouseData ~= nil then
         olyLink.readCurrentWarehouseData()
     end
@@ -535,5 +558,9 @@ function olyLink.periodicFunction()
         end
     end
     
-    return timer.getTime() + 1
+    if olyLink.initialized then
+        return timer.getTime() + 1
+    else
+        Olympus.notify("Stopping periodic task", 2)
+    end
 end
