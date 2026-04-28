@@ -375,7 +375,6 @@ function olyLink.checkIfSuppliesDelivered(baseName)
     end
 
     if hasCargo then
-        olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
         if cargoType == "ammo_cargo" and string.match(objectName, "^RocketHE.+") then
             rocketValue = 0
             for k,v in pairs(inventory["weapon"]) do
@@ -384,6 +383,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
                 end
             end 
             warehouse:setItem("weapons.nurs.HYDRA_70_M151", rocketValue + 19*2)
+            olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
             Olympus.notify("Delivered 38 rockets to " .. baseName .. " base!", 10)
         elseif cargoType == "ammo_cargo" and string.match(objectName, "^RocketOther.+") then
             rocketValueIllum = 0
@@ -397,6 +397,7 @@ function olyLink.checkIfSuppliesDelivered(baseName)
             end
             warehouse:setItem("weapons.nurs.HYDRA_70_M156", rocketValueSmoke + 7)
             warehouse:setItem("weapons.nurs.HYDRA_70_M257", rocketValueIllum + 7)
+            olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
             Olympus.notify("Delivered 7 smoke and 7 illum rockets to " .. baseName .. " base!", 10)
         elseif cargoType == "ammo_cargo" and string.match(objectName, "^AmmoGuns.+") then
             gun1 = 0
@@ -418,16 +419,20 @@ function olyLink.checkIfSuppliesDelivered(baseName)
             warehouse:setItem("weapons.containers.M60_SIDE_R", gun2 + 1)
             warehouse:setItem("weapons.containers.M134_L", gunMiniL + 1)
             warehouse:setItem("weapons.containers.M134_R", gunMiniR + 1)
+            olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
             Olympus.notify("Delivered 1 gun container to " .. baseName .. " base!", 10)
         elseif cargoType == "barrels_cargo" and string.match(objectName, "^Fuel.+") then
             warehouse:setLiquidAmount(0, warehouse:getLiquidAmount(0) + objectWeight)
+            olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
             Olympus.notify("Delivered " .. objectWeight .. " liters of fuel to " .. baseName .. " base!", 10)
         elseif cargoType == "uh1h_cargo" and string.match(objectName, "^Supplies.+") then
             olyLink.bases[baseName].supplies = olyLink.bases[baseName].supplies + 1000
+            olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
             Olympus.notify("Delivered 1000 supplies to " .. baseName .. " base!", 10)
         elseif cargoType == "uh1h_cargo" and string.match(objectName, "^Shells.+") then
-            olyLink.bases[baseName].shells = olyLink.bases[baseName].shells + 1000
-            Olympus.notify("Delivered 1000 shells to " .. baseName .. " base!", 10)
+            olyLink.bases[baseName].shells = olyLink.bases[baseName].shells + 100
+            olyLink.bases[baseName].detectedDropoffs = olyLink.bases[baseName].detectedDropoffs + 1
+            Olympus.notify("Delivered 100 shells to " .. baseName .. " base!", 10)
         end
     end
 end
