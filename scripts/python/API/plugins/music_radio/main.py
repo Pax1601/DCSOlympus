@@ -122,6 +122,7 @@ class MusicRadio(Plugin):
                     self.song_queue.append(current_song)
             
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_whisper=False, load_kokoro=False)
+            self.transmitter.set_volume(0.2)  # Set a reasonable default volume for music transmission
             self.transmitter = self.api.create_radio_transmitter()
             self.transmitter.start()
             

@@ -52,6 +52,7 @@ class RadioTransmitter:
         self._paused = False
         self._debug_packet_timing = False
         self.transmitting = False
+        self.volume = 1.0
                 
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API.RadioTransmitter")
@@ -214,6 +215,16 @@ class RadioTransmitter:
                         pcm_bytes = wf.readframes(frame_size)
                         if not pcm_bytes or len(pcm_bytes) < frame_size * 2:
                             break
+
+                        # Set the volume by adjusting the PCM data before encoding
+                        if self.volume != 1.0:
+                            pcm_array = bytearray(pcm_bytes)
+                            for i in range(0, len(pcm_array), 2):
+                                sample = int.from_bytes(pcm_array[i:i+2], byteorder='little', signed=True)
+                                adjusted_sample = int(sample * self.volume)
+                                adjusted_sample = max(-32768, min(32767, adjusted_sample))  # Clamp to int16 range
+                                pcm_array[i:i+2] = adjusted_sample.to_bytes(2, byteorder='little', signed=True)
+                            pcm_bytes = bytes(pcm_array)
                         
                         # Encode PCM to OPUS
                         try:
@@ -392,6 +403,14 @@ class RadioTransmitter:
 
         self._paused = False
         self.logger.info("RadioTransmitter resumed")
+
+    def set_volume(self, volume: float) -> None:
+        """Set the transmission volume (0.0 to 1.0)."""
+        if volume < 0.0 or volume > 1.0:
+            self.logger.warning("Volume must be between 0.0 and 1.0")
+            return
+        self.volume = volume
+        self.logger.info(f"Transmission volume set to {self.volume:.2f}")
     
     def is_running(self) -> bool:
         """Check if the radio transmitter is currently running."""

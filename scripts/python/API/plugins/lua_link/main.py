@@ -164,7 +164,7 @@ class LuaLink(Plugin):
             for base_name, base_info in custom_data.items():
                 if base_info["detectedDropoffs"] > self.bases_data[base_name]["detectedDropoffs"]:
                     # Send a radio message
-                    voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and "voiceModel" in self.bases_data[base_name] else "bm_daniel"
+                    voice_model = self.bases_data[base_name].get("voiceModel", "bm_daniel")
                     response = RESPONSE_TEMPLATES["cargo_dropped"]
                     future = self.api.generate_audio_message_in_executor(response, voice=voice_model)
                     future.add_done_callback(lambda audio_file: self.listeners[base_name].transmit_on_frequency(file_name=audio_file.result()))
@@ -172,7 +172,7 @@ class LuaLink(Plugin):
             self.bases_data = custom_data
 
             # Perform periodic functions
-            if result.get("load") < 10:  # Only perform these functions if the server load is less than 100% to avoid potential performance issues
+            if result.get("load") < 10:  # Only perform these functions if the server load is less than 10 to avoid potential performance issues
                 self.send_units_to_spawn_point()
                 self.rearm_artillery_pieces()
 
