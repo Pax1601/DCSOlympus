@@ -11,7 +11,7 @@ import websockets
 import logging
 import json
 import os
-from subprocess import check_call
+# Removed check_call import - now using asyncio.create_subprocess_exec
 
 from audio.audio_packet import AudioPacket, MessageType
 from utils.utils import coalition_to_enum
@@ -55,6 +55,7 @@ class RadioTransmitter:
         self.transmitting = False
         self.volume = 1.0
         self.SRS_folder = SRS_folder
+        self._external_process = None  # Track external SRS process for termination
                 
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API.RadioTransmitter")
@@ -303,7 +304,7 @@ class RadioTransmitter:
                     
             self.transmitting = False
 
-    def _transmit_on_frequency_external(self, file_name: str, frequency: float, modulation: int, encryption: int, unit_ID: None, keep_file: bool) -> bool:
+    async def _transmit_on_frequency_external(self, file_name: str, frequency: float, modulation: int, encryption: int, unit_ID: None, keep_file: bool) -> bool:
         """
         Transmit a mp3 file using SRS external implementation
 
@@ -319,22 +320,78 @@ class RadioTransmitter:
         # Transmit the file using the external command
         SRS_path = os.path.join(self.SRS_folder, 'ExternalAudio', 'DCS-SR-ExternalAudio.exe')
 
-        command = f"\"{SRS_path}\" -i \"{file_name}\" -f {frequency / 1e6} -v {self.volume} -m {"AM" if modulation == 0 else "FM"} -c {coalition_to_enum(self.coalition)}"
+        # Build command as a list for asyncio subprocess
+        command = [
+            SRS_path,
+            "-i", file_name,
+            "-f", str(frequency / 1e6),
+            "-v", str(self.volume),
+            "-m", "AM" if modulation == 0 else "FM",
+            "-c", str(coalition_to_enum(self.coalition))
+        ]
 
         if unit_ID:
-            command += f"--unitId {unit_ID}"
+            command.extend(["--unitId", str(unit_ID)])
 
-        self.logger.info(command)
+        self.logger.info(f"Executing: {' '.join(command)}")
+        
         try:
             self.transmitting = True
-            check_call(command)
+            
+            # Create subprocess
+            self._external_process = await asyncio.create_subprocess_exec(
+                *command,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            
+            # Wait for process to complete, checking for stop signal
+            while self._external_process.returncode is None:
+                try:
+                    # Wait with timeout to check stop signal periodically
+                    await asyncio.wait_for(self._external_process.wait(), timeout=0.5)
+                except asyncio.TimeoutError:
+                    # Check if we should stop
+                    if self._should_stop:
+                        self.logger.info("Stop signal received, terminating external SRS process")
+                        self._external_process.terminate()
+                        try:
+                            await asyncio.wait_for(self._external_process.wait(), timeout=2.0)
+                        except asyncio.TimeoutError:
+                            self.logger.warning("Process didn't terminate gracefully, killing it")
+                            self._external_process.kill()
+                            await self._external_process.wait()
+                        self.transmitting = False
+                        self._external_process = None
+                        return False
+            
+            # Get return code
+            returncode = self._external_process.returncode
+            self._external_process = None
             self.transmitting = False
-            if not keep_file and os.path.exists(file_name):
-                os.remove(file_name)
-                self.logger.debug(f"Cleaned up audio file: {file_name}")
-            return True
+            
+            if returncode == 0:
+                if not keep_file and os.path.exists(file_name):
+                    os.remove(file_name)
+                    self.logger.debug(f"Cleaned up audio file: {file_name}")
+                return True
+            else:
+                # Log stderr if there was an error
+                stderr_output = await self._external_process.stderr.read() if self._external_process else b""
+                self.logger.error(f"External transmission failed with code {returncode}: {stderr_output.decode()}")
+                if not keep_file and os.path.exists(file_name):
+                    os.remove(file_name)
+                return False
+                
         except Exception as e:
             self.transmitting = False
+            if self._external_process:
+                try:
+                    self._external_process.terminate()
+                    await asyncio.wait_for(self._external_process.wait(), timeout=2.0)
+                except:
+                    pass
+                self._external_process = None
             self.logger.error(f"Failed to execute external transmission command: {e}")
             if not keep_file and os.path.exists(file_name):
                 os.remove(file_name)
@@ -398,9 +455,13 @@ class RadioTransmitter:
         Returns:
             bool: True if transmission succeeded, False otherwise
         """
-        # Execute the external command in a separate thread to avoid blocking the event loop
-        loop = asyncio.get_running_loop()
-        return loop.run_in_executor(None, self._transmit_on_frequency_external, file_name, frequency, modulation, encryption, kwargs.get("unit_ID", None), kwargs.get("keep_file", False))
+        # Execute the external command as an async task
+        try:
+            asyncio.create_task(self._transmit_on_frequency_external(file_name, frequency, modulation, encryption, kwargs.get("unit_ID", None), kwargs.get("keep_file", False)))
+            return True
+        except Exception as e:
+            self.logger.error(f"Failed to schedule external transmission: {e}")
+            return False
         
     def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
         """
@@ -429,6 +490,14 @@ class RadioTransmitter:
         self.logger.info("Stopping RadioTransmitter...")
         self._should_stop = True
         self._paused = False
+        
+        # Terminate external process if running
+        if self._external_process and self._external_process.returncode is None:
+            self.logger.info("Terminating external SRS process")
+            try:
+                self._external_process.terminate()
+            except Exception as e:
+                self.logger.error(f"Error terminating external process: {e}")
         
         # Close WebSocket connection if active
         if self._websocket:
