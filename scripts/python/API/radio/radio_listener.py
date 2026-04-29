@@ -15,7 +15,7 @@ from audio.audio_recorder import AudioRecorder
 test_counter = 1
 
 class RadioListener(RadioTransmitter):
-    def __init__(self, api: API, address: str, port: int | None):
+    def __init__(self, api: API, address: str, port: int | None, SRS_folder: str):
         """
         Initialize the RadioListener.
         
@@ -25,7 +25,7 @@ class RadioListener(RadioTransmitter):
             endpoint (str): WebSocket server endpoint
         """
         self.api = api
-        super().__init__(address, port)
+        super().__init__(address, port, SRS_folder)
         
         self.message_callback = None
         self.clients_callback = None
