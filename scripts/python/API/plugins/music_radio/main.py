@@ -64,46 +64,19 @@ class MusicRadio(Plugin):
             self.logger.info("Music modulation: %s", self.music_modulation)
 
             music_files = []
-            converted_folder: Path | None = None
             if self.music_folder:
                 music_folder_path = Path(self.music_folder)
-                converted_folder = music_folder_path / "converted"
-                converted_folder.mkdir(parents=True, exist_ok=True)
                 music_files = [
                     f for f in music_folder_path.iterdir()
-                    if f.is_file() and f.suffix.lower() in [".mp3", ".wav"]
+                    if f.is_file() and f.suffix.lower() in [".mp3"]
                 ]
             else:
                 self.logger.warning("music_folder is not configured. No songs will be queued.")
 
             self.logger.info("Found %d source audio files in the folder.", len(music_files))
 
-            import subprocess
-            ffmpeg_path = Path(__file__).parent / "libs" / "ffmpeg"
-            if not ffmpeg_path.exists():
-                ffmpeg_path = ffmpeg_path.with_suffix(".exe")
-
-            for source_file in music_files:
-                self.logger.info(" - %s", source_file.name)
-                converted_file = converted_folder / f"{source_file.stem}.wav"
-
-                if converted_file.exists():
-                    self.logger.info("Converted WAV already exists, skipping: %s", converted_file.name)
-                    continue
-
-                self.logger.info("Converting %s -> %s", source_file.name, converted_file.name)
-                try:
-                    subprocess.run([
-                        str(ffmpeg_path), "-y", "-i", str(source_file),
-                        "-ac", "1", "-ar", "16000", "-sample_fmt", "s16",
-                        str(converted_file)
-                    ], check=True)
-                    self.logger.info("Conversion successful: %s", converted_file.name)
-                except Exception as e:
-                    self.logger.error(f"Failed to convert {source_file.name}: {e}", exc_info=True)
-
-            # Put all converted wav files in the song queue
-            self.song_queue = [f for f in converted_folder.glob("*.wav")] if converted_folder else []
+            # Put all files in the song queue
+            self.song_queue = [f for f in music_files if f.suffix.lower() == ".mp3"]
             self.logger.info("Added %d songs to the queue.", len(self.song_queue))
             
             # If the filenames start with a number, order the queue by that number to allow custom ordering. Otherwise, order alphabetically

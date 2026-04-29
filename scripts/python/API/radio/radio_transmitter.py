@@ -11,6 +11,7 @@ import websockets
 import logging
 import json
 import os
+from subprocess import check_call
 
 from audio.audio_packet import AudioPacket, MessageType
 from utils.utils import coalition_to_enum
@@ -25,7 +26,7 @@ class RadioTransmitter:
     to send audio messages. Does not receive or process incoming messages.
     """
     
-    def __init__(self, address: str, port: int | None):
+    def __init__(self, address: str, port: int | None, SRS_folder: str):
         """
         Initialize the RadioTransmitter.
         
@@ -53,6 +54,7 @@ class RadioTransmitter:
         self._debug_packet_timing = False
         self.transmitting = False
         self.volume = 1.0
+        self.SRS_folder = SRS_folder
                 
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API.RadioTransmitter")
@@ -300,6 +302,39 @@ class RadioTransmitter:
                 self.logger.debug(f"Cleaned up audio file: {file_name}")
                     
             self.transmitting = False
+
+    async def _transmit_on_frequency_external(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
+        """
+        Transmit a mp3 file using SRS external implementation
+
+        Args:
+            file_name (str): Path to the input mp3 file
+            frequency (float): Transmission frequency
+            modulation (int): Modulation type
+            encryption (int): Encryption type
+
+        Returns:
+            bool: True if transmission succeeded, False otherwise
+        """        
+        # Transmit the file using the external command
+        SRS_path = os.path.join(self.SRS_folder, 'ExternalAudio', 'DCS-SR-ExternalAudio.exe')
+
+        command = f"{SRS_path} -i {file_name} -f {frequency / 1e6} -v {self.volume} -m {"AM" if modulation == 0 else "FM"} -c {coalition_to_enum(self.coalition)}"
+        try:
+            self.transmitting = True
+            check_call(command)
+            self.transmitting = False
+            if not kwargs.get('keep_file', False) and os.path.exists(file_name):
+                os.remove(file_name)
+                self.logger.debug(f"Cleaned up audio file: {file_name}")
+            return True
+        except Exception as e:
+            self.transmitting = False
+            self.logger.error(f"Failed to execute external transmission command: {e}")
+            if not kwargs.get('keep_file', False) and os.path.exists(file_name):
+                os.remove(file_name)
+                self.logger.debug(f"Cleaned up audio file after failed transmission: {file_name}")
+            return False
     
     def start(self) -> None:
         """Start the radio transmitter in a separate thread."""
@@ -317,7 +352,7 @@ class RadioTransmitter:
         
         self.logger.info(f"RadioTransmitter started, connecting to {self.websocket_url}")
          
-    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
+    def transmit_on_frequency_internal(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
         """
         Transmit a WAV file as OPUS frames over the websocket.
         
@@ -340,7 +375,27 @@ class RadioTransmitter:
         except Exception as e:
             self.logger.error(f"Failed to schedule transmission: {e}")
             return False
-    
+
+    def transmit_on_frequency(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
+        """
+        Transmit a mp3 file using SRS expternal implementation
+
+        Args:
+            file_name (str): Path to the input mp3 file
+            frequency (float): Transmission frequency
+            modulation (int): Modulation type
+            encryption (int): Encryption type
+
+        Kwargs:
+            keep_file (boolean, option): If true the file will not be deleted at the end of the transmission. Default is False
+
+        Returns:
+            bool: True if transmission succeeded, False otherwise
+        """
+        # Execute the external command in a separate thread to avoid blocking the event loop
+        loop = asyncio.get_running_loop()
+        return loop.run_in_executor(None, self._transmit_on_frequency_external, file_name, frequency, modulation, encryption, **kwargs)
+        
     def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
         """
         Transmit a WAV file as OPUS frames over the websocket on a specific intercom ID.

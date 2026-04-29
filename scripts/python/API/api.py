@@ -36,7 +36,7 @@ class API:
     whisper_model = None
     audio_cache = {}
 
-    def __init__(self, username: str = "API", saved_games_folder: str = ".", load_whisper: bool = True, load_kokoro: bool = True):
+    def __init__(self, username: str = "API", saved_games_folder: str = ".", load_whisper: bool = True, load_kokoro: bool = True, SRS_folder: str = ""):
         self.base_url = None
         self.config = None
         self.logs = {}
@@ -55,6 +55,7 @@ class API:
         self.running = False
         self.auto_update_units = True
         self.auto_update_weapons = True
+        self.SRS_folder = SRS_folder
 
         # These are test units that are not really in game, but are useful for testing purposes
         self.test_units: dict[int, Unit] = {}
@@ -64,12 +65,6 @@ class API:
         
         # Setup logging
         self.logger = logging.getLogger(f"DCSOlympus.API")
-        #if not self.logger.handlers:
-        #    handler = logging.StreamHandler()
-        #    formatter = logging.Formatter('[%(asctime)s] %(name)s - %(levelname)s - %(message)s')
-        #    handler.setFormatter(formatter)
-        #    self.logger.addHandler(handler)
-        #    self.logger.setLevel(logging.INFO)
 
         # Read the config file olympus.json
         try:
@@ -791,9 +786,9 @@ class API:
         from radio.radio_listener import RadioListener
 
         if self.config.get("audio").get("WSAddress"):
-            return RadioListener(self, self.config.get("audio").get("WSAddress"), None)
+            return RadioListener(self, self.config.get("audio").get("WSAddress"), None, self.SRS_folder)
         else:
-            return RadioListener(self, self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"))
+            return RadioListener(self, self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"), self.SRS_folder)
         
     def create_radio_transmitter(self):
         """
@@ -805,11 +800,10 @@ class API:
         from radio.radio_transmitter import RadioTransmitter
 
         if self.config.get("audio").get("WSAddress"):
-            return RadioTransmitter(self.config.get("audio").get("WSAddress"), None)
+            return RadioTransmitter(self.config.get("audio").get("WSAddress"), None, self.SRS_folder)
         else:
-            return RadioTransmitter(self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"))
+            return RadioTransmitter(self.config.get("backend").get("address"), self.config.get("audio").get("WSPort"), self.SRS_folder)
         
-    
     def _text_to_speech(self, text: str, voice: str = "bm_daniel", speed: float = 1.0):
         try:
             # Check if Kokoro is available
@@ -854,18 +848,19 @@ class API:
             self.logger.error(f"Message generation failed: {e}")
             raise
 
-    def generate_audio_message(self, text: str, voice: str = "bm_daniel", speed: float = 1.0) -> str:
+    def generate_audio_message(self, text: str, voice: str = "bm_daniel", speed: float = 1.0, format: str = "mp3") -> str:
         """
-        Generate a WAV file from text using Kokoro TTS with streaming for faster response.
+        Generate a MP3 or WAV file from text using Kokoro TTS with streaming for faster response.
         Remember to manually delete the generated file after use!
         
         Args:
             text (str): The text to synthesize.
             voice (str): The voice name to use (e.g., af_bella, af_nicole, am_adam, bm_daniel, etc.).
             speed (float): Speech speed multiplier (default 1.0, higher = faster).
+            format (str): The audio format to save ("mp3" or "wav", default "mp3").
 
         Returns:
-            str: The filename of the generated WAV file.
+            str: The filename of the generated MP3 file.
             
         Raises:
             Exception: If Kokoro TTS fails or is not available.
@@ -907,10 +902,15 @@ class API:
 
                 # Save to temporary file
                 temp_dir = tempfile.gettempdir()
-                file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".wav")
+                file_name = os.path.join(temp_dir, next(tempfile._get_candidate_names()) + ".mp3")
                 
-                # Fast WAV writing
-                sf.write(file_name, audio, 16000, subtype='PCM_16')
+                if format == "wav":
+                    # Save as WAV if specified, used by internal tranmission
+                    sf.write(file_name.replace(".mp3", ".wav"), audio, 16000, format='WAV')
+                    file_name = file_name.replace(".mp3", ".wav")
+                else:
+                    # Fast MP3 writing
+                    sf.write(file_name, audio, format='MP3')
             return file_name
             
         except Exception as e:
@@ -927,7 +927,7 @@ class API:
             speed (float): Speech speed multiplier (default 1.0, higher = faster).
 
         Returns:
-            str: The filename of the generated WAV file.
+            str: The filename of the generated MP3 file.
             
         Raises:
             Exception: If Kokoro TTS fails or is not available.
