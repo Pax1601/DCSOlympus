@@ -97,7 +97,7 @@ class LuaLink(Plugin):
         self.api.execute_file(str(Path(__file__).parent / "lua" / "init.lua"))
 
         # Sleep 5 seconds so that any old periodic task stops
-        asyncio.sleep(5000)
+        await asyncio.sleep(5000)
 
         self.api.execute_file(self.active_lua_config)
         self.api.execute_file(str(Path(__file__).parent / "lua" / "constants.lua"))
