@@ -94,9 +94,9 @@ class MusicRadio(Plugin):
                     current_song = self.song_queue.pop(0)
                     self.song_queue.append(current_song)
             
-            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_whisper=False, load_kokoro=False)
-            self.transmitter.set_volume(0.2)  # Set a reasonable default volume for music transmission
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_whisper=False, load_kokoro=False, SRS_folder=self.global_config.get('SRS_folder', '.'))
             self.transmitter = self.api.create_radio_transmitter()
+            self.transmitter.set_volume(0.1)  # Set a reasonable default volume for music transmission
             self.transmitter.start()
             
             asyncio.create_task(self._periodic_task())

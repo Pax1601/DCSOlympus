@@ -61,7 +61,7 @@ class RadioListener(RadioTransmitter):
                 audio_packet = AudioPacket()
                 audio_packet.from_byte_array(message[1:])
                 
-                if audio_packet.get_transmission_guid() != self._guid:                    
+                if audio_packet.get_transmission_guid() != self._guid and audio_packet.get_unit_id() != 1000: # TODO: when using external audio generation, the unitID is set to 1000 by default. This is a lazy way to avoid listening to ourselves                    
                     if audio_packet.get_transmission_guid() not in self.audio_recorders:
                         recorder = AudioRecorder(self.api)
                         self.audio_recorders[audio_packet.get_transmission_guid()] = recorder

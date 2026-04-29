@@ -303,7 +303,7 @@ class RadioTransmitter:
                     
             self.transmitting = False
 
-    async def _transmit_on_frequency_external(self, file_name: str, frequency: float, modulation: int, encryption: int, **kwargs) -> bool:
+    def _transmit_on_frequency_external(self, file_name: str, frequency: float, modulation: int, encryption: int, unit_ID: None, keep_file: bool) -> bool:
         """
         Transmit a mp3 file using SRS external implementation
 
@@ -319,19 +319,24 @@ class RadioTransmitter:
         # Transmit the file using the external command
         SRS_path = os.path.join(self.SRS_folder, 'ExternalAudio', 'DCS-SR-ExternalAudio.exe')
 
-        command = f"{SRS_path} -i {file_name} -f {frequency / 1e6} -v {self.volume} -m {"AM" if modulation == 0 else "FM"} -c {coalition_to_enum(self.coalition)}"
+        command = f"\"{SRS_path}\" -i \"{file_name}\" -f {frequency / 1e6} -v {self.volume} -m {"AM" if modulation == 0 else "FM"} -c {coalition_to_enum(self.coalition)}"
+
+        if unit_ID:
+            command += f"--unitId {unit_ID}"
+
+        self.logger.info(command)
         try:
             self.transmitting = True
             check_call(command)
             self.transmitting = False
-            if not kwargs.get('keep_file', False) and os.path.exists(file_name):
+            if not keep_file and os.path.exists(file_name):
                 os.remove(file_name)
                 self.logger.debug(f"Cleaned up audio file: {file_name}")
             return True
         except Exception as e:
             self.transmitting = False
             self.logger.error(f"Failed to execute external transmission command: {e}")
-            if not kwargs.get('keep_file', False) and os.path.exists(file_name):
+            if not keep_file and os.path.exists(file_name):
                 os.remove(file_name)
                 self.logger.debug(f"Cleaned up audio file after failed transmission: {file_name}")
             return False
@@ -387,6 +392,7 @@ class RadioTransmitter:
             encryption (int): Encryption type
 
         Kwargs:
+            unit_ID (int, optional): The unit ID of the source unit to impersonate. Default is None
             keep_file (boolean, option): If true the file will not be deleted at the end of the transmission. Default is False
 
         Returns:
@@ -394,7 +400,7 @@ class RadioTransmitter:
         """
         # Execute the external command in a separate thread to avoid blocking the event loop
         loop = asyncio.get_running_loop()
-        return loop.run_in_executor(None, self._transmit_on_frequency_external, file_name, frequency, modulation, encryption, **kwargs)
+        return loop.run_in_executor(None, self._transmit_on_frequency_external, file_name, frequency, modulation, encryption, kwargs.get("unit_ID", None), kwargs.get("keep_file", False))
         
     def transmit_on_intercom(self, file_name: str, intercom_ID: int) -> bool:
         """

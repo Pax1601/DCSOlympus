@@ -910,7 +910,7 @@ class API:
                     file_name = file_name.replace(".mp3", ".wav")
                 else:
                     # Fast MP3 writing
-                    sf.write(file_name, audio, format='MP3')
+                    sf.write(file_name, audio, 16000, format='MP3')
             return file_name
             
         except Exception as e:

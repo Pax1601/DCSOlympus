@@ -81,7 +81,7 @@ class UnitRadioEmbark(Plugin):
             self.logger.info("Blue modulation: %s", self.blue_modulation)
             self.logger.info("Red modulation: %s", self.red_modulation)
 
-            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'))
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), SRS_folder=self.global_config.get('SRS_folder', '.'))
             self.blue_listener = self.api.create_radio_listener()
             self.red_listener = self.api.create_radio_listener()
             

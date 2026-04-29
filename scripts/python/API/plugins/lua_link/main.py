@@ -21,22 +21,22 @@ from api import API
 from utils.utils import lua_table_file_to_dict, dict_to_lua_table_file
 
 RESPONSE_TEMPLATES = {
-    "fuel_status_report": "{callsign}. Base logistics. Fuel: {fuel} liters, over.",
-    "shells_status_report": "{callsign}. Base logistics. Artillery shells: {shells}, over.",
-    "supplies_status_report": "{callsign}. Base logistics. Supplies: {supplies} kilograms, over.",
-    "troops_status_report": "{callsign}. Base logistics. Troops available: {troopsAvailable}, over.",
-    "status_report": "{callsign}. Base logistics, current base situation is as follows. Fuel: {fuel} liters. Artillery shells: {shells}. Supplies: {supplies} kilograms. Troops available: {troopsAvailable}, over.",
-    "fireteam_ready": "{callsign}. Base logistics, we're getting a fire team ready for you, over.",
-    "fuel": "{callsign}. Base logistics, we're getting some fuel ready for you, over.",
-    "ammo": "{callsign}. Base logistics, we're getting some gun crates ready for you, over.",
-    "explosives": "{callsign}. Base logistics, we're getting some H E rockets ready for you, over.",
-    "smoke": "{callsign}. Base logistics, we're getting some smoke rockets ready for you, over.",
-    "supplies": "{callsign}. Base logistics, we're getting some supplies ready for you, over.",
-    "shells": "{callsign}. Base logistics, we're getting some shells ready for you, over.",
-    "clear": "{callsign}. Base logistics, we're clearing the pickup zones for you, over.",
-    "no_troops": "{callsign}. Base logistics, no troops available at the barracks, over.",
-    "not_enough_supplies": "{callsign}. Base logistics, we don't have enough supplies to send a fire team right now, over.",
-    "cargo_dropped": "Base logistics, cargo has been secured, you can disconnect, over.",
+    "fuel_status_report": "{callsign}, base logistics, fuel quantity {fuel} liters, over.",
+    "shells_status_report": "{callsign}, base logistics, {shells} artillery shells available, over.",
+    "supplies_status_report": "{callsign}, base logistics, {supplies} kilograms of supplies, over.",
+    "troops_status_report": "{callsign}, base logistics, {troopsAvailable} troops available, over.",
+    "status_report": "{callsign}, base logistics. Current base situation is as follows. Fuel quantity {fuel} liters. {shells} artillery shells. {supplies} kilograms of supplies. {troopsAvailable} troops available, over.",
+    "fireteam_ready": "{callsign}, base logistics. We're getting a fire team ready for you, over.",
+    "fuel": "{callsign}, base logistics. We're getting some fuel ready for you, over.",
+    "ammo": "{callsign}, base logistics. We're getting a gun crate ready for you, over.",
+    "explosives": "{callsign}, base logistics. We're getting some H E rockets ready for you, over.",
+    "smoke": "{callsign}, base logistics. We're getting some smoke rockets ready for you, over.",
+    "supplies": "{callsign}, base logistics. We're getting some supplies ready for you, over.",
+    "shells": "{callsign}, base logistics. We're getting some shells ready for you, over.",
+    "clear": "{callsign}, base logistics. We're clearing the pickup zones for you, over.",
+    "no_troops": "{callsign}, base logistics. No troops available at the barracks, over.",
+    "not_enough_supplies": "{callsign}, base logistics. We don't have enough supplies to send a fire team right now, over.",
+    "cargo_dropped": "Base logistics, cargo has been secured, over.",
     "unrecognized": "Say again, over."
 }
 
@@ -78,17 +78,10 @@ class LuaLink(Plugin):
 
         # Initialize the API if not already done
         if self.api is None:
-            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), load_kokoro=True, load_whisper=True)
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), SRS_folder=self.global_config.get('SRS_folder', '.'))
         
         self.api.register_on_update_callback(lambda api: self.on_api_update(api))
         self.api.run()
-
-        # Pregenerate all the possible responses to have them ready
-        # Use dummy values
-        for base_name, base_info in self.bases_data.items():
-            for response_key in RESPONSE_TEMPLATES.keys():
-                voice_model = base_info["voiceModel"] if hasattr(base_info, "voiceModel") else "bm_daniel"
-                self.api.generate_audio_message(RESPONSE_TEMPLATES[response_key].format(callsign="TestUnit", fuel=1000, shells=100, supplies=500, troopsAvailable=20), voice=voice_model)
 
         self.logger.info("LuaLink plugin started")
         return True
@@ -114,7 +107,7 @@ class LuaLink(Plugin):
         
         # Read the configuration file
         self.bases_data = lua_table_file_to_dict(self.active_lua_config)
-        
+
         for base_name, base_info in self.bases_data.items():
             self.logger.info("Frequency (Hz): %s", base_info["frequency"])
             self.logger.info("Kokoro voice model: %s", base_info["voiceModel"])
@@ -131,7 +124,13 @@ class LuaLink(Plugin):
                 listener.register_message_callback(lambda message, unitID, listener=listener, base_name=base_name: self.on_message_callback(message, unitID, listener, base_name))
                 self.listeners[base_name] = listener
 
-                listener.set_prompt(f"Possible commands are: status report, fire team, fuel, ammo, explosives, smoke, supplies, clear. Over.")
+                # Pregenerate all the possible responses to have them ready
+                # Use dummy values
+                for response_key in RESPONSE_TEMPLATES.keys():
+                    voice_model = base_info["voiceModel"] if hasattr(base_info, "voiceModel") else "bm_daniel"
+                    self.api.generate_audio_message(RESPONSE_TEMPLATES[response_key].format(callsign="TestUnit", fuel=1000, shells=100, supplies=500, troopsAvailable=20), voice=voice_model)
+
+                listener.set_prompt(f"Possible commands are: status report, guns, fire team, fuel, ammo, explosives, smoke, supplies, clear. Over.")
             else:
                 self.logger.warning("Skipping base %s due to invalid configuration", base_name)
 
@@ -292,7 +291,7 @@ class LuaLink(Plugin):
     def fuel_status_report(self, unit: Unit, base_name: str):
         return RESPONSE_TEMPLATES["fuel_status_report"].format(
             callsign=unit.callsign,
-            fuel=self.bases_data[base_name].get("fuel", 0)
+            fuel=round(self.bases_data[base_name].get("fuel", 0))
         )
     
     def shells_status_report(self, unit: Unit, base_name: str):
@@ -316,7 +315,7 @@ class LuaLink(Plugin):
     def status_report(self, unit: Unit, base_name: str):
         return RESPONSE_TEMPLATES["status_report"].format(
             callsign=unit.callsign,
-            fuel=self.bases_data[base_name].get("fuel", 0),
+            fuel=round(self.bases_data[base_name].get("fuel", 0)),
             shells=self.bases_data[base_name].get("shells", 0),
             supplies=self.bases_data[base_name].get("supplies", 0),
             troopsAvailable=self.bases_data[base_name].get("troopsAvailable", 0)

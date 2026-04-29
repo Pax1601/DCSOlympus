@@ -91,7 +91,8 @@ class EnemyPatrols(Plugin):
             
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'),
             load_kokoro=False,
-            load_whisper=False               
+            load_whisper=False,
+            SRS_folder=self.global_config.get('SRS_folder', '.')              
             )
 
             self.api.register_on_update_callback(self.on_update)

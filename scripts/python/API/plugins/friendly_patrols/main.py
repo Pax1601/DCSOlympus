@@ -123,7 +123,7 @@ class FriendlyPatrols(Plugin):
             self.logger.info("Kokoro voice model: %s", self.kokoro_voice_model)
             self.logger.info("Friendly modulation: %s", self.modulation)
 
-            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'))
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), SRS_folder=self.global_config.get('SRS_folder', '.')   )
             self.api.interval = self.update_interval
             self.api.register_on_update_callback(self.on_update)
 
