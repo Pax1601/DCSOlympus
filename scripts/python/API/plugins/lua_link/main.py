@@ -97,7 +97,7 @@ class LuaLink(Plugin):
         self.api.execute_file(str(Path(__file__).parent / "lua" / "init.lua"))
 
         # Sleep 5 seconds so that any old periodic task stops
-        await asyncio.sleep(5000)
+        await asyncio.sleep(5)
 
         self.api.execute_file(self.active_lua_config)
         self.api.execute_file(str(Path(__file__).parent / "lua" / "constants.lua"))
@@ -161,12 +161,13 @@ class LuaLink(Plugin):
 
             # Iterate over the bases to check if anything has been dropped at a base
             for base_name, base_info in custom_data.items():
-                if base_info["detectedDropoffs"] > self.bases_data[base_name]["detectedDropoffs"]:
-                    # Send a radio message
-                    voice_model = self.bases_data[base_name].get("voiceModel", "bm_daniel")
-                    response = RESPONSE_TEMPLATES["cargo_dropped"]
-                    future = self.api.generate_audio_message_in_executor(response, voice=voice_model)
-                    future.add_done_callback(lambda audio_file: self.listeners[base_name].transmit_on_frequency(file_name=audio_file.result()))
+                if base_name in self.bases_data and "detectedDropoffs" in base_info and "detectedDropoffs" in self.bases_data[base_name]:
+                    if base_info["detectedDropoffs"] > self.bases_data[base_name]["detectedDropoffs"]:
+                        # Send a radio message
+                        voice_model = self.bases_data[base_name].get("voiceModel", "bm_daniel")
+                        response = RESPONSE_TEMPLATES["cargo_dropped"]
+                        future = self.api.generate_audio_message_in_executor(response, voice=voice_model)
+                        future.add_done_callback(lambda audio_file: self.listeners[base_name].transmit_on_frequency(file_name=audio_file.result()))
 
             self.bases_data = custom_data
 
