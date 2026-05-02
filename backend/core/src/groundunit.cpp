@@ -336,6 +336,10 @@ void GroundUnit::AIloop()
 	case State::SIMULATE_FIRE_FIGHT: {
 		string taskString = "";
 
+		/* Compute the target position. */
+		double distance = 0;
+		Unit* target = nullptr;
+
 		/* If we are in simulate engagement mode we compute the target position dinamically depending on the position of the clostest "enemy" */
 		if (state == State::SIMULATE_ENGAGEMENT) {
 			/* Do nothing if true neutral unit, but don't transition to IDLE */
@@ -345,11 +349,8 @@ void GroundUnit::AIloop()
 				return;
 			}
 
-			/* Compute the target position. */
-			double distance = 0;
-
 			unsigned char targetCoalition = unitEffectiveCoalition == 2 ? 1 : 2;
-			Unit* target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);
+			target = unitsManager->getClosestUnit(this, targetCoalition, { "GroundUnit" }, distance, false);
 
 			/* Set the target position as the target unit position */
 			if (target != nullptr && distance < 3 * engagementRange)
@@ -370,13 +371,30 @@ void GroundUnit::AIloop()
 				updateScenicFunctionProbability();
 
 				/* Randomly choose if we want to shoot */
-				if ((RANDOM_ZERO_TO_ONE > (1 - scenicFunctionProbability))) 
-					/* Shoot at the target. Indirect fire or aim point method will be used depending on the unit type */
-					taskString += scenicShootAtCoordinates(applyScatterToTarget(targetPosition));
+				/* If the target is in targeting range and we are in highest precision mode, target it */
+				if (distance < targetingRange && shotsScatter == ShotsScatter::LOW && target != nullptr) {
+					taskString += "Range is less than targeting range (" + to_string((int)round(targetingRange)) + "m) and scatter is LOW, aiming at target.";
 
-				/* Randomly choose if we want to throw a grenade */ 
-				if (RANDOM_ZERO_TO_ONE < (1 - scenicFunctionProbability) * 0.05) 
-					taskString += scenicThrowGranadeAtCoordinates(targetPosition);
+					/* Send the command */
+					std::ostringstream taskSS;
+					taskSS.precision(10);
+					taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
+					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+					scheduler->appendCommand(command);
+					shellsFiredAtTasking = totalShellsFired;
+					setHasTask(true);
+
+					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(2 * aimTime * 1000);
+				}
+				else {
+					if ((RANDOM_ZERO_TO_ONE > (1 - scenicFunctionProbability)))
+						/* Shoot at the target. Indirect fire or aim point method will be used depending on the unit type */
+						taskString += scenicShootAtCoordinates(applyScatterToTarget(targetPosition, true));
+
+					/* Randomly choose if we want to throw a grenade */
+					if (RANDOM_ZERO_TO_ONE < (1 - scenicFunctionProbability) * 0.05)
+						taskString += scenicThrowGranadeAtCoordinates(targetPosition);
+				}
 				
 			}
 		}
@@ -548,7 +566,7 @@ void GroundUnit::fireAtArea(Coords aimTarget) {
 	setHasTask(true);
 }
 
-Coords GroundUnit::applyScatterToTarget(Coords aimTarget) {
+Coords GroundUnit::applyScatterToTarget(Coords aimTarget, bool scatterVertically) {
 	/* Get the distance and bearing to the target */
 	Coords scatteredTargetPosition = aimTarget;
 	double distance;
@@ -562,6 +580,13 @@ Coords GroundUnit::applyScatterToTarget(Coords aimTarget) {
 	/* Compute the scattered position applying a random scatter to the shot */
 	double scatterDistance = distance * tan(10 /* degs */ * (ShotsScatter::LOW - shotsScatter) / 57.29577 + 2 / 57.29577 /* degs */) * RANDOM_MINUS_ONE_TO_ONE;
 	Geodesic::WGS84().Direct(scatteredTargetPosition.lat, scatteredTargetPosition.lng, bearing1, scatterDistance, scatteredTargetPosition.lat, scatteredTargetPosition.lng);
+
+	/* Scatter the altitude of the target by increasing by a random amount between 0% and 5% of the distance */
+	if (scatterVertically && scatteredTargetPosition.alt != NULL) {
+		double scatterAltitude = distance * 0.05 * RANDOM_ZERO_TO_ONE;
+		scatteredTargetPosition.alt += scatterAltitude;
+	}
+
 	return scatteredTargetPosition;
 }
 
@@ -576,7 +601,7 @@ string GroundUnit::aimAtPointMethod(Coords aimTarget) {
 	double r = 15; /* m */
 
 	/* Compute the elevation angle of the gun*/
-	double deltaHeight = (aimTarget.alt - (position.alt + barrelHeight));
+	double deltaHeight = (aimTarget.alt - (position.alt + barrelHeight)) + 2;
 	double alpha = 9.81 / 2 * dist * dist / (muzzleVelocity * muzzleVelocity);
 	double inner = dist * dist - 4 * alpha * (alpha + deltaHeight);
 

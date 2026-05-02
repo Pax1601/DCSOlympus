@@ -20,7 +20,7 @@ public:
 
 	void fireAtArea(Coords aimTarget);
 
-	Coords applyScatterToTarget(Coords aimTarget);
+	Coords applyScatterToTarget(Coords aimTarget, bool scatterVertically = false);
 
 	string aimAtPointMethod(Coords aimTarget);
 	void indirectFireMethod(Coords aimTarget);

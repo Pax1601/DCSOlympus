@@ -394,7 +394,8 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			unit->setDesiredAltitudeType(to_string(value[L"altitudeType"]));
 			log(username + " set " + unit->getUnitName() + "(" + unit->getName() + ") altitude type: " + to_string(value[L"altitudeType"]), true);
 		}
-	}/************************/
+	}
+	/************************/
 	else if (key.compare("setRacetrack") == 0)
 	{
 		unsigned int ID = value[L"ID"].as_integer();
