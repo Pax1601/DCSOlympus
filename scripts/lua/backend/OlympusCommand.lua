@@ -798,7 +798,7 @@ function Olympus.generateAirUnitsTable(units)
 			["payload"] = payload, 
 			["heading"] = unit.heading,
 			["callsign"] = { [1] = 1, [2] = 1, [3] = 1, ["name"] = "Olympus" .. Olympus.unitCounter.. "-" .. #unitsTable + 1 },
-			["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
+			["name"] = unit.name or "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 			["livery_id"] = unit.liveryID
 		}
 	end
@@ -875,7 +875,7 @@ function Olympus.generateGroundUnitsTable(units)
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = unit.skill,
-					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
+					["name"] = unit.name or "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1
 				}
 			end 
 		else
@@ -886,7 +886,7 @@ function Olympus.generateGroundUnitsTable(units)
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
 				["skill"] = unit.skill,
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
+				["name"] = unit.name or "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["livery_id"] = unit.liveryID
 			}
 		end
@@ -909,7 +909,7 @@ function Olympus.generateNavyUnitsTable(units)
 					["y"] = spawnLocation.z + value.dy,
 					["heading"] = 0,
 					["skill"] = unit.skill,
-					["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
+					["name"] = unit.name or "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 					["transportable"] = { ["randomTransportable"] = false }
 				}
 			end 
@@ -921,7 +921,7 @@ function Olympus.generateNavyUnitsTable(units)
 				["y"] = spawnLocation.z,
 				["heading"] = unit.heading,
 				["skill"] = unit.skill,
-				["name"] = "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
+				["name"] = unit.name or "Olympus-" .. Olympus.unitCounter .. "-" .. #unitsTable + 1,
 				["transportable"] = { ["randomTransportable"] = false },
 				["livery_id"] = unit.liveryID
 			}

@@ -42,8 +42,13 @@ string SpawnGroundUnits::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {" 
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+		}
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "heading = " << spawnOptions[i].heading << ", "
@@ -69,8 +74,13 @@ string SpawnNavyUnits::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+        }
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "heading = " << spawnOptions[i].heading << ", "
@@ -95,8 +105,13 @@ string SpawnAircrafts::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+        }
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
@@ -126,8 +141,13 @@ string SpawnHelicopters::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+        }
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "

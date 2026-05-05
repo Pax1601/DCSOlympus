@@ -249,7 +249,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			if (unit.has_string_field(L"payload"))
 				payload = to_string(unit[L"payload"]);
 
-			spawnOptions.push_back({ unitType, location, loadout, skill, liveryID, heading, payload });
+			string name = "";
+			if (unit.has_string_field(L"name"))
+				name = to_string(unit[L"name"]);
+
+			spawnOptions.push_back({ unitType, location, loadout, skill, liveryID, heading, payload, name });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
@@ -284,7 +288,11 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 
-			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading });
+			string name = "";
+			if (unit.has_string_field(L"name"))
+				name = to_string(unit[L"name"]);
+
+			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading, name });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
