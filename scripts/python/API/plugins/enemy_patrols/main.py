@@ -15,6 +15,7 @@ from plugin_base import Plugin
 ##Lets setup some basic globals
 FIRST_RUN = None
 STORED_ZONES = []
+counter = 0
 
 class RedPatrolUnit:
     def __init__(self, owner_plugin, unit_id, location, enemy_patrols_plugin_state="fight"):
@@ -27,10 +28,12 @@ class RedPatrolUnit:
 
 
     def spawn_red_inf(self, api: API):
+        global counter
         # Implement the logic to spawn the unit using the API
         self.api = api
         units = [
                 UnitSpawnTable(
+                    name=f"Tony is a cunt {counter}",
                     unit_type="Infantry AK Ins",
                     location=self.location,
                     skill="Average",
@@ -39,6 +42,8 @@ class RedPatrolUnit:
                     heading=random.randint(0, 360),
                     )
                 ]
+        
+        counter += 1
 
         api.spawn_ground_units(
             units=units,

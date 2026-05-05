@@ -12,6 +12,7 @@ class UnitSpawnTable:
     altitude: Optional[int] = None
     loadout: Optional[str] = None
     heading: Optional[int] = None
+    name: Optional[str] = ""
     
     def toJSON(self):
         """Convert the unit spawn table to a JSON serializable dictionary."""
@@ -26,5 +27,6 @@ class UnitSpawnTable:
             "liveryID": self.livery_id,
             "altitude": self.altitude,
             "loadout": self.loadout,
-            "heading": self.heading
+            "heading": self.heading,
+            "name": self.name
         }
