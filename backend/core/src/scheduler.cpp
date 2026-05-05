@@ -292,7 +292,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			if (unit.has_string_field(L"name"))
 				name = to_string(unit[L"name"]);
 
-			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading, name });
+			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading, "", name});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
