@@ -230,6 +230,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			return;
 		}
 
+		string groupName = "";
+		if (value.has_string_field(L"groupName"))
+			groupName = to_string(value[L"groupName"]);
+
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
@@ -258,9 +262,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 
 		if (key.compare("spawnAircrafts") == 0)
-			command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, country, groupName, immediate));
 		else
-			command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, country, groupName, immediate));
 	}
 	/************************/
 	else if (key.compare("spawnGroundUnits") == 0 || key.compare("spawnNavyUnits") == 0)
@@ -274,6 +278,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			log(username + " insufficient spawn points ", true);
 			return;
 		}
+
+		string groupName = "";
+		if (value.has_string_field(L"groupName"))
+			groupName = to_string(value[L"groupName"]);
 
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
@@ -297,9 +305,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		}
 
 		if (key.compare("spawnGroundUnits") == 0)
-			command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, country, groupName, immediate));
 		else
-			command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, country, groupName, immediate));
 	}
 	/************************/
 	else if (key.compare("attackUnit") == 0)

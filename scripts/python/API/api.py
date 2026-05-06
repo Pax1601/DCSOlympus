@@ -581,7 +581,7 @@ class API:
         else:
             self.logger.error(f"Failed to fetch custom data: {response.status_code}")
 
-    def spawn_aircrafts(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
+    def spawn_aircrafts(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None, groupName: str = ""):
         """
         Spawn aircraft units at the specified location or airbase.
         Args:
@@ -592,6 +592,7 @@ class API:
             immediate (bool): Whether to spawn the units immediately or not, overriding the scheduler.
             spawnPoints (int): Amount of spawn points to use, default is 0.
             execution_callback (function): An optional async callback function to execute after the command is processed.
+            groupName (str): Optional name for the group of units being spawned. If not provided, a default name will be generated.
         """
         command = {
             "units": [unit.toJSON() for unit in units],
@@ -600,6 +601,7 @@ class API:
             "country": country,
             "immediate": immediate,
             "spawnPoints": spawnPoints,
+            "groupName": groupName
         }
         data = { "spawnAircrafts": command }
         response = self._put(data)
@@ -618,7 +620,7 @@ class API:
             except Exception as e:
                 self.logger.error(f"Failed to parse JSON response: {e}")
         
-    def spawn_helicopters(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
+    def spawn_helicopters(self, units: list[UnitSpawnTable], coalition: str, airbaseName: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None, groupName: str = ""):
         """
         Spawn helicopter units at the specified location or airbase.
         Args:
@@ -629,6 +631,7 @@ class API:
             immediate (bool): Whether to spawn the units immediately or not, overriding the scheduler.
             spawnPoints (int): Amount of spawn points to use, default is 0.
             execution_callback (function): An optional async callback function to execute after the command is processed.
+            groupName (str): Optional name for the group of units being spawned. If not provided, a default name will be generated.
         """
         command = {
             "units": [unit.toJSON() for unit in units],
@@ -637,6 +640,7 @@ class API:
             "country": country,
             "immediate": immediate,
             "spawnPoints": spawnPoints,
+            "groupName": groupName
         }
         data = { "spawnHelicopters": command }
         response = self._put(data)
@@ -655,7 +659,7 @@ class API:
             except Exception as e:
                 self.logger.error(f"Failed to parse JSON response: {e}")
         
-    def spawn_ground_units(self, units: list[UnitSpawnTable], coalition: str, country: str, immediate: bool, spawnPoints: int, execution_callback):
+    def spawn_ground_units(self, units: list[UnitSpawnTable], coalition: str, country: str, immediate: bool, spawnPoints: int, execution_callback=None, groupName: str = ""):
         """
         Spawn ground units at the specified location.
         Args:
@@ -665,6 +669,7 @@ class API:
             immediate (bool): Whether to spawn the units immediately or not, overriding the scheduler.
             spawnPoints (int): Amount of spawn points to use.
             execution_callback (function): An async callback function to execute after the command is processed.
+            groupName (str): Optional name for the group of units being spawned. If not provided, a default name will be generated.
         """
         command = {
             "units": [unit.toJSON() for unit in units],
@@ -672,6 +677,7 @@ class API:
             "country": country,
             "immediate": immediate,
             "spawnPoints": spawnPoints,
+            "groupName": groupName
         }
         data = { "spawnGroundUnits": command }
         response = self._put(data)
@@ -689,7 +695,7 @@ class API:
         except Exception as e:
             self.logger.error(f"Failed to parse JSON response: {e}")
             
-    def spawn_navy_units(self, units: list[UnitSpawnTable], coalition: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None):
+    def spawn_navy_units(self, units: list[UnitSpawnTable], coalition: str, country: str, immediate: bool, spawnPoints: int = 0, execution_callback=None, groupName: str = ""):
         """
         Spawn navy units at the specified location.
         Args:
@@ -699,6 +705,7 @@ class API:
             immediate (bool): Whether to spawn the units immediately or not, overriding the scheduler.
             spawnPoints (int): Amount of spawn points to use, default is 0.
             execution_callback (function): An optional async callback function to execute after the command is processed.
+            groupName (str): Optional name for the group of units being spawned. If not provided, a default name will be generated.
         """
         command = {
             "units": [unit.toJSON() for unit in units],
@@ -706,6 +713,7 @@ class API:
             "country": country,
             "immediate": immediate,
             "spawnPoints": spawnPoints,
+            "groupName": groupName
         }
         data = { "spawnNavyUnits": command }
         response = self._put(data)
