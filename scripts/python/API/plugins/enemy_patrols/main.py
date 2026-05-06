@@ -16,6 +16,7 @@ from plugin_base import Plugin
 FIRST_RUN = None
 STORED_ZONES = []
 counter = 0
+CUNTer = 0
 
 class RedPatrolUnit:
     def __init__(self, owner_plugin, unit_id, location, enemy_patrols_plugin_state="fight"):
@@ -51,8 +52,10 @@ class RedPatrolUnit:
             country="",   # pick a valid neutral country in your mission
             immediate=True,
             spawnPoints=0,
+            groupName=f"Tony is a REAL cunt {CUNTer}",
             execution_callback=self.execution_callback,
         )
+        CUNTer += 1
         self.logger.info(f"Spawning red patrol unit {self.unit_id} at location {self.location} with patrol state {self.enemy_patrols_plugin_state}")
 
     async def execution_callback(self, command_result):
