@@ -26,15 +26,27 @@ class RedPatrolUnit:
         self.enemy_patrols_plugin_state = enemy_patrols_plugin_state
         self.api: API | None = None
         self.logger = owner_plugin.logger
+        self.max_units = owner_plugin.max_units
 
 
     def spawn_red_inf(self, api: API):
-        global counter
+        global counter, CUNTer
         # Implement the logic to spawn the unit using the API
         self.api = api
+        get_existing_units = api.update_units()
+        for existing_unit in get_existing_units:
+            #we'll check if the same named unit exists as we're about to make and if it does just respawn the thing again at the same location as the existing unit nice and easy
+            existing_unit_object = get_existing_units[existing_unit]
+            if existing_unit_object.unit_name == f"VC_TIAC_{counter}" and existing_unit_object.alive:
+                self.location = existing_unit_object.position
+                print(f"Unit with name VC_TIAC_{counter} already exists, respawning at existing location {self.location}")
+                self.location.lat += random.uniform(-0.000001, 0.000001) #we add a small random offset to the location so we dont spawn on top of the existing unit and cause issues with pathfinding and stuff, this is just a small random offset for testing and can be adjusted later if needed
+                self.location.lng += random.uniform(-0.000001, 0.000001) #we add a small random offset to the location so we dont spawn on top of the existing unit and cause issues with pathfinding and stuff, this is just a small random offset for testing and can be adjusted later if needed
+                break
+
         units = [
                 UnitSpawnTable(
-                    name=f"Tony is a cunt {counter}",
+                    name=f"VC_TIAC_{counter}",
                     unit_type="Infantry AK Ins",
                     location=self.location,
                     skill="Average",
@@ -46,17 +58,18 @@ class RedPatrolUnit:
         
         counter += 1
 
-        api.spawn_ground_units(
-            units=units,
-            coalition="neutral",
-            country="",   # pick a valid neutral country in your mission
-            immediate=True,
-            spawnPoints=0,
-            groupName=f"Tony is a REAL cunt {CUNTer}",
-            execution_callback=self.execution_callback,
-        )
-        CUNTer += 1
-        self.logger.info(f"Spawning red patrol unit {self.unit_id} at location {self.location} with patrol state {self.enemy_patrols_plugin_state}")
+        if counter < self.max_units:            
+            api.spawn_ground_units(
+                units=units,
+                coalition="neutral",
+                country="",   # pick a valid neutral country in your mission
+                immediate=True,
+                spawnPoints=0,
+                groupName=f"VC_TIAC_{CUNTer}",
+                execution_callback=self.execution_callback,
+            )
+            CUNTer += 1
+            self.logger.info(f"Spawning red patrol unit {self.unit_id} at location {self.location} with patrol state {self.enemy_patrols_plugin_state}")
 
     async def execution_callback(self, command_result):
         self.owner_plugin.register_pending_spawn_initialization(command_result, self.enemy_patrols_plugin_state)
@@ -78,6 +91,7 @@ class EnemyPatrols(Plugin):
         self.max_town_groups_of_units = int(self.config.get("max_town_groups_of_units", 3))
         self.suppression_trigger_level = float(self.config.get("suppression_trigger_level", 0.5))
         self.suppression_clear_level = float(self.config.get("suppression_clear_level", 0.25))
+        self.max_units = int(self.config.get("max_units", 200))
         self.pending_spawn_initializations = {}
 
         self.api: API | None = None  # Will be set when the plugin is started
