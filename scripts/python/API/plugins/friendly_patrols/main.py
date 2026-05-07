@@ -47,10 +47,6 @@ class Group:
     pending_zone_search_report_message: str | None = None
     extraction_requested: bool = False
     peak_total_ammo: int = 0
-    active_contact_enemy_ids: set[str] | None = None
-    observed_contact_enemy_ids: set[str] | None = None
-    last_resolved_contact_enemy_count: int = 0
-    last_resolved_contact_time: float | None = None
 
 class FriendlyPatrols(Plugin):
     def __init__(self, plugin_info, global_config=None):
@@ -127,7 +123,7 @@ class FriendlyPatrols(Plugin):
             self.logger.info("Kokoro voice model: %s", self.kokoro_voice_model)
             self.logger.info("Friendly modulation: %s", self.modulation)
 
-            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'))
+            self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'), SRS_folder=self.global_config.get('SRS_folder', '.')   )
             self.api.interval = self.update_interval
             self.api.register_on_update_callback(self.on_update)
 
@@ -205,7 +201,6 @@ class FriendlyPatrols(Plugin):
     def on_update(self, api: API):
         if not self.running or self.paused:
             return
-        self._refresh_group_contact_state()
         self._dispatch_pending_contact_reports()
         self._dispatch_pending_zone_search_reports()
         self._check_groups_for_extraction_requests()
@@ -225,14 +220,13 @@ class FriendlyPatrols(Plugin):
         select_store_check_keywords = ["yes", "no"]
         show_keywords = ["show", "list"]
         hold_keywords = ["hold", "defend"]
-        regroup_keywords = ["regroup", "rally up", "close up", "form up"]
+        regroup_keywords = ["regroup"]
         position_report_keywords = ["position", "pos"]
-        position_request_keywords = ["say", "read", "report", "where"]
-        status_report_keywords = ["report", "status", "update", "what are you doing", "check in", "sitrep"]
+        position_request_keywords = ["read", "report"]
         patrol_keywords = ["patrol","move", "control"]
         settlement_keywords = ["search","village", "town", "building", "buildings", "hut", "huts", "house", "town centre", "town center", "zone"]
         smoke_keywords = ["smoke"]
-        remove_group_keywords = ["remove", "delete", "dissolve", "disband"]
+        remove_group_keywords = ["remove", "delete"]
         unit = self._resolve_unit(unitID)
         response = None
 
@@ -264,7 +258,17 @@ class FriendlyPatrols(Plugin):
         if any(keyword in normalized_message for keyword in select_keywords):
             self.logger.info(f"Unit {unitID} wants to select.")
             radius_match = re.search(r"(\d+)\s*(meters|m)?", normalized_message)
-            radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
+            radius_match_commas = re.search(r"(\d+)\s*(,|\s)?(\d+)\s*(meters|m)?", normalized_message)
+            joined_radius = None
+            if radius_match_commas is not None and radius_match_commas.group(2) == ",":
+                joined_radius = radius_match_commas.group(1) + radius_match_commas.group(3)
+                if joined_radius is not None:
+                    radius = int(joined_radius)
+                else:
+                    radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
+            else:
+                radius = int(radius_match.group(1)) if radius_match else self.default_select_radius
+
             get_units_within_radius = self.get_units_within_radius(unit, radius)
             if self.get_units_within_radius is None or len(get_units_within_radius) == 0:
                 self.logger.warning(f"Failed to get any nearby units for unitID {unitID}.")
@@ -352,21 +356,20 @@ class FriendlyPatrols(Plugin):
                 if controlled_group is None:
                     response = "That squad no longer exists. Say show squads to hear the current squad list."
                 else:
-                    response = self._report_group_position(controlled_group)
+                    if "last" in normalized_message and "contact" in normalized_message:
+                        if hasattr(controlled_group, "last_zone_contact_report"):
+                            response = controlled_group.last_zone_contact_report if controlled_group.last_zone_contact_report else "No recent contact reports available for that squad."
+                        else:
+                            response = "No contact reports available for that squad."
+                    elif "last" in normalized_message and "recon" in normalized_message:
+                        if hasattr(controlled_group, "last_zone_search_report"):
+                            response = controlled_group.last_zone_search_report if controlled_group.last_zone_search_report else "No recent recon reports available for that squad."
+                        else:
+                            response = "No recent recon reports available for that squad."
+                    else:
+                        response = self._report_group_position(controlled_group)
             else:
                 response = "Please specify which squad should report position."
-        elif any(keyword in normalized_message for keyword in status_report_keywords):
-            self.logger.info(f"Unit {unitID} requested squad status report.")
-            if self.groups is None or len(self.groups) == 0:
-                response = "No squads available to report status."
-            elif any(group_name in normalized_message for group_name in self.group_names):
-                controlled_group = self._find_group_by_name(normalized_message)
-                if controlled_group is None:
-                    response = "That squad no longer exists. Say show squads to hear the current squad list."
-                else:
-                    response = self._report_group_status(controlled_group)
-            else:
-                response = "Please specify which squad should report status."
         elif any(keyword in normalized_message for keyword in patrol_keywords):
             self.logger.info(f"Unit {unitID} wants to start a patrol.")
             if self.groups is None or len(self.groups) == 0:
@@ -430,6 +433,48 @@ class FriendlyPatrols(Plugin):
                 response = "Please specify which squad to control."
             # Implement patrol logic here
 
+
+        # Handle generic 'report' or 'send report' commands for better UX
+        elif "report" in normalized_message:
+            self.logger.info(f"Unit {unitID} requested a generic report.")
+            if self.groups is None or len(self.groups) == 0:
+                response = "No squads available to report."
+            elif any(group_name in normalized_message for group_name in self.group_names):
+                controlled_group = self._find_group_by_name(normalized_message)
+                if controlled_group is None:
+                    response = "That squad no longer exists. Say show squads to hear the current squad list."
+                else:
+                    # If user asks for last contact or last recon, honor that
+                    if "last" in normalized_message and "contact" in normalized_message:
+                        last_contact = getattr(controlled_group, "last_zone_contact_report", None)
+                        response = last_contact if last_contact else "No recent contact reports available for that squad."
+                    elif "last" in normalized_message and "recon" in normalized_message:
+                        last_recon = getattr(controlled_group, "last_zone_search_report", None)
+                        response = last_recon if last_recon else "No recent recon reports available for that squad."
+                    else:
+                        # Always provide a status report for generic report requests
+                        movement_order = getattr(controlled_group, "movement_order", None) or {}
+                        status = None
+                        if movement_order.get("patrolling"):
+                            # If moving, estimate distance to go
+                            final_dest = movement_order.get("final_destination")
+                            unit = self._resolve_unit(controlled_group.units[0].ID) if controlled_group.units else None
+                            if unit and final_dest and hasattr(unit, "position") and unit.position:
+                                meters_to_go = int(unit.position.distance_to(final_dest))
+                                status = f"{controlled_group.name} is patrolling, {meters_to_go} meters to go."
+                            else:
+                                status = f"{controlled_group.name} is patrolling."
+                        elif movement_order.get("search_zone") or movement_order.get("target_zone"):
+                            status = f"{controlled_group.name} is searching a zone."
+                        elif movement_order.get("hold_position") or movement_order.get("holding"):
+                            status = f"{controlled_group.name} is holding position."
+                        elif movement_order.get("regroup"):
+                            status = f"{controlled_group.name} is regrouping."
+                        else:
+                            status = f"{controlled_group.name} is awaiting orders."
+                        response = status
+            else:
+                response = "Please specify which squad should report."
         else:
             response = "Say again."
 
@@ -543,200 +588,6 @@ class FriendlyPatrols(Plugin):
 
         return f"{group.name}, position, grid {spoken_grid}, out."
 
-    def _report_group_status(self, group: Group) -> str:
-        activity_report = self._build_group_activity_report(group)
-        contact_report = self._build_group_contact_status_report(group)
-        contact_aftermath = self._build_group_contact_aftermath_report(group)
-        dispersion_report = self._build_group_dispersion_report(group)
-        casualty_report = self._build_group_casualty_report(group)
-
-        report_parts = [f"{group.name}, {activity_report}"]
-        if casualty_report:
-            report_parts.append(casualty_report)
-        if dispersion_report:
-            report_parts.append(dispersion_report)
-        if contact_report:
-            report_parts.append(contact_report)
-        elif contact_aftermath:
-            report_parts.append(contact_aftermath)
-
-        return ", ".join(report_parts) + "."
-
-    def _build_group_activity_report(self, group: Group) -> str:
-        movement_order = group.movement_order or {}
-        direction = movement_order.get("direction")
-
-        if direction == "to nearby settlement":
-            zone_name = movement_order.get("target_zone_name") or "the local village"
-            remaining_time = self._get_group_zone_search_remaining_time(group, movement_order)
-            if remaining_time is not None:
-                return f"we are heading towards {zone_name} and should be there in roughly {remaining_time}"
-            return f"we are heading towards {zone_name}"
-
-        if direction == "hold":
-            average_position = self._get_group_average_position(group)
-            spoken_grid = self._format_mgrs_for_readback(self._format_enemy_mgrs(average_position)) if average_position else "unknown"
-            return f"we are defending our position, grid {spoken_grid}"
-
-        if direction:
-            remaining_distance = self._get_group_remaining_patrol_distance(group)
-            if remaining_distance is not None:
-                return f"we are currently on patrol, heading {direction} with roughly {remaining_distance} metres left to go"
-            return f"we are currently on patrol, heading {direction}"
-
-        average_position = self._get_group_average_position(group)
-        if average_position is None:
-            return "no living units remain to report"
-
-        spoken_grid = self._format_mgrs_for_readback(self._format_enemy_mgrs(average_position)) or "unknown"
-        return f"we are holding in place near grid {spoken_grid}"
-
-    def _get_group_zone_search_remaining_time(self, group: Group, movement_order: dict) -> str | None:
-        due_time = group.pending_zone_search_report_time or movement_order.get("zone_search_report_time")
-        if due_time is None:
-            return None
-
-        remaining_seconds = max(0.0, due_time - time.monotonic())
-        return self._format_rough_duration(remaining_seconds)
-
-    def _get_group_remaining_patrol_distance(self, group: Group) -> int | None:
-        movement_order = group.movement_order or {}
-        tracked_units = movement_order.get("units", {})
-        remaining_distances = []
-
-        for unit_id, unit_order in tracked_units.items():
-            patrol_unit = self._resolve_unit(unit_id)
-            final_destination = unit_order.get("final_destination")
-            if patrol_unit is None or not patrol_unit.alive or patrol_unit.position is None or final_destination is None:
-                continue
-            remaining_distances.append(patrol_unit.position.distance_to(final_destination))
-
-        if not remaining_distances:
-            return None
-
-        average_remaining_distance = sum(remaining_distances) / len(remaining_distances)
-        return self._round_to_nearest(average_remaining_distance, 50)
-
-    def _build_group_contact_status_report(self, group: Group) -> str | None:
-        friendly_center, enemy_center, enemy_units = self._get_group_contact_centers(group)
-        if friendly_center is None or enemy_center is None or not enemy_units:
-            return None
-
-        bearing = friendly_center.bearing_to(enemy_center)
-        direction = self._bearing_to_cardinal_direction(bearing)
-        distance = friendly_center.distance_to(enemy_center)
-        distance_text = self._describe_contact_distance(distance)
-        enemy_force_text = self._describe_enemy_forces(enemy_units)
-        return f"we have made contact with {enemy_force_text} {direction}, {distance_text}"
-
-    def _build_group_contact_aftermath_report(self, group: Group) -> str | None:
-        resolved_count = group.last_resolved_contact_enemy_count
-        resolved_time = group.last_resolved_contact_time
-        if resolved_count <= 0 or resolved_time is None:
-            return None
-
-        if time.monotonic() - resolved_time > 900.0:
-            return None
-
-        if resolved_count >= 20:            
-            return random.choice([
-                f"heavy contact here, we are counting at least {self._approximate_count_phrase(resolved_count)} bodies, more blood drag marks heading into the jungle, likely more casualties than we are seeing here",
-                f"area is littered with gear and blood, only a handful of bodies but signs suggest a lot W I A or K I A, maybe {self._approximate_count_phrase(resolved_count)} total as a guess.",
-                f"we ave located around {self._approximate_count_phrase(resolved_count)} K I A so far, still finding trails leading deeper into the trees, estimate multiple squads destroyed",
-                f"not many bodies visible, maybe three or four, but significant blood loss and abandoned kit suggests higher numbers",
-                f"clear signs of a firefight, we have counted ten plus bodies, more tracks leading away, unsure how many made it",
-                f"we are seeing scattered equipment, limbs and blood everywhere, no solid count but likely a large number taken out or injured",
-                f"found roughly a dozen KIA, more evidence of casualties dragged off, possibly an enemy squad or two destroyed",
-                f"light on bodies, but extensive blood trails and discarded weapons indicate heavier losses",
-                f"we ave got upwards of twenty bodies here, still searching but signs point to a major engagement",
-                f"evidence of multiple casualties, only a few confirmed KIA, but plenty of bandages and blood trails heading west",
-                f"looks like a hard fight for them, about {self._approximate_count_phrase(resolved_count)} bodies counted, more signs of wounded moving out in a hurry",
-                f"no confirmed bodies yet, but significant bloodshed and abandoned gear suggest serious casualties, they've slipped away",
-                f"we are estimating twenty plus K I A down here based on what we are seeing, though not everyone is accounted for here yet",
-                f"several bodies located, maybe eight or nine, but signs indicate more were evacuated or fled wounded",
-                f"heavy blood trails throughout the area, only a couple of bodies, likely many more injured",
-                f"we ave counted close to twenty KIA, with additional signs pointing to further losses beyond this point",
-                f"minimal bodies, but clear signs of a chaotic withdrawal, likely sustained heavy casualties",
-                f"around ten confirmed K I A, more tracks and blood leading away, unknown total",
-                f"evidence suggests multiple squads engaged, only a few bodies here but significant signs of damage inflicted, maybe {self._approximate_count_phrase(resolved_count)} plus",
-                f"we are seeing widespread signs of casualties, estimate {self._approximate_count_phrase(resolved_count)} or more killed",
-                f"you won't believe what we just found, massive weapon cache we're destroying it now and booby trapping everything else, we got loads of them maybe {self._approximate_count_phrase(resolved_count)} plus",
-                f"found a nice cache of food and supplies they were defending here, killed loads of them, just searching the bodies now, early estimates 20 plus K I A"
-                f"we killed a lot, maybe {self._approximate_count_phrase(resolved_count)} or so, but we found something really important on one of the bodies, I am not saying what it is over the air but it's a big win for us."
-                ])
-        if resolved_count >= 10:
-            return random.choice([
-                f"light contact here, we are counting maybe {self._approximate_count_phrase(resolved_count)} bodies, a few blood trails heading off but nothing major",
-                f"area shows signs of a small skirmish, only a handful of bodies and some scattered gear, estimate low numbers overall",
-                f"we ave located around {self._approximate_count_phrase(resolved_count)} K I A so far, a few trails leading away, likely some wounded got out",
-                f"not many bodies visible, maybe one or two, light blood loss and minimal abandoned kit",
-                f"clear signs of a brief firefight, we have counted under ten bodies, some tracks leading away",
-                f"we are seeing limited equipment and some blood, no solid count but looks like minor losses",
-                f"found a few K I A, some evidence of casualties dragged off, possibly a small unit hit",
-                f"light on bodies, only a couple, with some blood trails and discarded weapons",
-                f"we ave got a small number of bodies here, still checking but looks like a minor engagement",
-                f"evidence of limited casualties, only a few confirmed K I A, some bandages and blood trails nearby",
-                f"looks like a short fight, about {self._approximate_count_phrase(resolved_count)} bodies counted, not much sign of extended contact",
-                f"no confirmed bodies yet, but light bloodshed and a bit of abandoned gear suggests a few casualties",
-                f"we are estimating under ten K I A based on what we are seeing, not all accounted for",
-                f"several bodies located, maybe three or four, signs indicate a few more may have withdrawn wounded",
-                f"light blood trails throughout the area, only one or two bodies, likely a few injured",
-                f"we ave counted a small number of K I A, with minor signs pointing to additional losses beyond this point",
-                f"minimal bodies, signs of a quick withdrawal, likely took a few casualties",
-                f"around a handful confirmed K I A, a few tracks and blood leading away",
-                f"evidence suggests a small unit engaged, only a few bodies here and limited signs of damage inflicted",
-                f"we are seeing light signs of casualties, estimate {self._approximate_count_phrase(resolved_count)} or fewer killed",
-                f"we found a small weapon cache here, being destroyed now, looks like only a few defenders maybe {self._approximate_count_phrase(resolved_count)}",
-                f"found some supplies they were holding, only light resistance, just a few bodies here, estimate under ten K I A",
-                f"we took a few out, maybe {self._approximate_count_phrase(resolved_count)} or so, nothing major but worth noting"
-            ])
-        return f"we found about {self._approximate_count_phrase(resolved_count)} enemy bodies"
-
-    def _build_group_dispersion_report(self, group: Group) -> str | None:
-        spread_distance = self._get_group_spread_distance(group)
-        if spread_distance is None or spread_distance <= 200.0:
-            return None
-
-        rounded_spread = self._round_to_nearest(spread_distance, 50)
-        return f"we are fairly spread out, about {rounded_spread} metres across"
-
-    def _build_group_casualty_report(self, group: Group) -> str | None:
-        total_units = len(group.units)
-        if total_units == 0:
-            return None
-
-        casualties = 0
-        for squad_unit in group.units:
-            current_unit = self._resolve_unit(squad_unit.ID)
-            if current_unit is None:
-                if self._is_unit_embarked(squad_unit.ID):
-                    continue
-                casualties += 1
-                continue
-            if not current_unit.alive:
-                casualties += 1
-
-        if casualties <= 0:
-            return None
-
-        if casualties >= total_units:
-            return "the squad has been wiped out"
-        if casualties == 1:
-            return "we have taken 1 casualty"
-        return f"we have taken {casualties} casualties"
-
-    def _is_unit_embarked(self, unit_id) -> bool:
-        if self.api is None:
-            return False
-
-        unit_id_str = str(unit_id)
-        for candidate_unit in self.api.get_units().values():
-            on_board_units = getattr(candidate_unit, "on_board_units_IDs", []) or []
-            if any(str(on_board_unit_id) == unit_id_str for on_board_unit_id in on_board_units):
-                return True
-
-        return False
-
     def _get_group_smoke_unit(self, group: Group) -> Unit | None:
         for squad_unit in group.units:
             current_unit = self._resolve_unit(squad_unit.ID)
@@ -762,24 +613,6 @@ class FriendlyPatrols(Plugin):
         average_lng = sum(self._get_position_lng(position) for position in active_positions) / len(active_positions)
         average_alt = sum(position.alt for position in active_positions) / len(active_positions)
         return LatLng(average_lat, average_lng, average_alt)
-
-    def _get_group_spread_distance(self, group: Group) -> float | None:
-        active_positions = []
-        for squad_unit in group.units:
-            current_unit = self._resolve_unit(squad_unit.ID)
-            if current_unit is None or not current_unit.alive or current_unit.position is None:
-                continue
-            active_positions.append(current_unit.position)
-
-        if len(active_positions) < 2:
-            return None
-
-        max_distance = 0.0
-        for index, origin in enumerate(active_positions[:-1]):
-            for target in active_positions[index + 1:]:
-                max_distance = max(max_distance, origin.distance_to(target))
-
-        return max_distance
 
     def _remove_units_from_group_order(self, group: Group, unit_ids: set[int]):
         if group.movement_order is None:
@@ -1127,7 +960,8 @@ class FriendlyPatrols(Plugin):
             if current_time < due_time:
                 continue
 
-            self._transmit_response(message)
+            group.last_zone_contact_report = message
+            self._transmit_response(message)            
             group.pending_contact_detail_time = None
             group.pending_contact_detail_message = None
 
@@ -1143,7 +977,9 @@ class FriendlyPatrols(Plugin):
 
             movement_order = group.movement_order or {}
             search_zone = movement_order.get("search_zone") or movement_order.get("target_zone")
-            self._transmit_response(self._build_zone_search_report(group, search_zone, zone_name))
+            report_message = self._build_zone_search_report(group, search_zone, zone_name)
+            group.last_zone_search_report = report_message  
+            self._transmit_response(report_message)
             group.pending_zone_search_report_time = None
             group.pending_zone_search_report_message = None
             self._transition_group_to_post_search_hold(group)
@@ -1288,92 +1124,39 @@ class FriendlyPatrols(Plugin):
         primary_enemy = enemy_units[0]
         grid_text = self._format_mgrs_for_readback(self._format_enemy_mgrs(primary_enemy.position)) or "unknown"
         enemy_force_text = self._describe_enemy_forces(enemy_units)
-        return f"{group.name}, contact report, grid {grid_text}, {enemy_force_text}, engaging."
 
-    def _refresh_group_contact_state(self):
-        for group in self.groups:
-            contact_enemy_ids = self._get_group_contact_enemy_ids(group)
-            if contact_enemy_ids:
-                active_ids = set(group.active_contact_enemy_ids or set())
-                observed_ids = set(group.observed_contact_enemy_ids or set())
-                group.active_contact_enemy_ids = set(contact_enemy_ids)
-                group.observed_contact_enemy_ids = observed_ids | active_ids | set(contact_enemy_ids)
-                continue
+        # Calculate direction and distance
+        direction_text = "unknown direction"
+        distance_text = "unknown distance"
+        try:
+            if contact_unit.position and primary_enemy.position:
+                # Calculate bearing
+                lat1 = math.radians(contact_unit.position.lat)
+                lon1 = math.radians(self._get_position_lng(contact_unit.position))
+                lat2 = math.radians(primary_enemy.position.lat)
+                lon2 = math.radians(self._get_position_lng(primary_enemy.position))
+                dlon = lon2 - lon1
+                x = math.sin(dlon) * math.cos(lat2)
+                y = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+                initial_bearing = math.atan2(x, y)
+                bearing_deg = (math.degrees(initial_bearing) + 360) % 360
+                # Compass directions
+                compass_sectors = [
+                    (22.5, "north"), (67.5, "northeast"), (112.5, "east"), (157.5, "southeast"),
+                    (202.5, "south"), (247.5, "southwest"), (292.5, "west"), (337.5, "northwest"), (360, "north")
+                ]
+                for angle, direction in compass_sectors:
+                    if bearing_deg < angle:
+                        direction_text = direction
+                        break
+                # Calculate distance (meters)
+                distance = contact_unit.position.distance_to(primary_enemy.position)
+                rounded_distance = int(round(distance / 100.0) * 100)
+                distance_text = f"{rounded_distance} meters"
+        except Exception:
+            pass
 
-            previously_observed = set(group.observed_contact_enemy_ids or set())
-            if previously_observed:
-                resolved_count = self._count_dead_or_missing_units(previously_observed)
-                if resolved_count > 0:
-                    group.last_resolved_contact_enemy_count = resolved_count
-                    group.last_resolved_contact_time = time.monotonic()
-
-            group.active_contact_enemy_ids = set()
-            group.observed_contact_enemy_ids = set()
-
-    def _get_group_contact_enemy_ids(self, group: Group) -> set[str]:
-        enemy_ids = set()
-        enemy_coalition = self._get_group_enemy_coalition(group)
-        for group_unit in group.units:
-            patrol_unit = self._resolve_unit(group_unit.ID)
-            if patrol_unit is None or not patrol_unit.alive or patrol_unit.position is None:
-                continue
-
-            enemy_units = self._get_enemy_units_within_radius(patrol_unit.position, enemy_coalition, self.engagement_range)
-            for enemy_unit in enemy_units:
-                enemy_ids.add(str(enemy_unit.ID))
-
-        return enemy_ids
-
-    def _count_dead_or_missing_units(self, unit_ids: set[str]) -> int:
-        if self.api is None:
-            return 0
-
-        known_units = self.api.get_units()
-        resolved_count = 0
-        for unit_id in unit_ids:
-            enemy_unit = known_units.get(unit_id)
-            if enemy_unit is None:
-                try:
-                    enemy_unit = known_units.get(int(unit_id))
-                except (TypeError, ValueError):
-                    enemy_unit = None
-            if enemy_unit is None or not enemy_unit.alive:
-                resolved_count += 1
-
-        return resolved_count
-
-    def _get_group_contact_centers(self, group: Group) -> tuple[LatLng | None, LatLng | None, list[Unit]]:
-        enemy_units = self._get_group_detected_enemy_units(group)
-        friendly_center = self._get_group_average_position(group)
-        if friendly_center is None or not enemy_units:
-            return friendly_center, None, []
-
-        enemy_positions = [enemy_unit.position for enemy_unit in enemy_units if enemy_unit.position is not None]
-        if not enemy_positions:
-            return friendly_center, None, []
-
-        enemy_center = LatLng(
-            sum(position.lat for position in enemy_positions) / len(enemy_positions),
-            sum(self._get_position_lng(position) for position in enemy_positions) / len(enemy_positions),
-            sum(position.alt for position in enemy_positions) / len(enemy_positions),
-        )
-        return friendly_center, enemy_center, enemy_units
-
-    def _get_group_detected_enemy_units(self, group: Group) -> list[Unit]:
-        if self.api is None:
-            return []
-
-        enemy_units_by_id = {}
-        enemy_coalition = self._get_group_enemy_coalition(group)
-        for group_unit in group.units:
-            patrol_unit = self._resolve_unit(group_unit.ID)
-            if patrol_unit is None or not patrol_unit.alive or patrol_unit.position is None:
-                continue
-
-            for enemy_unit in self._get_enemy_units_within_radius(patrol_unit.position, enemy_coalition, self.engagement_range):
-                enemy_units_by_id[str(enemy_unit.ID)] = enemy_unit
-
-        return list(enemy_units_by_id.values())
+        return f"{group.name}, contact report, grid {grid_text}, {enemy_force_text}, enemy {direction_text} at {distance_text}, engaging."
 
     def _get_group_contact_snapshot(self, group: Group) -> tuple[Unit | None, list[Unit]]:
         if self.api is None:
@@ -1706,51 +1489,6 @@ class FriendlyPatrols(Plugin):
             return random.choice(["enemy aircraft", "aircraft", "fast air"])
 
         return random.choice(["enemy forces", "enemy units", "hostile forces"])
-
-    def _bearing_to_cardinal_direction(self, bearing_radians: float) -> str:
-        bearing_degrees = (math.degrees(bearing_radians) + 360.0) % 360.0
-        directions = ["north", "north east", "east", "south east", "south", "south west", "west", "north west"]
-        index = int((bearing_degrees + 22.5) // 45.0) % len(directions)
-        return directions[index]
-
-    def _describe_contact_distance(self, distance_metres: float) -> str:
-        if distance_metres > 500.0:
-            return "a long way away"
-        if distance_metres > 300.0:
-            return "fairly close"
-        return f"{self._round_to_nearest(distance_metres, 50)} metres"
-
-    def _format_rough_duration(self, duration_seconds: float) -> str:
-        if duration_seconds < 90.0:
-            return "about a minute"
-
-        minutes = max(1, int(math.ceil(duration_seconds / 60.0)))
-        if minutes <= 2:
-            return "about 2 minutes"
-        if minutes <= 3:
-            return "2 or 3 minutes"
-        if minutes <= 5:
-            return f"about {minutes} minutes"
-        rounded_minutes = int(math.ceil(minutes / 5.0) * 5)
-        return f"about {rounded_minutes} minutes"
-
-    def _approximate_count_phrase(self, count: int) -> str:
-        if count <= 2:
-            return str(count)
-        if count <= 5:
-            return "5 or so"
-        if count <= 8:
-            return "8 or so"
-        if count <= 12:
-            return "10 or so"
-        if count <= 18:
-            return "15 or so"
-        return "20 plus"
-
-    def _round_to_nearest(self, value: float, increment: int) -> int:
-        if increment <= 0:
-            return int(round(value))
-        return int(math.ceil(value / increment) * increment)
 
     def _utm_zone_from_longitude(self, longitude: float) -> int:
         return int((longitude + 180) // 6) + 1

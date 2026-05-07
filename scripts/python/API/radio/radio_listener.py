@@ -15,7 +15,7 @@ from audio.audio_recorder import AudioRecorder
 test_counter = 1
 
 class RadioListener(RadioTransmitter):
-    def __init__(self, api: API, address: str, port: int | None):
+    def __init__(self, api: API, address: str, port: int | None, SRS_folder: str):
         """
         Initialize the RadioListener.
         
@@ -25,7 +25,7 @@ class RadioListener(RadioTransmitter):
             endpoint (str): WebSocket server endpoint
         """
         self.api = api
-        super().__init__(address, port)
+        super().__init__(address, port, SRS_folder)
         
         self.message_callback = None
         self.clients_callback = None
@@ -61,7 +61,7 @@ class RadioListener(RadioTransmitter):
                 audio_packet = AudioPacket()
                 audio_packet.from_byte_array(message[1:])
                 
-                if audio_packet.get_transmission_guid() != self._guid:                    
+                if audio_packet.get_transmission_guid() != self._guid and audio_packet.get_unit_id() != 1000: # TODO: when using external audio generation, the unitID is set to 1000 by default. This is a lazy way to avoid listening to ourselves                    
                     if audio_packet.get_transmission_guid() not in self.audio_recorders:
                         recorder = AudioRecorder(self.api)
                         self.audio_recorders[audio_packet.get_transmission_guid()] = recorder

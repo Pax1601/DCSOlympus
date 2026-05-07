@@ -211,6 +211,7 @@ struct SpawnOptions {
 	string liveryID;
 	double heading;
 	string payload;
+	string name;
 };
 
 struct CloneOptions {

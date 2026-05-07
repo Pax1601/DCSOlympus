@@ -65,8 +65,7 @@ class VoiceArty(Plugin):
 
     def on_start(self) -> bool:
         try:
-            saved_games = self.global_config.get("dcs_saved_games_folder", ".")
-            self.api = API(saved_games_folder=saved_games)
+            self.api = API(saved_games_folder=self.global_config.get("dcs_saved_games_folder", "."), SRS_folder=self.global_config.get('SRS_folder', '.'))
             self.api.interval = self.update_interval
             self.api.register_on_update_callback(lambda api: self.on_api_update(api))
 

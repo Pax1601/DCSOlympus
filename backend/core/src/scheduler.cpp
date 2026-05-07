@@ -230,6 +230,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			return;
 		}
 
+		string groupName = "";
+		if (value.has_string_field(L"groupName"))
+			groupName = to_string(value[L"groupName"]);
+
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
@@ -249,14 +253,18 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			if (unit.has_string_field(L"payload"))
 				payload = to_string(unit[L"payload"]);
 
-			spawnOptions.push_back({ unitType, location, loadout, skill, liveryID, heading, payload });
+			string name = "";
+			if (unit.has_string_field(L"name"))
+				name = to_string(unit[L"name"]);
+
+			spawnOptions.push_back({ unitType, location, loadout, skill, liveryID, heading, payload, name });
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
 		if (key.compare("spawnAircrafts") == 0)
-			command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnAircrafts(coalition, spawnOptions, airbaseName, country, groupName, immediate));
 		else
-			command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnHelicopters(coalition, spawnOptions, airbaseName, country, groupName, immediate));
 	}
 	/************************/
 	else if (key.compare("spawnGroundUnits") == 0 || key.compare("spawnNavyUnits") == 0)
@@ -271,6 +279,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			return;
 		}
 
+		string groupName = "";
+		if (value.has_string_field(L"groupName"))
+			groupName = to_string(value[L"groupName"]);
+
 		vector<SpawnOptions> spawnOptions;
 		for (auto unit : value[L"units"].as_array()) {
 			string unitType = to_string(unit[L"unitType"]);
@@ -284,14 +296,18 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string liveryID = to_string(unit[L"liveryID"]);
 			string skill = to_string(unit[L"skill"]);
 
-			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading });
+			string name = "";
+			if (unit.has_string_field(L"name"))
+				name = to_string(unit[L"name"]);
+
+			spawnOptions.push_back({ unitType, location, "", skill, liveryID, heading, "", name});
 			log(username + " spawned a " + coalition + " " + unitType, true);
 		}
 
 		if (key.compare("spawnGroundUnits") == 0)
-			command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnGroundUnits(coalition, spawnOptions, country, groupName, immediate));
 		else
-			command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, country, immediate));
+			command = dynamic_cast<Command*>(new SpawnNavyUnits(coalition, spawnOptions, country, groupName, immediate));
 	}
 	/************************/
 	else if (key.compare("attackUnit") == 0)

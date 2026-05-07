@@ -42,8 +42,14 @@ string SpawnGroundUnits::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {" 
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        // Only include the name if it's not empty, as it is optional
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+		}
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "heading = " << spawnOptions[i].heading << ", "
@@ -53,7 +59,14 @@ string SpawnGroundUnits::getString()
 
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.spawnUnits, {"
+    commandSS << "Olympus.spawnUnits, {";
+
+    // Only include the name if it's not empty, as it is optional
+    if (!groupName.empty()) {
+        commandSS << "groupName = " << "\"" << groupName << "\"" << ", ";
+	}
+
+    commandSS 
         << "category = " << "\"" << "GroundUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "country = \"" << country << "\", "
@@ -69,8 +82,14 @@ string SpawnNavyUnits::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        // Only include the name if it's not empty, as it is optional
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+        }
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "heading = " << spawnOptions[i].heading << ", "
@@ -80,7 +99,14 @@ string SpawnNavyUnits::getString()
 
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.spawnUnits, {"
+    commandSS << "Olympus.spawnUnits, {";
+
+    // Only include the name if it's not empty, as it is optional
+    if (!groupName.empty()) {
+        commandSS << "groupName = " << "\"" << groupName << "\"" << ", ";
+    }
+
+    commandSS
         << "category = " << "\"" << "NavyUnit" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "country = \"" << country << "\", "
@@ -95,8 +121,14 @@ string SpawnAircrafts::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        // Only include the name if it's not empty, as it is optional
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+        }
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
@@ -109,7 +141,14 @@ string SpawnAircrafts::getString()
 
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.spawnUnits, {" 
+    commandSS << "Olympus.spawnUnits, {";
+
+    // Only include the name if it's not empty, as it is optional
+    if (!groupName.empty()) {
+        commandSS << "groupName = " << "\"" << groupName << "\"" << ", ";
+    }
+
+    commandSS
         << "category = " << "\"" << "Aircraft" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
@@ -126,8 +165,14 @@ string SpawnHelicopters::getString()
     std::ostringstream unitsSS;
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
-        unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+        unitsSS << "[" << i + 1 << "] = {";
+
+        // Only include the name if it's not empty, as it is optional
+        if (!spawnOptions[i].name.empty()) {
+            unitsSS << "name = " << "\"" << spawnOptions[i].name << "\"" << ", ";
+        }
+
+        unitsSS << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
@@ -140,7 +185,14 @@ string SpawnHelicopters::getString()
 
     std::ostringstream commandSS;
     commandSS.precision(10);
-    commandSS << "Olympus.spawnUnits, {"
+    commandSS << "Olympus.spawnUnits, {";
+
+    // Only include the name if it's not empty, as it is optional
+    if (!groupName.empty()) {
+        commandSS << "groupName = " << "\"" << groupName << "\"" << ", ";
+    }
+
+    commandSS
         << "category = " << "\"" << "Helicopter" << "\"" << ", "
         << "coalition = " << "\"" << coalition << "\"" << ", "
         << "airbaseName = \"" << airbaseName << "\", "
@@ -155,12 +207,14 @@ string SpawnStaticObject::getString() {
     std::ostringstream commandSS;
 	commandSS.precision(10);
     commandSS << "Olympus.spawnStaticObject, {";
+
 	    // Only include the name if it's not empty, as it is optional
         if (!name.empty()) {
             commandSS
                 << "name = " << "\"" << name << "\"" << ", ";
         }
-        commandSS << "type = " << "\"" << type << "\"" << ", "
+
+   commandSS << "type = " << "\"" << type << "\"" << ", "
         << "lat = " << location.lat << ", "
         << "lng = " << location.lng << ", "
         << "shapeName = " << "\"" << shapeName << "\"" << ", "
