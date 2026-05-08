@@ -398,12 +398,13 @@ class EnemyPatrols(Plugin):
 
     def _handle_inactive_state(self, unit_object, town_centres):
         state_name = unit_object.enemy_patrols_plugin_state
+        # Always check for nearby enemies first so patrol units can react
+        # while moving rather than ignoring threats.
+        enemy_nearby = self.get_nearest_opposite_coalition_unit(unit_object, 5000)
 
         if state_name == "patrol":
-            self._handle_patrol_state(unit_object, town_centres, None)
+            self._handle_patrol_state(unit_object, town_centres, enemy_nearby)
             return
-
-        enemy_nearby = self.get_nearest_opposite_coalition_unit(unit_object, 5000)
         if enemy_nearby is None or not enemy_nearby:
             return
 
@@ -441,6 +442,11 @@ class EnemyPatrols(Plugin):
 
     def _handle_patrol_state(self, unit_object, town_centres, enemy_nearby):
         self.logger.info(f"Unit {unit_object.unit_id} is in patrol mode.")
+        # If an enemy is nearby while patrolling, engage immediately.
+        if enemy_nearby is not None:
+            self.logger.info(f"Unit {unit_object.unit_id} detected nearby enemy {enemy_nearby.unit_id} while patrolling, switching to fight state.")
+            self._handle_fight_state(unit_object, enemy_nearby)
+            return
         position = self._coerce_position_to_latlng(unit_object.position)
         nearest_zone = self.get_nearest_zone(position, town_centres)
         if not nearest_zone:
@@ -531,27 +537,25 @@ class EnemyPatrols(Plugin):
             enemy_coalition = "blue"
         else:
             return None
-            nearest_unit = None
-            nearest_distance = max_distance
+        nearest_unit = None
+        nearest_distance = max_distance
 
-            for candidate_unit in self.api.units.values():
-                if not candidate_unit.alive:
-                    continue
-                if candidate_unit.coalition != enemy_coalition:
-                    continue
-                if candidate_unit.category.lower() not in ["ground", "aircraft", "helicopter"]:
-                    continue
-                if not getattr(candidate_unit, "human", False):
-                    continue
-                if unit_object.operate_as is not None and candidate_unit.operate_as != unit_object.operate_as and candidate_unit.coalition == "neutral":
-                    continue
+        for candidate_unit in self.api.units.values():
+            if not candidate_unit.alive:
+                continue
+            if candidate_unit.coalition != enemy_coalition:
+                continue
+            if candidate_unit.category.lower() not in ["ground", "aircraft", "helicopter"]:
+                continue
+            if unit_object.operate_as is not None and candidate_unit.operate_as != unit_object.operate_as and candidate_unit.coalition == "neutral":
+                continue
 
-                distance = unit_object.position.distance_to(candidate_unit.position)
-                if distance < nearest_distance:
-                    nearest_distance = distance
-                    nearest_unit = candidate_unit
+            distance = unit_object.position.distance_to(candidate_unit.position)
+            if distance < nearest_distance:
+                nearest_distance = distance
+                nearest_unit = candidate_unit
 
-            return nearest_unit
+        return nearest_unit
 
     def get_all_zones(self):
         try:
