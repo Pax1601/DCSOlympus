@@ -1,0 +1,7 @@
+{
+  "name": "CivilianWalkers",
+  "version": "0.1.0",
+  "author": "DCS Olympus",
+  "description": "Spawns neutral civilian pedestrians that wander around village/town-centre zones (TC-<name>-<n> triggers). Unit type and name prefix are fully customisable via plugin_settings.",
+  "main": "main.py"
+}
