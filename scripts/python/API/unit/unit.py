@@ -887,8 +887,8 @@ class Unit:
     def set_custom_integer(self, custom_integer: int):
         return self.api.send_command({"setCustomInteger": {"ID": self.ID, "customInteger": custom_integer}})
     
-    def embark_nearby_units(self):
-        return self.api.send_command({"embarkNearbyUnits": {"ID": self.ID}})
+    def embark_nearby_units(self, force = False):
+        return self.api.send_command({"embarkNearbyUnits": {"ID": self.ID, "force": force}})
     
     def disembark_units(self):
         return self.api.send_command({"disembarkUnits": {"ID": self.ID}})

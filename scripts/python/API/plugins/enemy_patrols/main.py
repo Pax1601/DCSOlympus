@@ -236,6 +236,9 @@ class EnemyPatrols(Plugin):
         for unit in units:
             unit_object = units[unit]
             if hasattr(unit_object, 'enemy_patrols_plugin_state'):
+                # Ignore dead units or units that are embarking
+                if not unit_object.alive or unit_object.state == "embarking":
+                    continue
                 self._handle_unit_state(unit_object, town_centres, current_time)
 
         self.watchdog_tick()

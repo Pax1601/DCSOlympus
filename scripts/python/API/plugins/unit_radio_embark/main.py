@@ -183,7 +183,7 @@ class UnitRadioEmbark(Plugin):
             response = self.disembark_units(unit)
         elif any(keyword in normalized_message for keyword in embark_keywords):
             self.logger.info(f"Unit {unitID} requesting embarking.")
-            response = self.embark_units(unit)
+            response = self.embark_units(unit, "force" in normalized_message)
         elif any(keyword in normalized_message for keyword in smoke_keywords):
             self.logger.info(f"Unit {unitID} requesting smoke.")
             response = self.smoke_pickup_point(unit)
@@ -199,7 +199,7 @@ class UnitRadioEmbark(Plugin):
         future = self.api.generate_audio_message_in_executor(response, voice=self.kokoro_voice_model)
         future.add_done_callback(lambda f: listener.transmit_on_frequency(file_name=f.result()))
                     
-    def embark_units(self, unit: Unit):
+    def embark_units(self, unit: Unit, force=False):
         self.logger.info(f"Embarking units for unitID {unit.ID}")
         
         if (not unit.can_transport_units):
@@ -227,7 +227,7 @@ class UnitRadioEmbark(Plugin):
             response = "You cannot embark more units on this unit sir, it is already at maximum capacity."
             return response
         
-        return self.extract_response(unit.embark_nearby_units())
+        return self.extract_response(unit.embark_nearby_units(force))
         
     def disembark_units(self, unit: Unit):
         self.logger.info(f"Disembarking units for unitID {unit.ID}")

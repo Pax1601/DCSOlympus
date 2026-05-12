@@ -1110,6 +1110,10 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		// }
 
 		unsigned int transportID = value[L"ID"].as_integer();
+		bool force = false;
+		if (value.has_boolean_field(L"force")) {
+			force = value[L"force"].as_bool();
+		}
 		Unit* transportUnit = unitsManager->getUnit(transportID);
 
 		if (transportUnit != nullptr &&
@@ -1135,7 +1139,7 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			for (auto& u : unitsManager->getUnits()) {
 				unsigned char unitCoalition = u.second->getCoalition() == 0? u.second->getOperateAs() : u.second->getCoalition();
 
-				if (u.second->getType() == "Infantry" && unitCoalition == transportCoalition && u.second->getState() == State::IDLE && u.second->getAlive()) {
+				if (u.second->getType() == "Infantry" && unitCoalition == transportCoalition && (u.second->getState() == State::IDLE || force) && u.second->getAlive()) {
 					double dist;
 					double bearing1;
 					double bearing2;
