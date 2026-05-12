@@ -1,0 +1,7 @@
+{
+  "name": "SailingShips",
+  "version": "0.1.0",
+  "author": "DCS Olympus",
+  "description": "Spawns neutral sailing ships that navigate between Sail-Home, Sail-N ocean waypoints, and Sail-Port-N destination ports using a wind-aware speed model with tacking when beating to windward.",
+  "main": "main.py"
+}
