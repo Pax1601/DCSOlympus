@@ -129,6 +129,7 @@ class LuaLink(Plugin):
                 for response_key in RESPONSE_TEMPLATES.keys():
                     voice_model = base_info["voiceModel"] if hasattr(base_info, "voiceModel") else "bm_daniel"
                     self.api.generate_audio_message(RESPONSE_TEMPLATES[response_key].format(callsign="TestUnit", fuel=1000, shells=100, supplies=500, troopsAvailable=20), voice=voice_model)
+                    await asyncio.sleep(0.1)  # Sleep a bit to avoid overwhelming the system
 
                 listener.set_prompt(f"Possible commands are: status report, guns, fire team, fuel, ammo, explosives, smoke, supplies, clear. Over.")
             else:
