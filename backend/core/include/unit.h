@@ -339,6 +339,7 @@ protected:
 	string requestHash = "";
 	unsigned int artilleryShotsToFire = 1000;
 	double artilleryRadius = 0;
+	int stuckCounter = 0;
 
 	/********** Private methods **********/
 	virtual void AIloop() = 0;

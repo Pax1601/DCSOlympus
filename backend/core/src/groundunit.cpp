@@ -205,6 +205,9 @@ void GroundUnit::setState(unsigned char newState)
 
 	triggerUpdate(DataIndex::state);
 
+	/* Reset the stuck counter when entering a new state to avoid getting stuck indefinitely in case we transition back to reaching destination after being stuck */ 
+	stuckCounter = 0;
+
 	AIloop();
 }
 
@@ -227,6 +230,11 @@ void GroundUnit::AIloop()
 
 	/* Get the coalition of the unit.If the unit is neutral, we use the "operate as" coalition to determine the behavior in scenic modes */
 	unsigned char unitEffectiveCoalition = coalition == 0 ? getOperateAs() : coalition;
+
+	/* If we are moving, reset the stuck counter */
+	if (getSpeed() > 0.1) {
+		stuckCounter = 0;
+	}
 
 	switch (state) {
 	case State::IDLE: {
@@ -280,13 +288,22 @@ void GroundUnit::AIloop()
 		/* If we are in reaching destination state check if the unit is stuck */
 		if (state == State::REACH_DESTINATION) {
 			// If the unit is not moving after timeToNextTasking, reset the destination to try and get it unstuck
+			// If the unit is still not moving after 3 tries, stop trying to reach the destination to avoid getting stuck indefinitely
 			if (timeNow >= nextTaskingMilliseconds && getSpeed() < 0.1) {
-				log(unitName + " seems to be stuck, resetting destination");
-				resetActiveDestination();
+				if (stuckCounter < 3) {
+					log(unitName + " seems to be stuck, resetting destination");
+					resetActiveDestination();
 
-				// Set the next tasking time to a bit in the future to give time for the unit to move after resetting the destination. We don't want to reset the destination again immediately if the unit is still stuck after resetting it.
-				nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(10 * 1000);
-				setTimeToNextTasking(((nextTaskingMilliseconds - timeNow) / 1000.0));
+					// Set the next tasking time to a bit in the future to give time for the unit to move after resetting the destination. We don't want to reset the destination again immediately if the unit is still stuck after resetting it.
+					nextTaskingMilliseconds = timeNow + static_cast<unsigned long>(10 * 1000);
+					setTimeToNextTasking(((nextTaskingMilliseconds - timeNow) / 1000.0));
+					stuckCounter++;
+				}
+				else if (stuckCounter == 3) {
+					log(unitName + " seems to be stuck and has already tried resetting the destination 3 times, giving up on reaching the destination");
+					setState(State::IDLE);
+					
+				}
 			}
 		}
 
