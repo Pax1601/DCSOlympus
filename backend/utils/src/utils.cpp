@@ -43,24 +43,27 @@ std::string to_string(const std::wstring& wstr)
     return result;
 }
 
-std::string random_string(size_t length)
+std::string random_string(std::size_t length)
 {
-    // Use nanoseconds since epoch as a seed for random number generation
-    auto now = std::chrono::high_resolution_clock::now();
-    auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
-	srand(static_cast<unsigned int>(nanos));
+    static constexpr char charset[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
 
-    auto randchar = []() -> char
-    {
-        const char charset[] =
-            "0123456789"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz";
-        const size_t max_index = (sizeof(charset) - 1);
-        return charset[rand() % max_index];
-    };
-    std::string str(length, 0);
-    std::generate_n(str.begin(), length, randchar);
+    static constexpr std::size_t max_index = sizeof(charset) - 2;
+
+    // One RNG per thread, seeded once
+    thread_local std::mt19937 rng{ std::random_device{}() };
+
+    std::uniform_int_distribution<std::size_t> dist(0, max_index);
+
+    std::string str(length, '\0');
+
+    std::generate(str.begin(), str.end(), [&]()
+        {
+            return charset[dist(rng)];
+        });
+
     return str;
 }
 
