@@ -10,11 +10,9 @@
 #include <string>
 #include <time.h>
 #include <chrono>
-#include <string>
 #include <map>
 #include <list>
 #include <fstream>
-#include <iostream>
 #include <cstdarg>
 #include <filesystem>
 #include <codecvt>
@@ -22,6 +20,8 @@
 #include <cpprest/json.h>
 #include <cpprest/streams.h>
 #include <set>
+#include <random>
+#include <algorithm>
 
 using namespace std;
 using namespace web;

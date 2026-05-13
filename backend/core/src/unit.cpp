@@ -194,6 +194,11 @@ void Unit::update(json::value json, double dt)
 		setShootingProjectionWeaponMass(0);
 	}
 
+	// Use nanoseconds since epoch as a seed for random number generation
+	auto now = std::chrono::high_resolution_clock::now();
+	auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
+	srand(static_cast<unsigned int>(nanos));
+
 	runAILoop();
 }
 

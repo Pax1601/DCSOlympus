@@ -48,6 +48,7 @@ std::string random_string(size_t length)
     // Use nanoseconds since epoch as a seed for random number generation
     auto now = std::chrono::high_resolution_clock::now();
     auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
+	srand(static_cast<unsigned int>(nanos));
 
     auto randchar = []() -> char
     {
