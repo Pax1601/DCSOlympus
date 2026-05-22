@@ -1,0 +1,19 @@
+{
+		"name": "Civs",
+		"enabled": true,
+		"frequency_hz": 30000000,
+		"modulation": 1,
+		"encryption": 0,
+		"update_interval": 1.0,
+		"voice": "am_michael",
+		"friendly_coalition": "blue",
+		"civilian_unit_types": {
+			"Man2": ["Black Clothes","Dark Green Clothes","Green Clothes","Grey Clothes","Maroon Clothes","Navy Clothes","Red Clothes", "Vest"],
+			"ManNoHat": ["Black Clothes","Dark Green Clothes","Green Clothes","Grey Clothes","Maroon Clothes","Navy Clothes","Red Clothes", "Vest"],
+			"WoManHat": ["Black Clothes","Green Clothes","Grey Clothes","Red Clothes", "Vest"],
+			"WoManNoHat": ["Black Clothes","Green Clothes","Grey Clothes","Red Clothes", "Vest"]
+		},
+		"known_names": ["sabana bafaa", "taleyfack", "fouha", "mogfog", "masalog", "timonergi", "finegayan", "taguac", "big", "isengsong", "bubulao", "sasa", "guatali", "togcha", "agat", "asiga", "sam antoni", "jalagai point", "chaligan", "yigo", "manglae", "dededo", "dandan", "adjoulan", "gayinero", "guae", "ypan", "ylig", "liyog", "sabanan fadang", "inarajan", "lulog", "leper colony", "lofon", "port pago", "atate", "aslucas", "lengaa", "layon", "tepungan", "aguada", "sinengsong", "asan", "merizo", "upi", "umatac", "alacunao", "llicho peak", "malolos", "ibaba", "pitii", "yona", "latte"],
+		"fuzzy_match_threshold": 0.75,
+		"wander_interval_seconds": 30
+	}
