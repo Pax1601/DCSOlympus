@@ -845,11 +845,11 @@ class Unit:
     def simulate_fire_fight(self, location: LatLng, altitude: float):
         return self.api.send_command({"simulateFireFight": {"ID": self.ID, "location": {"lat": location.lat, "lng": location.lng}, "altitude": altitude}})
 
-    def scenic_aaa(self, coalition: str):
-        return self.api.send_command({"scenicAAA": {"ID": self.ID, "coalition": coalition}})
+    def scenic_aaa(self):
+        return self.api.send_command({"scenicAAA": {"ID": self.ID}})
 
-    def miss_on_purpose(self, coalition: str):
-        return self.api.send_command({"missOnPurpose": {"ID": self.ID, "coalition": coalition}})
+    def miss_on_purpose(self):
+        return self.api.send_command({"missOnPurpose": {"ID": self.ID}})
     
     def simulate_engagement(self):
         return self.api.send_command({"simulateEngagement": {"ID": self.ID}})

@@ -55,7 +55,6 @@ class LuaLink(Plugin):
         self.listeners: dict = {}
         self.api: API | None = None
 
-        self.session_hash = None
         self.start_time = None
         self.mission_started = False
 

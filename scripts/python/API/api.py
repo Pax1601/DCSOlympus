@@ -40,8 +40,8 @@ class API:
         self.base_url = None
         self.config = None
         self.logs = {}
-        self.units: dict[str, Unit] = {}
-        self.weapons: dict[str, Weapon] = {}
+        self.units: dict[int, Unit] = {}
+        self.weapons: dict[int, Weapon] = {}
         self.mission = {}
         self.markers = {}
         self.spots = {}

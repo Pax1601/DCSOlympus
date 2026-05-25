@@ -15,7 +15,6 @@ def enum_to_coalition(coalition_id: int) -> str:
         return "blue"
     return ""
 
-
 def coalition_to_enum(coalition: str) -> int:
     if coalition == "neutral":
         return 0
