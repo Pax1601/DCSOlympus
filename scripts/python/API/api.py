@@ -513,7 +513,9 @@ class API:
         response = self._get("mission")
         if response.status_code == 200:
             try:
-                self.mission = json.loads(response.content.decode('utf-8'))['mission']
+                content = json.loads(response.content.decode('utf-8'))
+                self.mission = content['mission']
+                self.mission['load'] = content['load']
                 return self.mission
             except Exception as e:
                 self.logger.error(f"Failed to parse JSON response: {e}")
