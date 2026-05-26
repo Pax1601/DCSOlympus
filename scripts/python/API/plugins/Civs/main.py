@@ -84,11 +84,7 @@ class Civs(Plugin):
             if self.api is not None:
                 self.api.stop()
                 self.api = None
-
-            self.state_by_unit.clear()
-            self.stored_targets.clear()
-            self.target_counter = 0
-            self.logger.info("Civs stopped")
+                
             return True
         except Exception as error:
             self.logger.error(f"Failed to stop Civs: {error}", exc_info=True)

@@ -1,4 +1,4 @@
-import asyncio
+import time
 import math
 import random
 import re
@@ -14,42 +14,97 @@ from plugin_base import Plugin
 
 class EnemyPatrolsUnit(Unit):
     patrol_state = "No state"
+    original_position = None
+    idle_start_time = 0
     
     def set_patrol_state(self, patrol_state):
         self.patrol_state = patrol_state
+        self.original_position = self.position
         
         self.set_operate_as(coalition_to_enum("red"))
+        self.set_shots_intensity(3)
+        self.set_shots_scatter(3)
+        self.set_speed(2)
+        self.idle_start_time = 0
         
         # If we are in fight more, we fight
         if patrol_state == "fight":
             if random.random() < 0.25:
                 self.miss_on_purpose()
+                return 1
             else:
                 self.simulate_engagement()
+                return 1
+        return 1
         
-    def update(self, units: dict[int, Unit]):
+    def update(self, units: dict[int, Unit], nearest_town_centre: LatLng):
         if self.patrol_state == "ambush":
-            for unit in units.values():
-                if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.airborne:
-                    self.miss_on_purpose()
-                    break
-            
-            # Stop the unit from miss on purpose if there is no target nearby
-            if self.target_id == 0:
-                self.set_path([self.position])
+            if self.state == "idle":
+                for unit in units.values():
+                    # Spring the trap when enemy unit lands nearby or enemy infantry are nearby
+                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and not unit.airborne and unit.alive:
+                        if unit.category == "GroundUnit":
+                            self.simulate_engagement()
+                        else:
+                            self.miss_on_purpose()
+                        return 1
+            else:
+                # Stop the unit from shooting if there is no enemy nearby
+                unit_found = False
+                for unit in units.values():
+                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.alive:
+                        unit_found = True
+                        break
+                    
+                if not unit_found: 
+                    self.set_path([])
+                    return 1
             
         elif self.patrol_state == "patrol":
             # If the unit is doing nothing, make them walk
             if self.state == "idle":
-                self.set_path([self.position.project_with_bearing_and_distance(random.random() * 1000, random.random() * 2 * math.pi)])
-                           
-            # If someone is shooting at us, return fire
-            if self.suppression_level > 0.5:
-                if random.random() < 0.25:
-                    self.miss_on_purpose()
+                # Check if we have reached the village
+                if (nearest_town_centre.distance_to(self.position) < 50):
+                    if self.idle_start_time == 0:
+                        self.idle_start_time = time.time()
+                    
+                    # Check if the unit has been in the village for 10 minutes
+                    if time.time() - self.idle_start_time > 60 * 10:
+                        self.set_path([self.original_position])
+                        self.idle_start_time = 0
+                        return 1
+                    else:
+                        return 0
                 else:
-                    self.simulate_engagement()
-        
+                    self.set_path([nearest_town_centre])
+                    self.idle_start_time = 0
+                    return 1
+
+            # If we are walking, check if someone is being a bully       
+            elif self.state == "reach-destination":
+                # If someone is shooting at us, return fire
+                if self.suppression_level > 0.5:
+                    self.miss_on_purpose()
+                    return 1
+                
+                # If there are enemy units nearby, get in simulated engagement
+                for unit in units.values():
+                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.category == "GroundUnit" and unit.alive:
+                        self.simulate_engagement()
+                        return 1
+            else:
+                # Stop the unit from shooting if there is no enemy nearby
+                unit_found = False
+                for unit in units.values():
+                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.alive:
+                        unit_found = True
+                        break
+
+                if not unit_found: 
+                    self.set_path([])
+                    return 1
+        return 0
+    
             
 class EnemyPatrols(Plugin):
     """
@@ -148,7 +203,7 @@ class EnemyPatrols(Plugin):
             else:
                 return  # Don't do anything
                 
-        zones, _, _, _, _ = self.get_all_zones()
+        zones, _, town_centres, _, _ = self.get_all_zones()
         if zones is None: #no point wasting CPU cycles if no zones in mission do nothing
             self.logger.info("No zones found, nothing to execute.")
             return
@@ -158,9 +213,20 @@ class EnemyPatrols(Plugin):
         self.apply_pending_spawn_initializations(units)
         
         # Run the update cycle on all units of the EnemyPatrolsUnit class
-        for unit in units.values():
-            if isinstance(unit, EnemyPatrolsUnit):
-                unit.update(units)
+        mission = self.api.get_mission()
+        iteration_load = 0
+        if mission.get('load', 100) < 100:
+            for unit in units.values():
+                if isinstance(unit, EnemyPatrolsUnit):
+                    nearest_town_centre = self.get_nearest_zone(unit.position, town_centres)
+                    nearest_town_centre_pos = LatLng(
+                        nearest_town_centre["location"]["lat"],
+                        nearest_town_centre["location"]["lng"],
+                        nearest_town_centre["location"].get("alt", 0),
+                    )
+                    iteration_load += unit.update(units, nearest_town_centre_pos)
+                    if iteration_load > 25:
+                        break
        
     def initialize(self):
         zones, spawn_zones, town_centres, jungle_zones, centre_zones = self.get_all_zones()
@@ -177,7 +243,9 @@ class EnemyPatrols(Plugin):
         marker_counter = 0
         if town_centres: #spawns a load of flags, this will later depend on the red blueness score
             #initially pick a red / blueness score at random
-            for town_centre in town_centres:
+            for town_centre in town_centres: 
+                self.watchdog_tick() # Keep the dog happy
+
                 red_blueness_score = random.randint(-100, 100)  # This gives a value between -100 and 100
                 town_centre["red_blueness_score"] = red_blueness_score
                 self.logger.info(f"Assigned red_blueness_score of {red_blueness_score} to town centre {town_centre.get('name', '')}")
@@ -191,26 +259,31 @@ class EnemyPatrols(Plugin):
                     nearest_centre_zone["location"]["lng"],
                     nearest_centre_zone["location"].get("alt", 0),
                 )
+
+                tc = LatLng(
+                    town_centre["location"]["lat"],
+                    town_centre["location"]["lng"],
+                    town_centre["location"].get("alt", 0),
+                )
                 
-                self.api.create_marker(7000 + marker_counter, centre_zone_pos, f"Blue/red score = {red_blueness_score}")
+                self.api.create_marker(7000 + marker_counter, tc, f"Blue/red score of {town_centre.get('name', '')}= {red_blueness_score}")
                 marker_counter += 1
                 
                 if town_centre.get("red_blueness_score", 0) < self.red_spawn_threshold: #this area is really bad, it can be a red generator of troops
                     self.logger.info(f"Generating enemy patrol spawns near town centre {town_centre.get('name', '')}")
                     
                     total_town_groups_of_units = random.randint(self.min_town_groups_of_units,self.max_town_groups_of_units) #this will later depend on the red blueness score and other factors, this is just a random number for now
-                    tc = LatLng(
-                        town_centre["location"]["lat"],
-                        town_centre["location"]["lng"],
-                        town_centre["location"].get("alt", 0),
-                    )
+                   
                     patrol_state = random.choices(["fight", "ambush", "patrol"],weights=[0.55, 0.35, 0.1], k=1)[0] #we randomise the state a bit so we get a mix of different states in the units that spawn
                     #enemy_patrols_plugin_state = "patrol"#random.choice(["fight", "ambush", "patrol"]) #used for testing specifics or even weights
                     for i in range(total_town_groups_of_units):
                         project_new_position_from_centre = centre_zone_pos.project_with_bearing_and_distance(centre_zone_radius, random.randint(0, 360))
                         cz = project_new_position_from_centre
                         bearing = tc.bearing_to(cz)
-                        distance_m = town_centre.get("radius", 0) + distance_m
+                        distance_m = tc.distance_to(cz)*random.random() #we randomise the distance a bit 
+                        #if the distance is inside the actual spawn zone this is too close, we want them in the jungle
+                        if distance_m < town_centre.get("radius", 0):
+                            distance_m = town_centre.get("radius", 0) + distance_m
                         position_to_spawn = tc.project_with_bearing_and_distance(distance_m / 2, bearing)
                         #we need to group the spawned units together based on the town centre they are linked to, this is because we want them to act as a group and have the same enemy_patrols_plugin_state, e.g. if one unit in the group goes into fight mode then they all go into fight mode, if one unit in the group goes into patrol mode then they all go into patrol mode etc, this is because we want them to act as a cohesive unit rather than individual units that do their own thing, this also makes it easier to manage the enemy_patrols_plugin_states of the units and make them more effective as a group rather than individual units that do their own thing
                         #work out how many to spawn based on the max spawn numer
@@ -267,15 +340,17 @@ class EnemyPatrols(Plugin):
         self.pending_spawn_initializations[ID] = patrol_state
 
     def apply_pending_spawn_initializations(self, units: dict[int, Unit]):
+        mission = self.api.get_mission()
         if not self.pending_spawn_initializations:
             return
 
         resolved_ids = []
+        iteration_load = 0
         for result_id, patrol_state in self.pending_spawn_initializations.items():
             for unit in units.values():
-                if unit.ID == result_id:
+                if mission.get('load', 100) < 100 and iteration_load < 25 and unit.unit_id == result_id:
                     unit.__class__ = EnemyPatrolsUnit
-                    unit.set_patrol_state(patrol_state)
+                    iteration_load += unit.set_patrol_state(patrol_state)
                     resolved_ids.append(result_id)
                     break
 
