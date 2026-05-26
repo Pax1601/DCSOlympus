@@ -239,14 +239,53 @@ class EnemyPatrols(Plugin):
             self.logger.info("Successfully linked spawn zones to town centres.")
         else:
             self.logger.warning("Failed to link some spawn zones to town centres.")
+
+        # Check if a folder name "scores" exists, if not create it
+        if not Path("scores").exists():
+            try:
+                Path("scores").mkdir()
+                self.logger.info("Created 'scores' folder for storing red blueness scores.")
+            except Exception as e:
+                self.logger.error(f"Failed to create 'scores' folder: {e}", exc_info=True)
+
+        # Check if a file name "scores/red_blueness_scores.json" exists, if not create it with an empty json object
+        scores_file_path = Path("scores/red_blueness_scores.json")
+        if not scores_file_path.exists():
+            try:
+                with open(scores_file_path, "w") as f:
+                    json.dump({}, f)
+                self.logger.info("Created 'scores/red_blueness_scores.json' file for storing red blueness scores.")
+            except Exception as e:
+                self.logger.error(f"Failed to create 'scores/red_blueness_scores.json' file: {e}", exc_info=True)
+
+        # Read the existing red blueness scores from the file
+        try:
+            with open(scores_file_path, "r") as f:
+                red_blueness_scores = json.load(f)
+            self.logger.info("Loaded existing red blueness scores from file.")
+        except Exception as e:
+            self.logger.error(f"Failed to load 'scores/red_blueness_scores.json' file: {e}", exc_info=True)
             
-        marker_counter = 0
         if town_centres: #spawns a load of flags, this will later depend on the red blueness score
             #initially pick a red / blueness score at random
             for town_centre in town_centres: 
                 self.watchdog_tick() # Keep the dog happy
 
-                red_blueness_score = random.randint(-100, 100)  # This gives a value between -100 and 100
+                # Check if we already have a red blueness score for this town centre, if so use it, if not generate a new one and save it to the file
+                if red_blueness_scores and town_centre.get("name", "") in red_blueness_scores:
+                    red_blueness_score = red_blueness_scores[town_centre.get("name", "")]
+                    self.logger.info(f"Loaded existing red_blueness_score of {red_blueness_score} for town centre {town_centre.get('name', '')} from file")
+                else:
+                    red_blueness_score = random.randint(-100, 100)  # This gives a value between -100 and 100
+                    red_blueness_scores[town_centre.get("name", "")] = red_blueness_score
+                    # Save the updated scores back to the file
+                    try:
+                        with open(scores_file_path, "w") as f:
+                            json.dump(red_blueness_scores, f)
+                        self.logger.info(f"Saved new red_blueness_score of {red_blueness_score} for town centre {town_centre.get('name', '')} to file")
+                    except Exception as e:
+                        self.logger.error(f"Failed to save 'scores/red_blueness_scores.json' file: {e}", exc_info=True)
+
                 town_centre["red_blueness_score"] = red_blueness_score
                 self.logger.info(f"Assigned red_blueness_score of {red_blueness_score} to town centre {town_centre.get('name', '')}")
                 
@@ -265,10 +304,7 @@ class EnemyPatrols(Plugin):
                     town_centre["location"]["lng"],
                     town_centre["location"].get("alt", 0),
                 )
-                
-                self.api.create_marker(7000 + marker_counter, tc, f"Blue/red score of {town_centre.get('name', '')}= {red_blueness_score}")
-                marker_counter += 1
-                
+                                
                 if town_centre.get("red_blueness_score", 0) < self.red_spawn_threshold: #this area is really bad, it can be a red generator of troops
                     self.logger.info(f"Generating enemy patrol spawns near town centre {town_centre.get('name', '')}")
                     
