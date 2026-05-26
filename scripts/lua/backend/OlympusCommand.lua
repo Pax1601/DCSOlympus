@@ -328,6 +328,47 @@ function Olympus.buildTask(groupName, options)
 	return task
 end
 
+-- Ensure that a point is on land. Used to avoid ground units swimming in the ocean
+-- TODO support amphibious units
+function Olympus.forcePointOnLand(startPoint, endPoint)
+	local iterationCap = 10
+	local point1 = {x = startPoint.x, y = startPoint.z}
+	local point2 = {x = endPoint.x, y = endPoint.z}
+	
+	-- If we are starting from the water, check the destination. If the destination is also in the water just stay there, otherwise swim
+	if (land.getSurfaceType(point1) == land.SurfaceType.WATER or land.getSurfaceType(point1) == land.SurfaceType.SHALLOW_WATER) then
+		if (land.getSurfaceType(point2) == land.SurfaceType.WATER or land.getSurfaceType(point2) == land.SurfaceType.SHALLOW_WATER) then
+			return endPoint
+		else
+			return startPoint
+		end
+	end
+	
+	-- Reapeat for a fixed amount of times
+	local middlePoint = {x = (point1.x + point2.x) / 2, y = (point1.y + point2.y) / 2}
+	while iterationCap > 0 do
+		iterationCap = iterationCap - 1
+		
+		if (land.getSurfaceType(point2) == land.SurfaceType.WATER or land.getSurfaceType(point2) == land.SurfaceType.SHALLOW_WATER) then
+			-- Lets try the middle point
+			middlePoint = {x = (point1.x + point2.x) / 2, y = (point1.y + point2.y) / 2}
+			
+			-- BISECTION ALGORITHM
+			-- If the middle point is in the water, we set point2 to be the middle point because it means that the shore is between point1 and middlePoint. Otherwise, we set point1 to be middle point because the shore is between middle point and point 2
+			if (land.getSurfaceType(middlePoint) == land.SurfaceType.WATER or land.getSurfaceType(middlePoint) == land.SurfaceType.SHALLOW_WATER) then
+				point2 = middlePoint
+			else
+				point1 = middlePoint
+			end
+		else
+			-- If point2 is on ground return it directly, nothing we need to do
+			return {x = point2.x, y = 0, z = point2.y}			
+		end
+	end
+	
+	return {x = middlePoint.x, y = 0, z = middlePoint.y}
+end
+
 -- Move a unit. Since many tasks in DCS are Enroute tasks, this function is an important way to control the unit AI
 function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedType, category, taskOptions)
     Olympus.debug("Olympus.move " .. groupName .. " (" .. lat .. ", " .. lng ..") " .. altitude .. "m " .. altitudeType .. " ".. speed .. "m/s " .. category .. " " .. Olympus.serializeTable(taskOptions), 2)
@@ -420,8 +461,8 @@ function Olympus.move(groupName, lat, lng, altitude, altitudeType, speed, speedT
 			end
 			Olympus.debug("Olympus.move executed successfully on Helicopter", 2)
 		elseif category == "GroundUnit" then
-			local endPoint = coord.LLtoLO(lat, lng, 0) 
-
+			local endPoint = Olympus.forcePointOnLand(mist.getLeadPos(group), coord.LLtoLO(lat, lng, 0))
+			
 			local action = "Off Road"
 			local disableRoads = true
 			if taskOptions and taskOptions['id'] == 'FollowRoads' and taskOptions['value'] == true then
