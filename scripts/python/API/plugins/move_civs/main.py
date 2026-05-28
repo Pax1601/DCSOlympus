@@ -59,7 +59,10 @@ class move_civs(Plugin):
         get_zone = self.get_zones()
         for unit in get_all_units.values():
             unit_name = unit.unit_name
-            units_zone_name = re.search(r"CIV_(.*?)_", unit_name).group(1) if re.search(r"CIV_(.*?)_", unit_name) else "Unknown"
+            civ_match = re.search(r"CIV_(.*?)_", unit_name)
+            if not civ_match:
+                continue
+            units_zone_name = civ_match.group(1)
 
             if unit.ID not in self._speed_set_ids:
                 unit.set_speed(1)
