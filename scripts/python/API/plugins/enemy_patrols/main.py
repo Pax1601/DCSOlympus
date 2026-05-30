@@ -357,12 +357,13 @@ class EnemyPatrols(Plugin):
                             )
                             self.spawn_red_inf(position_to_spawn, patrol_state, town_centre_lat_lng)
                             
-        # Spawn a couple of trucks at each jungle zone and make them go towards the nearest jungle zone
+        # Spawn a couple of trucks at each jungle zone and make them go towards the nearest jungle zone that is not the one they are spawning in, to simulate supply runs between jungle zones. 
         if jungle_zones:
             for jungle_zone in jungle_zones:
                 self.watchdog_tick()  # Keep the dog happy.
 
-                nearest_jungle_zone = self.get_nearest_zone(jungle_zone.get("location", {}), jungle_zones)
+                other_jungle_zones = [zone for zone in jungle_zones if zone.get("name", "") != jungle_zone.get("name", "")]
+                nearest_jungle_zone = self.get_nearest_zone(jungle_zone.get("location", {}), other_jungle_zones)
                 if not nearest_jungle_zone:
                     continue
                 nearest_jungle_zone_pos = LatLng(
@@ -379,12 +380,13 @@ class EnemyPatrols(Plugin):
                     ).project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
                     self.spawn_red_truck(spawn_position, nearest_jungle_zone_pos)  # For now we make them patrol.
                     
-        # Spawn a couple of trucks at each village centre and make them go towards the nearest village centre
+        # Spawn a couple of trucks at each village centre and make them go towards the nearest village centre that is not the one they are spawning in, to simulate supply runs between villages.
         if town_centres:
             for town_centre in town_centres:
                 self.watchdog_tick()  # Keep the dog happy.
 
-                nearest_town_centre = self.get_nearest_zone(town_centre.get("location", {}), town_centres)
+                other_town_centres = [centre for centre in town_centres if centre.get("name", "") != town_centre.get("name", "")]
+                nearest_town_centre = self.get_nearest_zone(town_centre.get("location", {}), other_town_centres)
                 if not nearest_town_centre:
                     continue
                 nearest_town_centre_pos = LatLng(
