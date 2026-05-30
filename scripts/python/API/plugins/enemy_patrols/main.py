@@ -44,7 +44,7 @@ class EnemyPatrolsUnit(Unit):
             if self.state == "idle":
                 for unit in units.values():
                     # Spring the trap when enemy unit lands nearby or enemy infantry are nearby
-                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and not unit.airborne and unit.alive:
+                    if unit.position.distance_to(self.position) < 500 and (unit.coalition == "blue" or unit.operate_as == "blue") and not unit.airborne and unit.alive:
                         if unit.category == "GroundUnit":
                             self.simulate_engagement()
                         else:
@@ -54,7 +54,7 @@ class EnemyPatrolsUnit(Unit):
                 # Stop the unit from shooting if there is no enemy nearby
                 unit_found = False
                 for unit in units.values():
-                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.alive:
+                    if unit.position.distance_to(self.position) < 500 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.alive:
                         unit_found = True
                         break
                     
@@ -65,6 +65,11 @@ class EnemyPatrolsUnit(Unit):
         elif self.patrol_state == "patrol":
             # If the unit is doing nothing, make them walk
             if self.state == "idle":
+                # If someone is shooting at us, return fire
+                if self.suppression_level > 0.5:
+                    self.miss_on_purpose()
+                    return 1
+                
                 # Check if we have reached the village
                 if (self.town_centre.distance_to(self.position) < 50):
                     if self.idle_start_time == 0:
@@ -91,14 +96,14 @@ class EnemyPatrolsUnit(Unit):
                 
                 # If there are enemy units nearby, get in simulated engagement
                 for unit in units.values():
-                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.category == "GroundUnit" and unit.alive:
+                    if unit.position.distance_to(self.position) < 500 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.category == "GroundUnit" and unit.alive:
                         self.simulate_engagement()
                         return 1
             else:
                 # Stop the unit from shooting if there is no enemy nearby
                 unit_found = False
                 for unit in units.values():
-                    if unit.position.distance_to(self.position) < 200 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.alive:
+                    if unit.position.distance_to(self.position) < 2000 and (unit.coalition == "blue" or unit.operate_as == "blue") and unit.alive:
                         unit_found = True
                         break
 
