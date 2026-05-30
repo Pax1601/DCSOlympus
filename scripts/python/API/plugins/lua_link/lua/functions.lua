@@ -538,15 +538,18 @@ function olyLink.onFireTeamUnitReachedDestination(baseName)
     olyLink.bases[baseName].troopsAvailable = olyLink.bases[baseName].troopsAvailable + 1
 end
 
-function olyLink.rearmArtilleryPiece(baseName)
-    -- When an artillery piece is rearmed, decrease the number of available shells for this base in the config
-    local requiredShells = olyLink.bases[baseName].shellsPerArtilleryPiece or 0
-    if olyLink.bases[baseName].shells == nil or olyLink.bases[baseName].shells < requiredShells then
-        Olympus.notify("Not enough shells available for base " .. baseName .. " to rearm artillery piece", 10)
+function olyLink.decreaseAvailableSheels(baseName, shellsShot)
+    -- When an artillery piece shoots, decrease the number of available shells for this base in the config
+    if olyLink.bases[baseName].shells == nil then
+        Olympus.notify("Shells value not found for base " .. baseName .. ", cannot decrease shells", 10)
         return
     end
 
-    olyLink.bases[baseName].shells = olyLink.bases[baseName].shells - requiredShells
+    olyLink.bases[baseName].shells = olyLink.bases[baseName].shells - shellsShot
+
+    if olyLink.bases[baseName].shells < 0 then
+        olyLink.bases[baseName].shells = 0
+    end
 end
 
 -- Run all the periodic functions. This approach allows to avoid problems when reloading the plugin, 

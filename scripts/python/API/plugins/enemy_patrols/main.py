@@ -15,10 +15,12 @@ from plugin_base import Plugin
 class EnemyPatrolsUnit(Unit):
     patrol_state = "No state"
     original_position = None
+    town_centre = LatLng(0, 0)
     idle_start_time = 0
     
-    def set_patrol_state(self, patrol_state):
+    def set_patrol_state(self, patrol_state, town_centre):
         self.patrol_state = patrol_state
+        self.town_centre = town_centre
         self.original_position = self.position
         
         self.set_operate_as(coalition_to_enum("red"))
@@ -27,7 +29,7 @@ class EnemyPatrolsUnit(Unit):
         self.set_speed(2)
         self.idle_start_time = 0
         
-        # If we are in fight more, we fight
+        # If we are in fight mode, we fight.
         if patrol_state == "fight":
             if random.random() < 0.25:
                 self.miss_on_purpose()
@@ -37,7 +39,7 @@ class EnemyPatrolsUnit(Unit):
                 return 1
         return 1
         
-    def update(self, units: dict[int, Unit], nearest_town_centre: LatLng):
+    def update(self, units: dict[int, Unit]):        
         if self.patrol_state == "ambush":
             if self.state == "idle":
                 for unit in units.values():
@@ -56,7 +58,7 @@ class EnemyPatrolsUnit(Unit):
                         unit_found = True
                         break
                     
-                if not unit_found: 
+                if not unit_found:
                     self.set_path([])
                     return 1
             
@@ -64,7 +66,7 @@ class EnemyPatrolsUnit(Unit):
             # If the unit is doing nothing, make them walk
             if self.state == "idle":
                 # Check if we have reached the village
-                if (nearest_town_centre.distance_to(self.position) < 50):
+                if (self.town_centre.distance_to(self.position) < 50):
                     if self.idle_start_time == 0:
                         self.idle_start_time = time.time()
                     
@@ -76,11 +78,11 @@ class EnemyPatrolsUnit(Unit):
                     else:
                         return 0
                 else:
-                    self.set_path([nearest_town_centre])
+                    self.set_path([self.town_centre])
                     self.idle_start_time = 0
                     return 1
 
-            # If we are walking, check if someone is being a bully       
+            # If we are walking, check if someone is being a bully.
             elif self.state == "reach-destination":
                 # If someone is shooting at us, return fire
                 if self.suppression_level > 0.5:
@@ -100,7 +102,7 @@ class EnemyPatrolsUnit(Unit):
                         unit_found = True
                         break
 
-                if not unit_found: 
+                if not unit_found:
                     self.set_path([])
                     return 1
         return 0
@@ -134,9 +136,9 @@ class EnemyPatrols(Plugin):
         
         try:
             self.api = API(saved_games_folder=self.global_config.get('dcs_saved_games_folder', '.'),
-            load_kokoro=False,
-            load_whisper=False,
-            SRS_folder=self.global_config.get('SRS_folder', '.')              
+                load_kokoro=False,
+                load_whisper=False,
+                SRS_folder=self.global_config.get('SRS_folder', '.')
             )
 
             self.api.register_on_update_callback(self.on_update)
@@ -190,7 +192,7 @@ class EnemyPatrols(Plugin):
             self.logger.error(f"Failed to resume EnemyPatrols plugin: {e}", exc_info=True)
             return False
         
-    def on_update(self, api:API):
+    def on_update(self, api: API):
         self.api = api
         self.watchdog_tick()
         
@@ -204,11 +206,11 @@ class EnemyPatrols(Plugin):
                 return  # Don't do anything
                 
         zones, _, town_centres, _, _ = self.get_all_zones()
-        if zones is None: #no point wasting CPU cycles if no zones in mission do nothing
+        if zones is None:  # No point wasting CPU cycles if no zones are in mission.
             self.logger.info("No zones found, nothing to execute.")
             return
         
-        #Lets get all the red units and work out what we do with them based on zone and enemy_patrols_plugin_state
+        # Let's get all the red units and work out what we do with them.
         units = self.api.get_units()
         self.apply_pending_spawn_initializations(units)
         
@@ -218,13 +220,7 @@ class EnemyPatrols(Plugin):
         if mission.get('load', 100) < 100:
             for unit in units.values():
                 if isinstance(unit, EnemyPatrolsUnit):
-                    nearest_town_centre = self.get_nearest_zone(unit.position, town_centres)
-                    nearest_town_centre_pos = LatLng(
-                        nearest_town_centre["location"]["lat"],
-                        nearest_town_centre["location"]["lng"],
-                        nearest_town_centre["location"].get("alt", 0),
-                    )
-                    iteration_load += unit.update(units, nearest_town_centre_pos)
+                    iteration_load += unit.update(units)
                     if iteration_load > 25:
                         break
        
@@ -234,7 +230,7 @@ class EnemyPatrols(Plugin):
             self.logger.info("No zones found, nothing to execute.")
             return
         
-        #match up the spawn zones with the corresponding town centre zone and join them
+        # Match up the spawn zones with the corresponding town centre zone and join them.
         if self.link_spawn_zones_to_town_centres(spawn_zones, town_centres):
             self.logger.info("Successfully linked spawn zones to town centres.")
         else:
@@ -266,10 +262,10 @@ class EnemyPatrols(Plugin):
         except Exception as e:
             self.logger.error(f"Failed to load 'scores/red_blueness_scores.json' file: {e}", exc_info=True)
             
-        if town_centres: #spawns a load of flags, this will later depend on the red blueness score
-            #initially pick a red / blueness score at random
-            for town_centre in town_centres: 
-                self.watchdog_tick() # Keep the dog happy
+        if town_centres:  # Spawns a load of flags based on red blueness score.
+            # Initially pick a red blueness score at random.
+            for town_centre in town_centres:
+                self.watchdog_tick()  # Keep the dog happy.
 
                 # Check if we already have a red blueness score for this town centre, if so use it, if not generate a new one and save it to the file
                 if red_blueness_scores and town_centre.get("name", "") in red_blueness_scores:
@@ -278,6 +274,7 @@ class EnemyPatrols(Plugin):
                 else:
                     red_blueness_score = random.randint(-100, 100)  # This gives a value between -100 and 100
                     red_blueness_scores[town_centre.get("name", "")] = red_blueness_score
+                    
                     # Save the updated scores back to the file
                     try:
                         with open(scores_file_path, "w") as f:
@@ -305,29 +302,119 @@ class EnemyPatrols(Plugin):
                     town_centre["location"].get("alt", 0),
                 )
                                 
-                if town_centre.get("red_blueness_score", 0) < self.red_spawn_threshold: #this area is really bad, it can be a red generator of troops
+                if town_centre.get("red_blueness_score", 0) < self.red_spawn_threshold:  # This area is unstable and can generate red troops.
                     self.logger.info(f"Generating enemy patrol spawns near town centre {town_centre.get('name', '')}")
                     
-                    total_town_groups_of_units = random.randint(self.min_town_groups_of_units,self.max_town_groups_of_units) #this will later depend on the red blueness score and other factors, this is just a random number for now
+                    total_town_groups_of_units = random.randint(self.min_town_groups_of_units, self.max_town_groups_of_units)  # This is currently a random placeholder.
                    
-                    patrol_state = random.choices(["fight", "ambush", "patrol"],weights=[0.55, 0.35, 0.1], k=1)[0] #we randomise the state a bit so we get a mix of different states in the units that spawn
-                    #enemy_patrols_plugin_state = "patrol"#random.choice(["fight", "ambush", "patrol"]) #used for testing specifics or even weights
+                    patrol_state = random.choices(["fight", "ambush", "patrol"], weights=[0.55, 0.35, 0.1], k=1)[0]  # Randomize state to get a mix of spawned unit behaviors.
+                    
+                    # Enemy patrols plugin state = "patrol"  # Used for testing specifics or custom weights.
                     for i in range(total_town_groups_of_units):
-                        project_new_position_from_centre = centre_zone_pos.project_with_bearing_and_distance(centre_zone_radius, random.randint(0, 360))
-                        cz = project_new_position_from_centre
-                        bearing = tc.bearing_to(cz)
-                        distance_m = tc.distance_to(cz)*random.random() #we randomise the distance a bit 
-                        #if the distance is inside the actual spawn zone this is too close, we want them in the jungle
-                        if distance_m < town_centre.get("radius", 0):
-                            distance_m = town_centre.get("radius", 0) + distance_m
-                        position_to_spawn = tc.project_with_bearing_and_distance(distance_m / 2, bearing)
-                        #we need to group the spawned units together based on the town centre they are linked to, this is because we want them to act as a group and have the same enemy_patrols_plugin_state, e.g. if one unit in the group goes into fight mode then they all go into fight mode, if one unit in the group goes into patrol mode then they all go into patrol mode etc, this is because we want them to act as a cohesive unit rather than individual units that do their own thing, this also makes it easier to manage the enemy_patrols_plugin_states of the units and make them more effective as a group rather than individual units that do their own thing
-                        #work out how many to spawn based on the max spawn numer
+                        position_to_spawn = LatLng(
+                            town_centre["location"]["lat"],
+                            town_centre["location"]["lng"],
+                            town_centre["location"].get("alt", 0),
+                        )
+                        # Find the nearest jungle zone and spawn the units there. Otherwise revert to random spawning within a certain radius of the town centre.
+                        if jungle_zones:
+                            nearest_jungle_zone = self.get_nearest_zone(town_centre.get("location", {}), jungle_zones)
+                            if nearest_jungle_zone:
+                                nearest_jungle_zone_pos = LatLng(
+                                    nearest_jungle_zone["location"]["lat"],
+                                    nearest_jungle_zone["location"]["lng"],
+                                    nearest_jungle_zone["location"].get("alt", 0),
+                                )
+                                position_to_spawn = nearest_jungle_zone_pos.project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
+                        else:
+                            project_new_position_from_centre = centre_zone_pos.project_with_bearing_and_distance(centre_zone_radius, random.randint(0, 360))
+                            cz = project_new_position_from_centre
+                            bearing = tc.bearing_to(cz)
+                            distance_m = tc.distance_to(cz) * random.random()  # Randomize the distance a bit.
+                            
+                            # If the distance is inside the actual spawn zone this is too close; we want them in the jungle.
+                            if distance_m < town_centre.get("radius", 0):
+                                distance_m = town_centre.get("radius", 0) + distance_m
+                            position_to_spawn = tc.project_with_bearing_and_distance(distance_m / 2, bearing)
+                        
+                        # Group spawned units by town centre so they behave as a cohesive patrol.
+                        # Work out how many to spawn based on group-size limits.
                         size_of_group = random.randint(self.min_group_size, self.max_group_size)
-                        # position_to_spawn = tc.project_with_bearing_and_distance(distance_m / 2, bearing) #we need to reset the spawn position for each group so they dont all spawn on top of each other
-                        for j in range(size_of_group): #this will later depend on the red blueness score and other factors, this is just a random number for now
-                            position_to_spawn = position_to_spawn.project_with_bearing_and_distance(random.randint(3, 10), random.randint(0, 360)) #we randomise the spawn position a bit so they dont all spawn on top of each other
-                            self.spawn_red_inf(position_to_spawn, patrol_state)
+                        
+                        # Position to spawn = tc.project_with_bearing_and_distance(distance_m / 2, bearing)  # Reset spawn position per group if needed.
+                        for j in range(size_of_group):  # This is currently a random placeholder.
+                            position_to_spawn = position_to_spawn.project_with_bearing_and_distance(random.randint(3, 10), random.randint(0, 360))  # Randomize the spawn position to avoid overlap.
+                            
+                            town_centre_lat_lng = LatLng(
+                                town_centre["location"]["lat"],
+                                town_centre["location"]["lng"],
+                                town_centre["location"].get("alt", 0),
+                            )
+                            self.spawn_red_inf(position_to_spawn, patrol_state, town_centre_lat_lng)
+                            
+        # Spawn a couple of trucks at each jungle zone and make them go towards the nearest jungle zone
+        if jungle_zones:
+            for jungle_zone in jungle_zones:
+                self.watchdog_tick()  # Keep the dog happy.
+
+                nearest_jungle_zone = self.get_nearest_zone(jungle_zone.get("location", {}), jungle_zones)
+                if not nearest_jungle_zone:
+                    continue
+                nearest_jungle_zone_pos = LatLng(
+                    nearest_jungle_zone["location"]["lat"],
+                    nearest_jungle_zone["location"]["lng"],
+                    nearest_jungle_zone["location"].get("alt", 0),
+                )
+
+                for i in range(random.randint(1, 3)):  # Spawn 1 to 3 trucks in each jungle zone.
+                    spawn_position = LatLng(
+                        jungle_zone["location"]["lat"],
+                        jungle_zone["location"]["lng"],
+                        jungle_zone["location"].get("alt", 0),
+                    ).project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
+                    self.spawn_red_truck(spawn_position, nearest_jungle_zone_pos)  # For now we make them patrol.
+                    
+        # Spawn a couple of trucks at each village centre and make them go towards the nearest village centre
+        if town_centres:
+            for town_centre in town_centres:
+                self.watchdog_tick()  # Keep the dog happy.
+
+                nearest_town_centre = self.get_nearest_zone(town_centre.get("location", {}), town_centres)
+                if not nearest_town_centre:
+                    continue
+                nearest_town_centre_pos = LatLng(
+                    nearest_town_centre["location"]["lat"],
+                    nearest_town_centre["location"]["lng"],
+                    nearest_town_centre["location"].get("alt", 0),
+                )
+
+                for i in range(random.randint(1, 3)):  # Spawn 1 to 3 trucks in each village centre.
+                    spawn_position = LatLng(
+                        town_centre["location"]["lat"],
+                        town_centre["location"]["lng"],
+                        town_centre["location"].get("alt", 0),
+                    ).project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
+                    self.spawn_red_truck(spawn_position, nearest_town_centre_pos)  # For now we make them patrol.
+                    
+        # Add a couple of static tents in the jungle zones for flavour
+        if jungle_zones:
+            for jungle_zone in jungle_zones:
+                self.watchdog_tick()  # Keep the dog happy.
+                self.api.spawn_static_object(
+                    canCargo=False,
+                    coalition="neutral",
+                    dead=False,
+                    heading=random.randint(0, 360),
+                    linkOffset=False,
+                    location=LatLng(
+                        jungle_zone["location"]["lat"],
+                        jungle_zone["location"]["lng"],
+                        jungle_zone["location"].get("alt", 0),
+                    ).project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360)),  # Randomize spawn position to avoid overlap.
+                    mass=100,
+                    shapeName="FARP Tent",
+                    type="FARP Tent"
+                )
         
     def check_mission_started(self):
         result = self.api.update_mission()
@@ -335,16 +422,9 @@ class EnemyPatrols(Plugin):
             return False
         return True
 
-    def spawn_red_inf(self, location, patrol_state):
+    def spawn_red_inf(self, location, patrol_state, town_centre):
         if not self.api:
             return
-
-        units_by_id = self.api.update_units()
-        for existing_unit_object in units_by_id.values():
-            if existing_unit_object.unit_name == f"VC_TIAC_{self.spawn_counter}" and existing_unit_object.alive:
-                location = existing_unit_object.position
-                self.logger.info(f"Unit VC_TIAC_{self.spawn_counter} already exists, respawning at existing location {location}")
-                break
 
         units = [
             UnitSpawnTable(
@@ -360,20 +440,61 @@ class EnemyPatrols(Plugin):
 
         if self.spawn_counter < self.max_units:
             self.api.spawn_ground_units(
-                units = units,
-                coalition = "neutral",
-                country = "",   # pick a valid neutral country in your mission
-                immediate = True,
-                spawnPoints = 0,
-                groupName = f"VC_TIAC_{self.spawn_counter}",
-                execution_callback = lambda ID: self.spawn_execution_callback(ID, patrol_state),
+                units=units,
+                coalition="neutral",
+                country="",  # Pick a valid neutral country in your mission.
+                immediate=True,
+                spawnPoints=0,
+                groupName=f"VC_TIAC_{self.spawn_counter}",
+                execution_callback=lambda ID: self.spawn_execution_callback(ID, patrol_state, town_centre),
             )
             self.logger.info(f"Spawning red patrol unit VC_TIAC_{self.spawn_counter} at location {location} with patrol state {patrol_state}")
 
         self.spawn_counter += 1
+        
+    def spawn_red_truck(self, location, destination):
+        if not self.api:
+            return
 
-    async def spawn_execution_callback(self, ID, patrol_state):
-        self.pending_spawn_initializations[ID] = patrol_state
+        units = [
+            UnitSpawnTable(
+                name=f"VC_TIAC_TRUCK_{self.spawn_counter}",
+                unit_type="Bedford_MWD",
+                location=location,
+                skill="Average",
+                altitude=0,
+                heading=random.randint(0, 360),
+            )
+        ]
+
+        if self.spawn_counter < self.max_units:
+            self.api.spawn_ground_units(
+                units=units,
+                coalition="neutral",
+                country="",  # Pick a valid neutral country in your mission.
+                immediate=True,
+                spawnPoints=0,
+                groupName=f"VC_TIAC_TRUCK_{self.spawn_counter}",
+                execution_callback=lambda ID: self.spawn_truck_execution_callback(ID, destination),
+            )
+            self.logger.info(f"Spawning red truck unit VC_TIAC_TRUCK_{self.spawn_counter} at location {location} with destination {destination}")
+            # After spawning, we need to set the truck to move towards the destination
+            # We will do this in the on_update loop by checking for units with the name pattern "VC_TIAC_TRUCK_" and setting their path towards the destination, we can store the destination in a dict with the unit ID as the key when we spawn them and then retrieve it in the on_update loop to set their path towards it
+
+        self.spawn_counter += 1
+
+    async def spawn_execution_callback(self, ID, patrol_state, town_centre):
+        self.pending_spawn_initializations[ID] = {
+            "unit_type": "Infantry",
+            "state": patrol_state,
+            "town_centre": town_centre
+        }
+        
+    async def spawn_truck_execution_callback(self, ID, destination):
+        self.pending_spawn_initializations[ID] = {
+            "unit_type": "Truck",
+            "destination": destination
+        }
 
     def apply_pending_spawn_initializations(self, units: dict[int, Unit]):
         mission = self.api.get_mission()
@@ -382,11 +503,16 @@ class EnemyPatrols(Plugin):
 
         resolved_ids = []
         iteration_load = 0
-        for result_id, patrol_state in self.pending_spawn_initializations.items():
+        for result_id, init_data in self.pending_spawn_initializations.items():
             for unit in units.values():
                 if mission.get('load', 100) < 100 and iteration_load < 25 and unit.unit_id == result_id:
-                    unit.__class__ = EnemyPatrolsUnit
-                    iteration_load += unit.set_patrol_state(patrol_state)
+                    if init_data["unit_type"] == "Infantry":
+                        unit.__class__ = EnemyPatrolsUnit
+                        iteration_load += unit.set_patrol_state(init_data["state"], init_data["town_centre"])
+                    elif init_data["unit_type"] == "Truck":
+                        unit.set_path([init_data["destination"]])
+                        unit.set_speed(5)
+                        unit.set_operate_as(coalition_to_enum("red"))
                     resolved_ids.append(result_id)
                     break
 
@@ -397,22 +523,22 @@ class EnemyPatrols(Plugin):
         try:
             mission = self.api.update_mission()
             mission_triggers = mission.get("triggers", {})
-            #make an array of the zones for blue and then red
+            # Make an array of the zones for blue and then red.
             zones = []
             spawn_zones = []
             town_centres = []
             jungle_zones = []
             centre_zones = []
             for trigger in mission_triggers:
-               zone_name = mission_triggers[trigger].get("name", "")
-               if re.match(r"^[tT][cC]-.+-\d+$", zone_name):
-                   town_centres.append(mission_triggers[trigger]) # adds the zone to the town centres list
-               elif re.match(r"^[sS][vV]-.+-\d+$", zone_name) or re.match(r"^[lL][vV]-.+-\d+$", zone_name) or re.match(r"^[sS][hH]-.+-\d+$", zone_name):
-                   spawn_zones.append(mission_triggers[trigger]) # adds the zone to the spawn zones list
-               elif re.match(r"^[jJ][zZ]-.+-\d+$", zone_name):
-                   jungle_zones.append(mission_triggers[trigger]) # adds the zone to the jungle zones list
-               elif re.match(r"^[iI][mM]-\d+$",zone_name):
-                   centre_zones.append(mission_triggers[trigger]) # adds the zone to the centre zones list
+                zone_name = mission_triggers[trigger].get("name", "")
+                if re.match(r"^[tT][cC]-.+-\d+$", zone_name):
+                    town_centres.append(mission_triggers[trigger])  # Adds the zone to the town centres list.
+                elif re.match(r"^[sS][vV]-.+-\d+$", zone_name) or re.match(r"^[lL][vV]-.+-\d+$", zone_name) or re.match(r"^[sS][hH]-.+-\d+$", zone_name):
+                    spawn_zones.append(mission_triggers[trigger])  # Adds the zone to the spawn zones list.
+                elif re.match(r"^[jJ][zZ]-.+-\d+$", zone_name):
+                    jungle_zones.append(mission_triggers[trigger])  # Adds the zone to the jungle zones list.
+                elif re.match(r"^[iI][mM]-\d+$", zone_name):
+                    centre_zones.append(mission_triggers[trigger])  # Adds the zone to the centre zones list.
 
             zones = spawn_zones + town_centres + jungle_zones + centre_zones
 
@@ -472,7 +598,7 @@ class EnemyPatrols(Plugin):
         
     def _extract_lat_lng(self, point):
         # Accept either a dict-like payload with 'lat' and 'lng'/'lon',
-        # or a `LatLng`-like object with `lat` and `lng` attributes.
+        # Or a `LatLng`-like object with `lat` and `lng` attributes.
         try:
             # LatLng dataclass or other objects with lat/lng attributes
             if hasattr(point, "lat") and hasattr(point, "lng"):
@@ -493,91 +619,3 @@ class EnemyPatrols(Plugin):
             return None, None
 
         return None, None
-
-    def get_neutral_countries(self):
-        try:
-            mission = self.api.update_mission()
-            coalitions = mission.get("coalitions", {})
-            neutral = coalitions.get("neutral", {})
-            
-            if not neutral:
-                self.logger.warning("No neutral coalition found in the mission.")
-                return []
-            
-            # If neutral is a dict, return its values (country data dicts)
-            if isinstance(neutral, dict):
-                countries = list(neutral.values())
-                return countries if countries else []
-            
-            # If neutral is already a list, return it
-            if isinstance(neutral, list):
-                return neutral
-            
-            return []
-        except Exception as e:
-            self.logger.error(f"Error getting neutral countries: {e}", exc_info=True)
-            return []
-
-    def spawn_static_at_zone(self, zone, type="flag", colour="white", coalition="neutral"):
-        if not zone:
-            self.logger.info("No zone available for static spawning.")
-            return
-        
-        if coalition.lower() == "neutral":
-                neutral_countries = self.get_neutral_countries()
-                a_neutral_country_name_string = neutral_countries[0]
-        else:
-            return
-        
-        if type == "flag":
-            if colour.lower() == "white":
-                static_type = "White_Flag"
-            elif colour.lower() == "red":
-                static_type = "Red_Flag"
-            else:
-                return
-        else:
-            return
-
-        #get a neutral coalition country, this is used to spawn the statics in, we want them to be neutral so they dont get removed by the game when a coalition gets removed, e.g. if we spawn them as russian and then the russians get removed from the mission for whatever reason then the statics will also get removed, but if we spawn them as a neutral country then they will stay in the mission regardless of what happens to the coalitions
-        static_category = self.config.get("static_category", "Fortifications")
-        static_country = self.config.get("static_country", "country.id." + a_neutral_country_name_string)
-
-        zone_name = str(zone.get("name", "zone"))
-        location = zone.get("location", {})
-        lat, lng = self._extract_lat_lng(location)
-
-        if lat is None or lng is None:
-            self.logger.warning(f"Skipping zone '{zone_name}' due to invalid location payload: {location}")
-            return
-
-        safe_zone_name = re.sub(r"[^A-Za-z0-9_-]", "_", zone_name)
-        static_name = f"EP_STATIC_{safe_zone_name}"
-
-        lua_lines = [
-            f"do",
-            f"  local ll = coord.LLtoLO({lat}, {lng})",
-            f"  local ok = coalition.addStaticObject({static_country}, {{",
-            f"    name = {json.dumps(static_name)},",
-            f"    type = {json.dumps(static_type)},",
-            f"    category = {json.dumps(static_category)},",
-            f"    x = ll.x,",
-            f"    y = ll.z,",
-            f"    heading = 0,",
-            f"    canCargo = false",
-            f"  }})",
-            f"  env.info(string.format('EnemyPatrols static spawn zone={json.dumps(zone_name)} colour={json.dumps(colour)} success=%s', tostring(ok)))",
-            f"end",
-        ]
-
-        lua_script = "\n".join(lua_lines)
-
-        try:
-            with tempfile.NamedTemporaryFile(mode="w", suffix="_enemy_patrols_spawn_static.lua", delete=False, encoding="utf-8") as lua_file:
-                lua_file.write(lua_script)
-                lua_path = Path(lua_file.name)
-
-            self.api.execute_file(str(lua_path))
-            self.logger.info(f"Submitted static spawn Lua for zone '{zone_name}' with colour '{colour}': {lua_path}")
-        except Exception as e:
-            self.logger.error(f"Error spawning static at zone '{zone_name}': {e}", exc_info=True)

@@ -67,10 +67,10 @@ export class SRSHandler {
             clientsData: this.clients.map((client) => {
               return {
                 name: client.Name,
-                unitID: client.RadioInfo.unitId,
-                iff: client.RadioInfo.iff,
+                unitID: client.RadioInfo?.unitId || 0,
+                iff: client.RadioInfo?.iff || [],
                 coalition: client.Coalition,
-                radios: client.RadioInfo.radios.map((radio) => {
+                radios: (client.RadioInfo?.radios || []).map((radio) => {
                   return {
                     frequency: radio.freq,
                     modulation: radio.modulation,

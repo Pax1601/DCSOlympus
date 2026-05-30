@@ -57,6 +57,8 @@ class LuaLink(Plugin):
 
         self.start_time = None
         self.mission_started = False
+        
+        self.artillery_pieces: dict = {}  # Dictionary to keep track of artillery pieces and their status
 
     def on_start(self) -> bool:
         """
@@ -126,7 +128,7 @@ class LuaLink(Plugin):
                 # Pregenerate all the possible responses to have them ready
                 # Use dummy values
                 for response_key in RESPONSE_TEMPLATES.keys():
-                    voice_model = base_info["voiceModel"] if hasattr(base_info, "voiceModel") else "bm_daniel"
+                    voice_model = base_info["voiceModel"] if "voiceModel" in base_info else "bm_daniel"
                     self.api.generate_audio_message(RESPONSE_TEMPLATES[response_key].format(callsign="TestUnit", fuel=1000, shells=100, supplies=500, troopsAvailable=20), voice=voice_model)
                     await asyncio.sleep(0.1)  # Sleep a bit to avoid overwhelming the system
 
@@ -172,9 +174,9 @@ class LuaLink(Plugin):
             self.bases_data = custom_data
 
             # Perform periodic functions
-            if result.get("load") < 10:  # Only perform these functions if the server load is less than 10 to avoid potential performance issues
+            if result.get("load", 100) < 10:  # Only perform these functions if the server load is less than 10 to avoid potential performance issues
                 self.send_units_to_spawn_point()
-                self.rearm_artillery_pieces()
+                self.handle_artillery_pieces()
 
             # Write the custom data to the link file for the Lua script to read
             dict_to_lua_table_file(custom_data, self.active_lua_config, "olyLink.bases")
@@ -283,7 +285,7 @@ class LuaLink(Plugin):
             response = RESPONSE_TEMPLATES["unrecognized"].format(callsign=unit.callsign)
             keep_message = True  # Keep the message for debugging unrecognized commands
             
-        voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and hasattr(self.bases_data[base_name], "voiceModel") else "bm_daniel"
+        voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and "voiceModel" in self.bases_data[base_name] else "bm_daniel"
         future = self.api.generate_audio_message_in_executor(response, voice=voice_model)
         future.add_done_callback(lambda audio_file: listener.transmit_on_frequency(file_name=audio_file.result()))
 
@@ -409,46 +411,100 @@ class LuaLink(Plugin):
 
         # Notify the Lua script that the unit has reached its destination so it can update the number of available troops at the base
         self.execute_command(f"olyLink.onFireTeamUnitReachedDestination(\"{base_name}\")")
+        
+    def handle_artillery_pieces(self):
+        # Track all the artillery pieces in the mission that are alive, belong to the blue coalition, are within 200 meters of the dropoff point and are controlled by Olympus.
+        units = self.api.get_units()
+        
+        for unit in units.values():
+            if unit.category == "GroundUnit":
+                unit_type = self.api.groundunit_database.get(unit.name, {}).get("type", "")
+                if unit_type == "Artillery" and unit.coalition == "blue" and unit.controlled and unit.alive:
+                    # Check if any dropoff point is within 200 meters of the unit
+                    for base_name, base_info in self.bases_data.items():
+                        zones = self.api.get_mission().get("triggers", {})
+                        for zone in zones.values():
+                            if "name" in zone and zone["name"] == base_info.get("dropoffZoneName", ""):
+                                dropoff_location = zone.get("location", {})
+                                dropoff_latlng = LatLng(dropoff_location.get("lat", 0), dropoff_location.get("lng", 0), dropoff_location.get("alt", 0))
+                                if dropoff_latlng.distance_to(unit.position) <= 200:
+                                    # If the unit is not already being tracked, track it
+                                    if unit.ID not in self.artillery_pieces:
+                                        self.logger.info(f"Unit {unit.ID} is an artillery piece that is nearby the dropoff point of base {base_name}, tracking it for potential rearming")
+                                        self.artillery_pieces[unit.ID] = {
+                                            "unit": unit,
+                                            "base_name": base_name,
+                                            "total_ammo": unit.total_ammo
+                                        }
+                                        
+        # Remove any artillery pieces that are no longer valid (dead, not controlled, not blue coalition or moved away from the dropoff point)
+        for unit_id in list(self.artillery_pieces.keys()):
+            artillery_piece_info = self.artillery_pieces[unit_id]
+            unit = artillery_piece_info["unit"]
+            base_name = artillery_piece_info["base_name"]
 
-    def rearm_artillery_pieces(self):
-        # Iterate on all the bases
-        for base_name, base_info in self.bases_data.items():
-            required_shells = self.bases_data[base_name].get("shellsPerArtilleryPiece", 0)
-            available_shells = self.bases_data[base_name].get("shells", 0)
+            if not unit.alive or not unit.controlled or unit.coalition != "blue":
+                self.logger.info(f"Unit {unit.ID} is no longer valid for handling, removing it from tracking")
+                del self.artillery_pieces[unit_id]
+                continue
 
-            # Iterate on all the zones
             zones = self.api.get_mission().get("triggers", {})
             for zone in zones.values():
-                if "name" in zone and zone["name"] == base_info.get("dropoffZoneName", ""):
+                if "name" in zone and zone["name"] == self.bases_data[base_name].get("dropoffZoneName", ""):
                     dropoff_location = zone.get("location", {})
-                    dropoff_latlng = LatLng(dropoff_location.get("lat", 0), dropoff_location.get("lng", 0), dropoff_location.get("alt", 0), threshold=30)
+                    dropoff_latlng = LatLng(dropoff_location.get("lat", 0), dropoff_location.get("lng", 0), dropoff_location.get("alt", 0))
+                    if dropoff_latlng.distance_to(unit.position) > 200:
+                        self.logger.info(f"Unit {unit.ID} has moved away from the dropoff point of base {base_name}, removing it from tracking")
+                        del self.artillery_pieces[unit_id]
+                        break
                     
+        # Iterate on all the tracked artillery pieces and check if they need rearming (if their ammo is less than 10% of their max ammo).
+        # If they do, rearm them by cloning a new unit with the same type and position and deleting the original one
+        # Ignore if the base doesn't have enough shells available to rearm the artillery piece. Instead, we will keep tracking the number of shells shot
+        # We do that by comparing the current total_ammo of the artillery piece with its previous total_ammo. The difference is the number of shells shot. We will decrease the available shells at the base by that difference. 
+        # If the number of available shells reaches zero, we will stop any unit that is trying to shoot and we will play a radio message
+        
+        # Start by updating the available shells at each base
+        for artillery_piece_info in self.artillery_pieces.values():
+            unit = artillery_piece_info["unit"]
+            base_name = artillery_piece_info["base_name"]
+            previous_total_ammo = artillery_piece_info["total_ammo"]
+            current_total_ammo = unit.total_ammo
 
-                    # Get all the units in the mission that are within 200 meters the dropoff point
-                    units = self.api.get_units()
-                    for unit in units.values():
-                        if unit.category == "GroundUnit":
-                            if available_shells < required_shells:
-                                self.logger.debug(f"Not enough shells available to rearm unit {unit.ID} at base {base_name}, skipping")
-                                continue
+            if current_total_ammo < previous_total_ammo:
+                shells_shot = previous_total_ammo - current_total_ammo
+                self.logger.info(f"Unit {unit.ID} has shot {shells_shot} shells, updating available shells at base {base_name}")
+                self.execute_command(f"olyLink.decreaseAvailableShells(\"{base_name}\", {shells_shot})")
+                artillery_piece_info["total_ammo"] = current_total_ammo
+                
+                self.bases_data[base_name]["shells"] = max(0, self.bases_data[base_name].get("shells", 0) - shells_shot)
+                    
+        # Iterate on all the units that are being tracked and check if they need rearming. Ignore the available shells
+        for artillery_piece_info in self.artillery_pieces.values():
+            unit = artillery_piece_info["unit"]
+            base_name = artillery_piece_info["base_name"]
 
-                            unit_type = self.api.groundunit_database.get(unit.name, {}).get("type", "")
-                            if dropoff_latlng.distance_to(unit.position) <= 200 and unit_type == "Artillery" and unit.coalition == "blue" and unit.alive:
-                                # Check if the unit needs rearming
-                                if unit.total_ammo <= 0.1 * unit.max_ammo:
-                                    self.logger.info(f"Unit {unit.ID} is nearby base {base_name} and needs rearming, rearming it")
-                                    
-                                    # Clone the original unit to reset its ammo
-                                    self.api.clone_units([{"ID": unit.ID, "location": {
-                                        "lat": unit.position.lat,
-                                        "lng": unit.position.lng,
-                                        "alt": unit.position.alt
-                                    }}], delete_original=True)
+            if unit.total_ammo <= 0.1 * unit.max_ammo:
+                self.logger.info(f"Unit {unit.ID} is an artillery piece that is nearby the dropoff point of base {base_name} and needs rearming, rearming it")
+                
+                # Clone the original unit to reset its ammo
+                self.api.clone_units([{"ID": unit.ID, "location": {
+                    "lat": unit.position.lat,
+                    "lng": unit.position.lng,
+                    "alt": unit.position.alt
+                }}], delete_original=True)
 
-                                    # Update the value of available shells
-                                    self.execute_command(f"olyLink.rearmArtilleryPiece(\"{base_name}\")")
+        # Iterate all the tracked artillery pieces and check if any of them is trying to shoot while the base doesn't have any shells available. If so, stop the unit and play a radio message
+        for artillery_piece_info in self.artillery_pieces.values():
+            unit = artillery_piece_info["unit"]
+            base_name = artillery_piece_info["base_name"]
+            available_shells = self.bases_data[base_name].get("shells", 0)
 
-                                    # Decrease the available shells by the required shells to rearm one artillery piece
-                                    available_shells -= required_shells
-
-
+            if available_shells <= 0 and unit.state != "idle":
+                self.logger.info(f"Unit {unit.ID} is an artillery piece that is nearby the dropoff point of base {base_name} and is trying to shoot while no shells are available, stopping it and playing a radio message")
+                unit.set_path([])
+                
+                voice_model = self.bases_data[base_name]["voiceModel"] if base_name in self.bases_data and "voiceModel" in self.bases_data[base_name] else "bm_daniel"
+                response = RESPONSE_TEMPLATES["no_troops"].format(callsign=unit.callsign)
+                future = self.api.generate_audio_message_in_executor(response, voice=voice_model)
+                future.add_done_callback(lambda audio_file: self.listeners[base_name].transmit_on_frequency(file_name=audio_file.result()))
