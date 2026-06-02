@@ -15,7 +15,7 @@ from plugin_base import Plugin
 class EnemyPatrolsUnit(Unit):
     patrol_state = "No state"
     original_position = None
-    town_centre = LatLng(0, 0)
+    town_centre = LatLng(0, 0, 0)
     idle_start_time = 0
     
     def set_patrol_state(self, patrol_state, town_centre):
@@ -363,14 +363,21 @@ class EnemyPatrols(Plugin):
                 self.watchdog_tick()  # Keep the dog happy.
 
                 other_jungle_zones = [zone for zone in jungle_zones if zone.get("name", "") != jungle_zone.get("name", "")]
-                nearest_jungle_zone = self.get_nearest_zone(jungle_zone.get("location", {}), other_jungle_zones)
-                if not nearest_jungle_zone:
-                    continue
-                nearest_jungle_zone_pos = LatLng(
-                    nearest_jungle_zone["location"]["lat"],
-                    nearest_jungle_zone["location"]["lng"],
-                    nearest_jungle_zone["location"].get("alt", 0),
-                )
+                
+                # Compute a path containing all the jungle zones starting with the nearest one to the spawn zone and then going to the nearest one from there and so on, to simulate a supply run route between jungle zones.
+                if other_jungle_zones:
+                    visited_zones = set()
+                    path = []
+                    current_zone = jungle_zone
+                    while current_zone and current_zone.get("name", "") not in visited_zones:
+                        visited_zones.add(current_zone.get("name", ""))
+                        path.append(LatLng(
+                            current_zone["location"]["lat"],
+                            current_zone["location"]["lng"],
+                            current_zone["location"].get("alt", 0),
+                        ))
+                        current_zone = self.get_nearest_zone(current_zone.get("location", {}), other_jungle_zones)
+                    
 
                 for i in range(random.randint(1, 3)):  # Spawn 1 to 3 trucks in each jungle zone.
                     spawn_position = LatLng(
@@ -378,22 +385,28 @@ class EnemyPatrols(Plugin):
                         jungle_zone["location"]["lng"],
                         jungle_zone["location"].get("alt", 0),
                     ).project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
-                    self.spawn_red_truck(spawn_position, nearest_jungle_zone_pos)  # For now we make them patrol.
+                    self.spawn_red_truck(spawn_position, path)  # For now we make them patrol.
                     
         # Spawn a couple of trucks at each village centre and make them go towards the nearest village centre that is not the one they are spawning in, to simulate supply runs between villages.
         if town_centres:
             for town_centre in town_centres:
                 self.watchdog_tick()  # Keep the dog happy.
 
+                # Compute a path containing all the town centres starting with the nearest one to the spawn zone and then going to the nearest one from there and so on, to simulate a supply run route between town centres.
                 other_town_centres = [centre for centre in town_centres if centre.get("name", "") != town_centre.get("name", "")]
-                nearest_town_centre = self.get_nearest_zone(town_centre.get("location", {}), other_town_centres)
-                if not nearest_town_centre:
-                    continue
-                nearest_town_centre_pos = LatLng(
-                    nearest_town_centre["location"]["lat"],
-                    nearest_town_centre["location"]["lng"],
-                    nearest_town_centre["location"].get("alt", 0),
-                )
+                
+                if other_town_centres:
+                    visited_centres = set()
+                    path = []
+                    current_centre = town_centre
+                    while current_centre and current_centre.get("name", "") not in visited_centres:
+                        visited_centres.add(current_centre.get("name", ""))
+                        path.append(LatLng(
+                            current_centre["location"]["lat"],
+                            current_centre["location"]["lng"],
+                            current_centre["location"].get("alt", 0),
+                        ))
+                        current_centre = self.get_nearest_zone(current_centre.get("location", {}), other_town_centres)
 
                 for i in range(random.randint(1, 3)):  # Spawn 1 to 3 trucks in each village centre.
                     spawn_position = LatLng(
@@ -401,7 +414,7 @@ class EnemyPatrols(Plugin):
                         town_centre["location"]["lng"],
                         town_centre["location"].get("alt", 0),
                     ).project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
-                    self.spawn_red_truck(spawn_position, nearest_town_centre_pos)  # For now we make them patrol.
+                    self.spawn_red_truck(spawn_position, path)  # For now we make them patrol.
                     
         # Add a couple of static tents in the jungle zones for flavour
         if jungle_zones:
@@ -459,7 +472,7 @@ class EnemyPatrols(Plugin):
 
         self.spawn_counter += 1
         
-    def spawn_red_truck(self, location, destination):
+    def spawn_red_truck(self, location, path):
         if not self.api:
             return
 
@@ -471,6 +484,7 @@ class EnemyPatrols(Plugin):
                 skill="Average",
                 altitude=0,
                 heading=random.randint(0, 360),
+                livery_id=""
             )
         ]
 
@@ -482,9 +496,9 @@ class EnemyPatrols(Plugin):
                 immediate=True,
                 spawnPoints=0,
                 groupName=f"VC_TIAC_TRUCK_{self.spawn_counter}",
-                execution_callback=lambda ID: self.spawn_truck_execution_callback(ID, destination),
+                execution_callback=lambda ID: self.spawn_truck_execution_callback(ID, path),
             )
-            self.logger.info(f"Spawning red truck unit VC_TIAC_TRUCK_{self.spawn_counter} at location {location} with destination {destination}")
+            self.logger.info(f"Spawning red truck unit VC_TIAC_TRUCK_{self.spawn_counter} at location {location}")
             # After spawning, we need to set the truck to move towards the destination
             # We will do this in the on_update loop by checking for units with the name pattern "VC_TIAC_TRUCK_" and setting their path towards the destination, we can store the destination in a dict with the unit ID as the key when we spawn them and then retrieve it in the on_update loop to set their path towards it
 
@@ -497,10 +511,10 @@ class EnemyPatrols(Plugin):
             "town_centre": town_centre
         }
         
-    async def spawn_truck_execution_callback(self, ID, destination):
+    async def spawn_truck_execution_callback(self, ID, path):
         self.pending_spawn_initializations[ID] = {
             "unit_type": "Truck",
-            "destination": destination
+            "path": path
         }
 
     def apply_pending_spawn_initializations(self, units: dict[int, Unit]):
@@ -517,9 +531,10 @@ class EnemyPatrols(Plugin):
                         unit.__class__ = EnemyPatrolsUnit
                         iteration_load += unit.set_patrol_state(init_data["state"], init_data["town_centre"])
                     elif init_data["unit_type"] == "Truck":
-                        unit.set_path([init_data["destination"]])
+                        unit.set_path([init_data["path"]])
                         unit.set_speed(5)
                         unit.set_operate_as(coalition_to_enum("red"))
+                        iteration_load += 5
                     resolved_ids.append(result_id)
                     break
 
