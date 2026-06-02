@@ -314,7 +314,6 @@ class EnemyPatrols(Plugin):
                    
                     patrol_state = random.choices(["fight", "ambush", "patrol"], weights=[0.55, 0.35, 0.1], k=1)[0]  # Randomize state to get a mix of spawned unit behaviors.
                     
-                    # Enemy patrols plugin state = "patrol"  # Used for testing specifics or custom weights.
                     for i in range(total_town_groups_of_units):
                         position_to_spawn = LatLng(
                             town_centre["location"]["lat"],
@@ -330,7 +329,12 @@ class EnemyPatrols(Plugin):
                                     nearest_jungle_zone["location"]["lng"],
                                     nearest_jungle_zone["location"].get("alt", 0),
                                 )
-                                position_to_spawn = nearest_jungle_zone_pos.project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
+                                position_to_spawn = nearest_jungle_zone_pos.project_with_bearing_and_distance(town_centre.get("radius", 0) * random.random(), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
+                                
+                            # If not in "patrol" state, apply some scatter to the start position
+                            if patrol_state != "patrol":
+                                position_to_spawn = position_to_spawn.project_with_bearing_and_distance(random.randint(10, 30), random.randint(0, 360))  # Randomize spawn position to avoid overlap.
+                                
                         else:
                             project_new_position_from_centre = centre_zone_pos.project_with_bearing_and_distance(centre_zone_radius, random.randint(0, 360))
                             cz = project_new_position_from_centre
@@ -366,19 +370,22 @@ class EnemyPatrols(Plugin):
                 
                 # Compute a path containing all the jungle zones starting with the nearest one to the spawn zone and then going to the nearest one from there and so on, to simulate a supply run route between jungle zones.
                 if other_jungle_zones:
-                    visited_zones = set()
+                    zones_to_visit = [zone for zone in other_jungle_zones]
                     path = []
                     current_zone = jungle_zone
-                    while current_zone and current_zone.get("name", "") not in visited_zones:
-                        visited_zones.add(current_zone.get("name", ""))
-                        path.append(LatLng(
-                            current_zone["location"]["lat"],
-                            current_zone["location"]["lng"],
-                            current_zone["location"].get("alt", 0),
-                        ))
-                        current_zone = self.get_nearest_zone(current_zone.get("location", {}), other_jungle_zones)
-                    
-
+                    while len(zones_to_visit) > 0:
+                        nearest_zone = self.get_nearest_zone(current_zone.get("location", {}), zones_to_visit)
+                        if not nearest_zone:
+                            break
+                        nearest_zone_pos = LatLng(
+                            nearest_zone["location"]["lat"],
+                            nearest_zone["location"]["lng"],
+                            nearest_zone["location"].get("alt", 0),
+                        )
+                        path.append(nearest_zone_pos)
+                        current_zone = nearest_zone
+                        zones_to_visit.remove(nearest_zone)
+    
                 for i in range(random.randint(1, 3)):  # Spawn 1 to 3 trucks in each jungle zone.
                     spawn_position = LatLng(
                         jungle_zone["location"]["lat"],
@@ -396,17 +403,21 @@ class EnemyPatrols(Plugin):
                 other_town_centres = [centre for centre in town_centres if centre.get("name", "") != town_centre.get("name", "")]
                 
                 if other_town_centres:
-                    visited_centres = set()
+                    zones_to_visit = [centre for centre in other_town_centres]
                     path = []
-                    current_centre = town_centre
-                    while current_centre and current_centre.get("name", "") not in visited_centres:
-                        visited_centres.add(current_centre.get("name", ""))
-                        path.append(LatLng(
-                            current_centre["location"]["lat"],
-                            current_centre["location"]["lng"],
-                            current_centre["location"].get("alt", 0),
-                        ))
-                        current_centre = self.get_nearest_zone(current_centre.get("location", {}), other_town_centres)
+                    current_zone = town_centre
+                    while len(zones_to_visit) > 0:
+                        nearest_zone = self.get_nearest_zone(current_zone.get("location", {}), zones_to_visit)
+                        if not nearest_zone:
+                            break
+                        nearest_zone_pos = LatLng(
+                            nearest_zone["location"]["lat"],
+                            nearest_zone["location"]["lng"],
+                            nearest_zone["location"].get("alt", 0),
+                        )
+                        path.append(nearest_zone_pos)
+                        current_zone = nearest_zone
+                        zones_to_visit.remove(nearest_zone)
 
                 for i in range(random.randint(1, 3)):  # Spawn 1 to 3 trucks in each village centre.
                     spawn_position = LatLng(
