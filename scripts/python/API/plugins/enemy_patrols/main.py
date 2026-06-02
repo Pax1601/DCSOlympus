@@ -542,7 +542,7 @@ class EnemyPatrols(Plugin):
                         unit.__class__ = EnemyPatrolsUnit
                         iteration_load += unit.set_patrol_state(init_data["state"], init_data["town_centre"])
                     elif init_data["unit_type"] == "Truck":
-                        unit.set_path([init_data["path"]])
+                        unit.set_path(init_data["path"])
                         unit.set_speed(5)
                         unit.set_operate_as(coalition_to_enum("red"))
                         iteration_load += 5
