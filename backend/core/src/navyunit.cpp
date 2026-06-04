@@ -123,10 +123,12 @@ void NavyUnit::setState(unsigned char newState)
 		break;
 	}
 	case State::FIRE_AT_AREA: {
+		setTask("Firing at area");
 		setTargetPosition(currentTargetPosition);
 		setEnableTaskCheckFailed(true);
 		clearActivePath();
 		resetActiveDestination();
+		shellsFiredAtTasking = totalShellsFired;
 		break;
 	}
 	case State::SIMULATE_FIRE_FIGHT: {
@@ -171,6 +173,16 @@ void NavyUnit::setState(unsigned char newState)
 
 void NavyUnit::AIloop()
 {
+	double currentAmmo = computeTotalAmmo();
+	/* Out of ammo */
+	if (shotsToFire > 0 && currentAmmo < shotsToFire && state != State::IDLE && state != State::REACH_DESTINATION && state != State::FIRE_AT_AREA) 
+		setState(State::IDLE);
+
+	/* Account for unit reloading */
+	if (currentAmmo < oldAmmo)
+		totalShellsFired += oldAmmo - currentAmmo;
+	oldAmmo = currentAmmo;
+
 	switch (state) {
 	case State::IDLE: {
 		setTask("Idle");
@@ -222,16 +234,19 @@ void NavyUnit::AIloop()
 		break;
 	}
 	case State::FIRE_AT_AREA: {
-		setTask("Firing at area");
+		/* Transition to idle after firing the shots to avoid firing indefinitely
+			Keep this BEFORE so that if the expendQty option in DCS works and the task is removed from the unit it does not reissue it uselessly. */
+		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire)
+			setState(State::IDLE);
 
-		if (!getHasTask()) {
-			std::ostringstream taskSS;
-			taskSS.precision(10);
-
-			taskSS << "{id = 'FireAtPoint', lat = " << targetPosition.lat << ", lng = " << targetPosition.lng << ", radius = 1000}";
-			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
-			scheduler->appendCommand(command);
-			setHasTask(true);
+		if (targetPosition != Coords(NULL)) {
+			setTask("Firing at area");
+			if (!getHasTask()) {
+				fireAtArea(targetPosition);
+			}
+		}
+		else {
+			setState(State::IDLE);
 		}
 
 		break;
@@ -275,4 +290,18 @@ void NavyUnit::setOnOff(bool newOnOff, bool force)
 		Command* command = dynamic_cast<Command*>(new SetOnOff(groupName, onOff));
 		scheduler->appendCommand(command);
 	}
+}
+
+void NavyUnit::fireAtArea(Coords aimTarget) {
+	std::ostringstream taskSS;
+	taskSS.precision(10);
+	if (aimTarget.alt == NULL) {
+		taskSS << "{id = 'FireAtPoint', lat = " << aimTarget.lat << ", lng = " << aimTarget.lng << ", radius = " << artilleryRadius << ", expendQty = " << artilleryShotsToFire << " }";
+	}
+	else {
+		taskSS << "{id = 'FireAtPoint', lat = " << aimTarget.lat << ", lng = " << aimTarget.lng << ", alt = " << aimTarget.alt << ", radius = " << artilleryRadius << " expendQty = " << artilleryShotsToFire << "}";
+	}
+	Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+	scheduler->appendCommand(command);
+	setHasTask(true);
 }

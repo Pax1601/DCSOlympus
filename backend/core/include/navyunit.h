@@ -16,6 +16,8 @@ public:
 	virtual void changeSpeed(string change);
 	virtual void setOnOff(bool newOnOff, bool force = false);
 
+	void fireAtArea(Coords aimTarget);
+
 protected:
 	virtual void AIloop();
 	static json::value database;

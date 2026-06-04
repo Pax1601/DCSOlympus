@@ -220,7 +220,7 @@ void GroundUnit::AIloop()
 
 	double currentAmmo = computeTotalAmmo();
 	/* Out of ammo */
-	if (shotsToFire > 0 && currentAmmo < shotsToFire && state != State::IDLE && state != State::REACH_DESTINATION) 
+	if (shotsToFire > 0 && currentAmmo < shotsToFire && state != State::IDLE && state != State::REACH_DESTINATION && state != State::FIRE_AT_AREA)
 		setState(State::IDLE);
 	
 	/* Account for unit reloading */
@@ -335,7 +335,6 @@ void GroundUnit::AIloop()
 			Keep this BEFORE so that if the expendQty option in DCS works and the task is removed from the unit it does not reissue it uselessly. */
 		if (totalShellsFired - shellsFiredAtTasking >= artilleryShotsToFire)
 			setState(State::IDLE);
-
 
 		if (targetPosition != Coords(NULL)) {
 			setTask("Firing at area");
