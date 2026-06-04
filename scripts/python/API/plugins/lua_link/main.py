@@ -224,6 +224,15 @@ class LuaLink(Plugin):
     
     def on_message_callback(self, message, unitID, listener: RadioListener, base_name: str):
         self.logger.info(f"Received radio message: {message}")
+        
+        units = self.api.get_units()
+        if unitID not in units:
+            self.logger.warning(f"Received message from unknown unit_id={unitID}")
+        else:
+            if units[unitID].callsign.find("Olympus_API_RadioListener") != -1:
+                self.logger.debug(f"Ignoring message from {units[unitID].callsign} (unit_id={unitID}) to prevent loops")
+                return
+        
         normalized_message = message.lower()
 
         fireteam_keywords = ["fire", "team", "squad", "troop"]

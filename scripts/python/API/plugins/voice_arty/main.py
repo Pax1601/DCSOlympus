@@ -189,6 +189,14 @@ class VoiceArty(Plugin):
     def _on_message_received(self, recognized_text: str, unit_id: str):
         if not self.running or self.paused or self.api is None or self.listener is None:
             return
+        
+        units = self.api.get_units()
+        if unit_id not in units:
+            self.logger.warning(f"Received message from unknown unit_id={unit_id}")
+        else:
+            if units[unit_id].callsign.find("Olympus_API_RadioListener") == 1:
+                self.logger.debug(f"Ignoring message from {units[unit_id].callsign} (unit_id={unit_id}) to prevent loops")
+                return
 
         message = recognized_text.lower()
         normalized_message = self._normalize_intent_text(message)

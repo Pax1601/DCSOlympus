@@ -273,9 +273,16 @@ class Civs(Plugin):
         if not self.running or self.paused or self.api is None or self.listener is None:
             return
 
+        units = self.api.get_units()
+        if unit_id not in units:
+            self.logger.warning(f"Received message from unknown unit_id={unit_id}")
+        else:
+            if units[unit_id].callsign.find("Olympus_API_RadioListener") != -1:
+                self.logger.debug(f"Ignoring message from {units[unit_id].callsign} (unit_id={unit_id}) to prevent loops")
+                return
+        
         message = recognized_text.lower()
-        unit_name = self._resolve_callsign(unit_id)
-
+        
         if message == "":
             self._send_voice(f"Say again.")
             return
