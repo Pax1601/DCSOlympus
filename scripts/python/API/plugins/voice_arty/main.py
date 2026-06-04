@@ -194,7 +194,7 @@ class VoiceArty(Plugin):
         if unit_id not in units:
             self.logger.warning(f"Received message from unknown unit_id={unit_id}")
         else:
-            if units[unit_id].callsign.find("Olympus_API_RadioListener") == 1:
+            if units[unit_id].callsign.find("Olympus_API_RadioListener") != -1:
                 self.logger.debug(f"Ignoring message from {units[unit_id].callsign} (unit_id={unit_id}) to prevent loops")
                 return
 
