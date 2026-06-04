@@ -538,7 +538,7 @@ function olyLink.onFireTeamUnitReachedDestination(baseName)
     olyLink.bases[baseName].troopsAvailable = olyLink.bases[baseName].troopsAvailable + 1
 end
 
-function olyLink.decreaseAvailableSheels(baseName, shellsShot)
+function olyLink.decreaseAvailableShells(baseName, shellsShot)
     -- When an artillery piece shoots, decrease the number of available shells for this base in the config
     if olyLink.bases[baseName].shells == nil then
         Olympus.notify("Shells value not found for base " .. baseName .. ", cannot decrease shells", 10)
