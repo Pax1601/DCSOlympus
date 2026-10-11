@@ -23,7 +23,9 @@ import { KeybindModal } from "./modals/keybindmodal";
 import { UnitExplosionMenu } from "./panels/unitexplosionmenu";
 import { AppStateChangedEvent, ServerStatusUpdatedEvent } from "../events";
 import { GameMasterMenu } from "./panels/gamemastermenu";
+import { CombatLogMenu } from "./panels/combatlogmenu";
 import { InfoBar } from "./panels/infobar";
+import { KillFeed } from "./panels/killfeed";
 import { HotGroupBar } from "./panels/hotgroupsbar";
 import { SpawnContextMenu } from "./contextmenus/spawncontextmenu";
 import { ServerOverlay } from "./serveroverlay";
@@ -105,6 +107,7 @@ export function UI() {
             <AirbaseMenu open={appState === OlympusState.AIRBASE} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <AudioMenu open={appState === OlympusState.AUDIO} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <GameMasterMenu open={appState === OlympusState.GAME_MASTER} onClose={() => getApp().setState(OlympusState.IDLE)} />
+            <CombatLogMenu open={appState === OlympusState.COMBAT_LOG} onClose={() => getApp().setState(OlympusState.IDLE)} />
             <UnitExplosionMenu open={appState === OlympusState.UNIT_CONTROL && appSubState === UnitControlSubState.UNIT_EXPLOSION_MENU} onClose={() => {}} />
             {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AWACSMenu open={appState === OlympusState.AWACS} onClose={() => getApp().setState(OlympusState.IDLE)} />{*/}
@@ -114,6 +117,7 @@ export function UI() {
 
             <SideBar />
             <InfoBar />
+            <KillFeed />
             <HotGroupBar />
 
             <MapContextMenu />

@@ -35,6 +35,8 @@ export type MapOptions = {
   showMissionNavpoints: boolean;
   clusterGroundUnits: boolean;
   showUnitCallsigns: boolean;
+  showKillFeed: boolean;
+  showCombatMarkers: boolean;
 };
 
 export type AudioOptions = {

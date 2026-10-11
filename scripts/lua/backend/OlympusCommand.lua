@@ -31,6 +31,21 @@ Olympus.weaponIndex = 0				-- Counter used to spread the computational load of d
 Olympus.weaponStep = 50				-- Max number of weapons that get updated each cycle
 Olympus.weapons = {}				-- Table holding references to all the currently existing weapons
 
+-- Combat log data
+Olympus.combatEventsData = {}		-- Combat events pending transfer to the .dll, keyed by sequence number
+Olympus.combatEventsCounter = 0		-- Sequence number of the last combat event
+Olympus.combatEventsPending = 0		-- Number of combat events waiting to be transferred
+Olympus.combatEventsMaxPending = 500	-- Pending events are dropped above this limit (e.g. if the .dll does not support the combat log)
+Olympus.lastHitBy = {}				-- Last unit that hit each target, used to credit kills when DCS does not send a kill event
+Olympus.recentHits = {}				-- Recent hit events, used to merge repeated hits (e.g. gun bursts)
+Olympus.killedTargets = {}			-- Time at which each target was logged as destroyed, to avoid duplicates
+Olympus.pendingDeaths = {}			-- Destroyed targets waiting for a possible kill event, with the type of event to log otherwise
+Olympus.weaponDisplayNames = {}		-- Display names of the weapons seen so far, by type name (e.g. AIM_120 -> AIM-120B)
+Olympus.combatActors = {}			-- Last known description of each actor, used when DCS only provides its ID (e.g. a missile hits after its shooter died)
+Olympus.hitMergeWindow = 1			-- Repeated hits by the same shooter on the same target within this many seconds are merged
+Olympus.killedTargetsLifetime = 900	-- Seconds after which a destroyed target is forgotten. A shot down aircraft can take a while to crash
+Olympus.killCreditWindow = 60		-- A unit that dies within this many seconds from a hit is credited to the shooter
+
 -- Spots (laser/IR) data
 Olympus.spots = {}
 Olympus.spotsCounter = 1
@@ -2243,6 +2258,288 @@ function Olympus.initializeStatics()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Combat log
+------------------------------------------------------------------------------------------------------
+-- Returns a table describing a unit, static or scenery object involved in a combat event. The data is
+-- captured when the event happens, because destroyed objects stop existing right after
+function Olympus.describeCombatActor(object)
+	if object == nil then
+		return nil
+	end
+
+	local actor = {}
+	local function get(field, getter)
+		local status, value = pcall(getter)
+		if status and value ~= nil then
+			actor[field] = value
+		end
+	end
+
+	get("ID", function() return object["id_"] end)
+	get("unitID", function() return object:getID() end)
+	get("category", function() return object:getCategory() end)
+	get("typeName", function() return object:getTypeName() end)
+	get("unitName", function() return object:getName() end)
+	get("coalitionID", function() return object:getCoalition() end)
+	get("playerName", function() return object:getPlayerName() end)
+	get("groupName", function() return object:getGroup():getName() end)
+	get("callsign", function() return object:getCallsign() end)
+
+	local status, point = pcall(function() return object:getPoint() end)
+	if status and point ~= nil then
+		local lat, lng, alt = coord.LOtoLL(point)
+		actor["position"] = {lat = lat, lng = lng, alt = alt}
+	end
+
+	-- A destroyed object only provides its ID: complete it with what was known about it, except its position
+	if actor.ID ~= nil then
+		if actor.typeName ~= nil then
+			Olympus.combatActors[actor.ID] = {actor = actor, time = timer.getTime()}
+		elseif Olympus.combatActors[actor.ID] ~= nil then
+			local known = {}
+			for key, value in pairs(Olympus.combatActors[actor.ID].actor) do
+				if key ~= "position" then
+					known[key] = value
+				end
+			end
+			return known
+		end
+	end
+
+	return actor
+end
+
+-- Returns true if the object is a weapon. Missiles can hit and destroy each other, which is not worth logging
+function Olympus.isCombatWeapon(object)
+	if object == nil then
+		return false
+	end
+	local status, category = pcall(function() return Object.getCategory(object) end)
+	if not status or category == nil then
+		status, category = pcall(function() return object:getCategory() end)
+	end
+	return status and category ~= nil and category == Object.Category.WEAPON
+end
+
+-- Adds a combat event to the pending events, to be transferred to the .dll
+function Olympus.addCombatEvent(eventType, initiator, target, weaponName, position)
+	if Olympus.combatEventsPending >= Olympus.combatEventsMaxPending then
+		return nil
+	end
+
+	Olympus.combatEventsCounter = Olympus.combatEventsCounter + 1
+	Olympus.combatEventsPending = Olympus.combatEventsPending + 1
+
+	local combatEvent = {
+		seq = Olympus.combatEventsCounter,
+		type = eventType,
+		simTime = timer.getTime(),
+		absTime = timer.getAbsTime(),
+		initiator = initiator,
+		target = target,
+		weapon = weaponName,
+		count = 1
+	}
+
+	-- Use the position of the target if available, which is where the action happened
+	if position == nil then
+		if target ~= nil and target.position ~= nil then
+			position = target.position
+		elseif initiator ~= nil and initiator.position ~= nil then
+			position = initiator.position
+		end
+	end
+	combatEvent["position"] = position
+
+	Olympus.combatEventsData[Olympus.combatEventsCounter] = combatEvent
+	return combatEvent
+end
+
+-- Returns the name of the weapon involved in an event, if any
+function Olympus.getEventWeaponName(event)
+	local name = event.weapon_name
+	if event.weapon ~= nil then
+		local status, typeName = pcall(function() return event.weapon:getTypeName() end)
+		if status and typeName ~= nil then
+			name = typeName
+			-- The display name is more precise than the type name, remember it for the events where the weapon no longer exists
+			if Olympus.weaponDisplayNames[typeName] == nil then
+				local descStatus, displayName = pcall(function() return event.weapon:getDesc().displayName end)
+				if descStatus and displayName ~= nil and displayName ~= "" then
+					Olympus.weaponDisplayNames[typeName] = displayName
+					-- Kill events only give the short name, e.g. M56A3_HE_RED for weapons.shells.M56A3_HE_RED
+					local shortName = string.match(typeName, "([^%.]+)$")
+					if shortName ~= nil and Olympus.weaponDisplayNames[shortName] == nil then
+						Olympus.weaponDisplayNames[shortName] = displayName
+					end
+				end
+			end
+		end
+	end
+	return Olympus.weaponDisplayNames[name] or name
+end
+
+-- Credits the destruction of a target. Called on kill events and, with a delay, on dead events
+function Olympus.creditKill(targetKey, initiator, target, weaponName)
+	if targetKey ~= nil then
+		if Olympus.killedTargets[targetKey] then
+			return
+		end
+		Olympus.killedTargets[targetKey] = timer.getTime()
+		Olympus.lastHitBy[targetKey] = nil
+	end
+	Olympus.addCombatEvent("kill", initiator, target, weaponName)
+end
+
+-- Handles a destroyed object for which DCS did not send a kill event: credits the last shooter that hit it, if recent enough
+function Olympus.handleUnattributedDeath(args)
+	local targetKey, target = args[1], args[2]
+	local eventType = Olympus.pendingDeaths[targetKey] or "dead"
+	Olympus.pendingDeaths[targetKey] = nil
+	if Olympus.killedTargets[targetKey] then
+		return nil
+	end
+
+	local lastHit = Olympus.lastHitBy[targetKey]
+	if lastHit ~= nil and timer.getTime() - lastHit.simTime <= Olympus.killCreditWindow then
+		Olympus.creditKill(targetKey, lastHit.initiator, target, lastHit.weapon)
+	else
+		Olympus.killedTargets[targetKey] = timer.getTime()
+		Olympus.lastHitBy[targetKey] = nil
+		Olympus.addCombatEvent(eventType, nil, target, nil)
+	end
+	return nil
+end
+
+-- Records the combat related DCS events. Called by the world event handler
+function Olympus.recordCombatEvent(event)
+	local E = world.event
+	local id = event.id
+
+	if id == E.S_EVENT_SHOT then
+		-- Guided weapons know their target as soon as they are launched
+		local target = nil
+		if event.weapon ~= nil then
+			local status, weaponTarget = pcall(function() return event.weapon:getTarget() end)
+			if status and weaponTarget ~= nil then
+				target = Olympus.describeCombatActor(weaponTarget)
+			end
+		end
+		Olympus.addCombatEvent("shot", Olympus.describeCombatActor(event.initiator), target, Olympus.getEventWeaponName(event))
+
+	elseif id == E.S_EVENT_HIT then
+		if Olympus.isCombatWeapon(event.target) then
+			return
+		end
+		local initiator = Olympus.describeCombatActor(event.initiator)
+		local target = Olympus.describeCombatActor(event.target)
+		local weaponName = Olympus.getEventWeaponName(event)
+		local targetKey = target and target.ID
+
+		if targetKey ~= nil and initiator ~= nil then
+			Olympus.lastHitBy[targetKey] = {initiator = initiator, weapon = weaponName, simTime = timer.getTime()}
+		end
+
+		-- Merge repeated hits by the same shooter on the same target, as long as they have not been transferred yet
+		local hitKey = tostring(initiator and initiator.ID) .. ":" .. tostring(targetKey)
+		local recentHit = Olympus.recentHits[hitKey]
+		if recentHit ~= nil and timer.getTime() - recentHit.lastTime <= Olympus.hitMergeWindow and Olympus.combatEventsData[recentHit.seq] ~= nil then
+			local combatEvent = Olympus.combatEventsData[recentHit.seq]
+			combatEvent.count = combatEvent.count + 1
+			recentHit.lastTime = timer.getTime()
+		else
+			local combatEvent = Olympus.addCombatEvent("hit", initiator, target, weaponName)
+			if combatEvent ~= nil then
+				Olympus.recentHits[hitKey] = {seq = combatEvent.seq, lastTime = timer.getTime()}
+			end
+		end
+
+	elseif E.S_EVENT_KILL ~= nil and id == E.S_EVENT_KILL then
+		if Olympus.isCombatWeapon(event.target) then
+			return
+		end
+		local target = Olympus.describeCombatActor(event.target)
+		local initiator = Olympus.describeCombatActor(event.initiator)
+		local weaponName = Olympus.getEventWeaponName(event)
+		-- Without a known display name, use the name of the weapon of the last hit by the same shooter, to be consistent with the hits
+		local lastHit = target and Olympus.lastHitBy[target.ID]
+		if lastHit ~= nil and lastHit.weapon ~= nil and initiator ~= nil and lastHit.initiator.ID == initiator.ID
+			and (weaponName == nil or (event.weapon == nil and Olympus.weaponDisplayNames[event.weapon_name] == nil)) then
+			weaponName = lastHit.weapon
+		end
+		Olympus.creditKill(target and target.ID, initiator, target, weaponName)
+
+	elseif id == E.S_EVENT_DEAD or id == E.S_EVENT_CRASH or (E.S_EVENT_UNIT_LOST ~= nil and id == E.S_EVENT_UNIT_LOST) then
+		-- DCS sends the kill event, if any, around the same time: wait a moment before deciding who to credit
+		local target = Olympus.describeCombatActor(event.initiator)
+		if target ~= nil and target.ID ~= nil then
+			-- DCS can send several of these events for the same object: decide only once, and log it as a crash if any of them is one
+			local pending = Olympus.pendingDeaths[target.ID]
+			if id == E.S_EVENT_CRASH or pending == nil then
+				Olympus.pendingDeaths[target.ID] = (id == E.S_EVENT_CRASH) and "crash" or "dead"
+			end
+			if pending == nil then
+				timer.scheduleFunction(Olympus.handleUnattributedDeath, {target.ID, target}, timer.getTime() + 2)
+			end
+		end
+
+	elseif id == E.S_EVENT_EJECTION then
+		Olympus.addCombatEvent("ejection", Olympus.describeCombatActor(event.initiator), nil, nil)
+
+	elseif id == E.S_EVENT_PILOT_DEAD then
+		Olympus.addCombatEvent("pilotDead", Olympus.describeCombatActor(event.initiator), nil, nil)
+
+	elseif id == E.S_EVENT_TAKEOFF or id == E.S_EVENT_LAND then
+		local initiator = Olympus.describeCombatActor(event.initiator)
+		local place = nil
+		if event.place ~= nil then
+			local status, name = pcall(function() return event.place:getName() end)
+			if status then place = name end
+		end
+		local combatEvent = Olympus.addCombatEvent((id == E.S_EVENT_TAKEOFF) and "takeoff" or "land", initiator, nil, nil)
+		if combatEvent ~= nil then
+			combatEvent["place"] = place
+		end
+	end
+end
+
+-- Transfers the pending combat events to the .dll
+function Olympus.setCombatEventsData(arg, time)
+	-- Keep the events pending if the .dll does not support the combat log yet
+	if Olympus.OlympusDLL ~= nil and Olympus.OlympusDLL.setCombatEventsData ~= nil then
+		Olympus.OlympusDLL.setCombatEventsData()
+		Olympus.combatEventsData = {}
+		Olympus.combatEventsPending = 0
+	end
+
+	-- Forget old hits, so that the tables do not grow forever
+	local now = timer.getTime()
+	for key, recentHit in pairs(Olympus.recentHits) do
+		if now - recentHit.lastTime > Olympus.hitMergeWindow then
+			Olympus.recentHits[key] = nil
+		end
+	end
+	for key, lastHit in pairs(Olympus.lastHitBy) do
+		if now - lastHit.simTime > Olympus.killCreditWindow then
+			Olympus.lastHitBy[key] = nil
+		end
+	end
+	-- DCS can reuse the ID of a destroyed object, and long missions can destroy thousands of them
+	for key, killTime in pairs(Olympus.killedTargets) do
+		if now - killTime > Olympus.killedTargetsLifetime then
+			Olympus.killedTargets[key] = nil
+		end
+	end
+	for key, known in pairs(Olympus.combatActors) do
+		if now - known.time > Olympus.killedTargetsLifetime then
+			Olympus.combatActors[key] = nil
+		end
+	end
+
+	return time + 0.5
+end
+
+------------------------------------------------------------------------------------------------------
 -- Olympus startup script
 ------------------------------------------------------------------------------------------------------
 Olympus.instancePath = lfs.writedir().."Mods\\Services\\Olympus\\bin\\"
@@ -2263,6 +2560,14 @@ if handler ~= nil then
 end
 handler = {}
 function handler:onEvent(event)
+	-- Record the combat events. Errors are caught so that they do not prevent the handling below
+	if Olympus ~= nil and Olympus.recordCombatEvent ~= nil then
+		local status, err = pcall(Olympus.recordCombatEvent, event)
+		if not status then
+			Olympus.debug("Error recording combat event: " .. tostring(err), 2)
+		end
+	end
+
 	if event.id == 1 then
 		local weapon = event.weapon
 		if Olympus ~= nil and Olympus.weapons ~= nil then
@@ -2359,6 +2664,7 @@ timer.scheduleFunction(Olympus.setWeaponsData, {}, timer.getTime() + 1)
 timer.scheduleFunction(Olympus.setMissionData, {}, timer.getTime() + 1)
 timer.scheduleFunction(Olympus.setExecutionResults, {}, timer.getTime() + 1)
 timer.scheduleFunction(Olympus.scanAroundShooters, {}, timer.getTime() + 1)
+timer.scheduleFunction(Olympus.setCombatEventsData, {}, timer.getTime() + 1)
 
 -- Initialize the ME units
 Olympus.initializeUnits()

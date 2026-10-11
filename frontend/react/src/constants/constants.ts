@@ -38,6 +38,7 @@ export const TRAIL_LENGTH = 10;
 export const UNITS_URI = "units";
 export const WEAPONS_URI = "weapons";
 export const LOGS_URI = "logs";
+export const COMBAT_LOG_URI = "combatLog";
 export const AIRBASES_URI = "airbases";
 export const BULLSEYE_URI = "bullseyes";
 export const SPOTS_URI = "spots";
@@ -378,6 +379,7 @@ export enum OlympusState {
   AUDIO = "Audio",
   AIRBASE = "Airbase",
   GAME_MASTER = "Game master",
+  COMBAT_LOG = "Combat log",
   IMPORT_EXPORT = "Import/export",
   WARNING = "Warning modal",
   DATABASE_EDITOR = "Database editor",
@@ -482,6 +484,8 @@ export const MAP_OPTIONS_DEFAULTS: MapOptions = {
   showMissionNavpoints: false,
   clusterGroundUnits: true,
   showUnitCallsigns: true,
+  showKillFeed: true,
+  showCombatMarkers: true,
 };
 
 export const MAP_HIDDEN_TYPES_DEFAULTS = {
