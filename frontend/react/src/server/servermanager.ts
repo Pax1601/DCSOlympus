@@ -3,6 +3,7 @@ import { getApp } from "../olympusapp";
 import {
   AIRBASES_URI,
   BULLSEYE_URI,
+  COMBAT_LOG_URI,
   COMMANDS_URI,
   DRAWINGS_URI,
   LOGS_URI,
@@ -19,6 +20,7 @@ import {
 import {
   AirbasesData,
   BullseyesData,
+  CombatLogData,
   CommandModeOptions,
   GeneralSettings,
   MissionData,
@@ -54,6 +56,7 @@ export class ServerManager {
     this.#lastUpdateTimes[UNITS_URI] = Date.now();
     this.#lastUpdateTimes[WEAPONS_URI] = Date.now();
     this.#lastUpdateTimes[LOGS_URI] = Date.now();
+    this.#lastUpdateTimes[COMBAT_LOG_URI] = 0; /* Start from the beginning of the combat log, to show what happened before the page was opened */
     this.#lastUpdateTimes[AIRBASES_URI] = Date.now();
     this.#lastUpdateTimes[BULLSEYE_URI] = Date.now();
     this.#lastUpdateTimes[MISSION_URI] = Date.now();
@@ -222,6 +225,11 @@ export class ServerManager {
 
   getLogs(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
     this.GET(callback, errorCallback, LOGS_URI, { time: refresh ? 0 : this.#lastUpdateTimes[LOGS_URI] }, "text", refresh);
+  }
+
+  /* The combat log uses its own cursor: the callback must return the lastLogTime of the response */
+  getCombatLog(callback: CallableFunction, refresh: boolean = false, errorCallback: CallableFunction = () => {}) {
+    this.GET(callback, errorCallback, COMBAT_LOG_URI, { time: refresh ? 0 : this.#lastUpdateTimes[COMBAT_LOG_URI] }, "text", refresh);
   }
 
   getMission(callback: CallableFunction, errorCallback: CallableFunction = () => {}) {
@@ -779,6 +787,17 @@ export class ServerManager {
             this.checkSessionHash(data.sessionHash);
             //(getApp().getPanelsManager().get("log") as LogPanel).appendLogs(data.logs)
             return data.time;
+          });
+        }
+      }, 1000),
+    );
+
+    this.#intervals.push(
+      window.setInterval(() => {
+        if (!this.getPaused() && getApp().getMissionManager().getCommandModeOptions().commandMode != NONE) {
+          this.getCombatLog((data: CombatLogData) => {
+            this.checkSessionHash(data.sessionHash);
+            return getApp().getCombatLogManager()?.update(data) ?? 0;
           });
         }
       }, 1000),

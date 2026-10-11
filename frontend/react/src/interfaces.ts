@@ -159,6 +159,56 @@ export interface LogData {
   time: number;
 }
 
+/* Unit, static or scenery object involved in a combat event, as captured by the Lua backend when the event happened */
+export interface CombatActor {
+  ID?: number /* Olympus ID, the same as Unit.ID */;
+  unitID?: number;
+  category?: number;
+  typeName?: string /* Unit database key */;
+  unitName?: string;
+  playerName?: string;
+  groupName?: string;
+  callsign?: string;
+  coalitionID?: number /* 0 neutral, 1 red, 2 blue */;
+  position?: { lat: number; lng: number; alt: number };
+}
+
+export type CombatEventType = "shot" | "hit" | "kill" | "dead" | "crash" | "ejection" | "pilotDead" | "takeoff" | "land";
+
+export interface CombatEvent {
+  seq: number;
+  logTime: number /* Unique, strictly increasing, in ms */;
+  type: CombatEventType;
+  simTime: number /* Seconds since mission start */;
+  absTime: number /* Seconds since midnight of the mission day */;
+  initiator?: CombatActor;
+  target?: CombatActor;
+  weapon?: string;
+  count: number /* Number of merged hits */;
+  place?: string /* Airbase, for takeoffs and landings */;
+  position?: { lat: number; lng: number; alt: number };
+}
+
+export interface CombatLogData {
+  combatLog: CombatEvent[];
+  lastLogTime: number;
+  sessionHash: string;
+  time: number;
+}
+
+export interface CombatScore {
+  key: string;
+  name: string;
+  typeName?: string;
+  coalition: Coalition;
+  isPlayer: boolean;
+  shots: number;
+  hits: number;
+  kills: number;
+  airKills: number;
+  deaths: number;
+}
+
 export interface ServerRequestOptions {
   time?: number;
   commandHash?: string;

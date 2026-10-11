@@ -26,6 +26,7 @@ import { OlympusConfig } from "./interfaces";
 import { SessionDataManager } from "./sessiondata";
 import { CoalitionAreasManager } from "./map/coalitionarea/coalitionareamanager";
 import { DrawingsManager } from "./map/drawings/drawingsmanager";
+import { CombatLogManager } from "./mission/combatlogmanager";
 
 export var VERSION = "{{OLYMPUS_VERSION_NUMBER}}";
 export var IP = window.location.toString();
@@ -51,6 +52,7 @@ export class OlympusApp {
   #sessionDataManager: SessionDataManager | null = null;
   #coalitionAreasManager: CoalitionAreasManager | null = null;
   #drawingsManager: DrawingsManager | null = null;
+  #combatLogManager: CombatLogManager | null = null;
   //#pluginsManager: // TODO
 
   #adminPassword: string = "";
@@ -106,6 +108,10 @@ export class OlympusApp {
     return this.#drawingsManager as DrawingsManager;
   }
 
+  getCombatLogManager() {
+    return this.#combatLogManager as CombatLogManager;
+  }
+
   /* TODO
     getPluginsManager() {
         return null //  this.#pluginsManager as PluginsManager;
@@ -126,6 +132,7 @@ export class OlympusApp {
     this.#audioManager = new AudioManager();
     this.#coalitionAreasManager = new CoalitionAreasManager();
     this.#drawingsManager = new DrawingsManager();
+    this.#combatLogManager = new CombatLogManager();
 
     /* Load the config file from the server */
     const configRequest = new Request("./resources/config", {

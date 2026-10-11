@@ -35,6 +35,7 @@
   <ItemGroup>
     <ClInclude Include="include\aircraft.h" />
     <ClInclude Include="include\airunit.h" />
+    <ClInclude Include="include\combatlog.h" />
     <ClInclude Include="include\commands.h" />
     <ClInclude Include="include\datatypes.h" />
     <ClInclude Include="include\groundunit.h" />
@@ -52,6 +53,7 @@
   <ItemGroup>
     <ClCompile Include="src\aircraft.cpp" />
     <ClCompile Include="src\airunit.cpp" />
+    <ClCompile Include="src\combatlog.cpp" />
     <ClCompile Include="src\commands.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\datatypes.cpp" />

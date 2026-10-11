@@ -28,6 +28,7 @@ module.exports = function (configLocation) {
       app.get("/olympus/units", (req, res) => this.units(req, res));
       app.get("/olympus/weapons", (req, res) => this.weapons(req, res));
       app.get("/olympus/logs", (req, res) => this.logs(req, res));
+      app.get("/olympus/combatLog", (req, res) => this.combatLog(req, res));
       app.get("/olympus/bullseyes", (req, res) => this.bullseyes(req, res));
       app.get("/olympus/airbases", (req, res) => this.airbases(req, res));
       app.get("/olympus/mission", (req, res) => this.mission(req, res));
@@ -530,6 +531,19 @@ module.exports = function (configLocation) {
         array = this.concat(array, this.doubleToByteArray(element.alt));
       });
       return array;
+    }
+
+    /* No combat in the demo: the frontend can generate fake combat events with ?mockCombat=1 */
+    combatLog(req, res) {
+      var ret = {
+        combatLog: [],
+        lastLogTime: 0,
+        time: Date.now(),
+        frameRate: 60,
+        load: 0,
+      };
+
+      res.send(JSON.stringify(ret));
     }
 
     logs(req, res) {

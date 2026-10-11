@@ -14,6 +14,7 @@ typedef int(__stdcall* f_coreMissionData)(lua_State* L);
 typedef int(__stdcall* f_coreDrawingsData)(lua_State* L);
 typedef int(__stdcall* f_coreSetExecutionResults)(lua_State* L);
 typedef int(__stdcall* f_coreCallSchedulerFunction)(lua_State* L);
+typedef int(__stdcall* f_coreCombatEventsData)(lua_State* L);
 f_coreInit coreInit = nullptr;
 f_coreDeinit coreDeinit = nullptr;
 f_coreFrame coreFrame = nullptr;
@@ -23,6 +24,7 @@ f_coreMissionData coreMissionData = nullptr;
 f_coreDrawingsData coreDrawingsData = nullptr;
 f_coreSetExecutionResults coreExecutionResults = nullptr;
 f_coreCallSchedulerFunction coreCallSchedulerFunction = nullptr;
+f_coreCombatEventsData coreCombatEventsData = nullptr;
 
 string modPath;
 
@@ -135,6 +137,13 @@ static int onSimulationStart(lua_State* L)
         goto error;
 	}
 
+    /* Optional: the module still works with a core.dll that does not support the combat log */
+    coreCombatEventsData = (f_coreCombatEventsData)GetProcAddress(hGetProcIDDLL, "coreCombatEventsData");
+    if (!coreCombatEventsData)
+    {
+        LogWarning(L, "coreCombatEventsData ProcAddress not found in DLL, the combat log is disabled");
+    }
+
     coreInit(L, modPath.c_str());
 
     LogInfo(L, "Module loaded and started successfully.");
@@ -184,6 +193,7 @@ static int onSimulationStop(lua_State* L)
         coreMissionData = nullptr;
 
         coreDrawingsData = nullptr;
+        coreCombatEventsData = nullptr;
     }
 
     hGetProcIDDLL = NULL;
@@ -240,6 +250,15 @@ static int setExecutionResults(lua_State* L)
     return 0;
 }
 
+static int setCombatEventsData(lua_State* L)
+{
+    if (coreCombatEventsData)
+    {
+        coreCombatEventsData(L);
+    }
+    return 0;
+}
+
 static int callSchedulerFunction(lua_State* L)
 {
     if (coreCallSchedulerFunction)
@@ -259,6 +278,7 @@ static const luaL_Reg Map[] = {
     {"setDrawingsData", setDrawingsData },
 	{"setExecutionResults", setExecutionResults },
 	{"callSchedulerFunction", callSchedulerFunction },
+    {"setCombatEventsData", setCombatEventsData },
 	{NULL, NULL}
 };
 
