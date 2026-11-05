@@ -1,7 +1,7 @@
 import { AudioSink } from "./audio/audiosink";
 import { AudioSource } from "./audio/audiosource";
 import { OlympusState, OlympusSubState } from "./constants/constants";
-import { CommandModeOptions, LoadoutBlueprint, MissionData, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable, UnitBlueprint, UnitData } from "./interfaces";
+import { CombatEvent, CommandModeOptions, LoadoutBlueprint, MissionData, OlympusConfig, ServerStatus, SessionData, SpawnRequestTable, UnitBlueprint, UnitData } from "./interfaces";
 import { CoalitionCircle } from "./map/coalitionarea/coalitioncircle";
 import { CoalitionPolygon } from "./map/coalitionarea/coalitionpolygon";
 import { Airbase } from "./mission/airbase";
@@ -128,6 +128,25 @@ export class ServerStatusUpdatedEvent {
 }
 
 export class UnitDatabaseLoadedEvent extends BaseOlympusEvent {}
+
+export class CombatEventsReceivedEvent {
+    /* history is true for the events that happened before the page was opened */
+    static on(callback: (combatEvents: CombatEvent[], history: boolean) => void, singleShot = false) {
+        document.addEventListener(
+            this.name,
+            (ev: CustomEventInit) => {
+                callback(ev.detail.combatEvents, ev.detail.history);
+            },
+            { once: singleShot }
+        );
+    }
+
+    static dispatch(combatEvents: CombatEvent[], history: boolean = false) {
+        document.dispatchEvent(new CustomEvent(this.name, { detail: { combatEvents, history } }));
+        if (DEBUG) console.log(`Event ${this.name} dispatched`);
+        if (DEBUG) console.log(combatEvents);
+    }
+}
 
 export class InfoPopupEvent {
     static on(callback: (messages: string[]) => void, singleShot = false) {

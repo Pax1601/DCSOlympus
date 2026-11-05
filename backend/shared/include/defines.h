@@ -8,6 +8,7 @@
 #define UNITS_URI "units"
 #define WEAPONS_URI "weapons"
 #define LOGS_URI "logs"
+#define COMBAT_LOG_URI "combatLog"
 #define AIRBASES_URI "airbases"
 #define BULLSEYE_URI "bullseyes"
 #define SPOTS_URI "spots"

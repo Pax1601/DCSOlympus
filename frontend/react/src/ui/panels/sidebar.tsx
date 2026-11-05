@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { OlStateButton } from "../components/olstatebutton";
-import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown, faA, faDatabase } from "@fortawesome/free-solid-svg-icons";
+import { faGamepad, faPencil, faEllipsisV, faCog, faQuestionCircle, faPlusSquare, faVolumeHigh, faJ, faCrown, faA, faDatabase, faCrosshairs } from "@fortawesome/free-solid-svg-icons";
 import { getApp } from "../../olympusapp";
 import { NO_SUBSTATE, OlympusState, OlympusSubState, SpawnSubState } from "../../constants/constants";
 import { AppStateChangedEvent } from "../../events";
@@ -94,6 +94,15 @@ export function SideBar() {
             checked={appState === OlympusState.GAME_MASTER}
             icon={faCrown}
             tooltip="Hide/show Game Master menu"
+            tooltipPosition="side"
+          ></OlStateButton>
+          <OlStateButton
+            onClick={() => {
+              getApp().setState(appState !== OlympusState.COMBAT_LOG ? OlympusState.COMBAT_LOG : OlympusState.IDLE);
+            }}
+            checked={appState === OlympusState.COMBAT_LOG}
+            icon={faCrosshairs}
+            tooltip="Hide/show combat log"
             tooltipPosition="side"
           ></OlStateButton>
         </div>

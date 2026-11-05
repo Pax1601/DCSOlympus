@@ -159,3 +159,149 @@ input[type="range"]:focus::-moz-range-thumb {
     transform: translateY(-75px);
   }
 }
+
+/* Kill feed rows: slide in from the right, fade out when leaving, flash when a player is involved */
+.killfeed-row {
+  animation: killfeedIn 250ms ease-out both;
+}
+
+.killfeed-row[data-leaving="true"] {
+  animation: killfeedOut 400ms ease-in both;
+}
+
+.killfeed-player {
+  animation: killfeedIn 250ms ease-out both, killfeedFlash 900ms ease-in-out 250ms 2;
+}
+
+@keyframes killfeedIn {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes killfeedOut {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes killfeedFlash {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
+  }
+}
+
+/* Combat markers: two rings pulsing where a unit was destroyed, then a small cross fading out */
+.leaflet-combat-marker {
+  background: none;
+  border: none;
+}
+
+.ol-combat-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.ol-combat-flash {
+  position: absolute;
+  left: -14px;
+  top: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--combat-color);
+  opacity: 0;
+  animation: combatFlash 700ms ease-out;
+}
+
+.ol-combat-ring {
+  position: absolute;
+  left: -26px;
+  top: -26px;
+  width: 52px;
+  height: 52px;
+  border: 3px solid var(--combat-color);
+  border-radius: 50%;
+  opacity: 0;
+  animation: combatRing 1.8s ease-out 3;
+}
+
+.ol-combat-ring-delayed {
+  animation-delay: 0.6s;
+}
+
+.ol-combat-cross {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  animation: combatFade var(--combat-lifetime) ease-in forwards;
+}
+
+.ol-combat-cross::before,
+.ol-combat-cross::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--combat-color);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+.ol-combat-cross::before {
+  transform: rotate(45deg);
+}
+
+.ol-combat-cross::after {
+  transform: rotate(-45deg);
+}
+
+@keyframes combatRing {
+  from {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes combatFlash {
+  from {
+    transform: scale(0.2);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes combatFade {
+  0%, 60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

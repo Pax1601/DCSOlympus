@@ -238,6 +238,28 @@ export function OptionsMenu(props: { open: boolean; onClose: () => void; childre
             <OlCheckbox checked={mapOptions.showRacetracks} onChange={() => {}}></OlCheckbox>
             <span className="my-auto">Show racetracks</span>
           </div>
+          <div
+            className={`
+              group flex cursor-pointer flex-row content-center justify-start
+              gap-4 rounded-md p-2
+              dark:hover:bg-olympus-400
+            `}
+            onClick={() => getApp().getMap().setOption("showKillFeed", !mapOptions.showKillFeed)}
+          >
+            <OlCheckbox checked={mapOptions.showKillFeed} onChange={() => {}}></OlCheckbox>
+            <span className="my-auto">Show kill feed</span>
+          </div>
+          <div
+            className={`
+              group flex cursor-pointer flex-row content-center justify-start
+              gap-4 rounded-md p-2
+              dark:hover:bg-olympus-400
+            `}
+            onClick={() => getApp().getMap().setOption("showCombatMarkers", !mapOptions.showCombatMarkers)}
+          >
+            <OlCheckbox checked={mapOptions.showCombatMarkers} onChange={() => {}}></OlCheckbox>
+            <span className="my-auto">Show kills on the map</span>
+          </div>
           <>
             {commandModeOptions.commandMode === GAME_MASTER && (
               <div

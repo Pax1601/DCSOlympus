@@ -3,6 +3,7 @@
 #include "defines.h"
 #include "unitsManager.h"
 #include "weaponsManager.h"
+#include "combatLog.h"
 #include "scheduler.h"
 #include "luatools.h"
 #include <exception>
@@ -15,6 +16,7 @@ using namespace base64;
 
 extern UnitsManager* unitsManager; 
 extern WeaponsManager* weaponsManager;
+extern CombatLog* combatLog;
 extern Scheduler* scheduler;
 extern json::value missionData;
 extern json::value drawingsByLayer;
@@ -123,6 +125,19 @@ void Server::handle_get(http_request request)
                         auto logs = json::value::object();
                         getLogsJSON(logs, time);   
                         answer[L"logs"] = logs;
+                    }
+                    /* Combat log data. Clients use lastLogTime as the time of their next request */
+                    else if (URI.compare(COMBAT_LOG_URI) == 0)
+                    {
+                        /* Commanders only receive the events involving their own coalition (DCS coalition IDs: 1 red, 2 blue) */
+                        int coalitionID = 0;
+                        if (password.compare(gameMasterPassword) != 0)
+                            coalitionID = (password.compare(blueCommanderPassword) == 0) ? 2 : 1;
+
+                        auto combatEvents = json::value::array();
+                        combatLog->getCombatLogJSON(combatEvents, time, coalitionID);
+                        answer[L"combatLog"] = combatEvents;
+                        answer[L"lastLogTime"] = json::value::number(combatLog->getLastLogTime());
                     }
                     /* Airbases data */
                     else if (URI.compare(AIRBASES_URI) == 0 && missionData.has_object_field(L"airbases")) 
