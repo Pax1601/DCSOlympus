@@ -57,6 +57,15 @@ local lfs = require('lfs')
 ------------------------------------------------------------------------------------------------------
 -- Olympus functions
 ------------------------------------------------------------------------------------------------------
+-- Some static objects (e.g. carrier deck crew) have no bounding box in their description
+function Olympus.getStaticSize(static, axis)
+	local desc = static:getDesc()
+	if desc ~= nil and desc.box ~= nil then
+		return desc.box.max[axis] - desc.box.min[axis]
+	end
+	return 0
+end
+
 -- Print a debug message if the debug option is true
 function Olympus.debug(message, displayFor)
 	if debug == true then
@@ -2234,8 +2243,8 @@ function Olympus.initializeStatics()
 					heading = mist.getHeading(s, true),
 					name = name,
 					coalition = Olympus.getCoalitionByCoalitionID(coaId),
-					size1 = s:getDesc().box.max.x - s:getDesc().box.min.x,
-					size2 = s:getDesc().box.max.y - s:getDesc().box.min.y
+					size1 = Olympus.getStaticSize(s, "x"),
+					size2 = Olympus.getStaticSize(s, "y")
 				}				
 			end
 		end
@@ -2293,8 +2302,8 @@ function handler:onEvent(event)
 						heading = mist.getHeading(initiator, true),
 						name = name,
 						coalition = Olympus.getCoalitionByCoalitionID(initiator:getCoalition()),
-						size1 = initiator:getDesc().box.max.x - initiator:getDesc().box.min.x,
-						size2 = initiator:getDesc().box.max.y - initiator:getDesc().box.min.y
+						size1 = Olympus.getStaticSize(initiator, "x"),
+						size2 = Olympus.getStaticSize(initiator, "y")
 					}		
 					Olympus.debug("New static object created " .. initiator["id_"], 2)
 				end
