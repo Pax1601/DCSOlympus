@@ -876,6 +876,7 @@ void Unit::goToDestination(string enrouteTask)
 	if (activeDestination != NULL)
 	{
 		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory(), getFollowRoads(), [this]() { this->setHasTaskAssigned(true); }));
+		command->setUnitID(ID); // This will be used to reset the state to idle in case of command removal
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}

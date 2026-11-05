@@ -1461,6 +1461,14 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		command = new ExecuteFile(filePath);
 	}
 	/************************/
+	else if (key.compare("unloadAllCommands") == 0)
+	{
+		/* Special function that unloads all queued commands */
+		unloadAllCommands();
+		return; 
+	}
+	
+	/************************/
 	else
 	{
 		log("Unknown command: " + key);
@@ -1474,3 +1482,27 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	}
 }
 
+/**
+ * Unloads all queued commands.
+ * Known limitation: this command operates on all commands in the queue, whatever the coalition or the user that issued them.
+ */
+void Scheduler::unloadAllCommands() {
+	for (auto command: commands)
+	{
+		if (command != nullptr && command->getUnitID() != NULL) {
+			Unit* unit = unitsManager->getUnit(command->getUnitID());
+			if (unit != nullptr) {
+				unit->setState(State::IDLE);
+				unit->setTargetID(0);
+				unit->setActivePath({});
+				log("unloadAllCommands: command " + command->getHash() + " for unit " + unit->getUnitName() + "(" + unit->getName() + ") unloaded and unit set to IDLE");
+			}
+		}
+		delete command;
+	}
+	commands.clear();
+
+	log("unloadAllCommands: all commands deleted. Current load " + to_string(getLoad()));
+
+	return;
+}

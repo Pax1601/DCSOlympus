@@ -33,12 +33,16 @@ import { TrainingModal } from "./modals/trainingmodal";
 import { AdminModal } from "./modals/adminmodal";
 import { ImageOverlayModal } from "./modals/imageoverlaymodal";
 import { LoadoutWizardModal } from "./modals/loadoutwizardmodal";
+import { PanicButton } from "./panels/panicbutton";
+import { ServerStatus } from "../interfaces";
 
 export function UI() {
   const [appState, setAppState] = useState(OlympusState.NOT_INITIALIZED);
   const [appSubState, setAppSubState] = useState(NO_SUBSTATE as OlympusSubState);
-  const [serverConnected, setServerConnected] = useState(false as boolean);
-  const [connectedOnce, setConnectedOnce] = useState(false);
+  const [serverStatus, setServerStatus] = useState({} as ServerStatus);
+
+  let serverConnected = serverStatus?.connected ? true : false;
+  let connectedOnce = serverConnected;
 
   useEffect(() => {
     AppStateChangedEvent.on((state, subState) => {
@@ -46,9 +50,7 @@ export function UI() {
       setAppSubState(subState);
     });
     ServerStatusUpdatedEvent.on((status) => {
-      // If we connected at least once, record it
-      if (status.connected) setConnectedOnce(true);
-      setServerConnected(status.connected);
+      setServerStatus(status);
     });
   }, []);
 
@@ -109,7 +111,8 @@ export function UI() {
             {/*}<JTACMenu open={appState === OlympusState.JTAC} onClose={() => getApp().setState(OlympusState.IDLE)} />
         <AWACSMenu open={appState === OlympusState.AWACS} onClose={() => getApp().setState(OlympusState.IDLE)} />{*/}
 
-            <MiniMapPanel />
+            <PanicButton serverStatus={serverStatus} />
+            <MiniMapPanel serverStatus={serverStatus} />
             <ControlsPanel />
 
             <SideBar />

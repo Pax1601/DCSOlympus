@@ -40,6 +40,7 @@ public:
 	int getRedSpawnPoints() { return redSpawnPoints; }
 	vector<string> getEras() { return eras; }
 	json::value getCommandModeOptions();
+	void unloadAllCommands();
 
 private:
 	list<Command*> commands;

@@ -1,20 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
-import { zeroAppend } from "../../other/utils";
-import { DateAndTime, ServerStatus } from "../../interfaces";
-import { getApp } from "../../olympusapp";
+import { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
-import { MapOptionsChangedEvent, ServerStatusUpdatedEvent } from "../../events";
 import { colors, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
+import { MapOptionsChangedEvent } from "../../events";
+import { ServerStatus } from "../../interfaces";
+import { getApp } from "../../olympusapp";
+import { zeroAppend } from "../../other/utils";
 import { CoordinatesPanel } from "./coordinatespanel";
 import { RadiosSummaryPanel } from "./radiossummarypanel";
 
-export function MiniMapPanel(props: {}) {
-  const [serverStatus, setServerStatus] = useState({} as ServerStatus);
+type MiniMapPanelProps = {
+  serverStatus: ServerStatus;
+};
+
+export function MiniMapPanel({ serverStatus }: MiniMapPanelProps) {
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [showMissionTime, setShowMissionTime] = useState(false);
 
   useEffect(() => {
-    ServerStatusUpdatedEvent.on((status) => setServerStatus(status));
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
   }, []);
 
@@ -59,19 +61,20 @@ export function MiniMapPanel(props: {}) {
         flex w-[288px] cursor-pointer flex-col items-center justify-between
         gap-2 text-sm
       `}
-      
     >
       <RadiosSummaryPanel />
       <CoordinatesPanel />
-      <div className={`
-        flex h-12 w-full items-center justify-between gap-2 px-3
-        backdrop-blur-lg backdrop-grayscale
-        dark:bg-olympus-800/90 dark:text-gray-200
-        ${mapOptions.showMinimap ? `rounded-t-lg` : `rounded-lg`}
-      `}
-      onClick={(ev) => {
-        getApp().getMap().setOption("showMinimap", !mapOptions.showMinimap);
-      }}>
+      <div
+        className={`
+          flex h-12 w-full items-center justify-between gap-2 px-3
+          backdrop-blur-lg backdrop-grayscale
+          dark:bg-olympus-800/90 dark:text-gray-200
+          ${mapOptions.showMinimap ? `rounded-t-lg` : `rounded-lg`}
+        `}
+        onClick={(ev) => {
+          getApp().getMap().setOption("showMinimap", !mapOptions.showMinimap);
+        }}
+      >
         {!serverStatus.connected ? (
           <div className={`flex animate-pulse items-center gap-2 font-semibold`}>
             <div className={`relative h-4 w-4 rounded-full bg-[#F05252]`}></div>
@@ -107,13 +110,9 @@ export function MiniMapPanel(props: {}) {
             </div>
           </>
         )}
-        {mapOptions.showMinimap ? (
-          <FaChevronDown className="cursor-pointer" />
-        ) : (
-          <FaChevronUp
-            className={`cursor-pointer`}
-          />
-        )}
+        {mapOptions.showMinimap ? <FaChevronDown className="cursor-pointer" /> : <FaChevronUp className={`
+          cursor-pointer
+        `} />}
       </div>
     </div>
   );
