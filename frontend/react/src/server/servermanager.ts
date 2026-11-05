@@ -938,4 +938,9 @@ export class ServerManager {
       }, timeout);
     }
   }
+
+  unloadAllCommands(callback: CallableFunction = () => {}) {
+    var data = { unloadAllCommands: null };
+    this.PUT(data, callback);
+  }
 }
