@@ -320,6 +320,7 @@ void GroundUnit::AIloop()
 				taskSS.precision(10);
 				taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
 				Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+				command->setUnitID(getID());
 				scheduler->appendCommand(command);
 				setHasTask(true);
 			}
@@ -579,6 +580,7 @@ void GroundUnit::fireAtArea(Coords aimTarget) {
 		taskSS << "{id = 'FireAtPoint', lat = " << aimTarget.lat << ", lng = " << aimTarget.lng << ", alt = " << aimTarget.alt << ", radius = " << artilleryRadius << " expendQty = " << artilleryShotsToFire << "}";
 	}
 	Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+	command->setUnitID(getID());
 	scheduler->appendCommand(command);
 	setHasTask(true);
 }
@@ -638,6 +640,7 @@ string GroundUnit::aimAtPointMethod(Coords aimTarget) {
 		taskSS.precision(10);
 		taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << position.alt + barrelElevation + barrelHeight << ", radius = 0.001}";
 		Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+		command->setUnitID(getID());
 		scheduler->appendCommand(command);
 		shellsFiredAtTasking = totalShellsFired;
 		setHasTask(true);
@@ -655,6 +658,7 @@ void GroundUnit::indirectFireMethod(Coords aimTarget) {
 	taskSS.precision(10);
 	taskSS << "{id = 'FireAtPoint', lat = " << aimTarget.lat << ", lng = " << aimTarget.lng << ", radius = 0.01}";
 	Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+	command->setUnitID(getID());
 	scheduler->appendCommand(command);
 	shellsFiredAtTasking = totalShellsFired;
 	setHasTask(true);
@@ -709,6 +713,7 @@ string GroundUnit::scenicThrowGranadeAtCoordinates(Coords aimTarget) {
 
 		// Use the explosion command 
 		Command* command = dynamic_cast<Command*>(new Explosion(0.1, "normal", grenadeTargetPosition));
+		command->setUnitID(getID());
 		scheduler->appendCommand(command);
 	}
 	else {
@@ -767,6 +772,7 @@ string GroundUnit::scenicAAA() {
 		taskSS.precision(10);
 		taskSS << "{id = 'FireAtPoint', lat = " << lat << ", lng = " << lng << ", alt = " << barrelElevation << ", radius = 0.001 }";
 		Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+		command->setUnitID(getID());
 		scheduler->appendCommand(command);
 		shellsFiredAtTasking = totalShellsFired;
 		setHasTask(true);
@@ -820,6 +826,7 @@ string GroundUnit::missOnPurposeAAA(Unit* target) {
 		taskSS.precision(10);
 		taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
 		Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+		command->setUnitID(getID());
 		scheduler->appendCommand(command);
 		shellsFiredAtTasking = totalShellsFired;
 		setHasTask(true);
@@ -853,6 +860,7 @@ string GroundUnit::missOnPurposeAAA(Unit* target) {
 
 			taskString += ". Aiming altitude " + to_string((int)round((aimAlt - position.alt) / 0.3048)) + "ft AGL";
 			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+			command->setUnitID(getID());
 			scheduler->appendCommand(command);
 			shellsFiredAtTasking = totalShellsFired;
 			setHasTask(true);
@@ -876,6 +884,7 @@ string GroundUnit::missOnPurposeAAA(Unit* target) {
 			taskSS.precision(10);
 			taskSS << "{id = 'FireAtPoint', lat = " << 0 << ", lng = " << 0 << ", alt = " << 0 << ", radius = 0.001, expendQty = " << 0 << " }";
 			Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+			command->setUnitID(getID());
 			scheduler->appendCommand(command);
 			shellsFiredAtTasking = totalShellsFired;
 			setHasTask(true);
@@ -907,6 +916,7 @@ void GroundUnit::setOnOff(bool newOnOff, bool force)
 	if (newOnOff != onOff || force) {
 		Unit::setOnOff(newOnOff, force);
 		Command* command = dynamic_cast<Command*>(new SetOnOff(groupName, onOff));
+		command->setUnitID(getID());
 		scheduler->appendCommand(command);
 	}
 }
