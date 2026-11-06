@@ -396,6 +396,7 @@ void GroundUnit::AIloop()
 					taskSS.precision(10);
 					taskSS << "{id = 'AttackUnit', unitID = " << target->getID() << " }";
 					Command* command = dynamic_cast<Command*>(new SetTask(groupName, taskSS.str(), [this]() { this->setHasTaskAssigned(true); }));
+					command->setUnitID(getID());
 					scheduler->appendCommand(command);
 					shellsFiredAtTasking = totalShellsFired;
 					setHasTask(true);

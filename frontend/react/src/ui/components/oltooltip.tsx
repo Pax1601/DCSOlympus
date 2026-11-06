@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 export function OlTooltip(props: {
   content: string | JSX.Element | JSX.Element[];
   buttonRef: React.MutableRefObject<null>;
-  position?: string;
+  position?: "below" | "above" | "side" | string;
   relativeToParent?: boolean;
 }) {
   const [isTouchscreen, setIsTouchscreen] = useState(false);

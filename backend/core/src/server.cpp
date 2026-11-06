@@ -178,6 +178,7 @@ void Server::handle_get(http_request request)
                     answer[L"sessionHash"] = json::value::string(to_wstring(sessionHash));
                     answer[L"load"] = scheduler->getLoad();
                     answer[L"frameRate"] = scheduler->getFrameRate();
+                    answer[L"commandsCount"] = scheduler->getCommandsCount();
                     response.set_body(answer);
                 }
             }

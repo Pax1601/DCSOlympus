@@ -148,9 +148,10 @@ export class ServerManager {
           const result = JSON.parse(xmlHttp.responseText);
           this.#lastUpdateTimes[uri] = callback(result);
 
-          if (result.frameRate !== undefined && result.load !== undefined) {
+          if (result.frameRate !== undefined && result.load !== undefined && result.commandsCount !== undefined) {
             getApp().getMissionManager().setLoad(result.load);
             getApp().getMissionManager().setFrameRate(result.frameRate);
+            getApp().getMissionManager().setCommandsCount(result.commandsCount);
           }
         }
       } else if (xmlHttp.status == 401) {
@@ -833,6 +834,7 @@ export class ServerManager {
         ServerStatusUpdatedEvent.dispatch({
           frameRate: getApp().getMissionManager().getFrameRate(),
           load: getApp().getMissionManager().getLoad(),
+          commandsCount: getApp().getMissionManager().getCommandsCount(),
           elapsedTime: getApp().getMissionManager().getDateAndTime().elapsedTime,
           missionTime: getApp().getMissionManager().getDateAndTime().time,
           connected: this.getConnected(),

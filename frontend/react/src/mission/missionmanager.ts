@@ -33,6 +33,7 @@ export class MissionManager {
   };
   #load: number = 0;
   #frameRate: number = 0;
+  #commandsCount: number = 0;
   #commandModeOptions: CommandModeOptions = {
     commandMode: NONE,
     restrictSpawns: false,
@@ -322,6 +323,14 @@ export class MissionManager {
 
   getFrameRate() {
     return this.#frameRate;
+  }
+
+  setCommandsCount(commandsCount: number) {
+    this.#commandsCount = commandsCount;
+  }
+
+  getCommandsCount() {
+    return this.#commandsCount;
   }
 
   getSelectedAirbase() {

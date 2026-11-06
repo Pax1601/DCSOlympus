@@ -11,11 +11,11 @@ export function PanicButton({ serverStatus }: PanicButtonProps) {
 
   const clickHandler = () => {
     setIsDispatchingUnloadCommands(true);
-    getApp().getServerManager().unloadAllCommands(() => {
-      console.log('unloadAllCommands called successfully');
-    });
+    getApp().getServerManager().unloadAllCommands();
 
-    setIsDispatchingUnloadCommands(false);
+    setTimeout(() => {
+      setIsDispatchingUnloadCommands(false);
+    }, 2000); // Reset the state after 2 seconds
   };
 
   return (
@@ -25,19 +25,25 @@ export function PanicButton({ serverStatus }: PanicButtonProps) {
         text-sm
       `}
     >
-      {serverStatus.connected && serverStatus.load > 500 ? (
+      {serverStatus.connected ? (
         <button
           className={`
-            min-h-12 rounded-md bg-red-700 px-2 font-semibold text-white
-            ${isDispatchingUnloadCommands ? "bg-slate-400" : `
-              bg-red-700
-              hover:bg-red-500
-            `}
+            min-h-12 rounded-md px-2 font-semibold backdrop-blur-lg
+            backdrop-grayscale
+            dark:hover:bg-olympus-400 dark:hover:text-gray-200
+            ${
+              isDispatchingUnloadCommands
+                ? `
+                  bg-slate-400
+                  dark:hover:bg-olympus-400
+                `
+                : `dark:bg-olympus-800/90 dark:text-gray-200`
+            }
           `}
           onClick={clickHandler}
           disabled={isDispatchingUnloadCommands}
         >
-          {isDispatchingUnloadCommands ? "Standby..." : "Panic"}
+          {isDispatchingUnloadCommands ? "Unloading..." : "Unload"}
         </button>
       ) : null}
     </div>

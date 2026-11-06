@@ -33,6 +33,7 @@ public:
 
 	int getFrameRate() { return static_cast<int>(round(frameRate)); };
 	int getLoad();
+	int getCommandsCount() { return static_cast<int>(commands.size()); }
 	bool getRestrictSpawns() { return restrictSpawns; }
 	bool getRestrictToCoalition() { return restrictToCoalition; }
 	unsigned int getSetupTime() { return setupTime; }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { colors, MAP_OPTIONS_DEFAULTS } from "../../constants/constants";
 import { MapOptionsChangedEvent } from "../../events";
@@ -7,6 +7,7 @@ import { getApp } from "../../olympusapp";
 import { zeroAppend } from "../../other/utils";
 import { CoordinatesPanel } from "./coordinatespanel";
 import { RadiosSummaryPanel } from "./radiossummarypanel";
+import { OlTooltip } from "../components/oltooltip";
 
 type MiniMapPanelProps = {
   serverStatus: ServerStatus;
@@ -15,6 +16,10 @@ type MiniMapPanelProps = {
 export function MiniMapPanel({ serverStatus }: MiniMapPanelProps) {
   const [mapOptions, setMapOptions] = useState(MAP_OPTIONS_DEFAULTS);
   const [showMissionTime, setShowMissionTime] = useState(false);
+  const [isLoadNumberHovered, setIsLoadNumberHovered] = useState(false);
+
+  const commandsQueueCount = serverStatus.commandsCount;
+  let loadDivRef = useRef(null);
 
   useEffect(() => {
     MapOptionsChangedEvent.on((mapOptions) => setMapOptions({ ...mapOptions }));
@@ -64,6 +69,9 @@ export function MiniMapPanel({ serverStatus }: MiniMapPanelProps) {
     >
       <RadiosSummaryPanel />
       <CoordinatesPanel />
+      
+      {isLoadNumberHovered && <OlTooltip buttonRef={loadDivRef} position="above" content={"Commands Queue Count: " + commandsQueueCount} relativeToParent={true} />}
+
       <div
         className={`
           flex h-12 w-full items-center justify-between gap-2 px-3
@@ -93,7 +101,16 @@ export function MiniMapPanel({ serverStatus }: MiniMapPanelProps) {
                 {serverStatus.frameRate}
               </span>
             </div>
-            <div className="flex gap-1 font-semibold">
+            <div
+              className="flex gap-1 font-semibold"
+              onMouseEnter={() => {
+                setIsLoadNumberHovered(true);
+              }}
+              onMouseLeave={() => {
+                setIsLoadNumberHovered(false);
+              }}
+              ref={loadDivRef}
+            >
               Load:
               <span style={{ color: loadColor }} className={`font-semibold`}>
                 {serverStatus.load}
@@ -110,9 +127,13 @@ export function MiniMapPanel({ serverStatus }: MiniMapPanelProps) {
             </div>
           </>
         )}
-        {mapOptions.showMinimap ? <FaChevronDown className="cursor-pointer" /> : <FaChevronUp className={`
-          cursor-pointer
-        `} />}
+        {mapOptions.showMinimap ? (
+          <FaChevronDown className="cursor-pointer" />
+        ) : (
+          <FaChevronUp
+            className={`cursor-pointer`}
+          />
+        )}
       </div>
     </div>
   );
