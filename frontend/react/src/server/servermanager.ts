@@ -941,8 +941,25 @@ export class ServerManager {
     }
   }
 
+  /**
+   * Aka "soft panic", this calls a backend function that unloads all the commands in the queue at the moment it has been called.
+   * Id doesn't prevent automatic enqueue of new commands based on backend logic.
+   * @param callback a callback to be executed after the put command has been issued.
+   */
   unloadAllCommands(callback: CallableFunction = () => {}) {
     var data = { unloadAllCommands: null };
     this.PUT(data, callback);
   }
+
+   /**
+   * Aka "hard panic", this calls a backend function that sets all units state to "IDLE", therefore preventing the units to 
+   * automatically enqueue new commands.
+   * @param callback a callback to be executed after the put command has been issued.
+   */
+  setAllUnitsToIdle(callback: CallableFunction = () => {}) {
+    var data = { setAllUnitsToIdle: null };
+    this.PUT(data, callback);
+  }
+
+
 }

@@ -1467,6 +1467,13 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		unloadAllCommands();
 		return; 
 	}
+	/************************/
+	else if (key.compare("setAllUnitsToIdle") == 0)
+	{
+		/* Special function that sets all units to IDLE state */
+		setAllUnitsToIdle();
+		return; 
+	}
 	
 	/************************/
 	else
@@ -1483,8 +1490,9 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 }
 
 /**
- * Unloads all queued commands.
- * Known limitation: this command operates on all commands in the queue, whatever the coalition or the user that issued them.
+ * Unloads all queued commands (AKA "soft panic").
+ * This routine operates on all commands in the queue, whatever the coalition or the user that issued them.
+ * Keep in mind that this function doesn't prevent unit that are not in the "IDLE" state to autonomously re-queue commands.
  */
 void Scheduler::unloadAllCommands() {
 	for (auto command: commands)
@@ -1505,4 +1513,18 @@ void Scheduler::unloadAllCommands() {
 	log("unloadAllCommands: all commands deleted. Current load " + to_string(getLoad()));
 
 	return;
+}
+
+/**
+ * Sets all units to IDLE state and clears their target ID and active path (aka "hard panic").
+ * This routine operates on all units, whatever the coalition or the user that issued them.
+ */
+void Scheduler::setAllUnitsToIdle() {
+	for (auto& u : unitsManager->getUnits()) {
+		u.second->setState(State::IDLE);
+		u.second->setTargetID(0);
+		u.second->setActivePath({});
+		log("setAllUnitsToIdle: unit " + u.second->getUnitName() + "(" + u.second->getName() + ") set to IDLE");
+	}
+	log("setAllUnitsToIdle: all units set to IDLE");
 }

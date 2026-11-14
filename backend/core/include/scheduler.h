@@ -43,6 +43,8 @@ public:
 	json::value getCommandModeOptions();
 	void unloadAllCommands();
 
+    void setAllUnitsToIdle();
+
 private:
 	list<Command*> commands;
 	list<CommandResult> executedCommandResults;
