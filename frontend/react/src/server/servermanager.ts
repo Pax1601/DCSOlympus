@@ -946,20 +946,31 @@ export class ServerManager {
    * Id doesn't prevent automatic enqueue of new commands based on backend logic.
    * @param callback a callback to be executed after the put command has been issued.
    */
-  unloadAllCommands(callback: CallableFunction = () => {}) {
+  private unloadAllCommands(callback: CallableFunction = () => {}) {
+    console.log("unloadAllCommandsCalled.");
+
     var data = { unloadAllCommands: null };
     this.PUT(data, callback);
   }
 
-   /**
-   * Aka "hard panic", this calls a backend function that sets all units state to "IDLE", therefore preventing the units to 
+  /**
+   * Aka "hard panic", this calls a backend function that sets all units state to "IDLE", therefore preventing the units to
    * automatically enqueue new commands.
    * @param callback a callback to be executed after the put command has been issued.
    */
-  setAllUnitsToIdle(callback: CallableFunction = () => {}) {
+  private setAllUnitsToIdle(callback: CallableFunction = () => {}) {
+    console.log("setAllUnitsToIdleCalled.");
+
     var data = { setAllUnitsToIdle: null };
     this.PUT(data, callback);
   }
 
+  public softPanic() {
+    this.unloadAllCommands(() => {});
+  }
 
+  public hardPanic() {
+    this.setAllUnitsToIdle(() => {});
+    this.unloadAllCommands(() => {});
+  }
 }

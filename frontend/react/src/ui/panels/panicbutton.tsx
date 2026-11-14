@@ -7,45 +7,48 @@ type PanicButtonProps = {
 };
 
 export function PanicButton({ serverStatus }: PanicButtonProps) {
-  const [isDispatchingUnloadCommands, setIsDispatchingUnloadCommands] = useState(false);
+  const softPanicClickHandler = () => {
+    getApp().getServerManager().softPanic();
+  };
 
-  const clickHandler = () => {
-    setIsDispatchingUnloadCommands(true);
-    getApp().getServerManager().unloadAllCommands();
-
-    setTimeout(() => {
-      setIsDispatchingUnloadCommands(false);
-    }, 2000); // Reset the state after 2 seconds
+  const hardPanicClickHandler = () => {
+    getApp().getServerManager().hardPanic();
   };
 
   return (
     <div
       className={`
-        absolute bottom-[20px] right-[308px] flex items-center justify-between
-        text-sm
+        absolute bottom-[20px] right-[308px] flex flex-row items-center
+        justify-between gap-2 text-sm
       `}
     >
-      {serverStatus.connected ? (
-        <button
-          className={`
-            min-h-12 rounded-md px-2 font-semibold backdrop-blur-lg
-            backdrop-grayscale
-            dark:hover:bg-olympus-400 dark:hover:text-gray-200
-            ${
-              isDispatchingUnloadCommands
-                ? `
-                  bg-slate-400
-                  dark:hover:bg-olympus-400
-                `
-                : `dark:bg-olympus-800/90 dark:text-gray-200`
-            }
-          `}
-          onClick={clickHandler}
-          disabled={isDispatchingUnloadCommands}
-        >
-          {isDispatchingUnloadCommands ? "Unloading..." : "Unload"}
-        </button>
-      ) : null}
+      {serverStatus.connected
+        ? [
+            /* Soft Panic Button */
+            <button
+              className={`
+                min-h-12 rounded-md px-2 font-semibold
+                dark:bg-olympus-600 dark:text-gray-200 dark:hover:bg-olympus-400
+                dark:hover:text-gray-200
+              `}
+              onClick={softPanicClickHandler}
+            >
+              Unload
+            </button>,
+
+            /* Hard Panic Button */
+            <button
+              className={`
+                min-h-12 rounded-md px-2 font-semibold
+                dark:bg-red-400 dark:text-gray-950 dark:hover:bg-red-300
+                dark:hover:text-gray-800
+              `}
+              onClick={hardPanicClickHandler}
+            >
+              Hard Panic
+            </button>,
+          ]
+        : null}
     </div>
   );
 }

@@ -11,6 +11,7 @@
 using namespace std::chrono;
 
 #define TASK_CHECK_INIT_VALUE 10
+constexpr int AUTONOMOUS_COMMANDS_STABLE_CYCLES = 3;
 
 class Unit
 {
@@ -59,6 +60,8 @@ public:
 	bool getEnableTaskCheckFailed() { return enableTaskFailedCheck; }
 
 	void triggerUpdate(unsigned char datumIndex);
+	void setIgnoreAutonomousCommands(bool newValue);
+	bool getIgnoreAutonomousCommands() const { return ignoreAutonomousCommands; }
 
 	bool hasFreshData(unsigned long long time);
 	bool checkFreshness(unsigned char datumIndex, unsigned long long time);
@@ -326,6 +329,7 @@ protected:
 	unsigned int taskCheckCounter = 0;
 	Unit* missOnPurposeTarget = nullptr;
 	bool hasTaskAssigned = false;
+	bool ignoreAutonomousCommands = false;
 	double initialFuel = 0;
 	map<unsigned char, unsigned long long> updateTimeMap;
 	unsigned long long lastLoopTime = 0;

@@ -42,11 +42,14 @@ public:
 	vector<string> getEras() { return eras; }
 	json::value getCommandModeOptions();
 	void unloadAllCommands();
+	bool isSystemStabilizedAndReady();
+	void tryResumeAutonomousCommands();
 
     void setAllUnitsToIdle();
 
 private:
 	list<Command*> commands;
+	unsigned int autonomousStableCycleCounter = 0;
 	list<CommandResult> executedCommandResults;
 	unsigned int load = 0;
 	double frameRate = 0;
