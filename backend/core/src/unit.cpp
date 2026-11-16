@@ -218,6 +218,26 @@ void Unit::executeOnSpawnCallback() {
 	}
 }
 
+/**
+ * This method is used to set the "ignoreAutonomousCommands" flag for the unit. 
+ * When this flag is set to true, the unit will ignore any autonomous commands and will not execute them.
+ * When this flag is set to false, the unit will resume executing autonomous commands.
+ */
+void Unit::setIgnoreAutonomousCommands(bool newValue) {
+    if (ignoreAutonomousCommands == newValue)
+        return;
+
+    ignoreAutonomousCommands = newValue;
+
+    if (newValue) {
+        if (state != State::IDLE)
+            setState(State::IDLE);
+        setTargetID(0);
+        clearActivePath();
+        setHasTask(false);
+    }
+}
+
 void Unit::runAILoop() {
 	/* Set isLeader */
 	Unit* leader = nullptr;
@@ -225,11 +245,22 @@ void Unit::runAILoop() {
 
 	/* If the unit is alive, controlled, is the leader of the group and it is not a human, run the AI Loop that performs the requested commands and instructions (moving, attacking, etc) */
 	if (getAlive() && getControlled() && !getHuman() && getIsLeader()) {
-		if (getEnableTaskCheckFailed() && checkTaskFailed()) {
-			log(unitName + " has no task, switching to IDLE state");
-			setState(State::IDLE);
+
+		/** Check if the unit should ignore autonomous commands */
+		if (getIgnoreAutonomousCommands()) {
+			if (state != State::IDLE)
+				setState(State::IDLE);
+			setTargetID(NULL);
+			clearActivePath();
+			setHasTask(false);
 		}
-		AIloop();
+		else {
+			if (getEnableTaskCheckFailed() && checkTaskFailed()) {
+				log(unitName + " has no task, switching to IDLE state");
+				setState(State::IDLE);
+			}
+			AIloop();
+		}
 	}
 
 	refreshLeaderData(lastLoopTime);
@@ -876,6 +907,7 @@ void Unit::goToDestination(string enrouteTask)
 	if (activeDestination != NULL)
 	{
 		Command* command = dynamic_cast<Command*>(new Move(groupName, activeDestination, getDesiredSpeed(), getDesiredSpeedType() ? "GS" : "CAS", getDesiredAltitude(), getDesiredAltitudeType() ? "AGL" : "ASL", enrouteTask, getCategory(), getFollowRoads(), [this]() { this->setHasTaskAssigned(true); }));
+		command->setUnitID(ID); // This will be used to reset the state to idle in case of command removal
 		scheduler->appendCommand(command);
 		setHasTask(true);
 	}

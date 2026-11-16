@@ -39,6 +39,55 @@ int Scheduler::getLoad()
 	}
 	return currentLoad;
 }
+/**
+ * This method is used to check the units state after a "hard panic".
+ * It checks if all units are in a stable state and ready to receive new commands and exits from the "grace period" 
+ * by resetting the global flag "autonomousCommandsIgnored".
+ */
+bool Scheduler::isSystemStabilizedAndReady() {
+	if (unitsManager == nullptr || !commands.empty())
+		return false;
+
+	for (auto& [unitID, unit] : unitsManager->getUnits()) {
+		if (unit == nullptr)
+			continue;
+
+		if (unit->getIgnoreAutonomousCommands())
+			return false;
+		if (unit->getState() != State::IDLE)
+			return false;
+		if (unit->getHasTask())
+			return false;
+		if (unit->getTargetID() != 0)
+			return false;
+		if (!unit->getActivePath().empty())
+			return false;
+	}
+
+	return true;
+}
+
+/**
+ * This method is used to resume the execution of autonomous commands after a "hard panic" and a "grace period" has passed.
+ * The grace period is defined by the constant AUTONOMOUS_COMMANDS_STABLE_CYCLES, which is the number of cycles that the system must be 
+ * stable and ready before resuming autonomous commands.
+ */
+void Scheduler::tryResumeAutonomousCommands() {
+	if (isSystemStabilizedAndReady()) {
+		autonomousStableCycleCounter++;
+		if (autonomousStableCycleCounter >= AUTONOMOUS_COMMANDS_STABLE_CYCLES) {
+			for (auto& [unitID, unit] : unitsManager->getUnits()) {
+				if (unit != nullptr)
+					unit->setIgnoreAutonomousCommands(false);
+			}
+			autonomousStableCycleCounter = 0;
+			log("Autonomous commands resumed after stabilization");
+		}
+	}
+	else {
+		autonomousStableCycleCounter = 0;
+	}
+}
 
 void Scheduler::execute(lua_State* L)
 {
@@ -75,6 +124,7 @@ void Scheduler::execute(lua_State* L)
 				executedCommandResults.push_back(commandResult);
 				command->executeCallback(); /* Execute the command callback (this is a lambda function that can be used to execute a function when the command is run) */
 				delete command;
+				tryResumeAutonomousCommands(); // Check if the system is stabilized and ready to resume autonomous commands after a hard panic
 				return;
 			}
 		}
@@ -1461,6 +1511,21 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 		command = new ExecuteFile(filePath);
 	}
 	/************************/
+	else if (key.compare("unloadAllCommands") == 0)
+	{
+		/* Special function that unloads all queued commands */
+		unloadAllCommands();
+		return; 
+	}
+	/************************/
+	else if (key.compare("setAllUnitsToIdle") == 0)
+	{
+		/* Special function that sets all units to IDLE state */
+		setAllUnitsToIdle();
+		return; 
+	}
+	
+	/************************/
 	else
 	{
 		log("Unknown command: " + key);
@@ -1474,3 +1539,47 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 	}
 }
 
+/**
+ * Unloads all queued commands (AKA "soft panic").
+ * This routine operates on all commands in the queue, whatever the coalition or the user that issued them.
+ * This also prevents unit that are not in the "IDLE" state to autonomously re-queue commands setting the "setIgnoreAutonomousCommands" flag.
+ */
+void Scheduler::unloadAllCommands() {
+	for (auto command: commands)
+	{
+		if (command != nullptr && command->getUnitID() != NULL) {
+			Unit* unit = unitsManager->getUnit(command->getUnitID());
+			if (unit != nullptr) {
+				unit->setState(State::IDLE);
+				unit->setTargetID(0);
+				unit->clearActivePath();
+				log("unloadAllCommands: command " + command->getHash() + " for unit " + unit->getUnitName() + "(" + unit->getName() + ") unloaded and unit set to IDLE");
+			}
+		}
+		delete command;
+	}
+	commands.clear();
+	for (auto& [unitID, unit] : unitsManager->getUnits()) {
+		if (unit != nullptr)
+			unit->setIgnoreAutonomousCommands(true);
+	}
+
+	log("unloadAllCommands: all commands deleted. Current load " + to_string(getLoad()));
+
+	return;
+}
+
+/**
+ * Sets all units to IDLE state and clears their target ID and active path (aka "hard panic").
+ * This routine operates on all units, whatever the coalition or the user that issued them.
+ */
+void Scheduler::setAllUnitsToIdle() {
+	for (auto& u : unitsManager->getUnits()) {
+		u.second->setIgnoreAutonomousCommands(true);
+		u.second->setState(State::IDLE);
+		u.second->setTargetID(0);
+		u.second->clearActivePath();
+		log("setAllUnitsToIdle: unit " + u.second->getUnitName() + "(" + u.second->getName() + ") set to IDLE");
+	}
+	log("setAllUnitsToIdle: all units set to IDLE");
+}

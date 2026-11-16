@@ -111,13 +111,17 @@ class Command
 public:
 	Command(function<void(void)> callback) : callback(callback) {};
 	unsigned int getPriority() { return priority; }
+	unsigned int getUnitID() { return unitID; }
+	void setUnitID(unsigned int unitID) { this->unitID = unitID; }
 	virtual string getString() = 0;
 	virtual unsigned int getLoad() = 0;
 	const string getHash() { return hash; }
 	void executeCallback() { callback(); }
+	
 
 protected:
 	unsigned int priority = CommandPriority::LOW;
+	unsigned int unitID = NULL;
 	const string hash = random_string(16);
 	function<void(void)> callback;
 };

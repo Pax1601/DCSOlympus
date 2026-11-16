@@ -447,6 +447,7 @@ export interface ShortcutOptions {
 export interface ServerStatus {
   frameRate: number;
   load: number;
+  commandsCount: number;
   elapsedTime: number;
   missionTime: DateAndTime["time"];
   connected: boolean;
