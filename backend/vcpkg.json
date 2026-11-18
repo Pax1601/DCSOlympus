@@ -1,6 +1,20 @@
 {
     "dependencies": [
-        "cpprestsdk",
-        "geographiclib"
+        {
+            "name": "cpprestsdk",
+            "version>=": "2.10.19#6"
+        },
+        {
+            "name": "geographiclib",
+            "version>=": "2.3#1"
+        }
+
+    ],
+    "overrides": [
+        {
+            "name": "geographiclib",
+            "version": "2.3",
+            "port-version": 1
+        }
     ]
 }
