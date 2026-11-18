@@ -224,8 +224,13 @@ void Scheduler::handleRequest(string key, json::value value, string username, js
 			string skill = to_string(unit[L"skill"]);
 
 			string payload = "nil";
-			if (unit.has_string_field(L"payload"))
+			if (unit.has_string_field(L"payload")) {
 				payload = to_string(unit[L"payload"]);
+				if (!isSafeLuaDataLiteral(payload)) {
+					log(username + " rejected unsafe aircraft payload", true);
+					return;
+				}
+			}
 
 			spawnOptions.push_back({ unitType, location, loadout, skill, liveryID, heading, payload });
 			log(username + " spawned a " + coalition + " " + unitType, true);

@@ -10,6 +10,8 @@ struct CommandResult {
 	string result;
 };
 
+bool isSafeLuaDataLiteral(const string& value);
+
 namespace CommandPriority {
 	enum CommandPriorities { LOW, MEDIUM, HIGH, IMMEDIATE };
 };

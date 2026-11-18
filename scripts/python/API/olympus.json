@@ -15,7 +15,8 @@
     "customAuthHeaders": {
 			"enabled": false,
 			"username": "X-Authorized",
-			"group": "X-Group"
+			"group": "X-Group",
+			"trustedProxyIps": []
 		},
     "elevationProvider": {
       "provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",

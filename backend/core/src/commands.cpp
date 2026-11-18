@@ -6,20 +6,160 @@
 
 extern UnitsManager* unitsManager;
 
+namespace {
+    bool isSpace(const char ch) {
+        return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
+    }
+
+    bool isDigit(const char ch) {
+        return ch >= '0' && ch <= '9';
+    }
+
+    bool isAlpha(const char ch) {
+        return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '_';
+    }
+
+    bool isAlphaNumeric(const char ch) {
+        return isAlpha(ch) || isDigit(ch);
+    }
+
+    string luaQuote(const string& value) {
+        std::ostringstream result;
+        result << '"';
+        for (unsigned char ch : value) {
+            switch (ch) {
+            case '\\': result << "\\\\"; break;
+            case '"': result << "\\\""; break;
+            case '\n': result << "\\n"; break;
+            case '\r': result << "\\r"; break;
+            case '\t': result << "\\t"; break;
+            case '\0': result << "\\000"; break;
+            default:
+                if (ch < 32 || ch == 127) {
+                    result << '\\'
+                        << static_cast<char>('0' + ((ch / 100) % 10))
+                        << static_cast<char>('0' + ((ch / 10) % 10))
+                        << static_cast<char>('0' + (ch % 10));
+                }
+                else {
+                    result << static_cast<char>(ch);
+                }
+            }
+        }
+        result << '"';
+        return result.str();
+    }
+}
+
+bool isSafeLuaDataLiteral(const string& value) {
+    if (value.empty()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < value.size();) {
+        const char ch = value[i];
+        if (isSpace(ch)) {
+            i++;
+            continue;
+        }
+
+        if (ch == '"' || ch == '\'') {
+            const char quote = ch;
+            bool closed = false;
+            bool escaped = false;
+            i++;
+            while (i < value.size()) {
+                const char stringCh = value[i++];
+                if (escaped) {
+                    escaped = false;
+                }
+                else if (stringCh == '\\') {
+                    escaped = true;
+                }
+                else if (stringCh == quote) {
+                    closed = true;
+                    break;
+                }
+                else if (stringCh == '\r' || stringCh == '\n') {
+                    return false;
+                }
+            }
+            if (!closed || escaped) {
+                return false;
+            }
+            continue;
+        }
+
+        if (isAlpha(ch)) {
+            const size_t start = i++;
+            while (i < value.size() && isAlphaNumeric(value[i])) {
+                i++;
+            }
+            const string identifier = value.substr(start, i - start);
+            if (identifier != "true" && identifier != "false" && identifier != "nil") {
+                size_t next = i;
+                while (next < value.size() && isSpace(value[next])) next++;
+                if (next == value.size() || value[next] != '=') {
+                    return false;
+                }
+            }
+            continue;
+        }
+
+        if (isDigit(ch) || ch == '-' || ch == '+') {
+            bool hasDigit = isDigit(ch);
+            bool hasDecimal = false;
+            bool hasExponent = false;
+            i++;
+            while (i < value.size()) {
+                const char numberCh = value[i];
+                if (isDigit(numberCh)) {
+                    hasDigit = true;
+                    i++;
+                }
+                else if (numberCh == '.' && !hasDecimal && !hasExponent) {
+                    hasDecimal = true;
+                    i++;
+                }
+                else if ((numberCh == 'e' || numberCh == 'E') && !hasExponent) {
+                    hasExponent = true;
+                    i++;
+                    if (i < value.size() && (value[i] == '+' || value[i] == '-')) {
+                        i++;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+            if (!hasDigit) {
+                return false;
+            }
+            continue;
+        }
+
+        if (ch != '{' && ch != '}' && ch != '[' && ch != ']' && ch != '=' && ch != ',') {
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
 /* Move command */
 string Move::getString()
 {
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.move, "
-        << "\"" << groupName << "\"" << ", "
+        << luaQuote(groupName) << ", "
         << destination.lat << ", "
         << destination.lng << ", "
         << altitude << ", "
-        << "\"" << altitudeType << "\"" << ", "
+        << luaQuote(altitudeType) << ", "
         << speed << ", "
-        << "\"" << speedType << "\"" << ", "
-        << "\"" << category << "\"" << ", "
+        << luaQuote(speedType) << ", "
+        << luaQuote(category) << ", "
         << taskOptions;
     return commandSS.str();
 }
@@ -30,7 +170,7 @@ string Smoke::getString()
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.smoke, " 
-        << "\"" << color << "\"" << ", "
+        << luaQuote(color) << ", "
         << location.lat << ", "
         << location.lng;
     return commandSS.str();
@@ -43,22 +183,22 @@ string SpawnGroundUnits::getString()
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
         unitsSS << "[" << i + 1 << "] = {" 
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+            << "unitType = " << luaQuote(spawnOptions[i].unitType) << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "heading = " << spawnOptions[i].heading << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
+            << "liveryID = " << luaQuote(spawnOptions[i].liveryID) << ", "
+            << "skill = " << luaQuote(spawnOptions[i].skill) << "}, ";
     }
 
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnUnits, {"
-        << "category = " << "\"" << "GroundUnit" << "\"" << ", "
-        << "coalition = " << "\"" << coalition << "\"" << ", "
-        << "country = \"" << country << "\", "
+        << "category = " << luaQuote("GroundUnit") << ", "
+        << "coalition = " << luaQuote(coalition) << ", "
+        << "country = " << luaQuote(country) << ", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
-    commandSS << ", \"" << this->getHash() << "\"";
+    commandSS << ", " << luaQuote(this->getHash());
     return commandSS.str();
 }
 
@@ -70,22 +210,22 @@ string SpawnNavyUnits::getString()
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
         unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+            << "unitType = " << luaQuote(spawnOptions[i].unitType) << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "heading = " << spawnOptions[i].heading << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
+            << "liveryID = " << luaQuote(spawnOptions[i].liveryID) << ", "
+            << "skill = " << luaQuote(spawnOptions[i].skill) << "}, ";
     }
 
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnUnits, {"
-        << "category = " << "\"" << "NavyUnit" << "\"" << ", "
-        << "coalition = " << "\"" << coalition << "\"" << ", "
-        << "country = \"" << country << "\", "
+        << "category = " << luaQuote("NavyUnit") << ", "
+        << "coalition = " << luaQuote(coalition) << ", "
+        << "country = " << luaQuote(country) << ", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
-    commandSS << ", \"" << this->getHash() << "\"";
+    commandSS << ", " << luaQuote(this->getHash());
     return commandSS.str();
 }
 
@@ -96,26 +236,26 @@ string SpawnAircrafts::getString()
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
         unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+            << "unitType = " << luaQuote(spawnOptions[i].unitType) << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "heading = " << spawnOptions[i].heading << ", "
-            << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
+            << "loadout = " << luaQuote(spawnOptions[i].loadout) << ", "
             << "payload = " << spawnOptions[i].payload << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
+            << "liveryID = " << luaQuote(spawnOptions[i].liveryID) << ", "
+            << "skill = " << luaQuote(spawnOptions[i].skill) << "}, ";
     }
 
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnUnits, {" 
-        << "category = " << "\"" << "Aircraft" << "\"" << ", "
-        << "coalition = " << "\"" << coalition << "\"" << ", "
-        << "airbaseName = \"" << airbaseName << "\", "
-        << "country = \"" << country << "\", "
+        << "category = " << luaQuote("Aircraft") << ", "
+        << "coalition = " << luaQuote(coalition) << ", "
+        << "airbaseName = " << luaQuote(airbaseName) << ", "
+        << "country = " << luaQuote(country) << ", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
-    commandSS << ", \"" << this->getHash() << "\"";
+    commandSS << ", " << luaQuote(this->getHash());
     return commandSS.str();
 }
 
@@ -127,26 +267,26 @@ string SpawnHelicopters::getString()
     unitsSS.precision(10);
     for (int i = 0; i < spawnOptions.size(); i++) {
         unitsSS << "[" << i + 1 << "] = {"
-            << "unitType = " << "\"" << spawnOptions[i].unitType << "\"" << ", "
+            << "unitType = " << luaQuote(spawnOptions[i].unitType) << ", "
             << "lat = " << spawnOptions[i].location.lat << ", "
             << "lng = " << spawnOptions[i].location.lng << ", "
             << "alt = " << spawnOptions[i].location.alt << ", "
             << "heading = " << spawnOptions[i].heading << ", "
-            << "loadout = \"" << spawnOptions[i].loadout << "\"" << ", "
+            << "loadout = " << luaQuote(spawnOptions[i].loadout) << ", "
             << "payload = " << spawnOptions[i].payload << ", "
-            << "liveryID = " << "\"" << spawnOptions[i].liveryID << "\"" << ", "
-            << "skill =  \"" << spawnOptions[i].skill << "\"" << "}, ";
+            << "liveryID = " << luaQuote(spawnOptions[i].liveryID) << ", "
+            << "skill = " << luaQuote(spawnOptions[i].skill) << "}, ";
     }
 
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.spawnUnits, {"
-        << "category = " << "\"" << "Helicopter" << "\"" << ", "
-        << "coalition = " << "\"" << coalition << "\"" << ", "
-        << "airbaseName = \"" << airbaseName << "\", "
-        << "country = \"" << country << "\", "
+        << "category = " << luaQuote("Helicopter") << ", "
+        << "coalition = " << luaQuote(coalition) << ", "
+        << "airbaseName = " << luaQuote(airbaseName) << ", "
+        << "country = " << luaQuote(country) << ", "
         << "units = " << "{" << unitsSS.str() << "}" << "}";
-    commandSS << ", \"" << this->getHash() << "\"";
+    commandSS << ", " << luaQuote(this->getHash());
     return commandSS.str();
 }
 
@@ -179,7 +319,7 @@ string Delete::getString()
     commandSS << "Olympus.delete, "
         << ID << ", "
         << (explosion ? "true" : "false") << ", "
-        << "\"" << explosionType << "\"";
+        << luaQuote(explosionType);
     return commandSS.str();
 }
 
@@ -189,7 +329,7 @@ string SetTask::getString()
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setTask, "
-        << "\"" << groupName << "\"" << ", "
+        << luaQuote(groupName) << ", "
         << task;
 
     return commandSS.str();
@@ -201,7 +341,7 @@ string ResetTask::getString()
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.resetTask, "
-        << "\"" << groupName << "\"";
+        << luaQuote(groupName);
 
     return commandSS.str();
 }
@@ -212,7 +352,7 @@ string SetCommand::getString()
     std::ostringstream commandSS;
     commandSS.precision(10);
     commandSS << "Olympus.setCommand, "
-        << "\"" << groupName << "\"" << ", "
+        << luaQuote(groupName) << ", "
         << command;
 
     return commandSS.str();
@@ -226,12 +366,12 @@ string SetOption::getString()
 
     if (!isBoolean) {
         commandSS << "Olympus.setOption, "
-            << "\"" << groupName << "\"" << ", "
+            << luaQuote(groupName) << ", "
             << optionID << ", "
             << optionValue;
     } else {
         commandSS << "Olympus.setOption, "
-            << "\"" << groupName << "\"" << ", "
+            << luaQuote(groupName) << ", "
             << optionID << ", "
             << (optionBool? "true": "false");
     }
@@ -245,7 +385,7 @@ string SetOnOff::getString()
     commandSS.precision(10);
 
     commandSS << "Olympus.setOnOff, "
-        << "\"" << groupName << "\"" << ", "
+        << luaQuote(groupName) << ", "
         << (onOff ? "true" : "false");
  
     return commandSS.str();
@@ -258,7 +398,7 @@ string Explosion::getString()
     commandSS.precision(10);
     commandSS << "Olympus.explosion, "
         << intensity << ", "
-        << "\"" << explosionType << "\"" << ", "
+        << luaQuote(explosionType) << ", "
         << location.lat << ", "
         << location.lng;
     return commandSS.str();
@@ -331,7 +471,7 @@ string CreateMarker::getString()
 		<< markerID << ", "
         << position.lat << ", "
         << position.lng << ", "
-		<< "\"" << text << "\"";
+		<< luaQuote(text);
     return commandSS.str();
 }
 

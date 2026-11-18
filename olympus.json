@@ -29,13 +29,15 @@
 		"_comment13": "The group should be one of the groups defined using the admin page on the web interface",
 		"_comment14": "If the user is by default authorized to more than one command mode, x-command-mode header can be used to specify the default command mode",
 		"_comment15": "Otherwise, the login page will be skipped, but a command more selection page will still be shown",
+		"_comment16": "For security, custom headers are accepted only from localhost by default. Use trustedProxyIps when a reverse proxy runs on another host.",
 		"customAuthHeaders": {
 			"enabled": false,
 			"username": "X-Authorized",
-			"group": "X-Group"
+			"group": "X-Group",
+			"trustedProxyIps": []
 		},
 
-		"_comment16": "The elevation provider is used to fetch elevation data for the map. It should be a URL with {lat} and {lng} placeholders.",
+		"_comment17": "The elevation provider is used to fetch elevation data for the map. It should be a URL with {lat} and {lng} placeholders.",
 		"elevationProvider": {
 			"provider": "https://srtm.fasma.org/{lat}{lng}.SRTMGL3S.hgt.zip",
 			"username": null,
@@ -43,10 +45,10 @@
 		},
 
 
-		"_comment17": "These are the map layers used by the frontend server. They are used to display the map in the interface.",
-		"_comment18": "The urlTemplate should be a URL with {z}, {x}, and {y} placeholders for the zoom level and tile coordinates.",
-		"_comment19": "The minZoom and maxZoom define the zoom levels at which the layer is visible.",
-		"_comment20": "The attribution is the text displayed in the bottom right corner of the map.",
+		"_comment18": "These are the map layers used by the frontend server. They are used to display the map in the interface.",
+		"_comment19": "The urlTemplate should be a URL with {z}, {x}, and {y} placeholders for the zoom level and tile coordinates.",
+		"_comment20": "The minZoom and maxZoom define the zoom levels at which the layer is visible.",
+		"_comment21": "The attribution is the text displayed in the bottom right corner of the map.",
 		"mapLayers": {
 			"ArcGIS Satellite": {
 				"urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -62,8 +64,8 @@
 			}
 		},
 
-		"_comment21": "These are the map mirrors used by the frontend server. They are used to load the map tiles from different sources.",
-		"_comment22": "The key is the name of the mirror and the value is the URL of the mirror.",
+		"_comment22": "These are the map mirrors used by the frontend server. They are used to load the map tiles from different sources.",
+		"_comment23": "The key is the name of the mirror and the value is the URL of the mirror.",
 		"mapMirrors": {
 			"DCS Map (Official)": "https://maps.dcsolympus.com/maps",
 			"DCS Map (Alt.)": "https://refugees.dcsolympus.com/maps"
@@ -76,10 +78,10 @@
         "proxyHeader": "x-forwarded-for"
 	},
 
-	"_comment23": "These are the settings for the audio backend, i.e. the service which handles direct connection of Olympus to a SRS server.",
-	"_comment24": "The SRSPort is the port used to connect to the SRS server and should be set to be the same as the value in SRS (5002 by default).",
-	"_comment25": "The WSPort is the port used by the web interface to connect to the audio backend WebSocket. It should be available and not used by other processes.",
-	"_comment26": "The WSEndpoint is the endpoint used by the web interface to connect to the audio backend WebSocket when using a reverse proxy. A websocket proxy should be set up to forward requests from this endpoint to WSPort.",
+	"_comment24": "These are the settings for the audio backend, i.e. the service which handles direct connection of Olympus to a SRS server.",
+	"_comment25": "The SRSPort is the port used to connect to the SRS server and should be set to be the same as the value in SRS (5002 by default).",
+	"_comment26": "The WSPort is the port used by the web interface to connect to the audio backend WebSocket. It should be available and not used by other processes.",
+	"_comment27": "The WSEndpoint is the endpoint used by the web interface to connect to the audio backend WebSocket when using a reverse proxy. A websocket proxy should be set up to forward requests from this endpoint to WSPort.",
 
 	"audio": {
 		"SRSPort": 5002,

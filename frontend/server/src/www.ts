@@ -29,21 +29,11 @@ if (fs.existsSync(args["config"])) {
   /* Normalize port */
   const port = normalizePort(httpPort);
   app.set("port", port);
-  console.log("Express server listening on port: " + port);
-
-  /* Create HTTP server */
-  const server = http.createServer(app);
-
-  /* Listen on provided port, on all network interfaces. */
-  server.listen(port);
-  server.on("error", (error) => onError(error, port));
-  server.on("listening", () => onListening(server.address()));
+  const httpsEnabled = json["frontend"]["https"] === true;
 
   /* Optional https support */
   let https = null;
-  let credentials = null;
-  let httpsServer = null;
-  if (json["frontend"]["https"] === true) {
+  if (httpsEnabled) {
     https = require("https");
     const privateKey = fs.readFileSync(
       json["frontend"]["keyPath"] ?? "./cert/default.key",
@@ -54,10 +44,22 @@ if (fs.existsSync(args["config"])) {
       "utf8"
     );
     const httpsPort = json["frontend"]["httpsPort"] ?? 3433;
-    credentials = { key: privateKey, cert: certificate };
-    httpsServer = https.createServer(credentials, app);
+    const credentials = { key: privateKey, cert: certificate };
+    const httpsServer = https.createServer(credentials, app);
     httpsServer.listen(httpsPort);
-    console.log("Express server listening on SSL port: " + httpsPort);
+    httpsServer.on("error", (error) => onError(error, httpsPort));
+    httpsServer.on("listening", () => onListening(httpsServer.address()));
+    console.log("Express server listening on HTTPS port: " + httpsPort);
+  } else {
+    console.log("Express server listening on HTTP port: " + port);
+
+    /* Create HTTP server */
+    const server = http.createServer(app);
+
+    /* Listen on provided port, on all network interfaces. */
+    server.listen(port);
+    server.on("error", (error) => onError(error, port));
+    server.on("listening", () => onListening(server.address()));
   }
 
   /* Final user friendly printing */

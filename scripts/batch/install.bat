@@ -28,7 +28,7 @@ REM Check if node is installed
 node -v 2> Nul
 if "%errorlevel%" == "9009" (
     echo node.js could not be found, installing it...
-	msiexec /i "%CD%\dependencies\node-v20.10.0-x64.msi" /passive
+	msiexec /i "%CD%\dependencies\node-v26.13.1-x64.msi" /passive
 	set "PATH=%PATH%;%programfiles%\nodejs"
 ) else (
 	echo node.js is already installed, continuing installation!

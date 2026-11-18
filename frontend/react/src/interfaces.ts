@@ -26,6 +26,7 @@ export interface OlympusConfig {
             enabled: boolean;
             username: string;
             group: string;
+            trustedProxyIps?: string[];
         };
         autoconnectWhenLocal?: boolean;
     };
